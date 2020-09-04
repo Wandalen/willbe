@@ -1,6 +1,13 @@
-( function _Exported_s_( ) {
+( function _Exported_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillExported provides interface for work with exported resources.
+ * @class wWillExported
+ * @module Tools/atop/willbe
+ */
 
 let Tar;
 
@@ -395,14 +402,14 @@ function _performPrepare2()
 
   _.assert
   (
-      inModule.isFull({ only : { resourcesFormed : 0 } }) && inModule.isValid()
-    , `${inModule.decoratedQualifiedName} is not fully formed to be exported`
+    inModule.isFull({ only : { resourcesFormed : 0 } }) && inModule.isValid(),
+    `${inModule.decoratedQualifiedName} is not fully formed to be exported`
   );
 
   _.assert
   (
-      outModule.isValid()
-    , `${outModule.decoratedQualifiedName} is not fully formed to be exported`
+    outModule.isValid(),
+    `${outModule.decoratedQualifiedName} is not fully formed to be exported`
   );
 
   /* */
@@ -484,10 +491,9 @@ function _performExportedReflectors()
   _.assert( exported.exportedDirPath === null );
 
   let exportedReflector;
-  let exp;
   let recursive = null;
 
-  exp = inModule.pathResolve
+  let exp = inModule.pathResolve
   ({
     selector : exported.exportPath,
     currentContext : step,

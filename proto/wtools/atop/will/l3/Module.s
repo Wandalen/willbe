@@ -3,6 +3,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWillModule provides full interface for work with module.
+ * @class wWillModule
+ * @module Tools/atop/willbe
+ */
+
 /*
 
                                                               download update agree verify
@@ -580,9 +586,9 @@ function outModuleOpen( o )
       catch( err2 )
       {
         debugger;
-        err2 = _.err( err2 );
-        logger.log( _.errOnce( err2 ) );
-        throw err2;
+        let error2 = _.err( err2 );
+        logger.log( _.errOnce( error2 ) );
+        throw error2;
       }
 
       _.assert( !module.isFinited() );
@@ -1166,6 +1172,12 @@ function predefinedForm()
   ({
     name : 'willbe.version.check',
     stepRoutine : Predefined.stepRoutineWillbeIsUpToDate,
+  })
+
+  step
+  ({
+    name : 'version.bump',
+    stepRoutine : Predefined.stepRoutineWillfileVersionBump,
   })
 
   /* */
@@ -3398,7 +3410,7 @@ function moduleFixateAct( o )
     catch( err )
     {
       debugger;
-      err = _.err( err, '\nFailed to fixated ' + _.color.strFormat( willfilePath, 'path' ) );
+      let error = _.err( err, '\nFailed to fixated ' + _.color.strFormat( willfilePath, 'path' ) );
       if( o.reportingNegative )
       {
         let r = o.report[ willfilePath ] = Object.create( null );
@@ -3407,13 +3419,13 @@ function moduleFixateAct( o )
         r.willfilePath = willfilePath;
         r.performed = 0;
         r.skipped = 0;
-        r.err = err;
+        r.err = error;
       }
       // if( !o.dry )
-      // throw err;
+      // throw error;
       if( will.verbosity >= 3 )
-      logger.log( _.errOnce( _.errBrief( err ) ) );
-      // _.errLogOnce( _.errBrief( err ) );
+      logger.log( _.errOnce( _.errBrief( error ) ) );
+      // _.errLogOnce( _.errBrief( error ) );
       // if( will.verbosity >= 2 )
       // o.log += '\n  in ' + _.color.strFormat( willfilePath, 'path' ) + ' was not found';
     }
@@ -7062,8 +7074,8 @@ function _npmGenerateFromWillfile( o )
     config.repository = pathSimplify( o.srcConfig.path.repository );
     if( o.srcConfig.path.bugtracker )
     config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
-    if( o.srcConfig.path.entry )
-    config.entry = o.srcConfig.path.entry;
+    if( o.srcConfig.path.entry && !config.main )
+    config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
 
     for( let n in o.srcConfig.path )
     {
@@ -7143,10 +7155,8 @@ function npmGenerateFromWillfile( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
   let opts = _.mapExtend( null, o );
   let verbosity = o.verbosity;
-  // let about = module.about.exportStructure();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -7160,8 +7170,6 @@ function npmGenerateFromWillfile( o )
     selectorIsPath : 1,
     currentContext,
   });
-  // opts.packagePath = path.join( module.inPath, opts.packagePath );
-
 
   if( opts.entryPath )
   opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
@@ -7170,7 +7178,7 @@ function npmGenerateFromWillfile( o )
 
   /* */
 
-  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
+  let o2 =
   {
     srcConfig :
     {
@@ -7179,89 +7187,8 @@ function npmGenerateFromWillfile( o )
       submodule : module.submoduleMap,
     },
     ... opts,
-  });
-
-  // let config = Object.create( null );
-  // config.name = about.name;
-  // config.version = about.version;
-  // config.enabled = about.enabled;
-  //
-  // if( about.description )
-  // config.description = about.description;
-  // if( about.keywords )
-  // config.keywords = about.keywords;
-  // if( about.license )
-  // config.license = about.license;
-  //
-  // if( about.interpreters )
-  // {
-  //   let interpreters = _.arrayAs( about.interpreters );
-  //   interpreters.forEach( ( interpreter ) =>
-  //   {
-  //     if( _.strHas( interpreter, 'njs' ) )
-  //     config.engine = _.strReplace( interpreter, 'njs', 'node' );
-  //   });
-  // }
-  //
-  // if( about.author )
-  // config.author = about.author;
-  // if( about.contributors )
-  // config.contributors = about.contributors;
-  //
-  // for( let n in about )
-  // {
-  //   if( !_.strBegins( n, 'npm.' ) )
-  //   continue;
-  //   config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
-  // }
-  //
-  // if( opts.entryPath && opts.entryPath.length )
-  // {
-  //   config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
-  // }
-  //
-  // if( opts.filesPath && opts.filesPath.length )
-  // {
-  //   config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
-  // }
-  //
-  // if( module.pathMap.repository )
-  // config.repository = pathSimplify( module.pathMap.repository );
-  // if( module.pathMap.bugtracker )
-  // config.bugs = pathSimplify( module.pathMap.bugtracker );
-  // if( module.pathMap.entry )
-  // config.entry = module.pathMap.entry;
-  //
-  // for( let n in module.pathMap )
-  // {
-  //   if( !_.strBegins( n, 'npm.' ) )
-  //   continue;
-  //   config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
-  // }
-  //
-  // for( let s in module.submoduleMap )
-  // {
-  //   let submodule = module.submoduleMap[ s ];
-  //   let p = submodule.path;
-  //   p = path.parseFull( p );
-  //
-  //   _.assert
-  //   (
-  //     p.protocol === 'npm' || p.protocol === 'hd',
-  //     () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
-  //   );
-  //
-  //   if( p.protocol === 'npm' )
-  //   {
-  //     depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
-  //   }
-  //   else if( p.protocol === 'hd' )
-  //   {
-  //     depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
-  //   }
-  //   else _.assert( 0 );
-  //
-  // }
+  };
+  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o2 );
 
   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
@@ -7274,42 +7201,12 @@ function npmGenerateFromWillfile( o )
   });
 
   return null;
-
-  /* */
-
-  // function pathSimplify( src )
-  // {
-  //   let r = src;
-  //   if( !_.strIs( r ) )
-  //   return r;
-  //
-  //   r = r.replace( '///', '//' );
-  //   r = r.replace( 'npm://', '' );
-  //
-  //   return r;
-  // }
-  //
-  // function depAdd( submodule, name, hash )
-  // {
-  //   if( submodule.criterion.optional )
-  //   _depAdd( 'optionalDependencies', name, hash );
-  //   else if( submodule.criterion.development )
-  //   _depAdd( 'devDependencies', name, hash );
-  //   else
-  //   _depAdd( 'dependencies', name, hash );
-  // }
-  //
-  // function _depAdd( section, name, hash )
-  // {
-  //   config[ section ] = config[ section ] || Object.create( null );
-  //   config[ section ][ name ] = hash ? hash : '';
-  // }
 }
 
 npmGenerateFromWillfile.defaults =
 {
-  packagePath : 'package.json',
-  entryPath : 'Index.js',
+  packagePath : null,
+  entryPath : null,
   filesPath : null,
   verbosity : null,
 }
@@ -7335,21 +7232,21 @@ function _willfileGenerateFromNpm( o )
 
   let propertiesMap =
   {
-    name :          { propertyAdd : aboutPropertyAdd, name : 'name' },
-    version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
-    enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
-    description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
-    keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
-    license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
-    author :        { propertyAdd : aboutPropertyAdd, name : 'author' },
-    contributors :  { propertyAdd : aboutPropertyAdd, name : 'contributors' },
-    scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
-    interpreters :  { propertyAdd : interpretersAdd, name : 'interpreters' },
-    engine :        { propertyAdd : interpretersAdd, name : 'interpreters' },
-    repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
-    bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
-    main :          { propertyAdd : pathPropertyAdd, name : 'main' },
-    files :         { propertyAdd : pathPropertyAdd, name : 'files' },
+    name :          { propertyAdd : aboutPropertyAdd,          name : 'name' },
+    version :       { propertyAdd : aboutPropertyAdd,          name : 'version' },
+    enabled :       { propertyAdd : aboutPropertyAdd,          name : 'enabled' },
+    description :   { propertyAdd : aboutPropertyAdd,          name : 'description' },
+    keywords :      { propertyAdd : aboutPropertyAdd,          name : 'keywords' },
+    license :       { propertyAdd : aboutPropertyAdd,          name : 'license' },
+    author :        { propertyAdd : aboutFormattedPropertyAdd, name : 'author' },
+    contributors :  { propertyAdd : aboutFormattedPropertyAdd, name : 'contributors' },
+    scripts :       { propertyAdd : aboutPropertyAdd,          name : 'npm.scripts' },
+    interpreters :  { propertyAdd : interpretersAdd,           name : 'interpreters' },
+    engine :        { propertyAdd : interpretersAdd,           name : 'interpreters' },
+    repository :    { propertyAdd : pathPropertyAdd,           name : 'repository' },
+    bugs :          { propertyAdd : pathPropertyAdd,           name : 'bugs' },
+    main :          { propertyAdd : pathPropertyAdd,           name : 'main' },
+    files :         { propertyAdd : pathPropertyAdd,           name : 'files' },
     dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
     devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
     optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
@@ -7359,10 +7256,15 @@ function _willfileGenerateFromNpm( o )
   if( property in config )
   propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
 
+  for( let property in config )
+  if( !( property in propertiesMap ) )
+  willfile.about[ `npm.${ property }` ] = config[ property ];
+
   if( willfile.about.name )
   {
+    if( !willfile.about[ 'npm.name' ] )
     willfile.about[ 'npm.name' ] = willfile.about.name;
-    willfile.path.origins.push( `npm:///${ willfile.about.name }` );
+    willfile.path.origins.push( `npm:///${ willfile.about[ 'npm.name' ] }` );
   }
   if( willfile.path.origins.length === 0 )
   {
@@ -7379,26 +7281,25 @@ function _willfileGenerateFromNpm( o )
 
   /* */
 
-  // _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
-  // _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
-
-  return willfile;
-
-  // fileProvider.fileWrite
-  // ({
-  //   filePath : willfilePath,
-  //   data : willfile,
-  //   encoding : 'yaml',
-  //   verbosity : verbosity ? 5 : 0,
-  // });
-  //
-  // return null;
-
-  /* */
-
   function aboutPropertyAdd( property, name )
   {
     willfile.about[ name ] = config[ property ];
+  }
+
+  /* */
+
+  function aboutFormattedPropertyAdd( property, name )
+  {
+    if( _.strIs( config[ property ] ) || ( _.arrayIs( config[ property ] ) && _.strIs( config[ property ][ 0 ] ) ) )
+    {
+      willfile.about[ name ] = config[ property ];
+    }
+    else if( _.mapIs( config[ property ][ 0 ] ) )
+    {
+      willfile.about[ name ] = [];
+      for( let i = 0; i < config[ property ].length; i++ )
+      willfile.about[ name ][ i ] = `${ config[ property ][ i ].name } <${ config[ property ][ i ].email }>`;
+    }
   }
 
   /* */
@@ -7426,13 +7327,17 @@ function _willfileGenerateFromNpm( o )
     }
     if( property === 'main' )
     {
-      willfile.path.entryPath = config.main;
+      willfile.path.entry = config.main;
     }
     if( property === 'files' )
     {
-      willfile.path.export = path.common( config.files );
+      willfile.path[ 'npm.files' ] = config.files;
     }
   }
+
+  /* return config */
+
+  return willfile;
 
   /* */
 
@@ -7452,8 +7357,10 @@ function _willfileGenerateFromNpm( o )
       return str;
     }
 
-    let result = src.type;
-    result += '+' + src.url.replace( '//', '///' );
+    let result = '';
+    if( src.type )
+    result = src.type + '+';
+    result += src.url.replace( '//', '///' );
     return result;
   }
 
@@ -7526,7 +7433,7 @@ function willfileGenerateFromNpm( o )
   _.assert( _.objectIs( opts ) );
 
   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
   if( opts.currentContext )
   {
     packagePath = module.pathResolve
@@ -7539,7 +7446,7 @@ function willfileGenerateFromNpm( o )
     });
     willfilePath = module.pathResolve
     ({
-      selector : opts.willfilePath || '{path::out}/.will.yml',
+      selector : opts.willfilePath || '{path::out}/will.yml',
       prefixlessAction : 'resolved',
       pathNativizing : 0,
       selectorIsPath : 1,
@@ -7550,6 +7457,15 @@ function willfileGenerateFromNpm( o )
   {
     packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
     willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  }
+
+  if( !fileProvider.isTerminal( willfilePath ) || fileProvider.isDir( willfilePath ) )
+  {
+    let ext = path.ext( willfilePath );
+    if( ext === '' || ( ext !== 'will' && !_.longHasAny( [ 'yml', 'yaml' ], ext ) ) )
+    willfilePath += '.will.yml';
+    else if( ext === 'will' )
+    willfilePath += '.yml';
   }
 
   /* */
@@ -7587,7 +7503,8 @@ function willfileExtendWillfile( o )
   _.assert( _.objectIs( opts ) );
 
   let dstWillfiles = dstFilesFind( request[ 0 ] );
-  _.assert( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles' );
+  if( dstWillfiles.length > 2 )
+  throw _.errBrief( 'Please, improve selector, cannot choose willfiles.' );
 
   let ext;
   if( dstWillfiles.length )
@@ -7621,10 +7538,13 @@ function willfileExtendWillfile( o )
   {
     let files = configFilesFind( request[ i ] );
 
+    if( files.length === 0 )
+    throw _.errBrief( 'Source configuration files does not exist.' )
+
     for( let j = 0 ; j < files.length ; j++ )
     {
       if( _.longHasNone( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ) )
-      continue;
+      throw _.errBrief( 'Unexpected configuration files. Please, improve selector.' );
 
       let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
       let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding });
@@ -7637,12 +7557,16 @@ function willfileExtendWillfile( o )
   }
 
   if( opts.submodulesDisabling )
-  for( let dependency in willfile.submodule )
-  willfile.submodule[ dependency ].enabled = 0;
+  {
+    for( let dependency in willfile.submodule )
+    willfile.submodule[ dependency ].enabled = 0;
+  }
 
   for( let sectionName in sectionMap )
-  if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
-  delete willfile[ sectionName ];
+  {
+    if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+    delete willfile[ sectionName ];
+  }
 
   /* write destination willfile */
 
@@ -7655,7 +7579,7 @@ function willfileExtendWillfile( o )
   function dstFilesFind( dstPath )
   {
     if( path.isGlob( dstPath ) )
-    throw _.err( 'Path to destination file should has not globs.' );
+    throw _.err( 'Path to destination file should have not globs.' );
 
     dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
 
@@ -7729,7 +7653,7 @@ function willfileExtendWillfile( o )
 
     return fileProvider.filesFind
     ({
-      filePath : filePath,
+      filePath,
       withStem : 0,
       withDirs : 0,
       mode : 'distinct',
@@ -7745,20 +7669,26 @@ function willfileExtendWillfile( o )
     if( !opts.about )
     return;
 
-    let keys =
-    [
-      'name',
-      'version',
-      'enabled',
-      'description',
-      'license',
-      'npm.name',
-    ];
-    let extendingMap = Object.create( null );
-    for( let i = 0 ; i < keys.length ; i++ )
-    if( opts[ keys[ i ] ] && ( src.about[ keys[ i ] ] !== undefined ) )
-    extendingMap[ keys[ i ] ] = src.about[ keys[ i ] ];
+    let exclusionMap =
+    {
+      'author' : 1,
+      'keywords' : 1,
+      'contributors' : 1,
+      'interpreters' : 1,
+      'npm.scripts' : 1,
+    };
 
+    let extendingMap = Object.create( null );
+    for( let property in src.about )
+    {
+      if( !( property in exclusionMap ) )
+      {
+        if( ( property in willfileExtendWillfile.defaults ) && opts[ property ] )
+        extendingMap[ property ] = src.about[ property ];
+        else if( !( property in willfileExtendWillfile.defaults ) )
+        extendingMap[ property ] = src.about[ property ];
+      }
+    }
     opts.onSection( dst.about, extendingMap );
 
     /* */
@@ -7906,11 +7836,14 @@ function willfileExtendWillfile( o )
 
 
     if( opts.format === 'json' )
-    data = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
     {
-      srcConfig : data,
-      packagePath : path,
-    });
+      let o =
+      {
+        srcConfig : data,
+        packagePath : path,
+      };
+      data = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o );
+    }
 
     fileProvider.fileWrite
     ({
@@ -8028,27 +7961,19 @@ function _willfileOnPropertyAct( o )
 
   /* */
 
-  function dstRecordsFind( selector )
+  function dstRecordsFind( dstPath )
   {
-    let filePath = selector;
-    if( !path.isAbsolute( filePath ) )
-    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+    if( !path.isAbsolute( dstPath ) )
+    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
 
-    if( fileProvider.isTerminal( filePath ) )
-    return [ fileProvider.record( filePath ) ];
+    if( fileProvider.isDir( dstPath ) )
+    dstPath = path.join( dstPath, './' );
 
-    _.sure( !fileProvider.isDir( filePath ), () => `${ filePath } is dir, not safe to delete` );
-
-    if( !path.isGlob( filePath ) )
-    filePath = filePath + '*.(yml|yaml|json)';
-
-    return fileProvider.filesFind
+    return will.willfilesFind
     ({
-      filePath,
-      withStem : 0,
-      withDirs : 0,
-      mode : 'distinct',
-      mandatory : 0,
+      commonPath : dstPath,
+      withIn : 1,
+      withOut : 0,
     });
   }
 
@@ -8172,7 +8097,7 @@ function willfileSetProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
-        if( i === splits.length -1 )
+        if( i === splits.length - 1 )
         {
           let value = o.willfilePropertiesMap[ option ];
           if( o.structureParse )
@@ -8188,9 +8113,15 @@ function willfileSetProperty( o )
       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
       {
         if( _.mapIs( dstConfig[ key ] ) )
-        dstConfig = dstConfig[ key ];
+        {
+          dstConfig = dstConfig[ key ];
+        }
         else
-        dstConfig = Object.create( null );
+        {
+          if( o.verbosity > 3 )
+          logger.log( `${ dstConfig[ key ] } is removed` );
+          dstConfig = Object.create( null );
+        }
       }
       else
       {
@@ -8332,7 +8263,7 @@ function willfileExtendProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
-        if( i === splits.length -1 )
+        if( i === splits.length - 1 )
         {
           let value = o.willfilePropertiesMap[ option ];
           if( o.structureParse )
@@ -8384,6 +8315,65 @@ willfileExtendProperty.defaults =
   writing : 1,
   verbosity : 3,
   v : 3,
+}
+
+//
+
+function willfileVersionBump( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routineOptions( willfileVersionBump, o );
+
+  let version = module.willfilesArray[ 0 ].structure.about.version;
+  _.assert( _.strIs( version ), 'Expexts version in format "x.x.x".' );
+
+  let versionArray = version.split( '.' );
+
+  let deltaArray;
+  if( _.strIs( o.versionDelta ) )
+  deltaArray = o.versionDelta.split( '.' );
+  else if( _.numberIs( o.versionDelta ) )
+  deltaArray = _.arrayAs( o.versionDelta );
+  else
+  _.assert( 0, 'Not known how to handle delta.' );
+
+  _.assert( versionArray.length >= deltaArray.length, 'Not known how to change version.' );
+
+  for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+  {
+    let delta = Number( deltaArray[ i ] );
+    let versionArrayOffset = versionArray.length - 1 - offset;
+    _.assert( _.intIs( delta ), 'Expects integer as delta.' );
+    _.assert( delta >= 0, 'Expects positive delta.' );
+    versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+  }
+
+  let extensionMap = Object.create( null );
+  extensionMap[ 'about/version' ] = versionArray.join( '.' );
+
+  let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
+
+  module.willfileSetProperty
+  ({
+    request : willfilePath,
+    willfilePropertiesMap : extensionMap,
+    structureParse : 0,
+    verbosity : o.verbosity,
+  });
+
+  /* */
+
+  return version;
+}
+
+willfileVersionBump.defaults =
+{
+  verbosity : 3,
+  versionDelta : 1,
 }
 
 //
@@ -8618,13 +8608,18 @@ function gitPrOpen( o )
 
   _.routineOptions( gitPrOpen, o );
 
-  if( !_.git.isRepository )
+  if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
 
-  let token = o.token ? o.token : null;
-  let config = fileProvider.configUserRead();
-  if( config !== null && config.about && config.about[ 'github.token' ] )
-  token = config.about[ 'github.token' ];
+  if( !o.token )
+  {
+    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    if( !config )
+    config = fileProvider.configUserRead();
+
+    if( config !== null && config.about && config.about[ 'github.token' ] )
+    o.token = config.about[ 'github.token' ];
+  }
 
   if( !o.remotePath )
   {
@@ -8635,8 +8630,7 @@ function gitPrOpen( o )
   }
   o.remotePath = _.git.remotePathNativize( o.remotePath );
 
-  let title = o.title ? o.title : o.subject;
-  title = _.strUnquote( title );
+  o.title = _.strUnquote( o.title );
 
   /* */
 
@@ -8645,9 +8639,9 @@ function gitPrOpen( o )
   {
     return _.git.prOpen
     ({
-      token,
+      token : o.token,
       remotePath : o.remotePath,
-      title,
+      title : o.title,
       body : o.body,
       srcBranch : o.srcBranch,
       dstBranch : o.dstBranch,
@@ -8710,15 +8704,18 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${module.nameWithLocationGet()}` );
+  logger.log( `Pulling ${ module.nameWithLocationGet() }` );
 
   if( status.uncommitted )
   {
-    throw _.errBrief( `${module.nameWithLocationGet()} has local changes!` );
+    throw _.errBrief( `${ module.nameWithLocationGet() } has local changes!` );
     return null;
   }
 
-  let config = fileProvider.configUserRead();
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  config = fileProvider.configUserRead();
+
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = will.currentOpener.dirPath;
   if( config && config.path && config.path.link )
@@ -9744,13 +9741,15 @@ let Extension =
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
 
+  willfileExtendWillfile,
+
   _willfileOnPropertyAct,
   willfileGetProperty,
   willfileSetProperty,
   willfileDeleteProperty,
   willfileExtendProperty,
 
-  willfileExtendWillfile,
+  willfileVersionBump,
 
   // remote
 

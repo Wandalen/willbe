@@ -1,6 +1,13 @@
-( function _AbstractModule_s_( ) {
+( function _AbstractModule_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillAbstractModule provides common interface modules.
+ * @class wWillAbstractModule
+ * @module Tools/atop/willbe
+ */
 
 // if( typeof module !== 'undefined' )
 // {
@@ -240,7 +247,11 @@ function _filePathChanged2( o )
   o.dirPath = path.canonize( o.dirPath );
 
   if( o.isIdentical === undefined || o.isIdentical === null )
-  o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) );
+  o.isIdentical =
+  (
+    o.willfilesPath === this.willfilesPath
+    || _.entityIdentical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) )
+  );
 
   if( o.willfilesPath && o.willfilesPath.length )
   o.commonPath = _.Will.CommonPathFor( o.willfilesPath );

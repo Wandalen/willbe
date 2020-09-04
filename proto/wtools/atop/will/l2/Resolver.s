@@ -1,4 +1,5 @@
-( function _Resolver_s_( ) {
+( function _Resolver_s_()
+{
 
 'use strict';
 
@@ -185,7 +186,7 @@ function _onQuantitativeFail( err )
     });
 
     if( rop.criterion )
-    err = _.err( err, '\nCriterions :\n', _.toStr( rop.criterion, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } ) );
+    err = _.err( err, '\nCriterions :\n', _.toStr( rop.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
 
     /* found */
 
@@ -210,16 +211,17 @@ function _onQuantitativeFail( err )
       if( willfile )
       err = _.err
       (
-          err
-        , `\n${ it.currentModule.decoratedAbsoluteName } loaded from ${ willfile.storageWillfile.openedModule.decoratedAbsoluteName } is outdated!`
-        , `\nPlease re-export ${ _.ct.format( storagePath, 'path' ) } first.`
+        err,
+        `\n${ it.currentModule.decoratedAbsoluteName } loaded from `
+        + `${ willfile.storageWillfile.openedModule.decoratedAbsoluteName } is outdated!`,
+        `\nPlease re-export ${ _.ct.format( storagePath, 'path' ) } first.`
       );
       else
       err = _.err
       (
-          err
-        , `\n${ it.currentModule.decoratedAbsoluteName } is outdated!`
-        , `\nPlease re-export it first.`
+        err,
+        `\n${ it.currentModule.decoratedAbsoluteName } is outdated!`,
+        `\nPlease re-export it first.`
       );
     }
 
@@ -253,8 +255,8 @@ function _statusPreUpdate()
     if( !valid )
     throw _.errBrief
     (
-        `Cant select in non-valid submodules.`
-      , `\n ${it.src.absoluteName} is not opened or invalid`
+      `Cant select in non-valid submodules.`,
+      `\n ${it.src.absoluteName} is not opened or invalid`
     );
   }
 
@@ -887,7 +889,7 @@ function _functionThisUp()
   currentThis = resolver.resolveContextPrepare
   ({
     baseModule : rop.baseModule,
-    currentThis : currentThis,
+    currentThis,
     currentContext : rop.currentContext,
     force : 1,
   });

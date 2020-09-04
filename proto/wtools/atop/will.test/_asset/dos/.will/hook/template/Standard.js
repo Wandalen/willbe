@@ -1,42 +1,42 @@
 let Self =
 {
 
-// 'builder' : [{ softLink : '../../../app/builder', absolute : 0 }],
-// 'builder' : [{ softLink : '/c/pro/web/Port/app/builder', absolute : 1 }],
+  // 'builder' : [{ softLink : '../../../app/builder', absolute : 0 }],
+  // 'builder' : [{ softLink : '/c/pro/web/Port/app/builder', absolute : 1 }],
 
-'proto' :
+  'proto' :
 {
 
-  wtools :
+  'wtools' :
   {
 
-    abase : {},
-    amid : {},
-    atop : {},
+    'abase' : {},
+    'amid' : {},
+    'atop' : {},
 
     'Tools.s' : //
 `
 if( typeof module !== 'undefined' )
 {
 
-  if( typeof _global_ === 'undefined' || !Object.hasOwnProperty.call( _global_, 'wBase' ) )
+if( typeof _global_ === 'undefined' || !Object.hasOwnProperty.call( _global_, 'wBase' ) )
+{
+  let toolsPath = './abase/Layer1.s';
+  let toolsExternal = 0;
+  try
   {
-    let toolsPath = './abase/Layer1.s';
-    let toolsExternal = 0;
-    try
-    {
-      toolsPath = require.resolve( toolsPath );
-    }
-    catch( err )
-    {
-      toolsExternal = 1;
-      require( 'wTools' );
-    }
-    if( !toolsExternal )
-    require( toolsPath );
+    toolsPath = require.resolve( toolsPath );
   }
+  catch( err )
+  {
+    toolsExternal = 1;
+    require( 'wTools' );
+  }
+  if( !toolsExternal )
+  require( toolsPath );
+}
 
-  module[ 'exports' ] = _global_.wTools;
+module[ 'exports' ] = _global_.wTools;
 
 }
 `
@@ -239,7 +239,7 @@ _global_.wTester.test( Self.name );
 
 },
 
-'.im.will.yml' : //
+  '.im.will.yml' : //
 `
 
 submodule :
@@ -469,7 +469,7 @@ build :
 
 `,
 
-'.ex.will.yml' : //
+  '.ex.will.yml' : //
 `
 
 about :
@@ -567,7 +567,7 @@ build :
 
 `,
 
-'was.package.json' : //
+  'was.package.json' : //
 `
 {
   "name" : "{:package/lowName:}",
@@ -612,10 +612,10 @@ build :
 }
 `,
 
-'sample' : //
+  'sample' : //
 {
 
-'Sample.s' : //
+  'Sample.s' : //
 `
 let _ = require( '{:package/lowName:}' );
 
@@ -625,7 +625,7 @@ console.log( '___ not implemented ___' );
 
 `,
 
-'Sample.html' : //
+  'Sample.html' : //
 `
 <!DOCTYPE html>
 <html>
@@ -643,13 +643,13 @@ console.log( '___ not implemented ___' );
 
 },
 
-'.github' : //
+  '.github' : //
 {
 
-'workflows' : //
+  'workflows' : //
 {
 
-'Test.yml' : //
+  'Test.yml' : //
 `
 name : Test
 
@@ -715,10 +715,10 @@ jobs :
 },
 },
 
-'.circleci' : //
+  '.circleci' : //
 {
 
-'config.yml' : //
+  'config.yml' : //
 `
 version: 2.1
 orbs :
@@ -744,67 +744,67 @@ workflows :
 
 },
 
-// '.travis.yml' : //
-// `
-// sudo: false
-// language: node_js
-// os:
-//   - linux
-//   - osx
-//   - windows
-// node_js:
-//   - '10'
-//   - '12'
-//   - 'node'
-// script:
-//   - npm test
-// cache:
-//   npm: false
-//
-// `,
-//
-// 'appveyor.yml' : //
-// `
-//
-//
-// # image:
-// #   - Visual Studio 2017
-// #   - Ubuntu1804
-//
-// platform: x64
-//
-// environment:
-//   matrix:
-//     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
-//       nodejs_version: 8
-//     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
-//       nodejs_version: 9
-//     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
-//       nodejs_version: lts/*
-//
-//     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-//       nodejs_version: 8
-//     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-//       nodejs_version: 9
-//     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-//       nodejs_version: LTS
-//
-// build: off
-//
-// install:
-//  - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version
-//  - ps: Update-AppveyorBuild -Version "$env:package_version.$env:APPVEYOR_BUILD_NUMBER"
-//  - cmd: powershell -command "Install-Product node $env:nodejs_version"
-//  - sh: nvm install $nodejs_version
-//  - npm install
-//
-// test_script:
-//   - node --version
-//   - npm test
-//
-// `,
+  // '.travis.yml' : //
+  // `
+  // sudo: false
+  // language: node_js
+  // os:
+  //   - linux
+  //   - osx
+  //   - windows
+  // node_js:
+  //   - '10'
+  //   - '12'
+  //   - 'node'
+  // script:
+  //   - npm test
+  // cache:
+  //   npm: false
+  //
+  // `,
+  //
+  // 'appveyor.yml' : //
+  // `
+  //
+  //
+  // # image:
+  // #   - Visual Studio 2017
+  // #   - Ubuntu1804
+  //
+  // platform: x64
+  //
+  // environment:
+  //   matrix:
+  //     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+  //       nodejs_version: 8
+  //     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+  //       nodejs_version: 9
+  //     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+  //       nodejs_version: lts/*
+  //
+  //     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  //       nodejs_version: 8
+  //     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  //       nodejs_version: 9
+  //     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  //       nodejs_version: LTS
+  //
+  // build: off
+  //
+  // install:
+  //  - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version
+  //  - ps: Update-AppveyorBuild -Version "$env:package_version.$env:APPVEYOR_BUILD_NUMBER"
+  //  - cmd: powershell -command "Install-Product node $env:nodejs_version"
+  //  - sh: nvm install $nodejs_version
+  //  - npm install
+  //
+  // test_script:
+  //   - node --version
+  //   - npm test
+  //
+  // `,
 
-'.eslintrc.yml' : //
+  '.eslintrc.yml' : //
 `
 env :
   browser : true
@@ -1219,7 +1219,7 @@ rules :
     - max : 5
 `,
 
-'.gitattributes' : //
+  '.gitattributes' : //
 `
 *.s linguist-language=JavaScript
 *.ss linguist-language=JavaScript
@@ -1227,7 +1227,7 @@ rules :
 * -text
 `,
 
-'.gitignore' : //
+  '.gitignore' : //
 `
 /tmp
 /_
@@ -1241,7 +1241,7 @@ node_modules
 package-lock.json
 `,
 
-'LICENSE' : //
+  'LICENSE' : //
 `Copyright (c) 2013-2020 {:about/full.name:}({:about/org:})
 
 Permission is hereby granted, free of charge, to any person
@@ -1266,7 +1266,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 `,
 
-'README.md' : //
+  'README.md' : //
 `# module::{:package/shortName:} [![status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 ___

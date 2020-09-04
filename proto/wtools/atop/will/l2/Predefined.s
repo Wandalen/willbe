@@ -1,4 +1,5 @@
-( function _Predefined_s_( ) {
+( function _Predefined_s_()
+{
 
 'use strict';
 
@@ -41,7 +42,7 @@ function stepRoutineDelete( frame )
 
   let o2 =
   {
-    filePath : filePath,
+    filePath,
     verbosity : 0,
   }
 
@@ -83,9 +84,9 @@ function stepRoutineDelete( frame )
     let textualReport = path.groupTextualReport
     ({
       explanation : ' - ' + step.decoratedQualifiedName + ' deleted ',
-      groupsMap : groupsMap,
-      verbosity : verbosity,
-      spentTime : spentTime,
+      groupsMap,
+      verbosity,
+      spentTime,
     });
 
     if( textualReport )
@@ -383,7 +384,7 @@ function stepRoutineShell( frame )
     for( let dst in forEachDst.filesGrouped )
     {
       let src = forEachDst.filesGrouped[ dst ];
-      let upToDate = fileProvider.filesAreUpToDate2({ dst : dst, src : src });
+      let upToDate = fileProvider.filesAreUpToDate2({ dst, src });
       if( upToDate )
       delete forEachDst.filesGrouped[ dst ];
     }
@@ -405,7 +406,7 @@ function stepRoutineShell( frame )
     currentPath : opts.currentPath,
     currentThis : forEachDst,
     currentContext : step,
-    verbosity : verbosity,
+    verbosity,
   })
   .finally( ( err, arg ) =>
   {
@@ -450,7 +451,11 @@ function stepRoutineTranspile( frame )
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.sure( _.longHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
-  _.sure( opts.transpilingStrategy === null || _.arrayIs( opts.transpilingStrategy ),() => 'Unknown value of transpilingStrategy ' + _.strQuote( opts.transpilingStrategy ) )
+  _.sure
+  (
+    opts.transpilingStrategy === null || _.arrayIs( opts.transpilingStrategy ),
+    () => 'Unknown value of transpilingStrategy ' + _.strQuote( opts.transpilingStrategy )
+  );
   _.assert( arguments.length === 1 );
 
   if( opts.entry )
@@ -484,7 +489,7 @@ function stepRoutineTranspile( frame )
     opts.transpilingStrategy = [ 'Nop' ];
   }
 
-  let ts = new _.trs.System({ logger : logger }).form();
+  let ts = new _.trs.System({ logger }).form();
   let multiple = ts.multiple
   ({
 
@@ -499,7 +504,7 @@ function stepRoutineTranspile( frame )
     writingTerminalUnderDirectory : 1,
     simpleConcatenator : 0,
     upToDate : opts.upToDate,
-    verbosity : verbosity,
+    verbosity,
     // verbosity : 1,
 
     optimization : opts.optimization,
@@ -523,17 +528,17 @@ function stepRoutineTranspile( frame )
 
 stepRoutineTranspile.stepOptions =
 {
-  filePath : null,
-  upToDate : 'preserve',
-  entry : null,
+  'filePath' : null,
+  'upToDate' : 'preserve',
+  'entry' : null,
   'external.before' : null,
   'external.after' : null,
 
-  transpilingStrategy : null,
-  optimization : 9,
-  minification : 8,
-  diagnosing : 1,
-  beautifing : 0
+  'transpilingStrategy' : null,
+  'optimization' : 9,
+  'minification' : 8,
+  'diagnosing' : 1,
+  'beautifing' : 0
 }
 
 stepRoutineTranspile.uniqueOptions =
@@ -1012,8 +1017,8 @@ stepRoutineGitTag.stepOptions =
 {
   'tag.name' : '.',
   'tag.description' : '',
-  dry : 0,
-  light : 0,
+  'dry' : 0,
+  'light' : 0,
 }
 
 stepRoutineGitTag.uniqueOptions =
@@ -1250,6 +1255,31 @@ stepRoutineWillbeIsUpToDate.uniqueOptions =
 {
 }
 
+//
+
+function stepRoutineWillfileVersionBump( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+
+  return module.willfileVersionBump( opts );
+}
+
+stepRoutineWillfileVersionBump.stepOptions =
+{
+  versionDelta : 1,
+}
+
+stepRoutineWillfileVersionBump.uniqueOptions =
+{
+  versionDelta : 1,
+}
+
 // --
 // declare
 // --
@@ -1269,6 +1299,7 @@ let Extension =
   stepRoutineShell,
   stepRoutineTranspile,
   stepRoutineView,
+
   stepRoutineNpmGenerate,
   stepRoutineWillfileFromNpm,
 
@@ -1290,8 +1321,9 @@ let Extension =
   stepRoutineClean,
   stepRoutineExport,
 
-  stepRoutineWillbeIsUpToDate
+  stepRoutineWillbeIsUpToDate,
 
+  stepRoutineWillfileVersionBump,
 }
 
 //
@@ -1310,4 +1342,4 @@ _.will[ 'Predefined' ] = Self;
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-})();
+})()

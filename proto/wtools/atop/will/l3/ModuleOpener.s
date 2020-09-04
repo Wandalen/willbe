@@ -1,6 +1,13 @@
-( function _ModuleOpener_s_( ) {
+( function _ModuleOpener_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillModuleOpener allows to keep all parts of module as single instance. Interface keeps data with module paths, willfiles, cli and other.
+ * @class wWillModuleOpener
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.will.AbstractModule;
@@ -386,7 +393,6 @@ function _willfilesFindAct( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let filePaths;
   let records;
 
   o = _.routineOptions( _willfilesFindAct, arguments );
@@ -463,8 +469,8 @@ function _willfilesFind()
   }
   catch( err )
   {
-    err = _.err( err, '\nError looking for will files for', opener.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
-    opener.error = opener.error || err;
+    let error = _.err( err, '\nError looking for will files for', opener.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
+    opener.error = opener.error || error;
   }
 
   if( !opener.error )
@@ -595,7 +601,12 @@ function find( o )
         openedModule.rootModule = opener.rootModule;
       }
 
-      _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.longIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
+      _.assert
+      (
+        !opener.willfilesArray.length
+        || !openedModule.willfilesArray.length
+        || _.longIdentical( opener.willfilesArray, openedModule.willfilesArray )
+      );
       if( opener.willfilesArray.length )
       openedModule.willfilesArray = _.entityMake( opener.willfilesArray );
       else
@@ -638,10 +649,10 @@ function find( o )
   }
   catch( err )
   {
-    err = _.err( err, `\nError looking for willfiles for module at ${opener.commonPath}` );
-    opener.error = opener.error || err;
+    let error = _.err( err, `\nError looking for willfiles for module at ${opener.commonPath}` );
+    opener.error = opener.error || error;
     if( o.throwing )
-    throw err;
+    throw error;
     return null;
   }
 
@@ -1098,7 +1109,12 @@ function rootModuleSet( src )
 function superRelationGet()
 {
   let opener = this;
-  _.assert( opener[ superRelationSymbol ] === undefined || opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.will.ModulesRelation );
+  _.assert
+  (
+    opener[ superRelationSymbol ] === undefined
+    || opener[ superRelationSymbol ] === null
+    || opener[ superRelationSymbol ] instanceof _.will.ModulesRelation
+  );
   return opener[ superRelationSymbol ];
 }
 
@@ -1172,7 +1188,7 @@ function _repoForm()
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
     opener.repo = will.repoFrom
     ({
-      isRemote : isRemote,
+      isRemote,
       downloadPath : opener.downloadPath,
       remotePath : opener.remotePath,
     });
@@ -1235,7 +1251,8 @@ function _repoFormFormal()
     _.assert( !!opener.peerModule.localPath );
     _.assert( !!opener.peerModule.opener );
     opener.peerModule.opener._.downloadPath = opener.downloadPath;
-    opener.peerModule.opener._.remotePath = _.Will.RemotePathAdjust( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
+    opener.peerModule.opener._.remotePath =
+    _.Will.RemotePathAdjust( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
   }
 
   if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
@@ -1424,16 +1441,16 @@ function _repoDownload( o )
 
   /* */
 
-   function repositoryCheck()
-   {
-     _.assert( opener.repo.hasFiles === true );
-     if( !opener.repo.isRepository )
-     throw _.err
-     (
-       `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository or npm module.\n`,
-       'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
-     );
-   }
+  function repositoryCheck()
+  {
+    _.assert( opener.repo.hasFiles === true );
+    if( !opener.repo.isRepository )
+    throw _.err
+    (
+      `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository or npm module.\n`,
+      'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
+    );
+  }
 
   /* */
 
@@ -1593,12 +1610,12 @@ function _repoDownload( o )
       if( opener.repo.isRepository )
       if( !opener.repo.safeToDelete )
       {
-       _.assert( opener.repo.hasLocalChanges === true );
-       throw _.errBrief
-       (
-         'Module at', opener.decoratedAbsoluteName, `needs to be deleted, but has local changes.`,
-         '\nPlease commit and push your local changes and try again.'
-       );
+        _.assert( opener.repo.hasLocalChanges === true );
+        throw _.errBrief
+        (
+          'Module at', opener.decoratedAbsoluteName, `needs to be deleted, but has local changes.`,
+          '\nPlease commit and push your local changes and try again.'
+        );
       }
 
       _.assert( opener.repo.hasLocalChanges === false );
@@ -1695,8 +1712,8 @@ function _repoDownload( o )
       if( !status.safeToDelete )
       throw _.err
       (
-          `Cant ${o.mode} ${module.qualifiedName} at ${module.localPath}, because it has local changes.`
-        , ` Please commit changes or delete it manually.`
+        `Can't ${o.mode} ${module.qualifiedName} at ${module.localPath}, because it has local changes.`,
+        ` Please commit changes or delete it manually.`
       );
       reflected[ opener2.downloadPath ] = true;
       if( will.verbosity >= 3 )
@@ -2166,7 +2183,7 @@ function sharedFieldPut_functor( fieldName )
     will._pathChanged
     ({
       object : opener,
-      fieldName : fieldName,
+      fieldName,
       val,
       ex,
       kind : 'put',
@@ -2536,7 +2553,6 @@ let Forbids =
   moduleWithCommonPathMap : 'moduleWithCommonPathMap',
   allSubmodulesMap : 'allSubmodulesMap',
   moduleWithNameMap : 'moduleWithNameMap',
-  willfilesReadTimeReported : 'willfilesReadTimeReported',
   submoduleAssociation : 'submoduleAssociation',
   currentRemotePath : 'currentRemotePath',
   opened : 'opened',
@@ -2564,7 +2580,7 @@ let Accessors =
   willfilesPath : { get : willfilesPathGet, set : willfilesPathSet },
   dirPath : { get : dirPathGet, readOnly : 1 },
   commonPath : { get : commonPathGet, readOnly : 1 },
-  localPath : { get : localPathGet, readOnly : 1, },
+  localPath : { get : localPathGet, readOnly : 1 },
   downloadPath : { get : downloadPathGet, readOnly : 1 },
   remotePath : { get : remotePathGet, set : remotePathSet },
 

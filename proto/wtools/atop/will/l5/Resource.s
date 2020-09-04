@@ -1,6 +1,13 @@
-( function _Resource_s_( ) {
+( function _Resource_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillResource provides common interface for forming, handling different kinds of resources.
+ * @class wWillResource
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = null;
@@ -236,12 +243,13 @@ function MakeSingle( o )
   }
   catch( err )
   {
-    let cirterion = '';
+    let error = err;
+    let criterion = '';
     if( o.resource.criterion )
-    cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+    criterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
     if( err.message && _.strHas( err.message, 'Options map for' ) )
-    err = _.errBrief( err );
-    throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
+    error = _.errBrief( err );
+    throw _.err( error, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, criterion );
   }
 
 }
@@ -319,7 +327,7 @@ function copy( o )
 
   let module = o.module !== undefined ? o.module : resource.module;
   if( o.unformedResource )
-  resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module : module });
+  resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module });
 
   return result;
 }
@@ -449,7 +457,10 @@ function form1()
   if( resource.original )
   _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
   else if( !resource.phantom )
-  _.assert( module[ resource.MapName ][ resource.name ] === undefined || module[ resource.MapName ][ resource.name ] === resource );
+  _.assert
+  (
+    module[ resource.MapName ][ resource.name ] === undefined || module[ resource.MapName ][ resource.name ] === resource
+  );
 
   if( !resource.original && !resource.phantom )
   {
@@ -928,7 +939,7 @@ function _exportString( o )
   o = _.routineOptions( _exportString, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
-  result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
+  result += _.toStr( o.fields, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } );
 
   return result;
 }

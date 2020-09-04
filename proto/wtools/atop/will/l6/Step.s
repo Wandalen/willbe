@@ -1,6 +1,13 @@
-( function _Step_s_( ) {
+( function _Step_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillStep provides interface for forming step resources from willfile.
+ * @class wWillStep
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.will.Resource;
