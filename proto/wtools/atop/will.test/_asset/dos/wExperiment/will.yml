@@ -27,10 +27,10 @@ submodule :
   wProcess :
     path : npm:///wprocess
     enabled : 0 # submodule
-  wGraphBasic :
+  wgraphbasic :
     path : npm:///wgraphbasic
     enabled : 0 # submodule
-  wGraphBase:
+  wGraphExtra:
     path : npm:///wgraphbasic
     enabled : 0 # submodule
   wFiles :

@@ -57,7 +57,7 @@
     "wstatestorage" : "alpha",
     "wstatesession" : "alpha",
     "wstager" : "alpha",
-    "wgraphbase" : "alpha",
+    "wgraphextra" : "alpha",
     "wselector" : "alpha",
     "wresolver" : "alpha",
     "wresolverextra" : "alpha",

@@ -2622,11 +2622,11 @@ module:
         path: 'npm:///wprocess'
         autoExporting: 0
         enabled: 0
-      wGraphBasic:
+      wgraphbasic:
         path: 'npm:///wgraphbasic'
         autoExporting: 0
         enabled: 0
-      wGraphBase:
+      wGraphExtra:
         path: 'npm:///wgraphbasic'
         autoExporting: 0
         enabled: 0
@@ -3535,11 +3535,11 @@ module:
         path: 'npm:///wprocess'
         autoExporting: 0
         enabled: 0
-      wGraphBasic:
+      wgraphbasic:
         path: 'npm:///wgraphbasic'
         autoExporting: 0
         enabled: 0
-      wGraphBase:
+      wGraphExtra:
         path: 'npm:///wgraphbasic'
         autoExporting: 0
         enabled: 0

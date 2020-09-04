@@ -17,7 +17,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wVerbal' );
   _.include( 'wTemplateTreeEnvironment' );
   _.include( 'wStager' );
-  _.include( 'wGraphBasic' );
+  _.include( 'wgraphbasic' );
   _.include( 'wGitTools' );
   _.include( 'wNpmTools' );
   _.include( 'wYamlTools' );
