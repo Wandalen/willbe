@@ -6494,6 +6494,213 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
+function hookPublish2( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  originalShell( 'git init' );
+  originalShell( 'git remote add origin ../repo' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  originalShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+  cloneShell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\s\./ ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am second' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am third' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am fourth' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* */
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 0 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+    test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/ .call publish2' )
+  .then( ( op ) =>
+  {
+    test.case = 'without option `tag`, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function implyWithDot( test )
 {
   let context = this;
@@ -32892,6 +33099,7 @@ let Self =
     hookGitSyncColflict,
     hookGitSyncArguments,
     hookWasPackageExtendWillfile,
+    hookPublish2,
 
     implyWithDot,
     implyWithAsterisk,
