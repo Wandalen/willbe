@@ -8540,7 +8540,7 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Executing command "git ${ o.command }", ${module.nameWithLocationGet()}` );
+  logger.log( `${module.nameWithLocationGet()}` );
 
   let provider = _.FileFilter.Archive();
   if( o.hardLinkMaybe )
@@ -8593,7 +8593,7 @@ gitExecCommand.defaults =
 {
   command : null,
   dirPath : null,
-  hardLinkMaybe : 1,
+  hardLinkMaybe : 0,
   v : null,
   verbosity : 2,
 };
