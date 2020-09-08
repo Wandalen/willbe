@@ -26261,7 +26261,7 @@ function commandSubmodulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 0 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
@@ -26277,15 +26277,15 @@ function commandSubmodulesGit( test )
   })
 
   a.appStart( '.with original/GitSync .submodules.git add --all' );
-  a.appStart( '.with original/GitSync .submodules.git commit -am "new lines"' )
+  a.appStart( '.with original/GitSync .submodules.git commit -am "new lines" hardLinkMaybe:1' )
   .then( ( op ) =>
   {
     test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines"' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
     return null;
@@ -26314,8 +26314,8 @@ function commandSubmodulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'module::local' ), 0 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines2"' ), 0 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
@@ -26339,10 +26339,10 @@ function commandSubmodulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/git-sync.git", module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/local.git", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git remote add origin1 https://github.com/user' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   originalShell( 'git remote -v' )
@@ -27234,14 +27234,14 @@ function commandGitCheckHardLinkRestoring( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull' })
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull hardLinkMaybe:1' })
   .then( ( op ) =>
   {
     test.case = '.git pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27269,14 +27269,14 @@ function commandGitCheckHardLinkRestoring( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull v:0' })
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull hardLinkMaybe:1 v:0' })
   .then( ( op ) =>
   {
     test.case = '.git pull v:0 - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
@@ -27310,14 +27310,14 @@ function commandGitCheckHardLinkRestoring( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ execPath : '.with clone/ .git pull' })
+  a.appStart({ execPath : '.with clone/ .git pull hardLinkMaybe:1' })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27385,7 +27385,7 @@ clone
 
   originalShell( 'git commit -am second' );
 
-  a.appStartNonThrowing( '.with clone/ .git pull v:5' )
+  a.appStartNonThrowing( '.with clone/ .git pull hardLinkMaybe:1 v:5' )
   .then( ( op ) =>
   {
     test.description = 'has local changes';
@@ -27436,7 +27436,7 @@ clone
 
   cloneShell( 'git commit -am second' );
 
-  a.appStartNonThrowing( '.with clone/ .git pull v:5' )
+  a.appStartNonThrowing( '.with clone/ .git pull hardLinkMaybe:1 v:5' )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -27516,14 +27516,14 @@ original
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ execPath : '.with clone/ .git pull withSubmodules:1' })
+  a.appStart({ execPath : '.with clone/ .git pull hardLinkMaybe:1 withSubmodules:1' })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git pull withSubmodules:1 - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27551,14 +27551,14 @@ original
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.imply withSubmodules:2 .with clone/ .git pull withSubmodules:1' )
+  a.appStart( '.imply withSubmodules:2 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1' )
   .then( ( op ) =>
   {
     test.case = '.imply withSubmodules:2 .with clone/ .git pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27624,10 +27624,10 @@ function commandGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
     return null;
   })
@@ -27639,7 +27639,7 @@ function commandGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git log", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
@@ -27651,19 +27651,19 @@ function commandGitDifferentCommands( test )
 
   /* */
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log hardLinkMaybe:0' })
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log hardLinkMaybe:1' })
   .then( ( op ) =>
   {
-    test.case = '.git log hardLinkMaybe:0';
+    test.case = '.git log hardLinkMaybe:1';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git log", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
   })
 
@@ -27676,9 +27676,9 @@ function commandGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
   })
 
