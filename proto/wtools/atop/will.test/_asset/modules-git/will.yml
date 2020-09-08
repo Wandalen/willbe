@@ -1,0 +1,20 @@
+about :
+
+  name : modules-git
+
+path :
+
+  git : '.'
+
+submodule :
+
+  ModuleForTesting1 : git+http:///github.com/Wandalen/wModuleForTesting1.git
+
+build :
+
+  default.build :
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
+
