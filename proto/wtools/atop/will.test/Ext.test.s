@@ -26408,7 +26408,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   a.appStart( '.submodules.git status' )
   .then( ( op ) =>
   {
-    test.case = '.modules.git status - without remote git submodule';
+    test.case = '.submodules.git status - without remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
@@ -26426,7 +26426,86 @@ function commandSubmodulesGitRemoteSubmodules( test )
   a.appStart( '.submodules.git status' )
   .then( ( op ) =>
   {
-    test.case = '.modules.git status - with remote git submodule';
+    test.case = '.submodules.git status - with remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 0 );
+    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandSubmodulesGitRemoteSubmodulesRecursive( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git' );
+  a.reflect();
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git add --all' );
+  a.shell( 'git commit -am first' );
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  a.shell( 'git remote add origin repo/' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.submodules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.submodules.git status - without remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 0 );
+    test.identical( _.strCount( op.output, '> git status' ), 0 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.submodules.download recursive:2' );
+  a.appStart( '.submodules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.submodules.git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -33522,6 +33601,7 @@ let Self =
     commandSubmodulesShell,
     commandSubmodulesGit,
     commandSubmodulesGitRemoteSubmodules,
+    commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitPrOpen,
     commandSubmodulesGitSync,
 
