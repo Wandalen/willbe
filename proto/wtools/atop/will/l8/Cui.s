@@ -497,7 +497,6 @@ function _commandsEnd( command )
   }
   catch( err )
   {
-    debugger;
     will.errEncounter( err );
     will.currentOpenerChange( null );
     if( will.beeping )
@@ -630,8 +629,6 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  // debugger;
-
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
@@ -656,8 +653,6 @@ function _commandBuildLike( o )
 
   .then( () => will.openersCurrentEach( forSingle ) )
   .finally( end );
-
-  //debugger;
 
   return ready;
 
@@ -835,7 +830,6 @@ function _commandNewLike( o )
   _.routineOptions( _commandNewLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
 
-  debugger;
   if( o.withInvalid === null )
   o.withInvalid = 0;
   if( o.withDisabledModules === null )
@@ -2281,7 +2275,7 @@ function commandModulesGit( e )
 }
 
 commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
-commandModulesGit.defaults.withSubmodules = 0;
+commandModulesGit.defaults.withSubmodules = 2;
 commandModulesGit.hint = 'Use "modules git" to run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
@@ -3332,7 +3326,6 @@ function commandEach( e )
   // function handleBegin( it )
   // {
   //
-  //   // debugger;
   //   _.assert( cui.currentOpener === null );
   //   _.assert( cui.currentOpenerPath === null );
   //   // _.assert( cui.mainModule === null );
@@ -3365,11 +3358,9 @@ function commandEach( e )
   // function handleEnd( it )
   // {
   //
-  //   // debugger;
   //   logger.up();
   //   levelUp = 1;
   //
-  //   debugger;
   //   let r = ca.commandPerform
   //   ({
   //     command : e.parsedCommands[ commandIndex + 1 ].command,
@@ -3384,7 +3375,6 @@ function commandEach( e )
   //     logger.down();
   //     levelUp = 0;
   //
-  //     // debugger;
   //     _.assert( cui.currentOpener === it.currentOpener || cui.currentOpener === null );
   //     // _.assert( cui.currentOpener === it.currentOpener ); // xxx
   //     // _.assert( cui.mainModule === cui.currentOpener.openedModule );
