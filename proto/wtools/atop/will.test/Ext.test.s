@@ -26764,9 +26764,9 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '> git status' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
 
@@ -26787,10 +26787,10 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines"' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   a.appStart( '.with original/GitSync .modules.git push --all' )
@@ -26817,10 +26817,10 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'module::local' ), 0 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines2"' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   a.appStart( '.imply .with original/GitSync .modules.git push --all' )
@@ -26842,10 +26842,10 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/git-sync.git", module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/local.git", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git remote add origin1 https://github.com/user' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   originalShell( 'git remote -v' )

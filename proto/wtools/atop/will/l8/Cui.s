@@ -2023,7 +2023,7 @@ function commandSubmodulesGit( e )
 }
 
 commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
-commandSubmodulesGit.defaults.withSubmodules = 0;
+commandSubmodulesGit.defaults.withSubmodules = 2;
 commandSubmodulesGit.hint = 'Use "submodules git" to run custom Git command on submodules of the module.';
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
