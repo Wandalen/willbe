@@ -6494,6 +6494,213 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
+function hookPublish2( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  originalShell( 'git init' );
+  originalShell( 'git remote add origin ../repo' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  originalShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+  cloneShell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\s\./ ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am second' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am third' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am fourth' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* */
+
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 0 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+    test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/ .call publish2' )
+  .then( ( op ) =>
+  {
+    test.case = 'without option `tag`, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function implyWithDot( test )
 {
   let context = this;
@@ -26054,7 +26261,7 @@ function commandSubmodulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 0 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
@@ -26070,15 +26277,15 @@ function commandSubmodulesGit( test )
   })
 
   a.appStart( '.with original/GitSync .submodules.git add --all' );
-  a.appStart( '.with original/GitSync .submodules.git commit -am "new lines"' )
+  a.appStart( '.with original/GitSync .submodules.git commit -am "new lines" hardLinkMaybe:1' )
   .then( ( op ) =>
   {
     test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines"' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
     return null;
@@ -26107,8 +26314,8 @@ function commandSubmodulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'module::local' ), 0 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines2"' ), 0 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
@@ -26132,10 +26339,10 @@ function commandSubmodulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/git-sync.git", module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/local.git", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git remote add origin1 https://github.com/user' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   originalShell( 'git remote -v' )
@@ -26153,6 +26360,164 @@ function commandSubmodulesGit( test )
     return null;
   })
 
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandSubmodulesGitRemoteSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git' );
+  a.reflect();
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git add --all' );
+  a.shell( 'git commit -am first' );
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  a.shell( 'git remote add origin repo/' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.submodules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.submodules.git status - without remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 0 );
+    test.identical( _.strCount( op.output, '> git status' ), 0 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.build' );
+  a.appStart( '.submodules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.submodules.git status - with remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 0 );
+    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandSubmodulesGitRemoteSubmodulesRecursive( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git' );
+  a.reflect();
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git add --all' );
+  a.shell( 'git commit -am first' );
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  a.shell( 'git remote add origin repo/' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.submodules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.submodules.git status - without remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 0 );
+    test.identical( _.strCount( op.output, '> git status' ), 0 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.submodules.download recursive:2' );
+  a.appStart( '.submodules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.submodules.git status - with remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 0 );
+    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
   /* - */
 
   return a.ready;
@@ -26557,9 +26922,9 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '> git status' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
 
@@ -26580,10 +26945,10 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines"", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines"' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   a.appStart( '.with original/GitSync .modules.git push --all' )
@@ -26610,10 +26975,10 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am "new lines2"", module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'module::local' ), 0 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines2"' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   a.appStart( '.imply .with original/GitSync .modules.git push --all' )
@@ -26635,10 +27000,10 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/git-sync.git", module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git remote add origin1 https://github.com/user/local.git", module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git remote add origin1 https://github.com/user' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   })
   originalShell( 'git remote -v' )
@@ -26656,6 +27021,164 @@ function commandModulesGit( test )
     return null;
   })
 
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandModulesGitRemoteSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git' );
+  a.reflect();
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git add --all' );
+  a.shell( 'git commit -am first' );
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  a.shell( 'git remote add origin repo/' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.modules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.modules.git status - without remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 2 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 1 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.build' );
+  a.appStart( '.modules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.modules.git status - with remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 1 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 2 );
+    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandModulesGitRemoteSubmodulesRecursive( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git' );
+  a.reflect();
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git add --all' );
+  a.shell( 'git commit -am first' );
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  a.shell( 'git remote add origin repo/' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.modules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.modules.git status - without remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 2 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 1 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.submodules.download recursive:2' );
+  a.appStart( '.modules.git status' )
+  .then( ( op ) =>
+  {
+    test.case = '.modules.git status - with remote git submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'module::modules-git' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 1 );
+    test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
+    test.identical( _.strCount( op.output, '> git status' ), 2 );
+    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+    return null;
+  })
   /* - */
 
   return a.ready;
@@ -26948,14 +27471,14 @@ function commandGitCheckHardLinkRestoring( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull' })
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull hardLinkMaybe:1' })
   .then( ( op ) =>
   {
     test.case = '.git pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -26983,14 +27506,14 @@ function commandGitCheckHardLinkRestoring( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull v:0' })
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull hardLinkMaybe:1 v:0' })
   .then( ( op ) =>
   {
     test.case = '.git pull v:0 - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
@@ -27024,14 +27547,14 @@ function commandGitCheckHardLinkRestoring( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ execPath : '.with clone/ .git pull' })
+  a.appStart({ execPath : '.with clone/ .git pull hardLinkMaybe:1' })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27099,7 +27622,7 @@ clone
 
   originalShell( 'git commit -am second' );
 
-  a.appStartNonThrowing( '.with clone/ .git pull v:5' )
+  a.appStartNonThrowing( '.with clone/ .git pull hardLinkMaybe:1 v:5' )
   .then( ( op ) =>
   {
     test.description = 'has local changes';
@@ -27150,7 +27673,7 @@ clone
 
   cloneShell( 'git commit -am second' );
 
-  a.appStartNonThrowing( '.with clone/ .git pull v:5' )
+  a.appStartNonThrowing( '.with clone/ .git pull hardLinkMaybe:1 v:5' )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -27230,14 +27753,14 @@ original
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart({ execPath : '.with clone/ .git pull withSubmodules:1' })
+  a.appStart({ execPath : '.with clone/ .git pull hardLinkMaybe:1 withSubmodules:1' })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git pull withSubmodules:1 - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27265,14 +27788,14 @@ original
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.imply withSubmodules:2 .with clone/ .git pull withSubmodules:1' )
+  a.appStart( '.imply withSubmodules:2 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1' )
   .then( ( op ) =>
   {
     test.case = '.imply withSubmodules:2 .with clone/ .git pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -27338,10 +27861,10 @@ function commandGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
     return null;
   })
@@ -27353,7 +27876,7 @@ function commandGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git log", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
@@ -27365,19 +27888,19 @@ function commandGitDifferentCommands( test )
 
   /* */
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log hardLinkMaybe:0' })
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log hardLinkMaybe:1' })
   .then( ( op ) =>
   {
-    test.case = '.git log hardLinkMaybe:0';
+    test.case = '.git log hardLinkMaybe:1';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git log", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
   })
 
@@ -27390,9 +27913,9 @@ function commandGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
   })
 
@@ -32892,6 +33415,7 @@ let Self =
     hookGitSyncColflict,
     hookGitSyncArguments,
     hookWasPackageExtendWillfile,
+    hookPublish2,
 
     implyWithDot,
     implyWithAsterisk,
@@ -33076,11 +33600,15 @@ let Self =
 
     commandSubmodulesShell,
     commandSubmodulesGit,
+    commandSubmodulesGitRemoteSubmodules,
+    commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitPrOpen,
     commandSubmodulesGitSync,
 
     commandModulesShell,
     commandModulesGit,
+    commandModulesGitRemoteSubmodules,
+    commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitPrOpen,
     commandModulesGitSync,
 

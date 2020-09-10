@@ -277,14 +277,11 @@ function _statusPreUpdate()
     else
     module2 = opener.peerModule;
 
-    if( !module2 )
-    debugger;
     if( !module2 ) /* yyy */
     module2 = opener.openedModule;
 
     if( !module2 )
     {
-      debugger;
       if( it.selector !== undefined )
       throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
       else

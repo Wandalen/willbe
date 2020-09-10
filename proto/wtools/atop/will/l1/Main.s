@@ -4,7 +4,7 @@
 'use strict';
 
 /**
- * @classdesc Class wWill provides main functionality to work with modules and  willfiles.
+ * @classdesc Class wWill provides main functionality to work with modules, junctions, modules graphs, willfiles and other.
  * @class wWill
  * @module Tools/atop/willbe
  */
