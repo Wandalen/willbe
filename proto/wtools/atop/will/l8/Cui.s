@@ -1017,6 +1017,8 @@ function _commandModulesLike( o )
 
   cui._commandsBegin( o.commandRoutine );
 
+  debugger;
+
   if( cui.currentOpeners === null && cui.currentOpener === null )
   ready.then( () => cui.openersFind() )
   .then( () => filter() );
@@ -2037,7 +2039,7 @@ function commandSubmodulesGitPrOpen( e )
   cui._command_pre( commandSubmodulesGitPrOpen, arguments );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
   ({
@@ -2090,7 +2092,7 @@ function commandSubmodulesGitSync( e )
 
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply({ withSubmodules : 1 });
 
   return cui._commandModulesLike
   ({
@@ -2289,7 +2291,7 @@ function commandModulesGitPrOpen( e )
   cui._command_pre( commandModulesGitPrOpen, arguments );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
   ({
@@ -2342,7 +2344,7 @@ function commandModulesGitSync( e )
 
   _.routineOptions( commandModulesGitSync, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply({ withSubmodules : 1 });
 
   return cui._commandModulesLike
   ({
