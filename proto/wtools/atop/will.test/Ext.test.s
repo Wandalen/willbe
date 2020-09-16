@@ -28040,7 +28040,7 @@ function commandGitPrOpenRemote( test )
 
   /* - */
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.about || !config.about[ 'github.token' ] )
+  if( !config || !config.about || !config.about.name !== 'wtools-bot' )
   {
     test.is( true );
     return null;
