@@ -203,7 +203,7 @@ function assetFor( test, name )
     }
     return null
   }
-❮❯
+
   // a.shell = _.process.starter
   // ({
   //   currentPath : a.routinePath,
