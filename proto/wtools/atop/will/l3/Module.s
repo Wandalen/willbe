@@ -7940,6 +7940,9 @@ function _willfileOnPropertyAct( o )
 
     let splits = option.split( '/' );
 
+    if( splits[ 0 ] === '' )
+    splits.shift();
+
     if( !( splits[ 0 ] in sectionMap ) )
     throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
 

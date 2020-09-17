@@ -203,7 +203,7 @@ function assetFor( test, name )
     }
     return null
   }
-❮❯
+
   // a.shell = _.process.starter
   // ({
   //   currentPath : a.routinePath,
@@ -26531,6 +26531,13 @@ function commandSubmodulesGitPrOpen( test )
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  {
+    test.is( true );
+    return;
+  }
+
   /* - */
 
   a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr.open "some title" srcBranch:new' )
@@ -27191,6 +27198,13 @@ function commandModulesGitPrOpen( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
+
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  {
+    test.is( true );
+    return;
+  }
 
   /* - */
 
@@ -27932,6 +27946,13 @@ function commandGitPrOpen( test )
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  {
+    test.is( true );
+    return;
+  }
+
   /* - */
 
   a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new' )
@@ -28018,9 +28039,8 @@ function commandGitPrOpenRemote( test )
   a.reflect();
 
   /* - */
-
-  let config = a.fileProvider.configUserRead();
-  if( !config || !config.about || !config.about[ 'github.token' ] )
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || !config.about.name !== 'wtools-bot' )
   {
     test.is( true );
     return null;
