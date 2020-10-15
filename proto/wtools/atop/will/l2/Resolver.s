@@ -998,7 +998,7 @@ resolveContextPrepare.defaults =
 
 //
 
-function resolve_pre( routine, args )
+function resolve_head( routine, args )
 {
   let resolver = this;
   let o = args[ 0 ];
@@ -1006,7 +1006,7 @@ function resolve_pre( routine, args )
   if( o.Resolver === null || o.Resolver === undefined )
   o.Resolver = Self;
 
-  Parent.resolveQualified.pre.call( resolver, routine, args );
+  Parent.resolveQualified.head.call( resolver, routine, args );
 
   _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
   _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
@@ -1056,8 +1056,8 @@ defaults.currentExcluding = 1;
 defaults.hasPath = null;
 defaults.selectorIsPath = 0;
 
-let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
-let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolve = _.routineUnite( resolve_head, resolve_body );
+let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
 
 var defaults = resolveMaybe.defaults;
 defaults.missingAction = 'undefine';
@@ -1105,7 +1105,7 @@ defaults.visited = null;
 // wraps
 // --
 
-let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolveRaw = _.routineUnite( resolve_head, resolve_body );
 
 var defaults = resolveRaw.defaults;
 defaults.pathResolving = 0;
@@ -1125,7 +1125,7 @@ alternatively adjust call from finit of class Exported
 
 //
 
-let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let pathResolve = _.routineUnite( resolve_head, resolve_body );
 
 var defaults = pathResolve.defaults;
 defaults.pathResolving = 'in';
@@ -1170,11 +1170,11 @@ defaults.pathResolving = 'in';
 defaults.missingAction = 'undefine';
 defaults.pathUnwrapping = 0;
 
-let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
 
 //
 
-function filesFromResource_pre( routine, args )
+function filesFromResource_head( routine, args )
 {
   let resolver = this;
   let o =_.routineOptions( routine, args );
@@ -1183,7 +1183,7 @@ function filesFromResource_pre( routine, args )
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = 'resolved';
 
-  resolve_pre.call( resolver, routine, [ o ] );
+  resolve_head.call( resolver, routine, [ o ] );
 
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = prefixlessAction;
@@ -1307,7 +1307,7 @@ defaults.withDirs = null;
 defaults.withTerminals = null;
 defaults.withStem = null;
 
-let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
+let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
 
 //
 
@@ -1346,7 +1346,7 @@ defaults.prefixlessAction = 'default';
 defaults.currentContext = null;
 defaults.pathResolving = 'in';
 
-let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
+let reflectorResolve = _.routineUnite( resolve_head, reflectorResolve_body );
 
 //
 
@@ -1365,7 +1365,7 @@ defaults.selector = null;
 defaults.prefixlessAction = 'default';
 defaults.defaultResourceKind = 'submodule';
 
-let submodulesResolve = _.routineFromPreAndBody( resolve.pre, submodulesResolve_body );
+let submodulesResolve = _.routineUnite( resolve.head, submodulesResolve_body );
 
 // --
 // declare

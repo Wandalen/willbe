@@ -103,7 +103,7 @@ function pathExportAdd( context, willfPath )
 
   let match = read.match( regexp );
   let inside = match[ 0 ].replace( '\n', '' ).replace( '\n', '' );
-  let pre = match[ 1 ];
+  let head = match[ 1 ];
 
   if( _.strHas( read, ` export : '` ) )
   return;
@@ -111,7 +111,7 @@ function pathExportAdd( context, willfPath )
   if( o.verbosity )
   logger.log( `Adding path::export to ${context.junction.nameWithLocationGet()}` );
 
-  splits.splice( 2, 0, `${pre}export : '{path::proto}/**'\n` );
+  splits.splice( 2, 0, `${head}export : '{path::proto}/**'\n` );
   let write = splits.join( '' );
 
   if( o.verbosity >= 2 )
@@ -178,9 +178,9 @@ function pathRemotesAdd( context, willfPath )
     `npm:///${context.module.resolve({ selector : 'about::npm.name', missingAction : 'undefine' }) || context.module.name.toLowerCase()}`,
   ];
 
-  let ins = `${line.pre}remotes :
-${line.pre} - ${remotesPath[ 0 ]}
-${line.pre} - ${remotesPath[ 1 ]}`
+  let ins = `${line.head}remotes :
+${line.head} - ${remotesPath[ 0 ]}
+${line.head} - ${remotesPath[ 1 ]}`
 
   let write = [ line.before, '\n', line.line, '\n', ins, '\n', line.after ].join( '' );
 

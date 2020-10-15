@@ -801,7 +801,7 @@ function _importToModule()
 
 //
 
-function _resourcesImport_pre( routine, args )
+function _resourcesImport_head( routine, args )
 {
   let willf = this;
   let will = willf.will;
@@ -862,7 +862,7 @@ _resourcesImport_body.defaults =
   resources : null,
 }
 
-let _resourcesImport = _.routineFromPreAndBody( _resourcesImport_pre, _resourcesImport_body );
+let _resourcesImport = _.routineUnite( _resourcesImport_head, _resourcesImport_body );
 
 // --
 // peer

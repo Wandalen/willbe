@@ -231,14 +231,14 @@ function currentOpenerChange( src )
 // etc
 // --
 
-function _command_pre( o )
+function _command_head( o )
 {
   let cui = this;
 
   if( arguments.length === 2 )
   o = { routine : arguments[ 0 ], args : arguments[ 1 ] }
 
-  _.routineOptions( _command_pre, o );
+  _.routineOptions( _command_head, o );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( o.args.length === 1 );
 
@@ -280,7 +280,7 @@ function _command_pre( o )
   }
 }
 
-_command_pre.defaults =
+_command_head.defaults =
 {
   routine : null,
   args : null,
@@ -1124,7 +1124,7 @@ function commandHelp( e )
 {
   let cui = this;
   let ca = e.ca;
-  cui._command_pre( commandHelp, arguments );
+  cui._command_head( commandHelp, arguments );
 
   ca._commandHelp( e );
 }
@@ -1139,7 +1139,7 @@ function commandImply( e )
   let cui = this;
 
   cui.implied = null;
-  cui._command_pre( commandImply, arguments );
+  cui._command_head( commandImply, arguments );
 
   cui.implied = e.propertiesMap;
   cui._propertiesImply( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
@@ -1227,7 +1227,7 @@ commandImply.commandProperties =
 function commandVersion( e )
 {
   let cui = this;
-  cui._command_pre( commandVersion, arguments );
+  cui._command_head( commandVersion, arguments );
 
   return _.npm.versionLog
   ({
@@ -1260,7 +1260,7 @@ commandVersion.commandSubjectHint = false;
 function commandVersionCheck( e )
 {
   let cui = this;
-  cui._command_pre( commandVersion, arguments );
+  cui._command_head( commandVersion, arguments );
   cui._propertiesImply( e.propertiesMap );
 
   return cui.versionIsUpToDate( e.propertiesMap );
@@ -1280,7 +1280,7 @@ function commandVersionBump( e )
 {
   let cui = this;
   let properties = e.propertiesMap;
-  cui._command_pre( commandVersionBump, arguments );
+  cui._command_head( commandVersionBump, arguments );
 
   if( e.subject )
   properties.versionDelta = e.subject;
@@ -1321,7 +1321,7 @@ commandVersionBump.commandProperties =
 function commandResourcesList( e )
 {
   let cui = this;
-  cui._command_pre( commandResourcesList, arguments );
+  cui._command_head( commandResourcesList, arguments );
 
   return cui._commandListLike
   ({
@@ -1357,7 +1357,7 @@ commandResourcesList.commandSubjectHint = 'A selector for resources. Could be a 
 function commandPathsList( e )
 {
   let cui = this;
-  cui._command_pre( commandPathsList, arguments );
+  cui._command_head( commandPathsList, arguments );
 
   return cui._commandListLike
   ({
@@ -1384,7 +1384,7 @@ commandPathsList.commandSubjectHint = 'A selector for paths. Could be a glob.';
 function commandSubmodulesList( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesList, arguments );
+  cui._command_head( commandSubmodulesList, arguments );
 
   return cui._commandListLike
   ({
@@ -1411,7 +1411,7 @@ commandSubmodulesList.commandSubjectHint = 'A selector for submodules. Could be 
 function commandReflectorsList( e )
 {
   let cui = this;
-  cui._command_pre( commandReflectorsList, arguments );
+  cui._command_head( commandReflectorsList, arguments );
 
   return cui._commandListLike
   ({
@@ -1438,7 +1438,7 @@ commandReflectorsList.commandSubjectHint = 'A selector for reflectors. Could be 
 function commandStepsList( e )
 {
   let cui = this;
-  cui._command_pre( commandStepsList, arguments );
+  cui._command_head( commandStepsList, arguments );
 
   return cui._commandListLike
   ({
@@ -1465,7 +1465,7 @@ commandStepsList.commandSubjectHint = 'A selector for steps. Could be a glob.';
 function commandBuildsList( e )
 {
   let cui = this;
-  cui._command_pre( commandBuildsList, arguments );
+  cui._command_head( commandBuildsList, arguments );
 
   return cui._commandListLike
   ({
@@ -1499,7 +1499,7 @@ commandBuildsList.commandSubjectHint = 'A selector for builds. Could be a glob.'
 function commandExportsList( e )
 {
   let cui = this;
-  cui._command_pre( commandExportsList, arguments );
+  cui._command_head( commandExportsList, arguments );
 
   return cui._commandListLike
   ({
@@ -1533,7 +1533,7 @@ commandExportsList.commandSubjectHint = 'A selector for exports. Could be a glob
 function commandAboutList( e )
 {
   let cui = this;
-  cui._command_pre( commandAboutList, arguments );
+  cui._command_head( commandAboutList, arguments );
 
   return cui._commandListLike
   ({
@@ -1561,7 +1561,7 @@ commandAboutList.commandSubjectHint = false;
 function commandModulesList( e )
 {
   let cui = this;
-  cui._command_pre( commandModulesList, arguments );
+  cui._command_head( commandModulesList, arguments );
 
   return cui._commandListLike
   ({
@@ -1588,7 +1588,7 @@ commandModulesList.commandSubjectHint = false;
 function commandModulesTopologicalList( e )
 {
   let cui = this;
-  cui._command_pre( commandModulesTopologicalList, arguments );
+  cui._command_head( commandModulesTopologicalList, arguments );
 
   return cui._commandListLike
   ({
@@ -1616,7 +1616,7 @@ function commandModulesTree( e )
 {
   let cui = this;
   let logger = cui.logger;
-  cui._command_pre( commandModulesTree, arguments );
+  cui._command_head( commandModulesTree, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandModulesTree.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -1656,7 +1656,7 @@ commandModulesTree.commandProperties =
 function commandSubmodulesAdd( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesAdd, arguments );
+  cui._command_head( commandSubmodulesAdd, arguments );
 
   return cui._commandBuildLike
   ({
@@ -1714,7 +1714,7 @@ commandSubmodulesAdd.commandSubjectHint = 'A selector ( path ) for module that w
 function commandSubmodulesFixate( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesFixate, arguments );
+  cui._command_head( commandSubmodulesFixate, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesFixate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -1762,7 +1762,7 @@ commandSubmodulesFixate.commandProperties =
 function commandSubmodulesUpgrade( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesUpgrade, arguments );
+  cui._command_head( commandSubmodulesUpgrade, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesUpgrade.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -1803,7 +1803,7 @@ commandSubmodulesUpgrade.commandProperties =
 function commandSubmodulesVersionsDownload( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesVersionsDownload, arguments );
+  cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
   debugger;
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
@@ -1848,7 +1848,7 @@ commandSubmodulesVersionsDownload.commandProperties =
 function commandSubmodulesVersionsUpdate( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesVersionsUpdate, arguments );
+  cui._command_head( commandSubmodulesVersionsUpdate, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -1886,7 +1886,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 function commandSubmodulesVersionsVerify( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesVersionsVerify, arguments );
+  cui._command_head( commandSubmodulesVersionsVerify, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsVerify.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -1922,7 +1922,7 @@ commandSubmodulesVersionsVerify.commandProperties =
 function commandSubmodulesVersionsAgree( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesVersionsAgree, arguments );
+  cui._command_head( commandSubmodulesVersionsAgree, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsAgree.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -1960,7 +1960,7 @@ commandSubmodulesVersionsAgree.commandProperties =
 function commandSubmodulesShell( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesShell, arguments );
+  cui._command_head( commandSubmodulesShell, arguments );
 
   return cui._commandModulesLike
   ({
@@ -1998,7 +1998,7 @@ function commandSubmodulesGit( e )
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_pre( commandGit, arguments );
+  cui._command_head( commandGit, arguments );
 
   _.routineOptions( commandSubmodulesGit, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2036,7 +2036,7 @@ commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardl
 function commandSubmodulesGitPrOpen( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesGitPrOpen, arguments );
+  cui._command_head( commandSubmodulesGitPrOpen, arguments );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
@@ -2088,7 +2088,7 @@ commandSubmodulesGitPrOpen.commandProperties =
 function commandSubmodulesGitSync( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesGitSync, arguments );
+  cui._command_head( commandSubmodulesGitSync, arguments );
 
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -2138,7 +2138,7 @@ function commandModuleNew( e )
   let will = this;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
-  will._command_pre( commandModuleNew, arguments );
+  will._command_head( commandModuleNew, arguments );
 
   if( e.commandArgument )
   e.propertiesMap.localPath = e.commandArgument;
@@ -2168,7 +2168,7 @@ commandModuleNew.commandProperties =
 function commandModuleNewWith( e )
 {
   let cui = this;
-  cui._command_pre( commandModuleNewWith, arguments );
+  cui._command_head( commandModuleNewWith, arguments );
 
   let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
@@ -2211,7 +2211,7 @@ commandModuleNewWith.commandSubjectHint = 'A path to hook and arguments.';
 function commandModulesShell( e )
 {
   let cui = this;
-  cui._command_pre( commandModulesShell, arguments );
+  cui._command_head( commandModulesShell, arguments );
 
   return cui._commandModulesLike
   ({
@@ -2250,7 +2250,7 @@ function commandModulesGit( e )
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_pre( commandGit, arguments );
+  cui._command_head( commandGit, arguments );
 
   _.routineOptions( commandModulesGit, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2288,7 +2288,7 @@ commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlink
 function commandModulesGitPrOpen( e )
 {
   let cui = this;
-  cui._command_pre( commandModulesGitPrOpen, arguments );
+  cui._command_head( commandModulesGitPrOpen, arguments );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
@@ -2340,7 +2340,7 @@ commandModulesGitPrOpen.commandProperties =
 function commandModulesGitSync( e )
 {
   let cui = this;
-  cui._command_pre( commandModulesGitSync, arguments );
+  cui._command_head( commandModulesGitSync, arguments );
 
   _.routineOptions( commandModulesGitSync, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -2388,7 +2388,7 @@ commandModulesGitSync.commandProperties =
 function commandShell( e )
 {
   let cui = this;
-  cui._command_pre( commandShell, arguments );
+  cui._command_head( commandShell, arguments );
 
   return cui._commandBuildLike
   ({
@@ -2417,7 +2417,7 @@ commandShell.commandSubjectHint = 'A command to execute is shell.';
 function commandDo( e )
 {
   let cui = this;
-  cui._command_pre( commandDo, arguments );
+  cui._command_head( commandDo, arguments );
   let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
@@ -2459,7 +2459,7 @@ commandDo.commandSubjectHint = 'A JS script to execute.';
 function commandHookCall( e )
 {
   let cui = this;
-  cui._command_pre( commandDo, arguments );
+  cui._command_head( commandDo, arguments );
 
   let path = cui.fileProvider.path;
   let logger = cui.logger;
@@ -2500,7 +2500,7 @@ commandHookCall.commandSubjectHint = 'A hook to execute';
 function commandHooksList( e )
 {
   let cui = this.form();
-  cui._command_pre( commandHooksList, arguments );
+  cui._command_head( commandHooksList, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandHooksList.commandProperties );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -2523,7 +2523,7 @@ commandHooksList.commandProperties = commandImply.commandProperties;
 function commandClean( e )
 {
   let cui = this;
-  cui._command_pre( commandClean, arguments );
+  cui._command_head( commandClean, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandClean.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -2583,7 +2583,7 @@ commandClean.commandProperties =
 function commandSubmodulesClean( e )
 {
   let cui = this;
-  cui._command_pre( commandSubmodulesClean, arguments );
+  cui._command_head( commandSubmodulesClean, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesClean.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
@@ -2641,7 +2641,7 @@ commandSubmodulesClean.commandProperties =
 function commandBuild( e )
 {
   let cui = this;
-  cui._command_pre( commandBuild, arguments );
+  cui._command_head( commandBuild, arguments );
   let doneContainer = [];
 
   return cui._commandBuildLike
@@ -2676,7 +2676,7 @@ commandBuild.commandSubjectHint = 'A name of build scenario.';
 function commandExport( e )
 {
   let cui = this;
-  cui._command_pre( commandExport, arguments );
+  cui._command_head( commandExport, arguments );
   let doneContainer = [];
 
   return cui._commandBuildLike
@@ -2712,7 +2712,7 @@ commandExport.commandSubjectHint = 'A name of export scenario.';
 function commandExportPurging( e )
 {
   let cui = this;
-  cui._command_pre( commandExportPurging, arguments );
+  cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
 
   return cui._commandBuildLike
@@ -2748,7 +2748,7 @@ commandExportPurging.commandSubjectHint = 'A name of export scenario.';
 function commandExportRecursive( e )
 {
   let cui = this;
-  cui._command_pre( commandExportRecursive, arguments );
+  cui._command_head( commandExportRecursive, arguments );
   let doneContainer = [];
 
   return cui._commandBuildLike
@@ -2791,7 +2791,7 @@ function commandGit( e )
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_pre( commandGit, arguments );
+  cui._command_head( commandGit, arguments );
 
   _.routineOptions( commandGit, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2828,7 +2828,7 @@ commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Defa
 function commandGitPrOpen( e )
 {
   let cui = this;
-  cui._command_pre( commandGitPrOpen, arguments );
+  cui._command_head( commandGitPrOpen, arguments );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
@@ -2879,7 +2879,7 @@ commandGitPrOpen.commandProperties =
 function commandGitPull( e )
 {
   let cui = this;
-  cui._command_pre( commandGitPull, arguments );
+  cui._command_head( commandGitPull, arguments );
 
   _.routineOptions( commandGitPull, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2913,7 +2913,7 @@ commandGitPull.commandProperties = commandImply.commandProperties;
 function commandGitPush( e )
 {
   let cui = this;
-  cui._command_pre( commandGitPush, arguments );
+  cui._command_head( commandGitPush, arguments );
 
   _.routineOptions( commandGitPush, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2947,7 +2947,7 @@ commandGitPush.commandProperties = commandImply.commandProperties;
 function commandGitReset( e )
 {
   let cui = this;
-  cui._command_pre( commandGitReset, arguments );
+  cui._command_head( commandGitReset, arguments );
 
   _.routineOptions( commandGitReset, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -2994,7 +2994,7 @@ commandGitReset.commandProperties =
 function commandGitStatus( e )
 {
   let cui = this;
-  cui._command_pre( commandGitStatus, arguments );
+  cui._command_head( commandGitStatus, arguments );
 
   _.routineOptions( commandGitStatus, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -3045,7 +3045,7 @@ commandGitStatus.commandProperties =
 function commandGitSync( e )
 {
   let cui = this;
-  cui._command_pre( commandGitSync, arguments );
+  cui._command_head( commandGitSync, arguments );
 
   _.routineOptions( commandGitSync, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -3091,7 +3091,7 @@ commandGitSync.commandProperties =
 function commandGitTag( e )
 {
   let cui = this;
-  cui._command_pre( commandGitTag, arguments );
+  cui._command_head( commandGitTag, arguments );
 
   _.routineOptions( commandGitTag, e.propertiesMap );
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -3163,7 +3163,7 @@ function commandWith( e )
 {
   let cui = this.form();
   let path = cui.fileProvider.path;
-  cui._command_pre( commandWith, arguments );
+  cui._command_head( commandWith, arguments );
 
   if( cui.currentOpener )
   {
@@ -3431,7 +3431,7 @@ function commandNpmFromWillfile( e )
   let cui = this;
   let criterionsMap = _.mapBut( e.propertiesMap, commandNpmFromWillfile.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandNpmFromWillfile.defaults );
-  cui._command_pre( commandNpmFromWillfile, arguments );
+  cui._command_head( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -3486,7 +3486,7 @@ function commandWillfileFromNpm( e )
   let cui = this;
   let criterionsMap = _.mapBut( e.propertiesMap, commandWillfileFromNpm.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileFromNpm.defaults );
-  cui._command_pre( commandWillfileFromNpm, arguments );
+  cui._command_head( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
   if( cui.withSubmodules === null || cui.withSubmodules === undefined )
@@ -3569,7 +3569,7 @@ function commandWillfileGet( e )
   let cui = this;
   let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileGet.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileGet.defaults );
-  cui._command_pre( commandWillfileExtend, arguments );
+  cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
   e.subject = './';
@@ -3663,7 +3663,7 @@ function commandWillfileSet( e )
   let cui = this;
   let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileSet.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSet.defaults );
-  cui._command_pre( commandWillfileSet, arguments );
+  cui._command_head( commandWillfileSet, arguments );
 
   if( !e.subject && !cui.currentOpeners )
   if( _.mapKeys( willfilePropertiesMap ).length > 0 )
@@ -3728,7 +3728,7 @@ function commandWillfileDel( e )
   let cui = this;
   let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileGet.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileDel.defaults );
-  cui._command_pre( commandWillfileExtend, arguments );
+  cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
   e.subject = './';
@@ -3822,7 +3822,7 @@ function commandWillfileExtend( e )
   let cui = this;
   let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileExtend.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileExtend.defaults );
-  cui._command_pre( commandWillfileExtend, arguments );
+  cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
   if( _.mapKeys( willfilePropertiesMap ).length > 0 )
@@ -3889,7 +3889,7 @@ function commandWillfileSupplement( e )
   let cui = this;
   let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileSupplement.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSupplement.defaults );
-  cui._command_pre( commandWillfileSupplement, arguments );
+  cui._command_head( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
   e.subject = './';
@@ -3947,7 +3947,7 @@ commandWillfileSupplement.commandProperties.structureParse = 'Enable parsing of 
 function commandWillfileExtendWillfile( e )
 {
   let cui = this;
-  cui._command_pre( commandWillfileExtendWillfile, arguments );
+  cui._command_head( commandWillfileExtendWillfile, arguments );
 
   let o =
   {
@@ -3997,7 +3997,7 @@ commandWillfileExtendWillfile.commandProperties =
 function commandWillfileSupplementWillfile( e )
 {
   let cui = this;
-  cui._command_pre( commandWillfileSupplementWillfile, arguments );
+  cui._command_head( commandWillfileSupplementWillfile, arguments );
 
   let o =
   {
@@ -4027,7 +4027,7 @@ function commandPackageInstall( e )
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
-  cui._command_pre( commandPackageInstall, arguments );
+  cui._command_head( commandPackageInstall, arguments );
 
   _.assertMapHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
 
@@ -4196,7 +4196,7 @@ function commandPackageLocalVersions( e )
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
-  cui._command_pre( commandPackageLocalVersions, arguments );
+  cui._command_head( commandPackageLocalVersions, arguments );
 
   _.assertMapHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
 
@@ -4325,7 +4325,7 @@ function commandPackageRemoteVersions( e )
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
-  cui._command_pre( commandPackageRemoteVersions, arguments );
+  cui._command_head( commandPackageRemoteVersions, arguments );
 
   _.assertMapHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
 
@@ -4485,7 +4485,7 @@ function commandPackageVersion( e )
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
-  cui._command_pre( commandPackageVersion, arguments );
+  cui._command_head( commandPackageVersion, arguments );
 
   _.assertMapHasOnly( options, commandPackageVersion.commandProperties, `Command does not expect options:` );
 
@@ -4667,7 +4667,7 @@ let Extension =
 
   // etc
 
-  _command_pre,
+  _command_head,
   errEncounter,
   _propertiesImply,
 

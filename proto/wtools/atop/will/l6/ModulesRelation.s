@@ -880,13 +880,13 @@ function errorNotFound( err )
 // resolver
 // --
 
-function resolve_pre( routine, args )
+function resolve_head( routine, args )
 {
   let resource = this;
   let module = resource.module;
   if( resource.opener && resource.opener.openedModule )
   module = resource.opener.openedModule;
-  return module.resolve.pre.apply( module, arguments );
+  return module.resolve.head.apply( module, arguments );
 }
 
 function resolve_body( o )
@@ -905,7 +905,7 @@ function resolve_body( o )
 
 _.routineExtend( resolve_body, Parent.prototype.resolve.body );
 
-let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolve = _.routineUnite( resolve_head, resolve_body );
 
 // --
 // relations

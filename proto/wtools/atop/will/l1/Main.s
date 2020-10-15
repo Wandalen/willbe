@@ -1254,7 +1254,7 @@ function filterImplied()
 
 //
 
-function moduleFit_pre( routine, args )
+function moduleFit_head( routine, args )
 {
   let module = this;
 
@@ -1323,7 +1323,7 @@ var defaults = moduleFit_body.defaults = _.mapExtend( null, ModuleFilterDefaults
 defaults.withStem = 0;
 defaults.withPeers = 0;
 
-let moduleFit = _.routineFromPreAndBody( moduleFit_pre, moduleFit_body );
+let moduleFit = _.routineUnite( moduleFit_head, moduleFit_body );
 
 //
 
@@ -1373,7 +1373,7 @@ var defaults = relationFit_body.defaults =
 
 }
 
-let relationFit = _.routineFromPreAndBody( moduleFit_pre, relationFit_body );
+let relationFit = _.routineUnite( moduleFit_head, relationFit_body );
 
 //
 
@@ -2247,7 +2247,7 @@ modulesOnlyRoots.defaults =
 
 //
 
-function modulesEach_pre( routine, args )
+function modulesEach_head( routine, args )
 {
   let will = this;
 
@@ -2454,12 +2454,12 @@ _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 _.assert( defaults.withPeers === 0 );
 
-let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
+let modulesEach = _.routineUnite( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, RelationFilterOn );
 
 //
 
-function modulesFor_pre( routine, args )
+function modulesFor_head( routine, args )
 {
   let module = this;
 
@@ -2658,11 +2658,11 @@ _.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesFor = _.routineFromPreAndBody( modulesFor_pre, modulesFor_body );
+let modulesFor = _.routineUnite( modulesFor_head, modulesFor_body );
 
 //
 
-function modulesDownload_pre( routine, args )
+function modulesDownload_head( routine, args )
 {
   let module = this;
 
@@ -3082,7 +3082,7 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-let modulesDownload = _.routineFromPreAndBody( modulesDownload_pre, modulesDownload_body );
+let modulesDownload = _.routineUnite( modulesDownload_head, modulesDownload_body );
 
 //
 
@@ -3203,7 +3203,7 @@ delete defaults.onNode;
 
 //
 
-function modulesBuild_pre( routine, args )
+function modulesBuild_head( routine, args )
 {
   let o = _.routineOptions( routine, args );
   if( o.doneContainer === null )
@@ -3345,17 +3345,17 @@ _.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+let modulesBuild = _.routineUnite( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
 
-let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+let modulesExport = _.routineUnite( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
 //
 
-function modulesVerify_pre( routine, args )
+function modulesVerify_head( routine, args )
 {
   let o = _.routineOptions( routine, args );
   return o;
@@ -3461,7 +3461,7 @@ delete defaults.onEach;
 delete defaults.onEachModule;
 delete defaults.onEachJunction;
 
-let modulesVerify = _.routineFromPreAndBody( modulesVerify_pre, modulesVerify_body );
+let modulesVerify = _.routineUnite( modulesVerify_head, modulesVerify_body );
 
 // --
 // object
@@ -3985,7 +3985,7 @@ defaults.onlyRoots = 1;
 // opener
 // --
 
-function _openerMake_pre( routine, args )
+function _openerMake_head( routine, args )
 {
   let module = this;
   let o = args[ 0 ];
@@ -4058,7 +4058,7 @@ _openerMake_body.defaults =
 
 }
 
-let _openerMake = _.routineFromPreAndBody( _openerMake_pre, _openerMake_body );
+let _openerMake = _.routineUnite( _openerMake_head, _openerMake_body );
 
 //
 

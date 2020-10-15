@@ -95,11 +95,11 @@ module:
           - ../.module/ModuleForTesting1/.git/hooks/commit-msg.sample
           - ../.module/ModuleForTesting1/.git/hooks/fsmonitor-watchman.sample
           - ../.module/ModuleForTesting1/.git/hooks/post-update.sample
-          - ../.module/ModuleForTesting1/.git/hooks/pre-applypatch.sample
-          - ../.module/ModuleForTesting1/.git/hooks/pre-commit.sample
-          - ../.module/ModuleForTesting1/.git/hooks/pre-push.sample
-          - ../.module/ModuleForTesting1/.git/hooks/pre-rebase.sample
-          - ../.module/ModuleForTesting1/.git/hooks/pre-receive.sample
+          - ../.module/ModuleForTesting1/.git/hooks/head-applypatch.sample
+          - ../.module/ModuleForTesting1/.git/hooks/head-commit.sample
+          - ../.module/ModuleForTesting1/.git/hooks/head-push.sample
+          - ../.module/ModuleForTesting1/.git/hooks/head-rebase.sample
+          - ../.module/ModuleForTesting1/.git/hooks/head-receive.sample
           - ../.module/ModuleForTesting1/.git/hooks/prepare-commit-msg.sample
           - ../.module/ModuleForTesting1/.git/hooks/update.sample
           - ../.module/ModuleForTesting1/.git/info
@@ -168,11 +168,11 @@ module:
           - ../.module/ModuleForTesting2a/.git/hooks/commit-msg.sample
           - ../.module/ModuleForTesting2a/.git/hooks/fsmonitor-watchman.sample
           - ../.module/ModuleForTesting2a/.git/hooks/post-update.sample
-          - ../.module/ModuleForTesting2a/.git/hooks/pre-applypatch.sample
-          - ../.module/ModuleForTesting2a/.git/hooks/pre-commit.sample
-          - ../.module/ModuleForTesting2a/.git/hooks/pre-push.sample
-          - ../.module/ModuleForTesting2a/.git/hooks/pre-rebase.sample
-          - ../.module/ModuleForTesting2a/.git/hooks/pre-receive.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/head-applypatch.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/head-commit.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/head-push.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/head-rebase.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/head-receive.sample
           - ../.module/ModuleForTesting2a/.git/hooks/prepare-commit-msg.sample
           - ../.module/ModuleForTesting2a/.git/hooks/update.sample
           - ../.module/ModuleForTesting2a/.git/info

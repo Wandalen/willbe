@@ -23,7 +23,7 @@ Self.shortName = 'Resource';
 // inter
 // --
 
-function MakeFor_pre( routine, args )
+function MakeFor_head( routine, args )
 {
   let o = args[ 0 ];
 
@@ -95,7 +95,7 @@ MakeFor_body.defaults =
 
 }
 
-let MakeFor = _.routineFromPreAndBody( MakeFor_pre, MakeFor_body );
+let MakeFor = _.routineUnite( MakeFor_head, MakeFor_body );
 
 //
 
@@ -1144,11 +1144,11 @@ function moduleSet( src )
 // resolver
 // --
 
-function resolve_pre( routine, args )
+function resolve_head( routine, args )
 {
   let resource = this;
   let module = resource.module;
-  let o = module.resolve.pre.apply( module, arguments );
+  let o = module.resolve.head.apply( module, arguments );
   return o;
 }
 
@@ -1173,7 +1173,7 @@ function resolve_body( o )
 var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
 
-let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolve = _.routineUnite( resolve_head, resolve_body );
 
 //
 
@@ -1202,7 +1202,7 @@ defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
 
-let inPathResolve = _.routineFromPreAndBody( resolve.pre, inPathResolve_body );
+let inPathResolve = _.routineUnite( resolve.head, inPathResolve_body );
 
 //
 
@@ -1226,7 +1226,7 @@ function reflectorResolve_body( o )
 
 reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
 
-let reflectorResolve = _.routineFromPreAndBody( resolve.pre, reflectorResolve_body );
+let reflectorResolve = _.routineUnite( resolve.head, reflectorResolve_body );
 
 // --
 // etc

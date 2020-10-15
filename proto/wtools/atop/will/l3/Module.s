@@ -2409,7 +2409,7 @@ function exportAuto()
 
 //
 
-function moduleBuild_pre( routine, args )
+function moduleBuild_head( routine, args )
 {
   let o = _.routineOptions( routine, args );
   return o;
@@ -2486,9 +2486,9 @@ moduleBuild_body.defaults =
   purging : 0,
 }
 
-let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
+let moduleBuild = _.routineUnite( moduleBuild_head, moduleBuild_body );
 moduleBuild.defaults.kind = 'build';
-let moduleExport = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
+let moduleExport = _.routineUnite( moduleBuild_head, moduleBuild_body );
 moduleExport.defaults.kind = 'export';
 
 //
@@ -2580,7 +2580,7 @@ exportedMake.defaults =
 // batcher
 // --
 
-function modulesEach_pre( routine, args )
+function modulesEach_head( routine, args )
 {
   let module = this;
 
@@ -2616,12 +2616,12 @@ delete defaults.modules;
 
 _.assert( defaults.withPeers === 0 );
 
-let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
+let modulesEach = _.routineUnite( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, _.Will.RelationFilterOn );
 
 //
 
-function modulesBuild_pre( routine, args )
+function modulesBuild_head( routine, args )
 {
   let o = _.routineOptions( routine, args );
   return o;
@@ -2655,11 +2655,11 @@ _.assert( defaults.outputFormat === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+let modulesBuild = _.routineUnite( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
 
-let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+let modulesExport = _.routineUnite( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
@@ -3000,7 +3000,7 @@ function submodulesClean()
 
 //
 
-function _subModulesDownload_pre( routine, args )
+function _subModulesDownload_head( routine, args )
 {
   let module = this;
 
@@ -3043,23 +3043,23 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-let _subModulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body );
+let _subModulesDownload = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body );
 
 //
 
-let subModulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'subModulesDownload' );
+let subModulesDownload = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body, 'subModulesDownload' );
 var defaults = subModulesDownload.defaults;
 defaults.mode = 'download';
 
 //
 
-let subModulesUpdate = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'subModulesUpdate' );
+let subModulesUpdate = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body, 'subModulesUpdate' );
 var defaults = subModulesUpdate.defaults;
 defaults.mode = 'update';
 
 //
 
-let subModulesAgree = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'subModulesAgree' );
+let subModulesAgree = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body, 'subModulesAgree' );
 var defaults = subModulesAgree.defaults;
 defaults.mode = 'agree';
 
@@ -4267,7 +4267,7 @@ var defaults = submodulesPeersOpen_body.defaults = _.mapExtend( null, modulesEac
 
 defaults.throwing = 1;
 
-let submodulesPeersOpen = _.routineFromPreAndBody( modulesEach_pre, submodulesPeersOpen_body );
+let submodulesPeersOpen = _.routineUnite( modulesEach_head, submodulesPeersOpen_body );
 
 //
 
@@ -4566,7 +4566,7 @@ function resourceObtain( resourceKind, resourceName )
 
 //
 
-function resourceAllocate_pre( routine, args )
+function resourceAllocate_head( routine, args )
 {
   let module = this;
   let will = module.will;
@@ -4634,12 +4634,12 @@ resourceAllocate_body.defaults =
   generating : 0,
 }
 
-let resourceAllocate = _.routineFromPreAndBody( resourceAllocate_pre, resourceAllocate_body );
+let resourceAllocate = _.routineUnite( resourceAllocate_head, resourceAllocate_body );
 let resourceGenerate = _.routineDefaults( null, resourceAllocate, { generating : 1 } );
 
 //
 
-function resourceNameAllocate_pre( routine, args )
+function resourceNameAllocate_head( routine, args )
 {
   let module = this;
   let will = module.will;
@@ -4706,7 +4706,7 @@ resourceNameAllocate_body.defaults =
   generating : 0,
 }
 
-let resourceNameAllocate = _.routineFromPreAndBody( resourceNameAllocate_pre, resourceNameAllocate_body );
+let resourceNameAllocate = _.routineUnite( resourceNameAllocate_head, resourceNameAllocate_body );
 let resourceNameGenerate = _.routineDefaults( null, resourceNameAllocate, { generating : 1 } );
 
 // --
@@ -4959,7 +4959,7 @@ defaults.asCommand = 0;
 // resolver
 // --
 
-function resolve_pre( routine, args )
+function resolve_head( routine, args )
 {
   let module = this;
   let o = args[ 0 ];
@@ -4974,7 +4974,7 @@ function resolve_pre( routine, args )
 
   o.baseModule = module;
 
-  _.will.Resolver.resolve.pre.call( _.will.Resolver, routine, [ o ] );
+  _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -5000,23 +5000,23 @@ function resolve_body( o )
 
 _.routineExtend( resolve_body, _.will.Resolver.resolve );
 
-let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolve = _.routineUnite( resolve_head, resolve_body );
 
 //
 
-let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
 
 _.routineExtend( resolveMaybe, _.will.Resolver.resolveMaybe );
 
 //
 
-let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolveRaw = _.routineUnite( resolve_head, resolve_body );
 
 _.routineExtend( resolveRaw, _.will.Resolver.resolveRaw );
 
 //
 
-let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let pathResolve = _.routineUnite( resolve_head, resolve_body );
 
 _.routineExtend( pathResolve, _.will.Resolver.pathResolve );
 
@@ -5071,11 +5071,11 @@ function pathOrReflectorResolve_body( o )
 
 _.routineExtend( pathOrReflectorResolve_body, _.will.Resolver.pathOrReflectorResolve );
 
-let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
 
 //
 
-function filesFromResource_pre( routine, args )
+function filesFromResource_head( routine, args )
 {
   let module = this;
   let o = args[ 0 ];
@@ -5090,7 +5090,7 @@ function filesFromResource_pre( routine, args )
 
   o.baseModule = module;
 
-  _.will.Resolver.filesFromResource.pre.call( _.will.Resolver, routine, [ o ] );
+  _.will.Resolver.filesFromResource.head.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -5114,11 +5114,11 @@ function filesFromResource_body( o )
 
 _.routineExtend( filesFromResource_body, _.will.Resolver.filesFromResource );
 
-let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
+let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
 
 //
 
-let submodulesResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let submodulesResolve = _.routineUnite( resolve_head, resolve_body );
 
 _.routineExtend( submodulesResolve, _.will.Resolver.submodulesResolve );
 
@@ -5138,7 +5138,7 @@ function reflectorResolve_body( o )
 
 _.routineExtend( reflectorResolve_body, _.will.Resolver.reflectorResolve );
 
-let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
+let reflectorResolve = _.routineUnite( resolve_head, reflectorResolve_body );
 
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
 
@@ -5146,7 +5146,7 @@ _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
 // other resolver
 // --
 
-function _buildsResolve_pre( routine, args )
+function _buildsResolve_head( routine, args )
 {
   let module = this;
 
@@ -5262,17 +5262,17 @@ _buildsResolve_body.defaults =
   strictCriterion : 1,
 }
 
-let _buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
+let _buildsResolve = _.routineUnite( _buildsResolve_head, _buildsResolve_body );
 
 //
 
-let buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
+let buildsResolve = _.routineUnite( _buildsResolve_head, _buildsResolve_body );
 var defaults = buildsResolve.defaults;
 defaults.kind = 'build';
 
 //
 
-let exportsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
+let exportsResolve = _.routineUnite( _buildsResolve_head, _buildsResolve_body );
 var defaults = exportsResolve.defaults;
 defaults.kind = 'export';
 
