@@ -3047,19 +3047,19 @@ let _subModulesDownload = _.routineUnite( _subModulesDownload_head, _subModulesD
 
 //
 
-let subModulesDownload = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body, 'subModulesDownload' );
+let subModulesDownload = _.routineUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesDownload' });
 var defaults = subModulesDownload.defaults;
 defaults.mode = 'download';
 
 //
 
-let subModulesUpdate = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body, 'subModulesUpdate' );
+let subModulesUpdate = _.routineUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesUpdate' });
 var defaults = subModulesUpdate.defaults;
 defaults.mode = 'update';
 
 //
 
-let subModulesAgree = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body, 'subModulesAgree' );
+let subModulesAgree = _.routineUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesAgree' });
 var defaults = subModulesAgree.defaults;
 defaults.mode = 'agree';
 
