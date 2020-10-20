@@ -153,7 +153,7 @@ function assetFor( test, name )
       _.errAttend( err );
       /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null )
-      .timeOut( 3000 )
+      .delay( 3000 )
       .deasync();
       a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
       a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
@@ -227,7 +227,7 @@ function assetFor( test, name )
 //     catch( err )
 //     {
 //       debugger;
-//       _.Consequence().take( null ).timeOut( 3000 ).deasync();
+//       _.Consequence().take( null ).delay( 3000 ).deasync();
 //       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
 //       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
 //     }

@@ -42,7 +42,7 @@ function exec()
 
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.process.args({ keyValDelimeter : 0 });
+  let appArgs = _.process.input({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
   return _.Consequence
@@ -324,7 +324,7 @@ function _propertiesImply( implyMap )
     withSubmodules : 'withSubmodules',
   };
 
-  _.process.argsReadTo
+  _.process.inputReadTo
   ({
     dst : will,
     propertiesMap : implyMap,
@@ -342,7 +342,7 @@ function _commandsMake()
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.process.args();
+  let appArgs = _.process.input();
 
   _.assert( _.instanceIs( will ) );
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -1207,7 +1207,7 @@ commandImply.commandProperties =
 //   //
 //   // }
 //   //
-//   // _.process.argsReadTo
+//   // _.process.inputReadTo
 //   // ({
 //   //   dst : will,
 //   //   propertiesMap : request.map,
