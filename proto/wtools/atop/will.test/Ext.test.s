@@ -25645,7 +25645,8 @@ function resourcesFormReflectorsExperiment( test )
       throw _.err( 'TimeOut:10000, resources forming takes too long' );
     });
 
-    return con.orKeepingSplit( t );
+    return _.Consequence.Or( con, t );
+    // return con.orKeepingSplit( t );
   })
 
   .then( ( op ) =>
@@ -25686,7 +25687,8 @@ function resourcesFormReflectorsExperiment( test )
       throw _.err( 'TimeOut : 10000, resources forming takes too long' );
     });
 
-    return con.orKeepingSplit( t );
+    return _.Consequence.Or( con, t );
+    // return con.orKeepingSplit( t );
   })
 
   .then( ( op ) =>
