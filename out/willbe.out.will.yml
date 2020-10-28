@@ -296,8 +296,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/clean-special
           - ../proto/wtools/atop/will.test/_asset/clean-special/.will.yml
           - ../proto/wtools/atop/will.test/_asset/clean-special/out
-          - ../proto/wtools/atop/will.test/_asset/clean-special/out/"#dir2"
-          - ../proto/wtools/atop/will.test/_asset/clean-special/out/"#dir2"/file
+          - '../proto/wtools/atop/will.test/_asset/clean-special/out/"#dir2"'
+          - '../proto/wtools/atop/will.test/_asset/clean-special/out/"#dir2"/file'
           - ../proto/wtools/atop/will.test/_asset/clean-special/out/"@dir1"
           - ../proto/wtools/atop/will.test/_asset/clean-special/out/"@dir1"/file
           - ../proto/wtools/atop/will.test/_asset/clean-with-inpath
