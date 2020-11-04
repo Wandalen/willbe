@@ -25,7 +25,12 @@ function onModule( context )
   });
 
   if( !status.isRepository || !status.remote )
-  return null;
+  {
+    let context2 = context.will.hookContextNew( context );
+    context2.request.map = { verbosity : 2 }
+    context2.will.hooks.ProtoSync.call( context2 );
+    return null;
+  }
 
   if( o.verbosity )
   logger.log( `Pulling ${context.junction.nameWithLocationGet()}` );
@@ -56,6 +61,12 @@ function onModule( context )
   {
     provider.archive.restoreLinksEnd();
   });
+
+  {
+    let context2 = context.will.hookContextNew( context );
+    context2.request.map = { verbosity : 2 }
+    context2.will.hooks.ProtoSync.call( context2 );
+  }
 
   context.ready.catch( ( err ) =>
   {
