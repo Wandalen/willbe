@@ -2054,8 +2054,6 @@ function openWith( test )
   return a.ready;
 }
 
-openWith.timeOut = 300000;
-
 //
 
 function openEach( test )
@@ -15305,7 +15303,7 @@ function cleanBroken1( test )
   {
     test.case = '.clean ';
     var files = a.find( a.abs( '.module' ) );
-    test.identical( files.length, 4 ); debugger;
+    test.identical( files.length, 4 );
     return null;
   })
 
@@ -15482,7 +15480,6 @@ function cleanBroken2( test )
   a.appStart({ execPath : '.export', throwingExitCode : 0 })
   .then( ( op ) =>
   {
-    debugger;
     test.case = '.export';
 
     test.will = 'update should throw error if submodule is not downloaded but download path exists';
@@ -15861,7 +15858,7 @@ function cleanMixed( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '- Clean deleted' ) ); debugger;
+    test.is( _.strHas( op.output, '- Clean deleted' ) );
 
     test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -15893,7 +15890,6 @@ function cleanWithInPath( test )
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
-    debugger;
     hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
@@ -17746,6 +17742,85 @@ function shellVerbosity( test )
 
 //
 
+function shellQuotedCommand( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'open' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.shell "ls -a"';
+    return null;
+  });
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.shell "ls -a"' });
+
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Command ".shell "ls -a""' ), 1 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*\.ex\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*\.im\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '> ls -a' ), 1 );
+    test.identical( _.strCount( op.output, '..' ), 1 );
+    test.identical( _.strCount( op.output, 'doc' ), 3 );
+    test.identical( _.strCount( op.output, 'doc.ex.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'doc.im.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 3 );
+    test.identical( _.strCount( op.output, 'proto' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with */* .shell "ls -a"';
+    return null;
+  });
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.with */* .shell "ls -a"' });
+
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Command ".with */* .shell "ls -a""' ), 1 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*\/\.ex\.will\.yml/ ), 2 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*\/\.im\.will\.yml/ ), 2 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*\/doc\.ex\.will\.yml/ ), 2 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*\/doc\.im\.will\.yml/ ), 2 );
+    test.identical( _.strCount( op.output, '. Read 8 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '> ls -a' ), 4 );
+    test.identical( _.strCount( op.output, '..' ), 4 );
+    test.identical( _.strCount( op.output, 'doc' ), 18 );
+    test.identical( _.strCount( op.output, 'doc.ex.will.yml' ), 6 );
+    test.identical( _.strCount( op.output, 'doc.im.will.yml' ), 6 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 12 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 12 );
+    test.identical( _.strCount( op.output, 'proto' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+shellQuotedCommand.timeOut = 60000;
+
+//
+
 function functionStringsJoin( test )
 {
   let context = this;
@@ -18318,7 +18393,6 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    debugger
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
@@ -18331,7 +18405,7 @@ function submodulesDownloadSwitchBranch( test )
     // willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '#dev' );
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '!dev' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
-    debugger;
+
     return null;
   })
 
@@ -25576,7 +25650,6 @@ function runWillbe( test )
       if( _.strHas( data, 'wTools.out.will.yml' ) )
       {
         console.log( 'Terminating willbe...' );
-        // debugger;
         // o.process.kill( 'SIGTERM' );
         // o.process.kill( 'SIGINT' );
         o.process.kill( 'SIGINT' );
@@ -33553,6 +33626,7 @@ let Self =
 
     shellWithCriterion,
     shellVerbosity,
+    shellQuotedCommand,
 
     // function
 
