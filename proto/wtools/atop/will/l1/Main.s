@@ -5108,7 +5108,9 @@ function hookCall( o )
     ready
     .then( () =>
     {
-      return require( _.fileProvider.path.nativize( o.execPath ) );
+      // debugger;
+      /* qqq : cover hooks behind soft link */
+      return require( _.fileProvider.path.nativize( _.fileProvider.pathResolveLinkFull( o.execPath ).absolutePath ) );
     })
     .then( ( routine ) =>
     {
