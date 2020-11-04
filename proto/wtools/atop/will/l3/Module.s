@@ -8906,7 +8906,7 @@ function gitStatus( o )
 
   /* read stats to fix for windows to update edit time of hard linked files */
   if( process.platform === 'win32' )
-  fileProvider.filesFind({ filePath : context.junction.dirPath + '**', safe : 0 });
+  fileProvider.filesFind({ filePath : module.dirPath + '**', safe : 0 });
 
   let config = fileProvider.configUserRead();
   let token = null;
@@ -8917,7 +8917,7 @@ function gitStatus( o )
   o2.insidePath = o.dirPath;
   if( !o2.token )
   o2.token = token;
-  debugger;
+
   let got = _.git.statusFull( o2 );
 
   if( !got.status )
@@ -9158,10 +9158,11 @@ function shell( o )
   /* */
 
   let ready = new _.Consequence().take( null );
+  let execPath = _.strUnquote( o.execPath );
 
   _.process.start
   ({
-    execPath : o.execPath,
+    execPath,
     currentPath : o.currentPath,
     verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
     ready,
