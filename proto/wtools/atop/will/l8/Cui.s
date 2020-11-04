@@ -1017,8 +1017,6 @@ function _commandModulesLike( o )
 
   cui._commandsBegin( o.commandRoutine );
 
-  debugger;
-
   if( cui.currentOpeners === null && cui.currentOpener === null )
   ready.then( () => cui.openersFind() )
   .then( () => filter() );
@@ -1805,7 +1803,6 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
-  debugger;
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );

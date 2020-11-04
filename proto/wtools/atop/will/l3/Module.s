@@ -8905,7 +8905,6 @@ function gitStatus( o )
   });
 
   /* read stats to fix for windows to update edit time of hard linked files */
-  debugger;
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : module.dirPath + '**', safe : 0 });
 
@@ -9159,10 +9158,11 @@ function shell( o )
   /* */
 
   let ready = new _.Consequence().take( null );
+  let execPath = _.strUnquote( o.execPath );
 
   _.process.start
   ({
-    execPath : o.execPath,
+    execPath,
     currentPath : o.currentPath,
     verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
     ready,
