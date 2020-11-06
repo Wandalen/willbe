@@ -172,24 +172,25 @@ function ownedBy( object )
 // path
 // --
 
-function _shortestModuleWillfileWithRoleDirPathGet()
+function _shortestModuleDirPathGet()
 {
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  if( this.willfileWithRoleMap.single !== undefined )
-  return this.willfileWithRoleMap.single.dirPath;
+  let self = this;
+  let path = self.will.fileProvider.path;
 
-  let ex = this.willfileWithRoleMap.export;
-  let im = this.willfileWithRoleMap.import;
+  let modulePath = path.canonize( self.pathMap[ 'module.common' ] );
+  let moduleInPath = path.canonize( self.pathMap[ 'module.peer.in' ] );
 
-  if( ex && im )
-  return ex.dirPath.length < im.dirPath.length ? ex.dirPath : im.dirPath;
+  if( modulePath && moduleInPath )
+  return modulePath.length < moduleInPath.length ? modulePath : moduleInPath;
 
-  if( ex )
-  return ex.dirPath;
-  else if( im )
-  return im.dirPath;
-  else _.assert( 0, 'Unknown module role path.' );
+  if( modulePath )
+  return modulePath;
+  else if( moduleInPath )
+  return moduleInPath;
+  else
+  _.assert( 0, 'Unknown module path.' );
 }
 
 //
@@ -921,7 +922,7 @@ let Extension =
 
   // path
 
-  _shortestModuleWillfileWithRoleDirPathGet,
+  _shortestModuleDirPathGet,
 
   _filePathSet,
   _filePathChanged1,
