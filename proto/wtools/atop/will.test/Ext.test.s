@@ -29792,8 +29792,17 @@ clone
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".with clone/ .git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+    test.identical( _.strCount( op.output, '> git pull' ), 1 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+    test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
     test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
