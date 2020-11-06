@@ -8543,7 +8543,7 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() }` );
 
   let provider = _.FileFilter.Archive();
   if( o.hardLinkMaybe )
@@ -8707,11 +8707,11 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() }` );
 
   if( status.uncommitted )
   {
-    throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
+    throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() } has local changes!` );
     return null;
   }
 
@@ -8804,7 +8804,7 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Pushing ${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() }` );
 
   let ready = new _.Consequence().take( null );
   let start = _.process.starter
@@ -8862,7 +8862,7 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Resetting ${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() }` );
 
   _.git.reset
   ({
@@ -8924,7 +8924,7 @@ function gitStatus( o )
   return null;
 
   debugger;
-  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() }` );
   logger.log( got.status );
   return got;
 }
@@ -9022,7 +9022,7 @@ function gitSync( o )
       ready : con,
     });
     if( o.verbosity )
-    logger.log( `Committing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    logger.log( `Committing ${ module.qualifiedName } at ${ module._shortestModuleWillfileWithRoleDirPathGet() }` );
 
     start( `git add --all` );
     if( o.commit )
