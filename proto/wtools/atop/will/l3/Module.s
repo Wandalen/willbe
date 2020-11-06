@@ -8543,7 +8543,7 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module.qualifiedName } at ${ module.dirPath }` );
+  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
   let provider = _.FileFilter.Archive();
   if( o.hardLinkMaybe )
@@ -8707,11 +8707,11 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module.qualifiedName } at ${ module.dirPath }` );
+  logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
   if( status.uncommitted )
   {
-    throw _.errBrief( `${ module.qualifiedName } at ${ module.dirPath } has local changes!` );
+    throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
     return null;
   }
 
@@ -8804,7 +8804,7 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module.qualifiedName } at ${ module.dirPath }` );
+  logger.log( `Pushing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
   let ready = new _.Consequence().take( null );
   let start = _.process.starter
@@ -8862,7 +8862,7 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module.qualifiedName } at ${ module.dirPath }` );
+  logger.log( `Resetting ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
   _.git.reset
   ({
@@ -8924,7 +8924,7 @@ function gitStatus( o )
   return null;
 
   debugger;
-  logger.log( `${ module.qualifiedName } at ${ module.dirPath }` );
+  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
   logger.log( got.status );
   return got;
 }
@@ -9022,11 +9022,11 @@ function gitSync( o )
       ready : con,
     });
     if( o.verbosity )
-    logger.log( `Committing ${ module.qualifiedName } at ${ module.dirPath }` );
+    logger.log( `Committing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
     start( `git add --all` );
     if( o.commit )
-    start( `git commit ${o.commit}` );
+    start( `git commit ${ o.commit }` );
     else
     start( 'git commit -am "."' );
 

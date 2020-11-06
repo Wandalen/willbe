@@ -172,6 +172,15 @@ function ownedBy( object )
 // path
 // --
 
+function _shortestModuleDirPathGet()
+{
+  _.assert( arguments.length === 0, 'Expects no arguments' );
+
+  return this.inPath.length > this.outPath.length ? this.inPath : this.outPath;
+}
+
+//
+
 function _filePathSet( willfilesPath )
 {
   let module = this;
@@ -898,6 +907,8 @@ let Extension =
   ownedBy,
 
   // path
+
+  _shortestModuleDirPathGet,
 
   _filePathSet,
   _filePathChanged1,
