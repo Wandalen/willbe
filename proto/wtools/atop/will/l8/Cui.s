@@ -1305,7 +1305,7 @@ commandVersionBump.defaults =
   verbosity : 3,
   v : 3,
 };
-commandVersionBump.hint = 'Use ".version.bump" to increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.';
+commandVersionBump.hint = 'Use ".version.bump" to increase version in willfile on specified delta.';
 commandVersionBump.commandSubjectHint = 'A string in format "x.x.x" that declares delta for each version.';
 commandVersionBump.commandProperties =
 {
@@ -3467,13 +3467,20 @@ commandNpmFromWillfile.defaults =
   entryPath : null,
   filesPath : null,
 };
-commandNpmFromWillfile.hint = 'Use ".npm.from.willfile" to generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.';
+commandNpmFromWillfile.hint = 'Use ".npm.from.willfile" to generate JSON file from willfile(s) of current module.';
 commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
 commandNpmFromWillfile.commandProperties =
 {
-  packagePath : 'Path to generated JSON file. Default is "{path::out}/package.json".\n\t"will .npm.from.willfile packagePath:out/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "out".',
-  entryPath : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
-  filesPath : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module\n\twith path "path/npm.files"a.\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
+  'without options and subject' : 'Default JSON file is "package.json" in directory "out".'
+  + '\n\twill .npm.from.willfile\n\t- generate "package.json" from unnamed willfiles, file locates in directory "out".',
+  'with subject' : '\n\twill .npm.from.willfile package.json\n\t- generate "package.json" from unnamed willfiles, file locates in directory of module.\n\nOptions :\n',
+
+  'packagePath' : 'Path to generated JSON file. Default is "{path::out}/package.json".'
+  + '\n\twill .npm.from.willfile packagePath:debug/package.json\n\t- generate "package.json" from unnamed willfiles, file locates in directory "debug".',
+  'entryPath' : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".'
+  + '\n\twill .npm.from.willfile entryPath:proto/wtools/Include.s\n\t- generate "package.json" with field "main" : "proto/wtools/Include.s".',
+  'filesPath' : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
+  + '\n\twill .npm.from.willfile filesPath:proto\n\t- generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
 };
 
 //
@@ -3551,12 +3558,18 @@ commandWillfileFromNpm.defaults =
   packagePath : null,
   willfilePath : null,
 };
-commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".';
+commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file.';
 commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 commandWillfileFromNpm.commandProperties =
 {
-  packagePath : 'Path to source json file. Default is "./package.json".\n\t"will .willfile.from.npm packagePath:old.package.json" - generate willfile "will.yml" from JSON file "old.package.json".',
-  willfilePath : 'Path to generated willfile. Default is "./.will.yml".\n\t"will .willfile.from.npm willfilePath:Named" - generate willfile "Named.will.yml" from file "package.json".',
+  'without options and subject' : 'Default willfile - "will.yml", default JSON file - "package.json".'
+  + '\n\twill .npm.from.willfile\n\t- generate willfile "will.yml" from file "package.json".',
+  'with subject' : '\n\twill .npm.from.willfile Named\n\t- generate willfile "Named.will.yml" from file "package.json".\n\nOptions :\n',
+
+  'packagePath' : 'Path to source json file. Default is "./package.json".'
+  + '\n\twill .willfile.from.npm packagePath:old.package.json\n\t- generate willfile "will.yml" from JSON file "old.package.json".',
+  'willfilePath' : 'Path to generated willfile. Default is "./.will.yml".'
+  + '\n\twill .willfile.from.npm willfilePath:Named\n\t- generate willfile "Named.will.yml" from file "package.json".',
 };
 
 //
@@ -3645,12 +3658,18 @@ commandWillfileGet.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".';
+commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile.';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
-  verbosity : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:4" - enable output for not existed property.',
-  v : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
+  'without options and subject' : 'Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.'
+  + '\n\twill .willfile.get\n\t- show all unnamed willfile.',
+  'with subject' : '\n\twill .willfile.get Named about/author\n\t- show property "about/author" in willfile "Named.will.yml".\n\nOptions :\n',
+
+  'verbosity' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  + '\n\twill .willfile.get path/to/not/existed:1 verbosity:4\n\t- enable output for not existed property.',
+  'v' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  + '\n\twill .willfile.get path/to/not/existed:1 v:4\n\t- enable output for not existed property.',
 };
 
 //
@@ -3709,13 +3728,20 @@ commandWillfileSet.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".';
+commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile.';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSet.commandProperties =
 {
-  structureParse : 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.set path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
-  verbosity : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.set about/author/name:author verbosity:4" - enable output if option "author" has string value.',
-  v : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
+  'without subject' : 'Default willfile is unnamed willfile. Expects at least one property.'
+  + '\n\twill .willfile.set about/name:MyName\n\t- sets in unnamed willfile property "about/name" to "MyName".',
+  'with subject' : '\n\twill .willfile.set Named about/name:MyName\n\t- sets willfile "Named.will.yml" property "about/name" to "MyName".\n\nOptions :\n',
+
+  'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
+  + '\n\twill .willfile.set path/out.debug/criterion:\'debug:[0,1]\'\n\t- will parse criterion as structure.',
+  'verbosity' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  + '\n\twill .willfile.set about/author/name:author verbosity:4\n\t- enable output if option "author" has string value.',
+  'v' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  + '\n\twill .willfile.set about/author/name:author v:4\n\t- enable output if option "author" has string value.',
 };
 
 //
@@ -3804,12 +3830,18 @@ commandWillfileDel.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileDel.hint = 'Use ".willfile.del" to delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml"';
+commandWillfileDel.hint = 'Use ".willfile.del" to delete separate properties in destination willfile.';
 commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
 commandWillfileDel.commandProperties =
 {
-  verbosity : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.del about/author verbosity:4" - enable output.',
-  v : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.del about/author v:4" - enable output.',
+  'without options and subject' : 'Default willfile is unnamed willfile. If no options are provided, command clear all config file.'
+  + '\n\twill .willfile.del\n\t- clear all unnamed willfile.',
+  'with subject' : '\n\twill .willfile.del Named about/interpreters\n\t- delete property "interpreters" in willfile "Named.will.yml".\n\nOptions :\n',
+
+  'verbosity' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  + '\n\twill .willfile.del about/author verbosity:4\n\t- enable output.',
+  'v' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  + '\n\twill .willfile.del about/author v:4\n\t- enable output.',
 };
 
 //
@@ -3870,13 +3902,18 @@ commandWillfileExtend.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileExtend.hint = 'Use ".willfile.extend" to extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.';
+commandWillfileExtend.hint = 'Use ".willfile.extend" to extend separate properties of destination willfile.';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileExtend.commandProperties =
 {
-  structureParse : 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  'without options and subject' : 'Default willfile is unnamed willfile. Expects at least one property.'
+  + '\n\twill .willfile.extend about/name:MyName\n\t- sets in unnamed willfile property "about/name" to "MyName".',
+  'with subject' : '\n\twill .willfile.extend Named about/interpreters/chromium:73.1.0\n\t- throw error if property "interpreters" has String value.\n\nOptions :\n',
+
+  'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
+  + '\n\twill .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'\n\t- will parse criterion as structure.',
+  'verbosity' : 'Set verbosity. Default is 3.',
+  'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -3934,10 +3971,19 @@ commandWillfileSupplement.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.';
+commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile.';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
-commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
-commandWillfileSupplement.commandProperties.structureParse = 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.';
+commandWillfileSupplement.commandProperties =
+{
+  'without options and subject' : 'Default willfile is unnamed willfile. Expects at least one option.'
+  + '\n\twill .willfile.supplement about/name:MyName\n\t- sets in unnamed willfile option "about/name" to "MyName".',
+  'with subject' : '\n\twill .willfile.supplement Named about/interpreters/chromium:73.1.0\n\t- throw error if property "interpreters" has String value.\n\nOptions :\n',
+
+  'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
+  + '\n\twill .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'\n\t- will parse criterion as structure.',
+  'verbosity' : 'Set verbosity. Default is 3.',
+  'v' : 'Set verbosity. Default is 3.',
+};
 
 //
 
@@ -3960,10 +4006,13 @@ commandWillfileExtendWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileExtendWillfile.hint = 'Use ".willfile.extend.willfile" to extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".';
+commandWillfileExtendWillfile.hint = 'Use ".willfile.extend.willfile" to extend willfile by data from source configuration files.';
 commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileExtendWillfile.commandProperties =
 {
+  'without options' : 'If destination willfile does not exists, the "will.yml" file is created.'
+  + '\n\twill .willfile.extend.willfile ./ Named package.json\n\t- extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n\nOptions :\n',
+
   'about' : 'Enables extension of section "about". Default value is 1.',
   'build' : 'Enables extension of section "build". Default value is 1.',
   'path' : 'Enables extension of section "path". Default value is 1.',
@@ -4010,9 +4059,11 @@ commandWillfileSupplementWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileSupplementWillfile.hint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".';
+commandWillfileSupplementWillfile.hint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files.';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
-commandWillfileSupplementWillfile.commandProperties = commandWillfileExtendWillfile.commandProperties;
+commandWillfileSupplementWillfile.commandProperties = _.mapExtend( null, commandWillfileExtendWillfile.commandProperties );
+commandWillfileSupplementWillfile.commandProperties[ 'without options' ] = 'If destination willfile does not exists, the "will.yml" file is created.'
+  + '\n\twill .willfile.supplement.willfile ./ Named package.json\n\t- supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n\nOptions :\n';
 
 //
 
@@ -4818,3 +4869,4 @@ if( !module.parent )
 Self.Exec();
 
 })();
+
