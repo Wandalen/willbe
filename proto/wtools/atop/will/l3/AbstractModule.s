@@ -172,6 +172,29 @@ function ownedBy( object )
 // path
 // --
 
+function _shortestModuleDirPathGet()
+{
+  _.assert( arguments.length === 0, 'Expects no arguments' );
+
+  let self = this;
+  let path = self.will.fileProvider.path;
+
+  let modulePath = path.canonize( self.pathMap[ 'module.common' ] );
+  let moduleInPath = path.canonize( self.pathMap[ 'module.peer.in' ] );
+
+  if( modulePath && moduleInPath )
+  return modulePath.length < moduleInPath.length ? modulePath : moduleInPath;
+
+  if( modulePath )
+  return modulePath;
+  else if( moduleInPath )
+  return moduleInPath;
+  else
+  _.assert( 0, 'Unknown module path.' );
+}
+
+//
+
 function _filePathSet( willfilesPath )
 {
   let module = this;
@@ -898,6 +921,8 @@ let Extension =
   ownedBy,
 
   // path
+
+  _shortestModuleDirPathGet,
 
   _filePathSet,
   _filePathChanged1,
