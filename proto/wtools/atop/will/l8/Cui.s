@@ -1157,7 +1157,7 @@ commandImply.defaults =
   withInvalid : null,
   withSubmodules : null,
 };
-commandImply.hint = 'Change state or imply value of a variable';
+commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
 commandImply.commandProperties =
 {
@@ -1305,8 +1305,8 @@ commandVersionBump.defaults =
   verbosity : 3,
   v : 3,
 };
-commandVersionBump.hint = 'Use ".version.bump" to increase version in willfile on specified delta.';
-commandVersionBump.longHint = 'Use ".version.bump" to increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.\n';
+commandVersionBump.hint = 'Increase version in willfile on specified delta.';
+commandVersionBump.longHint = 'Increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.\n';
 commandVersionBump.commandSubjectHint = 'A string in format "x.x.x" that declares delta for each version.';
 commandVersionBump.commandProperties =
 {
@@ -1746,7 +1746,8 @@ function commandSubmodulesFixate( e )
 }
 
 commandSubmodulesFixate.defaults = commandImply.defaults;
-commandSubmodulesFixate.hint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
+commandSubmodulesFixate.hint = 'Fixate remote submodules.';
+commandSubmodulesFixate.longHint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
 commandSubmodulesFixate.commandSubjectHint = false;
 commandSubmodulesFixate.commandProperties =
 {
@@ -1787,7 +1788,8 @@ function commandSubmodulesUpgrade( e )
 }
 
 commandSubmodulesUpgrade.defaults = commandImply.defaults;
-commandSubmodulesUpgrade.hint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
+commandSubmodulesUpgrade.hint = 'Upgrade remote submodules.';
+commandSubmodulesUpgrade.longHint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
 commandSubmodulesUpgrade.commandSubjectHint = false;
 commandSubmodulesUpgrade.commandProperties =
 {
@@ -1832,7 +1834,8 @@ function commandSubmodulesVersionsDownload( e )
 }
 
 commandSubmodulesVersionsDownload.defaults = commandImply.defaults;
-commandSubmodulesVersionsDownload.hint = 'Download each submodule if such was not downloaded so far.';
+commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
+commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
 commandSubmodulesVersionsDownload.commandProperties =
 {
@@ -1870,7 +1873,8 @@ function commandSubmodulesVersionsUpdate( e )
 }
 
 commandSubmodulesVersionsUpdate.defaults = commandImply.defaults;
-commandSubmodulesVersionsUpdate.hint = 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.';
+commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
+commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
 commandSubmodulesVersionsUpdate.commandProperties =
 {
@@ -1907,7 +1911,7 @@ function commandSubmodulesVersionsVerify( e )
 }
 
 commandSubmodulesVersionsVerify.defaults = commandImply.defaults;
-commandSubmodulesVersionsVerify.hint = 'Check whether each submodule is on branch which is specified in willfile';
+commandSubmodulesVersionsVerify.hint = 'Check whether each submodule is on branch which is specified in willfile.';
 commandSubmodulesVersionsVerify.commandSubjectHint = false;
 commandSubmodulesVersionsVerify.commandProperties =
 {
@@ -1944,7 +1948,8 @@ function commandSubmodulesVersionsAgree( e )
 }
 
 commandSubmodulesVersionsAgree.defaults = commandImply.defaults;
-commandSubmodulesVersionsAgree.hint = 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
+commandSubmodulesVersionsAgree.hint = 'Update each submodule.';
+commandSubmodulesVersionsAgree.longHint = 'Update each submodule or check for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
 commandSubmodulesVersionsAgree.commandSubjectHint = false;
 commandSubmodulesVersionsAgree.commandProperties =
 {
@@ -2024,7 +2029,7 @@ function commandSubmodulesGit( e )
 
 commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesGit.defaults.withSubmodules = 1;
-commandSubmodulesGit.hint = 'Use "submodules git" to run custom Git command on submodules of the module.';
+commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.';
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
@@ -2068,7 +2073,7 @@ commandSubmodulesGitPrOpen.defaults =
   v : null,
   verbosity : null,
 };
-commandSubmodulesGitPrOpen.hint = 'Use "modules git pr open" to open pull requests from current modules and its submodules.';
+commandSubmodulesGitPrOpen.hint = 'Open pull requests from current modules and its submodules.';
 commandSubmodulesGitPrOpen.commandSubjectHint = 'A title for PR';
 commandSubmodulesGitPrOpen.commandProperties =
 {
@@ -2118,8 +2123,7 @@ commandSubmodulesGitSync.defaults =
   v : null,
   verbosity : 1,
 };
-commandSubmodulesGitSync.hint =
-'Use "submodules git sync" to syncronize repositories of submodules of current module.';
+commandSubmodulesGitSync.hint = 'Syncronize repositories of submodules of current module.';
 commandSubmodulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
 commandSubmodulesGitSync.commandProperties =
 {
@@ -2276,7 +2280,7 @@ function commandModulesGit( e )
 
 commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandModulesGit.defaults.withSubmodules = 1;
-commandModulesGit.hint = 'Use "modules git" to run custom Git command on module and its submodules.';
+commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
 commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
@@ -2320,7 +2324,7 @@ commandModulesGitPrOpen.defaults =
   v : null,
   verbosity : null,
 };
-commandModulesGitPrOpen.hint = 'Use "modules git pr open" to open pull requests from current modules and its submodules.';
+commandModulesGitPrOpen.hint = 'Open pull requests from current module and its submodules.';
 commandModulesGitPrOpen.commandSubjectHint = 'A title for PR';
 commandModulesGitPrOpen.commandProperties =
 {
@@ -2370,8 +2374,7 @@ commandModulesGitSync.defaults =
   v : null,
   verbosity : 1,
 };
-commandModulesGitSync.hint =
-'Use "modules git sync" to syncronize repositories of current module and all submodules of the module.';
+commandModulesGitSync.hint = 'Syncronize repositories of current module and all submodules of the module.';
 commandModulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
 commandModulesGitSync.commandProperties =
 {
@@ -2562,7 +2565,8 @@ function commandClean( e )
 commandClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandClean.defaults.withSubmodules = 0;
 commandClean.defaults.withOut = 1;
-commandClean.hint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
+commandClean.hint = 'Clean current module.';
+commandClean.longHint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
 commandClean.commandSubjectHint = false;
 commandClean.commandProperties =
 {
@@ -2702,7 +2706,8 @@ function commandExport( e )
 }
 
 commandExport.defaults = Object.create( null );
-commandExport.hint = 'Export selected the module with spesified criterion. Save output to output willfile and archive.';
+commandExport.hint = 'Export selected module with spesified criterion.';
+commandExport.longHint = 'Export selected module with spesified criterion. Save output to output willfile and archive.';
 commandExport.commandSubjectHint = 'A name of export scenario.';
 
 //
@@ -2738,7 +2743,8 @@ function commandExportPurging( e )
 }
 
 commandExportPurging.defaults = Object.create( null );
-commandExportPurging.hint = 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.';
+commandExportPurging.hint = 'Export selected the module with spesified criterion purging output willfile first.';
+commandExportPurging.longHint = 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.';
 commandExportPurging.commandSubjectHint = 'A name of export scenario.';
 
 //
@@ -2773,7 +2779,8 @@ function commandExportRecursive( e )
 }
 
 commandExportRecursive.defaults = Object.create( null );
-commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
+commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules.';
+commandExportRecursive.longHint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
 //
@@ -2816,7 +2823,7 @@ function commandGit( e )
 
 commandGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandGit.defaults.withSubmodules = 0;
-commandGit.hint = 'Use "git" to run custom Git command in repository of module.';
+commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandProperties = commandImply.commandProperties;
 commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
@@ -2859,7 +2866,7 @@ commandGitPrOpen.defaults =
   v : null,
   verbosity : null,
 };
-commandGitPrOpen.hint = 'Use "git pr open" to open pull request from current modules.';
+commandGitPrOpen.hint = 'Open pull request from current modules.';
 commandGitPrOpen.commandSubjectHint = 'A title for PR';
 commandGitPrOpen.commandProperties =
 {
@@ -2902,7 +2909,7 @@ function commandGitPull( e )
 
 commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPull.defaults.withSubmodules = 0;
-commandGitPull.hint = 'Use "git pull" to pull changes from remote repository.';
+commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
 
@@ -2936,7 +2943,7 @@ function commandGitPush( e )
 
 commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPush.defaults.withSubmodules = 0;
-commandGitPush.hint = 'Use "git push" to push commits and tags to remote repository.';
+commandGitPush.hint = 'Push commits and tags to remote repository.';
 commandGitPush.commandSubjectHint = false;
 commandGitPush.commandProperties = commandImply.commandProperties;
 
@@ -2976,7 +2983,7 @@ commandGitReset.defaults =
   v : null,
   verbosity : 2,
 };
-commandGitReset.hint = 'Use "git reset" to reset changes.';
+commandGitReset.hint = 'Reset local changes in repository of the module.';
 commandGitReset.commandSubjectHint = false;
 commandGitReset.commandProperties =
 {
@@ -3025,7 +3032,7 @@ commandGitStatus.defaults =
   v : null,
   verbosity : 1,
 };
-commandGitStatus.hint = 'Use "git status" to check the status of the repository.';
+commandGitStatus.hint = 'Check the status of the repository.';
 commandGitStatus.commandSubjectHint = false;
 commandGitStatus.commandProperties =
 {
@@ -3074,7 +3081,7 @@ commandGitSync.defaults =
   v : null,
   verbosity : 1,
 };
-commandGitSync.hint = 'Use "git sync" to syncronize local and remote repositories.';
+commandGitSync.hint = 'Syncronize local and remote repositories.';
 commandGitSync.commandSubjectHint = 'A commit message. Default value is "."';
 commandGitSync.commandProperties =
 {
@@ -3121,7 +3128,7 @@ commandGitTag.defaults =
   v : null,
   verbosity : 1,
 };
-commandGitTag.hint = 'Use "git tag" to add tag for current commit.';
+commandGitTag.hint = 'Add tag for current commit.';
 commandGitTag.commandSubjectHint = false;
 commandGitTag.commandProperties =
 {
@@ -3148,7 +3155,7 @@ function commandGitPreservingHardLinks( e )
   _.git.hookPreservingHardLinksUnregister();
 }
 
-commandGitPreservingHardLinks.hint = 'Use "git config preserving hard links" to switch on preserve hardlinks.';
+commandGitPreservingHardLinks.hint = 'Switch on preserving hardlinks.';
 commandGitPreservingHardLinks.commandSubjectHint = 'Any subject to enable preserving hardliks.';
 
 // --
@@ -3224,7 +3231,7 @@ function commandWith( e )
 
 }
 
-commandWith.hint = 'Use "with" to select a module.';
+commandWith.hint = 'Select a module to execute command.';
 commandWith.commandSubjectHint = 'A module selector.';
 
 //
@@ -3419,7 +3426,7 @@ function commandEach( e )
 
 }
 
-commandEach.hint = 'Use "each" to iterate each module in a directory.';
+commandEach.hint = 'Iterate each module in a directory.';
 commandEach.commandSubjectHint = 'A module or resource selector.';
 
 //
@@ -3468,8 +3475,8 @@ commandNpmFromWillfile.defaults =
   entryPath : null,
   filesPath : null,
 };
-commandNpmFromWillfile.hint = 'Use ".npm.from.willfile" to generate JSON file from willfile(s) of current module.';
-commandNpmFromWillfile.longHint = 'Use ".npm.from.willfile" to generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.\n';
+commandNpmFromWillfile.hint = 'Generate JSON file from willfile(s) of current module.';
+commandNpmFromWillfile.longHint = 'Generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.\n';
 commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
 commandNpmFromWillfile.commandProperties =
 {
@@ -3556,8 +3563,8 @@ commandWillfileFromNpm.defaults =
   packagePath : null,
   willfilePath : null,
 };
-commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file.';
-commandWillfileFromNpm.longHint = 'Use ".willfile.from.npm" to generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".\n';
+commandWillfileFromNpm.hint = 'Generate willfile from JSON file.';
+commandWillfileFromNpm.longHint = 'Generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".\n';
 commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 commandWillfileFromNpm.commandProperties =
 {
@@ -3653,8 +3660,8 @@ commandWillfileGet.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile.';
-commandWillfileGet.longHint = 'Use ".willfile.get" to get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".\n';
+commandWillfileGet.hint = 'Get value of separate properties of source willfile.';
+commandWillfileGet.longHint = 'Get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".\n';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
@@ -3720,8 +3727,8 @@ commandWillfileSet.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile.';
-commandWillfileSet.longHint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".\n';
+commandWillfileSet.hint = 'Set separate properties in destination willfile.';
+commandWillfileSet.longHint = 'Set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".\n';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSet.commandProperties =
 {
@@ -3819,8 +3826,8 @@ commandWillfileDel.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileDel.hint = 'Use ".willfile.del" to delete separate properties in destination willfile.';
-commandWillfileDel.longHint = 'Use ".willfile.del" to delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml".\n';
+commandWillfileDel.hint = 'Delete separate properties in destination willfile.';
+commandWillfileDel.longHint = 'Delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml".\n';
 commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
 commandWillfileDel.commandProperties =
 {
@@ -3888,8 +3895,8 @@ commandWillfileExtend.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileExtend.hint = 'Use ".willfile.extend" to extend separate properties of destination willfile.';
-commandWillfileExtend.longHint = 'Use ".willfile.extend" to extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
+commandWillfileExtend.hint = 'Extend separate properties of destination willfile.';
+commandWillfileExtend.longHint = 'Extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileExtend.commandProperties =
 {
@@ -3954,8 +3961,8 @@ commandWillfileSupplement.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile.';
-commandWillfileSupplement.longHint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one property.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile property "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
+commandWillfileSupplement.hint = 'Extend separate not existed properties of destination willfile.';
+commandWillfileSupplement.longHint = 'Extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one property.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile property "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSupplement.commandProperties =
 {
@@ -3986,8 +3993,8 @@ commandWillfileExtendWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileExtendWillfile.hint = 'Use ".willfile.extend.willfile" to extend willfile by data from source configuration files.';
-commandWillfileExtendWillfile.longHint = 'Use ".willfile.extend.willfile" to extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
+commandWillfileExtendWillfile.hint = 'Extend willfile by data from source configuration files.';
+commandWillfileExtendWillfile.longHint = 'Extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
 commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileExtendWillfile.commandProperties =
 {
@@ -4037,8 +4044,8 @@ commandWillfileSupplementWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileSupplementWillfile.hint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files.';
-commandWillfileSupplementWillfile.longHint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
+commandWillfileSupplementWillfile.hint = 'Supplement willfile by data from source configuration files.';
+commandWillfileSupplementWillfile.longHint = 'Supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileSupplementWillfile.commandProperties = _.mapExtend( null, commandWillfileExtendWillfile.commandProperties );
 
@@ -4202,7 +4209,7 @@ function commandPackageInstall( e )
   }
 }
 
-commandPackageInstall.hint = 'Use "package install" to install target package.';
+commandPackageInstall.hint = 'Install target package.';
 commandPackageInstall.commandSubjectHint = 'A name or path to package.';
 commandPackageInstall.commandProperties =
 {
@@ -4335,7 +4342,7 @@ function commandPackageLocalVersions( e )
 
 }
 
-commandPackageLocalVersions.hint = 'Use "package local versions" to get list of package versions avaiable locally.';
+commandPackageLocalVersions.hint = 'Get list of package versions avaiable locally.';
 commandPackageLocalVersions.commandSubjectHint = 'A name of package.';
 
 //
@@ -4492,7 +4499,7 @@ function commandPackageRemoteVersions( e )
   }
 }
 
-commandPackageRemoteVersions.hint = 'Use "package remote versions" to get list of package versions avaiable in remote archive.';
+commandPackageRemoteVersions.hint = 'Get list of package versions avaiable in remote archive.';
 commandPackageRemoteVersions.commandSubjectHint = 'A name of package.';
 commandPackageRemoteVersions.commandProperties =
 {
@@ -4625,7 +4632,7 @@ function commandPackageVersion( e )
   }
 }
 
-commandPackageVersion.hint = 'Use "package local version" to get version of installed package.';
+commandPackageVersion.hint = 'Get version of installed package.';
 commandPackageVersion.commandSubjectHint = 'A name of package.';
 
 // --
