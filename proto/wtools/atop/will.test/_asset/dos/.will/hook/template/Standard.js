@@ -59,7 +59,7 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = _testerGlobal_.wTools;
+let _ = _globals_.testing.wTools;
 let fileProvider = _.fileProvider;
 let path = fileProvider.path;
 

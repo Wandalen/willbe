@@ -25,22 +25,38 @@ function onModule( context )
   if( isProto )
   return null;
 
-  let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
-  if( !fileProvider.fileExists(moduleProtoPath ) )
-  return null;
-
   let verbosity = 0;
-  if( o.verbosity ) verbosity = o.verbosity >= 2 ? 5 : 1;
+  if( o.verbosity )
+  verbosity = o.verbosity >= 2 ? 5 : 1;
 
-  return fileProvider.filesReflect
-  ({
-    filter : { filePath : { [ moduleProtoPath ] : protoPath } },
-    dstRewritingOnlyPreserving : 1,
-    breakingSrcHardLink : 1,
-    breakingDstHardLink : 0,
-    linking : 'hardLink',
-    verbosity
-  });
+  let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
+  if( fileProvider.fileExists( moduleProtoPath ) )
+  {
+    return fileProvider.filesReflect
+    ({
+      filter : { filePath : { [ moduleProtoPath ] : protoPath } },
+      dstRewritingOnlyPreserving : 1,
+      breakingSrcHardLink : 1,
+      breakingDstHardLink : 0,
+      linking : 'hardLink',
+      verbosity
+    });
+  }
+
+  let moduleStepPath = path.join( context.junction.dirPath, 'step' );
+  if( fileProvider.fileExists( moduleStepPath ) )
+  {
+    return fileProvider.filesReflect
+    ({
+      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'step' ) } },
+      dstRewritingOnlyPreserving : 1,
+      breakingSrcHardLink : 1,
+      breakingDstHardLink : 0,
+      linking : 'hardLink',
+      verbosity
+    });
+  }
+
 }
 
 var defaults = ( onModule.defaults = Object.create( null ) );
