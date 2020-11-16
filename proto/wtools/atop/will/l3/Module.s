@@ -8550,8 +8550,8 @@ function gitExecCommand( o )
   {
     let config = fileProvider.configUserRead();
     provider.archive.basePath = will.currentOpener.dirPath;
-    if( config && config.path && config.path.link )
-    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+    if( config && config.path && config.path.hlink )
+    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
 
     provider.archive.fileMapAutosaving = 1;
 
@@ -8721,8 +8721,8 @@ function gitPull( o )
 
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = will.currentOpener.dirPath;
-  if( config && config.path && config.path.link )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+  if( config && config.path && config.path.hlink )
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
 
   provider.archive.fileMapAutosaving = 1;
 
