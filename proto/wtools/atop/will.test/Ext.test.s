@@ -6321,6 +6321,8 @@ hookGitSyncColflict.description =
 function hookGitSyncRestoreHardLinksWithConfigPath( test )
 {
   let context = this;
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
@@ -6446,12 +6448,13 @@ original/f.txt
 
   a.ready.then( () =>
   {
+    a.fileProvider.filesDelete( context.suiteTempPath );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    context.suiteTempPath = temp;
     return null;
   })
-
   /* - */
 
   return a.ready;
@@ -30001,6 +30004,8 @@ original
 function commandGitSyncRestoreHardLinksWithConfigPath( test )
 {
   let context = this;
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
@@ -30120,9 +30125,11 @@ original/f.txt
 
   a.ready.then( () =>
   {
+    a.fileProvider.filesDelete( context.suiteTempPath );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    context.suiteTempPath = temp;
     return null;
   })
 
