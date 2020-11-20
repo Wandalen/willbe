@@ -17,11 +17,21 @@ function onModule( context )
   if( o.verbosity )
   logger.log( `Diff ${context.junction.nameWithLocationGet()}` );
 
-  _.git.diff
+  /* Generates colored diff patch with minimal amount of context */
+
+  let result = _.git.diff
   ({
     localPath : context.junction.dirPath,
+    generatingPatch : 1,
+    coloredPatch : 1,
+    detailing : 1,
+    explaining : 1,
+    linesOfContext : 0,
     sync : 1,
   })
+
+  logger.log( `Status:\n${result.status}` );
+  logger.log( `Patch:\n${result.patch}` );
 
 }
 
