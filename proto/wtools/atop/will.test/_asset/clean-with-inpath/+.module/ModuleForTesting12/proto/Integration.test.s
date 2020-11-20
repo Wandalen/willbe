@@ -114,7 +114,7 @@ function eslint( test )
   let ready = new _.Consequence().take( null );
 
   if( _.process.insideTestContainer() && process.platform !== 'linux' )
-  return test.is( true );
+  return test.true( true );
 
   let start = _.process.starter
   ({

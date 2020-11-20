@@ -47,7 +47,7 @@ function onSuiteEnd()
 
 function trivial( test )
 {
-  test.is( true );
+  test.true( true );
 }
 
 function packageInstall( test )
@@ -90,17 +90,17 @@ function packageInstall( test )
     {
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, 'Installing:' ) )
-        test.is( _.strHas( got.output, 'git                      x86_64   2.18.2-1.el8_1             AppStream   186 k' ) )
-        test.is( _.strHas( got.output, 'Installed:' ) )
-        test.is( _.strHas( got.output, 'git-2.18.2-1.el8_1.x86_64' ) )
-        test.is( _.strHas( got.output, 'Complete!' ) )
+        test.true( _.strHas( got.output, 'Installing:' ) )
+        test.true( _.strHas( got.output, 'git                      x86_64   2.18.2-1.el8_1             AppStream   186 k' ) )
+        test.true( _.strHas( got.output, 'Installed:' ) )
+        test.true( _.strHas( got.output, 'git-2.18.2-1.el8_1.x86_64' ) )
+        test.true( _.strHas( got.output, 'Complete!' ) )
       }
       else if( isUbuntu )
       {
-        test.is( _.strHas( got.output, 'The following NEW packages will be installed:\n  git' ) );
-        test.is( _.strHas( got.output, 'Unpacking git (1:2.17.1-1ubuntu0.5' ) );
-        test.is( _.strHas( got.output, 'Setting up git (1:2.17.1-1ubuntu0.5)' ) );
+        test.true( _.strHas( got.output, 'The following NEW packages will be installed:\n  git' ) );
+        test.true( _.strHas( got.output, 'Unpacking git (1:2.17.1-1ubuntu0.5' ) );
+        test.true( _.strHas( got.output, 'Setting up git (1:2.17.1-1ubuntu0.5)' ) );
       }
     }
     else if( process.platform === 'win32' )
@@ -123,11 +123,11 @@ function packageInstall( test )
     {
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, 'git-2.18.2-1.el8_1.x86_64' ) )
+        test.true( _.strHas( got.output, 'git-2.18.2-1.el8_1.x86_64' ) )
       }
       else if( isUbuntu )
       {
-        test.is( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
+        test.true( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
       }
     }
     else if( process.platform === 'win32' )
@@ -192,11 +192,11 @@ function packageInstall( test )
       test.identical( got.exitCode, 0 );
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, 'git-2.18.2-1.el8_1.x86_64' ) )
+        test.true( _.strHas( got.output, 'git-2.18.2-1.el8_1.x86_64' ) )
       }
       else if( isUbuntu )
       {
-        test.is( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
+        test.true( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
       }
       return null;
     })
@@ -324,12 +324,12 @@ function packageLocalVersions( test )
     {
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, 'No matching Packages to list' ) )
+        test.true( _.strHas( got.output, 'No matching Packages to list' ) )
       }
       else if( isUbuntu )
       {
         let lines = _.strSplitNonPreserving({ src : got.output, delimeter : '\n' })
-        test.is( _.strHas( lines[ lines.length - 1 ], 'Listing...' ) );
+        test.true( _.strHas( lines[ lines.length - 1 ], 'Listing...' ) );
       }
     }
     else if( process.platform === 'win32' )
@@ -361,11 +361,11 @@ function packageLocalVersions( test )
     {
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, '2.18.2-1.el8_1' ) )
+        test.true( _.strHas( got.output, '2.18.2-1.el8_1' ) )
       }
       else if( isUbuntu )
       {
-        test.is( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
+        test.true( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
       }
     }
     else if( process.platform === 'win32' )
@@ -459,7 +459,7 @@ function packageRemoteVersions( test )
       else if( isUbuntu )
       {
         let lines = _.strSplitNonPreserving({ src : got.output, delimeter : '\n' })
-        test.is( lines.length > 0 );
+        test.true( lines.length > 0 );
       }
     }
     else if( process.platform === 'win32' )
@@ -615,11 +615,11 @@ function packageVersion( test )
     {
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, 'package git is not installed' ) )
+        test.true( _.strHas( got.output, 'package git is not installed' ) )
       }
       else if( isUbuntu )
       {
-        test.is( _.strHas( got.output, `package 'git' is not installed` ) )
+        test.true( _.strHas( got.output, `package 'git' is not installed` ) )
       }
     }
     else if( process.platform === 'win32' )
@@ -651,11 +651,11 @@ function packageVersion( test )
     {
       if( isCentOs )
       {
-        test.is( _.strHas( got.output, '2.18.2-1.el8_1' ) )
+        test.true( _.strHas( got.output, '2.18.2-1.el8_1' ) )
       }
       else if( isUbuntu )
       {
-        test.is( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
+        test.true( _.strHas( got.output, '1:2.17.1-1ubuntu0.5' ) );
       }
     }
     else if( process.platform === 'win32' )

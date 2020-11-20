@@ -287,7 +287,7 @@ function preCloneRepos( test )
 
   a.ready.then( () =>
   {
-    test.is( a.fileProvider.isDir( a.abs( context.repoDirPath, 'ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.isDir( a.abs( context.repoDirPath, 'ModuleForTesting1' ) ) );
     return null;
   })
 
@@ -308,9 +308,9 @@ function singleModuleWithSpaceTrivial( test )
   {
     test.case = '.with "single with space/" .resources.list';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `name : 'single with space'` ) );
-    test.is( _.strHas( op.output, `description : 'Module for testing'` ) );
-    test.is( _.strHas( op.output, `version : '0.0.1'` ) );
+    test.true( _.strHas( op.output, `name : 'single with space'` ) );
+    test.true( _.strHas( op.output, `description : 'Module for testing'` ) );
+    test.true( _.strHas( op.output, `version : '0.0.1'` ) );
     return null;
   })
 
@@ -342,8 +342,8 @@ function build( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.is( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
+    test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
+    test.true( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 1 );
@@ -354,7 +354,7 @@ function build( test )
       test.identical( _.strCount( op.output, 'out/Produced.txt2' ), 1 );
       test.identical( _.strCount( op.output, 'out/Produced.js2' ), 1 );
     }
-    test.is( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
+    test.true( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
 
     var files = a.find( a.routinePath );
     var exp =
@@ -381,8 +381,8 @@ function build( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.is( !_.strHas( op.output, 'node file/Produce.js' ) );
+    test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
+    test.true( !_.strHas( op.output, 'node file/Produce.js' ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 0 );
@@ -393,7 +393,7 @@ function build( test )
       test.identical( _.strCount( op.output, 'out/Produced.txt2' ), 0 );
       test.identical( _.strCount( op.output, 'out/Produced.js2' ), 0 );
     }
-    test.is( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
+    test.true( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
 
     var files = a.find( a.routinePath );
     var exp =
@@ -431,8 +431,8 @@ function build( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.is( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
+    test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
+    test.true( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 1 );
@@ -443,7 +443,7 @@ function build( test )
       test.identical( _.strCount( op.output, 'out/Produced.txt2' ), 1 );
       test.identical( _.strCount( op.output, 'out/Produced.js2' ), 1 );
     }
-    test.is( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
+    test.true( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
 
     var files = a.find( a.routinePath );
     var exp =
@@ -470,8 +470,8 @@ function build( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.is( !_.strHas( op.output, 'node file/Produce.js' ) );
+    test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
+    test.true( !_.strHas( op.output, 'node file/Produce.js' ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 0 );
@@ -482,7 +482,7 @@ function build( test )
       test.identical( _.strCount( op.output, 'out/Produced.txt2' ), 0 );
       test.identical( _.strCount( op.output, 'out/Produced.js2' ), 0 );
     }
-    test.is( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
+    test.true( _.strHas( op.output, /Built .+ \/ build::shell1/ ) );
 
     var files = a.find( a.routinePath );
     var exp =
@@ -584,22 +584,22 @@ function transpile( test )
     a.fileProvider.isTerminal( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
 
     var read = a.fileProvider.fileRead( a.abs( 'out/compiled.debug/Main.s' ) );
-    test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
-    test.is( _.strHas( read, 'dir2/File.js' ) );
-    test.is( !_.strHas( read, 'dir2/File.test.js' ) );
-    test.is( _.strHas( read, 'dir2/File1.debug.js' ) );
-    test.is( !_.strHas( read, 'dir2/File1.release.js' ) );
-    test.is( _.strHas( read, 'dir2/File2.debug.js' ) );
-    test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
+    test.true( !_.strHas( read, 'dir2/-Ecluded.js' ) );
+    test.true( _.strHas( read, 'dir2/File.js' ) );
+    test.true( !_.strHas( read, 'dir2/File.test.js' ) );
+    test.true( _.strHas( read, 'dir2/File1.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.release.js' ) );
+    test.true( _.strHas( read, 'dir2/File2.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
 
     var read = a.fileProvider.fileRead( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
-    test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
-    test.is( !_.strHas( read, 'dir2/File.js' ) );
-    test.is( _.strHas( read, 'dir2/File.test.js' ) );
-    test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
-    test.is( !_.strHas( read, 'dir2/File1.release.js' ) );
-    test.is( !_.strHas( read, 'dir2/File2.debug.js' ) );
-    test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
+    test.true( !_.strHas( read, 'dir2/-Ecluded.js' ) );
+    test.true( !_.strHas( read, 'dir2/File.js' ) );
+    test.true( _.strHas( read, 'dir2/File.test.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.release.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
   })
@@ -665,11 +665,11 @@ function transpile( test )
     a.fileProvider.isTerminal( a.abs( 'out/tests.compiled.release/Tests.s' ) );
 
     var read = a.fileProvider.fileRead( a.abs( 'out/release/Main.s' ) );
-    test.is( _.strHas( read, 'dir2/File.js' ) );
-    test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
-    test.is( _.strHas( read, 'dir2/File1.release.js' ) );
-    test.is( !_.strHas( read, 'dir2/File2.debug.js' ) );
-    test.is( _.strHas( read, 'dir2/File2.release.js' ) );
+    test.true( _.strHas( read, 'dir2/File.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.debug.js' ) );
+    test.true( _.strHas( read, 'dir2/File1.release.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.debug.js' ) );
+    test.true( _.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
   })
@@ -2147,8 +2147,8 @@ function withMixed( test )
   a.appStartNonThrowing({ execPath : '.with module .build' })
   .then( ( op ) =>
   {
-    test.is( op.exitCode !== 0 );
-    test.is( _.strHas( op.output, 'No module sattisfy criteria.' ) );
+    test.true( op.exitCode !== 0 );
+    test.true( _.strHas( op.output, 'No module sattisfy criteria.' ) );
     test.identical( _.strCount( op.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( op.output, '====' ), 0 );
     return null;
@@ -2166,7 +2166,7 @@ function withMixed( test )
   a.appStartNonThrowing({ execPath : '.with . .export' })
   .then( ( op ) =>
   {
-    test.is( op.exitCode === 0 );
+    test.true( op.exitCode === 0 );
     test.identical( _.strCount( op.output, /Exported .*module::submodules-mixed \/ build::proto.export.* in/ ), 1 );
     return null;
   })
@@ -2201,24 +2201,24 @@ function eachMixed( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'git status' ) );
+    test.true( _.strHas( op.output, 'git status' ) );
     /*
-    test.is( _.strHas( op.output, `Your branch is up to date with 'origin/master'.` ) );
+    test.true( _.strHas( op.output, `Your branch is up to date with 'origin/master'.` ) );
     // no such string on older git
     */
     test.identical( _.strCount( op.output, 'git status' ), 1 );
     test.identical( _.strCount( op.output, 'git "status"' ), 4 );
     test.identical( _.strCount( op.output, /nothing to commit, working .* clean/ ), 4 );
 
-    test.is( _.strHas( op.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/\.module\/Tools[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/\.module\/PathBasic[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/out\/UriBasic\.informal\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/out\/UriBasic[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( op.output, /eachMixed\/out\/Proto[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/Tools[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/PathBasic[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/UriBasic\.informal\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/UriBasic[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/Proto[^d]/ ) );
 
     return null;
   })
@@ -2277,7 +2277,7 @@ function withList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.with . .resources.list about::name';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'module-' ), 1 );
@@ -2292,7 +2292,7 @@ function withList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.with . .resources.list about::description';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'Module for testing' ), 1 );
@@ -2307,7 +2307,7 @@ function withList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.with . .resources.list path::module.dir';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, a.routinePath ), 2 );
@@ -2337,7 +2337,7 @@ function eachList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.each . .resources.list about::name';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -2367,7 +2367,7 @@ function eachList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply v:1 ; .each . .resources.list about::name';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -2398,7 +2398,7 @@ function eachList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply v:1 ; .each . .resources.list path::module.common';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -2423,7 +2423,7 @@ function eachList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply v:1 ; .each * .resources.list path::module.common';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -2448,7 +2448,7 @@ function eachList( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -2491,7 +2491,7 @@ function eachBrokenIll( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
-    test.is( !err );
+    test.true( !err );
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2529,7 +2529,7 @@ function eachBrokenNon( test )
   .finally( ( err, op ) =>
   {
     test.case = '.each */* .paths.list';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2564,7 +2564,7 @@ function eachBrokenCommand( test )
   .finally( ( err, op ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
-    test.is( !err );
+    test.true( !err );
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2848,8 +2848,8 @@ function reflectorOptionsCheck( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, /Exported module::reflector-options-check \/ build::export with 3 file\(s\) in/ ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, /Exported module::reflector-options-check \/ build::export with 3 file\(s\) in/ ) );
 
     var files = a.find( a.abs( 'out/' ) );
     test.identical( files, [ '.', './reflector-options-check.out.will.yml' ] );
@@ -2908,7 +2908,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
   {
     test.case = '".with import .build defaultOptions", first reflection';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -2922,7 +2922,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
   {
     test.case = '".with import .build defaultOptions", second reflection';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -2936,7 +2936,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
   {
     test.case = '".with import .build withoutOptions", throw error - different files';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
+    test.true( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -2973,7 +2973,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
   {
     test.case = '".with import .build withoutOptions", first reflection';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -2987,7 +2987,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
   {
     test.case = '".with import .build withoutOptions", second reflection';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -3001,7 +3001,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
   {
     test.case = '".with import .build defaultOptions", throw error - different files';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
+    test.true( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -3038,7 +3038,7 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
   {
     test.case = '".with import .build withoutOptions", first reflection';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -3052,7 +3052,7 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
   {
     test.case = '".with import .build withoutOptions", second reflection';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
     return null;
@@ -3065,7 +3065,7 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
   {
     test.case = '".with import .build notDefaultOptions", rewrite file because options disabled';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 1 file' ) );
+    test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -3106,16 +3106,16 @@ function reflectNothingFromSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, /Exported module::reflect-nothing-from-submodules \/ build::proto.export with 2 file\(s\) in/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, /Exported module::reflect-nothing-from-submodules \/ build::proto.export with 2 file\(s\) in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './reflect-nothing-from-submodules.out.will.yml', './debug', './debug/Single.s' ] );
 
-    test.is( a.fileProvider.fileExists( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) ) )
     var outfile = a.fileProvider.configRead( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) );
 
     outfile = outfile.module[ 'reflect-nothing-from-submodules.out' ]
@@ -3282,8 +3282,8 @@ function reflectSubdir( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     return null;
   })
 
@@ -3299,10 +3299,10 @@ function reflectSubdir( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     var expected =
     [
@@ -3339,10 +3339,10 @@ function reflectSubdir( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     var expected =
     [
@@ -3379,10 +3379,10 @@ function reflectSubdir( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     var expected =
     [
@@ -3433,8 +3433,8 @@ function reflectSubmodulesWithBase( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.isTerminal( a.abs( 'submodule1.out.will.yml' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'submodule2.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'submodule1.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'submodule2.out.will.yml' ) ) );
     return op;
   })
 
@@ -3537,7 +3537,7 @@ function reflectComposite( test )
       './debug/dir2/File2.debug.js'
     ]
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 5 );
+    test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3568,7 +3568,7 @@ function reflectComposite( test )
       './debug/dir2/File2.debug.js'
     ]
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 5 );
+    test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3599,7 +3599,7 @@ function reflectComposite( test )
       './debug/dir2/File2.debug.js'
     ]
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 5 );
+    test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3630,7 +3630,7 @@ function reflectComposite( test )
       './debug/dir2/File2.debug.js'
     ]
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 5 );
+    test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3651,7 +3651,7 @@ function reflectComposite( test )
     var expected =
     [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ]
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 5 );
+    test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3671,7 +3671,7 @@ function reflectComposite( test )
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 5 );
+    test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3872,7 +3872,7 @@ function reflectRemoteHttp( test )
   a.appStart({ execPath : '.build download' })
   .then( ( arg ) =>
   {
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting1.s' ) ) );
     test.gt( a.fileProvider.fileSize( a.abs( 'out/ModuleForTesting1.s' ) ), 200 );
     return null;
   })
@@ -3902,7 +3902,7 @@ function reflectWithOptions( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, / \+ reflector::reflect.proto1 reflected 3 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    test.true( _.strHas( op.output, / \+ reflector::reflect.proto1 reflected 3 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
@@ -3921,13 +3921,13 @@ function reflectWithOptions( test )
   a.appStartNonThrowing({ execPath : '.with mandatory .build variant2' })
   .finally( ( err, op ) =>
   {
-    test.is( !err );
-    test.is( !!op.exitCode );
+    test.true( !err );
+    test.true( !!op.exitCode );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, '====' ), 0 );
-    test.is( _.strHas( op.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
-    test.is( _.strHas( op.output, /No file found at .+/ ) );
+    test.true( _.strHas( op.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
+    test.true( _.strHas( op.output, /No file found at .+/ ) );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
     return null;
@@ -3947,7 +3947,7 @@ function reflectWithOptions( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, / \+ reflector::reflect.proto3 reflected 0 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    test.true( _.strHas( op.output, / \+ reflector::reflect.proto3 reflected 0 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
     return null;
@@ -3999,8 +3999,8 @@ function reflectWithOptionDstRewriting( test )
   a.appStartNonThrowing({ execPath : '.build variant1' })
   .finally( ( err, op ) =>
   {
-    test.is( !err );
-    test.is( !!op.exitCode );
+    test.true( !err );
+    test.true( !!op.exitCode );
     var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
@@ -4045,8 +4045,8 @@ function reflectWithOptionDstRewriting( test )
   a.appStartNonThrowing({ execPath : '.build variant1' })
   .finally( ( err, op ) =>
   {
-    test.is( !err );
-    test.is( !!op.exitCode );
+    test.true( !err );
+    test.true( !!op.exitCode );
     var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
@@ -4558,7 +4558,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   // .finally( ( err, arg ) => / Dmytro : op is not defined, so `arg` replaced to `op` */
   .finally( ( err, op ) =>
   {
-    test.is( err === undefined );
+    test.true( err === undefined );
     if( err )
     logger.log( err );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -4605,7 +4605,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   a.ready
   .finally( ( err, op ) =>
   {
-    test.is( _.errIs( err ) );
+    test.true( _.errIs( err ) );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     logger.log( err );
@@ -4639,8 +4639,8 @@ function reflectInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto1 reflected 6 file(s)' ) );
-    test.is( _.strHas( op.output, /.*out\/debug1.* <- .*proto.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto1 reflected 6 file(s)' ) );
+    test.true( _.strHas( op.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
@@ -4660,8 +4660,8 @@ function reflectInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto2 reflected 6 file(s)' ) );
-    test.is( _.strHas( op.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto2 reflected 6 file(s)' ) );
+    test.true( _.strHas( op.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
@@ -4681,8 +4681,8 @@ function reflectInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto3 reflected 6 file(s)' ) );
-    test.is( _.strHas( op.output, /.*out\/debug1.* <- .*proto.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto3 reflected 6 file(s)' ) );
+    test.true( _.strHas( op.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
@@ -4702,8 +4702,8 @@ function reflectInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto4 reflected 6 file(s)' ) );
-    test.is( _.strHas( op.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto4 reflected 6 file(s)' ) );
+    test.true( _.strHas( op.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
@@ -4723,8 +4723,8 @@ function reflectInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto5 reflected 6 file(s)' ) );
-    test.is( _.strHas( op.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto5 reflected 6 file(s)' ) );
+    test.true( _.strHas( op.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
@@ -4744,8 +4744,8 @@ function reflectInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, ' + reflector::reflect.not.test.only.js.v1 reflected 4 file(s)' ) );
-    test.is( _.strHas( op.output, /.*out.* <- .*proto.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.not.test.only.js.v1 reflected 4 file(s)' ) );
+    test.true( _.strHas( op.output, /.*out.* <- .*proto.*/ ) );
     var exp =
     [
       '.',
@@ -4956,7 +4956,7 @@ function reflectComplexInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ reflector::files.all reflected 21 file(s)' ) );
+    test.true( _.strHas( op.output, '+ reflector::files.all reflected 21 file(s)' ) );
     var exp =
     [
       '.',
@@ -5002,7 +5002,7 @@ function reflectComplexInherit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ reflector::files.all reflected 24 file(s)' ) );
+    test.true( _.strHas( op.output, '+ reflector::files.all reflected 24 file(s)' ) );
     var exp =
     [
       '.',
@@ -5063,7 +5063,7 @@ function reflectorMasks( test )
 
     test.identical( op.exitCode, 0 );
     var outputString = `\\+ reflector::reflect.copy. reflected ${files.length-1} file\\(s\\) .* in .*`;
-    test.is( _.strHas( op.output, new RegExp( outputString ) ) );
+    test.true( _.strHas( op.output, new RegExp( outputString ) ) );
 
     return null;
   })
@@ -5082,7 +5082,7 @@ function reflectorMasks( test )
 
     test.identical( op.exitCode, 0 );
     var outputString = `\\+ reflector::reflect.copy.debug reflected ${files.length -1} file\\(s\\) .* in .*`;
-    test.is( _.strHas( op.output, new RegExp( outputString ) ) );
+    test.true( _.strHas( op.output, new RegExp( outputString ) ) );
 
     return null;
   })
@@ -5112,8 +5112,8 @@ function reflectorsCommonPrefix( test )
     test.identical( files, [ '.', './debug', './debug/Source.js' ] );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /\+ reflector::reflect.copy reflected 2 file\(s\) .* in .*/ ) );
-    test.is( _.strHas( op.output, /\+ reflector::reflect.copy.second reflected 2 file\(s\) .* in .*/ ) );
+    test.true( _.strHas( op.output, /\+ reflector::reflect.copy reflected 2 file\(s\) .* in .*/ ) );
+    test.true( _.strHas( op.output, /\+ reflector::reflect.copy.second reflected 2 file\(s\) .* in .*/ ) );
 
     return null;
   })
@@ -5139,11 +5139,11 @@ function reflectorOptionStep( test )
   {
     test.case = 'copy proto and then use reflector to remote it';
 
-    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /\+ reflector::reflector.proto reflected 2 file\(s\) .* in .*/ ) );
-    test.is( _.strHas( op.output, /\- step::reflector.delete deleted 2 file\(s\), at .* in .*/ ) );
+    test.true( _.strHas( op.output, /\+ reflector::reflector.proto reflected 2 file\(s\) .* in .*/ ) );
+    test.true( _.strHas( op.output, /\- step::reflector.delete deleted 2 file\(s\), at .* in .*/ ) );
 
     return null;
   })
@@ -5169,7 +5169,7 @@ function reflectorOptionStepThrowing( test )
   {
     test.case = 'try to create reflector with name of existing step using option step, should throw error';
     test.notIdentical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'step::reflector.delete deleted 0 file' ) );
+    test.true( !_.strHas( op.output, 'step::reflector.delete deleted 0 file' ) );
 
     return null;
   })
@@ -5208,11 +5208,11 @@ function withDoInfo( test )
     test.case = 'setup';
     a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
 
-    test.is( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
@@ -5362,11 +5362,11 @@ function withDoStatus( test )
   {
     test.case = 'setup';
 
-    test.is( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
@@ -5447,7 +5447,7 @@ function withDoCommentOut( test )
   {
     a.reflect();
     var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
-    test.is( !!outfile.execution );
+    test.true( !!outfile.execution );
     return null;
   })
   a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution verbosity:5' )
@@ -5456,7 +5456,7 @@ function withDoCommentOut( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Comment out "execution" in module::execution_section at' ), 1 );
     var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
-    test.is( !outfile.execution );
+    test.true( !outfile.execution );
     return null;
   })
 
@@ -5467,7 +5467,7 @@ function withDoCommentOut( test )
   {
     a.reflect();
     var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
-    test.is( !!outfile.execution );
+    test.true( !!outfile.execution );
     return null;
   })
   a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1 verbosity:1' )
@@ -5476,7 +5476,7 @@ function withDoCommentOut( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Comment out "execution" in module::execution_section at' ), 1 );
     var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
-    test.is( !!outfile.execution );
+    test.true( !!outfile.execution );
     return null;
   })
 
@@ -5522,11 +5522,11 @@ function hookCallInfo( test )
     test.case = 'setup';
     a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
 
-    test.is( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
@@ -5648,7 +5648,7 @@ function hookGitMake( test )
 
   /* - */
 
-  test.is( true );
+  test.true( true );
 
   let config = a.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
@@ -5710,7 +5710,7 @@ function hookPrepare( test )
   let a = context.assetFor( test, 'dos' );
   a.reflect();
 
-  test.is( true );
+  test.true( true );
 
   let config = a.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
@@ -5899,9 +5899,9 @@ function hookHlink( test )
     test.case = '.with original/ .call hlink beeping:0';
 
     test.identical( _.strHas( op.output, '+ hardLink' ), true );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
   })
@@ -5912,9 +5912,9 @@ function hookHlink( test )
     test.case = '.with clone/ .call hlink beeping:0';
 
     test.identical( _.strHas( op.output, '+ hardLink' ), true );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
   })
@@ -5979,8 +5979,8 @@ function hookGitPullConflict( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -6032,8 +6032,8 @@ clone
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -6084,8 +6084,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -6195,8 +6195,8 @@ function hookGitSyncColflict( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -6253,8 +6253,8 @@ clone
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
     test.identical( _.strCount( op.output, '> git push' ), 0 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -6329,7 +6329,7 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
-    test.is( true );
+    test.true( true );
     return null;
   }
   let linkPath = config.path.hlink;
@@ -6375,8 +6375,8 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
 
   a.ready.then( () =>
   {
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -6405,8 +6405,8 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
     test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
 
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
     var exp =
 `
@@ -7017,26 +7017,26 @@ function verbositySet( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply verbosity:3 ; .build';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.is( _.strHas( op.output, '.imply verbosity:3 ; .build' ) );
-    test.is( _.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
-    test.is( _.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( op.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ) );
-    test.is( _.strHas( op.output, 'Failed to open module::submodules / relation::ModuleForTesting2a' ) );
-    test.is( _.strHas( op.output, '. Read 2 willfile(s) in' ) );
+    test.true( _.strHas( op.output, '.imply verbosity:3 ; .build' ) );
+    test.true( _.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
+    test.true( _.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
+    test.true( _.strHas( op.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ) );
+    test.true( _.strHas( op.output, 'Failed to open module::submodules / relation::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, '. Read 2 willfile(s) in' ) );
 
-    test.is( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.is( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 2 );
-    test.is( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
-    test.is( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
+    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
   })
@@ -7048,26 +7048,26 @@ function verbositySet( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply verbosity:2 ; .build';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.is( _.strHas( op.output, '.imply verbosity:2 ; .build' ) );
-    test.is( !_.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
-    test.is( !_.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( op.output, 'Failed to open relation::ModuleForTesting1' ) );
-    test.is( !_.strHas( op.output, 'Failed to open relation::ModuleForTesting2a' ) );
-    test.is( _.strHas( op.output, '. Read 2 willfile(s) in' ) );
+    test.true( _.strHas( op.output, '.imply verbosity:2 ; .build' ) );
+    test.true( !_.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
+    test.true( !_.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
+    test.true( !_.strHas( op.output, 'Failed to open relation::ModuleForTesting1' ) );
+    test.true( !_.strHas( op.output, 'Failed to open relation::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, '. Read 2 willfile(s) in' ) );
 
-    test.is( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.is( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 2 );
-    test.is( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
-    test.is( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
+    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
   })
@@ -7079,26 +7079,26 @@ function verbositySet( test )
   .finally( ( err, op ) =>
   {
     test.case = '.imply verbosity:1 ; .build';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.is( _.strHas( op.output, '.imply verbosity:1 ; .build' ) );
-    test.is( !_.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
-    test.is( !_.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( op.output, ' ! Failed to open relation::ModuleForTesting1' ) );
-    test.is( !_.strHas( op.output, ' ! Failed to open relation::ModuleForTesting2a' ) );
-    test.is( !_.strHas( op.output, '. Read 2 willfile(s) in' ) );
+    test.true( _.strHas( op.output, '.imply verbosity:1 ; .build' ) );
+    test.true( !_.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
+    test.true( !_.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
+    test.true( !_.strHas( op.output, ' ! Failed to open relation::ModuleForTesting1' ) );
+    test.true( !_.strHas( op.output, ' ! Failed to open relation::ModuleForTesting2a' ) );
+    test.true( !_.strHas( op.output, '. Read 2 willfile(s) in' ) );
 
-    test.is( !_.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( !_.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.is( !_.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( !_.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( !_.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( !_.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 0 );
-    test.is( !_.strHas( op.output, ' - Deleted' ) );
-    test.is( !_.strHas( op.output, ' + reflect.proto.debug reflected 2 file(s) ' ) );
-    test.is( !_.strHas( op.output, ' + reflect.submodules reflected' ) );
-    test.is( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( !_.strHas( op.output, ' - Deleted' ) );
+    test.true( !_.strHas( op.output, ' + reflect.proto.debug reflected 2 file(s) ' ) );
+    test.true( !_.strHas( op.output, ' + reflect.submodules reflected' ) );
+    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
   })
@@ -7147,7 +7147,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 0 );
@@ -7176,7 +7176,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 0 );
@@ -7206,7 +7206,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 0 );
@@ -7235,7 +7235,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 1 );
@@ -7264,13 +7264,13 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( op.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( op.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
-    test.is( 2 <=_.strLinesCount( op.output ) && _.strLinesCount( op.output ) <= 3 );
+    test.true( 2 <=_.strLinesCount( op.output ) && _.strLinesCount( op.output ) <= 3 );
 
     var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
@@ -7294,7 +7294,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 0 );
@@ -7323,7 +7323,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 1 );
@@ -7352,7 +7352,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 0 );
@@ -7381,7 +7381,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( op.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( op.output, '2 at ./A' ), 1 );
@@ -8339,7 +8339,7 @@ function help( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 1 );
-    test.is( op.output.length >= 1 );
+    test.true( op.output.length >= 1 );
     test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
     return null;
   })
@@ -8358,7 +8358,7 @@ function help( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 1 );
-    test.is( op.output.length >= 1 );
+    test.true( op.output.length >= 1 );
     test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
     return null;
   })
@@ -8420,9 +8420,9 @@ function listSingleModule( test )
   {
     test.case = 'list';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `name : 'single'` ) );
-    test.is( _.strHas( op.output, `description : 'Module for testing'` ) );
-    test.is( _.strHas( op.output, `version : '0.0.1'` ) );
+    test.true( _.strHas( op.output, `name : 'single'` ) );
+    test.true( _.strHas( op.output, `description : 'Module for testing'` ) );
+    test.true( _.strHas( op.output, `version : '0.0.1'` ) );
     return null;
   })
 
@@ -8435,17 +8435,17 @@ function listSingleModule( test )
 
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, `name : 'single'` ));
-    test.is( _.strHas( op.output, `description : 'Module for testing'` ));
-    test.is( _.strHas( op.output, `version : '0.0.1'` ));
-    test.is( _.strHas( op.output, `enabled : 1` ));
-    test.is( _.strHas( op.output, `interpreters :` ));
-    test.is( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
-    test.is( _.strHas( op.output, `'chrome >= 60.0.0'` ));
-    test.is( _.strHas( op.output, `'firefox >= 60.0.0'` ));
-    test.is( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
-    test.is( _.strHas( op.output, `keywords :` ));
-    test.is( _.strHas( op.output, `'wModuleForTesting1'` ));
+    test.true( _.strHas( op.output, `name : 'single'` ));
+    test.true( _.strHas( op.output, `description : 'Module for testing'` ));
+    test.true( _.strHas( op.output, `version : '0.0.1'` ));
+    test.true( _.strHas( op.output, `enabled : 1` ));
+    test.true( _.strHas( op.output, `interpreters :` ));
+    test.true( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
+    test.true( _.strHas( op.output, `'chrome >= 60.0.0'` ));
+    test.true( _.strHas( op.output, `'firefox >= 60.0.0'` ));
+    test.true( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
+    test.true( _.strHas( op.output, `keywords :` ));
+    test.true( _.strHas( op.output, `'wModuleForTesting1'` ));
 
     return null;
   })
@@ -8458,11 +8458,11 @@ function listSingleModule( test )
     test.case = '.paths.list';
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, `proto : proto` ) );
-    test.is( _.strHas( op.output, `in : .` ) );
-    test.is( _.strHas( op.output, `out : out` ) );
-    test.is( _.strHas( op.output, `out.debug : out/debug` ) );
-    test.is( _.strHas( op.output, `out.release : out/release` ) );
+    test.true( _.strHas( op.output, `proto : proto` ) );
+    test.true( _.strHas( op.output, `in : .` ) );
+    test.true( _.strHas( op.output, `out : out` ) );
+    test.true( _.strHas( op.output, `out.debug : out/debug` ) );
+    test.true( _.strHas( op.output, `out.release : out/release` ) );
 
     return null;
   })
@@ -8475,17 +8475,17 @@ function listSingleModule( test )
     test.case = '.paths.list predefined:1';
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, `module.willfiles :` ) );
-    test.is( _.strHas( op.output, `module.peer.willfiles :` ) );
-    test.is( _.strHas( op.output, `module.dir : /` ) );
-    test.is( _.strHas( op.output, `module.common : /` ) );
-    test.is( _.strHas( op.output, `local : /` ) );
-    test.is( _.strHas( op.output, `will :` ) );
-    test.is( !_.strHas( op.output, `proto : proto` ) );
-    test.is( !_.strHas( op.output, `in : .` ) );
-    test.is( !_.strHas( op.output, `out : out` ) );
-    test.is( !_.strHas( op.output, `out.debug : out/debug` ) );
-    test.is( !_.strHas( op.output, `out.release : out/release` ) );
+    test.true( _.strHas( op.output, `module.willfiles :` ) );
+    test.true( _.strHas( op.output, `module.peer.willfiles :` ) );
+    test.true( _.strHas( op.output, `module.dir : /` ) );
+    test.true( _.strHas( op.output, `module.common : /` ) );
+    test.true( _.strHas( op.output, `local : /` ) );
+    test.true( _.strHas( op.output, `will :` ) );
+    test.true( !_.strHas( op.output, `proto : proto` ) );
+    test.true( !_.strHas( op.output, `in : .` ) );
+    test.true( !_.strHas( op.output, `out : out` ) );
+    test.true( !_.strHas( op.output, `out.debug : out/debug` ) );
+    test.true( !_.strHas( op.output, `out.release : out/release` ) );
     test.identical( _.strCount( op.output, ':' ), 12 );
 
     return null;
@@ -8499,17 +8499,17 @@ function listSingleModule( test )
     test.case = '.paths.list predefined:0';
     test.identical( op.exitCode, 0 );
 
-    test.is( !_.strHas( op.output, `module.willfiles :` ) );
-    test.is( !_.strHas( op.output, `module.peer.willfiles :` ) );
-    test.is( !_.strHas( op.output, `module.dir : .` ) );
-    test.is( !_.strHas( op.output, `module.common : ./` ) );
-    test.is( !_.strHas( op.output, `local : .` ) );
-    test.is( !_.strHas( op.output, `will :` ) );
-    test.is( _.strHas( op.output, `proto : proto` ) );
-    test.is( _.strHas( op.output, `in : .` ) );
-    test.is( _.strHas( op.output, `out : out` ) );
-    test.is( _.strHas( op.output, `out.debug : out/debug` ) );
-    test.is( _.strHas( op.output, `out.release : out/release` ) );
+    test.true( !_.strHas( op.output, `module.willfiles :` ) );
+    test.true( !_.strHas( op.output, `module.peer.willfiles :` ) );
+    test.true( !_.strHas( op.output, `module.dir : .` ) );
+    test.true( !_.strHas( op.output, `module.common : ./` ) );
+    test.true( !_.strHas( op.output, `local : .` ) );
+    test.true( !_.strHas( op.output, `will :` ) );
+    test.true( _.strHas( op.output, `proto : proto` ) );
+    test.true( _.strHas( op.output, `in : .` ) );
+    test.true( _.strHas( op.output, `out : out` ) );
+    test.true( _.strHas( op.output, `out.debug : out/debug` ) );
+    test.true( _.strHas( op.output, `out.release : out/release` ) );
     test.identical( _.strCount( op.output, ':' ), 6 );
 
     return null;
@@ -8522,7 +8522,7 @@ function listSingleModule( test )
   {
     test.case = 'submodules list'
     test.identical( op.exitCode, 0 );
-    test.is( op.output.length >= 1 );
+    test.true( op.output.length >= 1 );
     return null;
   })
 
@@ -8534,10 +8534,10 @@ function listSingleModule( test )
     test.case = 'reflectors.list'
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'reflector::reflect.proto.' ) );
-    test.is( _.strHas( op.output, `path::proto : path::out.*=1` ) );
-    test.is( _.strHas( op.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( op.output, `path::proto : path::out.*=1` ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
+    test.true( _.strHas( op.output, `path::proto : path::out.*=1` ) );
+    test.true( _.strHas( op.output, `reflector::reflect.proto.debug` ) );
+    test.true( _.strHas( op.output, `path::proto : path::out.*=1` ) );
 
     return null;
   })
@@ -8549,11 +8549,11 @@ function listSingleModule( test )
   {
     test.case = 'steps.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'step::reflect.proto.' ))
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ))
-    test.is( _.strHas( op.output, 'step::reflect.proto.raw' ))
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug.raw' ))
-    test.is( _.strHas( op.output, 'step::export.proto' ))
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ))
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ))
+    test.true( _.strHas( op.output, 'step::reflect.proto.raw' ))
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug.raw' ))
+    test.true( _.strHas( op.output, 'step::export.proto' ))
 
     return null;
   })
@@ -8565,11 +8565,11 @@ function listSingleModule( test )
   {
     test.case = '.builds.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'build::debug.raw' ));
-    test.is( _.strHas( op.output, 'build::debug.compiled' ));
-    test.is( _.strHas( op.output, 'build::release.raw' ));
-    test.is( _.strHas( op.output, 'build::release.compiled' ));
-    test.is( _.strHas( op.output, 'build::all' ));
+    test.true( _.strHas( op.output, 'build::debug.raw' ));
+    test.true( _.strHas( op.output, 'build::debug.compiled' ));
+    test.true( _.strHas( op.output, 'build::release.raw' ));
+    test.true( _.strHas( op.output, 'build::release.compiled' ));
+    test.true( _.strHas( op.output, 'build::all' ));
 
     return null;
   })
@@ -8581,10 +8581,10 @@ function listSingleModule( test )
   {
     test.case = '.exports.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'build::proto.export' ));
-    test.is( _.strHas( op.output, 'steps : ' ));
-    test.is( _.strHas( op.output, 'build::debug.raw' ));
-    test.is( _.strHas( op.output, 'step::export.proto' ));
+    test.true( _.strHas( op.output, 'build::proto.export' ));
+    test.true( _.strHas( op.output, 'steps : ' ));
+    test.true( _.strHas( op.output, 'build::debug.raw' ));
+    test.true( _.strHas( op.output, 'step::export.proto' ));
 
     return null;
   })
@@ -8596,13 +8596,13 @@ function listSingleModule( test )
   {
     test.case = 'resources list globs negative';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'path::out.release' ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.raw' ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
-    test.is( _.strHas( op.output, 'build::debug.raw' ) );
-    test.is( _.strHas( op.output, 'build::release.raw' ) );
-    test.is( _.strHas( op.output, 'build::release.compiled' ) );
-    test.is( _.strHas( op.output, 'build::all' ) );
+    test.true( _.strHas( op.output, 'path::out.release' ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.raw' ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
+    test.true( _.strHas( op.output, 'build::debug.raw' ) );
+    test.true( _.strHas( op.output, 'build::release.raw' ) );
+    test.true( _.strHas( op.output, 'build::release.compiled' ) );
+    test.true( _.strHas( op.output, 'build::all' ) );
     test.identical( _.strCount( op.output, '::' ), 21 );
 
     return null;
@@ -8613,14 +8613,14 @@ function listSingleModule( test )
   {
     test.case = 'resources list globs negative';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflector::predefined.debug.v1'  ) );
-    test.is( !_.strHas( op.output, 'reflector::predefined.debug.v2'  ) );
-    test.is( _.strHas( op.output, 'reflector::reflect.proto.debug' ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
-    test.is( _.strHas( op.output, 'step::export.proto' ) );
-    test.is( _.strHas( op.output, 'build::debug.compiled' ) );
-    test.is( _.strHas( op.output, 'build::proto.export' ) );
+    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1'  ) );
+    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.debug' ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
+    test.true( _.strHas( op.output, 'build::debug.compiled' ) );
+    test.true( _.strHas( op.output, 'build::proto.export' ) );
     test.identical( _.strCount( op.output, '::' ), 22 );
 
     return null;
@@ -8633,13 +8633,13 @@ function listSingleModule( test )
     test.case = '.resources.list *proto*';
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
 
-    test.is( _.strHas( op.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( op.output, `files.reflect` ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, `files.reflect` ) );
 
-    test.is( _.strHas( op.output, 'build::proto.export'  ) );
-    test.is( _.strHas( op.output, `step::export.proto` ) );
+    test.true( _.strHas( op.output, 'build::proto.export'  ) );
+    test.true( _.strHas( op.output, `step::export.proto` ) );
 
     return null;
   })
@@ -8650,10 +8650,10 @@ function listSingleModule( test )
   {
     test.case = 'globs and criterions negative';
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, `out.debug : './out/debug'` ) );
-    test.is( !_.strHas( op.output, `reflector::reflect.proto.debug` ) );
-    test.is( !_.strHas( op.output, 'step::reflect.proto.debug'  ) );
-    test.is( !_.strHas( op.output, 'build::debug.raw'  ) );
+    test.true( !_.strHas( op.output, `out.debug : './out/debug'` ) );
+    test.true( !_.strHas( op.output, `reflector::reflect.proto.debug` ) );
+    test.true( !_.strHas( op.output, 'step::reflect.proto.debug'  ) );
+    test.true( !_.strHas( op.output, 'build::debug.raw'  ) );
 
     return null;
   })
@@ -8665,12 +8665,12 @@ function listSingleModule( test )
     test.case = 'globs and criterions positive';
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'path::proto'  ) );
+    test.true( _.strHas( op.output, 'path::proto'  ) );
 
-    test.is( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
 
-    test.is( _.strHas( op.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( op.output, `files.reflect` ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, `files.reflect` ) );
 
     test.identical( _.strCount( op.output, '::' ), 12 );
 
@@ -8684,12 +8684,12 @@ function listSingleModule( test )
     test.case = '.resources.list * debug:1 raw:0 predefined:0';
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, `path::out.debug` ) );
-    test.is( _.strHas( op.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( op.output, `step::reflect.proto.debug` ) );
-    test.is( _.strHas( op.output, `step::export.proto` ) );
-    test.is( _.strHas( op.output, `build::debug.compiled` ) );
-    test.is( _.strHas( op.output, `build::proto.export` ) );
+    test.true( _.strHas( op.output, `path::out.debug` ) );
+    test.true( _.strHas( op.output, `reflector::reflect.proto.debug` ) );
+    test.true( _.strHas( op.output, `step::reflect.proto.debug` ) );
+    test.true( _.strHas( op.output, `step::export.proto` ) );
+    test.true( _.strHas( op.output, `build::debug.compiled` ) );
+    test.true( _.strHas( op.output, `build::proto.export` ) );
     test.identical( _.strCount( op.output, '::' ), 20 );
 
     return null;
@@ -8702,8 +8702,8 @@ function listSingleModule( test )
     test.case = '.resources.list * debug:0 raw:1';
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'step::reflect.proto.raw'  ) );
-    test.is( _.strHas( op.output, 'build::release.raw'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.raw'  ) );
+    test.true( _.strHas( op.output, 'build::release.raw'  ) );
     test.identical( _.strCount( op.output, '::' ), 7 );
 
     return null;
@@ -8726,9 +8726,9 @@ function listWithSubmodulesSimple( test )
   {
     test.case = '.resources.list';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `name : 'submodules'` ) );
-    test.is( _.strHas( op.output, `description : 'Module for testing'` ) );
-    test.is( _.strHas( op.output, `version : '0.0.1'` ) );
+    test.true( _.strHas( op.output, `name : 'submodules'` ) );
+    test.true( _.strHas( op.output, `description : 'Module for testing'` ) );
+    test.true( _.strHas( op.output, `version : '0.0.1'` ) );
     return null;
   })
 
@@ -8751,8 +8751,8 @@ function listWithSubmodules( test )
   {
     test.case = '.submodules.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'relation::ModuleForTesting1' ) );
-    test.is( _.strHas( op.output, 'relation::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, 'relation::ModuleForTesting1' ) );
+    test.true( _.strHas( op.output, 'relation::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -8764,8 +8764,8 @@ function listWithSubmodules( test )
   {
     test.case = 'reflectors.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflector::reflect.proto.' ))
-    test.is( _.strHas( op.output, `reflector::reflect.proto.debug` ))
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ))
+    test.true( _.strHas( op.output, `reflector::reflect.proto.debug` ))
     return null;
   })
 
@@ -8778,11 +8778,11 @@ function listWithSubmodules( test )
     test.case = 'steps.list'
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'step::delete.out.debug' ))
-    test.is( _.strHas( op.output, 'step::reflect.proto.' ))
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ))
-    test.is( _.strHas( op.output, 'step::reflect.submodules' ))
-    test.is( _.strHas( op.output, 'step::export.proto' ))
+    test.true( _.strHas( op.output, 'step::delete.out.debug' ))
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ))
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ))
+    test.true( _.strHas( op.output, 'step::reflect.submodules' ))
+    test.true( _.strHas( op.output, 'step::export.proto' ))
 
     return null;
   })
@@ -8795,10 +8795,10 @@ function listWithSubmodules( test )
   {
     test.case = '.builds.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'build::debug.raw' ));
-    test.is( _.strHas( op.output, 'build::debug.compiled' ));
-    test.is( _.strHas( op.output, 'build::release.raw' ));
-    test.is( _.strHas( op.output, 'build::release.compiled' ));
+    test.true( _.strHas( op.output, 'build::debug.raw' ));
+    test.true( _.strHas( op.output, 'build::debug.compiled' ));
+    test.true( _.strHas( op.output, 'build::release.raw' ));
+    test.true( _.strHas( op.output, 'build::release.compiled' ));
 
     return null;
   })
@@ -8811,10 +8811,10 @@ function listWithSubmodules( test )
   {
     test.case = '.exports.list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'build::proto.export' ));
-    test.is( _.strHas( op.output, 'steps : ' ));
-    test.is( _.strHas( op.output, 'build::debug.raw' ));
-    test.is( _.strHas( op.output, 'step::export.proto' ));
+    test.true( _.strHas( op.output, 'build::proto.export' ));
+    test.true( _.strHas( op.output, 'steps : ' ));
+    test.true( _.strHas( op.output, 'build::debug.raw' ));
+    test.true( _.strHas( op.output, 'step::export.proto' ));
 
     return null;
   })
@@ -8829,17 +8829,17 @@ function listWithSubmodules( test )
 
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, `name : 'submodules'` ));
-    test.is( _.strHas( op.output, `description : 'Module for testing'` ));
-    test.is( _.strHas( op.output, `version : '0.0.1'` ));
-    test.is( _.strHas( op.output, `enabled : 1` ));
-    test.is( _.strHas( op.output, `interpreters :` ));
-    test.is( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
-    test.is( _.strHas( op.output, `'chrome >= 60.0.0'` ));
-    test.is( _.strHas( op.output, `'firefox >= 60.0.0'` ));
-    test.is( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
-    test.is( _.strHas( op.output, `keywords :` ));
-    test.is( _.strHas( op.output, `'wModuleForTesting1'` ));
+    test.true( _.strHas( op.output, `name : 'submodules'` ));
+    test.true( _.strHas( op.output, `description : 'Module for testing'` ));
+    test.true( _.strHas( op.output, `version : '0.0.1'` ));
+    test.true( _.strHas( op.output, `enabled : 1` ));
+    test.true( _.strHas( op.output, `interpreters :` ));
+    test.true( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
+    test.true( _.strHas( op.output, `'chrome >= 60.0.0'` ));
+    test.true( _.strHas( op.output, `'firefox >= 60.0.0'` ));
+    test.true( _.strHas( op.output, `'nodejs >= 10.0.0'` ));
+    test.true( _.strHas( op.output, `keywords :` ));
+    test.true( _.strHas( op.output, `'wModuleForTesting1'` ));
 
     return null;
   })
@@ -8872,16 +8872,16 @@ function listSteps( test )
   .finally( ( err, op ) =>
   {
     test.case = '.steps.list';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.is( _.strHas( op.output, 'step::delete.out.debug' ) );
-    test.is( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.is( _.strHas( op.output, 'step::reflect.submodules' ) );
-    test.is( _.strHas( op.output, 'step::export.proto' ) );
+    test.true( _.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( _.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
   })
@@ -8892,16 +8892,16 @@ function listSteps( test )
   .finally( ( err, op ) =>
   {
     test.case = '.steps.list';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
 
-    test.is( _.strHas( op.output, 'step::delete.out.debug' ) );
-    test.is( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.is( _.strHas( op.output, 'step::reflect.submodules' ) );
-    test.is( _.strHas( op.output, 'step::export.proto' ) );
+    test.true( _.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( _.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
   })
@@ -8912,16 +8912,16 @@ function listSteps( test )
   .finally( ( err, op ) =>
   {
     test.case = '.steps.list';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
 
-    test.is( !_.strHas( op.output, 'step::delete.out.debug' ) );
-    test.is( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.is( !_.strHas( op.output, 'step::reflect.submodules' ) );
-    test.is( _.strHas( op.output, 'step::export.proto' ) );
+    test.true( !_.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
   })
@@ -8932,16 +8932,16 @@ function listSteps( test )
   .finally( ( err, op ) =>
   {
     test.case = '.steps.list';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
 
-    test.is( !_.strHas( op.output, 'step::delete.out.debug' ) );
-    test.is( !_.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.is( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.is( !_.strHas( op.output, 'step::reflect.submodules' ) );
-    test.is( _.strHas( op.output, 'step::export.proto' ) );
+    test.true( !_.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( !_.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
   })
@@ -8976,9 +8976,9 @@ function buildSingleModule( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
+    test.true( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
@@ -9000,9 +9000,9 @@ function buildSingleModule( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
+    test.true( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
@@ -9024,9 +9024,9 @@ function buildSingleModule( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Building .*module::single \/ build::release\.raw.*/ ) );
-    test.is( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
+    test.true( _.strHas( op.output, /Building .*module::single \/ build::release\.raw.*/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
@@ -9050,10 +9050,10 @@ function buildSingleModule( test )
     return test.shouldThrowErrorOfAnyKind( () => a.appStart( o ) )
     .then( ( op ) =>
     {
-      test.is( o.exitCode !== 0 );
-      test.is( o.output.length >= 1 );
-      test.is( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) )
-      test.is( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) )
+      test.true( o.exitCode !== 0 );
+      test.true( o.output.length >= 1 );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) )
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) )
 
       return null;
     })
@@ -9139,7 +9139,7 @@ function buildSubmodules( test )
   a.appStart({ execPath : '.build' })
   .finally( ( err, op ) =>
   {
-    test.is( !err );
+    test.true( !err );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     var files = a.find( a.abs( 'out' ) );
@@ -9162,8 +9162,8 @@ function buildSubmodules( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 15 );
@@ -9195,11 +9195,11 @@ function buildSubmodules( test )
     return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
     .then( ( op ) =>
     {
-      test.is( o.exitCode !== 0 );
-      test.is( o.output.length >= 1 );
-      test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
-      test.is( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
-      test.is( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
+      test.true( o.exitCode !== 0 );
+      test.true( o.output.length >= 1 );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
 
       return null;
     })
@@ -9668,11 +9668,11 @@ function buildDetached( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
-    test.is( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#48023b1e3d064b473e491be4bd5f7f789ce5c288/ ) );
-    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
+    test.true( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
+    test.true( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#48023b1e3d064b473e491be4bd5f7f789ce5c288/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting12.informal', 'ModuleForTesting12ab.informal', 'ModuleForTesting2a.informal', 'ModuleForTesting2b' ] );
@@ -9717,16 +9717,16 @@ function exportSingle( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, 'Exported module::single / build::proto.export with 2 file(s) in') );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, 'Exported module::single / build::proto.export with 2 file(s) in') );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
-    test.is( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
     var outfile = a.fileProvider.configRead( a.abs( 'out/single.out.will.yml' ) );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
@@ -9753,16 +9753,16 @@ function exportSingle( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exported .*module::single \/ build::proto.export.* in/ ) );
-    test.is( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( op.output, 'Exported module::single / build::proto.export with 2 file(s) in' ) );
+    test.true( _.strHas( op.output, /Exported .*module::single \/ build::proto.export.* in/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, 'Exported module::single / build::proto.export with 2 file(s) in' ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
 
-    test.is( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
     var outfile = a.fileProvider.configRead( a.abs( 'out/single.out.will.yml' ) );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
@@ -9809,8 +9809,8 @@ function exportItself( test )
     var files = a.find( a.routinePath );
     test.gt( files.length, 50 );
 
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
 
     return null;
   })
@@ -9841,7 +9841,7 @@ function exportNonExportable( test )
 
   .then( ( op ) =>
   {
-    test.is( op.exitCode !== 0 );
+    test.true( op.exitCode !== 0 );
 
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -9875,7 +9875,7 @@ function exportPurging( test )
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
-    test.is( op.exitCode === 0 );
+    test.true( op.exitCode === 0 );
 
     var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
     test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '0.0.0' );
@@ -9898,7 +9898,7 @@ function exportPurging( test )
   .then( ( op ) =>
   {
     test.description = 'second .export';
-    test.is( op.exitCode === 0 );
+    test.true( op.exitCode === 0 );
 
     var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
     test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '3.3.3' );
@@ -9910,7 +9910,7 @@ function exportPurging( test )
   .then( ( op ) =>
   {
     test.description = '.export.purging';
-    test.is( op.exitCode === 0 );
+    test.true( op.exitCode === 0 );
 
     var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
     test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '0.0.0' );
@@ -10228,10 +10228,10 @@ function exportToRoot( test )
   {
     test.case = '.export'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exporting .*module::export-to-root \/ build::proto\.export.*/ ) );
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, /Exported .*module::export-to-root \/ build::proto\.export.* in/ ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'export-to-root.out.will.yml' ) ) )
+    test.true( _.strHas( op.output, /Exporting .*module::export-to-root \/ build::proto\.export.*/ ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, /Exported .*module::export-to-root \/ build::proto\.export.* in/ ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'export-to-root.out.will.yml' ) ) )
     return null;
   })
 
@@ -10260,15 +10260,15 @@ function exportMixed( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exporting .*module::ModuleForTesting12ab\.informal \/ build::export.*/ ) );
-    test.is( _.strHas( op.output, ' + reflector::download reflected' ) );
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, /Exported .*module::ModuleForTesting12ab\.informal \/ build::export.* in/ ) );
-    test.is( _.strHas( op.output, 'out/ModuleForTesting12.informal.out.will.yml' ) );
-    test.is( _.strHas( op.output, 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
+    test.true( _.strHas( op.output, /Exporting .*module::ModuleForTesting12ab\.informal \/ build::export.*/ ) );
+    test.true( _.strHas( op.output, ' + reflector::download reflected' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, /Exported .*module::ModuleForTesting12ab\.informal \/ build::export.* in/ ) );
+    test.true( _.strHas( op.output, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    test.true( _.strHas( op.output, 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
     var files = a.find( a.abs( 'module' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
@@ -10448,22 +10448,22 @@ function exportMixed( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exporting .*module::ModuleForTesting12ab.informal.* \/ build::export/ ) );
-    test.is( _.strHas( op.output, /\+ reflector::download reflected .* file\(s\)/ ) );
-    test.is( _.strHas( op.output, '+ Write out willfile' ) );
-    test.is( _.strHas( op.output, /Exported .*module::ModuleForTesting12ab.informal.* \/ build::export/ ) );
-    test.is( _.strHas( op.output, 'out/ModuleForTesting12.informal.out.will.yml' ) );
-    test.is( _.strHas( op.output, 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
-    test.is( _.strHas( op.output, 'Reloading submodules' ) );
+    test.true( _.strHas( op.output, /Exporting .*module::ModuleForTesting12ab.informal.* \/ build::export/ ) );
+    test.true( _.strHas( op.output, /\+ reflector::download reflected .* file\(s\)/ ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, /Exported .*module::ModuleForTesting12ab.informal.* \/ build::export/ ) );
+    test.true( _.strHas( op.output, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    test.true( _.strHas( op.output, 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
+    test.true( _.strHas( op.output, 'Reloading submodules' ) );
 
-    test.is( _.strHas( op.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
-    test.is( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected' ) );
-    test.is( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
+    test.true( _.strHas( op.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected' ) );
+    test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
 
     test.identical( _.strCount( op.output, ' ! Failed to open' ), 4 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
     var files = a.find( a.abs( 'module' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
@@ -10515,7 +10515,7 @@ function exportSecond( test )
     test.identical( _.strCount( op.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( op.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
@@ -10729,7 +10729,7 @@ function exportSecond( test )
     test.identical( _.strCount( op.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( op.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
@@ -10956,13 +10956,13 @@ function exportSubmodules( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/wtools/testing/l1/ModuleForTesting1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
-    test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/debug/wtools/testing/l1/ModuleForTesting1.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
+    test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out' ) );
-    test.is( files.length > 10 );
+    test.true( files.length > 10 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
@@ -11002,12 +11002,12 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'Read 2 willfile(s) in' ) );
-    test.is( _.strHas( op.output, /Exported module::submodule \/ build::export.debug with 2 file\(s\) in .*/ ) );
-    test.is( _.strHas( op.output, 'Write out archive' ) );
-    test.is( _.strHas( op.output, 'Write out willfile' ) );
-    test.is( _.strHas( op.output, 'submodule.debug.out.tgs' ) );
-    test.is( _.strHas( op.output, 'out/submodule.out.will.yml' ) );
+    test.true( _.strHas( op.output, 'Read 2 willfile(s) in' ) );
+    test.true( _.strHas( op.output, /Exported module::submodule \/ build::export.debug with 2 file\(s\) in .*/ ) );
+    test.true( _.strHas( op.output, 'Write out archive' ) );
+    test.true( _.strHas( op.output, 'Write out willfile' ) );
+    test.true( _.strHas( op.output, 'submodule.debug.out.tgs' ) );
+    test.true( _.strHas( op.output, 'out/submodule.out.will.yml' ) );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/submodule.out.will.yml' ) );
 
@@ -11202,17 +11202,17 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'Read 3 willfile(s) in' ) );
-    test.is( _.strHas( op.output, /Exported module::submodule \/ build::export. with 2 file\(s\) in .*/ ) );
-    test.is( _.strHas( op.output, 'Write out archive' ) );
-    test.is( _.strHas( op.output, 'Write out willfile' ) );
-    test.is( _.strHas( op.output, 'submodule.out.tgs' ) );
-    test.is( _.strHas( op.output, 'out/submodule.out.will.yml' ) );
+    test.true( _.strHas( op.output, 'Read 3 willfile(s) in' ) );
+    test.true( _.strHas( op.output, /Exported module::submodule \/ build::export. with 2 file\(s\) in .*/ ) );
+    test.true( _.strHas( op.output, 'Write out archive' ) );
+    test.true( _.strHas( op.output, 'Write out willfile' ) );
+    test.true( _.strHas( op.output, 'submodule.out.tgs' ) );
+    test.true( _.strHas( op.output, 'out/submodule.out.will.yml' ) );
 
     var outfileData = a.fileProvider.fileRead( a.abs( 'out/submodule.out.will.yml' ) );
-    test.is( outfileData.length > 1000 );
-    test.is( !_.strHas( outfileData, a.abs( '../..' ) ) );
-    test.is( !_.strHas( outfileData, a.path.nativize( a.abs( '../..' ) ) ) );
+    test.true( outfileData.length > 1000 );
+    test.true( !_.strHas( outfileData, a.abs( '../..' ) ) );
+    test.true( !_.strHas( outfileData, a.path.nativize( a.abs( '../..' ) ) ) );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/submodule.out.will.yml' ) );
     outfile = outfile.module[ 'submodule.out' ]
@@ -11521,7 +11521,7 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
+    test.true( _.strHas( op.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
 
     return null;
   })
@@ -11545,7 +11545,7 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
+    test.true( _.strHas( op.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
 
     return null;
   })
@@ -11567,8 +11567,8 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '5 at ' ) );
-    test.is( _.strHas( op.output, 'Clean will delete 5 file(s)' ) );
+    test.true( _.strHas( op.output, '5 at ' ) );
+    test.true( _.strHas( op.output, 'Clean will delete 5 file(s)' ) );
 
     return null;
   })
@@ -11590,7 +11590,7 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted 5 file(s)' ) );
+    test.true( _.strHas( op.output, 'Clean deleted 5 file(s)' ) );
 
     return null;
   })
@@ -11616,7 +11616,7 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s)' ) );
+    test.true( _.strHas( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s)' ) );
 
     return null;
   })
@@ -11638,8 +11638,8 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '8 at ' ) );
-    test.is( _.strHas( op.output, 'Clean will delete 8 file(s)' ) );
+    test.true( _.strHas( op.output, '8 at ' ) );
+    test.true( _.strHas( op.output, 'Clean will delete 8 file(s)' ) );
 
     return null;
   })
@@ -11661,7 +11661,7 @@ function exportImportMultiple( test )
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted 8 file(s)' ) );
+    test.true( _.strHas( op.output, 'Clean deleted 8 file(s)' ) );
 
     return null;
   })
@@ -11697,11 +11697,11 @@ function exportBroken( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
 
-    test.is( _.strHas( op.output, 'submodule.debug.out.tgs' ) );
-    test.is( _.strHas( op.output, 'out/submodule.out.will.yml' ) );
+    test.true( _.strHas( op.output, 'submodule.debug.out.tgs' ) );
+    test.true( _.strHas( op.output, 'out/submodule.out.will.yml' ) );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/submodule.out.will.yml' ) );
     outfile = outfile.module[ 'submodule.out' ];
@@ -12597,7 +12597,7 @@ function exportRecursiveLocal( test )
   {
     test.case = 'first';
 
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -12608,14 +12608,14 @@ function exportRecursiveLocal( test )
   a.appStart({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, op ) =>
   {
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
 
     test.identical( _.strCount( op.output, 'About' ), 1 );
     test.identical( _.strCount( op.output, 'module::module-ab / path::export' ), 1 );
-    test.is( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
+    test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
   })
@@ -12626,7 +12626,7 @@ function exportRecursiveLocal( test )
   .finally( ( err, op ) =>
   {
     test.case = 'second';
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -12637,14 +12637,14 @@ function exportRecursiveLocal( test )
   a.appStart({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, op ) =>
   {
-    test.is( !err );
+    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
 
     test.identical( _.strCount( op.output, 'About' ), 1 );
     test.identical( _.strCount( op.output, 'module::module-ab / path::export' ), 1 );
-    test.is( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
+    test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
   })
@@ -12983,7 +12983,7 @@ function exportRewritesOutFile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
     let outFile = a.fileProvider.fileRead({ filePath : a.abs( 'out/export-rewrites-out-file.out.will.yml' ), encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
@@ -13004,7 +13004,7 @@ function exportRewritesOutFile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
     let outFile = a.fileProvider.fileRead({ filePath : a.abs( 'out/export-rewrites-out-file.out.will.yml' ), encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1' ] );
@@ -13025,7 +13025,7 @@ function exportRewritesOutFile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
     let outFile = a.fileProvider.fileRead({ filePath : a.abs( 'out/export-rewrites-out-file.out.will.yml' ), encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
@@ -14411,7 +14411,7 @@ function exportOutdated2( test )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     var read = a.fileProvider.fileRead( a.abs( 'module/mand/.im.will.yml' ) );
     read += '\n\n';
     a.fileProvider.fileWrite( a.abs( 'module/mand/.im.will.yml' ), read );
@@ -14427,7 +14427,7 @@ function exportOutdated2( test )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     return null;
   })
 
@@ -14456,9 +14456,9 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   {
     test.case = 'optional';
     a.reflect();
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
     return op;
   })
 
@@ -14477,9 +14477,9 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   .then( ( op ) =>
   {
     a.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
-    test.is( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
     return null;
   })
 
@@ -14492,9 +14492,9 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
 
     var exp =
     [
@@ -14519,9 +14519,9 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   {
     test.case = 'mandatory';
     a.reflect();
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return op;
   })
 
@@ -14540,9 +14540,9 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   .then( ( op ) =>
   {
     a.fileProvider.filesDelete( a.abs( 'module/mand/.module' ) );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
   })
 
@@ -14554,9 +14554,9 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 1 );
     test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 0 );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
   })
 
@@ -15138,8 +15138,8 @@ function clean( test )
   {
     test.case = '.clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + files.length + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.true( _.strHas( op.output, 'Clean deleted ' + files.length + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
     return null;
   })
 
@@ -15148,7 +15148,7 @@ function clean( test )
   {
     test.case = '.with NoTemp .clean -- second';
     test.identical( op.exitCode, 0 );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15168,8 +15168,8 @@ function clean( test )
   {
     test.case = '.with NoBuild .clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted ' + 0 + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15190,9 +15190,9 @@ function clean( test )
   {
     test.case = '.with NoBuild .clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '- Clean deleted 2 file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( _.strHas( op.output, '- Clean deleted 2 file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     return null;
   })
 
@@ -15230,8 +15230,8 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15254,8 +15254,8 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15278,8 +15278,8 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15302,8 +15302,8 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15326,8 +15326,8 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15350,7 +15350,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15364,7 +15364,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15377,7 +15377,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15405,9 +15405,9 @@ function cleanSingleModule( test )
     test.case = '.clean '
     test.identical( op[ 0 ].exitCode, 0 );
     test.identical( op[ 1 ].exitCode, 0 );
-    test.is( _.strHas( op[ 1 ].output, 'Clean deleted 0 file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op[ 1 ].output, 'Clean deleted 0 file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
@@ -15420,7 +15420,7 @@ function cleanSingleModule( test )
     test.case = '.clean dry:1'
     test.identical( op[ 0 ].exitCode, 0 );
     test.identical( op[ 1 ].exitCode, 0 );
-    test.is( _.strHas( op[ 1 ].output, 'Clean will delete 0 file(s)' ) );
+    test.true( _.strHas( op[ 1 ].output, 'Clean will delete 0 file(s)' ) );
     return null;
   })
 
@@ -15462,10 +15462,10 @@ function cleanBroken1( test )
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, String( files.length ) + ' at ' ) );
-    test.is( _.strHas( op.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
+    test.true( _.strHas( op.output, String( files.length ) + ' at ' ) );
+    test.true( _.strHas( op.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
   })
@@ -15478,9 +15478,9 @@ function cleanBroken1( test )
   {
     test.case = '.clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
   })
 
@@ -15492,7 +15492,7 @@ function cleanBroken1( test )
     test.case = '.export';
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
@@ -15520,7 +15520,7 @@ function cleanBroken1( test )
     test.case = '.export';
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
@@ -15570,9 +15570,9 @@ function cleanBroken2( test )
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, String( files.length ) ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
+    test.true( _.strHas( op.output, String( files.length ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
   })
@@ -15585,9 +15585,9 @@ function cleanBroken2( test )
   {
     test.case = '.clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
+    test.true( _.strHas( op.output, 'Clean deleted' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
   })
 
@@ -15599,7 +15599,7 @@ function cleanBroken2( test )
     test.case = '.export';
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
@@ -15629,9 +15629,9 @@ function cleanBroken2( test )
     test.will = 'update should throw error if submodule is not downloaded but download path exists';
 
     test.notIdentical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.true( !_.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
     var expected = `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository`;
-    test.is( _.strHas( op.output, expected ) );
+    test.true( _.strHas( op.output, expected ) );
 
     // var files = a.find( a.abs( 'out/debug' ) );
     // test.gt( files.length, 9 );
@@ -15669,9 +15669,9 @@ function cleanBroken2( test )
     /* agree/update/download should not count as update of module if no change was done */
     test.identical( _.strCount( op.output, 'was updated' ), 0 );
     test.identical( _.strCount( op.output, 'to version' ), 0 );
-    test.is( !_.strHas( op.output, /Module module::submodules \/ opener::ModuleForTesting2 is not downloaded, but file at .*/ ) );
-    test.is( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
-    test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.true( !_.strHas( op.output, /Module module::submodules \/ opener::ModuleForTesting2 is not downloaded, but file at .*/ ) );
+    test.true( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
+    test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
@@ -15723,8 +15723,8 @@ function cleanBrokenSubmodules( test )
     test.identical( files.length, 2 );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '/.module' ) );
-    test.is( _.strHas( op.output, '/out' ) );
+    test.true( _.strHas( op.output, '/.module' ) );
+    test.true( _.strHas( op.output, '/out' ) );
 
     return null;
   })
@@ -15742,7 +15742,7 @@ function cleanBrokenSubmodules( test )
     test.identical( files.length, 0 );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '6 file(s)' ) );
+    test.true( _.strHas( op.output, '6 file(s)' ) );
 
     return null;
   })
@@ -15834,8 +15834,8 @@ function cleanNoBuild( test )
   {
     test.case = '.clean -- second';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.true( _.strHas( op.output, 'Clean deleted ' + 0 + ' file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
     return null;
   })
 
@@ -15844,7 +15844,7 @@ function cleanNoBuild( test )
   {
     test.case = '.clean';
     test.identical( op.exitCode, 0 );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -15855,7 +15855,7 @@ function cleanNoBuild( test )
   {
     test.case = '.clean -- badarg';
     test.notIdentical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'Clean deleted' ) );
+    test.true( !_.strHas( op.output, 'Clean deleted' ) );
     return null;
   })
 
@@ -15878,7 +15878,7 @@ function cleanDry( test )
 
   .then( ( op ) =>
   {
-    test.is( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
+    test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
@@ -15887,7 +15887,7 @@ function cleanDry( test )
   a.appStart({ args : [ '.with NoTemp .build' ] })
   .then( ( op ) =>
   {
-    test.is( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
     return op;
   })
 
@@ -15905,11 +15905,11 @@ function cleanDry( test )
     test.gt( files.length, 50 );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, String( files.length ) + ' at ' ) );
-    test.is( _.strHas( op.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
-    test.is( a.fileProvider.isDir( a.abs( '.module' ) ) ); /* phantom problem ? */
-    test.is( a.fileProvider.isDir( a.abs( 'out' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
+    test.true( _.strHas( op.output, String( files.length ) + ' at ' ) );
+    test.true( _.strHas( op.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
+    test.true( a.fileProvider.isDir( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.true( a.fileProvider.isDir( a.abs( 'out' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
   })
@@ -15936,15 +15936,15 @@ function cleanSubmodules( test )
   {
     test.case = '.submodules.update'
     test.identical( op.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
-    test.is( files.length >= 1 );
+    test.true( files.length >= 1 );
 
     var files = a.find( a.abs( '.module/ModuleForTesting2' ) );
-    test.is( files.length >= 1 );
+    test.true( files.length >= 1 );
 
     return null;
   })
@@ -15966,9 +15966,9 @@ function cleanSubmodules( test )
   {
     test.case = '.submodules.clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `${files.length}` ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
+    test.true( _.strHas( op.output, `${files.length}` ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
   })
 
@@ -16002,10 +16002,10 @@ function cleanMixed( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '- Clean deleted' ) );
+    test.true( _.strHas( op.output, '- Clean deleted' ) );
 
-    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
 
     var expected = [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ];
     var files = a.find( a.abs( 'module' ) );
@@ -17701,7 +17701,7 @@ function cleanSpecial( test )
   {
     test.case = '.clean';
     test.identical( op.exitCode, 0 );
-    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     return null;
   })
 
@@ -17755,7 +17755,7 @@ function shellWithCriterion( test )
   {
     test.description = 'should execute file A.js';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Executed-A.js' ) );
+    test.true( _.strHas( op.output, 'Executed-A.js' ) );
     return null;
   })
 
@@ -17767,7 +17767,7 @@ function shellWithCriterion( test )
   {
     test.description = 'should execute file B.js';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Executed-B.js' ) );
+    test.true( _.strHas( op.output, 'Executed-B.js' ) );
 
     return null;
   })
@@ -18146,7 +18146,7 @@ function functionThisCriterion( test )
     test.description = 'should print debug:1';
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'debug:1' ) );
+    test.true( _.strHas( op.output, 'debug:1' ) );
 
     return null;
   })
@@ -18160,7 +18160,7 @@ function functionThisCriterion( test )
     test.description = 'should print debug:0';
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'debug:0' ) );
+    test.true( _.strHas( op.output, 'debug:0' ) );
 
     return null;
   })
@@ -18186,7 +18186,7 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.download';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
     return null;
   })
 
@@ -18198,9 +18198,9 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.download'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
@@ -18212,9 +18212,9 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.update'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::single were updated in' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::single were updated in' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
@@ -18226,9 +18226,9 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.clean';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Clean deleted 0 file(s)' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op.output, 'Clean deleted 0 file(s)' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
@@ -18261,14 +18261,14 @@ function submodulesDownloadUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were downloaded' ) );
 
     var files = a.find( a.abs( '.module' ) );
 
-    test.is( files.length > 30 );
+    test.true( files.length > 30 );
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -18284,16 +18284,16 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
-    test.is( files.length > 3 );
+    test.true( files.length > 3 );
 
     var files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
-    test.is( files.length > 3 );
+    test.true( files.length > 3 );
 
     return null;
   })
@@ -18311,16 +18311,16 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
-    test.is( files.length >= 1 );
+    test.true( files.length >= 1 );
 
     var files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
-    test.is( files.length >= 1 );
+    test.true( files.length >= 1 );
 
     return null;
   })
@@ -18337,16 +18337,16 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
+    test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
-    test.is( files.length >= 1 );
+    test.true( files.length >= 1 );
 
     var files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
-    test.is( files.length >= 1 );
+    test.true( files.length >= 1 );
 
     return null;
   })
@@ -18368,8 +18368,8 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `${files.length}` ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.true( _.strHas( op.output, `${files.length}` ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
 
     return null;
   })
@@ -18403,12 +18403,12 @@ function submodulesDownloadUpdateDry( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*a37826f11bd1801b1e5d727bdf38a738fb2f783c.*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
-    test.is( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
+    // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
+    // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*a37826f11bd1801b1e5d727bdf38a738fb2f783c.*/ ) );
+    // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
+    test.true( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = a.find( a.abs( '.module' ) );
-    test.is( files.length === 0 );
+    test.true( files.length === 0 );
     return null;
   })
 
@@ -18427,7 +18427,7 @@ function submodulesDownloadUpdateDry( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
+    test.true( _.strHas( op.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
@@ -18447,12 +18447,12 @@ function submodulesDownloadUpdateDry( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    // test.is( _.strHas( op.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::PathBasic.* will be updated to version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
-    test.is( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be updated' ) );
+    // test.true( _.strHas( op.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
+    // test.true( _.strHas( op.output, / \+ .*module::PathBasic.* will be updated to version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ) );
+    // test.true( _.strHas( op.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
+    test.true( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = a.find( a.abs( '.module' ) );
-    test.is( files.length === 0 );
+    test.true( files.length === 0 );
     return null;
   })
 
@@ -18471,7 +18471,7 @@ function submodulesDownloadUpdateDry( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
+    test.true( _.strHas( op.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
@@ -18538,7 +18538,7 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -18558,7 +18558,7 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -18576,7 +18576,7 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -18594,7 +18594,7 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -19028,9 +19028,9 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
-    test.is( _.strHas( op.output, 'Failed to download module' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -19047,9 +19047,9 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
-    test.is( _.strHas( op.output, 'Failed to download module' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
     return null;
   })
@@ -19067,9 +19067,9 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'Failed to download module' ) );
-    test.is( _.strHas( op.output, 'module::wModuleForTesting2a was downloaded version master in' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
+    test.true( !_.strHas( op.output, 'Failed to download module' ) );
+    test.true( _.strHas( op.output, 'module::wModuleForTesting2a was downloaded version master in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
 
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     // test.gt( files.length, 10 );
@@ -19093,9 +19093,9 @@ function submodulesDownloadThrowing( test )
   {
     test.notIdentical( op.exitCode, 0 );
     var exp = `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is downloaded, but it's not a git repo`;
-    test.is( _.strHas( op.output, exp ) );
-    test.is( _.strHas( op.output, 'Failed to download module' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, exp ) );
+    test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [ 'file' ] );
     return null;
   })
@@ -19114,9 +19114,9 @@ function submodulesDownloadThrowing( test )
   {
     test.notIdentical( op.exitCode, 0 );
     var expected = `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is not downloaded, but file at`;
-    test.is( _.strHas( op.output, expected ) );
-    test.is( _.strHas( op.output, 'Failed to download module' ) );
-    test.is( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, expected ) );
+    test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -19144,8 +19144,8 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore );
 
@@ -19180,7 +19180,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Willfile should not have section(s) : "section"' ) );
+    test.true( _.strHas( op.output, 'Willfile should not have section(s) : "section"' ) );
     let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore )
     return null;
@@ -19227,9 +19227,9 @@ function submodulesDownloadStepAndCommand( test )
   {
     test.identical( op.exitCode, 0 );
     let files = a.find( a.abs( '.module' ) );
-    test.is( !_.longHas( files, './ModuleForTesting1' ) )
-    test.is( !_.longHas( files, './ModuleForTesting2a' ) )
-    test.is( _.longHas( files, './submodule' ) )
+    test.true( !_.longHas( files, './ModuleForTesting1' ) )
+    test.true( !_.longHas( files, './ModuleForTesting2a' ) )
+    test.true( _.longHas( files, './submodule' ) )
     return null;
   })
 
@@ -19249,9 +19249,9 @@ function submodulesDownloadStepAndCommand( test )
   {
     test.identical( op.exitCode, 0 );
     let files = a.find( a.abs( '.module' ) );
-    test.is( !_.longHas( files, './ModuleForTesting1' ) )
-    test.is( !_.longHas( files, './ModuleForTesting2a' ) )
-    test.is( _.longHas( files, './submodule' ) )
+    test.true( !_.longHas( files, './ModuleForTesting1' ) )
+    test.true( !_.longHas( files, './ModuleForTesting2a' ) )
+    test.true( _.longHas( files, './submodule' ) )
     return null;
   })
 
@@ -20025,9 +20025,9 @@ function submodulesDownloadNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -20067,9 +20067,9 @@ function submodulesDownloadNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -20120,9 +20120,9 @@ function submodulesDownloadNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( files, filesBefore );
@@ -20204,9 +20204,9 @@ function submodulesDownloadUpdateNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -20259,9 +20259,9 @@ function submodulesDownloadUpdateNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -20301,9 +20301,9 @@ function submodulesDownloadUpdateNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -20384,7 +20384,7 @@ function submodulesDownloadAutoCrlfEnabled( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 1/1 submodule(s) of module::supermodule were downloaded in' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::supermodule were downloaded in' ) );
     return null;
   })
   a.appStart({ execPath : '.submodules.list' })
@@ -20430,7 +20430,7 @@ function rootModuleRenormalization( test )
   {
     test.description = 'run submodules.download on module that is not a git repo';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
     return null;
   })
 
@@ -20441,7 +20441,7 @@ function rootModuleRenormalization( test )
   {
     test.description = 'run submodules.update on module that is not a git repo';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were updated in' ) );
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were updated in' ) );
     return null;
   })
 
@@ -20453,14 +20453,14 @@ function rootModuleRenormalization( test )
   {
     test.description = 'will file of git module has modified eol( crlf ), out file should be marked as outdated';
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.is( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    test.true( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
     return null;
   })
   a.appStart({ execPath : '.with repoClone/ .submodules.download' })
   .then( ( op ) =>
   {
     test.description = 'files of a git module should be normalized after executing submodules.download';
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
     return null;
   })
   a.appStart({ execPath : '.with repoClone/ .submodules.list' })
@@ -20468,7 +20468,7 @@ function rootModuleRenormalization( test )
   {
     test.description = 'out file of root git module should be up to date';
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.is( !_.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    test.true( !_.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
     return null;
   })
 
@@ -20480,14 +20480,14 @@ function rootModuleRenormalization( test )
   {
     test.description = 'will file of git module has modified eol( crlf ), out file should be marked as outdated';
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.is( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    test.true( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
     return null;
   })
   a.appStart({ execPath : '.with repoClone/ .submodules.update' })
   .then( ( op ) =>
   {
     test.description = 'files of a git module should be normalized after executing submodules.download';
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were updated in' ) );
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were updated in' ) );
     return null;
   })
   a.appStart({ execPath : '.with repoClone/ .submodules.list' })
@@ -20495,7 +20495,7 @@ function rootModuleRenormalization( test )
   {
     test.description = 'out file of root git module should be up to date';
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.is( !_.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    test.true( !_.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
     return null;
   })
 
@@ -20507,7 +20507,7 @@ function rootModuleRenormalization( test )
   {
     test.description = 'will file of git module has modified eol( crlf ), out file should be marked as outdated';
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.is( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    test.true( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
 
     a.fileProvider.fileWrite( a.abs( 'repoClone/File.js' ), 'console.log( 1 );' );
 
@@ -20517,7 +20517,7 @@ function rootModuleRenormalization( test )
   .then( ( op ) =>
   {
     test.description = 'files of a git module should not be normalized, because module repository has local changes';
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
     return null;
   })
   a.appStart({ execPath : '.with repoClone/ .submodules.list' })
@@ -20525,7 +20525,7 @@ function rootModuleRenormalization( test )
   {
     test.description = 'out file of root git module should stay stale';
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.is( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    test.true( _.strHas( op.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
     return null;
   })
 
@@ -20536,8 +20536,8 @@ function rootModuleRenormalization( test )
   .then( ( op ) =>
   {
     test.description = 'gitattrubutes has "* text" attribute, normalization should print warning that result can be affected by gitattrubutes';
-    test.is( _.strHas( op.output, /File \.gitattributes from the repository at .* contains lines that can affect the result of EOL normalization/g ) )
-    test.is( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    test.true( _.strHas( op.output, /File \.gitattributes from the repository at .* contains lines that can affect the result of EOL normalization/g ) )
+    test.true( _.strHas( op.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
     return null;
   })
 
@@ -20612,10 +20612,10 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
-    test.is( _.strHas( op.output, 'Failed to update module' ) );
+    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, 'Failed to update module' ) );
 
-    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -20632,9 +20632,9 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
-    test.is( _.strHas( op.output, 'Failed to update module' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, 'Failed to update module' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
     return null;
   })
@@ -20652,9 +20652,9 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'Failed to download update' ) );
-    test.is( _.strHas( op.output, 'module::wModuleForTesting2a was updated to version master in' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
+    test.true( !_.strHas( op.output, 'Failed to download update' ) );
+    test.true( _.strHas( op.output, 'module::wModuleForTesting2a was updated to version master in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.ge( files.length, 1 );
@@ -20677,9 +20677,9 @@ function submodulesUpdateThrowing( test )
   {
     test.notIdentical( op.exitCode, 0 );
     var exp = `Module module::submodules-download-errors-good / opener::ModuleForTesting2a is downloaded, but it's not a git rep`;
-    test.is( _.strHas( op.output, exp ) );
-    test.is( _.strHas( op.output, 'Failed to update module' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, exp ) );
+    test.true( _.strHas( op.output, 'Failed to update module' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [ 'file' ] );
     return null;
   })
@@ -20697,9 +20697,9 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Module module::submodules-download-errors-good / opener::ModuleForTesting2a is not downloaded, but file at' ) );
-    test.is( _.strHas( op.output, 'Failed to update submodules' ) );
-    test.is( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, 'Module module::submodules-download-errors-good / opener::ModuleForTesting2a is not downloaded, but file at' ) );
+    test.true( _.strHas( op.output, 'Failed to update submodules' ) );
+    test.true( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -20722,9 +20722,9 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'opener::ModuleForTesting2a is already downloaded, but has different origin url') );
-    test.is( _.strHas( op.output, 'Failed to update submodules' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, 'opener::ModuleForTesting2a is already downloaded, but has different origin url') );
+    test.true( _.strHas( op.output, 'Failed to update submodules' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesBefore.length, filesAfter.length );
 
@@ -20759,7 +20759,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Willfile should not have section(s) : "section"' ) );
+    test.true( _.strHas( op.output, 'Willfile should not have section(s) : "section"' ) );
     let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore )
     return null;
@@ -20813,8 +20813,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Failed to agree module' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, 'Failed to agree module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -20831,8 +20831,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Failed to agree module' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( _.strHas( op.output, 'Failed to agree module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
   })
 
@@ -20849,9 +20849,9 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'Failed to agree module' ) );
-    test.is( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
+    test.true( !_.strHas( op.output, 'Failed to agree module' ) );
+    test.true( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
@@ -20872,8 +20872,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Failed to agree module' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( _.strHas( op.output, 'Failed to agree module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
 
     return null;
   })
@@ -20892,9 +20892,9 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'Failed to agree module' ) );
-    test.is( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
+    test.true( !_.strHas( op.output, 'Failed to agree module' ) );
+    test.true( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
@@ -20914,8 +20914,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Failed to agree module' ) );
-    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( _.strHas( op.output, 'Failed to agree module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
   })
 
@@ -20932,9 +20932,9 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, 'Failed to agree module' ) );
-    test.is( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
+    test.true( !_.strHas( op.output, 'Failed to agree module' ) );
+    test.true( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
     return null;
@@ -20954,8 +20954,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
@@ -20980,8 +20980,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Module at module::submodules-download-errors-good / opener::ModuleForTesting2a needs to be updated, but has local changes' ) );
-    test.is( _.strHas( op.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, 'Module at module::submodules-download-errors-good / opener::ModuleForTesting2a needs to be updated, but has local changes' ) );
+    test.true( _.strHas( op.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -21003,8 +21003,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'needs to be deleted, but has local changes' ) );
-    test.is( _.strHas( op.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, 'needs to be deleted, but has local changes' ) );
+    test.true( _.strHas( op.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -21048,8 +21048,8 @@ function submodulesVersionsAgreeWrongOrigin( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
@@ -21094,7 +21094,7 @@ function submodulesDownloadedUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, / \+ 1\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.true( _.strHas( op.output, / \+ 1\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     return op;
   })
 
@@ -21119,7 +21119,7 @@ function submodulesDownloadedUpdate( test )
   {
     test.will = 'submodule of supermodule should stay on dev';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'dev' ) );
+    test.true( _.strHas( op.output, 'dev' ) );
     return op;
   })
 
@@ -21136,7 +21136,7 @@ function submodulesDownloadedUpdate( test )
   {
     test.will = 'submodule of informal submodule should stay on master';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'master' ) );
+    test.true( _.strHas( op.output, 'master' ) );
     return op;
   })
 
@@ -21163,7 +21163,7 @@ function submodulesDownloadedUpdate( test )
   {
     test.will = 'submodule of supermodule should stay on dev';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'dev' ) );
+    test.true( _.strHas( op.output, 'dev' ) );
     return op;
   })
 
@@ -21180,7 +21180,7 @@ function submodulesDownloadedUpdate( test )
   {
     test.will = 'submodule of informal submodule should stay on master';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'master' ) );
+    test.true( _.strHas( op.output, 'master' ) );
     return op;
   })
 
@@ -21209,10 +21209,10 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version e96f5405a2f23912957c4b7baa0a0ddf4ac6ca24 in' ) );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version cef20499c8dae0bf6d8b288be63b2c031ad34551 in' ) );
-    test.is( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version e96f5405a2f23912957c4b7baa0a0ddf4ac6ca24 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version cef20499c8dae0bf6d8b288be63b2c031ad34551 in' ) );
+    test.true( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -21229,10 +21229,10 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
-    test.is( _.strHas( op.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
+    test.true( _.strHas( op.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -21252,10 +21252,10 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    // test.is( _.strHas( op.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
-    test.is( _.strHas( op.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
+    // test.true( _.strHas( op.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
+    test.true( _.strHas( op.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -21272,10 +21272,10 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
-    test.is( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
-    test.is( _.strHas( op.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
+    test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
+    test.true( _.strHas( op.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -21309,7 +21309,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -21327,7 +21327,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
 
@@ -21345,7 +21345,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, detachedVersion ) );
+    test.true( _.strHas( currentVersion, detachedVersion ) );
     return null;
   })
 
@@ -21363,7 +21363,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -21394,10 +21394,10 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( op ) =>
   {
-    test.is( _.strHas( op.output, 'modified:   File.js' ) )
+    test.true( _.strHas( op.output, 'modified:   File.js' ) )
 
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -21432,7 +21432,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
 
@@ -21475,10 +21475,10 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( op ) =>
   {
-    test.is( _.strHas( op.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
+    test.true( _.strHas( op.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
 
     let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.true( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -21525,7 +21525,7 @@ function subModulesUpdateSwitchBranch( test )
       .then( ( op ) =>
       {
         detachedVersion = _.strStrip( op.output );
-        test.is( _.strDefined( detachedVersion ) );
+        test.true( _.strDefined( detachedVersion ) );
         return null;
       })
 
@@ -21588,7 +21588,7 @@ function submodulesVerify( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
     return null;
   })
 
@@ -21606,7 +21606,7 @@ function submodulesVerify( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
+    test.true( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
   })
 
@@ -21623,7 +21623,7 @@ function submodulesVerify( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
+    test.true( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
   })
 
@@ -21642,7 +21642,7 @@ function submodulesVerify( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
+    test.true( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
   })
 
@@ -21661,7 +21661,7 @@ function submodulesVerify( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Submodule module::local has version different from that is specified in will-file' ) );
+    test.true( _.strHas( op.output, 'Submodule module::local has version different from that is specified in will-file' ) );
     return null;
   })
 
@@ -21717,7 +21717,7 @@ function versionsAgree( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
 
@@ -21734,7 +21734,7 @@ function versionsAgree( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
+    test.true( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
 
@@ -21751,14 +21751,14 @@ function versionsAgree( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
+    test.true( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   a.appStart3( 'git status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Your branch is ahead of \'origin\/master\' by 1 commit/ ) );
+    test.true( _.strHas( op.output, /Your branch is ahead of \'origin\/master\' by 1 commit/ ) );
     return null;
   })
 
@@ -21776,15 +21776,15 @@ function versionsAgree( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, 'module::local was agreed with version master in' ) );
-    test.is( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
+    test.true( _.strHas( op.output, 'module::local was agreed with version master in' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   a.appStart3( 'git status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
+    test.true( _.strHas( op.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
     return null;
   })
 
@@ -21803,14 +21803,14 @@ function versionsAgree( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   a.appStart3( 'git status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Your branch is up to date/ ) );
+    test.true( _.strHas( op.output, /Your branch is up to date/ ) );
     return null;
   })
 
@@ -21876,9 +21876,9 @@ function versionsAgreeNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -21930,9 +21930,9 @@ function versionsAgreeNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -21971,9 +21971,9 @@ function versionsAgreeNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -22025,9 +22025,9 @@ function versionsAgreeNpm( test )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     var exp =
     [
@@ -22078,7 +22078,7 @@ function stepSubmodulesDownload( test )
   {
     test.case = 'list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master` ) );
+    test.true( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master` ) );
     return null;
   })
 
@@ -22120,7 +22120,7 @@ function stepSubmodulesDownload( test )
     test.identical( op.exitCode, 0 );
     test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
     test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
     return null;
   })
 
@@ -22140,7 +22140,7 @@ function stepWillbeVersionCheck( test )
 
   if( !a.fileProvider.fileExists( a.abs( a.abs( __dirname, '../../../..' ), 'package.json' ) ) )
   {
-    test.is( true );
+    test.true( true );
     return;
   }
 
@@ -22175,7 +22175,7 @@ function stepWillbeVersionCheck( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Built .+ \/ build::debug/ ) );
+    test.true( _.strHas( op.output, /Built .+ \/ build::debug/ ) );
     return null;
   })
 
@@ -22192,8 +22192,8 @@ function stepWillbeVersionCheck( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'npm r -g willbe && npm i -g willbe' ) );
-    test.is( _.strHas( op.output, /Failed .+ \/ step::willbe.version.check/ ) );
+    test.true( _.strHas( op.output, 'npm r -g willbe && npm i -g willbe' ) );
+    test.true( _.strHas( op.output, /Failed .+ \/ step::willbe.version.check/ ) );
     return null;
   })
 
@@ -22396,8 +22396,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22414,8 +22414,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22434,9 +22434,9 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.is( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
-    // test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22453,8 +22453,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '! Submodule module::local does not have files' ) );
-    // test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22471,8 +22471,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '! Submodule module::local does not have files' ) );
-    // test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22489,8 +22489,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
-    // test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22507,8 +22507,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
-    // test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22525,7 +22525,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -22789,8 +22789,8 @@ function stepGitCheckHardLinkRestoring( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -22824,8 +22824,8 @@ function stepGitCheckHardLinkRestoring( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -22878,8 +22878,8 @@ clone
     test.description = 'has local changes';
     test.notIdentical( op.exitCode, 0 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -22932,8 +22932,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -23255,8 +23255,8 @@ function stepGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -23289,8 +23289,8 @@ function stepGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -23344,8 +23344,8 @@ clone
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -23398,8 +23398,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -25769,11 +25769,11 @@ function runWillbe( test )
       else
       test.identical( o.exitCode, 255 );
       test.identical( o.exitSignal, 'SIGINT' );
-      test.is( _.strHas( o.output, 'wTools.out.will.yml' ) );
-      test.is( !_.strHas( o.output, 'wLogger.out.will.yml' ) );
-      test.is( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
-      test.is( !_.strHas( o.output, 'wConsequence.out.will.yml' ) );
-      test.is( !_.strHas( o.output, 'wInstancing.out.will.yml' ) );
+      test.true( _.strHas( o.output, 'wTools.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wLogger.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wConsequence.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wInstancing.out.will.yml' ) );
 
       return null;
     })
@@ -25809,9 +25809,9 @@ function runWillbe( test )
       else
       test.identical( o.exitCode, 255 );
       test.identical( o.exitSignal, 'SIGINT' );
-      test.is( _.strHas( o.output, 'module::runWillbe / submodule::Tools' ) );
-      test.is( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
-      test.is( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
+      test.true( _.strHas( o.output, 'module::runWillbe / submodule::Tools' ) );
+      test.true( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
+      test.true( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
       return null;
     })
 
@@ -25869,13 +25869,13 @@ function resourcesFormReflectorsExperiment( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'module::old-out-file / submodule::Starter' ) );
-    test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
-    test.is( _.strHas( op.output, 'autoExporting : 0' ) );
-    test.is( _.strHas( op.output, 'enabled : 1' ) );
-    test.is( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
-    test.is( _.strHas( op.output, 'isDownloaded : false' ) );
-    test.is( _.strHas( op.output, 'isAvailable : false' ) );
+    test.true( _.strHas( op.output, 'module::old-out-file / submodule::Starter' ) );
+    test.true( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
+    test.true( _.strHas( op.output, 'autoExporting : 0' ) );
+    test.true( _.strHas( op.output, 'enabled : 1' ) );
+    test.true( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
+    test.true( _.strHas( op.output, 'isDownloaded : false' ) );
+    test.true( _.strHas( op.output, 'isAvailable : false' ) );
 
     return null;
   })
@@ -25911,13 +25911,13 @@ function resourcesFormReflectorsExperiment( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'module::new-out-file / submodule::Starter' ) );
-    test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
-    test.is( _.strHas( op.output, 'autoExporting : 0' ) );
-    test.is( _.strHas( op.output, 'enabled : 1' ) );
-    test.is( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
-    test.is( _.strHas( op.output, 'isDownloaded : false' ) );
-    test.is( _.strHas( op.output, 'isAvailable : false' ) );
+    test.true( _.strHas( op.output, 'module::new-out-file / submodule::Starter' ) );
+    test.true( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
+    test.true( _.strHas( op.output, 'autoExporting : 0' ) );
+    test.true( _.strHas( op.output, 'enabled : 1' ) );
+    test.true( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
+    test.true( _.strHas( op.output, 'isDownloaded : false' ) );
+    test.true( _.strHas( op.output, 'isAvailable : false' ) );
 
     return null;
   })
@@ -25949,8 +25949,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -25966,8 +25966,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -25983,8 +25983,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -26000,8 +26000,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -26019,7 +26019,7 @@ function commandVersionCheck( test )
 
   if( !a.fileProvider.fileExists( a.abs( a.abs( __dirname, '../../../..' ), 'package.json' ) ) )
   {
-    test.is( true );
+    test.true( true );
     return;
   }
 
@@ -26055,8 +26055,8 @@ function commandVersionCheck( test )
   {
     test.case = '".version.check", current version';
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
   })
 
@@ -26065,9 +26065,9 @@ function commandVersionCheck( test )
   {
     test.case = '".imply v:9 ; .version.check", current version';
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Read/ ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Read/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
   })
 
@@ -26076,9 +26076,9 @@ function commandVersionCheck( test )
   {
     test.case = '".imply v:9 .version.check", current version';
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Read/ ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Read/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
   })
 
@@ -26087,9 +26087,9 @@ function commandVersionCheck( test )
   {
     test.case = '".version.check v:7", current version';
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Read/ ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Read/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
   })
 
@@ -26107,8 +26107,8 @@ function commandVersionCheck( test )
   {
     test.case = '".version.check", outdated version';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
   })
 
@@ -26117,8 +26117,8 @@ function commandVersionCheck( test )
   {
     test.case = '".imply v:9 ; .version.check", outdated version';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
   })
 
@@ -26127,8 +26127,8 @@ function commandVersionCheck( test )
   {
     test.case = '".imply v:9 .version.check", outdated version';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
   })
 
@@ -26137,8 +26137,8 @@ function commandVersionCheck( test )
   {
     test.case = '".imply v:7 .version.check", outdated version';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.is( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
   })
 
@@ -26753,7 +26753,7 @@ function commandSubmodulesGitPrOpen( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   {
-    test.is( true );
+    test.true( true );
     return;
   }
 
@@ -27421,7 +27421,7 @@ function commandModulesGitPrOpen( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   {
-    test.is( true );
+    test.true( true );
     return;
   }
 
@@ -27772,8 +27772,8 @@ function commandGitCheckHardLinkRestoring( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -27807,8 +27807,8 @@ function commandGitCheckHardLinkRestoring( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -27861,8 +27861,8 @@ clone
     test.description = 'has local changes';
     test.notIdentical( op.exitCode, 0 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -27915,8 +27915,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -28168,7 +28168,7 @@ function commandGitPrOpen( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   {
-    test.is( true );
+    test.true( true );
     return;
   }
 
@@ -28261,7 +28261,7 @@ function commandGitPrOpenRemote( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.about || !config.about.name !== 'wtools-bot' )
   {
-    test.is( true );
+    test.true( true );
     return null;
   }
   let user = config.about.user;
@@ -28477,8 +28477,8 @@ function commandGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -28512,8 +28512,8 @@ function commandGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -28567,8 +28567,8 @@ clone
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -28621,8 +28621,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -28814,8 +28814,8 @@ function commandGitPullRestoreHardlinkOnFail( test )
     test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -29510,7 +29510,7 @@ function commandGitStatusWithPR( test )
   let config = a.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
   {
-    test.is( true );
+    test.true( true );
     return null;
   }
   let user = config.about.user;
@@ -29886,8 +29886,8 @@ function commandGitSyncRestoringHardlinks( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -29948,8 +29948,8 @@ clone
     test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -30012,7 +30012,7 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
-    test.is( true );
+    test.true( true );
     return null;
   }
   let linkPath = config.path.hlink;
@@ -30051,8 +30051,8 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
 
   a.ready.then( () =>
   {
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -30082,8 +30082,8 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
     test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
     var exp =
 `
@@ -30672,7 +30672,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.case = 'check option `entryPath`, direct link to file';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
-    test.is( _.longHas( files, './package.json' ) );
+    test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
@@ -30695,7 +30695,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
-    test.is( _.longHas( files, './package.json' ) );
+    test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
@@ -30718,7 +30718,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
-    test.is( _.longHas( files, './package.json' ) );
+    test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
@@ -30741,7 +30741,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.case = 'check option `filesPath`, direct link to file';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
-    test.is( _.longHas( files, './package.json' ) );
+    test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
@@ -30764,7 +30764,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
-    test.is( _.longHas( files, './package.json' ) );
+    test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
@@ -30787,7 +30787,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
-    test.is( _.longHas( files, './package.json' ) );
+    test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
@@ -31277,12 +31277,12 @@ function commandWillfileGet( test )
     test.case = 'source willfile - without name, without options and subject';
     test.identical( op.exitCode, 0 );
     test.ge( _.strLinesCount( op.output ), 100 );
-    test.is( _.strHas( op.output, 'about ::' ) );
-    test.is( _.strHas( op.output, 'build ::' ) );
-    test.is( _.strHas( op.output, 'path ::' ) );
-    test.is( _.strHas( op.output, 'reflector ::' ) );
-    test.is( _.strHas( op.output, 'step ::' ) );
-    test.is( _.strHas( op.output, 'submodule ::' ) );
+    test.true( _.strHas( op.output, 'about ::' ) );
+    test.true( _.strHas( op.output, 'build ::' ) );
+    test.true( _.strHas( op.output, 'path ::' ) );
+    test.true( _.strHas( op.output, 'reflector ::' ) );
+    test.true( _.strHas( op.output, 'step ::' ) );
+    test.true( _.strHas( op.output, 'submodule ::' ) );
 
     return null;
   })
@@ -31292,7 +31292,7 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - without name, only subject';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
 
     return null;
   })
@@ -31302,7 +31302,7 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - without name, only enabled option';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
 
     return null;
   })
@@ -31312,8 +31312,8 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - only name and subjects';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.is( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   })
@@ -31323,8 +31323,8 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile with - full form and enabled options';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.is( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   })
@@ -31334,9 +31334,9 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - glob, subject and enabled options';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author1@dot.com>' ) );
-    test.is( _.strHas( op.output, 'about/name :: Extension willfile' ) );
-    test.is( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author1@dot.com>' ) );
+    test.true( _.strHas( op.output, 'about/name :: Extension willfile' ) );
+    test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
 
     return null;
   })
@@ -31346,10 +31346,10 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - glob, subject and disabled options';
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, 'about/author :: Author1 some.nickname@dot.com' ) );
-    test.isNot( _.strHas( op.output, 'about/name :: Extension willfile' ) );
-    test.is( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
-    test.is( _.strHas( op.output, 'path : npm:///eslint#7.1.0' ) );
+    test.false( _.strHas( op.output, 'about/author :: Author1 some.nickname@dot.com' ) );
+    test.false( _.strHas( op.output, 'about/name :: Extension willfile' ) );
+    test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
+    test.true( _.strHas( op.output, 'path : npm:///eslint#7.1.0' ) );
 
     return null;
   })
@@ -31359,7 +31359,7 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - glob for two unnamed willfiles';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'path/in :: .' ) );
+    test.true( _.strHas( op.output, 'path/in :: .' ) );
 
     return null;
   })
@@ -31371,8 +31371,8 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile from context module, subjects';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.isNot( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   })
@@ -31382,8 +31382,8 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile from context module, enabled options';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.isNot( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   })
@@ -31393,8 +31393,8 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile from context module, enabled options';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.is( _.strHas( op.output, 'about/name :: NpmFromWillfile' ) );
+    test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.true( _.strHas( op.output, 'about/name :: NpmFromWillfile' ) );
 
     return null;
   })
@@ -31404,9 +31404,9 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile from context module, disabled options';
     test.identical( op.exitCode, 0 );
-    test.isNot( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.isNot( _.strHas( op.output, 'about/name :: NpmFromWillfile' ) );
-    test.is( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
+    test.false( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
+    test.false( _.strHas( op.output, 'about/name :: NpmFromWillfile' ) );
+    test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
 
     return null;
   })
@@ -31416,7 +31416,7 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - two unnamed willfiles from context';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'path/in :: .' ) );
+    test.true( _.strHas( op.output, 'path/in :: .' ) );
 
     return null;
   })
@@ -31700,7 +31700,7 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.mapKeys( config.about ).length, 0 );
-    test.is( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
+    test.true( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
   })
@@ -31713,7 +31713,7 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, undefined );
     test.identical( _.mapKeys( config.about ).length, 0 );
-    test.is( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
+    test.true( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
 
     return null;
   })
@@ -31727,7 +31727,7 @@ function commandWillfileDel( test )
     test.identical( config.about.author, undefined );
     test.identical( config.about.name, undefined );
     test.ge( _.mapKeys( config.about ).length, 4 );
-    test.is( !_.longHas( _.mapKeys( config.submodule ), 'eslint' ) );
+    test.true( !_.longHas( _.mapKeys( config.submodule ), 'eslint' ) );
     test.identical( _.mapKeys( config.submodule ).length, 2 );
 
     return null;
@@ -31741,7 +31741,7 @@ function commandWillfileDel( test )
     test.identical( config.about.description, 'To check the extension' );
     test.identical( config.about.version, '1.1.1' );
     test.ge( _.mapKeys( config.about ).length, 4 );
-    test.is( !_.longHas( _.mapKeys( config.submodule ), 'NpmFromWillfile' ) );
+    test.true( !_.longHas( _.mapKeys( config.submodule ), 'NpmFromWillfile' ) );
     test.ge( _.mapKeys( config.submodule ).length, 1 );
 
     return null;
@@ -31779,7 +31779,7 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.mapKeys( config.about ).length, 0 );
-    test.isNot( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
+    test.false( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
   })
@@ -31792,7 +31792,7 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, undefined );
     test.identical( _.mapKeys( config.about ).length, 0 );
-    test.isNot( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
+    test.false( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
 
     return null;
   })
@@ -31806,7 +31806,7 @@ function commandWillfileDel( test )
     test.identical( config.about.author, undefined );
     test.identical( config.about.name, undefined );
     test.ge( _.mapKeys( config.about ).length, 4 );
-    test.is( !_.longHas( _.mapKeys( config.submodule ), 'eslint' ) );
+    test.true( !_.longHas( _.mapKeys( config.submodule ), 'eslint' ) );
     test.identical( _.mapKeys( config.submodule ).length, 2 );
 
     return null;
@@ -31820,7 +31820,7 @@ function commandWillfileDel( test )
     test.identical( config.about.description, 'To check the extension' );
     test.identical( config.about.version, '1.1.1' );
     test.ge( _.mapKeys( config.about ).length, 4 );
-    test.is( !_.longHas( _.mapKeys( config.submodule ), 'NpmFromWillfile' ) );
+    test.true( !_.longHas( _.mapKeys( config.submodule ), 'NpmFromWillfile' ) );
     test.ge( _.mapKeys( config.submodule ).length, 1 );
 
     return null;
@@ -32218,9 +32218,9 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config.about.name, 'NpmFromWillfile' );
     test.identical( config.about.enabled, 1 );
     test.identical( config.about.contributors.length, 2 );
-    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
   })
@@ -32237,9 +32237,9 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config.about.name, undefined );
     test.identical( config.about.enabled, undefined );
     test.identical( config.about.contributors.length, 2 );
-    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
   })
@@ -32256,9 +32256,9 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config.about.name, undefined );
     test.identical( config.about.enabled, undefined );
     test.identical( config.about.contributors.length, 2 );
-    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
   })
@@ -32656,7 +32656,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.name, undefined );
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
-    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.engine, 'node >= 10.0.0' );
 
     return null;
@@ -32674,7 +32674,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.name, undefined );
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
-    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.engine, 'node >= 10.0.0' );
 
     return null;
@@ -32692,7 +32692,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.name, undefined );
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
-    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.engine, 'node >= 10.0.0' );
 
     return null;
@@ -32987,7 +32987,7 @@ function commandWillfileExtendWillfileWithOptions( test )
   {
     test.case = 'option verbosity > 2';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ writing' ) );
+    test.true( _.strHas( op.output, '+ writing' ) );
 
     return null;
   })
@@ -32999,7 +32999,7 @@ function commandWillfileExtendWillfileWithOptions( test )
   {
     test.case = 'option verbosity < 2';
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, '+ writing' ) );
+    test.true( !_.strHas( op.output, '+ writing' ) );
 
     return null;
   })
@@ -33029,9 +33029,9 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
     test.identical( config.about.name, 'NpmFromWillfile' );
     test.identical( config.about.enabled, 1 );
     test.identical( config.about.contributors.length, 2 );
-    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 6.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 6.0.0' ) );
 
     return null;
   })
@@ -33048,9 +33048,9 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
     test.identical( config.about.name, undefined );
     test.identical( config.about.enabled, undefined );
     test.identical( config.about.contributors.length, 2 );
-    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
   })
@@ -33067,9 +33067,9 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
     test.identical( config.about.name, undefined );
     test.identical( config.about.enabled, undefined );
     test.identical( config.about.contributors.length, 2 );
-    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
   })
@@ -33466,7 +33466,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.name, undefined );
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
-    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.engine, 'node >= 10.0.0' );
 
     return null;
@@ -33484,7 +33484,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.name, undefined );
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
-    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.engine, 'node >= 10.0.0' );
 
     return null;
@@ -33502,7 +33502,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.name, undefined );
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
-    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.engine, 'node >= 10.0.0' );
 
     return null;
@@ -33797,7 +33797,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
   {
     test.case = 'option verbosity > 2';
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ writing' ) );
+    test.true( _.strHas( op.output, '+ writing' ) );
 
     return null;
   })
@@ -33809,7 +33809,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
   {
     test.case = 'option verbosity < 2';
     test.identical( op.exitCode, 0 );
-    test.is( !_.strHas( op.output, '+ writing' ) );
+    test.true( !_.strHas( op.output, '+ writing' ) );
 
     return null;
   })
