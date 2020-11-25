@@ -25748,16 +25748,16 @@ function runWillbe( test )
 
     let con = a.fork( o );
 
-    o.process.stdout.on( 'data', ( data ) =>
+    o.pnd.stdout.on( 'data', ( data ) =>
     {
       if( _.bufferAnyIs( data ) )
       data = _.bufferToStr( data );
       if( _.strHas( data, 'wTools.out.will.yml' ) )
       {
         console.log( 'Terminating willbe...' );
-        o.process.kill( 'SIGINT' )
-        // o.process.stdin.write( '\x03\n' ); /* CTRL+C */
-        // o.process.stdin.write( '~^C\n' ); /* CTRL+C */
+        o.pnd.kill( 'SIGINT' )
+        // o.pnd.stdin.write( '\x03\n' ); /* CTRL+C */
+        // o.pnd.stdin.write( '~^C\n' ); /* CTRL+C */
       }
     });
 
@@ -25787,17 +25787,17 @@ function runWillbe( test )
     let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
     let con = a.appStart( o );
 
-    o.process.stdout.on( 'data', ( data ) =>
+    o.pnd.stdout.on( 'data', ( data ) =>
     {
       if( _.bufferAnyIs( data ) )
       data = _.bufferToStr( data );
       if( _.strHas( data, 'wTools.out.will.yml' ) )
       {
         console.log( 'Terminating willbe...' );
-        // o.process.kill( 'SIGTERM' );
-        // o.process.kill( 'SIGINT' );
-        o.process.kill( 'SIGINT' );
-        // o.process.kill( 'SIGKILL' );
+        // o.pnd.kill( 'SIGTERM' );
+        // o.pnd.kill( 'SIGINT' );
+        o.pnd.kill( 'SIGINT' );
+        // o.pnd.kill( 'SIGKILL' );
       }
     });
 
@@ -25858,7 +25858,7 @@ function resourcesFormReflectorsExperiment( test )
     let con = _.process.start( o2 );
     let t = _.time.out( 10000, () =>
     {
-      o2.process.kill( 'SIGKILL' );
+      o2.pnd.kill( 'SIGKILL' );
       throw _.err( 'TimeOut:10000, resources forming takes too long' );
     });
 
@@ -25900,7 +25900,7 @@ function resourcesFormReflectorsExperiment( test )
     let con = _.process.start( o2 );
     let t = _.time.out( 10000, () =>
     {
-      o2.process.kill( 'SIGKILL' );
+      o2.pnd.kill( 'SIGKILL' );
       throw _.err( 'TimeOut : 10000, resources forming takes too long' );
     });
 
