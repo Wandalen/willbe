@@ -30,7 +30,7 @@ function onModule( context )
     sync : 1,
   })
 
-  if( !result.status && result.patch.length )
+  if( !result.status && !result.patch )
   return;
 
   logger.log( `Status:\n${result.status}` );
