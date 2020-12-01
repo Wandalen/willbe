@@ -2101,19 +2101,10 @@ function commandSubmodulesGitSync( e )
   ({
     event : e,
     name : 'submodules git sync',
-    onEach : handleEach,
+    onEach : handleEachModulesGitSync_functor( e ),
     commandRoutine : commandSubmodulesGitSync,
     withRoot : 0,
   });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitSync
-    ({
-      commit : e.subject,
-      ... e.propertiesMap,
-    });
-  }
 }
 
 commandSubmodulesGitSync.defaults =
@@ -2339,6 +2330,53 @@ commandModulesGitPrOpen.commandProperties =
 
 //
 
+function handleEachModulesGitSync_functor( e )
+{
+  return function( it )
+  {
+    let cui = it.will;
+
+    let pathsContainer = [];
+    for( let i = 0 ; i < it.openers.length ; i++ )
+    pathsContainer.push( it.openers[ i ].openedModule.dirPath );
+    let provider = it.opener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ) );
+    if( e.propertiesMap.verbosity )
+    provider.archive.verbosity = 2;
+    else
+    provider.archive.verbosity = 0;
+    provider.archive.restoreLinksBegin();
+
+    let ready = new _.Consequence().take( null );
+    for( let i = 0 ; i < it.openers.length ; i++ )
+    ready.then( () =>
+    {
+      return it.openers[ i ].openedModule.gitSync
+      ({
+        commit : e.subject,
+        ... e.propertiesMap,
+        restoringHardLinks : 0,
+      });
+    });
+
+    ready.finally( ( err, arg ) =>
+    {
+      _.arrayEmpty( it.openers );
+      it.openers.push( it.opener );
+
+      provider.archive.restoreLinksEnd();
+
+      if( err )
+      throw _.err( err );
+
+      return arg;
+    });
+
+    return ready;
+  }
+}
+
+//
+
 function commandModulesGitSync( e )
 {
   let cui = this;
@@ -2352,19 +2390,10 @@ function commandModulesGitSync( e )
   ({
     event : e,
     name : 'modules git sync',
-    onEach : handleEach,
+    onEach : handleEachModulesGitSync_functor( e ),
     commandRoutine : commandModulesGitSync,
     withRoot : 1,
   });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitSync
-    ({
-      commit : e.subject,
-      ... e.propertiesMap,
-    });
-  }
 }
 
 commandModulesGitSync.defaults =
@@ -4758,6 +4787,7 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitPrOpen,
+  handleEachModulesGitSync_functor,
   commandModulesGitSync,
 
   commandShell,
