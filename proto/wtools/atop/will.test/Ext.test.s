@@ -27660,7 +27660,7 @@ function commandModulesGitSync( test )
 
 //
 
-function commandModulesGitSyncRestoreHardLinksWithConfigPath( test )
+function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
@@ -27701,15 +27701,6 @@ function commandModulesGitSyncRestoreHardLinksWithConfigPath( test )
     mode : 'shell',
   });
 
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
   /* */
 
   originalShell( 'git init' );
@@ -27722,13 +27713,13 @@ function commandModulesGitSyncRestoreHardLinksWithConfigPath( test )
   {
     a.fileProvider.hardLink
     ({
-      srcPath : a.abs( 'f1.txt' ),
+      srcPath : a.abs( 'super/f1.txt' ),
       dstPath : a.abs( linkPath, 'f1_.lnk' ),
       sync : 1,
     });
     a.fileProvider.hardLink
     ({
-      srcPath : a.abs( 'f2.txt' ),
+      srcPath : a.abs( 'super/f2.txt' ),
       dstPath : a.abs( linkPath, 'f2_.lnk' ),
       sync : 1,
     });
@@ -27750,6 +27741,8 @@ function commandModulesGitSyncRestoreHardLinksWithConfigPath( test )
 
   a.ready.then( () =>
   {
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
@@ -27764,13 +27757,13 @@ function commandModulesGitSyncRestoreHardLinksWithConfigPath( test )
   originalShell( 'git commit -am second' );
   originalShell( 'git push' );
 
-  a.appStartNonThrowing( '.modules.git.sync v:5' )
+  a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -34300,7 +34293,7 @@ let Self =
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitPrOpen,
     commandModulesGitSync,
-    commandModulesGitSyncRestoreHardLinksWithConfigPath,
+    commandModulesGitSyncRestoreHardLinksInSubmodule,
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,

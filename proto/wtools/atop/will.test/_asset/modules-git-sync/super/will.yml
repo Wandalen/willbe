@@ -4,5 +4,5 @@ about :
 
 submodule :
 
-  Clone : ./clone/GitSync
+  Clone : ../clone/GitSync
 
