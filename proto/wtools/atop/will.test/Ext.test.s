@@ -27790,7 +27790,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
     test.identical( _.strCount( op.output, '+ hardLink : ' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
     test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
