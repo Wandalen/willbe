@@ -2335,6 +2335,7 @@ function handleEachModulesGitSync_functor( e )
   return function( it )
   {
     let cui = it.will;
+    let logger = cui.logger;
 
     let pathsContainer = [];
     for( let i = 0 ; i < it.openers.length ; i++ )
@@ -2344,6 +2345,9 @@ function handleEachModulesGitSync_functor( e )
     provider.archive.verbosity = 2;
     else
     provider.archive.verbosity = 0;
+
+    if( e.propertiesMap.verbosity )
+    logger.log( `Archiving file records in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
 
     let ready = new _.Consequence().take( null );

@@ -27786,6 +27786,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
     test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Archiving file records in directory(s) :\n' ), 1 );
     test.identical( _.strCount( op.output, '> git pull' ), 2 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
@@ -27975,6 +27976,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
     test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Archiving file records in directory(s) :\n' ), 1 );
     test.identical( _.strCount( op.output, '> git pull' ), 1 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
@@ -28152,6 +28154,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
     test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Archiving file records in directory(s) :\n' ), 1 );
     test.identical( _.strCount( op.output, '> git pull' ), 1 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
