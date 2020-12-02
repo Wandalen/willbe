@@ -8748,6 +8748,9 @@ function gitPull( o )
     provider.archive.verbosity = 2;
     else
     provider.archive.verbosity = 0;
+
+    if( e.propertiesMap.verbosity )
+    logger.log( `Archiving file records in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 
