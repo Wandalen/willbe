@@ -1,0 +1,8 @@
+about :
+
+  name : super
+
+submodule :
+
+  Clone : ../clone/GitSync
+

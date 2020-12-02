@@ -8676,6 +8676,31 @@ gitPrOpen.defaults =
 
 //
 
+function _providerArchiveMake( dirPath )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  config = fileProvider.configUserRead();
+
+  let provider = _.FileFilter.Archive();
+  provider.archive.basePath = dirPath;
+
+  if( config && config.path && config.path.hlink )
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+
+  provider.archive.fileMapAutosaving = 1;
+  provider.archive.allowingMissed = 1;
+  provider.archive.allowingCycled = 1;
+
+  return provider;
+}
+
+//
+
 function gitPull( o )
 {
   let module = this;
@@ -8715,25 +8740,16 @@ function gitPull( o )
     return null;
   }
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  if( !config )
-  config = fileProvider.configUserRead();
-
-  let provider = _.FileFilter.Archive();
-  provider.archive.basePath = will.currentOpener.dirPath;
-  if( config && config.path && config.path.hlink )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
-
-  provider.archive.fileMapAutosaving = 1;
-
-  if( o.verbosity )
-  provider.archive.verbosity = 2;
-  else
-  provider.archive.verbosity = 0;
-
-  provider.archive.allowingMissed = 1;
-  provider.archive.allowingCycled = 1;
-  provider.archive.restoreLinksBegin();
+  let provider;
+  if( o.restoringHardLinks )
+  {
+    provider = module._providerArchiveMake( will.currentOpener.dirPath );
+    if( o.verbosity )
+    provider.archive.verbosity = 2;
+    else
+    provider.archive.verbosity = 0;
+    provider.archive.restoreLinksBegin();
+  }
 
   let ready = new _.Consequence().take( null );
 
@@ -8746,6 +8762,7 @@ function gitPull( o )
 
   ready.tap( () =>
   {
+    if( o.restoringHardLinks )
     provider.archive.restoreLinksEnd();
   });
 
@@ -8764,6 +8781,7 @@ gitPull.defaults =
   dirPath : null,
   v : null,
   verbosity : 2,
+  restoringHardLinks : 1,
 };
 
 //
@@ -9005,7 +9023,7 @@ function gitSync( o )
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.' } ) );
+    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.' } ) );
     return null;
   })
 
@@ -9038,6 +9056,7 @@ gitSync.defaults =
 {
   commit : '.',
   dirPath : null,
+  restoringHardLinks : 1,
   dry : 0,
   v : null,
   verbosity : 1,
@@ -9768,6 +9787,7 @@ let Extension =
   gitPush,
   gitReset,
   gitStatus,
+  _providerArchiveMake,
   gitSync,
   gitTag,
 
