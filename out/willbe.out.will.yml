@@ -1504,6 +1504,23 @@ module:
           - ../proto/wtools/atop/will.test/_asset/modules-git/f1.txt
           - ../proto/wtools/atop/will.test/_asset/modules-git/f2.txt
           - ../proto/wtools/atop/will.test/_asset/modules-git/will.yml
+          - ../proto/wtools/atop/will.test/_asset/modules-git-sync
+          - ../proto/wtools/atop/will.test/_asset/modules-git-sync/original
+          - >-
+            ../proto/wtools/atop/will.test/_asset/modules-git-sync/original/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/modules-git-sync/original/f1.txt
+          - >-
+            ../proto/wtools/atop/will.test/_asset/modules-git-sync/original/f2.txt
+          - >-
+            ../proto/wtools/atop/will.test/_asset/modules-git-sync/original/GitSync.will.yml
+          - ../proto/wtools/atop/will.test/_asset/modules-git-sync/super
+          - >-
+            ../proto/wtools/atop/will.test/_asset/modules-git-sync/super/.gitignore
+          - ../proto/wtools/atop/will.test/_asset/modules-git-sync/super/f1.txt
+          - ../proto/wtools/atop/will.test/_asset/modules-git-sync/super/f2.txt
+          - >-
+            ../proto/wtools/atop/will.test/_asset/modules-git-sync/super/will.yml
           - ../proto/wtools/atop/will.test/_asset/npm-from-willfile
           - ../proto/wtools/atop/will.test/_asset/npm-from-willfile/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/npm-from-willfile/.im.will.yml
