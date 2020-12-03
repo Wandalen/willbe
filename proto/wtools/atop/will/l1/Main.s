@@ -346,7 +346,7 @@ function PathToRole( filePath )
   let role = null;
 
   if( _.arrayLike( filePath ) )
-  return _.map( filePath, ( filePath ) => this.PathToRole( filePath ) );
+  return _.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
 
   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
   let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
@@ -480,7 +480,7 @@ function LocalPathNormalize( localPath )
 
   /* xxx : find more robust solution */
 
-  localPath = _.filter( localPath, ( r ) =>
+  localPath = _.filter_( null, localPath, ( r ) =>
   {
     let splits = _.path.split( r );
     if( _.longCountElement( splits, '.module' ) > 1 )
@@ -717,12 +717,12 @@ function resourcesInfoExport( o )
   for( let n in names )
   {
     if( n === 'willfilesArray' )
-    result[ names[ n ] ] = _.filter( will[ n ], ( willf ) => willf.filePath + ' # ' + willf.id );
+    result[ names[ n ] ] = _.filter_( null, will[ n ], ( willf ) => willf.filePath + ' # ' + willf.id );
     else
-    result[ names[ n ] ] = _.filter( will[ n ], ( e ) => e.commonPath + ' # ' + e.id );
+    result[ names[ n ] ] = _.filter_( null, will[ n ], ( e ) => e.commonPath + ' # ' + e.id );
   }
 
-  result.openersErrors = _.filter( will.openersErrorsArray, ( r ) => r.err.originalMessage || r.err.message );
+  result.openersErrors = _.filter_( null, will.openersErrorsArray, ( r ) => r.err.originalMessage || r.err.message );
 
   if( o.stringing )
   result = _.toStrNice( result );
@@ -2112,7 +2112,7 @@ function modulesFindWithAt( o )
     });
 
     // op.sortedOpeners = [];
-    // op.sortedJunctions = _.filter( op.sortedJunctions, ( junction ) =>
+    // op.sortedJunctions = _.filter_( null, op.sortedJunctions, ( junction ) =>
     // {
     //   let opener = _.arraySetIntersection( op.openers.slice(), junction.openers )[ 0 ];
     //   if( !opener )
@@ -2281,7 +2281,7 @@ function modulesEach_body( o )
   /* ttt */
 
   let nodes = _.arrayAs( o.modules );
-  nodes = _.filter( nodes, ( node ) =>
+  nodes = _.filter_( null, nodes, ( node ) =>
   {
     if( _.will.isJunction( node ) )
     return _.unrollFrom( node.objects );
@@ -3741,7 +3741,7 @@ function junctionsInfoExport( junctions )
     // });
   }
 
-  return _.map( junctions, ( junction ) => junction.exportString() ).join( '\n' );
+  return _.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
 }
 
 // --

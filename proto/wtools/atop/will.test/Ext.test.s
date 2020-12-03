@@ -268,7 +268,7 @@ function assetFor( test, name )
 //     return filePath;
 //     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
 //     {
-//       return _.filter( filePath, ( filePath ) => rel( filePath ) );
+//       return _.filter_( null, filePath, ( filePath ) => rel( filePath ) );
 //     }
 //     if( _.uri.isRelative( filePath ) && !_.uri.isRelative( routinePath ) )
 //     return filePath;

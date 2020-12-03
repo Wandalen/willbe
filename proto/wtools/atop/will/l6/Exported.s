@@ -656,7 +656,7 @@ function _performExportedFilesReflector()
     throw _.err( err, '\nCant collect files for export' );
   }
 
-  exportedFilesPath = _.filter( exportedFilesPath, ( r ) => r.absolute );
+  exportedFilesPath = _.filter_( null, exportedFilesPath, ( r ) => r.absolute );
 
   exported.exportedFilesPath.path = path.s.relative( outModule.inPath, exportedFilesPath );
 

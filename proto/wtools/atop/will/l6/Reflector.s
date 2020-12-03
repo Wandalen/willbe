@@ -304,7 +304,7 @@ function form2( o )
 
   if( reflector.src.hasAnyPath() )
   {
-    reflector.src.prefixPath = _.filter( reflector.src.prefixPath, ( prefixPath ) =>
+    reflector.src.prefixPath = _.filter_( null, reflector.src.prefixPath, ( prefixPath ) =>
     {
       if( _.will.Resolver.selectorIs( prefixPath ) )
       return prefixPath;

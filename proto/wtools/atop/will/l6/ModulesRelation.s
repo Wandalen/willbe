@@ -758,7 +758,7 @@ function exportStructure( o )
 
   if( result.path && path.s.anyAreAbsolute( result.path ) )
   {
-    result.path = _.filter( result.path, ( p ) =>
+    result.path = _.filter_( null, result.path, ( p ) =>
     {
       let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
@@ -769,7 +769,7 @@ function exportStructure( o )
 
   if( result.localPath && path.s.anyAreAbsolute( result.localPath ) )
   {
-    result.localPath = _.filter( result.localPath, ( p ) =>
+    result.localPath = _.filter_( null, result.localPath, ( p ) =>
     {
       let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
@@ -780,7 +780,7 @@ function exportStructure( o )
 
   if( result.remotePath && path.s.anyAreAbsolute( result.remotePath ) )
   {
-    result.remotePath = _.filter( result.remotePath, ( p ) =>
+    result.remotePath = _.filter_( null, result.remotePath, ( p ) =>
     {
       let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )

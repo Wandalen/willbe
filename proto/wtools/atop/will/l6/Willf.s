@@ -1277,7 +1277,7 @@ function isConsistent( opening )
 //
 //   result = this.LocalPathNormalize( result );
 //
-//   // result = _.filter( result, ( r ) =>
+//   // result = _.filter_( null, result, ( r ) =>
 //   // {
 //   //   let splits = _.path.split( r );
 //   //   if( _.longCountElement( splits, '.module' ) > 1 )

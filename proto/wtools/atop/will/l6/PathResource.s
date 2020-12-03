@@ -235,7 +235,7 @@ function exportStructure()
 
   if( result.path && path.s.anyAreAbsolute( result.path ) )
   {
-    result.path = _.filter( result.path, ( p ) =>
+    result.path = _.filter_( null, result.path, ( p ) =>
     {
       let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
@@ -394,7 +394,7 @@ let pathSymbol = Symbol.for( 'path' );
 let Composes =
 {
 
-  path : _.define.field({ ini : null, order : 1 }),
+  path : _.define.field( null, { order : 1 } ),
 
 }
 

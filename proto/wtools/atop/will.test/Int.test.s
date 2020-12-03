@@ -254,7 +254,7 @@ function assetFor( test, name )
 //
 //     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
 //     {
-//       return _.filter( filePath, ( filePath ) => abs( filePath, ... args.slice( 2, args.length ) ) );
+//       return _.filter_( null, filePath, ( filePath ) => abs( filePath, ... args.slice( 2, args.length ) ) );
 //     }
 //
 //     return _.uri.s.join.apply( _.uri.s, args );
@@ -274,7 +274,7 @@ function assetFor( test, name )
 //     return filePath;
 //     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
 //     {
-//       return _.filter( filePath, ( filePath ) => rel( filePath ) );
+//       return _.filter_( null, filePath, ( filePath ) => rel( filePath ) );
 //     }
 //     if( _.uri.isRelative( filePath ) && !_.uri.isRelative( routinePath ) )
 //     return filePath;
@@ -547,7 +547,7 @@ function openNamedFast( test )
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [ 'Submodule' ] ) );
-    var got = _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
+    var got = _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
     test.identical( _.setFrom( got ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
@@ -760,7 +760,7 @@ function openNamedForming( test )
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [ 'Submodule' ] ) );
-    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
+    test.identical( _.setFrom( _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
@@ -1178,7 +1178,7 @@ function openAnon( test )
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [ 'Submodule' ] ) );
-    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
+    test.identical( _.setFrom( _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'export.', 'export.debug', 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
@@ -1309,7 +1309,7 @@ function openOutNamed( test )
     test.identical( opener.openedModule.willfilesArray.length, 1 );
     test.identical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( opener.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] ) );
+    test.identical( _.setFrom( _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] ) );
@@ -1441,7 +1441,7 @@ function openCurruptedUnknownField( test )
     test.identical( opener.openedModule.about.name, 'sub' );
     test.identical( opener.openedModule.pathMap, pathMap );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'export.', 'export.debug' ] ) );
@@ -4343,7 +4343,7 @@ function exportCourruptedSubmodulesDisabled( test )
     test.case = 'modulesEach';
     var exp = [];
     var got = opener.openedModule.modulesEach({ outputFormat : '/' });
-    var commonPath = _.filter( got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
+    var commonPath = _.filter_( null, got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
     test.identical( commonPath, exp );
 
     test.case = 'modulesEach, withDisabled';
@@ -4354,7 +4354,7 @@ function exportCourruptedSubmodulesDisabled( test )
       '.module/Submodule2/',
       '.module/Submodule3/',
     ];
-    var localPath = _.filter( got, ( e ) => e.localPath );
+    var localPath = _.filter_( null, got, ( e ) => e.localPath );
     test.identical( localPath, a.abs( exp ) );
     var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabledSubmodules : 1 });
     var exp =
@@ -4363,7 +4363,7 @@ function exportCourruptedSubmodulesDisabled( test )
       '.module/Submodule2',
       '.module/Submodule3',
     ];
-    var localPath = _.filter( got, ( e ) => e.opener.downloadPath );
+    var localPath = _.filter_( null, got, ( e ) => e.opener.downloadPath );
     test.identical( localPath, a.abs( exp ) );
     var exp =
     [
@@ -4371,7 +4371,7 @@ function exportCourruptedSubmodulesDisabled( test )
       'git+https:///github.com/X2/X2.git!master',
       'git+https:///github.com/X3/X3.git!master',
     ];
-    var remotePath = _.filter( got, ( e ) => e.remotePath );
+    var remotePath = _.filter_( null, got, ( e ) => e.remotePath );
     test.identical( remotePath, exp );
 
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
@@ -5923,7 +5923,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.identical( _.setFrom( got ), _.setFrom( _.filter( a.abs( expected ), ( p ) => p ? a.path.s.nativize( p ) : p ) ) );
+    test.identical( _.setFrom( got ), _.setFrom( _.filter_( null, a.abs( expected ), ( p ) => p ? a.path.s.nativize( p ) : p ) ) );
 
     /* */
 

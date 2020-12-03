@@ -430,7 +430,7 @@
 //   let cls = this;
 //   _.assert( arguments.length === 2 );
 //   if( _.arrayLike( junctions ) )
-//   return _.filter( junctions, ( junction ) => cls.Reform( sys, junction ) );
+//   return _.filter_( null, junctions, ( junction ) => cls.Reform( sys, junction ) );
 //   else
 //   return cls.Reform( sys, junctions );
 // }
@@ -470,7 +470,7 @@
 //   let cls = this;
 //   _.assert( arguments.length === 2 );
 //   if( _.arrayLike( junctions ) )
-//   return _.filter( junctions, ( junction ) => cls.JunctionFrom( sys, junction ) );
+//   return _.filter_( null, junctions, ( junction ) => cls.JunctionFrom( sys, junction ) );
 //   else
 //   return cls.JunctionFrom( sys, junctions );
 // }
@@ -511,7 +511,7 @@
 //   let cls = this;
 //   _.assert( arguments.length === 2 );
 //   if( _.arrayLike( junctions ) )
-//   return _.filter( junctions, ( junction ) => cls.Of( sys, junction ) );
+//   return _.filter_( null, junctions, ( junction ) => cls.Of( sys, junction ) );
 //   else
 //   return cls.Of( sys, junctions );
 // }
@@ -537,7 +537,7 @@
 //   let cls = this;
 //   _.assert( arguments.length === 2 );
 //   if( _.arrayLike( paths ) )
-//   return _.filter( paths, ( path ) => cls.JunctionWithPath( sys, path ) );
+//   return _.filter_( null, paths, ( path ) => cls.JunctionWithPath( sys, path ) );
 //   else
 //   return cls.JunctionWithPath( sys, paths );
 // }
@@ -952,7 +952,7 @@
 //   let result;
 //
 //   if( _.arrayIs( object ) )
-//   return _.any( _.map( object, ( object ) => junction._add( object ) ) );
+//   return _.any( _.map_( null, object, ( object ) => junction._add( object ) ) );
 //
 //   if( object instanceof _.will.ModulesRelation )
 //   {
@@ -988,7 +988,7 @@
 //   let junction = this;
 //
 //   if( _.arrayIs( object ) )
-//   return _.any( _.map( object, ( object ) => junction._remove( object ) ) );
+//   return _.any( _.map_( null, object, ( object ) => junction._remove( object ) ) );
 //
 //   if( object instanceof _.will.ModulesRelation )
 //   {

@@ -1777,7 +1777,7 @@ function isFull( o )
   o.only = module.optionsFormingForward( o.only );
 
   let states = module.stager.stagesState( 'performed' )
-  _.mapSupplement( o.only, _.map( states, () => true ) );
+  _.mapSupplement( o.only, _.map_( null, states, () => true ) );
   states = _.only( states, o.only ); /* xxx : review mapOnly / mapBut */
 
   return _.all( states );
@@ -2808,7 +2808,7 @@ function superRelationsAppend( src )
 
   if( _.arrayIs( src ) )
   {
-    return _.map( src, ( src ) => module.supeRelationsAppend( src ) );
+    return _.map_( null, src, ( src ) => module.supeRelationsAppend( src ) );
   }
 
   _.assert( src instanceof _.will.ModulesRelation );
@@ -2829,7 +2829,7 @@ function superRelationsRemove( src )
 
   if( _.arrayIs( src ) )
   {
-    return _.map( src, ( src ) => module.superRelationsRemove( src ) );
+    return _.map_( null, src, ( src ) => module.superRelationsRemove( src ) );
   }
 
   _.assert( src instanceof _.will.ModulesRelation );
@@ -2858,7 +2858,7 @@ function submodulesAreDownloaded( o )
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/commonPath' );
 
-  return _.map( relations, ( relation ) =>
+  return _.map_( null, relations, ( relation ) =>
   {
     if( relation === null )
     return true;
@@ -2926,7 +2926,7 @@ function submodulesAreValid( o )
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/absoluteName' );
 
-  return _.map( relations, ( relation ) =>
+  return _.map_( null, relations, ( relation ) =>
   {
     if( relation === null )
     return true;
@@ -5246,7 +5246,7 @@ function _buildsResolve_body( o )
 
     }
 
-    elements = _.entityFilter( elements, filter );
+    elements = _.filter_( null, elements, filter );
 
     return elements;
   }
@@ -6682,7 +6682,7 @@ function structureExportOut( o )
     descriptive : 1,
   });
 
-  found.result = _.longOnce( _.filter( found.result, ( handle ) =>
+  found.result = _.longOnce( _.filter_( null, found.result, ( handle ) =>
   {
     let junction = handle.toJunction();
     let module = handle.toModule();

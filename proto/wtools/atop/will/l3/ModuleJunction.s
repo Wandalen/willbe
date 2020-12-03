@@ -887,7 +887,7 @@ function Reforms( junctions, will )
   let cls = this;
   _.assert( arguments.length === 2 );
   if( _.arrayLike( junctions ) )
-  return _.filter( junctions, ( junction ) => cls.Reform( junction, will ) );
+  return _.filter_( null, junctions, ( junction ) => cls.Reform( junction, will ) );
   else
   return cls.Reform( junctions, will );
 }
@@ -927,7 +927,7 @@ function JunctionsFrom( junctions, will )
   let cls = this;
   _.assert( arguments.length === 2 );
   if( _.arrayLike( junctions ) )
-  return _.filter( junctions, ( junction ) => cls.JunctionFrom( junction, will ) );
+  return _.filter_( null, junctions, ( junction ) => cls.JunctionFrom( junction, will ) );
   else
   return cls.JunctionFrom( junctions, will );
 }
@@ -991,7 +991,7 @@ function Ofs( junctions, will )
   let cls = this;
   _.assert( arguments.length === 2 );
   if( _.arrayLike( junctions ) )
-  return _.filter( junctions, ( junction ) => cls.Of( junction, will ) );
+  return _.filter_( null, junctions, ( junction ) => cls.Of( junction, will ) );
   else
   return cls.Of( junctions, will );
 }
@@ -1344,7 +1344,7 @@ function _add( object )
   let result;
 
   if( _.arrayIs( object ) )
-  return _.any( _.map( object, ( object ) => junction._add( object ) ) );
+  return _.any( _.map_( null, object, ( object ) => junction._add( object ) ) );
 
   // _.assert( _.numberIs( object.formed ) ); /* yyy */
   // if( object.formed <= 0 )
@@ -1387,7 +1387,7 @@ function _remove( object )
   let junction = this;
 
   if( _.arrayIs( object ) )
-  return _.any( _.map( object, ( object ) => junction._remove( object ) ) );
+  return _.any( _.map_( null, object, ( object ) => junction._remove( object ) ) );
 
   if( object instanceof _.will.ModulesRelation )
   {
