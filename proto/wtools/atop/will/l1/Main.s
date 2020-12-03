@@ -4411,7 +4411,7 @@ function WillfilesFind( o )
       if( !_.strIs( it.dst ) )
       return { [ it.src ] : it.dst };
 
-      _.sure( !o.tracing || !path.isGlob( it.src ) )
+      // _.sure( !o.tracing || !path.isGlob( it.src ) )
 
       let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
       let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );

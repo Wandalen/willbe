@@ -120,11 +120,12 @@ function _openersCurrentEach( o )
     _.assert( will.currentOpener === null );
     _.assert( _.arrayIs( will.currentOpeners ) );
 
-    will.currentOpeners.forEach( ( opener ) =>
+    // will.currentOpeners.forEach( ( opener ) =>
+    for( let i = 0 ; i < will.currentOpeners.length ; i++ )
     {
-      let it = itFrom( opener );
+      let it = itFrom( will.currentOpeners[ i ] );
       ready.then( () => o.onEach.call( will, it ) );
-    });
+    };
 
   }
 
@@ -1011,7 +1012,7 @@ function _commandModulesLike( o )
     ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
-  _.assert( _.routineIs( o.onEach ) );
+  _.assert( _.routineIs( o.onEach ) || _.routineIs( o.onCurrentOpeners ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
@@ -1070,8 +1071,10 @@ function _commandModulesLike( o )
       return it;
     })
 
-    ready2
-    .then( () => cui.openersCurrentEach( forSingle ) )
+    if( o.onCurrentOpeners )
+    ready2.then( () => o.onCurrentOpeners.call( cui, cui.currentOpeners ) );
+    else
+    ready2.then( () => cui.openersCurrentEach( forSingle ) )
 
     return ready2;
   }
@@ -1110,6 +1113,7 @@ function _commandModulesLike( o )
 var defaults = _commandModulesLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
 defaults.event = null;
 defaults.onEach = null;
+defaults.onCurrentOpeners = null;
 defaults.commandRoutine = null;
 defaults.name = null;
 defaults.withRoot = 1;
@@ -2101,7 +2105,7 @@ function commandSubmodulesGitSync( e )
   ({
     event : e,
     name : 'submodules git sync',
-    onEach : handleEachModulesGitSync_functor( e ),
+    onCurrentOpeners : handleEachModulesGitSync_functor( e ),
     commandRoutine : commandSubmodulesGitSync,
     withRoot : 0,
   });
@@ -2332,29 +2336,29 @@ commandModulesGitPrOpen.commandProperties =
 
 function handleEachModulesGitSync_functor( e )
 {
-  return function( it )
+  return function( openers )
   {
-    let cui = it.will;
+    let cui = this;
     let logger = cui.logger;
 
     let pathsContainer = [];
-    for( let i = 0 ; i < it.openers.length ; i++ )
-    pathsContainer.push( it.openers[ i ].openedModule.dirPath );
-    let provider = it.opener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ) );
+    for( let i = 0 ; i < openers.length ; i++ )
+    pathsContainer.push( openers[ i ].openedModule.dirPath );
+    let provider = openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ) );
     if( e.propertiesMap.verbosity )
     provider.archive.verbosity = 2;
     else
     provider.archive.verbosity = 0;
 
     if( e.propertiesMap.verbosity )
-    logger.log( `Archiving file records in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
 
     let ready = new _.Consequence().take( null );
-    for( let i = 0 ; i < it.openers.length ; i++ )
+    for( let i = 0 ; i < openers.length ; i++ )
     ready.then( () =>
     {
-      return it.openers[ i ].openedModule.gitSync
+      return openers[ i ].openedModule.gitSync
       ({
         commit : e.subject,
         ... e.propertiesMap,
@@ -2364,9 +2368,6 @@ function handleEachModulesGitSync_functor( e )
 
     ready.finally( ( err, arg ) =>
     {
-      _.arrayEmpty( it.openers );
-      it.openers.push( it.opener );
-
       provider.archive.restoreLinksEnd();
 
       if( err )
@@ -2394,7 +2395,7 @@ function commandModulesGitSync( e )
   ({
     event : e,
     name : 'modules git sync',
-    onEach : handleEachModulesGitSync_functor( e ),
+    onCurrentOpeners : handleEachModulesGitSync_functor( e ),
     commandRoutine : commandModulesGitSync,
     withRoot : 1,
   });
