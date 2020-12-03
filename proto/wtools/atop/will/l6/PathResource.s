@@ -394,7 +394,7 @@ let pathSymbol = Symbol.for( 'path' );
 let Composes =
 {
 
-  path : _.define.field( null, { order : 1 } ),
+  path : _.define.prop( null, { order : 1 } ),
 
 }
 
