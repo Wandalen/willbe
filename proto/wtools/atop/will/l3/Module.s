@@ -6971,7 +6971,7 @@ function resourceImport( o )
       currentContext : o.srcResource,
     });
 
-    if( _.instanceIsStandard( value ) )
+    if( _.workpiece.instanceIsStandard( value ) )
     {
       let o2 = _.mapExtend( null, o );
       o2.srcResource = value;
