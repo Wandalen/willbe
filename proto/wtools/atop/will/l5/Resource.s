@@ -1342,11 +1342,11 @@ let Forbids =
 let Accessors =
 {
   willf : { set : willfSet },
-  qualifiedName : { get : qualifiedNameGet, readOnly : 1 },
-  decoratedQualifiedName : { get : decoratedQualifiedNameGet, readOnly : 1 },
-  refName : { get : _refNameGet, readOnly : 1 },
-  absoluteName : { get : absoluteNameGet, readOnly : 1 },
-  decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, readOnly : 1 },
+  qualifiedName : { get : qualifiedNameGet, writable : 0 },
+  decoratedQualifiedName : { get : decoratedQualifiedNameGet, writable : 0 },
+  refName : { get : _refNameGet, writable : 0 },
+  absoluteName : { get : absoluteNameGet, writable : 0 },
+  decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
   inherit : { set : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
   module : {},
 }

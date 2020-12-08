@@ -890,15 +890,15 @@ let Forbids =
 let Accessors =
 {
 
-  qualifiedName : { get : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
-  fileName : { readOnly : 1 },
-  decoratedQualifiedName : { get : decoratedQualifiedNameGet, combining : 'rewrite', readOnly : 1 },
-  decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, readOnly : 1 },
+  qualifiedName : { get : qualifiedNameGet, combining : 'rewrite', writable : 0 },
+  fileName : { writable : 0 },
+  decoratedQualifiedName : { get : decoratedQualifiedNameGet, combining : 'rewrite', writable : 0 },
+  decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
 
   willfilesArray : { set : willfileArraySet },
-  willfileWithRoleMap : { readOnly : 1 },
+  willfileWithRoleMap : { writable : 0 },
 
-  __ : { get : _.accessor.getter.withSymbol, readOnly : 1, strict : 0 },
+  __ : { get : _.accessor.getter.withSymbol, writable : 0, strict : 0 },
 
 }
 

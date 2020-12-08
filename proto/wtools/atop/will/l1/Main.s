@@ -5458,10 +5458,10 @@ let Forbids =
 let Accessors =
 {
 
-  _ : { get : _.accessor.getter.withSymbol, readOnly : 1 },
-  hooks : { get : hooksGet, readOnly : 1 },
+  _ : { get : _.accessor.getter.withSymbol, writable : 0 },
+  hooks : { get : hooksGet, writable : 0 },
   environmentPath : { set : environmentPathSet },
-  hooksPath : { get : hooksPathGet, readOnly : 1 },
+  hooksPath : { get : hooksPathGet, writable : 0 },
   withSubmodules : {},
 
 }

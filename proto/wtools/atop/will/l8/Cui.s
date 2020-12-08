@@ -4707,7 +4707,7 @@ let Forbids =
 
 let Accessors =
 {
-  currentOpener : { readOnly : 1 },
+  currentOpener : { writable : 0 },
 }
 
 // --

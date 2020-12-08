@@ -800,23 +800,23 @@ let Forbids =
 let Accessors =
 {
 
-  _ : { get : _.accessor.getter.withSymbol, readOnly : 1, strict : 0 },
+  _ : { get : _.accessor.getter.withSymbol, writable : 0, strict : 0 },
 
-  dirExists : { get : _statusGetter_functor( 'dirExists' ), readOnly : 1 },
-  hasFiles : { get : _statusGetter_functor( 'hasFiles' ), readOnly : 1 },
-  isRepository : { get : _statusGetter_functor( 'isRepository' ), readOnly : 1 },
-  hasLocalChanges : { get : _statusGetter_functor( 'hasLocalChanges' ), readOnly : 1 },
-  hasLocalUncommittedChanges : { get : _statusGetter_functor( 'hasLocalUncommittedChanges' ), readOnly : 1 },
-  remoteIsValid : { get : _statusGetter_functor( 'remoteIsValid' ), readOnly : 1 },
-  isUpToDate : { get : _statusGetter_functor( 'isUpToDate' ), readOnly : 1 },
-  safeToDelete : { get : _statusGetter_functor( 'safeToDelete' ), readOnly : 1 },
-  downloadRequired : { get : _statusGetter_functor( 'downloadRequired' ), readOnly : 1 },
-  updateRequired : { get : _statusGetter_functor( 'updateRequired' ), readOnly : 1 },
-  agreeRequired : { get : _statusGetter_functor( 'agreeRequired' ), readOnly : 1 },
+  dirExists : { get : _statusGetter_functor( 'dirExists' ), writable : 0 },
+  hasFiles : { get : _statusGetter_functor( 'hasFiles' ), writable : 0 },
+  isRepository : { get : _statusGetter_functor( 'isRepository' ), writable : 0 },
+  hasLocalChanges : { get : _statusGetter_functor( 'hasLocalChanges' ), writable : 0 },
+  hasLocalUncommittedChanges : { get : _statusGetter_functor( 'hasLocalUncommittedChanges' ), writable : 0 },
+  remoteIsValid : { get : _statusGetter_functor( 'remoteIsValid' ), writable : 0 },
+  isUpToDate : { get : _statusGetter_functor( 'isUpToDate' ), writable : 0 },
+  safeToDelete : { get : _statusGetter_functor( 'safeToDelete' ), writable : 0 },
+  downloadRequired : { get : _statusGetter_functor( 'downloadRequired' ), writable : 0 },
+  updateRequired : { get : _statusGetter_functor( 'updateRequired' ), writable : 0 },
+  agreeRequired : { get : _statusGetter_functor( 'agreeRequired' ), writable : 0 },
 
-  remotePath : { readOnly : 1 },
-  downloadPath : { readOnly : 1 },
-  isRemote : { readOnly : 1 },
+  remotePath : { writable : 0 },
+  downloadPath : { writable : 0 },
+  isRemote : { writable : 0 },
 
 }
 
