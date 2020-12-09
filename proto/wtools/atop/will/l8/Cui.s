@@ -2344,11 +2344,8 @@ function handleEachModulesGitSync_functor( e )
     let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    let provider = openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ) );
-    if( e.propertiesMap.verbosity )
-    provider.archive.verbosity = 2;
-    else
-    provider.archive.verbosity = 0;
+    let provider =
+    openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
 
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
