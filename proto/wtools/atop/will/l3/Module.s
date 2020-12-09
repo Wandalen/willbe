@@ -8749,7 +8749,7 @@ function gitPull( o )
     else
     provider.archive.verbosity = 0;
 
-    if( e.propertiesMap.verbosity )
+    if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
