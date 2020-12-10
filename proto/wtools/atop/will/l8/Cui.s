@@ -1013,8 +1013,8 @@ function _commandModulesLike( o )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
-  _.assert( o.onModulesBegin === undefined || _.routineIs( o.onModulesBegin ) );
-  _.assert( o.onModulesEnd === undefined || _.routineIs( o.onModulesEnd ) );
+  _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
+  _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
@@ -1074,7 +1074,7 @@ function _commandModulesLike( o )
       return it;
     })
 
-    if( o.onModulesBegin );
+    if( o.onModulesBegin )
     ready2.then( () =>
     {
       o.onModulesBegin.call( cui, cui.currentOpeners, opener );
@@ -1083,7 +1083,7 @@ function _commandModulesLike( o )
 
     ready2.then( () => cui.openersCurrentEach( forSingle ) )
 
-    if( o.onModulesEnd );
+    if( o.onModulesEnd )
     ready2.finally( ( err, arg ) =>
     {
       o.onModulesEnd.call( cui, cui.currentOpeners, opener );
