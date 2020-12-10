@@ -1730,10 +1730,10 @@ let Forbids =
 let Accessors =
 {
 
-  commonPath : { readOnly : 1 },
+  commonPath : { writable : 0 },
   data : {},
   structure : {},
-  moduleStructure : { readOnly : 1 },
+  moduleStructure : { writable : 0 },
   error : { set : errorSet },
 
 }

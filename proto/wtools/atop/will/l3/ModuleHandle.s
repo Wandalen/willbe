@@ -236,9 +236,9 @@ let Forbids =
 
 let Accessors =
 {
-  dirPath : { get : dirPathGet, readOnly : 1 },
-  enabled : { get : enabledGet, readOnly : 1 },
-  isRemote : { get : isRemoteGet, readOnly : 1 },
+  dirPath : { get : dirPathGet, writable : 0 },
+  enabled : { get : enabledGet, writable : 0 },
+  isRemote : { get : isRemoteGet, writable : 0 },
 }
 
 // --

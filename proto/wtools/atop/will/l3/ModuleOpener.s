@@ -2575,19 +2575,19 @@ _.assert( _.longHas( _.accessor.getter.toStructure.identity, 'functor' ) );
 let Accessors =
 {
 
-  _ : { get : _.accessor.getter.toStructure, readOnly : 1, strict : 0 },
+  _ : { get : _.accessor.getter.toStructure, writable : 0, strict : 0 },
 
   willfilesPath : { get : willfilesPathGet, set : willfilesPathSet },
-  dirPath : { get : dirPathGet, readOnly : 1 },
-  commonPath : { get : commonPathGet, readOnly : 1 },
-  localPath : { get : localPathGet, readOnly : 1 },
-  downloadPath : { get : downloadPathGet, readOnly : 1 },
+  dirPath : { get : dirPathGet, writable : 0 },
+  commonPath : { get : commonPathGet, writable : 0 },
+  localPath : { get : localPathGet, writable : 0 },
+  downloadPath : { get : downloadPathGet, writable : 0 },
   remotePath : { get : remotePathGet, set : remotePathSet },
 
-  name : { get : nameGet, readOnly : 1 },
+  name : { get : nameGet, writable : 0 },
   aliasName : { set : aliasNameSet },
-  absoluteName : { get : absoluteNameGet, readOnly : 1 },
-  qualifiedName : { get : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
+  absoluteName : { get : absoluteNameGet, writable : 0 },
+  qualifiedName : { get : qualifiedNameGet, combining : 'rewrite', writable : 0 },
 
   isOut : { get : isOutGet, set : isOutSet },
   isMain : { get : isMainGet, set : isMainSet },

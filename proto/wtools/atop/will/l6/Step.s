@@ -312,7 +312,7 @@ let Forbids =
 
 let Accessors =
 {
-  uniqueOptions : { get : uniqueOptionsGet, readOnly : 1 },
+  uniqueOptions : { get : uniqueOptionsGet, writable : 0 },
 }
 
 // --

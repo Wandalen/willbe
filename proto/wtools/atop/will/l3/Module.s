@@ -6971,7 +6971,7 @@ function resourceImport( o )
       currentContext : o.srcResource,
     });
 
-    if( _.instanceIsStandard( value ) )
+    if( _.workpiece.instanceIsStandard( value ) )
     {
       let o2 = _.mapExtend( null, o );
       o2.srcResource = value;
@@ -9444,9 +9444,9 @@ let Accessors =
   exportedMap : { set : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
   superRelations : { set : superRelationsSet },
 
-  name : { get : nameGet, readOnly : 1 },
-  absoluteName : { get : absoluteNameGet, readOnly : 1 }, /* xxx : deprecate option readOnly */
-  aliasNames : { get : aliasNamesGet, readOnly : 1 },
+  name : { get : nameGet, writable : 0 },
+  absoluteName : { get : absoluteNameGet, writable : 0 }, /* xxx : deprecate option readOnly */
+  aliasNames : { get : aliasNamesGet, writable : 0 },
 
   willfilesPath : { get : willfilesPathGet, set : willfilesPathSet },
   inPath : { get : inPathGet, set : inPathSet },
@@ -9454,27 +9454,27 @@ let Accessors =
   localPath : { get : localPathGet, set : localPathSet },
   downloadPath : { get : downloadPathGet, set : downloadPathSet },
   remotePath : { get : remotePathGet, set : remotePathSet },
-  dirPath : { get : dirPathGet, readOnly : 1 },
-  commonPath : { get : commonPathGet, readOnly : 1 },
-  currentRemotePath : { get : currentRemotePathGet, readOnly : 1 },
-  willPath : { get : willPathGet, readOnly : 1 },
-  originalWillfilesPath : { get : originalWillfilesPathGet, readOnly : 1 },
-  peerWillfilesPath : { get : peerWillfilesPathGet, readOnly : 1 },
-  peerInPath : { get : peerInPathGet, readOnly : 1 },
+  dirPath : { get : dirPathGet, writable : 0 },
+  commonPath : { get : commonPathGet, writable : 0 },
+  currentRemotePath : { get : currentRemotePathGet, writable : 0 },
+  willPath : { get : willPathGet, writable : 0 },
+  originalWillfilesPath : { get : originalWillfilesPathGet, writable : 0 },
+  peerWillfilesPath : { get : peerWillfilesPathGet, writable : 0 },
+  peerInPath : { get : peerInPathGet, writable : 0 },
 
-  decoratedWillfilesPath : { get : decoratedWillfilesPathGet, readOnly : 1 },
-  decoratedInPath : { get : decoratedInPathGet, readOnly : 1 },
-  decoratedOutPath : { get : decoratedOutPathGet, readOnly : 1 },
-  decoratedLocalPath : { get : decoratedLocalPathGet, readOnly : 1 },
-  decoratedDownloadPath : { get : decoratedDownloadPathGet, readOnly : 1 },
-  decoratedRemotePath : { get : decoratedRemotePathGet, readOnly : 1 },
-  decoratedDirPath : { get : decoratedDirPathGet, readOnly : 1 },
-  decoratedCommonPath : { get : decoratedCommonPathGet, readOnly : 1 },
-  decoratedCurrentRemotePath : { get : decoratedCurrentRemotePathGet, readOnly : 1 },
-  decoratedWillPath : { get : decoratedWillPathGet, readOnly : 1 },
-  decoratedOriginalWillfilesPath : { get : decoratedOriginalWillfilesPathGet, readOnly : 1 },
-  decoratedPeerWillfilesPath : { get : decoratedPeerWillfilesPathGet, readOnly : 1 },
-  decoratedPeerInPath : { get : decoratedPeerInPathGet, readOnly : 1 },
+  decoratedWillfilesPath : { get : decoratedWillfilesPathGet, writable : 0 },
+  decoratedInPath : { get : decoratedInPathGet, writable : 0 },
+  decoratedOutPath : { get : decoratedOutPathGet, writable : 0 },
+  decoratedLocalPath : { get : decoratedLocalPathGet, writable : 0 },
+  decoratedDownloadPath : { get : decoratedDownloadPathGet, writable : 0 },
+  decoratedRemotePath : { get : decoratedRemotePathGet, writable : 0 },
+  decoratedDirPath : { get : decoratedDirPathGet, writable : 0 },
+  decoratedCommonPath : { get : decoratedCommonPathGet, writable : 0 },
+  decoratedCurrentRemotePath : { get : decoratedCurrentRemotePathGet, writable : 0 },
+  decoratedWillPath : { get : decoratedWillPathGet, writable : 0 },
+  decoratedOriginalWillfilesPath : { get : decoratedOriginalWillfilesPathGet, writable : 0 },
+  decoratedPeerWillfilesPath : { get : decoratedPeerWillfilesPathGet, writable : 0 },
+  decoratedPeerInPath : { get : decoratedPeerInPathGet, writable : 0 },
 
 }
 

@@ -9231,7 +9231,7 @@ function customLogger( test )
 
   function onTransformEnd( o )
   {
-    loggerOutput.push( o.outputForPrinter[ 0 ] )
+    loggerOutput.push( o._outputForPrinter[ 0 ] )
   }
 }
 

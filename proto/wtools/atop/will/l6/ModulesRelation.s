@@ -953,9 +953,9 @@ let Statics =
 
 let Accessors =
 {
-  isAvailable : { get : isAvailableGet, readOnly : 1 },
-  localPath : { get : localPathGet, readOnly : 1 },
-  remotePath : { get : remotePathGet, readOnly : 1 },
+  isAvailable : { get : isAvailableGet, writable : 0 },
+  localPath : { get : localPathGet, writable : 0 },
+  remotePath : { get : remotePathGet, writable : 0 },
   opener : { set : openerSet },
   longPath : { get : longPathGet },
   path : { set : pathSet },
