@@ -574,18 +574,18 @@ status.defaults =
 
 //
 
-function _statusGetter_functor( fieldName )
+function _statusGetter_functor( propName )
 {
   return function get()
   {
     let repo = this;
 
-    _.assert( repo._[ fieldName ] === null || _.boolIs( repo._[ fieldName ] ) );
+    _.assert( repo._[ propName ] === null || _.boolIs( repo._[ propName ] ) );
 
-    if( repo._[ fieldName ] === null )
-    repo.status({ all : 0, [ fieldName ] : 1 });
+    if( repo._[ propName ] === null )
+    repo.status({ all : 0, [ propName ] : 1 });
 
-    return repo._[ fieldName ];
+    return repo._[ propName ];
   }
 }
 

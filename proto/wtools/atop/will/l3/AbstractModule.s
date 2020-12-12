@@ -303,7 +303,7 @@ function _filePathChanged2( o )
   will._pathChanged
   ({
     object : module,
-    fieldName : 'willfilesPath',
+    propName : 'willfilesPath',
     val : o.willfilesPath,
     ex : o.exWillfilesPath,
     isIdentical : o.isIdentical,
@@ -313,7 +313,7 @@ function _filePathChanged2( o )
   will._pathChanged
   ({
     object : module,
-    fieldName : 'dirPath',
+    propName : 'dirPath',
     val : o.dirPath,
     ex : module.dirPath,
     kind : 'set',
@@ -322,7 +322,7 @@ function _filePathChanged2( o )
   will._pathChanged
   ({
     object : module,
-    fieldName : 'commonPath',
+    propName : 'commonPath',
     val : o.commonPath,
     ex : module.commonPath,
     kind : 'set',
@@ -331,7 +331,7 @@ function _filePathChanged2( o )
   will._pathChanged
   ({
     object : module,
-    fieldName : 'localPath',
+    propName : 'localPath',
     val : o.localPath,
     ex : module.localPath,
     kind : 'set',

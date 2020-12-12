@@ -377,7 +377,7 @@ function _pathSet( src )
   // module.will._pathChanged
   // ({
   //   object : module,
-  //   fieldName : resource.name,
+  //   propName : resource.name,
   //   val : src,
   //   ex,
   //   kind : 'resource.set',
