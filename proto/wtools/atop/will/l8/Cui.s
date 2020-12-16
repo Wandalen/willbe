@@ -276,7 +276,7 @@ function _command_head( o )
   if( e.propertiesMap.v !== undefined )
   {
     e.propertiesMap.verbosity = e.propertiesMap.v;
-    delete e.propertiesMap.v;
+    // delete e.propertiesMap.v;
   }
 }
 
