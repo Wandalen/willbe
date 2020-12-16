@@ -6149,6 +6149,121 @@ hookGitPullConflict.description =
 
 //
 
+function hookGitPush( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  });
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+
+  /* - */
+
+  originalShell( 'git init' );
+  originalShell( 'git remote add origin ../repo' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+
+  a.appStart( '.with original/ .call GitPush v:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call GitPush v:1 - succefull pushing of commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/ .call GitPush' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call GitPush - second run, nothing to push';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  });
+
+  originalShell( 'git commit -am second' );
+  originalShell( 'git tag -a v1.0 -m v1.0' );
+
+  a.appStart( '.with original/ .call GitPush v:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call GitPush v:0 - succefull pushing of tag';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
+    test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/ .call GitPush' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .call GitPush - second run, nothing to push';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function hookGitSyncColflict( test )
 {
   let context = this;
@@ -34481,6 +34596,7 @@ let Self =
     hookPrepare,
     hookHlink,
     hookGitPullConflict,
+    hookGitPush,
     hookGitSyncColflict,
     hookGitSyncRestoreHardLinksWithConfigPath,
     hookGitSyncArguments,
