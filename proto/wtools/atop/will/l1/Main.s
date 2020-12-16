@@ -751,62 +751,62 @@ function _pathChanged( o )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
   if( o.val )
-  if( o.fieldName === 'currentRemotePath' || o.fieldName === 'currentRemote' )
+  if( o.propName === 'currentRemotePath' || o.propName === 'currentRemote' )
   {
-    logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+    logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
     debugger;
   }
 
   // if( o.val )
-  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( o.propName === 'remotePath' || o.propName === 'remote' )
   // if( o.object.id === 690 || o.object.id === 692 )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
   //   debugger;
   // }
 
   // if( o.val )
-  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( o.propName === 'remotePath' || o.propName === 'remote' )
   // if( o.object.id === 1086 )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
   //   debugger;
   // }
 
   // if( o.val )
-  // if( o.fieldName === 'outPath' || o.fieldName === 'out' )
+  // if( o.propName === 'outPath' || o.propName === 'out' )
   // if( o.object.id === 209 || o.object.id === 84 )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
   //   debugger;
   // }
 
   // if( o.val )
-  // if( o.fieldName === 'download' )
+  // if( o.propName === 'download' )
   // // if( o.object.isOut && !o.object.isRemote )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
   //   debugger;
   // }
 
-  // if( o.fieldName === 'module.original.willfiles' )
+  // if( o.propName === 'module.original.willfiles' )
   // if( o.object.isOut )
   // if( o.val )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
   //   debugger;
   // }
 
-  // if( o.fieldName === 'willfilesPath' || o.fieldName === 'module.willfiles' )
+  // if( o.propName === 'willfilesPath' || o.propName === 'module.willfiles' )
   // if( _.strIs( o.val ) && _.strHas( o.val, 'wTools.out' ) )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
   //   // debugger;
   // }
 
-  // if( o.fieldName === 'willfilesPath' || o.fieldName === 'module.willfiles' )
+  // if( o.propName === 'willfilesPath' || o.propName === 'module.willfiles' )
   // {
-  //   logger.log( o.object.absoluteName, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, o.kind, o.propName, _.toStrNice( o.val ) );
   //   debugger;
   // }
 
@@ -816,7 +816,7 @@ function _pathChanged( o )
   // debugger;
 
   // if( !o.isIdential )
-  // logger.log( o.object.absoluteName, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  // logger.log( o.object.absoluteName, o.kind, o.propName, _.toStrNice( o.val ) );
 
 }
 
@@ -826,7 +826,7 @@ _pathChanged.defaults =
   ex : null,
   isIdentical : null,
   object : null,
-  fieldName : null,
+  propName : null,
   kind : null,
 }
 

@@ -1031,9 +1031,9 @@ _.assert( submodulesRelationsOwnFilter.defaults.withStem === undefined );
 // submodule
 // --
 
-function sharedFieldGet_functor( fieldName )
+function sharedFieldGet_functor( propName )
 {
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( propName );
 
   return function sharedFieldGet()
   {
@@ -1042,7 +1042,7 @@ function sharedFieldGet_functor( fieldName )
     let will = opener.will;
 
     if( openedModule )
-    return openedModule[ fieldName ];
+    return openedModule[ propName ];
 
     let result = opener[ symbol ];
 
@@ -1053,9 +1053,9 @@ function sharedFieldGet_functor( fieldName )
 
 //
 
-function sharedFieldSet_functor( fieldName )
+function sharedFieldSet_functor( propName )
 {
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( propName );
 
   return function sharedModuleSet( src )
   {
@@ -1066,8 +1066,8 @@ function sharedFieldSet_functor( fieldName )
 
     opener[ symbol ] = src;
 
-    if( openedModule && openedModule[ fieldName ] !== src )
-    openedModule[ fieldName ] = src;
+    if( openedModule && openedModule[ propName ] !== src )
+    openedModule[ propName ] = src;
 
     return src;
   }
@@ -1091,8 +1091,8 @@ function rootModuleSet( src )
 
   opener[ rootModuleSymbol ] = src;
 
-  if( openedModule && openedModule[ fieldName ] !== src )
-  openedModule[ fieldName ] = src;
+  if( openedModule && openedModule[ propName ] !== src )
+  openedModule[ propName ] = src;
 
   if( will )
   {
@@ -2105,7 +2105,7 @@ function remotePathPut( val )
   will._pathChanged
   ({
     object : opener,
-    fieldName : 'remotePath',
+    propName : 'remotePath',
     val,
     ex,
     kind : 'put',
@@ -2164,9 +2164,9 @@ remotePathEachAdoptAct.defaults =
 
 //
 
-function sharedFieldPut_functor( fieldName )
+function sharedFieldPut_functor( propName )
 {
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( propName );
 
   return function put( val )
   {
@@ -2177,13 +2177,13 @@ function sharedFieldPut_functor( fieldName )
 
     opener[ symbol ] = val;
 
-    _.assert( !module || module[ fieldName ] === val );
+    _.assert( !module || module[ propName ] === val );
 
     if( will )
     will._pathChanged
     ({
       object : opener,
-      fieldName,
+      propName,
       val,
       ex,
       kind : 'put',
@@ -2374,9 +2374,9 @@ function isMainSet( src )
 
 //
 
-function accessorGet_functor( fieldName )
+function accessorGet_functor( propName )
 {
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( propName );
 
   return function accessorGet()
   {
@@ -2384,7 +2384,7 @@ function accessorGet_functor( fieldName )
     let openedModule = opener.openedModule;
 
     if( openedModule )
-    return openedModule[ fieldName ];
+    return openedModule[ propName ];
 
     let result = opener[ symbol ];
 
@@ -2395,9 +2395,9 @@ function accessorGet_functor( fieldName )
 
 //
 
-function accessorSet_functor( fieldName )
+function accessorSet_functor( propName )
 {
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( propName );
 
   return function accessorSet( filePath )
   {
@@ -2406,7 +2406,7 @@ function accessorSet_functor( fieldName )
 
     opener[ symbol ] = filePath;
     if( openedModule )
-    openedModule[ fieldName ] = filePath;
+    openedModule[ propName ] = filePath;
 
     return filePath;
   }
@@ -2570,7 +2570,7 @@ let Forbids =
 }
 
 _.assert( _.routineIs( _.accessor.getter.toStructure ) );
-_.assert( _.longHas( _.accessor.getter.toStructure.identity, 'functor' ) );
+_.assert( !!_.accessor.getter.toStructure.identity.functor );
 
 let Accessors =
 {

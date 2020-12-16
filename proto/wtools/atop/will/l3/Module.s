@@ -5527,14 +5527,14 @@ function _pathResourceChanged( o )
   let o2 = _.mapExtend( null, o );
   o2.kind = 'resource.set';
   o2.object = module;
-  o2.fieldName = o.name;
+  o2.propName = o.name;
   delete o2.name;
   will._pathChanged( o2 );
 
   // will._pathChanged
   // ({
   //   object : module,
-  //   fieldName : resource.name,
+  //   propName : resource.name,
   //   val : src,
   //   ex,
   //   kind : 'resource.set',
@@ -5824,7 +5824,7 @@ function peerInPathGet()
 
 //
 
-function predefinedPathGet_functor( fieldName, resourceName, absolutize )
+function predefinedPathGet_functor( propName, resourceName, absolutize )
 {
 
   return function predefinedPathGet()
@@ -5859,7 +5859,7 @@ function predefinedPathGet_functor( fieldName, resourceName, absolutize )
 
 //
 
-function predefinedPathPut_functor( fieldName, resourceName, relativizing )
+function predefinedPathPut_functor( propName, resourceName, relativizing )
 {
 
   return function predefinedPathPut( filePath )
@@ -5872,7 +5872,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
     filePath = _.entityMake( filePath );
 
-    let ex = module[ fieldName ];
+    let ex = module[ propName ];
     let isIdentical = false;
     isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
     /* xxx : optimize? */
@@ -5895,14 +5895,14 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
       filePath = module.pathsRelative( basePath, filePath );
     }
 
-    if( fieldName === 'localPath' || fieldName === 'remotePath' ) /* xxx : move out to set */
+    if( propName === 'localPath' || propName === 'remotePath' ) /* xxx : move out to set */
     {
       module._pathUnregister();
     }
 
     module.pathResourceMap[ resourceName ].path = filePath;
 
-    if( fieldName === 'localPath' || fieldName === 'remotePath' )
+    if( propName === 'localPath' || propName === 'remotePath' )
     if( module.isPreformed() )
     if( module.commonPath )
     {
@@ -5913,7 +5913,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
     will._pathChanged
     ({
       object : module,
-      fieldName,
+      propName,
       val : filePath,
       ex,
       isIdentical,
@@ -5927,13 +5927,13 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
 //
 
-function decoratedPathGet_functor( fieldName )
+function decoratedPathGet_functor( propName )
 {
 
   return function decoratedPathGet()
   {
     let module = this;
-    let result = module[ fieldName ];
+    let result = module[ propName ];
     if( result !== null )
     {
       let will = module.will;
@@ -5949,10 +5949,10 @@ function decoratedPathGet_functor( fieldName )
 
 //
 
-function predefinedPathSet_functor( fieldName, resourceName )
+function predefinedPathSet_functor( propName, resourceName )
 {
 
-  let putName = '_' + fieldName + 'Put';
+  let putName = '_' + propName + 'Put';
   _.assert( arguments.length === 2 );
   _.assert( resourceName !== 'remote' );
   _.assert( resourceName !== 'module.willfiles' );
@@ -5961,7 +5961,7 @@ function predefinedPathSet_functor( fieldName, resourceName )
   {
     let module = this;
     let will = module.will;
-    let ex = module[ fieldName ];
+    let ex = module[ propName ];
 
     _.assert( !!module[ putName ] );
     module[ putName ]( filePath );
@@ -5970,7 +5970,7 @@ function predefinedPathSet_functor( fieldName, resourceName )
     will._pathChanged
     ({
       object : module,
-      fieldName,
+      propName,
       val : filePath,
       ex,
       kind : 'set',
@@ -6013,7 +6013,7 @@ function remotePathSet( filePath )
   will._pathChanged
   ({
     object : module,
-    fieldName : 'remotePath',
+    propName : 'remotePath',
     val : filePath,
     ex,
     isIdentical,
