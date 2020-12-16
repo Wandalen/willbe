@@ -30072,7 +30072,7 @@ function commandGitStatusWithPR( test )
   /* - */
 
   let config = a.fileProvider.configUserRead();
-  if( !config || !config.about || !config.about[ 'github.token' ] )
+  if( !_.process.insideTestContainer() || !config || !config.about || !config.about[ 'github.token' ] )
   {
     test.true( true );
     return null;
