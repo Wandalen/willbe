@@ -8709,8 +8709,6 @@ function gitPull( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  debugger;
-
   _.routineOptions( gitPull, o );
 
   o.dirPath = module.pathResolve
@@ -8824,16 +8822,13 @@ function gitPush( o )
   if( o.verbosity )
   logger.log( `Pushing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
+  let ready = _.git.push
   ({
-    currentPath : o.dirPath,
-    ready,
+    localPath : o.dirPath,
+    withTags : status.unpushedTags,
+    sync : 0,
+    throwing : 1,
   });
-
-  start( `git push -u origin --all` );
-  if( status.unpushedTags )
-  start( `git push --tags -f` );
 
   ready.catch( ( err ) =>
   {
