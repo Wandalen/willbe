@@ -8709,6 +8709,8 @@ function gitPull( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
+  debugger;
+
   _.routineOptions( gitPull, o );
 
   o.dirPath = module.pathResolve
@@ -8735,10 +8737,7 @@ function gitPull( o )
   logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
   if( status.uncommitted )
-  {
-    throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
-    return null;
-  }
+  throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
 
   let provider;
   if( o.restoringHardLinks )
@@ -8749,18 +8748,16 @@ function gitPull( o )
     else
     provider.archive.verbosity = 0;
 
-    if( e.propertiesMap.verbosity )
+    if( o.verbosity )
     logger.log( `Archiving file records in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 
-  let ready = new _.Consequence().take( null );
-
-  _.process.start
+  let ready = _.git.pull
   ({
-    execPath : `git pull`,
-    currentPath : o.dirPath,
-    ready,
+    localPath : o.dirPath,
+    sync : 0,
+    throwing : 1,
   });
 
   ready.tap( () =>
