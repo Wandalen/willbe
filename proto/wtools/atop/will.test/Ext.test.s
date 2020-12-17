@@ -6625,6 +6625,7 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
+    context.suiteTempPath = temp;
     test.true( true );
     return null;
   }
@@ -27966,6 +27967,196 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
+    context.suiteTempPath = temp;
+    test.true( true );
+    return null;
+  }
+  let linkPath = config.path.hlink;
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let superShell = _.process.starter
+  ({
+    currentPath : a.abs( 'super' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+
+  /* */
+
+  superShell( 'git init' );
+  superShell( 'git remote add origin ../repo' );
+  superShell( 'git add --all' );
+  superShell( 'git commit -am first' );
+  superShell( 'git push -u origin master' );
+  a.shell( `git clone ./repo ./clone` );
+  a.shell( `git clone ./repo ./original` );
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'super/f1.txt' ),
+      dstPath : a.abs( linkPath, 'f1_.lnk' ),
+      sync : 1,
+    });
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'super/f2.txt' ),
+      dstPath : a.abs( linkPath, 'f2_.lnk' ),
+      sync : 1,
+    });
+
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( linkPath, 'f1.lnk' ),
+      sync : 1,
+    });
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f2.txt' ),
+      dstPath : a.abs( linkPath, 'f2.lnk' ),
+      sync : 1,
+    });
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+    a.fileProvider.fileAppend( a.abs( 'super/f2.txt' ), 'super\n' );
+
+    return null;
+  })
+
+  /* */
+
+  originalShell( 'git commit -am third' );
+  originalShell( 'git push' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+    return null;
+  })
+
+  a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
+  .then( ( op ) =>
+  {
+    test.case = 'without conflict';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::super' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::GitSync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::GitSync' ), 1 );
+    test.identical( _.strCount( op.output, '+ hardLink' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
+
+    test.false( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+
+    var exp =
+`
+original/f.txt
+original
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f2.txt
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+original
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f2.txt
+super
+`
+    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead2, exp );
+    return null;
+  })
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( context.suiteTempPath );
+    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
+    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
+    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
+    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
+    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    context.suiteTempPath = temp;
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
+{
+  let context = this;
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  let a = context.assetFor( test, 'modules-git-sync' );
+
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.path || !config.path.hlink )
+  {
+    context.suiteTempPath = temp;
     test.true( true );
     return null;
   }
@@ -28082,7 +28273,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
     test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Archiving file records in directory(s) :\n' ), 1 );
+    test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
     test.identical( _.strCount( op.output, '> git pull' ), 2 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
@@ -28162,6 +28353,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
+    context.suiteTempPath = temp;
     test.true( true );
     return null;
   }
@@ -28272,7 +28464,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
     test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Archiving file records in directory(s) :\n' ), 1 );
+    test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
     test.identical( _.strCount( op.output, '> git pull' ), 1 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
@@ -28352,6 +28544,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
+    context.suiteTempPath = temp;
     test.true( true );
     return null;
   }
@@ -28450,7 +28643,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
     test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Archiving file records in directory(s) :\n' ), 1 );
+    test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
     test.identical( _.strCount( op.output, '> git pull' ), 1 );
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
@@ -30872,6 +31065,7 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
   if( !config || !config.path || !config.path.hlink )
   {
+    context.suiteTempPath = temp;
     test.true( true );
     return null;
   }
@@ -34981,6 +35175,7 @@ let Self =
     commandModulesGitPrOpen,
     commandModulesGitSync,
     commandModulesGitSyncRestoreHardLinksInModuleWithSuccess,
+    commandModulesGitSyncRestoreHardLinksInModuleWithFail,
     commandModulesGitSyncRestoreHardLinksInModule,
     commandModulesGitSyncRestoreHardLinksInSubmodule,
 

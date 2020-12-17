@@ -8676,7 +8676,7 @@ gitPrOpen.defaults =
 
 //
 
-function _providerArchiveMake( dirPath )
+function _providerArchiveMake( dirPath, verbosity )
 {
   let module = this;
   let will = module.will;
@@ -8691,6 +8691,11 @@ function _providerArchiveMake( dirPath )
 
   if( config && config.path && config.path.hlink )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+
+  if( verbosity )
+  provider.archive.verbosity = 2;
+  else
+  provider.archive.verbosity = 0;
 
   provider.archive.fileMapAutosaving = 1;
   provider.archive.allowingMissed = 1;
@@ -8740,14 +8745,10 @@ function gitPull( o )
   let provider;
   if( o.restoringHardLinks )
   {
-    provider = module._providerArchiveMake( will.currentOpener.dirPath );
-    if( o.verbosity )
-    provider.archive.verbosity = 2;
-    else
-    provider.archive.verbosity = 0;
+    provider = module._providerArchiveMake( will.currentOpener.dirPath, o.verbosity );
 
     if( o.verbosity )
-    logger.log( `Archiving file records in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 

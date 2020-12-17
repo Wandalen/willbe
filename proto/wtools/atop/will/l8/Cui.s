@@ -120,11 +120,12 @@ function _openersCurrentEach( o )
     _.assert( will.currentOpener === null );
     _.assert( _.arrayIs( will.currentOpeners ) );
 
-    will.currentOpeners.forEach( ( opener ) =>
+    // will.currentOpeners.forEach( ( opener ) =>
+    for( let i = 0 ; i < will.currentOpeners.length ; i++ )
     {
-      let it = itFrom( opener );
+      let it = itFrom( will.currentOpeners[ i ] );
       ready.then( () => o.onEach.call( will, it ) );
-    });
+    };
 
   }
 
@@ -1012,6 +1013,8 @@ function _commandModulesLike( o )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
+  _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
+  _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
@@ -1050,6 +1053,7 @@ function _commandModulesLike( o )
     }
     return null;
   }
+
   /* */
 
   function openersEach( opener )
@@ -1070,8 +1074,25 @@ function _commandModulesLike( o )
       return it;
     })
 
-    ready2
-    .then( () => cui.openersCurrentEach( forSingle ) )
+    if( o.onModulesBegin )
+    ready2.then( () =>
+    {
+      o.onModulesBegin.call( cui, cui.currentOpeners, opener );
+      return null;
+    });
+
+    ready2.then( () => cui.openersCurrentEach( forSingle ) )
+
+    if( o.onModulesEnd )
+    ready2.finally( ( err, arg ) =>
+    {
+      o.onModulesEnd.call( cui, cui.currentOpeners, opener );
+
+      if( err )
+      throw _.err( err );
+
+      return null;
+    });
 
     return ready2;
   }
@@ -1110,6 +1131,8 @@ function _commandModulesLike( o )
 var defaults = _commandModulesLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
 defaults.event = null;
 defaults.onEach = null;
+defaults.onModulesBegin = null;
+defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
 defaults.withRoot = 1;
@@ -2091,6 +2114,8 @@ commandSubmodulesGitPrOpen.commandProperties =
 function commandSubmodulesGitSync( e )
 {
   let cui = this;
+  let logger = cui.logger;
+  let provider;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
@@ -2101,10 +2126,47 @@ function commandSubmodulesGitSync( e )
   ({
     event : e,
     name : 'submodules git sync',
-    onEach : handleEachModulesGitSync_functor( e ),
+    onModulesBegin,
+    onEach,
+    onModulesEnd,
     commandRoutine : commandSubmodulesGitSync,
     withRoot : 0,
   });
+
+  /* */
+
+  function onModulesBegin( openers, rootOpener )
+  {
+    let pathsContainer = [ rootOpener.openedModule.dirPath ];
+    for( let i = 0 ; i < openers.length ; i++ )
+    pathsContainer.push( openers[ i ].openedModule.dirPath );
+    provider =
+    rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+
+    if( e.propertiesMap.verbosity )
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    provider.archive.restoreLinksBegin();
+  }
+
+  /* */
+
+  function onEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... e.propertiesMap,
+      restoringHardLinks : 0,
+    });
+  }
+
+  /* */
+
+  function onModulesEnd( openers )
+  {
+    debugger;
+    provider.archive.restoreLinksEnd();
+  }
 }
 
 commandSubmodulesGitSync.defaults =
@@ -2330,60 +2392,11 @@ commandModulesGitPrOpen.commandProperties =
 
 //
 
-function handleEachModulesGitSync_functor( e )
-{
-  return function( it )
-  {
-    let cui = it.will;
-    let logger = cui.logger;
-
-    let pathsContainer = [];
-    for( let i = 0 ; i < it.openers.length ; i++ )
-    pathsContainer.push( it.openers[ i ].openedModule.dirPath );
-    let provider = it.opener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ) );
-    if( e.propertiesMap.verbosity )
-    provider.archive.verbosity = 2;
-    else
-    provider.archive.verbosity = 0;
-
-    if( e.propertiesMap.verbosity )
-    logger.log( `Archiving file records in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
-
-    let ready = new _.Consequence().take( null );
-    for( let i = 0 ; i < it.openers.length ; i++ )
-    ready.then( () =>
-    {
-      return it.openers[ i ].openedModule.gitSync
-      ({
-        commit : e.subject,
-        ... e.propertiesMap,
-        restoringHardLinks : 0,
-      });
-    });
-
-    ready.finally( ( err, arg ) =>
-    {
-      _.arrayEmpty( it.openers );
-      it.openers.push( it.opener );
-
-      provider.archive.restoreLinksEnd();
-
-      if( err )
-      throw _.err( err );
-
-      return arg;
-    });
-
-    return ready;
-  }
-}
-
-//
-
 function commandModulesGitSync( e )
 {
   let cui = this;
+  let logger = cui.logger;
+  let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
   _.routineOptions( commandModulesGitSync, e.propertiesMap );
@@ -2394,10 +2407,46 @@ function commandModulesGitSync( e )
   ({
     event : e,
     name : 'modules git sync',
-    onEach : handleEachModulesGitSync_functor( e ),
+    onModulesBegin,
+    onEach,
+    onModulesEnd,
     commandRoutine : commandModulesGitSync,
     withRoot : 1,
   });
+
+  /* */
+
+  function onModulesBegin( openers )
+  {
+    let pathsContainer = [];
+    for( let i = 0 ; i < openers.length ; i++ )
+    pathsContainer.push( openers[ i ].openedModule.dirPath );
+    provider =
+    openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+
+    if( e.propertiesMap.verbosity )
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    provider.archive.restoreLinksBegin();
+  }
+
+  /* */
+
+  function onEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... e.propertiesMap,
+      restoringHardLinks : 0,
+    });
+  }
+
+  /* */
+
+  function onModulesEnd( openers )
+  {
+    provider.archive.restoreLinksEnd();
+  }
 }
 
 commandModulesGitSync.defaults =
@@ -4791,7 +4840,6 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitPrOpen,
-  handleEachModulesGitSync_functor,
   commandModulesGitSync,
 
   commandShell,
