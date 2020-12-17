@@ -3016,6 +3016,8 @@ function exportSuperIn( test )
   return a.ready;
 } /* end of function exportSuperIn */
 
+exportSuperIn.rapidity = -1;
+
 //
 
 /*
@@ -3239,6 +3241,8 @@ function exportDefaultPath( test )
   return a.ready;
 
 } /* end of function exportDefaultPath */
+
+exportDefaultPath.rapidity = -1;
 
 //
 
