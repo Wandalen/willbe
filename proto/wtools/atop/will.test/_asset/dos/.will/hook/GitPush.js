@@ -26,17 +26,17 @@ function onModule( context )
   if( o.verbosity )
   logger.log( `Pushing ${context.junction.nameWithLocationGet()}` );
 
-  // context.start( `git push -u origin --all` );
-  // if( status.unpushedTags )
-  // context.start( `git push --tags -f` );
+  context.start( `git push -u origin --all` );
+  if( status.unpushedTags )
+  context.start( `git push --tags -f` );
 
-  _.git.push
-  ({
-    localPath : context.junction.dirPath,
-    withTags : status.unpushedTags,
-    sync : 0,
-    throwing : 1,
-  });
+  // _.git.push
+  // ({
+  //   localPath : context.junction.dirPath,
+  //   withTags : status.unpushedTags,
+  //   sync : 0,
+  //   throwing : 1,
+  // });
 }
 
 module.exports = onModule;
