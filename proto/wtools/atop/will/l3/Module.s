@@ -8872,9 +8872,6 @@ function gitReset( o )
   if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
   return null;
 
-  if( o.dry )
-  return null;
-
   if( o.verbosity )
   logger.log( `Resetting ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
@@ -8882,6 +8879,9 @@ function gitReset( o )
   ({
     localPath : o.dirPath,
     removingUntracked : o.removingUntracked,
+    removingIgnored : o.removingIgnored,
+    removingSubrepositories : o.removingSubrepositories,
+    dry : o.dry,
     sync : 1,
   });
 
@@ -8890,9 +8890,11 @@ function gitReset( o )
 
 gitReset.defaults =
 {
-  dry : null,
-  removingUntracked : 0,
   dirPath : null,
+  removingUntracked : 0,
+  removingIgnored : 0,
+  removingSubrepositories : 0,
+  dry : null,
   v : null,
   verbosity : 2,
 }
