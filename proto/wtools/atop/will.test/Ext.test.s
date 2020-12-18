@@ -510,6 +510,8 @@ function build( test )
   return a.ready;
 }
 
+build.rapidity = -1;
+
 //
 
 /*
@@ -1673,6 +1675,8 @@ function moduleNewNamed( test )
   return a.ready;
 }
 
+moduleNewNamed.rapidity = -1;
+
 //
 
 function openWith( test )
@@ -2053,6 +2057,8 @@ function openWith( test )
 
   return a.ready;
 }
+
+openWith.rapidity = -1;
 
 //
 
@@ -2824,6 +2830,7 @@ function implyWithSubmodulesModulesList( test )
   return a.ready;
 }
 
+implyWithSubmodulesModulesList.rapidity = -1;
 implyWithSubmodulesModulesList.description =
 `
 - imply withSubmodules:0 cause to open no submodules
@@ -3717,6 +3724,8 @@ function reflectComposite( test )
 
   return a.ready;
 }
+
+reflectComposite.rapidity = -1;
 
 //
 
@@ -5039,6 +5048,7 @@ function reflectComplexInherit( test )
   return a.ready;
 } /* end of function reflectComplexInherit */
 
+reflectComplexInherit.rapidity = -1;
 reflectComplexInherit.timeOut = 300000;
 
 //
@@ -5314,6 +5324,7 @@ function withDoInfo( test )
 
 } /* end of function withDoInfo */
 
+withDoInfo.rapidity = -1;
 withDoInfo.timeOut = 300000;
 withDoInfo.description =
 `
@@ -5425,6 +5436,7 @@ function withDoStatus( test )
   return a.ready;
 } /* end of function withDoStatus */
 
+withDoStatus.rapidity = -1;
 withDoStatus.timeOut = 300000;
 withDoStatus.description =
 `
@@ -5627,6 +5639,7 @@ function hookCallInfo( test )
   return a.ready;
 } /* end of function hookCallInfo */
 
+hookCallInfo.rapidity = -1;
 hookCallInfo.timeOut = 300000;
 hookCallInfo.description =
 `
@@ -7696,6 +7709,8 @@ function verbosityStepDelete( test )
   return a.ready;
 }
 
+verbosityStepDelete.rapidity = -1;
+
 //
 
 /*
@@ -7865,6 +7880,8 @@ shell.step
 
   return a.ready;
 } /* end of function verbosityStepPrintName */
+
+verbosityStepPrintName.rapidity = -1;
 
 //
 
@@ -8258,6 +8275,7 @@ function modulesTreeHierarchyRemote( test )
   return a.ready;
 } /* end of function modulesTreeHierarchyRemote */
 
+modulesTreeHierarchyRemote.rapidity = -1;
 modulesTreeHierarchyRemote.timeOut = 300000;
 
 //
@@ -9008,6 +9026,8 @@ function listSingleModule( test )
 
   return a.ready;
 }
+
+listSingleModule.rapidity = -1;
 
 //
 
@@ -9940,6 +9960,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   return a.ready;
 }
 
+buildOptionWithSubmodulesExplicitRunOption.rapidity = -1;
 buildOptionWithSubmodulesExplicitRunOption.timeOut = 300000;
 
 //
@@ -11968,6 +11989,8 @@ function exportImportMultiple( test )
   return a.ready;
 }
 
+exportImportMultiple.rapidity = -1;
+
 //
 
 function exportBroken( test )
@@ -12471,6 +12494,7 @@ function exportDisabledModule( test )
 
 } /* end of function exportDisabledModule */
 
+exportDisabledModule.rapidity = -1;
 exportDisabledModule.timeOut = 300000;
 exportDisabledModule.description =
 `
@@ -12951,6 +12975,7 @@ function exportRecursiveLocal( test )
   return a.ready;
 } /* end of function exportRecursiveLocal */
 
+exportRecursiveLocal.rapidity = -1;
 exportRecursiveLocal.timeOut = 300000;
 
 //
@@ -13721,6 +13746,7 @@ function exportWithRemoteSubmodules( test )
   return a.ready;
 } /* end of function exportWithRemoteSubmodules */
 
+exportWithRemoteSubmodules.rapidity = -1;
 exportWithRemoteSubmodules.timeOut = 400000;
 exportWithRemoteSubmodules.description =
 `
@@ -13884,6 +13910,7 @@ function exportWithRemoteSubmodulesRecursive( test )
   return a.ready;
 }
 
+exportWithRemoteSubmodulesRecursive.rapidity = -1;
 exportWithRemoteSubmodulesRecursive.timeOut = 400000;
 exportWithRemoteSubmodulesRecursive.description =
 `
@@ -14103,6 +14130,7 @@ function exportHierarchyRemote( test )
 
 } /* end of function exportHierarchyRemote */
 
+exportHierarchyRemote.rapidity = -1;
 exportHierarchyRemote.timeOut = 300000;
 exportHierarchyRemote.description =
 `
@@ -14862,6 +14890,7 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   return a.ready;
 }/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
 
+exportWithSubmoduleThatHasModuleDirDeleted.rapidity = -1;
 exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 150000;
 exportWithSubmoduleThatHasModuleDirDeleted.description =
 `
@@ -15683,6 +15712,7 @@ function cleanOptionWithSubmodules( test )
   return a.ready;
 }
 
+cleanOptionWithSubmodules.rapidity = -1;
 cleanOptionWithSubmodules.timeOut = 300000;
 
 //
@@ -16475,6 +16505,8 @@ function cleanRecursiveMin( test )
   return a.ready;
 } /* end of function cleanRecursiveMin */
 
+cleanRecursiveMin.rapidity = -1;
+
 //
 
 function cleanGlobMin( test )
@@ -16585,6 +16617,8 @@ function cleanGlobMin( test )
   return a.ready;
 } /* end of function cleanGlobMin */
 
+cleanGlobMin.rapidity = -1;
+
 //
 
 /*
@@ -16669,6 +16703,7 @@ function cleanRecursive( test )
   return a.ready;
 } /* end of function cleanRecursive */
 
+cleanRecursive.rapidity = -1;
 cleanRecursive.timeOut = 500000;
 
 //
@@ -16841,6 +16876,7 @@ function cleanDisabledModule( test )
 
 } /* end of function cleanDisabledModule */
 
+cleanDisabledModule.rapidity = -1;
 cleanDisabledModule.timeOut = 300000;
 cleanDisabledModule.description =
 `
@@ -17139,6 +17175,7 @@ submodule :
 
 } /* end of function cleanHierarchyRemote */
 
+cleanHierarchyRemote.rapidity = -1;
 cleanHierarchyRemote.timeOut = 1000000;
 
 //
@@ -17418,6 +17455,7 @@ function cleanHierarchyRemoteDry( test )
 
 } /* end of function cleanHierarchyRemoteDry */
 
+cleanHierarchyRemoteDry.rapidity = -1;
 cleanHierarchyRemoteDry.timeOut = 1000000;
 
 //
@@ -17698,6 +17736,7 @@ function cleanSubmodulesHierarchyRemote( test )
 
 } /* end of function cleanSubmodulesHierarchyRemote */
 
+cleanSubmodulesHierarchyRemote.rapidity = -1;
 cleanSubmodulesHierarchyRemote.timeOut = 1000000;
 
 //
@@ -17977,6 +18016,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
 } /* end of function cleanSubmodulesHierarchyRemoteDry */
 
+cleanSubmodulesHierarchyRemoteDry.rapidity = -1;
 cleanSubmodulesHierarchyRemoteDry.timeOut = 1000000;
 
 //
@@ -19821,6 +19861,7 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
 
 } /* end of function submodulesDownloadDiffDownloadPathsIrregular */
 
+submodulesDownloadDiffDownloadPathsIrregular.rapidity = -1;
 submodulesDownloadDiffDownloadPathsIrregular.timeOut = 400000;
 
 //
@@ -20061,6 +20102,7 @@ function submodulesDownloadHierarchyRemote( test )
 
 } /* end of function submodulesDownloadHierarchyRemote */
 
+submodulesDownloadHierarchyRemote.rapidity = -1;
 submodulesDownloadHierarchyRemote.timeOut = 400000;
 
 //
@@ -20261,6 +20303,7 @@ function submodulesDownloadHierarchyDuplicate( test )
 
 } /* end of function submodulesDownloadHierarchyDuplicate */
 
+submodulesDownloadHierarchyDuplicate.rapidity = -1;
 submodulesDownloadHierarchyDuplicate.timeOut = 300000;
 
 //
@@ -21310,6 +21353,7 @@ function submodulesAgreeThrowing( test )
   return a.ready;
 }
 
+submodulesAgreeThrowing.rapidity = -1;
 submodulesAgreeThrowing.timeOut = 300000;
 
 //
@@ -21834,6 +21878,7 @@ function subModulesUpdateSwitchBranch( test )
 
 }
 
+subModulesUpdateSwitchBranch.rapidity = -1;
 subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
@@ -22348,6 +22393,7 @@ function versionsAgreeNpm( test )
   return a.ready;
 }
 
+versionsAgreeNpm.rapidity = -1;
 versionsAgreeNpm.timeOut = 300000;
 
 //
@@ -23750,6 +23796,7 @@ original
   return a.ready;
 }
 
+stepGitPull.rapidity = -1;
 stepGitPull.timeOut = 300000;
 
 //
@@ -31840,6 +31887,8 @@ function commandNpmFromWillfile( test )
   return a.ready;
 }
 
+commandNpmFromWillfile.rapidity = -1;
+
 //
 
 function commandNpmFromWillfileOptionsInCommand( test )
@@ -34292,6 +34341,8 @@ function commandWillfileExtendWillfileWithOptions( test )
   return a.ready;
 }
 
+commandWillfileExtendWillfileWithOptions.rapidity = -1;
+
 //
 
 function commandWillfileSupplementWillfileDstIsWillfile( test )
@@ -35101,6 +35152,8 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   return a.ready;
 }
+
+commandWillfileSupplementWillfileWithOptions.rapidity = -1;
 
 // --
 // declare
