@@ -30040,50 +30040,19 @@ function commandGitReset( test )
   let context = this;
   let a = context.assetFor( test, 'git-reset' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
   /* - */
 
-  cloneShell( 'git init' );
-  cloneShell( 'git remote add origin ../repo' );
-  cloneShell( 'git add --all' );
-  cloneShell( 'git commit -am first' );
-
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with clone .git.reset dirPath:{path::git.proto} - directory proto is not a git dir, no resetting';
     a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( "new line" );\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .git.reset dirPath:{path::git.proto}' )
   .then( ( op ) =>
   {
-    test.case = '.with clone .git.reset dirPath:{path::git.proto} - directory proto is not a git dir, no resetting';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 0 );
@@ -30092,7 +30061,7 @@ function commandGitReset( test )
 `
 console.log( 'File.js' );
 console.log( "new line" );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
@@ -30100,19 +30069,26 @@ console.log( "new line" );
 `
 File.txt
 new line
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
     return null;
-  })
+  });
 
   /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with clone .git.reset - resetting of current directory';
+    a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( "new line" );\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  });
 
   a.appStart( '.with clone/ .git.reset' )
   .then( ( op ) =>
   {
-    test.case = '.with clone .git.reset - resetting of current directory';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 1 );
@@ -30120,36 +30096,42 @@ new line
     var exp =
 `
 console.log( 'File.js' );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
     var exp =
 `
 File.txt
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with clone .git.reset dry:1 - with option dry';
     a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( "new line" );\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileWrite( a.abs( 'clone/F.txt' ), 'F.txt' );
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .git.reset dry:1' )
   .then( ( op ) =>
   {
-    test.case = '.with clone .git.reset dry:1 - with option dry';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 0 );
+    test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 1 );
+    test.identical( _.strCount( op.output, 'Uncommitted changes, would be reseted :' ), 1 );
+    test.identical( _.strCount( op.output, 'M File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M proto/File.js' ), 1 );
+    test.identical( _.strCount( op.output, 'Uncommitted changes, would be cleaned :' ), 1 );
+    test.identical( _.strCount( op.output, '?? F.txt' ), 0 );
 
     var exp =
 `
@@ -30167,17 +30149,18 @@ new line
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
+    a.fileProvider.fileDelete( a.abs( 'clone/F.txt' ) );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    test.case = 'untracked files in directory';
-    a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( "new line" );\n' );
+    test.case = '.with clone/ .git.reset removingUntracked:1 - resetting of untracked files, but not ignored';
+    a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( \'new line\' );\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileWrite( a.abs( 'clone/proto/File2.js'), 'console.log( "File2.js" );' );
+    a.fileProvider.fileWrite( a.abs( 'clone/proto/File2.js'), 'console.log( \'File2.js\' );' );
     a.fileProvider.fileWrite( a.abs( 'clone/File2.txt'), 'File2.txt' );
     a.fileProvider.fileWrite( a.abs( 'clone/.file'), '.file' );
 
@@ -30197,12 +30180,11 @@ new line
     test.identical( got, exp );
 
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .git.reset removingUntracked:1' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.reset removingUntracked:1 - resetting of untracked files, but not ignored';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 1 );
@@ -30235,21 +30217,227 @@ File.txt
     test.identical( got, exp );
 
     return null;
-  })
+  });
 
   /* */
 
+  begin().then( () =>
+  {
+    test.case = '.with clone/ .git.reset removingUntracked:1 removingIgnored:1 - resetting of untracked and ignored files';
+    a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( \'new line\' );\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileWrite( a.abs( 'clone/proto/File2.js'), 'console.log( \'File2.js\' );' );
+    a.fileProvider.fileWrite( a.abs( 'clone/File2.txt'), 'File2.txt' );
+    a.fileProvider.fileWrite( a.abs( 'clone/.file'), '.file' );
+
+    var got = a.find( a.abs( 'clone' ) );
+    var exp =
+    [
+      '.',
+      './.file',
+      './.gitignore',
+      './File.txt',
+      './File2.txt',
+      './will.yml',
+      './proto',
+      './proto/File.js',
+      './proto/File2.js'
+    ];
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  a.appStart( '.with clone/ .git.reset removingUntracked:1 removingIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 1 );
+
+    var exp =
+`
+console.log( 'File.js' );
+`
+    var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
+    test.equivalent( read, exp );
+
+    var exp =
+`
+File.txt
+`
+    var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
+    test.equivalent( read, exp );
+
+    var got = a.find( a.abs( 'clone' ) );
+    var exp =
+    [
+      '.',
+      './File.txt',
+      './will.yml',
+      './proto',
+      './proto/File.js',
+    ];
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with clone/ .git.reset removingUntracked:1 removingIgnored:1';
+    test.description = 'resetting of untracked and ignored files but not subrepository'
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.dirMake( a.abs( 'clone/sub' ) );
+    a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( \'new line\' )\n' );
+    a.fileProvider.fileWrite( a.abs( 'clone/.file'), '.file' );
+
+    var got = a.find( a.abs( 'clone' ) );
+    var exp =
+    [
+      '.',
+      './.file',
+      './.gitignore',
+      './File.txt',
+      './will.yml',
+      './proto',
+      './proto/File.js',
+      './sub',
+    ];
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone/sub' ), execPath : 'git init' });
   a.ready.then( () =>
   {
+    test.true( a.fileProvider.fileExists( a.abs( 'clone/sub/.git' ) ) );
+    return null;
+  });
+
+  a.appStart( '.with clone/ .git.reset removingUntracked:1 removingIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 1 );
+
+    var exp =
+`
+console.log( 'File.js' );
+`
+    var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
+    test.equivalent( read, exp );
+
+    var exp =
+`
+File.txt
+`
+    var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
+    test.equivalent( read, exp );
+
+    var got = a.find( a.abs( 'clone' ) );
+    var exp =
+    [
+      '.',
+      './File.txt',
+      './will.yml',
+      './proto',
+      './proto/File.js',
+      './sub',
+    ];
+    test.identical( got, exp );
+    test.true( a.fileProvider.fileExists( a.abs( 'clone/sub/.git' ) ) );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with clone/ .git.reset removingUntracked:1 removingIgnored:1 removingSubrepositories:1';
+    test.description = 'resetting of untracked, ignored files and subrepository'
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.dirMake( a.abs( 'clone/sub' ) );
+    a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( \'new line\' )\n' );
+    a.fileProvider.fileWrite( a.abs( 'clone/.file'), '.file' );
+
+    var got = a.find( a.abs( 'clone' ) );
+    var exp =
+    [
+      '.',
+      './.file',
+      './.gitignore',
+      './File.txt',
+      './will.yml',
+      './proto',
+      './proto/File.js',
+      './sub',
+    ];
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone/sub' ), execPath : 'git init' });
+  a.ready.then( () =>
+  {
+    test.true( a.fileProvider.fileExists( a.abs( 'clone/sub/.git' ) ) );
+    return null;
+  });
+
+  a.appStart( '.with clone/ .git.reset removingUntracked:1 removingIgnored:1 removingSubrepositories:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 1 );
+
+    var exp =
+`
+console.log( 'File.js' );
+`
+    var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
+    test.equivalent( read, exp );
+
+    var exp =
+`
+File.txt
+`
+    var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
+    test.equivalent( read, exp );
+
+    var got = a.find( a.abs( 'clone' ) );
+    var exp =
+    [
+      '.',
+      './File.txt',
+      './will.yml',
+      './proto',
+      './proto/File.js',
+    ];
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with clone .git.reset v:0 - verbosity:0';
     a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( "new line" );\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .git.reset v:0' )
   .then( ( op ) =>
   {
-    test.case = '.with clone .build - verbosity:0';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git-reset' ), 0 );
     test.identical( _.strCount( op.output, 'Resetting module::git-reset' ), 0 );
@@ -30269,12 +30457,53 @@ File.txt
     test.equivalent( read, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    _.process.start
+    ({
+      execPath : 'git init --bare',
+      currentPath : a.abs( 'repo' ),
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    let cloneShell = _.process.starter
+    ({
+      currentPath : a.abs( 'clone' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* - */
+
+    cloneShell( 'git init' );
+    cloneShell( 'git remote add origin ../repo' );
+    cloneShell( 'git add --all' );
+    cloneShell( 'git commit -am first' );
+
+    return a.ready;
+  }
 }
+
+commandGitReset.rapidity = -1;
 
 //
 
