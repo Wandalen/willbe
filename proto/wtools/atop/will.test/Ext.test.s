@@ -25872,6 +25872,168 @@ function runWillbe( test )
 
 //
 
+function killWillbe( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+  let con = _.take( null );
+  a.reflect();
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe without signal';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe...' );
+      o.pnd.kill();
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe with signal SIGTERM';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe...' );
+      o.pnd.kill( 'SIGTERM' );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe with signal SIGKILL';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe...' );
+      o.pnd.kill( 'SIGKILL' );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGKILL' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
+      test.ge( _.strCount( op.output, 'SIGKILL' ), 0 );
+
+      return null;
+    });
+  });
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe with signal SIGINT';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe...' );
+      o.pnd.kill( 'SIGINT' );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGINT' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* - */
+
+  return con;
+}
+
+//
+
 /*
 
 Performance issue. Related with
@@ -34907,6 +35069,7 @@ let Self =
     // fixateDetached, // xxx : look later
 
     // runWillbe, // zzz : help to fix, please
+    killWillbe,
 
     // resourcesFormReflectorsExperiment, // xxx : look
 
