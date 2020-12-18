@@ -277,7 +277,7 @@ function _command_head( o )
   if( e.propertiesMap.v !== undefined )
   {
     e.propertiesMap.verbosity = e.propertiesMap.v;
-    delete e.propertiesMap.v;
+    // delete e.propertiesMap.v;
   }
 }
 
@@ -3061,6 +3061,8 @@ commandGitReset.defaults =
 {
   dirPath : '.',
   removingUntracked : 0,
+  removingIgnored : 0,
+  removingSubrepositories : 0,
   dry : 0,
   v : null,
   verbosity : 2,
@@ -3071,6 +3073,8 @@ commandGitReset.commandProperties =
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
+  removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
+  removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
   dry : 'Dry run without resetting. Default is dry:0.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',

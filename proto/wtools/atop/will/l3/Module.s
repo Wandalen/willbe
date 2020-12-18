@@ -8740,10 +8740,7 @@ function gitPull( o )
   logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
   if( status.uncommitted )
-  {
-    throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
-    return null;
-  }
+  throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
 
   let provider;
   if( o.restoringHardLinks )
@@ -8755,13 +8752,11 @@ function gitPull( o )
     provider.archive.restoreLinksBegin();
   }
 
-  let ready = new _.Consequence().take( null );
-
-  _.process.start
+  let ready = _.git.pull
   ({
-    execPath : `git pull`,
-    currentPath : o.dirPath,
-    ready,
+    localPath : o.dirPath,
+    sync : 0,
+    throwing : 1,
   });
 
   ready.tap( () =>
@@ -8828,16 +8823,13 @@ function gitPush( o )
   if( o.verbosity )
   logger.log( `Pushing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
+  let ready = _.git.push
   ({
-    currentPath : o.dirPath,
-    ready,
+    localPath : o.dirPath,
+    withTags : status.unpushedTags,
+    sync : 0,
+    throwing : 1,
   });
-
-  start( `git push -u origin --all` );
-  if( status.unpushedTags )
-  start( `git push --tags -f` );
 
   ready.catch( ( err ) =>
   {
@@ -8880,9 +8872,6 @@ function gitReset( o )
   if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
   return null;
 
-  if( o.dry )
-  return null;
-
   if( o.verbosity )
   logger.log( `Resetting ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
@@ -8890,6 +8879,9 @@ function gitReset( o )
   ({
     localPath : o.dirPath,
     removingUntracked : o.removingUntracked,
+    removingIgnored : o.removingIgnored,
+    removingSubrepositories : o.removingSubrepositories,
+    dry : o.dry,
     sync : 1,
   });
 
@@ -8898,9 +8890,11 @@ function gitReset( o )
 
 gitReset.defaults =
 {
-  dry : null,
-  removingUntracked : 0,
   dirPath : null,
+  removingUntracked : 0,
+  removingIgnored : 0,
+  removingSubrepositories : 0,
+  dry : null,
   v : null,
   verbosity : 2,
 }
