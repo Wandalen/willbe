@@ -55,13 +55,13 @@ function onModule( context )
   provider.archive.allowingCycled = 1;
   provider.archive.restoreLinksBegin();
 
-  context.start( `git pull` );
-  // _.git.pull
-  // ({
-  //   localPath : context.junction.dirPath,
-  //   sync : 0,
-  //   throwing : 1,
-  // });
+  // context.start( `git pull` );
+  _.git.pull
+  ({
+    localPath : context.junction.dirPath,
+    sync : 0,
+    throwing : 'full',
+  });
 
   context.ready.tap( () =>
   {
