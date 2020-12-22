@@ -6348,44 +6348,15 @@ function hookGitPush( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    test.case = '.with original/ .call GitPush v:1 - succefull pushing of commit';
     return null;
   });
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
 
   a.appStart( '.with original/ .call GitPush v:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .call GitPush v:1 - succefull pushing of commit';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
@@ -6398,35 +6369,20 @@ function hookGitPush( test )
 
   /* */
 
-  a.appStart( '.with original/ .call GitPush' )
-  .then( ( op ) =>
+  begin().then( () =>
   {
-    test.case = '.with original/ .call GitPush - second run, nothing to push';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( ( op ) =>
-  {
+    test.case = '.with original/ .call GitPush v:0 - succefull pushing of tag';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
   });
 
-  originalShell( 'git commit -am second' );
-  originalShell( 'git tag -a v1.0 -m v1.0' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -a v1.0 -m v1.0' });
 
   a.appStart( '.with original/ .call GitPush v:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .call GitPush v:0 - succefull pushing of tag';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
@@ -6438,10 +6394,16 @@ function hookGitPush( test )
 
   /* */
 
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitPush - second run, nothing to push';
+    return null;
+  });
+
+  a.appStart( '.with original/ .call GitPush' );
   a.appStart( '.with original/ .call GitPush' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .call GitPush - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
@@ -6451,9 +6413,70 @@ function hookGitPush( test )
     return null;
   });
 
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitPush - error on pushing, remote repository does not exist';
+    a.fileProvider.filesDelete( a.abs( 'repo' ) );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with original/ .call GitPush' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, 'fatal: \'../repo\' does not appear to be a git repository' ), 2 );
+    test.identical( _.strCount( op.output, 'fatal: Could not read from remote repository.' ), 2 );
+    test.identical( _.strCount( op.output, 'Please make sure you have the correct access rights' ), 2 );
+    test.identical( _.strCount( op.output, 'and the repository exists.' ), 2 );
+
+    return null;
+  });
+
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    /* */
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+
+    /* */
+
+    return a.ready;
+  }
 }
 
 //
