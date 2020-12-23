@@ -23839,7 +23839,7 @@ function stepGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git status", module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Executing command "git status", module::git' ), 0 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
@@ -23872,7 +23872,7 @@ function stepGitDifferentCommands( test )
     test.case = '.with clone/Git.* .build git.log.hardlink';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git log", module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Executing command "git log", module::git' ), 0 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
@@ -23890,7 +23890,7 @@ function stepGitDifferentCommands( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::git' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
