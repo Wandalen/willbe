@@ -8742,15 +8742,86 @@ function gitPull( o )
   if( status.uncommitted )
   throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
 
+  /* */
+
   let provider;
   if( o.restoringHardLinks )
   {
+    // let routine = archiveProcess;
+    // let toolsPath = _.module.resolve( 'wTools' );
+    // let programPath = path.join( o.dirPath, routine.name + '.js' );
+    // let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
+    //
+    // _.program.write({ routine, programPath, locals });
+    //
+    // let o2 =
+    // {
+    //   mode : 'spawn',
+    //   outputCollecting : 1,
+    //   ipc : 1,
+    //   detaching : 2,
+    //   currentPath : o.dirPath,
+    //   execPath : 'node ' + programPath,
+    // };
+    //
+    // let child = _.process.start( o2 );
+    //
+    // o2.pnd.on( 'message', ( msg ) =>
+    // {
+    //   logger.log( msg );
+    // });
+    //
+    // /* */
+    //
+    // function archiveProcess()
+    // {
+    //   let _ = require( toolsPath );
+    //   _.include( 'wProcess' );
+    //   _.include( 'wCensorBasic' );
+    //   _.include( 'wFiles' );
+    //   _.include( 'wFilesArchive' );
+    //   _.include( 'wConsequence' );
+    //
+    //   let fileProvider = _.FileProvider.HardDrive();
+    //   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    //   if( !config )
+    //   config = fileProvider.configUserRead();
+    //
+    //   let provider = _.FileFilter.Archive();
+    //   provider.archive.basePath = dirPath;
+    //
+    //   if( config && config.path && config.path.hlink )
+    //   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+    //
+    //   if( verbosity )
+    //   provider.archive.verbosity = 2;
+    //   else
+    //   provider.archive.verbosity = 0;
+    //
+    //   provider.archive.fileMapAutosaving = 1;
+    //   provider.archive.allowingMissed = 1;
+    //   provider.archive.allowingCycled = 1;
+    //
+    //   if( verbosity )
+    //   process.send( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    //   provider.archive.restoreLinksBegin();
+    //
+    //   while( process.channel !== undefined )
+    //   {
+    //     _.time.sleep( 500 );
+    //   }
+    //
+    //   provider.archive.restoreLinksEnd();
+    // }
+
     provider = module._providerArchiveMake( will.currentOpener.dirPath, o.verbosity );
 
     if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
+
+  /* */
 
   let ready = _.git.pull
   ({

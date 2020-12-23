@@ -30374,6 +30374,7 @@ original
   }
 }
 
+commandGitPull.rapidity = -1;
 commandGitPull.timeOut = 300000;
 
 //
