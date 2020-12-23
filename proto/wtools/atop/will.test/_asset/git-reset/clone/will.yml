@@ -21,6 +21,17 @@ step :
     dirPath : '.'
     removingUntracked : 1
 
+  git.reset.removingIgnored :
+    dirPath : '.'
+    removingUntracked : 1
+    removingIgnored : 1
+
+  git.reset.removingSubrepositories :
+    dirPath : '.'
+    removingUntracked : 1
+    removingIgnored : 1
+    removingSubrepositories : 1
+
 build :
 
   git.reset.default :
@@ -38,3 +49,11 @@ build :
   git.reset.removingUntracked :
     steps :
       - git.reset.removingUntracked
+
+  git.reset.removingIgnored :
+    steps :
+      - git.reset.removingIgnored
+
+  git.reset.removingSubrepositories :
+    steps :
+      - git.reset.removingSubrepositories
