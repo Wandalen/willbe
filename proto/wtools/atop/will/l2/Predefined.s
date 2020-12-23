@@ -922,6 +922,8 @@ function stepRoutineGitReset( frame )
 stepRoutineGitReset.stepOptions =
 {
   removingUntracked : 0,
+  removingIgnored : 0,
+  removingSubrepositories : 0,
   dirPath : null,
   dry : 0,
 }
@@ -929,6 +931,8 @@ stepRoutineGitReset.stepOptions =
 stepRoutineGitReset.uniqueOptions =
 {
   removingUntracked : 0,
+  removingIgnored : 0,
+  removingSubrepositories : 0,
 }
 
 //
