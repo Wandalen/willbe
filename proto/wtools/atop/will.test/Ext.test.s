@@ -7251,7 +7251,7 @@ function hookGitSyncArguments( test )
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
-    test.identical( _.strCount( op.output, '> git push' ), 0 );
+    test.identical( _.strCount( op.output, '> git push' ), 1 );
     return null;
   })
 
