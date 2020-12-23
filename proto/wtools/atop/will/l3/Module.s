@@ -8545,23 +8545,14 @@ function gitExecCommand( o )
   if( o.verbosity )
   logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
-  let provider = _.FileFilter.Archive();
+
+  let provider;
   if( o.hardLinkMaybe )
   {
-    let config = fileProvider.configUserRead();
-    provider.archive.basePath = will.currentOpener.dirPath;
-    if( config && config.path && config.path.hlink )
-    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
-
-    provider.archive.fileMapAutosaving = 1;
+    provider = module._providerArchiveMake( o.dirPath, o.verbosity );
 
     if( o.verbosity )
-    provider.archive.verbosity = 2;
-    else
-    provider.archive.verbosity = 0;
-
-    provider.archive.allowingMissed = 1;
-    provider.archive.allowingCycled = 1;
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 
@@ -8574,13 +8565,11 @@ function gitExecCommand( o )
     ready,
   });
 
-  if( o.hardLinkMaybe )
+  ready.tap( () =>
   {
-    ready.tap( () =>
-    {
-      provider.archive.restoreLinksEnd();
-    });
-  }
+    if( o.hardLinkMaybe )
+    provider.archive.restoreLinksEnd();
+  });
 
   ready.catch( ( err ) =>
   {
