@@ -1,6 +1,28 @@
 
 submodule :
 
+  wTools :
+    path : npm:///wTools
+    enabled : 0 # submodule
+  wCopyable :
+    path : npm:///wCopyable
+    enabled : 0 # submodule
+  wtemplatetreeresolver :
+    path : hd://.
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+  wTesting :
+    path : npm:///wTesting
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+  eslint :
+    path : npm:///eslint#7.1.0
+    enabled : 0 # submodule
+    criterion :
+      debug : 1
+
 path :
 
   in : '.'
