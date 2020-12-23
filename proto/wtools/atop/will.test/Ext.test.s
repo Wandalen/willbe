@@ -6878,7 +6878,7 @@ hookGitReset.rapidity = -1;
 
 //
 
-function hookGitSyncColflict( test )
+function hookGitSyncConflict( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-conflict' );
@@ -6890,7 +6890,7 @@ function hookGitSyncColflict( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
+  });
 
   let cloneShell = _.process.starter
   ({
@@ -6899,7 +6899,7 @@ function hookGitSyncColflict( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
+  });
 
   /* - */
 
@@ -6911,7 +6911,7 @@ function hookGitSyncColflict( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git init' );
   originalShell( 'git add --all' );
@@ -6966,7 +6966,7 @@ clone
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
 
@@ -6980,7 +6980,7 @@ clone
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
-    test.identical( _.strCount( op.output, '> git push' ), 0 );
+    test.identical( _.strCount( op.output, '> git push' ), 1 );
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -7035,10 +7035,10 @@ original
   /* - */
 
   return a.ready;
-} /* end of function hookGitSyncColflict */
+} /* end of function hookGitSyncConflict */
 
-hookGitSyncColflict.timeOut = 300000;
-hookGitSyncColflict.description =
+hookGitSyncConflict.timeOut = 300000;
+hookGitSyncConflict.description =
 `
 - pull done
 - conflict is not obstacle to relink files
@@ -35952,7 +35952,7 @@ let Self =
     hookGitPullConflict,
     hookGitPush,
     hookGitReset,
-    hookGitSyncColflict,
+    hookGitSyncConflict,
     hookGitSyncRestoreHardLinksWithConfigPath,
     hookGitSyncArguments,
     hookWasPackageExtendWillfile,
