@@ -1,10 +1,13 @@
-( function _ModuleForTesting1_s_() {
+( function _ModuleForTesting1_s_()
+{
 
 'use strict';
 
 // --
 // Routines
 // --
+
+let Self = _global_._test_ = _global_._test_ || Object.create( null );
 
 function sumOfNumbers()
 {
@@ -18,7 +21,9 @@ function sumOfNumbers()
 // export
 // --
 
+Self = Object.assign( Self, { sumOfNumbers } );
+
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ].sumOfNumbers = sumOfNumbers;
+module[ 'exports' ] = Self;
 
 })();
