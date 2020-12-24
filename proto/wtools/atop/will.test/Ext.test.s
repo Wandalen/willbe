@@ -8190,7 +8190,7 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( op.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( op.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
     test.identical( _.strCount( op.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
-    test.identical( _.strCount( op.output, /at.* .*verbosityStepPrintName/ ), 3 );
+    test.identical( _.strCount( op.output, /at.* .*verbosityStepPrintName/ ), 2 );
     test.identical( _.strCount( op.output, 'shell.step' ), 2 );
     test.identical( _.strCount( op.output, /: .*step::delete.step.*/ ), 1 );
     test.identical( _.strCount( op.output, /1 at .*\/out/ ), 1 );
