@@ -753,7 +753,7 @@ function transpileWithOptions( test )
      \n optimization : 9\
      \n minification : 9\
      \n diagnosing : 0\
-     \n beautifing : 1
+     \n beautifing : 0
     `
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
