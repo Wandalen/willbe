@@ -12723,7 +12723,7 @@ function exportCourruptedOutfileSyntax( test )
   let a = context.assetFor( test, 'corrupted-outfile-syntax' );
   a.reflect();
 
-  /* - */
+  /* */
 
   a.appStart( '.with sub .export debug:1' )
   .then( ( op ) =>
@@ -12743,17 +12743,17 @@ function exportCourruptedOutfileSyntax( test )
     test.identical( _.strCount( op.output, '. Read 2 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, '! Failed to open .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to convert from "string" to "structure" by converter yaml:string->structure' ), 1 );
+    var exp = 'Failed to convert from "string" to "structure" by encoder yaml:string.utf8->structure';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
 
     return null;
-
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportCourruptedOutfileSyntax */
+}
 
 //
 
