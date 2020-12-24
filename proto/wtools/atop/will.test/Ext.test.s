@@ -15212,20 +15212,17 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     test.case = 'optional';
     a.reflect();
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
-    return op;
-  })
+    return null;
+  });
 
   a.appStart( '.with module/opt/ .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15234,19 +15231,18 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     return null;
-  })
+  });
 
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     a.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
     test.true( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
     return null;
-  })
+  });
 
   a.appStart( '.with Optional .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15271,24 +15267,21 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.mapKeys( outfile.module ), exp );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     test.case = 'mandatory';
     a.reflect();
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
-    return op;
+    return null;
   })
 
   a.appStart( '.with module/mand/ .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15297,30 +15290,29 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     return null;
-  })
+  });
 
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     a.fileProvider.filesDelete( a.abs( 'module/mand/.module' ) );
     test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.with Mandatory .export' )
-
+  a.appStart( '.with Mandatory .export' )
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 1 );
-    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 0 );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 0 );
+    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
-    test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
