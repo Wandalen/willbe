@@ -16160,33 +16160,31 @@ function cleanSingleModule( test )
   let a = context.assetFor( test, 'single' );
   a.reflect();
 
-  /* - */
+  /* */
 
-  a.appStart({ execPath : [ '.build', '.clean' ] })
-
+  a.appStart( { execPath : [ '.build', '.clean' ] } )
   .then( ( op ) =>
   {
     test.case = '.clean '
-    test.identical( op[ 0 ].exitCode, 0 );
-    test.identical( op[ 1 ].exitCode, 0 );
-    test.true( _.strHas( op[ 1 ].output, 'Clean deleted 0 file(s)' ) );
+    test.identical( op.sessions[ 0 ].exitCode, 0 );
+    test.identical( op.sessions[ 1 ].exitCode, 0 );
+    test.true( _.strHas( op.sessions[ 1 ].output, 'Clean deleted 0 file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : [ '.build', '.clean dry:1' ] })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1'
-    test.identical( op[ 0 ].exitCode, 0 );
-    test.identical( op[ 1 ].exitCode, 0 );
-    test.true( _.strHas( op[ 1 ].output, 'Clean will delete 0 file(s)' ) );
+    test.identical( op.sessions[ 0 ].exitCode, 0 );
+    test.identical( op.sessions[ 1 ].exitCode, 0 );
+    test.true( _.strHas( op.sessions[ 1 ].output, 'Clean will delete 0 file(s)' ) );
     return null;
-  })
+  });
 
   /* - */
 
