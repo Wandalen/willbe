@@ -1,9 +1,15 @@
-( function _ModuleForTesting12_s_() {
+( function _ModuleForTesting12_s_()
+{
 
 'use strict';
 
-let test1 = require( '../../../Tools.s' );
-let test2 = require( 'wmodulefortesting2' );
+if( typeof module !== 'undefined' )
+{
+  require( '../../Basic.s' );
+  require( 'wmodulefortesting2' );
+}
+
+let test = _global_._test_;
 
 // --
 // Routines
@@ -11,19 +17,23 @@ let test2 = require( 'wmodulefortesting2' );
 
 function divideMulOnSum()
 {
-  let sum = test1.sumOfNumbers.apply( this, arguments );
-  let mul = test2.mulOfNumbers.apply( this, arguments );
+  let sum = test.sumOfNumbers.apply( this, arguments );
+  let mul = test.mulOfNumbers.apply( this, arguments );
   let result = mul / sum;
 
   return result;
 }
+
+//
+
+test = Object.assign( test, { divideMulOnSum } );
 
 // --
 // export
 // --
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ].divideMulOnSum = divideMulOnSum;
+module[ 'exports' ] = test;
 
 })();
 

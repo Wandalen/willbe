@@ -9175,7 +9175,8 @@ function customLogger( test )
 {
   let context = this;
   let a = context.assetFor( test, 'simple' );
-  let logger = new _.Logger({ output : null, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
+  // let logger = new _.Logger({ output : null, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
+  let logger = new _.Logger({ output : console, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
   let loggerOutput = [];
   a.will = new _.Will({ logger });
   a.reflect();
@@ -9235,7 +9236,8 @@ function customLogger( test )
 
   function onTransformEnd( o )
   {
-    loggerOutput.push( o._outputForPrinter[ 0 ] )
+    loggerOutput.push( o._outputForTerminal[ 0 ] )
+    // loggerOutput.push( o._outputForPrinter[ 0 ] )
   }
 }
 

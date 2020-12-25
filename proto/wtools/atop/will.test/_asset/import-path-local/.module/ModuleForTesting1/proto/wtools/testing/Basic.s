@@ -2,7 +2,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  if( typeof _global_ === 'undefined' || !Object.hasOwnProperty.call( _global_, 'wBase' ) )
+  if( typeof _global_ === 'undefined' || !Object.hasOwnProperty.call( _global_, '_test_' ) )
   {
     let toolsPath = './l1/Include.s';
     let toolsExternal = 0;
@@ -19,6 +19,6 @@ if( typeof module !== 'undefined' )
     require( toolsPath );
   }
 
-  module[ 'exports' ] = _global_.wTools;
+  module[ 'exports' ] = _global_._test_;
 
 }
