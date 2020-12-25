@@ -753,7 +753,7 @@ function transpileWithOptions( test )
      \n optimization : 9\
      \n minification : 9\
      \n diagnosing : 0\
-     \n beautifing : 1
+     \n beautifing : 0
     `
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
@@ -7696,9 +7696,9 @@ function implyWithAsterisk( test )
   {
     test.case = '.with module .git.status - only local commits';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 5 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 5 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 5 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
@@ -7709,9 +7709,9 @@ function implyWithAsterisk( test )
   {
     test.case = '.with module .git.status - only local commits';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 7 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 7 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
@@ -8173,7 +8173,7 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( op.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( op.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
     test.identical( _.strCount( op.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
-    test.identical( _.strCount( op.output, /at.* .*verbosityStepPrintName/ ), 3 );
+    test.identical( _.strCount( op.output, /at.* .*verbosityStepPrintName/ ), 2 );
     test.identical( _.strCount( op.output, 'shell.step' ), 2 );
     test.identical( _.strCount( op.output, /: .*step::delete.step.*/ ), 1 );
     test.identical( _.strCount( op.output, /1 at .*\/out/ ), 1 );
@@ -12706,7 +12706,7 @@ function exportCourruptedOutfileSyntax( test )
   let a = context.assetFor( test, 'corrupted-outfile-syntax' );
   a.reflect();
 
-  /* - */
+  /* */
 
   a.appStart( '.with sub .export debug:1' )
   .then( ( op ) =>
@@ -12726,17 +12726,17 @@ function exportCourruptedOutfileSyntax( test )
     test.identical( _.strCount( op.output, '. Read 2 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, '! Failed to open .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to convert from "string" to "structure" by converter yaml:string->structure' ), 1 );
+    var exp = 'Failed to convert from "string" to "structure" by encoder yaml:string.utf8->structure';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
 
     return null;
-
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportCourruptedOutfileSyntax */
+}
 
 //
 
@@ -15195,20 +15195,17 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     test.case = 'optional';
     a.reflect();
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
-    return op;
-  })
+    return null;
+  });
 
   a.appStart( '.with module/opt/ .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15217,19 +15214,18 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     return null;
-  })
+  });
 
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     a.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
     test.true( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
     return null;
-  })
+  });
 
   a.appStart( '.with Optional .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15254,24 +15250,21 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.mapKeys( outfile.module ), exp );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     test.case = 'mandatory';
     a.reflect();
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
-    return op;
+    return null;
   })
 
   a.appStart( '.with module/mand/ .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15280,30 +15273,29 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     return null;
-  })
+  });
 
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
     a.fileProvider.filesDelete( a.abs( 'module/mand/.module' ) );
     test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.with Mandatory .export' )
-
+  a.appStart( '.with Mandatory .export' )
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 1 );
-    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 0 );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 0 );
+    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
-    test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
@@ -16143,33 +16135,31 @@ function cleanSingleModule( test )
   let a = context.assetFor( test, 'single' );
   a.reflect();
 
-  /* - */
+  /* */
 
-  a.appStart({ execPath : [ '.build', '.clean' ] })
-
+  a.appStart( { execPath : [ '.build', '.clean' ] } )
   .then( ( op ) =>
   {
     test.case = '.clean '
-    test.identical( op[ 0 ].exitCode, 0 );
-    test.identical( op[ 1 ].exitCode, 0 );
-    test.true( _.strHas( op[ 1 ].output, 'Clean deleted 0 file(s)' ) );
+    test.identical( op.sessions[ 0 ].exitCode, 0 );
+    test.identical( op.sessions[ 1 ].exitCode, 0 );
+    test.true( _.strHas( op.sessions[ 1 ].output, 'Clean deleted 0 file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : [ '.build', '.clean dry:1' ] })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1'
-    test.identical( op[ 0 ].exitCode, 0 );
-    test.identical( op[ 1 ].exitCode, 0 );
-    test.true( _.strHas( op[ 1 ].output, 'Clean will delete 0 file(s)' ) );
+    test.identical( op.sessions[ 0 ].exitCode, 0 );
+    test.identical( op.sessions[ 1 ].exitCode, 0 );
+    test.true( _.strHas( op.sessions[ 1 ].output, 'Clean will delete 0 file(s)' ) );
     return null;
-  })
+  });
 
   /* - */
 

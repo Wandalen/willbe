@@ -1,4 +1,5 @@
-( function _IncludeMid_s_( ) {
+( function _IncludeMid_s_()
+{
 
 'use strict';
 
