@@ -219,8 +219,6 @@ function exportStructure()
   if( !result )
   return result;
 
-  debugger;
-
   if( o.exportModule && !o.exportModule.isOut )
   if( result.path === null || result.path === undefined )
   {
@@ -284,10 +282,7 @@ function pathsRebase( o )
   o.relative = path.relative( o.inPath, o.exInPath );
 
   if( o.inPath === o.exInPath )
-  {
-    debugger;
-    return resource;
-  }
+  return resource;
 
   /* */
 
