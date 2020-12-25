@@ -1,4 +1,5 @@
-( function _Include_s_( ) {
+( function _Include_s_()
+{
 
 'use strict';
 

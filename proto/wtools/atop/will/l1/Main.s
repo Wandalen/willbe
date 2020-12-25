@@ -4977,7 +4977,7 @@ function hookContextFrom( o )
     outputPiping : 1,
     inputMirroring : 1,
     // briefExitCode : 1,
-    throwingExitCode : 'brief',
+    // throwingExitCode : 'brief',
     throwingExitCode : 0,
     sync : 0,
     deasync : 1,

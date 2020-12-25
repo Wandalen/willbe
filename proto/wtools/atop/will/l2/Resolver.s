@@ -652,8 +652,13 @@ function _pathNativize( filePath, resource )
 
 //
 
-function _pathCompositeResolve( currentModule, currentResource, filePath, resolving )
+function _pathCompositeResolve( /* currentModule, currentResource, filePath, resolving */ )
 {
+  let currentModule = arguments[ 0 ];
+  let currentResource = arguments[ 1 ];
+  let filePath = arguments[ 2 ];
+  let resolving = arguments[ 3 ];
+
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;

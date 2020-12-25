@@ -1,4 +1,5 @@
-( function _Top_s_( ) {
+( function _Top_s_()
+{
 
 'use strict';
 
