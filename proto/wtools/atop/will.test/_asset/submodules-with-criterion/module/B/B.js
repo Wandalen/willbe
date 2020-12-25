@@ -1,2 +1,2 @@
-console.log( 'B.js' );
+console.log( 'A.js' );
 
