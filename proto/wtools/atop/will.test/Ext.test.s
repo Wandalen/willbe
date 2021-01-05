@@ -31245,62 +31245,18 @@ function commandGitStatus( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
-
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status - only local commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31308,21 +31264,21 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status - only local commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31331,24 +31287,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status - local and remote commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status - local and remote commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31358,24 +31314,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status local:0 - checks no local changes';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status local:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status local:0 - checks no local changes';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
@@ -31385,24 +31341,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status remote:0 - checks no local changes';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status remote:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status remote:0 - checks no local changes';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31412,25 +31368,25 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status uncommittedIgnored:1 - checks ignored uncommited';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status uncommittedIgnored:1 - checks ignored uncommited';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31441,25 +31397,25 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status uncommittedIgnored:0 - checks without ignored';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status uncommittedIgnored:0 - checks without ignored';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31470,24 +31426,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status remoteBranches:1 - checks with remote branches';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status remoteBranches:1 - checks with remote branches';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31497,12 +31453,48 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
 }
+
+commandGitStatus.rapidity = -1;
 
 //
 
