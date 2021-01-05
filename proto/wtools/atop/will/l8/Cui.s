@@ -402,6 +402,7 @@ function _commandsMake()
     'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
     'modules git' :                     { e : _.routineJoin( will, will.commandModulesGit )                   },
     'modules git pr open' :             { e : _.routineJoin( will, will.commandModulesGitPrOpen )             },
+    'modules git status' :              { e : _.routineJoin( will, will.commandModulesGitStatus )             },
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
@@ -2388,6 +2389,57 @@ commandModulesGitPrOpen.commandProperties =
   body : 'Body message.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
+};
+
+//
+
+function commandModulesGitStatus( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesGitStatus, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules git status',
+    onEach : handleEach,
+    commandRoutine : commandModulesGitStatus,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitStatus
+    ({
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandModulesGitStatus.defaults =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+  v : null,
+  verbosity : 1,
+};
+commandModulesGitStatus.hint = 'Check the status of the module and submodules repositories.';
+commandModulesGitStatus.commandSubjectHint = false;
+commandModulesGitStatus.commandProperties =
+{
+  local : 'Check local commits. Default value is 1.',
+  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+  remote : 'Check remote unmerged commits. Default value is 1.',
+  remoteBranches : 'Check remote branches. Default value is 0.',
+  prs : 'Check pull requests. Default is prs:1.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
 };
 
 //
@@ -4844,6 +4896,7 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitPrOpen,
+  commandModulesGitStatus,
   commandModulesGitSync,
 
   commandShell,
