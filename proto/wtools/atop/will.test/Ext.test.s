@@ -27896,6 +27896,100 @@ function commandSubmodulesGitPrOpen( test )
 
 //
 
+function commandSubmodulesGitStatusWithOnlyRoot( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - only local commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - local and remote commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandSubmodulesGitStatus( test )
 {
   let context = this;
@@ -28375,6 +28469,8 @@ function commandSubmodulesGitStatus( test )
     return a.ready;
   }
 }
+
+commandSubmodulesGitStatus.rapidity = -1;
 
 //
 
@@ -37352,6 +37448,7 @@ let Self =
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitPrOpen,
+    commandSubmodulesGitStatusWithOnlyRoot,
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
 
