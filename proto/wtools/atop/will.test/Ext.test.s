@@ -31318,6 +31318,155 @@ function commandGitDifferentCommands( test )
 
 //
 
+function commandGitDiff( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff - no diffs';
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff v:0 - no diffs, verbosity - 0';
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff - with diffs';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff v:0 - with diffs';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    originalShell( 'git init' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+      return null;
+    });
+
+    originalShell( 'git commit -am second' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandGitPrOpen( test )
 {
   let context = this;
@@ -37467,6 +37616,7 @@ let Self =
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
+    commandGitDiff,
     commandGitPrOpen,
     commandGitPrOpenRemote,
     commandGitPull,
