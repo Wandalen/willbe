@@ -29073,6 +29073,306 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
 
 //
 
+function commandModulesGitDiff( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git-sync' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - no diffs';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - no diffs, verbosity - 0';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - with diffs in root module';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - with diffs in root module';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - with diffs in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - with diffs in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - with diffs in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 2 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 2 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - with diffs in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let superShell = _.process.starter
+    ({
+      currentPath : a.abs( 'super' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    superShell( 'git init' );
+    superShell( 'git remote add origin ../repo' );
+    superShell( 'git add --all' );
+    superShell( 'git commit -am first' );
+    superShell( 'git push -u origin master' );
+    a.shell( `git clone ./repo ./clone` );
+    a.shell( `git clone ./repo ./original` );
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+      return null;
+    });
+
+    return a.ready;
+  }
+}
+
+commandModulesGitDiff.rapidity = -1;
+
+//
+
 function commandModulesGitPrOpen( test )
 {
   let context = this;
@@ -37605,6 +37905,7 @@ let Self =
     commandModulesGit,
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
+    commandModulesGitDiff,
     commandModulesGitPrOpen,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
