@@ -383,6 +383,7 @@ function _commandsMake()
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
     'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
     'submodules git' :                  { e : _.routineJoin( will, will.commandSubmodulesGit )                },
+    'submodules git diff' :             { e : _.routineJoin( will, will.commandSubmodulesGitDiff )            },
     'submodules git pr open' :          { e : _.routineJoin( will, will.commandSubmodulesGitPrOpen )          },
     'submodules git status' :           { e : _.routineJoin( will, will.commandSubmodulesGitStatus )          },
     'submodules git sync' :             { e : _.routineJoin( will, will.commandSubmodulesGitSync )            },
@@ -2060,6 +2061,40 @@ commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+
+//
+
+function commandSubmodulesGitDiff( e )
+{
+  let cui = this;
+  cui._command_head( commandSubmodulesGitDiff, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules git diff',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesGitDiff,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitDiff
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandSubmodulesGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesGitDiff.hint = 'Get diffs of submodules repositories.';
+commandSubmodulesGitDiff.commandSubjectHint = false;
+commandSubmodulesGitDiff.commandProperties = commandImply.commandProperties;
 
 //
 
@@ -5008,6 +5043,7 @@ let Extension =
 
   commandSubmodulesShell,
   commandSubmodulesGit,
+  commandSubmodulesGitDiff,
   commandSubmodulesGitPrOpen,
   commandSubmodulesGitStatus,
   commandSubmodulesGitSync,
