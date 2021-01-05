@@ -407,6 +407,7 @@ function _commandsMake()
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
+    'git diff' :                        { e : _.routineJoin( will, will.commandGitDiff )                      },
     'git pr open' :                     { e : _.routineJoin( will, will.commandGitPrOpen )                    },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
@@ -2358,7 +2359,7 @@ function commandModulesGit( e )
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_head( commandGit, arguments );
+  cui._command_head( commandModulesGit, arguments );
 
   _.routineOptions( commandModulesGit, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -3016,6 +3017,39 @@ commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Defa
 
 //
 
+function commandGitDiff( e )
+{
+  let cui = this;
+  cui._command_head( commandGitDiff, arguments );
+  _.routineOptions( commandGitDiff, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git diff',
+    onEach : handleEach,
+    commandRoutine : commandGitDiff,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitDiff
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitDiff.defaults.withSubmodules = 0;
+commandGitDiff.hint = 'Get diffs in module repository.';
+commandGitDiff.commandSubjectHint = false;
+commandGitDiff.commandProperties = commandImply.commandProperties;
+
+//
+
 function commandGitPrOpen( e )
 {
   let cui = this;
@@ -3230,7 +3264,7 @@ commandGitStatus.commandProperties =
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
-  prs : 'Check pull requests. Default is dry:1.',
+  prs : 'Check pull requests. Default is prs:1.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
@@ -4966,6 +5000,7 @@ let Extension =
   // command git
 
   commandGit,
+  commandGitDiff,
   commandGitPrOpen,
   commandGitPull,
   commandGitPush,
