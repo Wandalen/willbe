@@ -18740,8 +18740,11 @@ function functionStringsJoin( test )
 
     var expected =
 `console.log( 'File2.js' );
+
 console.log( 'File3.js' );
+
 console.log( 'File1.js' );
+
 `
     var read = a.fileProvider.fileRead( a.abs( 'out1.js' ) );
     test.identical( read, expected );
@@ -18771,7 +18774,9 @@ console.log( 'File1.js' );
 
     var expected =
 `console.log( 'File3.js' );
+
 console.log( 'File1.js' );
+
 `
     var read = a.fileProvider.fileRead( a.abs( 'out2.js' ) );
     test.identical( read, expected );
