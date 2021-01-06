@@ -8733,106 +8733,115 @@ function gitPull( o )
 
   /* */
 
-  let provider;
+  let provider, ready;
   if( o.restoringHardLinks )
   {
-    // let routine = archiveProcess;
-    // let toolsPath = _.module.resolve( 'wTools' );
-    // let programPath = path.join( o.dirPath, routine.name + '.js' );
-    // let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
-    //
-    // _.program.write({ routine, programPath, locals });
-    //
-    // let o2 =
-    // {
-    //   mode : 'spawn',
-    //   outputCollecting : 1,
-    //   ipc : 1,
-    //   detaching : 2,
-    //   currentPath : o.dirPath,
-    //   execPath : 'node ' + programPath,
-    // };
-    //
-    // let child = _.process.start( o2 );
-    //
-    // o2.pnd.on( 'message', ( msg ) =>
-    // {
-    //   logger.log( msg );
-    // });
-    //
-    // /* */
-    //
-    // function archiveProcess()
-    // {
-    //   let _ = require( toolsPath );
-    //   _.include( 'wProcess' );
-    //   _.include( 'wCensorBasic' );
-    //   _.include( 'wFiles' );
-    //   _.include( 'wFilesArchive' );
-    //   _.include( 'wConsequence' );
-    //
-    //   let fileProvider = _.FileProvider.HardDrive();
-    //   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    //   if( !config )
-    //   config = fileProvider.configUserRead();
-    //
-    //   let provider = _.FileFilter.Archive();
-    //   provider.archive.basePath = dirPath;
-    //
-    //   if( config && config.path && config.path.hlink )
-    //   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
-    //
-    //   if( verbosity )
-    //   provider.archive.verbosity = 2;
-    //   else
-    //   provider.archive.verbosity = 0;
-    //
-    //   provider.archive.fileMapAutosaving = 1;
-    //   provider.archive.allowingMissed = 1;
-    //   provider.archive.allowingCycled = 1;
-    //
-    //   if( verbosity )
-    //   process.send( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    //   provider.archive.restoreLinksBegin();
-    //
-    //   while( process.channel !== undefined )
-    //   {
-    //     _.time.sleep( 500 );
-    //   }
-    //
-    //   provider.archive.restoreLinksEnd();
-    // }
+    let routine = archiveProcess;
+    let toolsPath = _.module.resolve( 'wTools' );
+    let programPath = path.join( o.dirPath, routine.name + '.js' );
+    let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
+    let con2 = new _.Consequence();
 
-    provider = module._providerArchiveMake( will.currentOpener.dirPath, o.verbosity );
+    _.program.write({ routine, programPath, locals });
 
-    if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+    let o2 =
+    {
+      currentPath : o.dirPath,
+      execPath : 'node ' + programPath,
+      args : [ process.pid ],
+      outputCollecting : 1,
+      ipc : 1,
+      stdio : 'pipe',
+      detaching : 1,
+      mode : 'spawn',
+    };
+
+    let child = _.process.startMinimal( o2 );
+
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
+      con2.take( msg );
+    });
+
+    o2.conStart.then( () => con2 );
+
+    return o2.conStart.then( () =>
+    {
+      ready = pull()
+      ready.tap( () => o2.pnd.disconnect() );
+      ready.catch( onErr );
+      return ready;
+    })
+  }
+  else
+  {
+    ready = pull();
+    ready.catch( onErr );
+    return ready;
   }
 
   /* */
 
-  let ready = _.git.pull
-  ({
-    localPath : o.dirPath,
-    sync : 0,
-    throwing : 1,
-  });
-
-  ready.tap( () =>
+  function pull()
   {
-    if( o.restoringHardLinks )
-    provider.archive.restoreLinksEnd();
-  });
+    return _.git.pull
+    ({
+      localPath : o.dirPath,
+      sync : 0,
+      throwing : 1,
+    });
+  }
 
-  ready.catch( ( err ) =>
+  /* */
+
+  function onErr( err )
   {
     err = _.errBrief( err );
     logger.error( _.errOnce( err ) );
     throw err;
-  });
+  }
 
-  return ready;
+  /* */
+
+  function archiveProcess()
+  {
+    let _ = require( toolsPath );
+    _.include( 'wProcess' );
+    _.include( 'wCensorBasic' );
+    _.include( 'wFiles' );
+    _.include( 'wFilesArchive' );
+    _.include( 'wConsequence' );
+
+    let fileProvider = _.FileProvider.HardDrive();
+    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    if( !config )
+    config = fileProvider.configUserRead();
+
+    let provider = _.FileFilter.Archive();
+    provider.archive.basePath = dirPath;
+
+    if( config && config.path && config.path.hlink )
+    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+    provider.archive.fileMapAutosaving = 1;
+    provider.archive.allowingMissed = 1;
+    provider.archive.allowingCycled = 1;
+
+    provider.archive.restoreLinksBegin();
+    if( verbosity )
+    process.send( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    else
+    process.send( 'ok' );
+
+    let parentPid = _.numberFrom( process.argv[ 2 ] );
+    while( _.process.isAlive( parentPid ) || process.connected )
+    _.time.sleep( 200 );
+
+    provider.archive.restoreLinksEnd();
+
+    fileProvider.filesDelete( programPath );
+  }
 }
 
 gitPull.defaults =
