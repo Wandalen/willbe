@@ -9019,19 +9019,22 @@ function modulesTreeDisabledAndCorrupted( test )
  +-- module::many
  | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  | | +-- module::Testing - path::remote:=npm:///wTesting
+ | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
  | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  | | +-- module::Testing - path::remote:=npm:///wTesting
+ | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git!gamma
  |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
  |   +-- module::Testing - path::remote:=npm:///wTesting
+ |   +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  |
  +-- module::corrupted
-`
+`;
 
     test.identical( _.strStripCount( op.output, exp ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::' ), 11 );
+    test.identical( _.strCount( op.output, '+-- module::' ), 14 );
 
     return null;
   })
