@@ -147,6 +147,7 @@ function eslint( test )
       '--ignore-pattern', '*.css',
       '--ignore-pattern', '_asset',
       '--ignore-pattern', 'out',
+      '--ignore-pattern', '*.tgs',
       '--quiet'
     ],
     throwingExitCode : 0,
