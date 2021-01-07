@@ -383,7 +383,9 @@ function _commandsMake()
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
     'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
     'submodules git' :                  { e : _.routineJoin( will, will.commandSubmodulesGit )                },
+    'submodules git diff' :             { e : _.routineJoin( will, will.commandSubmodulesGitDiff )            },
     'submodules git pr open' :          { e : _.routineJoin( will, will.commandSubmodulesGitPrOpen )          },
+    'submodules git status' :           { e : _.routineJoin( will, will.commandSubmodulesGitStatus )          },
     'submodules git sync' :             { e : _.routineJoin( will, will.commandSubmodulesGitSync )            },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
@@ -401,10 +403,13 @@ function _commandsMake()
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
     'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
     'modules git' :                     { e : _.routineJoin( will, will.commandModulesGit )                   },
+    'modules git diff' :                { e : _.routineJoin( will, will.commandModulesGitDiff )               },
     'modules git pr open' :             { e : _.routineJoin( will, will.commandModulesGitPrOpen )             },
+    'modules git status' :              { e : _.routineJoin( will, will.commandModulesGitStatus )             },
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
+    'git diff' :                        { e : _.routineJoin( will, will.commandGitDiff )                      },
     'git pr open' :                     { e : _.routineJoin( will, will.commandGitPrOpen )                    },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
@@ -2059,6 +2064,40 @@ commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardl
 
 //
 
+function commandSubmodulesGitDiff( e )
+{
+  let cui = this;
+  cui._command_head( commandSubmodulesGitDiff, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules git diff',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesGitDiff,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitDiff
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandSubmodulesGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesGitDiff.hint = 'Get diffs of submodules repositories.';
+commandSubmodulesGitDiff.commandSubjectHint = false;
+commandSubmodulesGitDiff.commandProperties = commandImply.commandProperties;
+
+//
+
 function commandSubmodulesGitPrOpen( e )
 {
   let cui = this;
@@ -2107,6 +2146,57 @@ commandSubmodulesGitPrOpen.commandProperties =
   body : 'Body message.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
+};
+
+//
+
+function commandSubmodulesGitStatus( e )
+{
+  let cui = this;
+  cui._command_head( commandSubmodulesGitStatus, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules git status',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesGitStatus,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitStatus
+    ({
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandSubmodulesGitStatus.defaults =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+  v : null,
+  verbosity : 1,
+};
+commandSubmodulesGitStatus.hint = 'Check the status of the submodules repositories.';
+commandSubmodulesGitStatus.commandSubjectHint = false;
+commandSubmodulesGitStatus.commandProperties =
+{
+  local : 'Check local commits. Default value is 1.',
+  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+  remote : 'Check remote unmerged commits. Default value is 1.',
+  remoteBranches : 'Check remote branches. Default value is 0.',
+  prs : 'Check pull requests. Default is prs:1.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
 };
 
 //
@@ -2305,7 +2395,7 @@ function commandModulesGit( e )
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_head( commandGit, arguments );
+  cui._command_head( commandModulesGit, arguments );
 
   _.routineOptions( commandModulesGit, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2337,6 +2427,40 @@ commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
 commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+
+//
+
+function commandModulesGitDiff( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesGitDiff, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules git diff',
+    onEach : handleEach,
+    commandRoutine : commandModulesGitDiff,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitDiff
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandModulesGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesGitDiff.hint = 'Get diffs of root module and submodules repositories.';
+commandModulesGitDiff.commandSubjectHint = false;
+commandModulesGitDiff.commandProperties = commandImply.commandProperties;
 
 //
 
@@ -2388,6 +2512,57 @@ commandModulesGitPrOpen.commandProperties =
   body : 'Body message.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
+};
+
+//
+
+function commandModulesGitStatus( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesGitStatus, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules git status',
+    onEach : handleEach,
+    commandRoutine : commandModulesGitStatus,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitStatus
+    ({
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandModulesGitStatus.defaults =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+  v : null,
+  verbosity : 1,
+};
+commandModulesGitStatus.hint = 'Check the status of the module and submodules repositories.';
+commandModulesGitStatus.commandSubjectHint = false;
+commandModulesGitStatus.commandProperties =
+{
+  local : 'Check local commits. Default value is 1.',
+  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+  remote : 'Check remote unmerged commits. Default value is 1.',
+  remoteBranches : 'Check remote branches. Default value is 0.',
+  prs : 'Check pull requests. Default is prs:1.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
 };
 
 //
@@ -2912,6 +3087,39 @@ commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Defa
 
 //
 
+function commandGitDiff( e )
+{
+  let cui = this;
+  cui._command_head( commandGitDiff, arguments );
+  _.routineOptions( commandGitDiff, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git diff',
+    onEach : handleEach,
+    commandRoutine : commandGitDiff,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitDiff
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitDiff.defaults.withSubmodules = 0;
+commandGitDiff.hint = 'Get diffs in module repository.';
+commandGitDiff.commandSubjectHint = false;
+commandGitDiff.commandProperties = commandImply.commandProperties;
+
+//
+
 function commandGitPrOpen( e )
 {
   let cui = this;
@@ -3126,7 +3334,7 @@ commandGitStatus.commandProperties =
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
-  prs : 'Check pull requests. Default is dry:1.',
+  prs : 'Check pull requests. Default is prs:1.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
@@ -4835,7 +5043,9 @@ let Extension =
 
   commandSubmodulesShell,
   commandSubmodulesGit,
+  commandSubmodulesGitDiff,
   commandSubmodulesGitPrOpen,
+  commandSubmodulesGitStatus,
   commandSubmodulesGitSync,
 
   commandModuleNew,
@@ -4843,7 +5053,9 @@ let Extension =
 
   commandModulesShell,
   commandModulesGit,
+  commandModulesGitDiff,
   commandModulesGitPrOpen,
+  commandModulesGitStatus,
   commandModulesGitSync,
 
   commandShell,
@@ -4860,6 +5072,7 @@ let Extension =
   // command git
 
   commandGit,
+  commandGitDiff,
   commandGitPrOpen,
   commandGitPull,
   commandGitPush,

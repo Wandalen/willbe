@@ -1,2 +1,3 @@
-console.log( 'A.js' );
-
+{
+  "name" : "package.json"
+}

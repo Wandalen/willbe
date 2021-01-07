@@ -1,15 +1,15 @@
-( function _ModuleForTesting1_test_s_() {
+( function _ModuleForTesting1_test_s_()
+{
 
 'use strict';
 
 if( typeof module !== 'undefined' )
 {
-
-  var _ = require( '../../Tools.s' );
-
+  require( '../Basic.s' );
   require( 'wTesting' );
-
 }
+
+let _ = _global_._test_;
 
 // --
 // test
@@ -34,10 +34,10 @@ function trivial( test )
 // declare
 // --
 
-var Self =
+let Self =
 {
 
-  name : 'Tools.base.l1.ModuleForTesting1',
+  name : 'Tools.l1.ModuleForTesting1',
   silencing : 1,
 
   tests :
