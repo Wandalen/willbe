@@ -7051,7 +7051,7 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
@@ -9019,19 +9019,22 @@ function modulesTreeDisabledAndCorrupted( test )
  +-- module::many
  | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  | | +-- module::Testing - path::remote:=npm:///wTesting
+ | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
  | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  | | +-- module::Testing - path::remote:=npm:///wTesting
+ | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git!gamma
  |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
  |   +-- module::Testing - path::remote:=npm:///wTesting
+ |   +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  |
  +-- module::corrupted
-`
+`;
 
     test.identical( _.strStripCount( op.output, exp ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::' ), 11 );
+    test.identical( _.strCount( op.output, '+-- module::' ), 14 );
 
     return null;
   })
@@ -18740,8 +18743,11 @@ function functionStringsJoin( test )
 
     var expected =
 `console.log( 'File2.js' );
+
 console.log( 'File3.js' );
+
 console.log( 'File1.js' );
+
 `
     var read = a.fileProvider.fileRead( a.abs( 'out1.js' ) );
     test.identical( read, expected );
@@ -18771,7 +18777,9 @@ console.log( 'File1.js' );
 
     var expected =
 `console.log( 'File3.js' );
+
 console.log( 'File1.js' );
+
 `
     var read = a.fileProvider.fileRead( a.abs( 'out2.js' ) );
     test.identical( read, expected );
@@ -27827,6 +27835,306 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
 
 //
 
+function commandSubmodulesGitDiff( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git-sync' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff - no diffs';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff v:0 - no diffs, verbosity - 0';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff - with diffs in root module';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 0 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 0 );
+    test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'f2.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 0 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+new line' ), 0 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+another new line' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff v:0 - with diffs in root module';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 0 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 0 );
+    test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'f2.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 0 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+new line' ), 0 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+another new line' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff - with diffs in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff v:0 - with diffs in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff - with diffs in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+new line' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.submodules.git.diff v:0 - with diffs in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '+new line' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let superShell = _.process.starter
+    ({
+      currentPath : a.abs( 'super' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    superShell( 'git init' );
+    superShell( 'git remote add origin ../repo' );
+    superShell( 'git add --all' );
+    superShell( 'git commit -am first' );
+    superShell( 'git push -u origin master' );
+    a.shell( `git clone ./repo ./clone` );
+    a.shell( `git clone ./repo ./original` );
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+      return null;
+    });
+
+    return a.ready;
+  }
+}
+
+commandSubmodulesGitDiff.rapidity = -1;
+
+//
+
 function commandSubmodulesGitPrOpen( test )
 {
   let context = this;
@@ -27893,6 +28201,584 @@ function commandSubmodulesGitPrOpen( test )
 
   return a.ready;
 }
+
+//
+
+function commandSubmodulesGitStatusWithOnlyRoot( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - only local commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - local and remote commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
+}
+
+//
+
+function commandSubmodulesGitStatus( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git-sync' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - changes in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - changes in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - changes in submodule and remote commits in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status - changes in root and remote commits in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status local:0 - checks no local changes, local changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status local:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status local:0 - checks no local changes, local changes in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status local:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status remote:0 - checks no remote changes, unpulled commit in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status remote:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status remote:0 - checks no remote changes, unpulled commit in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status remote:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status remoteBranches:1 - checks with remote branches, changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status remoteBranches:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .submodules.git.status remoteBranches:1 - checks with remote branches, changes in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .submodules.git.status remoteBranches:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let superShell = _.process.starter
+    ({
+      currentPath : a.abs( 'super' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    superShell( 'git init' );
+    superShell( 'git remote add origin ../repo' );
+    superShell( 'git add --all' );
+    superShell( 'git commit -am first' );
+    superShell( 'git push -u origin master' );
+    a.shell( `git clone ./repo ./clone` );
+    a.shell( `git clone ./repo ./original` );
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+      return null;
+    });
+
+    return a.ready;
+  }
+}
+
+commandSubmodulesGitStatus.rapidity = -1;
 
 //
 
@@ -28495,6 +29381,306 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
 
 //
 
+function commandModulesGitDiff( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git-sync' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - no diffs';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - no diffs, verbosity - 0';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - with diffs in root module';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - with diffs in root module';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - with diffs in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - with diffs in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff - with diffs in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 2 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 2 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.modules.git.diff v:0 - with diffs in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 2 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 2 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let superShell = _.process.starter
+    ({
+      currentPath : a.abs( 'super' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    superShell( 'git init' );
+    superShell( 'git remote add origin ../repo' );
+    superShell( 'git add --all' );
+    superShell( 'git commit -am first' );
+    superShell( 'git push -u origin master' );
+    a.shell( `git clone ./repo ./clone` );
+    a.shell( `git clone ./repo ./original` );
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+      return null;
+    });
+
+    return a.ready;
+  }
+}
+
+commandModulesGitDiff.rapidity = -1;
+
+//
+
 function commandModulesGitPrOpen( test )
 {
   let context = this;
@@ -28561,6 +29747,748 @@ function commandModulesGitPrOpen( test )
 
   return a.ready;
 }
+
+//
+
+function commandModulesGitStatusWithOnlyRoot( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - only local commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - only local commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - local and remote commits';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status local:0 - checks no local changes';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status local:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status remote:0 - checks no local changes';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status remote:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status uncommittedIgnored:1 - checks ignored uncommited';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status uncommittedIgnored:0 - checks without ignored';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status remoteBranches:1 - checks with remote branches';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status remoteBranches:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
+}
+
+commandModulesGitStatusWithOnlyRoot.rapidity = -1;
+
+//
+
+function commandModulesGitStatus( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modules-git-sync' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - changes in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - changes in root module and submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - changes in submodule and remote commits in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status - changes in root and remote commits in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status local:0 - checks no local changes, local changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status local:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status local:0 - checks no local changes, local changes in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status local:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status remote:0 - checks no remote changes, unpulled commit in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status remote:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status remote:0 - checks no remote changes, unpulled commit in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status remote:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status remoteBranches:1 - checks with remote branches, changes in submodule';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status remoteBranches:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.with original .modules.git.status remoteBranches:1 - checks with remote branches, changes in root';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
+
+  a.appStart( '.with original/ .modules.git.status remoteBranches:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let superShell = _.process.starter
+    ({
+      currentPath : a.abs( 'super' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    superShell( 'git init' );
+    superShell( 'git remote add origin ../repo' );
+    superShell( 'git add --all' );
+    superShell( 'git commit -am first' );
+    superShell( 'git push -u origin master' );
+    a.shell( `git clone ./repo ./clone` );
+    a.shell( `git clone ./repo ./original` );
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+      return null;
+    });
+
+    return a.ready;
+  }
+}
+
+commandModulesGitStatus.rapidity = -1;
 
 //
 
@@ -28747,7 +30675,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
@@ -28936,7 +30864,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
@@ -29133,7 +31061,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
@@ -29324,7 +31252,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
   let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
@@ -29994,6 +31922,155 @@ function commandGitDifferentCommands( test )
   /* - */
 
   return a.ready;
+}
+
+//
+
+function commandGitDiff( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff - no diffs';
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff v:0 - no diffs, verbosity - 0';
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff - with diffs';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = '.git.diff v:0 - with diffs';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff v:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+    test.identical( _.strCount( op.output, 'Status:' ), 1 );
+    test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
+    test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
+    test.ge( _.strCount( op.output, 'f2.txt' ), 5 );
+    test.identical( _.strCount( op.output, 'Patch:' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+new line' ), 1 );
+    test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
+    test.identical( _.strCount( op.output, '+another new line' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    originalShell( 'git init' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+      return null;
+    });
+
+    originalShell( 'git commit -am second' );
+
+    return a.ready;
+  }
 }
 
 //
@@ -31245,62 +33322,18 @@ function commandGitStatus( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
-
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status - only local commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31308,21 +33341,21 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status - only local commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31331,24 +33364,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status - local and remote commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status - local and remote commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31358,24 +33391,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status local:0 - checks no local changes';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status local:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status local:0 - checks no local changes';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
@@ -31385,24 +33418,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status remote:0 - checks no local changes';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status remote:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status remote:0 - checks no local changes';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31412,25 +33445,25 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status uncommittedIgnored:1 - checks ignored uncommited';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status uncommittedIgnored:1 - checks ignored uncommited';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31441,25 +33474,25 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status uncommittedIgnored:0 - checks without ignored';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status uncommittedIgnored:0 - checks without ignored';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31470,24 +33503,24 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.status remoteBranches:1 - checks with remote branches';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
   a.appStart( '.with original/ .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.status remoteBranches:1 - checks with remote branches';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -31497,12 +33530,48 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
 }
+
+commandGitStatus.rapidity = -1;
 
 //
 
@@ -32020,7 +34089,7 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
@@ -36135,14 +38204,20 @@ let Self =
     commandSubmodulesGit,
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
+    commandSubmodulesGitDiff,
     commandSubmodulesGitPrOpen,
+    commandSubmodulesGitStatusWithOnlyRoot,
+    commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
 
     commandModulesShell,
     commandModulesGit,
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
+    commandModulesGitDiff,
     commandModulesGitPrOpen,
+    commandModulesGitStatusWithOnlyRoot,
+    commandModulesGitStatus,
     commandModulesGitSync,
     commandModulesGitSyncRestoreHardLinksInModuleWithSuccess,
     commandModulesGitSyncRestoreHardLinksInModuleWithFail,
@@ -36151,6 +38226,7 @@ let Self =
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
+    commandGitDiff,
     commandGitPrOpen,
     commandGitPrOpenRemote,
     commandGitPull,

@@ -96,7 +96,6 @@ function finit()
   catch( err )
   {
     logger.error( _.errOnce( err ) );
-    debugger;
   }
 
   try
@@ -126,7 +125,6 @@ function finit()
   catch( err )
   {
     logger.error( _.errOnce( err ) );
-    debugger;
   }
 
   _.assert( Object.keys( module.exportedMap ).length === 0 );
@@ -8592,6 +8590,58 @@ gitExecCommand.defaults =
 
 //
 
+function gitDiff( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.routineOptions( gitDiff, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git' ],
+  });
+
+  if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Diff ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+
+  let result = _.git.diff
+  ({
+    localPath : o.dirPath,
+    generatingPatch : 1,
+    coloredPatch : 1,
+    detailing : 1,
+    explaining : 1,
+    linesOfContext : 0,
+    sync : 1,
+  });
+
+  if( !result.status && !result.patch )
+  return null;
+
+  logger.log( `Status:\n${ result.status }` );
+  logger.log( `Patch:\n${ result.patch }` );
+
+  return true;
+}
+
+gitDiff.defaults =
+{
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+};
+
+//
+
 function gitPrOpen( o )
 {
   let module = this;
@@ -8999,7 +9049,6 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  debugger;
   logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
   logger.log( got.status );
   return got;
@@ -9275,7 +9324,6 @@ function errTooMany( builds, what )
 
   if( builds.length !== 1 )
   {
-    debugger;
     if( builds.length === 0 )
     err = _.errBrief( prefix, '\nPlease specify exactly one ' + what + ', none satisfies passed arguments' );
     else
@@ -9840,6 +9888,7 @@ let Extension =
   // git
 
   gitExecCommand,
+  gitDiff,
   gitPrOpen,
   gitPull,
   gitPush,

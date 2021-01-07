@@ -8,3 +8,4 @@ if( typeof module !== 'undefined' )
 module[ 'exports' ] = 'File2.s';
 
 })();
+
