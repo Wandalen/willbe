@@ -23793,7 +23793,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Executing command "git status", module::git' ), 0 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
     return null;
   })
@@ -23810,7 +23810,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
     return null;
   })
@@ -23828,7 +23828,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
   })
 
@@ -23843,7 +23843,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::git' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
   })
 
@@ -31850,7 +31850,7 @@ function commandGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
   })
 

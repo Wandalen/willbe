@@ -8508,6 +8508,103 @@ function _remoteChanged()
 // git
 // --
 
+function _providerArchiveMake( dirPath, verbosity )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  config = fileProvider.configUserRead();
+
+  let provider = _.FileFilter.Archive();
+  provider.archive.basePath = dirPath;
+
+  if( config && config.path && config.path.hlink )
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+
+  if( verbosity )
+  provider.archive.verbosity = 2;
+  else
+  provider.archive.verbosity = 0;
+
+  provider.archive.fileMapAutosaving = 1;
+  provider.archive.allowingMissed = 1;
+  provider.archive.allowingCycled = 1;
+
+  return provider;
+}
+
+//
+
+function _archiveSubprocessMake( o )
+{
+  let routine = __archiveProcess;
+  let toolsPath = _.module.resolve( 'wTools' );
+  let programPath = _.path.join( o.dirPath, routine.name + '.js' );
+  let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
+
+  _.program.write({ routine, programPath, locals });
+
+  let o2 =
+  {
+    currentPath : o.dirPath,
+    execPath : 'node ' + programPath,
+    args : [ process.pid ],
+    outputCollecting : 1,
+    ipc : 1,
+    stdio : 'pipe',
+    detaching : 1,
+    mode : 'spawn',
+  };
+
+  _.process.startMinimal( o2 );
+  return o2;
+
+  /* */
+
+  function __archiveProcess()
+  {
+    let _ = require( toolsPath );
+    _.include( 'wProcess' );
+    _.include( 'wCensorBasic' );
+    _.include( 'wFiles' );
+    _.include( 'wFilesArchive' );
+    _.include( 'wConsequence' );
+
+    let fileProvider = _.FileProvider.HardDrive();
+    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    if( !config )
+    config = fileProvider.configUserRead();
+
+    let provider = _.FileFilter.Archive();
+    provider.archive.basePath = dirPath;
+
+    if( config && config.path && config.path.hlink )
+    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+    provider.archive.fileMapAutosaving = 1;
+    provider.archive.allowingMissed = 1;
+    provider.archive.allowingCycled = 1;
+
+    provider.archive.restoreLinksBegin();
+    if( verbosity )
+    process.send( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    else
+    process.send( 'ok' );
+
+    let parentPid = _.numberFrom( process.argv[ 2 ] );
+    while( _.process.isAlive( parentPid ) || process.connected )
+    _.time.sleep( 200 );
+
+    provider.archive.restoreLinksEnd();
+
+    fileProvider.filesDelete( programPath );
+  }
+}
+
+//
+
 function gitExecCommand( o )
 {
   let module = this;
@@ -8543,40 +8640,59 @@ function gitExecCommand( o )
   if( o.verbosity )
   logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
 
+  /* */
 
-  let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake( o.dirPath, o.verbosity );
+    let con2 = new _.Consequence();
+    let o2 = module._archiveSubprocessMake( o );
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
 
-    if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+      /* sync archive creation with main process */
+      if( con2.resourcesGet().length === 0 )
+      con2.take( msg );
+    });
+
+    o2.conStart.then( () => con2 );
+    o2.conStart.then( () =>
+    {
+      let ready = execCommand();
+      ready.tap( () => o2.pnd.disconnect() );
+      ready.catch( onErr );
+      return ready;
+    });
+    return o2.conStart;
+  }
+  else
+  {
+    let ready = execCommand();
+    ready.catch( onErr );
+    return ready;
   }
 
-  let ready = new _.Consequence().take( null );
+  /* */
 
-  _.process.start
-  ({
-    execPath : `git ${ o.command }`,
-    currentPath : o.dirPath,
-    ready,
-  });
-
-  ready.tap( () =>
+  function execCommand()
   {
-    if( o.hardLinkMaybe )
-    provider.archive.restoreLinksEnd();
-  });
+    return _.process.start
+    ({
+      execPath : `git ${ o.command }`,
+      currentPath : o.dirPath,
+      sync : 0,
+    });
+  }
 
-  ready.catch( ( err ) =>
+  /* */
+
+  function onErr( err )
   {
     err = _.errBrief( err );
     logger.error( _.errOnce( err ) );
     throw err;
-  });
-
-  return ready;
+  }
 }
 
 gitExecCommand.defaults =
@@ -8715,103 +8831,6 @@ gitPrOpen.defaults =
 
 //
 
-function _providerArchiveMake( dirPath, verbosity )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  if( !config )
-  config = fileProvider.configUserRead();
-
-  let provider = _.FileFilter.Archive();
-  provider.archive.basePath = dirPath;
-
-  if( config && config.path && config.path.hlink )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
-
-  if( verbosity )
-  provider.archive.verbosity = 2;
-  else
-  provider.archive.verbosity = 0;
-
-  provider.archive.fileMapAutosaving = 1;
-  provider.archive.allowingMissed = 1;
-  provider.archive.allowingCycled = 1;
-
-  return provider;
-}
-
-//
-
-function _archiveSubprocessMake( o )
-{
-  let routine = __archiveProcess;
-  let toolsPath = _.module.resolve( 'wTools' );
-  let programPath = _.path.join( o.dirPath, routine.name + '.js' );
-  let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
-
-  _.program.write({ routine, programPath, locals });
-
-  let o2 =
-  {
-    currentPath : o.dirPath,
-    execPath : 'node ' + programPath,
-    args : [ process.pid ],
-    outputCollecting : 1,
-    ipc : 1,
-    stdio : 'pipe',
-    detaching : 1,
-    mode : 'spawn',
-  };
-
-  _.process.startMinimal( o2 );
-  return o2;
-
-  /* */
-
-  function __archiveProcess()
-  {
-    let _ = require( toolsPath );
-    _.include( 'wProcess' );
-    _.include( 'wCensorBasic' );
-    _.include( 'wFiles' );
-    _.include( 'wFilesArchive' );
-    _.include( 'wConsequence' );
-
-    let fileProvider = _.FileProvider.HardDrive();
-    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    if( !config )
-    config = fileProvider.configUserRead();
-
-    let provider = _.FileFilter.Archive();
-    provider.archive.basePath = dirPath;
-
-    if( config && config.path && config.path.hlink )
-    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
-    provider.archive.fileMapAutosaving = 1;
-    provider.archive.allowingMissed = 1;
-    provider.archive.allowingCycled = 1;
-
-    provider.archive.restoreLinksBegin();
-    if( verbosity )
-    process.send( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    else
-    process.send( 'ok' );
-
-    let parentPid = _.numberFrom( process.argv[ 2 ] );
-    while( _.process.isAlive( parentPid ) || process.connected )
-    _.time.sleep( 200 );
-
-    provider.archive.restoreLinksEnd();
-
-    fileProvider.filesDelete( programPath );
-  }
-}
-
-//
-
 function gitPull( o )
 {
   let module = this;
@@ -8865,7 +8884,7 @@ function gitPull( o )
     o2.conStart.then( () => con2 );
     o2.conStart.then( () =>
     {
-      let ready = pull()
+      let ready = pull();
       ready.tap( () => o2.pnd.disconnect() );
       ready.catch( onErr );
       return ready;
@@ -9887,6 +9906,8 @@ let Extension =
 
   // git
 
+  _providerArchiveMake,
+  _archiveSubprocessMake,
   gitExecCommand,
   gitDiff,
   gitPrOpen,
@@ -9894,8 +9915,6 @@ let Extension =
   gitPush,
   gitReset,
   gitStatus,
-  _providerArchiveMake,
-  _archiveSubprocessMake,
   gitSync,
   gitTag,
 
