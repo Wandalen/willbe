@@ -343,7 +343,7 @@ function build( test )
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.true( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
+    test.true( _.strHas( op.output, `node ${ a.path.normalize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 1 );
@@ -432,7 +432,7 @@ function build( test )
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.true( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
+    test.true( _.strHas( op.output, `node ${ a.path.normalize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 1 );
