@@ -6980,7 +6980,7 @@ clone
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
-    test.identical( _.strCount( op.output, '> git push' ), 1 );
+    test.identical( _.strCount( op.output, '> git push' ), 0 );
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -7251,7 +7251,7 @@ function hookGitSyncArguments( test )
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
-    test.identical( _.strCount( op.output, '> git push' ), 1 );
+    test.identical( _.strCount( op.output, '> git push' ), 0 );
     return null;
   })
 
