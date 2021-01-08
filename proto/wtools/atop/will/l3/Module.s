@@ -8745,117 +8745,33 @@ function _providerArchiveMake( dirPath, verbosity )
 
 //
 
-function gitPull( o )
+function _archiveSubprocessMake( o )
 {
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
+  let routine = __archiveProcess;
+  let toolsPath = _.module.resolve( 'wTools' );
+  let programPath = _.path.join( o.dirPath, routine.name + '.js' );
+  let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
 
-  _.routineOptions( gitPull, o );
+  _.program.write({ routine, programPath, locals });
 
-  o.dirPath = module.pathResolve
-  ({
-    selector : o.dirPath || module.dirPath,
-    prefixlessAction : 'resolved',
-    pathNativizing : 0,
-    selectorIsPath : 1,
-    currentContext : module.stepMap[ 'git.pull' ],
-  });
+  let o2 =
+  {
+    currentPath : o.dirPath,
+    execPath : 'node ' + programPath,
+    args : [ process.pid ],
+    outputCollecting : 1,
+    ipc : 1,
+    stdio : 'pipe',
+    detaching : 1,
+    mode : 'spawn',
+  };
 
-  let status = _.git.statusFull
-  ({
-    insidePath : o.dirPath,
-    unpushed : 0,
-    prs : 0,
-    remote : 1,
-  });
-
-  if( !status.isRepository || !status.remote )
-  return null;
-
-  if( o.verbosity )
-  logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
-
-  if( status.uncommitted )
-  throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
+  _.process.startMinimal( o2 );
+  return o2;
 
   /* */
 
-  let provider, ready;
-  if( o.restoringHardLinks )
-  {
-    let routine = archiveProcess;
-    let toolsPath = _.module.resolve( 'wTools' );
-    let programPath = path.join( o.dirPath, routine.name + '.js' );
-    let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
-    let con2 = new _.Consequence();
-
-    _.program.write({ routine, programPath, locals });
-
-    let o2 =
-    {
-      currentPath : o.dirPath,
-      execPath : 'node ' + programPath,
-      args : [ process.pid ],
-      outputCollecting : 1,
-      ipc : 1,
-      stdio : 'pipe',
-      detaching : 1,
-      mode : 'spawn',
-    };
-
-    let child = _.process.startMinimal( o2 );
-
-    o2.pnd.on( 'message', ( msg ) =>
-    {
-      if( msg.length > 2 )
-      logger.log( msg );
-      con2.take( msg );
-    });
-
-    o2.conStart.then( () => con2 );
-
-    return o2.conStart.then( () =>
-    {
-      ready = pull()
-      ready.tap( () => o2.pnd.disconnect() );
-      ready.catch( onErr );
-      return ready;
-    })
-  }
-  else
-  {
-    ready = pull();
-    ready.catch( onErr );
-    return ready;
-  }
-
-  /* */
-
-  function pull()
-  {
-    return _.git.pull
-    ({
-      localPath : o.dirPath,
-      sync : 0,
-      throwing : 1,
-    });
-  }
-
-  /* */
-
-  function onErr( err )
-  {
-    err = _.errBrief( err );
-    logger.error( _.errOnce( err ) );
-    throw err;
-  }
-
-  /* */
-
-  function archiveProcess()
+  function __archiveProcess()
   {
     let _ = require( toolsPath );
     _.include( 'wProcess' );
@@ -8891,6 +8807,97 @@ function gitPull( o )
     provider.archive.restoreLinksEnd();
 
     fileProvider.filesDelete( programPath );
+  }
+}
+
+//
+
+function gitPull( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.routineOptions( gitPull, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.pull' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    unpushed : 0,
+    prs : 0,
+    remote : 1,
+  });
+
+  if( !status.isRepository || !status.remote )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+
+  if( status.uncommitted )
+  throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
+
+  /* */
+
+  if( o.restoringHardLinks )
+  {
+    let con2 = new _.Consequence();
+    let o2 = module._archiveSubprocessMake( o );
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
+
+      /* sync archive creation with main process */
+      if( con2.resourcesGet().length === 0 )
+      con2.take( msg );
+    });
+
+    o2.conStart.then( () => con2 );
+    o2.conStart.then( () =>
+    {
+      let ready = pull()
+      ready.tap( () => o2.pnd.disconnect() );
+      ready.catch( onErr );
+      return ready;
+    });
+    return o2.conStart;
+  }
+  else
+  {
+    let ready = pull();
+    ready.catch( onErr );
+    return ready;
+  }
+
+  /* */
+
+  function pull()
+  {
+    return _.git.pull
+    ({
+      localPath : o.dirPath,
+      sync : 0,
+      throwing : 1,
+    });
+  }
+
+  /* */
+
+  function onErr( err )
+  {
+    err = _.errBrief( err );
+    logger.error( _.errOnce( err ) );
+    throw err;
   }
 }
 
@@ -9904,6 +9911,7 @@ let Extension =
   gitReset,
   gitStatus,
   _providerArchiveMake,
+  _archiveSubprocessMake,
   gitSync,
   gitTag,
 
