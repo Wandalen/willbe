@@ -65,7 +65,6 @@ function onModule( context )
 
   ready.tap( () =>
   {
-    debugger;
     provider.archive.restoreLinksEnd();
   });
 
@@ -79,7 +78,8 @@ function onModule( context )
   {
     err = _.errBrief( err );
     logger.error( _.errOnce( err ) );
-    throw err;
+    context.ready.error( err );
+    // throw err;
   });
 
 }
