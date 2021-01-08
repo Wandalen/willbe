@@ -28779,6 +28779,7 @@ function commandSubmodulesGitStatus( test )
 }
 
 commandSubmodulesGitStatus.rapidity = -1;
+commandSubmodulesGitStatus.timeOut = 500000;
 
 //
 
@@ -30489,6 +30490,7 @@ function commandModulesGitStatus( test )
 }
 
 commandModulesGitStatus.rapidity = -1;
+commandModulesGitStatus.timeOut = 500000;
 
 //
 
