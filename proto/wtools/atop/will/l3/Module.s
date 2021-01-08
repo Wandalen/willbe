@@ -9102,7 +9102,6 @@ function gitSync( o )
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
   let logger = will.logger;
 
   _.routineOptions( gitSync, o );
@@ -9120,35 +9119,20 @@ function gitSync( o )
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : o.dirPath + '**', safe : 0 });
 
-  let status = _.git.statusFull
-  ({
-    insidePath : o.dirPath,
-  });
-
   if( o.dry )
   return null;
 
   /* */
 
+  let status = _.git.statusFull ({ insidePath : o.dirPath });
+
   let ready =  new _.Consequence().take( null );
-  ready.then( () =>
-  {
-    if( status.uncommitted )
-    return gitCommit();
-    return null;
-  })
-  .then( () =>
-  {
-    if( status.remote )
-    return module.gitPull.call( module, _.mapBut( o, { commit : '.', dry : '.' } ) );
-    return null;
-  })
-  .then( () =>
-  {
-    if( status.local )
-    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.' } ) );
-    return null;
-  })
+  if( status.uncommitted )
+  ready.then( () => gitCommit() );
+  if( status.remote )
+  ready.then( () => module.gitPull.call( module, _.mapBut( o, { commit : '.', dry : '.' } ) ) );
+  if( status.local )
+  ready.then( () => module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.' } ) ) );
 
   return ready;
 
