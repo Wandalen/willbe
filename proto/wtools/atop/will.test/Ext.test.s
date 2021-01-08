@@ -32057,6 +32057,7 @@ function commandGitDiff( test )
     });
 
     originalShell( 'git init' );
+    originalShell( 'git config core.autocrlf input' );
     originalShell( 'git add --all' );
     originalShell( 'git commit -am first' );
 
