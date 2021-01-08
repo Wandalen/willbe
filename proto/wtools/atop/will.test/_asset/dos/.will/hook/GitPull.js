@@ -56,15 +56,16 @@ function onModule( context )
   provider.archive.restoreLinksBegin();
 
   // context.start( `git pull` );
-  _.git.pull
+  let ready = _.git.pull
   ({
     localPath : context.junction.dirPath,
     sync : 0,
     throwing : 'full',
   });
 
-  context.ready.tap( () =>
+  ready.tap( () =>
   {
+    debugger;
     provider.archive.restoreLinksEnd();
   });
 
@@ -74,7 +75,7 @@ function onModule( context )
     context2.will.hooks.ProtoSync.call( context2 );
   }
 
-  context.ready.catch( ( err ) =>
+  ready.catch( ( err ) =>
   {
     err = _.errBrief( err );
     logger.error( _.errOnce( err ) );
