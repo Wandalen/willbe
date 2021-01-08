@@ -33948,23 +33948,6 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
   let originalShell = _.process.starter
   ({
     currentPath : a.abs( 'original' ),
@@ -33972,61 +33955,47 @@ function commandGitSync( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.sync - committing and pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.sync - committing and pushing, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with clone/ .git.sync - only pulling, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
   originalShell( 'git add --all' );
   originalShell( 'git commit -am second' );
   originalShell( 'git push -u origin --all' );
@@ -34034,74 +34003,82 @@ function commandGitSync( test )
   a.appStart( '.with clone/ .git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.sync - only pulling, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'second' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync - only pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
   originalShell( 'git add --all' );
   originalShell( 'git commit -am third' );
 
   a.appStart( '.with original/ .git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync - only pushing, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' );
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'third' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync -am fifth - committing, pulling and pushing with message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "fourth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "fourth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am fifth' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am fifth - committing, pulling and pushing with message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
   originalShell( 'git log' )
   .then( ( op ) =>
   {
@@ -34109,67 +34086,99 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'fourth' ), 1 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am seventh v:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
 
   /* */
 
-  cloneShell( 'git pull' );
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am seventh dry:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
 }
+
+commandGitSync.rapidity = -1;
 
 //
 
