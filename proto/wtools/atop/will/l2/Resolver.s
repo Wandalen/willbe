@@ -246,7 +246,7 @@ function _statusPreUpdate()
   if( !it.src )
   return;
 
-  _.assert( !_.mapHasKey( it.src, 'composite' ) );
+  _.assert( !_.mapOwn( it.src, 'composite' ) );
 
   if( it.down && it.down.src && it.down.src instanceof _.will.ModulesRelation )
   {
