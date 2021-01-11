@@ -8540,9 +8540,9 @@ function _providerArchiveMake( dirPath, verbosity )
 
 function _archiveSubprocessMake( o )
 {
-  let routine = __archiveProcess;
+  let routine = archiveProcess;
   let toolsPath = _.module.resolve( 'wTools' );
-  let programPath = _.path.join( o.dirPath, routine.name + '.js' );
+  let programPath = _.path.join( o.dirPath, '.' + routine.name + '.js' );
   let locals = { toolsPath, programPath, dirPath : o.dirPath, verbosity : o.verbosity };
 
   _.program.write({ routine, programPath, locals });
@@ -8564,7 +8564,7 @@ function _archiveSubprocessMake( o )
 
   /* */
 
-  function __archiveProcess()
+  function archiveProcess()
   {
     let _ = require( toolsPath );
     _.include( 'wProcess' );
