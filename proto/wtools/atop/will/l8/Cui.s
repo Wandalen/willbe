@@ -1082,8 +1082,7 @@ function _commandModulesLike( o )
     if( o.onModulesBegin )
     ready2.then( () =>
     {
-      o.onModulesBegin.call( cui, cui.currentOpeners, opener );
-      return null;
+      return o.onModulesBegin.call( cui, cui.currentOpeners, opener );
     });
 
     ready2.then( () => cui.openersCurrentEach( forSingle ) )
@@ -1091,12 +1090,12 @@ function _commandModulesLike( o )
     if( o.onModulesEnd )
     ready2.finally( ( err, arg ) =>
     {
-      o.onModulesEnd.call( cui, cui.currentOpeners, opener );
+      let result = o.onModulesEnd.call( cui, cui.currentOpeners, opener );
 
       if( err )
       throw _.err( err );
 
-      return null;
+      return result;
     });
 
     return ready2;
@@ -2236,6 +2235,7 @@ function commandSubmodulesGitSync( e )
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
+    return null;
   }
 
   /* */
@@ -2254,8 +2254,8 @@ function commandSubmodulesGitSync( e )
 
   function onModulesEnd( openers )
   {
-    debugger;
     provider.archive.restoreLinksEnd();
+    return null;
   }
 }
 
@@ -2571,7 +2571,7 @@ function commandModulesGitSync( e )
 {
   let cui = this;
   let logger = cui.logger;
-  let provider;
+  let o2;
   cui._command_head( commandModulesGitSync, arguments );
 
   _.routineOptions( commandModulesGitSync, e.propertiesMap );
@@ -2593,15 +2593,25 @@ function commandModulesGitSync( e )
 
   function onModulesBegin( openers )
   {
+
     let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    let commonPath = cui.fileProvider.path.common( pathsContainer );
 
-    if( e.propertiesMap.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+    let con2 = new _.Consequence();
+    o2 = openers[ 0 ].openedModule._archiveSubprocessMake({ dirPath : commonPath, verbosity : e.propertiesMap.verbosity });
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
+
+      /* sync archive creation with main process */
+      if( con2.resourcesGet().length === 0 )
+      con2.take( msg );
+    });
+
+    return con2;
   }
 
   /* */
@@ -2618,9 +2628,10 @@ function commandModulesGitSync( e )
 
   /* */
 
-  function onModulesEnd( openers )
+  function onModulesEnd()
   {
-    provider.archive.restoreLinksEnd();
+    o2.pnd.disconnect();
+    return null;
   }
 }
 
