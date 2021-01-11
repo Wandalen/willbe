@@ -2204,7 +2204,7 @@ function commandSubmodulesGitSync( e )
 {
   let cui = this;
   let logger = cui.logger;
-  let provider;
+  let o2;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
@@ -2224,18 +2224,29 @@ function commandSubmodulesGitSync( e )
 
   /* */
 
-  function onModulesBegin( openers, rootOpener )
+  function onModulesBegin( openers )
   {
-    let pathsContainer = [ rootOpener.openedModule.dirPath ];
+    if( openers.length === 0 )
+    return null;
+
+    let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    let commonPath = cui.fileProvider.path.common( pathsContainer );
 
-    if( e.propertiesMap.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
-    return null;
+    let con2 = new _.Consequence();
+    o2 = openers[ 0 ].openedModule._archiveSubprocessMake({ dirPath : commonPath, verbosity : e.propertiesMap.verbosity });
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
+
+      /* sync archive creation with main process */
+      if( con2.resourcesGet().length === 0 )
+      con2.take( msg );
+    });
+
+    return con2;
   }
 
   /* */
@@ -2252,12 +2263,12 @@ function commandSubmodulesGitSync( e )
 
   /* */
 
-  function onModulesEnd( openers )
+  function onModulesEnd()
   {
-    provider.archive.restoreLinksEnd();
+    if( o2 )
+    o2.pnd.disconnect();
     return null;
-  }
-}
+  }}
 
 commandSubmodulesGitSync.defaults =
 {
