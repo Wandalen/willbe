@@ -503,7 +503,7 @@ function _inheritSingle( o )
 
   _.assert( reflector2.formed === 3 );
 
-  let only = _.mapNulls( reflector );
+  let only = _.mapOnlyNulls( reflector );
   only = _.mapOnly( reflector, reflector.Composes );
   let extend = _.mapOnly( reflector2, only );
 
