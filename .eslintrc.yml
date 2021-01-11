@@ -408,7 +408,7 @@ rules :
     - max : 100
   max-nested-callbacks :
     - error
-    - max : 5
+    - max : 3
   max-depth :
     - error
     - max : 5

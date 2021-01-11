@@ -646,7 +646,7 @@ function _inheritSingle( o )
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly( resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
