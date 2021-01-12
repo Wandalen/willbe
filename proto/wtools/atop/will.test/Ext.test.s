@@ -7268,6 +7268,173 @@ hookGitSyncArguments.description =
 
 //
 
+function hookGitTag( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitTag name:v1.0 - add tag, only option name';
+    return null;
+  });
+
+  a.appStart( '.with original/ .call GitTag name:v1.0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitTag name:v2.0 description:"Version 2.0" - add tag with description';
+    return null;
+  });
+
+  a.appStart( '.with original/ .call GitTag name:v2.0 description:"Version 2.0"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /v2.0\s+Version 2.0/ ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitTag name:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
+    return null;
+  });
+
+  a.appStart( '.with original/ .call GitTag name:v3.0 description:"Version 3.0" light:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitTag name:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
+    return null;
+  });
+
+  a.appStart( '.with original/ .call GitTag name:v4.0 description:"Version 4.0" dry:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /v4.0\s+Version 4.0/ ), 0 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = '.with original/ .call GitTag name:v4.0 description:"Version 4.0" v:0 - verbosity';
+    return null;
+  });
+
+  a.appStart( '.with original/ .call GitTag name:v4.0 description:"Version 4.0" v:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /v4.0\s+Version 4.0/ ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+
+    return a.ready;
+  }
+}
+
+hookGitTag.rapidity = -1;
+
+//
+
 function hookWasPackageExtendWillfile( test )
 {
   let context = this;
@@ -38014,6 +38181,7 @@ let Self =
     hookGitSyncConflict,
     hookGitSyncRestoreHardLinksWithConfigPath,
     hookGitSyncArguments,
+    hookGitTag,
     hookWasPackageExtendWillfile,
     hookPublish2,
 
