@@ -56,11 +56,14 @@ function onModule( context )
   provider.archive.restoreLinksBegin();
 
   // context.start( `git pull` );
-  _.git.pull
-  ({
-    localPath : context.junction.dirPath,
-    sync : 0,
-    throwing : 'full',
+  context.ready.then( () =>
+  {
+    return _.git.pull
+    ({
+      localPath : context.junction.dirPath,
+      sync : 0,
+      throwing : 'full',
+    });
   });
 
   context.ready.tap( () =>

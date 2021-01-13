@@ -343,7 +343,7 @@ function build( test )
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.true( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
+    test.true( _.strHas( op.output, `node ${ a.path.normalize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 1 );
@@ -432,7 +432,7 @@ function build( test )
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Building .+ \/ build::shell1/ ) );
-    test.true( _.strHas( op.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
+    test.true( _.strHas( op.output, `node ${ a.path.normalize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( op.output, 'out\\Produced.txt2' ), 1 );
@@ -6980,7 +6980,7 @@ clone
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
-    test.identical( _.strCount( op.output, '> git push' ), 1 );
+    test.identical( _.strCount( op.output, '> git push' ), 0 );
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -7251,7 +7251,7 @@ function hookGitSyncArguments( test )
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
-    test.identical( _.strCount( op.output, '> git push' ), 1 );
+    test.identical( _.strCount( op.output, '> git push' ), 0 );
     return null;
   })
 
@@ -26778,8 +26778,8 @@ function killWillbe( test )
     var result = _.process.start( o );
     o.pnd.stdout.on( 'data', ( data ) =>
     {
-      console.log( 'Terminating willbe...' );
-      o.pnd.kill();
+      console.log( 'Terminating willbe... SIGTERM' );
+      _.time.out( 1000, () => o.pnd.kill() );
     });
 
     return a.ready.then( ( op ) =>
@@ -26791,6 +26791,7 @@ function killWillbe( test )
       test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 1 );
       test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
       return null;
@@ -26815,8 +26816,8 @@ function killWillbe( test )
     var result = _.process.start( o );
     o.pnd.stdout.on( 'data', ( data ) =>
     {
-      console.log( 'Terminating willbe...' );
-      o.pnd.kill( 'SIGTERM' );
+      console.log( 'Terminating willbe... SIGTERM' );
+      _.time.out( 1000, () => o.pnd.kill( 'SIGTERM') );
     });
 
     return a.ready.then( ( op ) =>
@@ -26828,6 +26829,7 @@ function killWillbe( test )
       test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 1 );
       test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
       return null;
@@ -26852,7 +26854,7 @@ function killWillbe( test )
     var result = _.process.start( o );
     o.pnd.stdout.on( 'data', ( data ) =>
     {
-      console.log( 'Terminating willbe...' );
+      console.log( 'Terminating willbe... SIGKILL' );
       o.pnd.kill( 'SIGKILL' );
     });
 
@@ -26865,7 +26867,8 @@ function killWillbe( test )
       test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 0 );
       test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
-      test.ge( _.strCount( op.output, 'SIGKILL' ), 0 );
+      if( !process.platform === 'win32' )
+      test.ge( _.strCount( op.output, 'SIGKILL' ), 1 );
 
       return null;
     });
@@ -26889,8 +26892,8 @@ function killWillbe( test )
     var result = _.process.start( o );
     o.pnd.stdout.on( 'data', ( data ) =>
     {
-      console.log( 'Terminating willbe...' );
-      o.pnd.kill( 'SIGINT' );
+      console.log( 'Terminating willbe... SIGINT' );
+      _.time.out( 1000, () => o.pnd.kill( 'SIGINT' ) );
     });
 
     return a.ready.then( ( op ) =>
@@ -26902,6 +26905,7 @@ function killWillbe( test )
       test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 1 );
       test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
 
       return null;
@@ -28779,6 +28783,7 @@ function commandSubmodulesGitStatus( test )
 }
 
 commandSubmodulesGitStatus.rapidity = -1;
+commandSubmodulesGitStatus.timeOut = 500000;
 
 //
 
@@ -30489,6 +30494,7 @@ function commandModulesGitStatus( test )
 }
 
 commandModulesGitStatus.rapidity = -1;
+commandModulesGitStatus.timeOut = 500000;
 
 //
 
@@ -32057,6 +32063,7 @@ function commandGitDiff( test )
     });
 
     originalShell( 'git init' );
+    originalShell( 'git config core.autocrlf input' );
     originalShell( 'git add --all' );
     originalShell( 'git commit -am first' );
 
