@@ -33151,8 +33151,6 @@ function commandGitPullRestoreHardlinkOnKillWithSuccefulPulling( test )
     });
   });
 
-  return con;
-
   /* */
 
   con.then( () => begin() );
@@ -33273,7 +33271,7 @@ function commandGitPullRestoreHardlinkOnKillWithSuccefulPulling( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGKILL' );
 
-      test.identical( _.strCount( op.output, 'Command ".git.pull"' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 1 );
       test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
       test.ge( _.strCount( op.output, 'SIGKILL' ), 0 );
