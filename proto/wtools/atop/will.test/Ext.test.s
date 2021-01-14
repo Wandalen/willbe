@@ -32481,6 +32481,7 @@ function commandGitPull( test )
     test.description = 'hardlink';
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    debugger;
     return null;
   });
 
@@ -32814,7 +32815,7 @@ original
 
 //
 
-function commandGitPullRestoreHardlinkAsync( test )
+function commandGitPullRestoreHardlinkOnKillWithFailedPulling( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
@@ -32852,7 +32853,6 @@ function commandGitPullRestoreHardlinkAsync( test )
       {
         if( _.strHas( op.output, 'CONFLICT' ) )
         {
-          console.log( op.output );
           test.identical( _.strCount( op.output, 'has local changes' ), 0 );
           test.identical( _.strCount( op.output, ' > git pull' ), 1 );
           test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
@@ -32908,7 +32908,6 @@ function commandGitPullRestoreHardlinkAsync( test )
       {
         if( _.strHas( op.output, 'CONFLICT' ) )
         {
-          console.log( op.output );
           test.identical( _.strCount( op.output, 'has local changes' ), 0 );
           test.identical( _.strCount( op.output, ' > git pull' ), 1 );
           test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
@@ -32964,7 +32963,6 @@ function commandGitPullRestoreHardlinkAsync( test )
       {
         if( _.strHas( op.output, 'CONFLICT' ) )
         {
-          console.log( op.output );
           test.identical( _.strCount( op.output, 'has local changes' ), 0 );
           test.identical( _.strCount( op.output, ' > git pull' ), 1 );
           test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
@@ -33020,7 +33018,6 @@ function commandGitPullRestoreHardlinkAsync( test )
       {
         if( _.strHas( op.output, 'CONFLICT' ) )
         {
-          console.log( op.output );
           test.identical( _.strCount( op.output, 'has local changes' ), 0 );
           test.identical( _.strCount( op.output, ' > git pull' ), 1 );
           test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
@@ -33096,7 +33093,262 @@ function commandGitPullRestoreHardlinkAsync( test )
   }
 }
 
-commandGitPullRestoreHardlinkAsync.rapidity = -1;
+commandGitPullRestoreHardlinkOnKillWithFailedPulling.rapidity = -1;
+
+//
+
+function commandGitPullRestoreHardlinkOnKillWithSuccefulPulling( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let con = _.take( null );
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe without defined signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill(), 2000 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1 * 2, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  return con;
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGTERM signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGTERM' ), 1500 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1 * 2, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGINT signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGINT' ), 1500 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGINT' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1 * 2, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGKILL signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGKILL' ), 1500 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGKILL' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGKILL' ), 0 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* - */
+
+  return con;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+
+    /* */
+
+    a.appStart( '.with clone/ .call hlink beeping:0' )
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+      return null;
+    })
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+    return a.ready;
+  }
+
+  /* */
+
+  function willbeProcessMake()
+  {
+    var o =
+    {
+      execPath : 'node ' + _.Will.WillPathGet() + ' .git.pull .submodules.list .paths.list',
+      currentPath : a.abs( 'clone' ),
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'spawn',
+    };
+    _.process.start( o );
+    return o;
+  }
+}
+
+commandGitPullRestoreHardlinkOnKillWithSuccefulPulling.rapidity = -1;
 
 //
 
@@ -38617,7 +38869,8 @@ let Self =
     commandGitPrOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
-    commandGitPullRestoreHardlinkAsync,
+    commandGitPullRestoreHardlinkOnKillWithFailedPulling,
+    commandGitPullRestoreHardlinkOnKillWithSuccefulPulling,
     commandGitPush,
     commandGitReset,
     commandGitStatus,
