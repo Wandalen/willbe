@@ -8550,7 +8550,7 @@ function _archiveSubprocessMake( o )
   let o2 =
   {
     currentPath : o.dirPath,
-    execPath : 'node ' + programPath,
+    execPath : 'node ' + _.path.nativize( programPath ),
     args : [ process.pid ],
     outputCollecting : 1,
     ipc : 1,
