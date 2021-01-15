@@ -535,8 +535,22 @@ function _commandListLike( o )
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
 
-  ready
-  .then( () => will.openersCurrentEach( function( it )
+  ready.then( () => will.openersCurrentEach( listOfResourcesGet ) )
+  .finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    logger.error( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return ready;
+
+  /* */
+
+  function listOfResourcesGet( it )
   {
     let ready2 = new _.Consequence().take( null );
 
@@ -604,18 +618,7 @@ function _commandListLike( o )
     });
 
     return ready2;
-  }))
-  .finally( ( err, arg ) =>
-  {
-    will._commandsEnd( o.commandRoutine );
-    if( err )
-    logger.error( _.errOnce( err ) );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  return ready;
+  }
 }
 
 _commandListLike.defaults =
@@ -941,6 +944,7 @@ function _commandTreeLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+  let ready2 = new _.Consequence().take( null );
 
   _.routineOptions( _commandTreeLike, arguments );
   _.assert( _.routineIs( o.commandRoutine ) );
@@ -956,15 +960,7 @@ function _commandTreeLike( o )
 
   ready.then( () =>
   {
-    let ready2 = new _.Consequence().take( null );
-
-    will.currentOpeners.forEach( ( opener ) => ready2.then( () =>
-    {
-      _.assert( !!opener.openedModule );
-      if( !opener.openedModule.isValid() )
-      return null;
-      return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
-    }));
+    will.currentOpeners.forEach( moduleEachUpform );
 
     ready2.then( () =>
     {
@@ -989,6 +985,19 @@ function _commandTreeLike( o )
   });
 
   return ready;
+
+  /* */
+
+  function moduleEachUpform( opener )
+  {
+    return ready2.then( () =>
+    {
+      _.assert( !!opener.openedModule );
+      if( !opener.openedModule.isValid() )
+      return null;
+      return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
+    });
+  }
 }
 
 _commandTreeLike.defaults =
@@ -2268,7 +2277,8 @@ function commandSubmodulesGitSync( e )
     if( o2 )
     o2.pnd.disconnect();
     return null;
-  }}
+  }
+}
 
 commandSubmodulesGitSync.defaults =
 {
