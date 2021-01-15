@@ -241,8 +241,8 @@ function moduleSuitability( test )
     a.fileProvider.filesReflect({ reflectMap : { [ samplePath ] : a.abs( './Sample.s' ) } });
 
     let packagePath = a.abs( __dirname, '../package.json' );
-    let moduleName = a.fileProvider.fileRead({ filePath : packagePath, encoding : 'json' }).name;
-    let data = { dependencies : { [ moduleName ] : 'alpha' } };
+    let config = a.fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
+    let data = { dependencies : { [ config.name ] : 'alpha' } };
     a.fileProvider.fileWrite({ filePath : a.abs( 'package.json' ), data, encoding : 'json' });
 
     return null;
