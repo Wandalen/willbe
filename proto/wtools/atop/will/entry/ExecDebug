@@ -12,4 +12,5 @@ let shell = _.process.startPassingThrough
 ({
   execPath : 'debugnode',
   args : [ _.path.nativize( _.path.join( __dirname, 'Include.s' ) ) ],
+  stdio : 'pipe',
 });
