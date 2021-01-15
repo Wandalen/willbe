@@ -1668,15 +1668,7 @@ function modulesFindEachAt( o )
     if( !_.mapIs( resolved ) )
     resolved = _.arrayAs( resolved );
 
-    _.each( resolved, ( context ) =>
-    {
-      _.assert( context.currentModule instanceof _.will.Module );
-      _.assert( context.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
-
-      _.arrayAppendOnce( op.openers, context.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
-
-      return context;
-    })
+    _.each( resolved, openersAppendOnce );
 
     return op;
   })
@@ -1716,7 +1708,20 @@ function modulesFindEachAt( o )
   });
 
   return con;
+
+  /* */
+
+  function openersAppendOnce( context )
+  {
+    _.assert( context.currentModule instanceof _.will.Module );
+    _.assert( context.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+
+    _.arrayAppendOnce( op.openers, context.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
+
+    return context;
+  }
 }
+
 // {
 //   let will = this.form();
 //   let fileProvider = will.fileProvider;
@@ -2512,25 +2517,8 @@ function modulesFor_body( o )
   {
     let ready = new _.Consequence().take( null );
 
-    ready.then( () =>
-    {
-      if( !o.onEachVisitedObject && !o.onEachModule )
-      return null;
-      let ready = new _.Consequence().take( null );
-      objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
-      return ready;
-    });
-
-    ready.then( () =>
-    {
-      if( !o.onEachJunction )
-      return null;
-      let ready = new _.Consequence().take( null );
-      let junctions = _.longOnce( will.junctionsFrom( objects ) );
-      junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
-      return ready;
-    });
-
+    ready.then( objectActionOnEachCall );
+    ready.then( junctionActionOnEachCall );
     ready.then( () =>
     {
       let objects2 = objectsEach( objects );
@@ -2539,6 +2527,29 @@ function modulesFor_body( o )
       return o;
     });
 
+    return ready;
+  }
+
+  /* */
+
+  function objectActionOnEachCall()
+  {
+    if( !o.onEachVisitedObject && !o.onEachModule )
+    return null;
+    let ready = new _.Consequence().take( null );
+    objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
+    return ready;
+  }
+
+  /* */
+
+  function junctionActionOnEachCall()
+  {
+    if( !o.onEachJunction )
+    return null;
+    let ready = new _.Consequence().take( null );
+    let junctions = _.longOnce( will.junctionsFrom( objects ) );
+    junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
     return ready;
   }
 
