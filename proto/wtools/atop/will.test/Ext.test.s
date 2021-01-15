@@ -30471,7 +30471,7 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, '?? .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
@@ -30499,7 +30499,7 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, '?? .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
