@@ -27772,7 +27772,7 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines"' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
     return null;
   })
   a.appStart( '.with original/GitSync .submodules.git push --all' )
@@ -27841,7 +27841,7 @@ function commandSubmodulesGit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
+    test.identical( _.strCount( op.output, /origin1\thttps:\/\/.*github\.com\/user\/local\.git/ ), 2 );
     return null;
   })
 
