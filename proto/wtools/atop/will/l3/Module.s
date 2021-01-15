@@ -8594,7 +8594,7 @@ function _archiveSubprocessMake( o )
     process.send( 'ok' );
 
     let parentPid = _.numberFrom( process.argv[ 2 ] );
-    while( _.process.isAlive( parentPid ) || process.connected )
+    while( _.process.isAlive( parentPid ) && process.connected )
     _.time.sleep( 200 );
 
     provider.archive.restoreLinksEnd();
