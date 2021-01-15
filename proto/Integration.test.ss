@@ -18,6 +18,28 @@ let fileProvider = _.fileProvider;
 let path = fileProvider.path;
 
 // --
+// context
+// --
+
+function onSuiteBegin( test )
+{
+  let context = this;
+  context.provider = fileProvider;
+  let path = context.provider.path;
+  context.suiteTempPath = context.provider.path.tempOpen( path.join( __dirname, '../..'  ), 'moduleSuitability' );
+}
+
+//
+
+function onSuiteEnd( test )
+{
+  let context = this;
+  let path = context.provider.path;
+  _.assert( _.strHas( context.suiteTempPath, 'moduleSuitability' ), context.suiteTempPath );
+  path.tempClose( context.suiteTempPath );
+}
+
+// --
 // test
 // --
 
@@ -192,6 +214,60 @@ function eslint( test )
 
 eslint.rapidity = -2;
 
+//
+
+function moduleSuitability( test )
+{
+  let context = this;
+  let a = test.assetFor( 'moduleSuitability' );
+
+  let ready = new _.Consequence().take( null );
+  let start = _.process.starter
+  ({
+    mode : 'shell',
+    currentPath : a.abs( '.' ),
+    throwingExitCode : 0,
+    outputCollecting : 1,
+    ready,
+  });
+
+  /* */
+
+  ready.then( () =>
+  {
+    a.fileProvider.dirMake( a.abs( '.' ) );
+
+    let samplePath = a.abs( __dirname, '../sample/Sample.s' );
+    a.fileProvider.filesReflect({ reflectMap : { [ samplePath ] : a.abs( './Sample.s' ) } });
+
+    let packagePath = a.abs( __dirname, '../package.json' );
+    let moduleName = a.fileProvider.fileRead({ filePath : packagePath, encoding : 'json' }).name;
+    let data = { dependencies : { [ moduleName ] : 'alpha' } };
+    a.fileProvider.fileWrite({ filePath : a.abs( 'package.json' ), data, encoding : 'json' });
+
+    return null;
+  });
+
+  start( `npm i` )
+  .then( ( op ) =>
+  {
+    test.case = 'install module';
+    test.identical( op.exitCode, 0 );
+    return null;
+  });
+
+  start( 'node Sample.s' )
+  .then( ( op ) =>
+  {
+    test.case = 'succefull running sample';
+    test.identical( op.exitCode, 0 );
+    test.ge( op.output.length, 3 );
+    return null;
+  });
+
+  return ready;
+}
+
 // --
 // declare
 // --
@@ -203,10 +279,20 @@ let Self =
   routineTimeOut : 1500000,
   silencing : 0,
 
+  onSuiteBegin,
+  onSuiteEnd,
+  context :
+  {
+    provider : null,
+    suiteTempPath : null,
+    appJsPath : null
+  },
+
   tests :
   {
     samples,
     eslint,
+    moduleSuitability,
   },
 
 }
@@ -218,3 +304,4 @@ if( typeof module !== 'undefined' && !module.parent )
 _global_.wTester.test( Self.name );
 
 })();
+
