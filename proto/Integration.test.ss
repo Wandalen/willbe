@@ -237,7 +237,8 @@ function moduleSuitability( test )
   {
     a.fileProvider.dirMake( a.abs( '.' ) );
 
-    let samplePath = a.abs( __dirname, '../sample/Sample.s' );
+    let samplePath = a.find({ filePath : a.abs( __dirname, '../sample' ), filter : { filePath : { 'Sample.(s|js|ss)' : 1 } } });
+    samplePath = a.abs( __dirname, '../sample', samplePath[ 0 ] ) ;
     a.fileProvider.filesReflect({ reflectMap : { [ samplePath ] : a.abs( './Sample.s' ) } });
 
     let packagePath = a.abs( __dirname, '../package.json' );
