@@ -233,6 +233,8 @@ function moduleSuitability( test )
 
   /* */
 
+  let sampleName = '';
+
   ready.then( () =>
   {
     a.fileProvider.dirMake( a.abs( '.' ) );
@@ -244,7 +246,8 @@ function moduleSuitability( test )
       filter : { filePath : { 'Sample.(s|js|ss)' : 1 } }
     });
     samplePath = a.abs( sampleDir, samplePath[ 0 ] ) ;
-    a.fileProvider.filesReflect({ reflectMap : { [ samplePath ] : a.abs( './Sample.s' ) } });
+    sampleName = a.path.fullName( samplePath );
+    a.fileProvider.filesReflect({ reflectMap : { [ samplePath ] : a.abs( sampleName ) } });
 
     let packagePath = a.abs( __dirname, '../package.json' );
     let config = a.fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
@@ -262,7 +265,7 @@ function moduleSuitability( test )
     return null;
   });
 
-  start( 'node Sample.s' )
+  start( `node ${ sampleName }` )
   .then( ( op ) =>
   {
     test.case = 'succefull running sample';
