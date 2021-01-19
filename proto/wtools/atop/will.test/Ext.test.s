@@ -22007,108 +22007,75 @@ function submodulesDownloadedUpdate( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.each module .export' })
-  a.appStart({ execPath : '.submodules.download' })
+  a.appStart({ execPath : '.each module .export' });
+  a.appStart({ execPath : '.submodules.download' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, / \+ 1\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     return op;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'check module branch after download';
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( '.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of supermodule should stay on dev';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'dev' ) );
+    test.true( _.strHas( op.output, 'dev1' ) );
     return op;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( 'module/.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of informal submodule should stay on master';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'master' ) );
     return op;
-  })
+  });
 
   /* */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'update downloaded module and check branch';
     return op;
-  })
+  });
 
   a.appStart({ execPath : '.submodules.update' })
 
-  _.process.start
-  ({
-    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( '.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of supermodule should stay on dev';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'dev' ) );
+    test.true( _.strHas( op.output, 'dev1' ) );
     return op;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( 'module/.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of informal submodule should stay on master';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'master' ) );
     return op;
-  })
+  });
 
   return a.ready;
 }
