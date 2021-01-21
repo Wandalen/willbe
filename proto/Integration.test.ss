@@ -170,6 +170,8 @@ function eslint( test )
       '--ignore-pattern', '_asset',
       '--ignore-pattern', 'out',
       '--ignore-pattern', '*.tgs',
+      '--ignore-pattern', '*.bat',
+      '--ignore-pattern', '*.sh',
       '--quiet'
     ],
     throwingExitCode : 0,
