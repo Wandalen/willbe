@@ -54,9 +54,8 @@ function onModule( context )
   // sourcesRemoveOld( context );
   // sourcesRemoveOld2( context );
   // sampleFix( context );
-
-  // xxx : find and replace : `# wInstancing` without badges
-  // xxx : replace `  //` -> `  /* */`
+    sampleTrivial( context );
+    readmeSampleRename( context );
 
 }
 
@@ -892,6 +891,77 @@ function sampleFix( context )
   logger.log( _.censor.fileReplace
   ({
     filePath : abs( 'sample/Sample.s' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+//
+
+function sampleTrivial( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  if( !fileProvider.fileExists( abs( 'sample/trivial' ) ) )
+  fileProvider.dirMake( abs( 'sample/trivial' ) );
+
+  move( 'Sample.s' );
+  move( 'Sample.js' );
+  move( 'Sample.ss' );
+  move( 'Sample.html' );
+
+  function move( name )
+  {
+    if( fileProvider.fileExists( abs( `sample/${name}` ) ) )
+    fileProvider.fileRename
+    ({
+      dstPath : abs( `sample/trivial/${name}` ),
+      srcPath : abs( `sample/${name}` ),
+      verbosity : o.verbosity >= 2 ? o.verbosity : 0,
+    });
+  }
+
+}
+
+//
+
+function readmeSampleRename( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  let ins = `sample/Sample`;
+  let sub = `sample/trivial/Sample`;
+
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
+  return null;
+
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
     ins,
     sub,
     verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
