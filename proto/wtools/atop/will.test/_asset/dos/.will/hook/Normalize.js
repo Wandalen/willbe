@@ -633,14 +633,14 @@ function readmeTryOutAdjust( context )
   let ins = `## Try out
 \`\`\`
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 \`\`\``;
   let sub = `## Try out from the repository
 \`\`\`
 git clone https://github.com/${config.about.user}/${moduleName}
 cd ${moduleName}
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 \`\`\``;
 
   debugger;
@@ -751,9 +751,9 @@ function readmeToAddAdjust( context )
 
   let moduleName = context.module.about.name; debugger;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `node sample/Sample.s
+  let ins = `node sample/trivial/Sample.s
 \`\`\``;
-  let sub = `node sample/Sample.s
+  let sub = `node sample/trivial/Sample.s
 \`\`\`
 
 ## To add to your project
