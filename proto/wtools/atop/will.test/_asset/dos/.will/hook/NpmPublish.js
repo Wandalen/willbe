@@ -159,6 +159,12 @@ function onModule( context )
     verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
+  {
+    let context2 = context.will.hookContextNew( context );
+    context2.request.map = { verbosity : 2 }
+    context2.will.hooks.ProtoSync.call( context2 );
+  }
+
   function onDependency( dep )
   {
     // console.log( dep );
