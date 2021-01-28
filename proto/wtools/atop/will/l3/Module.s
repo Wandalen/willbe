@@ -5868,7 +5868,7 @@ function predefinedPathPut_functor( propName, resourceName, relativizing )
     if( !will && !filePath )
     return filePath;
 
-    filePath = _.entityMake( filePath );
+    filePath = _.entity.make( filePath );
 
     let ex = module[ propName ];
     let isIdentical = false;
@@ -6426,7 +6426,7 @@ function optionsForOpenerExport()
   // result.isRepository = true;
   // result.repo = module.repo;
 
-  result.willfilesArray = _.entityMake( result.willfilesArray );
+  result.willfilesArray = _.entity.make( result.willfilesArray );
 
   return result;
 }

@@ -103,7 +103,7 @@ function optionsForModuleExport()
   let result = _.mapOnly( opener, Import );
 
   result.superRelations = null;
-  result.willfilesArray = _.entityMake( result.willfilesArray );
+  result.willfilesArray = _.entity.make( result.willfilesArray );
 
   _.assert( _.boolLike( opener.isOut ), 'Expects defined {- opener.isOut -}' );
 
@@ -608,9 +608,9 @@ function find( o )
         || _.longIdentical( opener.willfilesArray, openedModule.willfilesArray )
       );
       if( opener.willfilesArray.length )
-      openedModule.willfilesArray = _.entityMake( opener.willfilesArray );
+      openedModule.willfilesArray = _.entity.make( opener.willfilesArray );
       else
-      opener.willfilesArray = _.entityMake( openedModule.willfilesArray );
+      opener.willfilesArray = _.entity.make( openedModule.willfilesArray );
 
       let o2 = opener.optionsForModuleExport();
       for( let f in o2 )

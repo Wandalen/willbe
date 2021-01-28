@@ -1838,7 +1838,7 @@ function exportStructure()
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
-  if( _.mapIs( result.dst ) && _.entityLength( result.dst ) === 0 )
+  if( _.mapIs( result.dst ) && _.entityLengthOf( result.dst ) === 0 )
   delete result.dst;
 
   if( result.src && result.src.prefixPath )
@@ -1907,7 +1907,7 @@ function filePathSet( src )
   if( !reflector.src && src === null )
   return src;
   _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
-  reflector.src.filePath = reflector.dst.filePath = _.entityMake( src );
+  reflector.src.filePath = reflector.dst.filePath = _.entity.make( src );
   return reflector.src.filePath;
 }
 
