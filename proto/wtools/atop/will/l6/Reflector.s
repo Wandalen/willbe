@@ -114,6 +114,7 @@ function MakeSingle( o )
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
   o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  if( o.resource.shell ) /* Dmytro : temporary fix, need to investigate the behaviour of reflectors which produce shell commands */
   o3.resource.shell = o.resource.shell;
   o3.resource.module = module;
   o3.resource.willf = willf;
