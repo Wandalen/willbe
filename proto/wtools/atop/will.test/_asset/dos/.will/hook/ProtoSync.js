@@ -6,6 +6,9 @@ function onModule( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
+  // debugger;
+  // console.log( 'xxx : proto sync' );
+
   if( o.v !== null && o.v !== undefined ) o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
