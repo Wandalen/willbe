@@ -1878,7 +1878,7 @@ function openWith( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( op.output, '====' ), 0 );
@@ -1910,7 +1910,7 @@ function openWith( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( op.output, '====' ), 0 );
@@ -1976,7 +1976,7 @@ function openWith( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( op.output, '====' ), 0 );
@@ -23499,7 +23499,7 @@ function stepBuild( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo step1' ), 0 );
     test.identical( _.strCount( op.output, 'echo' ), 0 );
     test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
@@ -23552,7 +23552,7 @@ function stepBuild( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo step3' ), 0 );
     test.identical( _.strCount( op.output, 'echo' ), 0 );
     test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
@@ -23571,7 +23571,7 @@ function stepBuild( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo' ), 0 );
     test.identical( _.strCount( op.output, 'Instance build::step2 already exists' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to make resource build::step2' ), 1 );
@@ -23590,7 +23590,7 @@ function stepBuild( test )
 
   .then( ( op ) =>
   {
-    test.ni( op.exitCode, 0 );
+    test.nil( op.exitCode, 0 );
     logger.log( 'op.exitCode', op.exitCode );
     test.identical( _.strCount( op.output, 'echo' ), 0 );
     test.identical( _.strCount( op.output, 'Instance build::step3 already exists' ), 1 );

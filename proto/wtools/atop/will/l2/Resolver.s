@@ -491,7 +491,7 @@ function _pathsTransform( onPath, onStr )
 
   function wrapTransform( resource )
   {
-    if( _.prototypeIsPrototypeOf( _.Looker, resource ) )
+    if( _.prototype.isPrototypeOf( _.Looker, resource ) )
     {
       resource.dst = elementTransform( resource.dst );
     }
