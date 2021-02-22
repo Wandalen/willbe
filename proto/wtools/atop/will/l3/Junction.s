@@ -700,7 +700,7 @@
 //     return { [ name ] : o }
 //   }
 //
-//   _.assert( 0, `Unknown type of node ${_.strType( o )}` );
+//   _.assert( 0, `Unknown type of node ${_.entity.strType( o )}` );
 //   // if( o instanceof _.will.Module )
 //   // {
 //   //   return { module : o }
@@ -966,7 +966,7 @@
 //   {
 //     result = junction._openerAdd( object );
 //   }
-//   else _.assert( 0, `Unknown type of object ${_.strType( object )}` );
+//   else _.assert( 0, `Unknown type of object ${_.entity.strType( object )}` );
 //
 //   return result;
 // }

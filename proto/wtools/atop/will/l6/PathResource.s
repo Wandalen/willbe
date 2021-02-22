@@ -182,7 +182,7 @@ function form3()
     _.assert
     (
       _.all( resource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
-      () => resource.qualifiedName + ' should not have absolute paths, but have ' + _.toStr( resource.path )
+      () => resource.qualifiedName + ' should not have absolute paths, but have ' + _.entity.exportString( resource.path )
     );
 
   }

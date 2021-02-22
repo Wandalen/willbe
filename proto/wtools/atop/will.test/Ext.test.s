@@ -3185,7 +3185,7 @@ function reflectNothingFromSubmodules( test )
       }
     }
     test.identical( outfile.reflector, expectedReflector );
-    // logger.log( _.toJson( outfile.reflector ) );
+    // logger.log( _.entity.exportJson( outfile.reflector ) );
 
     return null;
   })
@@ -10912,7 +10912,7 @@ function exportStringrmal( test )
     test.identical( outfile.path.download.path, '../.module/ModuleForTesting12' );
     test.identical( outfile.path.remote.path, undefined );
     // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.entity.exportJson( outfile.path ) );
 
     return null;
   })
@@ -10989,7 +10989,7 @@ function exportStringrmal( test )
     test.identical( outfile.path.download.path, '../.module/ModuleForTesting12' );
     test.identical( outfile.path.remote.path, undefined );
     // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.entity.exportJson( outfile.path ) );
 
     return null;
   })
@@ -11067,7 +11067,7 @@ function exportStringrmal( test )
     test.identical( outfile.path.download.path, '../.module/ModuleForTesting12ab' );
     test.identical( outfile.path.remote.path, undefined );
     // test.identical( outfile.path.remote.path, 'npm:///wmodulefortesting12ab' );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.entity.exportJson( outfile.path ) );
 
     return null;
   })
@@ -11293,7 +11293,7 @@ function exportMixed( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.entity.exportJson( outfile.path ) );
 
     var expected =
     {
@@ -11504,7 +11504,7 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.toJson( outfile.reflector ) ); debugger;
+    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11584,7 +11584,7 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.path ) ); debugger;
+    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -11718,7 +11718,7 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.toJson( outfile.reflector ) ); debugger;
+    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11798,7 +11798,7 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.path ) ); debugger;
+    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -11963,7 +11963,7 @@ function exportMultiple( test )
       linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
-    // logger.log( _.toJson( outfile.reflector ) );
+    // logger.log( _.entity.exportJson( outfile.reflector ) );
 
     var exportedReflectorFiles =
     {
@@ -12187,7 +12187,7 @@ function exportMultiple( test )
       linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
-    // logger.log( _.toJson( outfile.reflector[ 'exported.export.debug' ] ) );
+    // logger.log( _.entity.exportJson( outfile.reflector[ 'exported.export.debug' ] ) );
 
     var exportedReflector =
     {
@@ -12209,7 +12209,7 @@ function exportMultiple( test )
       dstRewritingOnlyPreserving : 1,
       linking : 'hardLinkMaybe',
     }
-    // logger.log( _.toJson( outfile.reflector[ 'exported.export.' ] ) );
+    // logger.log( _.entity.exportJson( outfile.reflector[ 'exported.export.' ] ) );
     test.identical( outfile.reflector[ 'exported.export.' ], exportedReflector );
 
     var exportedReflectorFiles =
@@ -12391,7 +12391,7 @@ function exportMultiple( test )
       },
     }
     test.identical( outfile.path, outfilePath );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.entity.exportJson( outfile.path ) );
 
     return null;
   })
@@ -15893,7 +15893,7 @@ function importLocalRepo( test )
       }
     }
     test.identical( outfile.path, expectedPath );
-    // logger.log( _.toJs( outfile.path ) );
+    // logger.log( _.entity.exportJs( outfile.path ) );
 
     return null;
   })

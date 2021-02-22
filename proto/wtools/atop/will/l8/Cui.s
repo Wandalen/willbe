@@ -261,7 +261,7 @@ function _command_head( o )
     _.mapExtend( e.propertiesMap, cui.implied );
   }
 
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( e.propertiesMap ) );
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShort( e.propertiesMap ) );
   if( o.routine.commandProperties )
   _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
 
@@ -642,7 +642,7 @@ function _commandBuildLike( o )
   _.all
   (
     _.Will.ModuleFilterNulls,
-    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
@@ -742,7 +742,7 @@ function _commandCleanLike( o )
   _.all
   (
     _.Will.ModuleFilterNulls,
-    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
@@ -1014,7 +1014,7 @@ function _commandModulesLike( o )
   _.all
   (
     _.Will.ModuleFilterNulls,
-    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
@@ -1272,7 +1272,7 @@ commandVersion.commandSubjectHint = false;
 //   let logger = will.logger;
 //
 //   let implyMap = _.strStructureParse( e.commandArgument );
-//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.entity.exportStringShort( implyMap ) );
 //   will._propertiesImply( implyMap );
 //
 //   // logger.log( 'Current version:', will.versionGet() );
@@ -1312,7 +1312,7 @@ function commandVersionBump( e )
   properties.versionDelta = e.subject;
 
   if( _.numberIs( properties.versionDelta ) && !_.intIs( properties.versionDelta ) )
-  properties.versionDelta = _.toStr( properties.versionDelta );
+  properties.versionDelta = _.entity.exportString( properties.versionDelta );
 
   return cui._commandBuildLike
   ({
@@ -2234,7 +2234,7 @@ function commandSubmodulesGitSync( e )
     rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
 
     if( e.propertiesMap.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 
@@ -2600,7 +2600,7 @@ function commandModulesGitSync( e )
     openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
 
     if( e.propertiesMap.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.toStrNice( provider.archive.basePath ) }` );
+    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 

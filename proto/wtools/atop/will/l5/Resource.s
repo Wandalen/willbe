@@ -246,7 +246,7 @@ function MakeSingle( o )
     let error = err;
     let criterion = '';
     if( o.resource.criterion )
-    criterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+    criterion += '\nCriterions\n' + _.entity.exportString( o.resource.criterion );
     if( err.message && _.strHas( err.message, 'Options map for' ) )
     error = _.errBrief( err );
     throw _.err( error, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, criterion );
@@ -631,7 +631,7 @@ function _inheritSingle( o )
   let resource2 = o.ancestor;
 
   _.assert( !!resource2.formed );
-  _.assert( o.ancestor instanceof resource.constructor, () => 'Expects ' + resource.constructor.shortName + ' but got ' + _.strType( o.ancestor ) );
+  _.assert( o.ancestor instanceof resource.constructor, () => 'Expects ' + resource.constructor.shortName + ' but got ' + _.entity.strType( o.ancestor ) );
   _.assert( arguments.length === 1 );
   _.assert( resource.formed === 1 );
   _.assert( !!resource2.formed );
@@ -694,7 +694,7 @@ function criterionValidate()
   for( let c in resource.criterion )
   {
     let crit = resource.criterion[ c ];
-    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.qualifiedName + ' should be number or string, but is ' + _.strType( crit ) );
+    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.qualifiedName + ' should be number or string, but is ' + _.entity.strType( crit ) );
   }
 
 }
@@ -939,7 +939,7 @@ function _exportString( o )
   o = _.routineOptions( _exportString, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
-  result += _.toStr( o.fields, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } );
+  result += _.entity.exportString( o.fields, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } );
 
   return result;
 }

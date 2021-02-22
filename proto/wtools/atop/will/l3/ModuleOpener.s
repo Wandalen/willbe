@@ -2477,7 +2477,7 @@ function exportString( o )
     fields.remote = opener.remotePath;
     fields.local = opener.localPath;
     fields.download = opener.downloadPath;
-    result += '\n' + _.toStrNice( fields );
+    result += '\n' + _.entity.exportStringNice( fields );
   }
 
   return result;

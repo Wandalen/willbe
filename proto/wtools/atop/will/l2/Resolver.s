@@ -189,7 +189,7 @@ function _onQuantitativeFail( err )
     });
 
     if( rop.criterion )
-    err = _.err( err, '\nCriterions :\n', _.toStr( rop.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
+    err = _.err( err, '\nCriterions :\n', _.entity.exportString( rop.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
 
     /* found */
 
@@ -1093,6 +1093,21 @@ defaults.missingAction = 'undefine';
 
 //
 
+function _iterator_functor() /* xxx : move? */
+{
+  var iterator = Object.create( null );
+  var iterationPreserve = Object.create( null );
+  iterationPreserve.exported = null;
+  iterationPreserve.currentModule = null;
+  iterationPreserve.selectorIsPath = 0;
+  let ResolverWillbe = _.looker.make({ iterationPreserve, iterator, parent : _.ResolverExtra, name : 'ResolverWillbe' });
+  return ResolverWillbe;
+}
+
+let ResolverWillbe = _iterator_functor();
+
+//
+
 function _resolveQualifiedAct( o )
 {
   let resolver = this;
@@ -1108,26 +1123,19 @@ function _resolveQualifiedAct( o )
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
   _.assert( o.baseModule instanceof _.will.AbstractModule );
 
-  /* yyy */
-  // o.iterationPreserve = o.iterationPreserve || Object.create( null );
-  // o.iterationPreserve.exported = null;
-  // o.iterationPreserve.currentModule = o.baseModule;
-  // o.iterationPreserve.selectorIsPath = 0;
-
   /* */
 
-  let iterator = Object.create( null );
-  // iterator.
-  let iterationPreserve = Object.create( null );
-  iterationPreserve.exported = null;
-  iterationPreserve.currentModule = o.baseModule;
-  iterationPreserve.selectorIsPath = 0;
-  // debugger;
+  // let iterator = Object.create( null );
+  // let iterationPreserve = Object.create( null );
+  // iterationPreserve.exported = null;
+  // iterationPreserve.currentModule = o.baseModule;
+  // // iterationPreserve.currentModule = null;
+  // iterationPreserve.selectorIsPath = 0;
+  // o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverWillbe' }); /* yyy : use predefined Looker */
+  o.Looker = ResolverWillbe;
 
-  o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverWillbe' }); /* xxx */
-
-  _.assert( o.Looker.Iteration.currentModule === o.baseModule );
-  _.assert( o.Looker.IterationPreserve.currentModule === o.baseModule );
+  _.assert( o.Looker.Iteration.currentModule !== undefined );
+  _.assert( o.Looker.IterationPreserve.currentModule !== undefined );
 
   /* */
 
@@ -1315,7 +1323,7 @@ function filesFromResource_body( o )
       let files = filesFind( o2 );
       filesAdd( files );
     }
-    else _.assert( 0, 'Unknown type of resource ' + _.strType( resource ) );
+    else _.assert( 0, 'Unknown type of resource ' + _.entity.strType( resource ) );
 
   }
 
@@ -1378,7 +1386,7 @@ function reflectorResolve_body( o )
 
   if( reflector instanceof _.will.Reflector )
   {
-    _.sure( reflector instanceof _.will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
+    _.sure( reflector instanceof _.will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.entity.strType( reflector ) );
     reflector.form();
     _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
   }

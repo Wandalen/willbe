@@ -816,7 +816,7 @@ function exportString( o )
     resultMap.local = module2.localPath;
 
     if( relation.opener.openedModule )
-    resultMap[ 'Exported builds' ] = _.toStr( _.mapKeys( module2.openedModule.exportedMap ) );
+    resultMap[ 'Exported builds' ] = _.entity.exportString( _.mapKeys( module2.openedModule.exportedMap ) );
 
   }
 

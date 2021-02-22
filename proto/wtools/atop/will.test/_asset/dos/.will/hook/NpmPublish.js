@@ -68,7 +68,7 @@ function onModule( context )
     if( o.verbosity >= 2 && diff && diff.status )
     {
       logger.up();
-      logger.log( _.toStrNice( diff.status ) );
+      logger.log( _.entity.exportStringNice( diff.status ) );
       logger.down();
     }
   }
