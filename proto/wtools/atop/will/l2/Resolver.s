@@ -20,6 +20,8 @@ function _onSelectorReplicate( o )
   let will = rop.baseModule.will;
   let selector = o.selector;
 
+  debugger;
+
   let result = Parent._onSelectorReplicate.call( it, o );
 
   if( resolver._selectorIs( selector ) )
