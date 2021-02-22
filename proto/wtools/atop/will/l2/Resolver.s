@@ -14,7 +14,8 @@ let Self = Object.create( Parent );
 function _onSelectorReplicate( o )
 {
   let it = this;
-  let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let selector = o.selector;
@@ -53,7 +54,8 @@ function _onSelectorReplicate( o )
 function _onSelectorDown()
 {
   let it = this;
-  let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
@@ -99,7 +101,7 @@ function _onSelectorDown()
 function _onUpBegin()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
@@ -124,7 +126,7 @@ function _onUpBegin()
 function _onUpEnd()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !it.dstWritingDown )
@@ -145,7 +147,7 @@ function _onUpEnd()
 function _onDownEnd()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !it.dstWritingDown )
@@ -161,7 +163,8 @@ function _onDownEnd()
 function _onQuantitativeFail( err )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let dst = it.dst;
 
   if( _.mapIs( dst ) )
@@ -198,7 +201,7 @@ function _onQuantitativeFail( err )
 
     /* information about outdated status of the module */
 
-    if( it.currentModule.peerModuleIsOutdated )
+    if( rit.currentModule.peerModuleIsOutdated )
     if
     (
          ( it.parsedSelector && it.parsedSelector.kind === 'exported' )
@@ -206,13 +209,13 @@ function _onQuantitativeFail( err )
       || ( it.down && it.down.parsedSelector && it.down.parsedSelector.kind === 'submodule' )
     )
     {
-      let willfile = it.currentModule.willfilesArray[ 0 ];
+      let willfile = rit.currentModule.willfilesArray[ 0 ];
       let storagePath = willfile ? willfile.storagePath : '';
       if( willfile )
       err = _.err
       (
         err,
-        `\n${ it.currentModule.decoratedAbsoluteName } loaded from `
+        `\n${ rit.currentModule.decoratedAbsoluteName } loaded from `
         + `${ willfile.storageWillfile.openedModule.decoratedAbsoluteName } is outdated!`,
         `\nPlease re-export ${ _.ct.format( storagePath, 'path' ) } first.`
       );
@@ -220,7 +223,7 @@ function _onQuantitativeFail( err )
       err = _.err
       (
         err,
-        `\n${ it.currentModule.decoratedAbsoluteName } is outdated!`,
+        `\n${ rit.currentModule.decoratedAbsoluteName } is outdated!`,
         `\nPlease re-export it first.`
       );
     }
@@ -240,7 +243,8 @@ function _onQuantitativeFail( err )
 function _statusPreUpdate()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let will = rop.baseModule.will;
 
   if( !it.src )
@@ -262,7 +266,9 @@ function _statusPreUpdate()
 
   if( it.src instanceof _.will.Module )
   {
-    it.currentModule = it.src;
+    debugger; /* xxx : should selector iteration have individual currentModule? */
+    rit.currentModule = it.src;
+    // it.currentModule = it.src;
   }
   else if( it.src instanceof _.will.ModulesRelation )
   {
@@ -285,10 +291,12 @@ function _statusPreUpdate()
       if( it.selector !== undefined )
       throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
       else
-      module2 = it.currentModule;
+      module2 = rit.currentModule;
+      // module2 = it.currentModule;
     }
 
-    it.currentModule = module2;
+    rit.currentModule = module2;
+    // it.currentModule = module2;
   }
   else if( it.src instanceof _.will.Exported )
   {
@@ -302,7 +310,7 @@ function _statusPreUpdate()
 function _statusPostUpdate()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let will = rop.baseModule.will;
 
   if( rop.selectorIsPath )
@@ -327,7 +335,7 @@ function _statusPostUpdate()
 function _globCriterionFilter()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let will = rop.baseModule.will;
 
   if( it.down && it.down.isGlob )
@@ -351,7 +359,8 @@ function _globCriterionFilter()
 function _resourceMapSelect()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let fileProvider = will.fileProvider;
@@ -390,14 +399,14 @@ function _resourceMapSelect()
   else
   {
 
-    it.src = it.currentModule.resourceMapsForKind( kind ); /* xxx : write result of selection to dst, never to src */
+    it.src = rit.currentModule.resourceMapsForKind( kind ); /* xxx : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
       it.selectorArray.splice( it.absoluteLevel, 1, '*', it.selector );
       it.selector = it.selectorArray[ it.absoluteLevel ];
       _.assert( it.selector !== undefined );
-      it.selectorChanged();
+      it.iterationSelectorChanged();
     }
 
     if( !it.src )
@@ -417,7 +426,7 @@ function _resourceMapSelect()
 function _exportedWriteThrough()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
@@ -438,7 +447,7 @@ function _exportedWriteThrough()
 function _currentExclude()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
@@ -455,7 +464,7 @@ function _currentExclude()
 function _pathPerform()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
@@ -479,7 +488,7 @@ function _pathPerform()
 function _pathsTransform( onPath, onStr )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let resource = it.dst;
@@ -540,7 +549,7 @@ function _pathsTransform( onPath, onStr )
 function _pathsNormalize()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let resource = it.dst;
@@ -558,10 +567,11 @@ function _pathsNormalize()
 function _pathNormalize( filePath, resource )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
+  let currentModule = rit.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
 
@@ -591,7 +601,7 @@ function _pathNormalize( filePath, resource )
 function _pathsNativize()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let resource = it.dst;
@@ -619,10 +629,11 @@ function _pathsNativize()
 function _pathNativize( filePath, resource )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
+  let currentModule = rit.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
 
@@ -660,7 +671,7 @@ function _pathCompositeResolve( /* currentModule, currentResource, filePath, res
   let resolving = arguments[ 3 ];
 
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let result = filePath;
@@ -691,10 +702,11 @@ function _pathCompositeResolve( /* currentModule, currentResource, filePath, res
 function _pathsCompositeResolve()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
+  let currentModule = rit.currentModule;
   let resource = it.dst;
 
   if( resource instanceof _.will.Reflector )
@@ -725,11 +737,21 @@ function _pathsCompositeResolve()
 function _pathResolve( filePath, resource )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions; /* yyy */
+  // if( it.resolveExtraOptions )
+  // debugger;
+  // _.assert( 0 ) /* xxx yyy : check */
+  // let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration;
+  _.assert( !!rop );
+  _.assert( rit.baseModule === undefined );
+  _.assert( rit.currentModule !== undefined );
+  _.assert( rop.baseModule !== undefined );
+  _.assert( rop.currentModule === undefined );
+  _.assert( rit.currentModule !== undefined );
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule || rop.iterationExtension.currentModule || rop.baseModule;
+  let currentModule = rit.currentModule || rop.baseModule;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let resourceName = resource.name;
@@ -804,10 +826,11 @@ function _pathResolve( filePath, resource )
 function _pathsResolve()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
+  let currentModule = rit.currentModule;
   let resource = it.dst;
 
   resolver._pathsTransform.call( it, ( filePath, resource ) =>
@@ -823,10 +846,11 @@ function _pathsResolve()
 function _pathsUnwrap()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
+  let currentModule = rit.currentModule;
 
   resolver._pathsTransform.call( it, unwrap );
 
@@ -858,7 +882,7 @@ function _pathsUnwrap()
 function _functionOsGetUp()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let will = rop.baseModule.will;
   let Os = require( 'os' );
   let os = 'posix';
@@ -873,7 +897,7 @@ function _functionOsGetUp()
   it.dst = os;
   it.selector = undefined;
   it.iterable = null;
-  it.selectorChanged();
+  it.iterationSelectorChanged();
   it.srcChanged();
 }
 
@@ -882,7 +906,7 @@ function _functionOsGetUp()
 function _functionThisUp()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let currentThis = rop.currentThis;
@@ -900,7 +924,7 @@ function _functionThisUp()
   it.src = [ currentThis ]; /* xxx : write result of selection to dst, never to src */
   it.selector = 0;
   it.iterable = null;
-  it.selectorChanged();
+  it.iterationSelectorChanged();
   it.srcChanged();
 }
 
@@ -909,7 +933,7 @@ function _functionThisUp()
 function _functionStringsJoinDown()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
@@ -1084,10 +1108,28 @@ function _resolveQualifiedAct( o )
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
   _.assert( o.baseModule instanceof _.will.AbstractModule );
 
-  o.iterationPreserve = o.iterationPreserve || Object.create( null );
-  o.iterationPreserve.exported = null;
-  o.iterationPreserve.currentModule = o.baseModule;
-  o.iterationPreserve.selectorIsPath = 0;
+  /* yyy */
+  // o.iterationPreserve = o.iterationPreserve || Object.create( null );
+  // o.iterationPreserve.exported = null;
+  // o.iterationPreserve.currentModule = o.baseModule;
+  // o.iterationPreserve.selectorIsPath = 0;
+
+  /* */
+
+  let iterator = Object.create( null );
+  // iterator.
+  let iterationPreserve = Object.create( null );
+  iterationPreserve.exported = null;
+  iterationPreserve.currentModule = o.baseModule;
+  iterationPreserve.selectorIsPath = 0;
+  // debugger;
+
+  o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverWillbe' }); /* xxx */
+
+  _.assert( o.Looker.Iteration.currentModule === o.baseModule );
+  _.assert( o.Looker.IterationPreserve.currentModule === o.baseModule );
+
+  /* */
 
   try
   {
