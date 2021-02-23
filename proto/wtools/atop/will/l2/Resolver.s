@@ -14,13 +14,10 @@ let Self = Object.create( Parent );
 function _onSelectorReplicate( o )
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let selector = o.selector;
-
-  debugger;
 
   let result = Parent._onSelectorReplicate.call( it, o );
 
@@ -56,7 +53,6 @@ function _onSelectorReplicate( o )
 function _onSelectorDown()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
@@ -367,9 +363,6 @@ function _resourceMapSelect()
   let will = rop.baseModule.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-
-  // if( _.strIs( it.selector ) && _.strHas( it.selector, '*' ) && it.parsedSelector.kind === '*' )
-  // debugger;
 
   if( it.selector === undefined || it.selector === null )
   return;
@@ -1067,9 +1060,6 @@ function resolve_body( o )
     baseModule : o.baseModule,
   });
 
-  // if( _.longIs( o.selector ) && o.selector[ 0 ] === 1 )
-  // debugger;
-
   return Parent.resolveQualified.body.call( resolver, o );
 }
 
@@ -1102,7 +1092,10 @@ function _iterator_functor() /* xxx : move? */
   iterationPreserve.exported = null;
   iterationPreserve.currentModule = null;
   iterationPreserve.selectorIsPath = 0;
+  _.assert( !!_.ResolverExtra );
+  _.assert( _.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
   let ResolverWillbe = _.looker.make({ iterationPreserve, iterator, parent : _.ResolverExtra, name : 'ResolverWillbe' });
+  _.assert( ResolverWillbe.Iterator.resolveExtraOptions !== undefined );
   return ResolverWillbe;
 }
 
@@ -1266,18 +1259,15 @@ function filesFromResource_body( o )
     resources = module.resolve( o2 );
     if( !resources )
     {
-      debugger;
       let o2 = _.mapOnly( o, module.resolve.defaults );
       o2.prefixlessAction = 'default';
       o2.missingAction = 'undefine';
       o2.defaultResourceKind = 'reflector';
       resources = module.resolve( o2 );
-      debugger;
     }
 
     if( resources === undefined )
     {
-      debugger;
       let err = _.err( `No path::${o.selector}, neither reflecotr::${o.selector} exists` );
       if( o.missingAction === 'throw' )
       throw err;
@@ -1292,7 +1282,6 @@ function filesFromResource_body( o )
   {
     let o2 = _.mapOnly( o, module.resolve.defaults );
     resources = module.resolve( o2 );
-    debugger;
   }
 
   if( _.arrayIs( resources ) )
