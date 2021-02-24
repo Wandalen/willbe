@@ -144,7 +144,6 @@ function assetFor( test, name )
     a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     try
     {
-      // debugger;
       /* Dmytro : all default values for option `sync` is `null`, so each routine checks the option and applies `null`. Last time, the routine `_fileCopyDo` run async copy and throw error */
       a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
     }
@@ -8802,10 +8801,7 @@ function modulesEachDuplicates( test )
     o2.withPeers = 1;
     o2.onUp = handleUp;
     o2.outputFormat = '*/module';
-    _global_.debugger = 1;
-    debugger;
     var got = opener.openedModule.submoduleMap.a.opener.openedModule.modulesEach( o2 )
-    debugger;
     test.true( ups.length === got.length );
     test.true( ups[ 0 ] === got[ 0 ] );
 
@@ -9080,7 +9076,6 @@ function submodulesDeleteAndDownload( test )
     let builds = opener.openedModule.buildsResolve({ name : 'build' });
     test.identical( builds.length, 1 );
 
-    debugger;
     let build = builds[ 0 ];
     let con = build.perform();
 

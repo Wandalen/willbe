@@ -1365,7 +1365,7 @@ function _add( object )
   {
     result = junction._openerAdd( object );
   }
-  else _.assert( 0, `Unknown type of object ${_.strType( object )}` );
+  else _.assert( 0, `Unknown type of object ${_.entity.strType( object )}` );
 
   return result;
 }

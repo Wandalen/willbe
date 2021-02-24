@@ -130,7 +130,7 @@ function exportString()
 
   let result = '';
   // result += _.color.strFormat( 'About', 'highlighted' );
-  result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
+  result += '\n' + _.entity.exportString( fields, { wrap : 0, levels : 4, multiline : 1 } );
 
   result += '\n\n';
 

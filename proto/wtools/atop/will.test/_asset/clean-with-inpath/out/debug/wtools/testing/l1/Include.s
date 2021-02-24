@@ -14,7 +14,7 @@ else if( typeof global !== 'undefined' && global.global === global )
 _global = global;
 else if( typeof window !== 'undefined' && window.window === window )
 _global = window;
-else if( typeof self   !== 'undefined' && self.self === self )
+else if( typeof self !== 'undefined' && self.self === self )
 _global = self;
 if( !_global._globals_ )
 {

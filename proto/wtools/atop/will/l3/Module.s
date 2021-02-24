@@ -1699,7 +1699,7 @@ function own( object )
       return true;
     }
   }
-  else _.assert( 0, `Unknown type of object ${_.strType( object )}` );
+  else _.assert( 0, `Unknown type of object ${_.entity.strType( object )}` );
 
   return false;
 }
@@ -5868,7 +5868,7 @@ function predefinedPathPut_functor( propName, resourceName, relativizing )
     if( !will && !filePath )
     return filePath;
 
-    filePath = _.entityMake( filePath );
+    filePath = _.entity.make( filePath );
 
     let ex = module[ propName ];
     let isIdentical = false;
@@ -6426,7 +6426,7 @@ function optionsForOpenerExport()
   // result.isRepository = true;
   // result.repo = module.repo;
 
-  result.willfilesArray = _.entityMake( result.willfilesArray );
+  result.willfilesArray = _.entity.make( result.willfilesArray );
 
   return result;
 }
@@ -6453,7 +6453,7 @@ function exportString( o )
     fields.remote = module.remotePath;
     fields.local = module.localPath;
     fields.download = module.downloadPath;
-    result += '\n' + _.toStrNice( fields );
+    result += '\n' + _.entity.exportStringNice( fields );
   }
 
   if( o.verbosity >= 4 )
@@ -6492,7 +6492,7 @@ function infoExportPaths( paths )
   // paths = module.pathsRelative({ basePath : module.dirPath, filePath : paths, onlyLocal : 1 });
 
   debugger;
-  result += '\n' + _.toStrNice( paths ) + '';
+  result += '\n' + _.entity.exportStringNice( paths ) + '';
   debugger;
 
   result += '\n\n';
@@ -6529,7 +6529,7 @@ function resourcesExportInfo( collection )
     }
     else
     {
-      result = _.toStrNice( resource );
+      result = _.entity.exportStringNice( resource );
     }
   });
 
@@ -8039,7 +8039,7 @@ function willfileGetProperty( o )
       }
       else if( o.willfilePropertiesMap[ option ] )
       {
-        let value = _.toStrNice( dstConfig[ key ] );
+        let value = _.entity.exportStringNice( dstConfig[ key ] );
         if( _.strLinesCount( value ) > 1 )
         logger.log( `${ option } ::\n${ value }` );
         else

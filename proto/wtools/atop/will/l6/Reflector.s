@@ -114,6 +114,7 @@ function MakeSingle( o )
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
   o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  // if( o.resource.shell ) /* Dmytro : temporary fix, need to investigate the behaviour of reflectors which produce shell commands */
   o3.resource.shell = o.resource.shell;
   o3.resource.module = module;
   o3.resource.willf = willf;
@@ -386,12 +387,12 @@ function form3()
   _.assert
   (
     reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.toStrShort( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShort( reflector.src.prefixPath )
   );
   _.assert
   (
     reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.toStrShort( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShort( reflector.src.prefixPath )
   );
 
   /* end */
@@ -479,7 +480,7 @@ function _inheritSingle( o )
   _.assertRoutineOptions( _inheritSingle, arguments );
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
-  _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.strType( reflector2 ) );
+  _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.entity.strType( reflector2 ) );
   _.assert( !!reflector2.formed );
   _.assert( reflector.src instanceof _.FileRecordFilter );
   _.assert( reflector.dst instanceof _.FileRecordFilter );
@@ -661,8 +662,8 @@ function _inheritPathMapAct1( o )
   function set( dst, src )
   {
     reflector.filePath = reflector.filePath || Object.create( null );
-    _.assert( path.isElement( dst ), () => 'Expects destination path, got ' + _.strType( dst ) );
-    _.assert( path.isElement( src ), () => 'Expects source path, got ' + _.strType( src ) );
+    _.assert( path.isElement( dst ), () => 'Expects destination path, got ' + _.entity.strType( dst ) );
+    _.assert( path.isElement( src ), () => 'Expects source path, got ' + _.entity.strType( src ) );
     let resolvedSrc = src ? path.normalize( src ) : src;
     _.assert( _.mapIs( reflector.filePath ) );
     _.assert
@@ -735,7 +736,7 @@ function _inheritPathMapAct2( o )
   )
   {
     debugger;
-    resolvedSrc = _.err( 'Source of path map was resolved to unexpected type', _.strType( resolvedSrc ) );
+    resolvedSrc = _.err( 'Source of path map was resolved to unexpected type', _.entity.strType( resolvedSrc ) );
   }
   if( _.errIs( resolvedSrc ) )
   {
@@ -858,8 +859,8 @@ function _inheritPathMapAct3( o )
   function set( dst, src )
   {
     reflector.filePath = reflector.filePath || Object.create( null );
-    _.assert( path.isElement( dst ), () => 'Expects destination path, got ' + _.strType( dst ) );
-    _.assert( path.isElement( src ), () => 'Expects source path, got ' + _.strType( src ) );
+    _.assert( path.isElement( dst ), () => 'Expects destination path, got ' + _.entity.strType( dst ) );
+    _.assert( path.isElement( src ), () => 'Expects source path, got ' + _.entity.strType( src ) );
     let resolvedSrc = src ? path.normalize( src ) : src;
     _.assert( _.mapIs( reflector.filePath ) );
     _.assert
@@ -1838,7 +1839,7 @@ function exportStructure()
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
-  if( _.mapIs( result.dst ) && _.entityLength( result.dst ) === 0 )
+  if( _.mapIs( result.dst ) && _.entityLengthOf( result.dst ) === 0 )
   delete result.dst;
 
   if( result.src && result.src.prefixPath )
@@ -1907,7 +1908,7 @@ function filePathSet( src )
   if( !reflector.src && src === null )
   return src;
   _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
-  reflector.src.filePath = reflector.dst.filePath = _.entityMake( src );
+  reflector.src.filePath = reflector.dst.filePath = _.entity.make( src );
   return reflector.src.filePath;
 }
 
