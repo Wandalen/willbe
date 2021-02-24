@@ -68,14 +68,16 @@ function onModule( context )
 
   context.ready.tap( () =>
   {
+    // console.log( 'xxx : resotring links' );
     provider.archive.restoreLinksEnd();
   });
 
+  context.ready.tap( () =>
   {
     let context2 = context.will.hookContextNew( context );
     context2.request.map = { verbosity : 2 }
     context2.will.hooks.ProtoSync.call( context2 );
-  }
+  });
 
   context.ready.catch( ( err ) =>
   {

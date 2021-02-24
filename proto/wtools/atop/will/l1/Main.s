@@ -725,7 +725,7 @@ function resourcesInfoExport( o )
   result.openersErrors = _.filter_( null, will.openersErrorsArray, ( r ) => r.err.originalMessage || r.err.message );
 
   if( o.stringing )
-  result = _.toStrNice( result );
+  result = _.entity.exportStringNice( result );
 
   return result;
 }
@@ -753,7 +753,7 @@ function _pathChanged( o )
   if( o.val )
   if( o.propName === 'currentRemotePath' || o.propName === 'currentRemote' )
   {
-    logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+    logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
     debugger;
   }
 
@@ -761,7 +761,7 @@ function _pathChanged( o )
   // if( o.propName === 'remotePath' || o.propName === 'remote' )
   // if( o.object.id === 690 || o.object.id === 692 )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   debugger;
   // }
 
@@ -769,7 +769,7 @@ function _pathChanged( o )
   // if( o.propName === 'remotePath' || o.propName === 'remote' )
   // if( o.object.id === 1086 )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   debugger;
   // }
 
@@ -777,7 +777,7 @@ function _pathChanged( o )
   // if( o.propName === 'outPath' || o.propName === 'out' )
   // if( o.object.id === 209 || o.object.id === 84 )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   debugger;
   // }
 
@@ -785,7 +785,7 @@ function _pathChanged( o )
   // if( o.propName === 'download' )
   // // if( o.object.isOut && !o.object.isRemote )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   debugger;
   // }
 
@@ -793,20 +793,20 @@ function _pathChanged( o )
   // if( o.object.isOut )
   // if( o.val )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   debugger;
   // }
 
   // if( o.propName === 'willfilesPath' || o.propName === 'module.willfiles' )
   // if( _.strIs( o.val ) && _.strHas( o.val, 'wTools.out' ) )
   // {
-  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   // debugger;
   // }
 
   // if( o.propName === 'willfilesPath' || o.propName === 'module.willfiles' )
   // {
-  //   logger.log( o.object.absoluteName, o.kind, o.propName, _.toStrNice( o.val ) );
+  //   logger.log( o.object.absoluteName, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
   //   debugger;
   // }
 
@@ -816,7 +816,7 @@ function _pathChanged( o )
   // debugger;
 
   // if( !o.isIdential )
-  // logger.log( o.object.absoluteName, o.kind, o.propName, _.toStrNice( o.val ) );
+  // logger.log( o.object.absoluteName, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
 
 }
 
@@ -5115,7 +5115,7 @@ function hookCall( o )
     .then( ( routine ) =>
     {
       if( !_.routineIs( routine ) )
-      throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
+      throw _.errBrief( `Script file should export routine or consequence, but exports ${_.entity.strType( routine )}` );
       defaultsApply( routine );
       let r = routine.call( will, o );
       if( r === ready )

@@ -1477,7 +1477,7 @@ function structureSet( src )
 {
   let willf = this;
 
-  _.assert( src === null || _.mapIs( src ), () => `Expects map with structure, but got ${_.strType( src )}` );
+  _.assert( src === null || _.mapIs( src ), () => `Expects map with structure, but got ${_.entity.strType( src )}` );
 
   if( willf.structure === src )
   return src;

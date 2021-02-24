@@ -49,7 +49,6 @@ function onModule( context )
     {
       diff = _.git.diff
       ({
-        // state2 : 'tag::' + o.tag,
         state2 : '!' + o.tag,
         localPath : context.junction.dirPath,
         sync : 1,
@@ -69,7 +68,7 @@ function onModule( context )
     if( o.verbosity >= 2 && diff && diff.status )
     {
       logger.up();
-      logger.log( _.toStrNice( diff.status ) );
+      logger.log( _.entity.exportStringNice( diff.status ) );
       logger.down();
     }
   }
@@ -82,8 +81,6 @@ function onModule( context )
 
   if( o.dry )
   return;
-
-  // debugger;
 
   let bumped = _.npm.bump
   ({
@@ -103,8 +100,6 @@ function onModule( context )
     activeСonfigPath = configPath;
   }
 
-  debugger;
-
   _.npm.fixate
   ({
     dry : o.dry,
@@ -114,6 +109,14 @@ function onModule( context )
     onDependency,
     verbosity : o.verbosity - 2,
   });
+
+  /* adjust styles */
+  {
+    context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
+    let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
+    read += '\n';
+    fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
+  }
 
   {
     let context2 = context.will.hookContextNew( context );
@@ -155,6 +158,12 @@ function onModule( context )
     ready : context.ready,
     verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
+
+  {
+    let context2 = context.will.hookContextNew( context );
+    context2.request.map = { verbosity : 2 }
+    context2.will.hooks.ProtoSync.call( context2 );
+  }
 
   function onDependency( dep )
   {

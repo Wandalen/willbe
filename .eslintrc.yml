@@ -32,7 +32,7 @@ rules :
     - error
     - after : true
       before : true
-  block-scoped-var : error
+  block-scoped-var : off
   block-spacing :
     - error
     - always
@@ -94,7 +94,20 @@ rules :
     - 2
     - outerIIFEBody : 0
       MemberExpression : 0
-      ignoredNodes : [ "IfStatement > IfStatement.consequent", "IfStatement > IfStatement.alternate", "IfStatement.body", "WhileStatement.body", "ForStatement.body", "ForInStatement.body", "ForOfStatement.body" ]
+      SwitchCase : 1
+      ignoreComments : true
+      ignoredNodes :
+        - "IfStatement > IfStatement.consequent"
+        - "IfStatement > IfStatement.alternate"
+        - "IfStatement > ForStatement"
+        - "IfStatement > ForInStatement"
+        - "IfStatement > ForOfStatement"
+        - "IfStatement.body"
+        - "WhileStatement.body"
+        - "ForStatement.body"
+        - "ForInStatement.body"
+        - "ForOfStatement.body"
+        - "CallExpression > ObjectExpression"
   indent-legacy : off
   init-declarations : off
   key-spacing :
@@ -174,6 +187,7 @@ rules :
       allow :
         - '!!'
         - '+'
+  no-cond-assign : error
   no-implicit-globals : error
   no-implied-eval : error
   no-import-assign : error
@@ -190,7 +204,7 @@ rules :
   no-mixed-requires : error
   no-multi-assign : off
   no-multi-spaces :
-    - warn
+    - error
     -
       ignoreEOLComments : true
       exceptions :
@@ -200,7 +214,7 @@ rules :
   no-multi-str : error
   no-multiple-empty-lines : error
   no-native-reassign : error
-  no-negated-condition : off
+  no-negated-condition : error
   no-negated-in-lhs : error
   no-nested-ternary : error
   no-new : error
@@ -409,7 +423,7 @@ rules :
     - max : 100
   max-nested-callbacks :
     - error
-    - max : 3
+    - max : 4
   max-depth :
     - error
     - max : 5
