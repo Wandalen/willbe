@@ -734,9 +734,6 @@ function _pathResolve( filePath, resource )
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions; /* yyy */
-  // if( it.resolveExtraOptions )
-  // debugger;
-  // _.assert( 0 ) /* xxx yyy : check */
   // let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration;
   _.assert( !!rop );
   _.assert( rit.baseModule === undefined );
@@ -916,7 +913,7 @@ function _functionThisUp()
   });
 
   it.isFunction = it.selector;
-  it.src = [ currentThis ]; /* xxx : write result of selection to dst, never to src */
+  it.src = [ currentThis ]; /* xxx : write result of selection to dst, never to src? */
   it.selector = 0;
   it.iterable = null;
   it.iterationSelectorChanged();
