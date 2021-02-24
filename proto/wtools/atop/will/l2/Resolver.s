@@ -1084,14 +1084,43 @@ defaults.missingAction = 'undefine';
 
 function _iterator_functor() /* xxx : move? */
 {
+
+  _.assert( !!_.resolver.ResolverExtraSelector );
+  let ResolverWillbeSelector = _.looker.make
+  ({
+    name : 'ResolverWillbeSelector',
+    parent : _.resolver.ResolverExtraSelector,
+    defaults :
+    {
+      defaultResourceKind : null,
+      prefixlessAction : null,
+      singleUnwrapping : null,
+      mapValsUnwrapping : null,
+      mapFlattening : null,
+      arrayWrapping : null,
+      arrayFlattening : null,
+      Resolver : null,
+    },
+  });
+
+  let looker = Object.create( null );
+  looker.ResolverWillbeSelector = ResolverWillbeSelector;
+  looker.ResolverWillbeSelector = ResolverWillbeSelector;
   var iterator = Object.create( null );
   var iterationPreserve = Object.create( null );
   iterationPreserve.exported = null;
   iterationPreserve.currentModule = null;
   iterationPreserve.selectorIsPath = 0;
-  _.assert( !!_.ResolverExtra );
-  _.assert( _.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
-  let ResolverWillbe = _.looker.make({ iterationPreserve, iterator, parent : _.ResolverExtra, name : 'ResolverWillbe' });
+  _.assert( !!_.resolver.ResolverExtra );
+  _.assert( _.resolver.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
+  let ResolverWillbe = _.looker.make
+  ({
+    name : 'ResolverWillbe',
+    parent : _.resolver.ResolverExtra,
+    defaults : resolve.defaults,
+    iterationPreserve,
+    iterator,
+  });
   _.assert( ResolverWillbe.Iterator.resolveExtraOptions !== undefined );
   return ResolverWillbe;
 }
