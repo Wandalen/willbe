@@ -58,9 +58,6 @@ function finit()
 
   _.assert( !module.isFinited() );
 
-  // if( module.id === 1004 )
-  // debugger;
-
   try
   {
 
@@ -4965,6 +4962,7 @@ function resolve_head( routine, args )
   if( _.strIs( o ) || _.arrayIs( o ) )
   o = { selector : o }
 
+  _.assert( _.aux.is( o ) );
   _.routineOptions( routine, o );
 
   if( o.visited === null )
@@ -4972,13 +4970,15 @@ function resolve_head( routine, args )
 
   o.baseModule = module;
 
-  _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
+  let it = _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
 
+  _.assert( _.looker.iteratorIs( o ) );
+  _.assert( _.looker.iterationIs( it ) );
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.arrayIs( o.visited ) );
 
-  return o;
+  return it;
 }
 
 //
@@ -4987,7 +4987,9 @@ function resolve_body( o )
 {
   let module = this;
   let will = module.will;
+
   _.assert( o.baseModule === module );
+
   let result = _.will.Resolver.resolve.body.call( _.will.Resolver, o );
 
   if( o.pathUnwrapping )
