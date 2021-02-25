@@ -4,12 +4,10 @@
 'use strict';
 
 const _ = _global_.wTools;
-// let Parent = _.resolver;
 const Parent = _.resolver2.Looker;
 _.assert( !!_.resolver2.resolveQualified );
 _.assert( !!_.resolver2.Looker.resolveQualified );
 _.assert( !!_.resolver2.composite );
-// const Self = Object.create( _.resolver2 );
 _.will.Resolver = Object.create( _.resolver2 );;
 
 // --
@@ -272,7 +270,6 @@ function _statusPreUpdate()
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let will = rop.baseModule.will;
 
-  // debugger; /* yyy */
   if( !it.src )
   return;
 
@@ -292,7 +289,7 @@ function _statusPreUpdate()
 
   if( it.src instanceof _.will.Module )
   {
-    // debugger; /* xxx : should selector iteration have individual currentModule? */
+    // debugger; /* yyy : should selector iteration have individual currentModule? */
     rit.currentModule = it.src;
     // it.currentModule = it.src;
   }
@@ -841,17 +838,14 @@ function _pathResolve( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions; /* yyy */
-  // let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions; /* yyy xxx */
   _.assert( !!rop );
   _.assert( rit.Looker === rit.ResolverReplicator );
   _.assert( rop === rit.iterator );
   _.assert( rit.baseModule !== undefined );
-  // _.assert( rit.baseModule === undefined );
   _.assert( rit.currentModule !== undefined );
   _.assert( rop.baseModule !== undefined );
   _.assert( rop.currentModule !== undefined );
-  // _.assert( rop.currentModule === undefined );
   _.assert( rit.currentModule !== undefined );
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
@@ -1045,7 +1039,6 @@ function _functionStringsJoinDown()
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
-  // debugger; /* yyy */
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
 
@@ -1122,10 +1115,59 @@ function head( routine, args )
 
 //
 
-function perform()
+// function perform()
+// {
+//   let it = this;
+//
+//   // let resolver = this; /* xxx */
+//   // let module = it.baseModule;
+//   // let will = module.will;
+//   // let hardDrive = will.fileProvider.providersWithProtocolMap.file;
+//   // let fileProvider = will.fileProvider;
+//   // let path = fileProvider.path;
+//   // let currentContext = it.currentContext = it.currentContext || module;
+//   //
+//   // _.assert( it.srcForSelect instanceof _.will.Module );
+//   //
+//   // it.iterator.currentThis = it.resolveContextPrepare
+//   // ({
+//   //   currentThis : it.currentThis,
+//   //   currentContext : it.currentContext,
+//   //   baseModule : it.baseModule,
+//   // });
+//   // _.assert( !_.property.own( it, 'currentThis' ) );
+//   //
+//   // /* */
+//   //
+//   // let result;
+//   //
+//   // _.assert( it.iterationProper( it ) );
+//   // if( !( it.currentContext instanceof _.will.AbstractModule ) )
+//   // if( it.iterator.criterion === null && it.currentContext && it.currentContext.criterion )
+//   // it.iterator.criterion = it.currentContext.criterion;
+//   //
+//   // _.assert( it.criterion === null || _.mapIs( it.criterion ) );
+//   // _.assert( it.baseModule instanceof _.will.AbstractModule );
+//   // _.assert( !_.property.own( it, 'criterion' ) );
+//   //
+//   // _.assert( it.Looker === ResolverWillbe );
+//   // _.assert( it.Looker.Iteration.currentModule !== undefined );
+//   // _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
+//
+//   /* */
+// 
+//   Parent.perform.apply( this, arguments );
+//
+//   return it;
+// }
+
+//
+
+function performBegin()
 {
   let it = this;
-  // let resolver = this; /* xxx */
+  Parent.performBegin.apply( it, arguments );
+
   let module = it.baseModule;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
@@ -1133,9 +1175,6 @@ function perform()
   let path = fileProvider.path;
   let currentContext = it.currentContext = it.currentContext || module;
 
-  // debugger; /* yyy */
-  // _.assert( it.src instanceof _.will.Module );
-  // _.assert( _.strIs( it.src ) || _.vectorIs( it.src ) );
   _.assert( it.srcForSelect instanceof _.will.Module );
 
   it.iterator.currentThis = it.resolveContextPrepare
@@ -1146,14 +1185,6 @@ function perform()
   });
   _.assert( !_.property.own( it, 'currentThis' ) );
 
-  /* */
-
-  // let resolver = this;
-  // let module = it.baseModule;
-  // let will = module.will;
-  // let currentContext = it.currentContext;
-  let result;
-
   _.assert( it.iterationProper( it ) );
   if( !( it.currentContext instanceof _.will.AbstractModule ) )
   if( it.iterator.criterion === null && it.currentContext && it.currentContext.criterion )
@@ -1162,27 +1193,9 @@ function perform()
   _.assert( it.criterion === null || _.mapIs( it.criterion ) );
   _.assert( it.baseModule instanceof _.will.AbstractModule );
   _.assert( !_.property.own( it, 'criterion' ) );
-
-  /* */
-
-  // let iterator = Object.create( null );
-  // let iterationPreserve = Object.create( null );
-  // iterationPreserve.exported = null;
-  // iterationPreserve.currentModule = it.baseModule;
-  // // iterationPreserve.currentModule = null;
-  // iterationPreserve.selectorIsPath = 0;
-  // it.Looker = _.looker.define({ iterationPreserve, iterator, parent : it.Looker || _.Resolver, name : 'ResolverWillbe' }); /* yyy : use predefined Looker */
-  // it.Looker = ResolverWillbe;
-
   _.assert( it.Looker === ResolverWillbe );
   _.assert( it.Looker.Iteration.currentModule !== undefined );
   _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
-
-  /* */
-
-  // return Parent.resolveQualified.body.call( resolver, it );
-
-  Parent.perform.apply( this, arguments );
 
   return it;
 }
@@ -1199,13 +1212,10 @@ function optionsForm( routine, o )
   _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
   _.assert( o.baseModule !== undefined );
 
-  /* yyy */
   if( o.src === null )
   o.src = o.baseModule;
 
   Parent.optionsForm.call( this, routine, o );
-
-  // Parent.resolveQualified.head.call( resolver, routine, args );
 
   return o;
 }
@@ -1218,7 +1228,6 @@ function optionsToIteration( o )
   _.assert( !!Self.ResolverSelector );
   _.assert( it.ResolverSelector === Self.ResolverSelector );
   _.assert( it.Looker.ResolverSelector === Self.ResolverSelector );
-  // _.assert( it.Looker.ResolverSelector.currentThis === null );
   return it;
 }
 
@@ -1465,17 +1474,10 @@ function reflectorResolve_body( o )
   let module = o.baseModule;
   let will = module.will;
 
-  // let o2 = _.mapExtend( null, o );
-  // o2.pathResolving = 'in';
-  // let reflector = module.resolve( o2 );
-  /* yyy */
-
   _.assert( _.looker.iterationIs( o ) );
   _.assert( o.pathResolving === 'in' );
 
-  // debugger;
   let reflector = module.resolve.body.call( module, o );
-  // debugger;
 
   /*
     `pathResolving` should be `in` for proper resolving of external resources
@@ -1504,7 +1506,6 @@ defaults.currentContext = null;
 defaults.pathResolving = 'in';
 
 let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
-// let reflectorResolve = _.routineUnite( resolve_head, reflectorResolve_body );
 
 //
 
@@ -1547,18 +1548,6 @@ function _iterator_functor()
       arrayFlattening : null,
       Resolver : null,
 
-      // currentThis : null,
-      // currentContext : null,
-      // baseModule : null,
-      // criterion : null,
-      // pathResolving : null,
-      // pathNativizing : null,
-      // pathUnwrapping : null,
-      // strictCriterion : null,
-      // currentExcluding : null,
-      // hasPath : null,
-      // selectorIsPath : null,
-
       ... Defaults,
     },
     looker :
@@ -1584,13 +1573,11 @@ function _iterator_functor()
       resolve,
       resolveMaybe,
       head,
-      perform,
+      performBegin,
       performMaking : resolve,
       optionsForm,
       optionsToIteration,
 
-      // ResolverWillbeSelector : ResolverWillbeSelector,
-      // ResolverSelector : ResolverWillbeSelector,
     },
     iterationPreserve :
     {
@@ -1603,35 +1590,12 @@ function _iterator_functor()
   /* */
 
   _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions !== undefined );
-  // _.assert( ResolverWillbeReplicator.Looker.ResolverSelector === ResolverWillbeSelector );
   _.assert( ResolverWillbeReplicator.Looker === ResolverWillbeReplicator );
 
   ResolverWillbeReplicator.ResolverSelector = ResolverWillbeSelector;
   ResolverWillbeReplicator.ResolverReplicator = ResolverWillbeReplicator;
   ResolverWillbeSelector.ResolverSelector = ResolverWillbeSelector;
   ResolverWillbeSelector.ResolverReplicator = ResolverWillbeReplicator;
-
-  // ResolverWillbeSelector.Looker.ResolverWillbeSelector = ResolverWillbeSelector;
-  // ResolverWillbeSelector.Looker.ResolverExtraSelector = ResolverWillbeSelector;
-  // ResolverWillbeSelector.Looker.ResolverSelector = ResolverWillbeSelector;
-  // ResolverWillbeSelector.Looker.ResolverWillbe = ResolverWillbe;
-  // ResolverWillbeSelector.Looker.ResolverExtra = ResolverWillbe; debugger;
-  //
-  // ResolverWillbe.Looker.ResolverWillbeSelector = ResolverWillbeSelector;
-  // ResolverWillbe.Looker.ResolverSelector = ResolverWillbeSelector;
-  // ResolverWillbe.Looker.ResolverWillbe = ResolverWillbe;
-  // debugger;
-  // ResolverWillbe.Looker.ResolverExtra = ResolverWillbe;
-
-  // ResolverExtraReplicator.ResolverSelector = ResolverExtraSelector;
-  // ResolverExtraReplicator.ResolverExtraSelector = ResolverExtraSelector;
-  // ResolverExtraReplicator.ResolverExtra = ResolverExtraReplicator;
-  // ResolverExtraReplicator.ResolverExtraReplicator = ResolverExtraReplicator;
-  //
-  // ResolverExtraSelector.ResolverSelector = ResolverExtraSelector;
-  // ResolverExtraSelector.ResolverExtraSelector = ResolverExtraSelector;
-  // ResolverExtraSelector.ResolverExtra = ResolverExtraReplicator;
-  // ResolverExtraSelector.ResolverExtraReplicator = ResolverExtraReplicator;
 
   return ResolverWillbeReplicator;
 }
