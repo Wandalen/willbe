@@ -535,8 +535,22 @@ function _commandListLike( o )
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
 
-  ready
-  .then( () => will.openersCurrentEach( function( it )
+  ready.then( () => will.openersCurrentEach( listOfResourcesGet ) )
+  .finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    logger.error( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return ready;
+
+  /* */
+
+  function listOfResourcesGet( it )
   {
     let ready2 = new _.Consequence().take( null );
 
@@ -604,18 +618,7 @@ function _commandListLike( o )
     });
 
     return ready2;
-  }))
-  .finally( ( err, arg ) =>
-  {
-    will._commandsEnd( o.commandRoutine );
-    if( err )
-    logger.error( _.errOnce( err ) );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  return ready;
+  }
 }
 
 _commandListLike.defaults =
@@ -941,6 +944,7 @@ function _commandTreeLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+  let ready2 = new _.Consequence().take( null );
 
   _.routineOptions( _commandTreeLike, arguments );
   _.assert( _.routineIs( o.commandRoutine ) );
@@ -956,15 +960,7 @@ function _commandTreeLike( o )
 
   ready.then( () =>
   {
-    let ready2 = new _.Consequence().take( null );
-
-    will.currentOpeners.forEach( ( opener ) => ready2.then( () =>
-    {
-      _.assert( !!opener.openedModule );
-      if( !opener.openedModule.isValid() )
-      return null;
-      return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
-    }));
+    will.currentOpeners.forEach( moduleEachUpform );
 
     ready2.then( () =>
     {
@@ -989,6 +985,19 @@ function _commandTreeLike( o )
   });
 
   return ready;
+
+  /* */
+
+  function moduleEachUpform( opener )
+  {
+    return ready2.then( () =>
+    {
+      _.assert( !!opener.openedModule );
+      if( !opener.openedModule.isValid() )
+      return null;
+      return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
+    });
+  }
 }
 
 _commandTreeLike.defaults =
@@ -1082,8 +1091,7 @@ function _commandModulesLike( o )
     if( o.onModulesBegin )
     ready2.then( () =>
     {
-      o.onModulesBegin.call( cui, cui.currentOpeners, opener );
-      return null;
+      return o.onModulesBegin.call( cui, cui.currentOpeners, opener );
     });
 
     ready2.then( () => cui.openersCurrentEach( forSingle ) )
@@ -1091,12 +1099,12 @@ function _commandModulesLike( o )
     if( o.onModulesEnd )
     ready2.finally( ( err, arg ) =>
     {
-      o.onModulesEnd.call( cui, cui.currentOpeners, opener );
+      let result = o.onModulesEnd.call( cui, cui.currentOpeners, opener );
 
       if( err )
       throw _.err( err );
 
-      return null;
+      return result;
     });
 
     return ready2;
@@ -2205,7 +2213,7 @@ function commandSubmodulesGitSync( e )
 {
   let cui = this;
   let logger = cui.logger;
-  let provider;
+  let o2;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
@@ -2225,17 +2233,29 @@ function commandSubmodulesGitSync( e )
 
   /* */
 
-  function onModulesBegin( openers, rootOpener )
+  function onModulesBegin( openers )
   {
-    let pathsContainer = [ rootOpener.openedModule.dirPath ];
+    if( openers.length === 0 )
+    return null;
+
+    let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    let commonPath = cui.fileProvider.path.common( pathsContainer );
 
-    if( e.propertiesMap.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+    let con2 = new _.Consequence();
+    o2 = openers[ 0 ].openedModule._archiveSubprocessMake({ dirPath : commonPath, verbosity : e.propertiesMap.verbosity });
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
+
+      /* sync archive creation with main process */
+      if( con2.resourcesGet().length === 0 )
+      con2.take( msg );
+    });
+
+    return con2;
   }
 
   /* */
@@ -2252,10 +2272,11 @@ function commandSubmodulesGitSync( e )
 
   /* */
 
-  function onModulesEnd( openers )
+  function onModulesEnd()
   {
-    debugger;
-    provider.archive.restoreLinksEnd();
+    if( o2 )
+    o2.pnd.disconnect();
+    return null;
   }
 }
 
@@ -2571,7 +2592,7 @@ function commandModulesGitSync( e )
 {
   let cui = this;
   let logger = cui.logger;
-  let provider;
+  let o2;
   cui._command_head( commandModulesGitSync, arguments );
 
   _.routineOptions( commandModulesGitSync, e.propertiesMap );
@@ -2593,15 +2614,25 @@ function commandModulesGitSync( e )
 
   function onModulesBegin( openers )
   {
+
     let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    let commonPath = cui.fileProvider.path.common( pathsContainer );
 
-    if( e.propertiesMap.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+    let con2 = new _.Consequence();
+    o2 = openers[ 0 ].openedModule._archiveSubprocessMake({ dirPath : commonPath, verbosity : e.propertiesMap.verbosity });
+    o2.pnd.on( 'message', ( msg ) =>
+    {
+      if( msg.length > 2 )
+      logger.log( msg );
+
+      /* sync archive creation with main process */
+      if( con2.resourcesGet().length === 0 )
+      con2.take( msg );
+    });
+
+    return con2;
   }
 
   /* */
@@ -2618,9 +2649,10 @@ function commandModulesGitSync( e )
 
   /* */
 
-  function onModulesEnd( openers )
+  function onModulesEnd()
   {
-    provider.archive.restoreLinksEnd();
+    o2.pnd.disconnect();
+    return null;
   }
 }
 

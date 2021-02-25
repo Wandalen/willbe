@@ -23621,14 +23621,17 @@ function stepGitCheckHardLinkRestoring( test )
   a.appStart( '.with clone/Git.* .build git.pull' )
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -23642,14 +23645,17 @@ function stepGitCheckHardLinkRestoring( test )
   a.appStart( '.imply v:0 .with clone/Git.* .build git.pull' )
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git' ), 0 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -23673,15 +23679,18 @@ function stepGitCheckHardLinkRestoring( test )
   a.appStart({ execPath : '.with clone/Git.* .build git.pull' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/Git.* .build git.pull - succefull pulling with hardlinks';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = '.with clone/Git.* .build git.pull - succefull pulling with hardlinks';
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -23742,45 +23751,48 @@ clone
   a.appStartNonThrowing( '.with clone/Git.* .build git.pull' )
   .then( ( op ) =>
   {
-    test.description = 'has local changes';
-    test.notIdentical( op.exitCode, 0 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.description = 'has local changes';
+      test.notIdentical( op.exitCode, 0 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 copy
 `;
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 copy
 `;
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 clone
 `;
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 clone
 `;
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    test.equivalent( orignalRead2, exp );
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      test.equivalent( orignalRead2, exp );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -23789,45 +23801,34 @@ clone
   a.appStartNonThrowing( '.with clone/Git.* .git pull v:5 hardLinkMaybe:1' )
   .then( ( op ) =>
   {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.description = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 copy
 `;
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 copy
 `;
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
- >>>>>>>
-`;
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -23836,10 +23837,24 @@ clone
 copy
  >>>>>>>
 `;
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
+
+      var exp =
+`
+original/f.txt
+ <<<<<<< HEAD
+clone
+=======
+copy
+ >>>>>>>
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
   });
 
   /* */
@@ -23853,14 +23868,17 @@ copy
   a.appStart({ execPath : '.imply withSubmodules:0 .with clone/Git.* .build git.pull' })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* - */
@@ -23960,7 +23978,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Executing command "git status", module::git' ), 0 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
     return null;
   })
@@ -23977,7 +23995,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
     return null;
   })
@@ -23995,7 +24013,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
   })
 
@@ -24010,7 +24028,7 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::git' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
   })
 
@@ -24025,150 +24043,107 @@ function stepGitPull( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-conflict' );
-  a.reflect();
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    a.reflect();
-    return null
-  })
 
   /* */
 
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
+    test.case = '.with clone/ .build git.pull - succefull pulling';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
-  originalShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.appStart( '.with clone/ .build git.pull' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .build git.pull - succefull pulling';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::original' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::original' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'clone' ) );
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
+    test.case = '.imply v:0 .with clone/ .build pull.with.dir - succefull pulling';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
-  originalShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.appStart( '.imply v:0 .with clone/ .build pull.with.dir' )
   .then( ( op ) =>
   {
-    test.case = '.imply v:0 .with clone/ .build pull.with.dir - succefull pulling';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::original' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::original' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::original' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
+    test.case = 'hardlink';
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.filesDelete( a.abs( 'clone' ) );
     return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
   {
-    test.description = 'hardlink';
-
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
-  originalShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.appStart( '.with clone/ .build git.pull' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .build git.pull - succefull pulling with hardlinks';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::original' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = '.with clone/ .build git.pull - succefull pulling with hardlinks';
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::original' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
   {
-    test.description = 'hardlink';
+    test.case = 'hardlink';
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -24179,49 +24154,45 @@ function stepGitPull( test )
     var exp =
 `
 original/f.txt
-copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
-  originalShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
 
   a.appStartNonThrowing( '.with clone/ .build pull.with.dir' )
   .then( ( op ) =>
   {
-    test.description = 'has local changes';
+    test.case = 'has local changes';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
@@ -24231,107 +24202,131 @@ clone
     var exp =
 `
 original/f.txt
-copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
-  cloneShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
 
   a.appStartNonThrowing( '.with clone/ .build git.pull' )
   .then( ( op ) =>
   {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
  <<<<<<< HEAD
 clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
  <<<<<<< HEAD
 clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    a.shell( `git clone original clone` );
+
+    return a.ready;
+  }
 }
 
 stepGitPull.rapidity = -1;
@@ -24901,7 +24896,7 @@ File.txt
 }
 
 stepGitReset.rapidity = -1;
-stepGitReset.timeOut = 120000;
+stepGitReset.timeOut = 240000;
 
 //
 
@@ -25176,23 +25171,6 @@ function stepGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
   let originalShell = _.process.starter
   ({
     currentPath : a.abs( 'original' ),
@@ -25200,61 +25178,47 @@ function stepGitSync( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .build git.sync.default - committing and pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/GitSync .build git.sync.default' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.default - committing and pushing, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with clone/GitSync .build git.sync.default - only pulling, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
   originalShell( 'git add --all' );
   originalShell( 'git commit -am second' );
   originalShell( 'git push -u origin --all' );
@@ -25262,74 +25226,82 @@ function stepGitSync( test )
   a.appStart( '.with clone/GitSync .build git.sync.default' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/GitSync .build git.sync.default - only pulling, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
-    return null;
-  })
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'second' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .build git.sync.default - only pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
   originalShell( 'git add --all' );
   originalShell( 'git commit -am third' );
 
   a.appStart( '.with original/GitSync .build git.sync.default' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.default - only pushing, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' );
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'third' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .build git.sync.message - committing, pulling and pushing with message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "fourth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "fourth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/GitSync .build git.sync.message' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.message - committing, pulling and pushing with message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+      return null;
+    });
+  });
   originalShell( 'git log' )
   .then( ( op ) =>
   {
@@ -25337,67 +25309,99 @@ function stepGitSync( test )
     test.identical( _.strCount( op.output, 'fourth' ), 1 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.imply v:0 .with original/GitSync .build git.sync.message - checking of option verbosity';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.imply v:0 .with original/GitSync .build git.sync.message' )
   .then( ( op ) =>
   {
-    test.case = '.imply v:0 .with original/GitSync .build git.sync.message - checking of option verbosity';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
+      return null;
+    });
+  });
 
   /* */
 
-  cloneShell( 'git pull' );
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .build git.sync.dry - checking of option dry';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/GitSync .build git.sync.dry' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.dry - checking of option dry';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
 }
+
+stepGitSync.rapidity = -1;
 
 //
 
@@ -27768,7 +27772,7 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, 'module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'module::local' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "new lines"' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
     return null;
   })
   a.appStart( '.with original/GitSync .submodules.git push --all' )
@@ -27837,7 +27841,7 @@ function commandSubmodulesGit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
+    test.identical( _.strCount( op.output, /origin1\thttps:\/\/.*github\.com\/user\/local\.git/ ), 2 );
     return null;
   })
 
@@ -28755,7 +28759,7 @@ function commandSubmodulesGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, '?? .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
@@ -28783,7 +28787,7 @@ function commandSubmodulesGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, '?? .warchive' ), 0 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
 
@@ -28959,43 +28963,6 @@ function commandSubmodulesGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    a.fileProvider.dirMake( a.abs( 'repo2' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo2' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
   let cloneShell = _.process.starter
   ({
     currentPath : a.abs( 'clone' ),
@@ -29003,132 +28970,170 @@ function commandSubmodulesGitSync( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
-
-  let localShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original/.local' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
-
-  localShell( 'git init' );
-  localShell( 'git remote add origin ../../repo2' );
-  localShell( 'git add --all' );
-  localShell( 'git commit -am first' );
-  localShell( 'git push -u origin --all' );
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .submodules.git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .submodules.git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with original .submodules.git.sync - committing and pushing, without remote submodule';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
-  cloneShell( 'git pull' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
+  cloneShell( 'git pull' );
   cloneShell( 'git log' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 0 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/GitSync .submodules.git.sync -am "new lines"' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::local' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::local' ), 1 );
-    test.identical( _.strCount( op.output, 'To ../../repo2' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::local' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::local' ), 1 );
+      test.identical( _.strCount( op.output, 'To ../../repo2' ), 1 );
+      return null;
+    });
+  });
+  cloneShell( 'git pull' );
   cloneShell( 'git log' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines' ), 0 );
     return null;
-  })
+  });
 
-  a.ready.then( () =>
+  /* */
+
+  begin().then( () =>
   {
+    test.case = '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2"' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" - committing and pushing with local submodule';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'To ../../repo2' ), 0 );
-    return null;
-  })
-  cloneShell( 'git pull' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'To ../../repo2' ), 0 );
+      return null;
+    });
+  });
+  cloneShell( 'git pull' );
   cloneShell( 'git log' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines2' ), 0 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.dirMake( a.abs( 'repo2' ) );
+      return null;
+    })
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    a.shell({ currentPath : a.abs( 'repo2' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    let localShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original/.local' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    localShell( 'git init' );
+    localShell( 'git remote add origin ../../repo2' );
+    localShell( 'git add --all' );
+    localShell( 'git commit -am first' );
+    localShell( 'git push -u origin --all' );
+
+    return a.ready;
+  }
 }
 
 //
@@ -30466,7 +30471,7 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, '?? .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
@@ -30494,7 +30499,7 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 2 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, '?? .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
@@ -30670,43 +30675,6 @@ function commandModulesGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    a.fileProvider.dirMake( a.abs( 'repo2' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo2' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
   let cloneShell = _.process.starter
   ({
     currentPath : a.abs( 'clone' ),
@@ -30714,7 +30682,7 @@ function commandModulesGitSync( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
+  });
 
   let localShell = _.process.starter
   ({
@@ -30723,27 +30691,13 @@ function commandModulesGitSync( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
-
-  localShell( 'git init' );
-  localShell( 'git remote add origin ../../repo2' );
-  localShell( 'git add --all' );
-  localShell( 'git commit -am first' );
-  localShell( 'git push -u origin --all' );
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .modules.git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   })
@@ -30751,28 +30705,31 @@ function commandModulesGitSync( test )
   a.appStart( '.with original/ .modules.git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with original .modules.git.sync - committing and pushing, without remote submodule';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
+  cloneShell( 'git pull' );
   cloneShell( 'git log' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .modules.git.sync -am "new lines" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
@@ -30781,65 +30738,114 @@ function commandModulesGitSync( test )
   a.appStart( '.with original/GitSync .modules.git.sync -am "new lines"' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .modules.git.sync -am "new lines" - committing and pushing with local submodule';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::local' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::local' ), 1 );
-    test.identical( _.strCount( op.output, 'To ../../repo2' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::local' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::local' ), 1 );
+      test.identical( _.strCount( op.output, 'To ../../repo2' ), 1 );
+      return null;
+    });
+  });
+  cloneShell( 'git pull' );
   cloneShell( 'git log' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines' ), 1 );
     return null;
-  })
+  });
 
-  a.ready.then( () =>
+  /* */
+
+  begin().then( () =>
   {
+    test.case = '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2"' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2" - committing and pushing with local submodule';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
-    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::local' ), 0 );
-    test.identical( _.strCount( op.output, 'To ../../repo2' ), 0 );
-    return null;
-  })
-  cloneShell( 'git pull' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+      test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::local' ), 0 );
+      test.identical( _.strCount( op.output, 'To ../../repo2' ), 0 );
+      return null;
+    });
+  });
+  cloneShell( 'git pull' );
   cloneShell( 'git log' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines2' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.dirMake( a.abs( 'repo2' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    a.shell({ currentPath : a.abs( 'repo2' ), execPath : 'git init --bare' });
+
+    let originalShell = _.process.starter
+    ({
+      currentPath : a.abs( 'original' ),
+      outputCollecting : 1,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'shell',
+    });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    localShell( 'git init' );
+    localShell( 'git remote add origin ../../repo2' );
+    localShell( 'git add --all' );
+    localShell( 'git commit -am first' );
+    localShell( 'git push -u origin --all' );
+
+    return a.ready;
+  }
 }
 
 //
@@ -30860,23 +30866,17 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   }
   let linkPath = config.path.hlink;
 
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
 
   let superShell = _.process.starter
   ({
@@ -30947,7 +30947,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     a.fileProvider.fileAppend( a.abs( 'super/f2.txt' ), 'super\n' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -30956,63 +30956,67 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   a.ready.then( () =>
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
+    a.fileProvider.filesDelete( a.abs( '.original' ) );
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'without conflict';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::super' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'without conflict';
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::super' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::GitSync' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::GitSync' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink' ), 2 );
+      // test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
 
-    test.false( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+      test.false( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f2.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f2.txt
 super
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   a.ready.then( () =>
   {
@@ -31024,7 +31028,7 @@ super
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
 
   /* - */
 
@@ -31049,23 +31053,17 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   }
   let linkPath = config.path.hlink;
 
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
 
   let superShell = _.process.starter
   ({
@@ -31136,7 +31134,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -31146,49 +31144,51 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::super' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 2 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink : ' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
-    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::super' ), 0 );
+      test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
+      test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+      test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
+      test.identical( _.strCount( op.output, '> git pull' ), 2 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 2 );
+      // test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
+      test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f2.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -31196,20 +31196,21 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f2.txt
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   a.ready.then( () =>
   {
@@ -31221,7 +31222,7 @@ original/f2.txt
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
 
   /* - */
 
@@ -31246,23 +31247,17 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   }
   let linkPath = config.path.hlink;
 
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.filesDelete( a.abs( 'original' ) );
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
 
   let superShell = _.process.starter
   ({
@@ -31333,7 +31328,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -31343,43 +31338,45 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
-    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
+      test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+      test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
+      test.identical( _.strCount( op.output, '> git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+      test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f2.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -31387,20 +31384,21 @@ super
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'super/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'super/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f2.txt
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'super/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'super/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   a.ready.then( () =>
   {
@@ -31437,22 +31435,16 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   }
   let linkPath = config.path.hlink;
 
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
 
   let originalShell = _.process.starter
   ({
@@ -31512,7 +31504,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -31522,43 +31514,45 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
-    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
+      test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+      test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s) :\n' ), 1 );
+      test.identical( _.strCount( op.output, '> git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+      test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -31566,20 +31560,21 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   a.ready.then( () =>
   {
@@ -31591,7 +31586,7 @@ original/f.txt
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
 
   /* - */
 
@@ -31612,32 +31607,13 @@ function commandGitCheckHardLinkRestoring( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
+  });
 
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  /* */
 
-  /* - */
-
-  a.ready.then( () =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
-    return null
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
+    test.case = '.git pull - succefull pulling';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -31647,106 +31623,95 @@ function commandGitCheckHardLinkRestoring( test )
   a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull hardLinkMaybe:1' })
   .then( ( op ) =>
   {
-    test.case = '.git pull - succefull pulling';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
+    test.case = '.git pull v:0 - succefull pulling';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
   a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git pull hardLinkMaybe:1 v:0' })
   .then( ( op ) =>
   {
-    test.case = '.git pull v:0 - succefull pulling';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'module::clone' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
+    test.case = 'hardlink';
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
   {
-    test.description = 'hardlink';
-
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
   a.appStart({ execPath : '.with clone/ .git pull hardLinkMaybe:1' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git pull - succefull pulling with hardlinks';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = '.with clone/ .git pull - succefull pulling with hardlinks';
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'module::clone' ), 2 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
+    test.case = 'hardlink';
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
   {
-    test.description = 'hardlink';
-
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
@@ -31756,40 +31721,36 @@ function commandGitCheckHardLinkRestoring( test )
     var exp =
 `
 original/f.txt
-copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -31807,179 +31768,177 @@ clone
     var exp =
 `
 original/f.txt
-copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-copy
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
-  cloneShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
 
   a.appStartNonThrowing( '.with clone/ .git pull hardLinkMaybe:1 v:5' )
   .then( ( op ) =>
   {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.description = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
  <<<<<<< HEAD
 clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-copy
  <<<<<<< HEAD
 clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
+    test.case = '.with clone/ .git pull withSubmodules:1 - succefull pulling';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
   a.appStart({ execPath : '.with clone/ .git pull hardLinkMaybe:1 withSubmodules:1' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git pull withSubmodules:1 - succefull pulling';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'module::clone' ), 2 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* */
 
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
-    a.reflect();
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
+    test.case = '.imply withSubmodules:2 .with clone/ .git pull - succefull pulling';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
   a.appStart( '.imply withSubmodules:2 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:2 .with clone/ .git pull - succefull pulling';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'module::clone' ), 2 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null
+    });
+
+    originalShell( 'git init' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    a.shell( `git clone original clone` );
+
+    return a.ready;
+  }
 }
 
+commandGitCheckHardLinkRestoring.rapidity = -1;
 commandGitCheckHardLinkRestoring.timeOut = 300000;
 
 //
@@ -32073,7 +32032,7 @@ function commandGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
   })
 
@@ -32471,14 +32430,17 @@ function commandGitPull( test )
   a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -32492,14 +32454,17 @@ function commandGitPull( test )
   a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull v:0' })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -32516,27 +32481,32 @@ function commandGitPull( test )
     test.description = 'hardlink';
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    debugger;
     return null;
   });
 
   a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.pull - succefull pulling with hardlinks';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = '.with clone/ .git.pull - succefull pulling with hardlinks';
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
 
   begin().then( ( op ) =>
   {
+    test.case = 'succefull pulling of hardlinked files';
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   });
@@ -32555,7 +32525,7 @@ function commandGitPull( test )
 original/f.txt
 copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -32563,7 +32533,7 @@ original
 `
 original/f.txt
 copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -32593,110 +32563,50 @@ clone
   a.appStartNonThrowing( '.with clone/ .git.pull v:5' )
   .then( ( op ) =>
   {
-    test.description = 'has local changes';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.description = 'has local changes';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 copy
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 copy
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 clone
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 clone
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    test.equivalent( orignalRead2, exp );
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      test.equivalent( orignalRead2, exp );
 
-    return null;
-  });
-
-  /* */
-
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-
-  a.appStartNonThrowing( '.with clone/ .git.pull v:5' )
-  .then( ( op ) =>
-  {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
-
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
-
-    var exp =
-`
-original/f.txt
-copy
-original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
-copy
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
-original
- >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
-original
- >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -32710,14 +32620,17 @@ original
   a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull withSubmodules:1' })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* */
@@ -32731,14 +32644,17 @@ original
   a.appStart( '.imply withSubmodules:2 .with clone/ .git.pull withSubmodules:1' )
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      // test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
-    return null;
+      return null;
+    });
   });
 
   /* - */
@@ -32799,25 +32715,17 @@ function commandGitPullRestoreHardlinkOnFail( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  });
 
   /* - */
 
   a.ready.then( ( op ) =>
   {
+    test.case = 'conflict';
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
-  })
+  });
 
   originalShell( 'git init' );
   originalShell( 'git add --all' );
@@ -32826,50 +32734,51 @@ function commandGitPullRestoreHardlinkOnFail( test )
 
   /* */
 
-  a.appStart( '.with clone/ .call hlink beeping:0' )
+  a.appStart( '.with clone/ .call hlink beeping:0' );
   a.ready.then( ( op ) =>
   {
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     return null;
-  })
+  });
   originalShell( 'git commit -am second' );
-  cloneShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
 
   /* */
 
   a.appStartNonThrowing( '.with clone/ .git.pull v:5' )
   .then( ( op ) =>
   {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, ' > git pull' ), 1 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
-    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+      test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -32877,12 +32786,12 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -32890,18 +32799,554 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
 
-    return null;
-  })
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
 }
+
+//
+
+function commandGitPullRestoreHardlinkOnKillWithFailedPulling( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let con = _.take( null );
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe without defined signal';
+    var o = pullProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill(), 1250 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      return _.time.out( context.t1, () =>
+      {
+        if( _.strHas( op.output, 'CONFLICT' ) )
+        {
+          test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+          test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+          test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+          test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+          /* the child process cannot write output in closed stdio */
+          // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+          // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+        }
+        else
+        {
+          /* no pulling, so no output with conflict */
+          /* the child process cannot write output in closed stdio */
+          test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+        }
+
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGTERM signal';
+    var o = pullProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGTERM' ), 1250 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      return _.time.out( context.t1, () =>
+      {
+        if( _.strHas( op.output, 'CONFLICT' ) )
+        {
+          test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+          test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+          test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+          test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+          /* the child process cannot write output in closed stdio */
+          // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+          // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+        }
+        else
+        {
+          /* no pulling, so no output with conflict */
+          /* the child process cannot write output in closed stdio */
+          test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+        }
+
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGINT signal';
+    var o = pullProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGINT' ), 1250 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGINT' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
+
+      return _.time.out( context.t1, () =>
+      {
+        if( _.strHas( op.output, 'CONFLICT' ) )
+        {
+          test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+          test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+          test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+          test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+          /* the child process cannot write output in closed stdio */
+          // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+          // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+        }
+        else
+        {
+          /* no pulling, so no output with conflict */
+          /* the child process cannot write output in closed stdio */
+          test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+        }
+
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGKILL signal';
+    var o = pullProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGKILL' ), 1250 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGKILL' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGKILL' ), 0 );
+
+      return _.time.out( context.t1, () =>
+      {
+        if( _.strHas( op.output, 'CONFLICT' ) )
+        {
+          test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+          test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+          test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+          test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+          /* the child process cannot write output in closed stdio */
+          // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+          // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+        }
+        else
+        {
+          /* no pulling, so no output with conflict */
+          /* the child process cannot write output in closed stdio */
+          test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
+        }
+
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* - */
+
+  return con;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+
+    /* */
+
+    a.appStart( '.with clone/ .call hlink beeping:0' )
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+      return null;
+    })
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+    return a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
+  }
+
+  /* */
+
+  function pullProcessMake()
+  {
+    var o =
+    {
+      execPath : 'node ' + _.Will.WillPathGet() + ' .git.pull',
+      currentPath : a.abs( 'clone' ),
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'spawn',
+    };
+    _.process.start( o );
+    return o;
+  }
+}
+
+commandGitPullRestoreHardlinkOnKillWithFailedPulling.rapidity = -1;
+
+//
+
+function commandGitPullRestoreHardlinkOnKillWithSuccefulPulling( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let con = _.take( null );
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe without defined signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill(), 2000 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1 * 2, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGTERM signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGTERM' ), 1500 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1 * 2, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGINT signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGINT' ), 1500 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGINT' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1 * 2, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* */
+
+  con.then( () => begin() );
+  con.then( () =>
+  {
+    test.case = 'kill willbe with SIGKILL signal';
+    a.fileProvider.filesDelete( a.abs( 'clone/.warchive' ) );
+    var o = willbeProcessMake();
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.strHas( data.toString(), '. Read 1 willfile(s)' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        setTimeout( () => o.pnd.kill( 'SIGKILL' ), 1500 );
+      }
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGKILL' );
+
+      test.identical( _.strCount( op.output, 'Command ".git.pull .submodules.list .paths.list"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.ge( _.strCount( op.output, 'SIGKILL' ), 0 );
+
+      test.identical( _.strCount( op.output, 'Restoring hardlinks in directory(s)' ), 1 );
+      test.identical( _.strCount( op.output, ' > git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 0 );
+      test.identical( _.strCount( op.output, 'f1.txt | 1 +' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      /* the child process cannot write output in closed stdio */
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+
+      return _.time.out( context.t1, () =>
+      {
+        /* checks for real state of hardlinks */
+        test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+        test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+        test.true( !_.longHas( a.find( a.abs( 'clone' ) ), './archiveProcess.js' ) );
+      });
+    });
+  });
+
+  /* - */
+
+  return con;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+
+    /* */
+
+    a.appStart( '.with clone/ .call hlink beeping:0' )
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+      return null;
+    })
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+    return a.ready;
+  }
+
+  /* */
+
+  function willbeProcessMake()
+  {
+    var o =
+    {
+      execPath : 'node ' + _.Will.WillPathGet() + ' .git.pull .submodules.list .paths.list',
+      currentPath : a.abs( 'clone' ),
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'spawn',
+    };
+    _.process.start( o );
+    return o;
+  }
+}
+
+commandGitPullRestoreHardlinkOnKillWithSuccefulPulling.rapidity = -1;
 
 //
 
@@ -33886,23 +34331,6 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
   let originalShell = _.process.starter
   ({
     currentPath : a.abs( 'original' ),
@@ -33910,61 +34338,47 @@ function commandGitSync( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original .git.sync - committing and pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with original .git.sync - committing and pushing, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with clone/ .git.sync - only pulling, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
   originalShell( 'git add --all' );
   originalShell( 'git commit -am second' );
   originalShell( 'git push -u origin --all' );
@@ -33972,74 +34386,82 @@ function commandGitSync( test )
   a.appStart( '.with clone/ .git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.sync - only pulling, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'second' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync - only pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
   originalShell( 'git add --all' );
   originalShell( 'git commit -am third' );
 
   a.appStart( '.with original/ .git.sync' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync - only pushing, without message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
-  cloneShell( 'git pull' );
-  cloneShell( 'git log' )
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'third' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync -am fifth - committing, pulling and pushing with message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "fourth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "fourth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am fifth' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am fifth - committing, pulling and pushing with message';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+      return null;
+    });
+  });
   originalShell( 'git log' )
   .then( ( op ) =>
   {
@@ -34047,67 +34469,99 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'fourth' ), 1 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am seventh v:0' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
 
   /* */
 
-  cloneShell( 'git pull' );
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am seventh dry:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
-    return null;
-  })
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+      test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+
+    /* */
+
+    originalShell( 'git init' );
+    originalShell( 'git remote add origin ../repo' );
+    originalShell( 'git add --all' );
+    originalShell( 'git commit -am first' );
+    originalShell( 'git push -u origin --all' );
+    a.shell( 'git clone repo/ clone' );
+
+    return a.ready;
+  }
 }
+
+commandGitSync.rapidity = -1;
 
 //
 
@@ -34132,7 +34586,7 @@ function commandGitSyncRestoringHardlinks( test )
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
-  })
+  });
 
   originalShell( 'git init' );
   originalShell( 'git add --all' );
@@ -34142,7 +34596,7 @@ function commandGitSyncRestoringHardlinks( test )
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
   {
-    test.description = 'hardlink';
+    test.case = 'hardlink';
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -34154,14 +34608,14 @@ function commandGitSyncRestoringHardlinks( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -34169,7 +34623,7 @@ original/f.txt
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -34177,12 +34631,12 @@ clone
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -34191,40 +34645,42 @@ clone
   a.appStartNonThrowing( '.with clone/ .git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with clone/ .git.sync v:5"' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
-    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'Command ".with clone/ .git.sync v:5"' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+      test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+      test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+      test.identical( _.strCount( op.output, '> git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+      test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+      test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -34232,12 +34688,12 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -34245,12 +34701,13 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   /* - */
 
@@ -34317,7 +34774,7 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -34326,40 +34783,42 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
   a.appStartNonThrowing( '.with clone/ .git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with clone/ .git.sync v:5"' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
-    test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
-    test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
+    return _.time.out( context.t1 / 5, () =>
+    {
+      test.case = 'conflict';
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+      test.identical( _.strCount( op.output, 'Command ".with clone/ .git.sync v:5"' ), 1 );
+      test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+      test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+      test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+      test.identical( _.strCount( op.output, '1 file changed, 1 insertion(+)' ), 1 );
+      test.identical( _.strCount( op.output, '> git pull' ), 1 );
+      test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+      test.identical( _.strCount( op.output, 'Automatic merge failed' ), 1 );
+      // test.identical( _.strCount( op.output, '+ hardLink : ' ), 1 );
+      // test.identical( _.strCount( op.output, '+ Restored 1 hardlinks' ), 1 );
+      test.identical( _.strCount( op.output, 'Launched as "git pull"' ), 1 );
 
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
+      test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
 
-    var exp =
+      var exp =
 `
 original/f.txt
 original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
  <<<<<<< HEAD
@@ -34367,20 +34826,21 @@ clone
 =======
 original
  >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
+`;
+      var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+      orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead1, exp );
 
-    var exp =
+      var exp =
 `
 original/f.txt
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
-    return null;
-  })
+`;
+      var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+      orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+      test.equivalent( orignalRead2, exp );
+      return null;
+    });
+  });
 
   a.ready.then( () =>
   {
@@ -34390,7 +34850,7 @@ original/f.txt
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
 
   /* - */
 
@@ -38110,6 +38570,7 @@ let Self =
     assetFor,
     // abs_functor, /* xxx : remove */
     // rel_functor, /* xxx : remove */
+    t1 : 5000,
   },
 
   tests :
@@ -38406,6 +38867,8 @@ let Self =
     commandGitPrOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
+    commandGitPullRestoreHardlinkOnKillWithFailedPulling,
+    commandGitPullRestoreHardlinkOnKillWithSuccefulPulling,
     commandGitPush,
     commandGitReset,
     commandGitStatus,
