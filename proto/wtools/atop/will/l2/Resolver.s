@@ -1358,6 +1358,7 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
+  _.routineOptions( routine, o );
   return o;
 }
 
@@ -1562,9 +1563,9 @@ function reflectorResolve_body( o )
   _.assert( _.looker.iterationIs( o ) );
   _.assert( o.pathResolving === 'in' );
 
-  debugger;
+  // debugger;
   let reflector = module.resolve.body.call( module, o );
-  debugger;
+  // debugger;
 
   /*
     `pathResolving` should be `in` for proper resolving of external resources

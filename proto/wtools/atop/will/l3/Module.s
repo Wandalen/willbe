@@ -4954,12 +4954,12 @@ defaults.asCommand = 0;
 // resolver
 // --
 
-function resolve_head( routine, args )
+function _resolve_head( routine, args )
 {
   let module = this;
   let o = args[ 0 ];
 
-  if( _.strIs( o ) || _.arrayIs( o ) )
+  if( !_.mapIs( o ) )
   o = { selector : o }
 
   _.assert( _.aux.is( o ) );
@@ -4970,13 +4970,40 @@ function resolve_head( routine, args )
 
   o.baseModule = module;
 
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.arrayIs( o.visited ) );
+
+  return o;
+}
+
+//
+
+function resolve_head( routine, args )
+{
+  let module = this;
+  let o = module._resolve_head.call( module, routine, args );
+
+  // let o = args[ 0 ];
+  //
+  // if( !_.mapIs( o ) )
+  // o = { selector : o }
+  //
+  // _.assert( _.aux.is( o ) );
+  // _.routineOptions( routine, o );
+  //
+  // if( o.visited === null )
+  // o.visited = [];
+  //
+  // o.baseModule = module;
+
   let it = _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( _.looker.iteratorIs( o ) );
   _.assert( _.looker.iterationIs( it ) );
   _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-  _.assert( _.arrayIs( o.visited ) );
+  // _.assert( args.length === 1 );
+  // _.assert( _.arrayIs( o.visited ) );
 
   return it;
 }
@@ -5059,6 +5086,14 @@ _.routineExtend( pathResolve, _.will.Resolver.pathResolve );
 //   selector : null,
 // }
 
+function pathOrReflectorResolve_head( routine, args )
+{
+  let module = this;
+  let o = module._resolve_head.call( module, routine, args );
+  _.assert( arguments.length === 2 );
+  return _.will.Resolver.pathOrReflectorResolve.head.call( _.will.Resolver, routine, [ o ] );
+}
+
 function pathOrReflectorResolve_body( o )
 {
   let module = this;
@@ -5071,7 +5106,8 @@ function pathOrReflectorResolve_body( o )
 
 _.routineExtend( pathOrReflectorResolve_body, _.will.Resolver.pathOrReflectorResolve );
 
-let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+// let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
 
 //
 
@@ -9752,6 +9788,7 @@ let Extension =
 
   // resolver
 
+  _resolve_head,
   resolve,
 
   resolveMaybe,
