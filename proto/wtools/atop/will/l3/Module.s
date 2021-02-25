@@ -5045,8 +5045,10 @@ _.routineExtend( resolveRaw, _.will.Resolver.resolveRaw );
 //
 
 let pathResolve = _.routineUnite( resolve_head, resolve_body );
-
+_.assert( pathResolve.defaults.defaultResourceKind === null );
 _.routineExtend( pathResolve, _.will.Resolver.pathResolve );
+_.assert( _.will.Resolver.pathResolve.defaults.defaultResourceKind === 'path' );
+_.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 
 //
 

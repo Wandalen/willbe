@@ -899,7 +899,7 @@ function resolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  debugger;
+  // debugger;
   return module.resolve.head.call( module, routine, [ o ] );
 }
 
@@ -914,7 +914,7 @@ function resolve_body( o )
   // _.assert( o.currentContext === null || o.currentContext === resource );
   _.assert( o.currentContext === resource );
 
-  debugger;
+  // debugger;
   // o.currentContext = resource;
   return module.resolve.body.call( module, o );
 }

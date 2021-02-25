@@ -56,6 +56,7 @@ function _onSelectorReplicate( o )
   }
   else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
   {
+    _.debugger;
     if( rop.pathResolving )
     if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
     if( _.strIs( selector ) || _.arrayIs( selector ) )
@@ -83,6 +84,7 @@ function _onSelectorDown()
   let will = rop.baseModule.will;
 
   // debugger; /* yyy */
+
   if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.composite )
   {
 
@@ -570,6 +572,8 @@ function _pathPerform()
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
+  _.debugger;
+
   if( !it.dstWritingDown )
   return;
 
@@ -860,6 +864,9 @@ function _pathResolve( filePath, resource )
   let resourceName = resource.name;
   let result = filePath;
 
+  if( _.mapIs( filePath ) )
+  debugger;
+
   if( filePath === null || filePath === '' )
   return result;
 
@@ -1059,9 +1066,9 @@ function errResolving( o )
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
   if( o.rop.currentContext && o.rop.currentContext.qualifiedName )
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'path' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
   else
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'path' ), 'in', module.decoratedAbsoluteName );
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 }
 
 errResolving.defaults =
@@ -1078,21 +1085,6 @@ errResolving.defaults =
 function resolve_head( routine, args )
 {
   return Self.head( routine, args );
-  // let resolver = this;
-  // let o = args[ 0 ];
-  //
-  // if( o.Resolver === null || o.Resolver === undefined )
-  // o.Resolver = Self;
-  //
-  // Parent.resolveQualified.head.call( resolver, routine, args );
-  //
-  // _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
-  // _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
-  //
-  // if( o.src === null )
-  // o.src = o.baseModule;
-  //
-  // return o;
 }
 
 //
@@ -1101,97 +1093,15 @@ function resolve_body( it )
 {
   it.perform();
   return it.result;
-  // let resolver = this;
-  // let module = o.baseModule;
-  // let will = module.will;
-  // let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
-  // let currentContext = o.currentContext = o.currentContext || module;
-  //
-  // _.assert( o.src instanceof _.will.Module );
-  //
-  // o.currentThis = resolver.resolveContextPrepare
-  // ({
-  //   currentThis : o.currentThis,
-  //   currentContext : o.currentContext,
-  //   baseModule : o.baseModule,
-  // });
-  //
-  // return Parent.resolveQualified.body.call( resolver, o );
 }
 
 var defaults = resolve_body.defaults = Defaults
-
-// var defaults = resolve_body.defaults = Object.create( Parent.resolveQualified.body.defaults );
-//
-// defaults.currentThis = null;
-// defaults.currentContext = null;
-// defaults.baseModule = null;
-// defaults.criterion = null;
-// defaults.pathResolving = 'in';
-// defaults.pathNativizing = 0;
-// defaults.pathUnwrapping = 1;
-// defaults.strictCriterion = 0;
-// defaults.currentExcluding = 1;
-// defaults.hasPath = null;
-// defaults.selectorIsPath = 0;
 
 let resolve = _.routineUnite( resolve_head, resolve_body );
 let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
 
 var defaults = resolveMaybe.defaults;
 defaults.missingAction = 'undefine';
-
-//
-
-// function _resolveQualifiedAct( o )
-// {
-//   let resolver = this;
-//   let module = o.baseModule;
-//   let will = module.will;
-//   let currentContext = o.currentContext;
-//   let result;
-//
-//   if( !( o.currentContext instanceof _.will.AbstractModule ) )
-//   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
-//   o.criterion = o.currentContext.criterion;
-//
-//   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
-//   _.assert( o.baseModule instanceof _.will.AbstractModule );
-//
-//   /* */
-//
-//   // let iterator = Object.create( null );
-//   // let iterationPreserve = Object.create( null );
-//   // iterationPreserve.exported = null;
-//   // iterationPreserve.currentModule = o.baseModule;
-//   // // iterationPreserve.currentModule = null;
-//   // iterationPreserve.selectorIsPath = 0;
-//   // o.Looker = _.looker.define({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverWillbe' }); /* yyy : use predefined Looker */
-//   o.Looker = ResolverWillbe;
-//
-//   _.assert( o.Looker.Iteration.currentModule !== undefined );
-//   _.assert( o.Looker.IterationPreserve.currentModule !== undefined );
-//
-//   /* */
-//
-//   try
-//   {
-//     result = Parent._resolveQualifiedAct.call( resolver, o );
-//   }
-//   catch( err )
-//   {
-//     debugger;
-//     throw _.err( err );
-//   }
-//
-//   return result;
-// }
-//
-// var defaults = _resolveQualifiedAct.defaults = Object.create( resolve.defaults )
-//
-// defaults.visited = null;
 
 //
 
@@ -1218,7 +1128,7 @@ function head( routine, args )
 function perform()
 {
   let it = this;
-  // let resolver = this;
+  // let resolver = this; /* xxx */
   let module = it.baseModule;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
@@ -1228,7 +1138,7 @@ function perform()
 
   // debugger; /* yyy */
   // _.assert( it.src instanceof _.will.Module );
-  _.assert( _.strIs( it.src ) || _.vectorIs( it.src ) );
+  // _.assert( _.strIs( it.src ) || _.vectorIs( it.src ) );
   _.assert( it.srcForSelect instanceof _.will.Module );
 
   it.iterator.currentThis = it.resolveContextPrepare
@@ -1347,6 +1257,9 @@ defaults.prefixlessAction = 'resolved';
 defaults.arrayFlattening = 1;
 defaults.selectorIsPath = 1;
 defaults.mapValsUnwrapping = 1;
+
+defaults.defaultResourceKind = 'path'; /* yyy */
+_.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 
 //
 

@@ -8557,12 +8557,15 @@ function pathsResolveFailing( test )
     test.identical( got, expected );
 
     test.case = 'path::entry.*=1: null';
+    _.debugger = 1;
+    debugger;
     var got = opener.openedModule.pathResolve
     ({
       selector : { 'path::entry.*=1' : null },
       missingAction : 'undefine',
       mapValsUnwrapping : 1,
     });
+    debugger;
     var expected = null;
     test.identical( got, expected );
 
