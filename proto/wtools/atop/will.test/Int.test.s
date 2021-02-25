@@ -8402,7 +8402,10 @@ function pathsResolveResolvedPath( test )
 
     var src = 'some';
     test.case = src;
-    var exp = 'some';
+    // var exp = 'some'; /* yyy */
+    var exp = a.abs( 'some' );
+    _.debugger = 1;
+    debugger;
     var got = module.pathResolve
     ({
       selector : src,
@@ -8410,6 +8413,7 @@ function pathsResolveResolvedPath( test )
       pathResolving : 'in',
       selectorIsPath : 0,
     });
+    debugger;
     test.identical( got, exp );
 
     var src = 'some';

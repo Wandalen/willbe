@@ -56,7 +56,6 @@ function _onSelectorReplicate( o )
   }
   else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
   {
-    _.debugger;
     if( rop.pathResolving )
     if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
     if( _.strIs( selector ) || _.arrayIs( selector ) )
@@ -571,8 +570,6 @@ function _pathPerform()
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-
-  _.debugger;
 
   if( !it.dstWritingDown )
   return;
