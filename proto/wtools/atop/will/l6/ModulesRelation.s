@@ -883,16 +883,23 @@ function errorNotFound( err )
 function resolve_head( routine, args )
 {
   let resource = this;
+  let module = resource.module;
+  if( resource.opener && resource.opener.openedModule )
+  module = resource.opener.openedModule;
+
   let o = args[ 0 ];
   if( !_.mapIs( o ) )
   o = { selector : o }
 
+  _.assert( _.aux.is( o ) );
   _.assert( o.currentContext === undefined || o.currentContext === null || o.currentContext === resource );
+
   o.currentContext = resource;
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
+  debugger;
   return module.resolve.head.call( module, routine, [ o ] );
 }
 
@@ -907,6 +914,7 @@ function resolve_body( o )
   // _.assert( o.currentContext === null || o.currentContext === resource );
   _.assert( o.currentContext === resource );
 
+  debugger;
   // o.currentContext = resource;
   return module.resolve.body.call( module, o );
 }

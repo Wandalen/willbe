@@ -5015,6 +5015,7 @@ function resolve_body( o )
   let module = this;
   let will = module.will;
 
+  _.assert( _.looker.iterationIs( o ) );
   _.assert( o.baseModule === module );
 
   let result = _.will.Resolver.resolve.body.call( _.will.Resolver, o );
