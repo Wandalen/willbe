@@ -831,7 +831,8 @@ function reopen()
   _.assert( !opener.isFinited() );
   opener.willfilesPath = willfilesPath;
   _.assert( opener.error === null );
-  _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
+  // _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
+  _.assert( opener.searching !== 'exact' || _.path.map.identical( opener.willfilesPath, willfilesPath ) );
   _.assert( !_.longHas( will.willfilesArray, willf ) );
 
   opener.find();
@@ -1953,7 +1954,8 @@ function _pathChanged( o )
   _.routineOptions( _pathChanged, arguments );
 
   if( o.isIdentical === null )
-  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+  o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
+  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
 
   _.assert( opener.__[ o.name ] !== undefined );
   opener.__[ o.name ] = o.val;

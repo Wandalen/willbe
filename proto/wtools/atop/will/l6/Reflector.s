@@ -486,8 +486,10 @@ function _inheritSingle( o )
   _.assert( reflector.dst instanceof _.FileRecordFilter );
   _.assert( reflector2.src instanceof _.FileRecordFilter );
   _.assert( reflector2.dst instanceof _.FileRecordFilter );
-  _.assert( _.entityIdentical( reflector.src.filePath, reflector.filePath ) );
-  _.assert( _.entityIdentical( reflector2.src.filePath, reflector2.filePath ) );
+  // _.assert( _.entityIdentical( reflector.src.filePath, reflector.filePath ) );
+  // _.assert( _.entityIdentical( reflector2.src.filePath, reflector2.filePath ) );
+  _.assert( _.path.map.identical( reflector.src.filePath, reflector.filePath ) );
+  _.assert( _.path.map.identical( reflector2.src.filePath, reflector2.filePath ) );
   _.assert( reflector.src.dst === reflector.dst );
   _.assert( reflector.dst.src === reflector.src );
   _.assert( !!reflector._accumulator );
@@ -1836,7 +1838,8 @@ function exportStructure()
     _.mapIs( reflector.src.filePath )
     || ( _.strIs( reflector.src.filePath ) && _.will.Resolver.selectorIs( reflector.src.filePath ) )
   )
-  if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
+  // if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
+  if( _.path.map.identical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
   if( _.mapIs( result.dst ) && _.entityLengthOf( result.dst ) === 0 )

@@ -62,7 +62,7 @@ function _onSelectorReplicate( o )
     {
       selector = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
       selector.form1();
-      debugger; /* yyy */
+      // debugger; /* yyy */
       it.src = selector;
     }
   }
@@ -592,7 +592,9 @@ function _pathsTransform( onPath, onStr )
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let resource = it.dst;
-  let transform = rop.preservingIteration ? wrapTransform : elementTransform;
+  // debugger; /* xxx yyy */
+  let transform = it.preservingIteration ? wrapTransform : elementTransform;
+  // let transform = rop.preservingIteration ? wrapTransform : elementTransform;
 
   it.dst = transform( it.dst );
 
@@ -600,8 +602,11 @@ function _pathsTransform( onPath, onStr )
 
   function wrapTransform( resource )
   {
-    if( _.prototype.isPrototypeFor( _.Looker, resource ) )
+    // debugger;
+    // if( _.prototype.isPrototypeFor( _.Looker, resource ) )
+    if( _.looker.iterationIs( resource ) )
     {
+      // debugger;
       resource.dst = elementTransform( resource.dst );
     }
     return elementTransform( resource );
@@ -1155,7 +1160,7 @@ function head( routine, args )
 //   // _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
 //
 //   /* */
-// 
+//
 //   Parent.perform.apply( this, arguments );
 //
 //   return it;

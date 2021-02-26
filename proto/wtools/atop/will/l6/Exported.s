@@ -720,15 +720,23 @@ function _performPaths()
   _.assert( !originalWillFilesPath.importableFromIn );
   _.assert( !!originalWillFilesPath.importableFromOut );
 
-  _.assert( !inModule.isOut );
-  _.assert( _.entityIdentical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.willfiles' ] ) );
-  _.assert( !_.entityIdentical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
-  _.assert( !_.entityIdentical( inModule.pathMap[ 'module.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( !inModule.isOut );
+  // _.assert( _.entityIdentical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.willfiles' ] ) );
+  // _.assert( !_.entityIdentical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( !_.entityIdentical( inModule.pathMap[ 'module.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( !!outModule.isOut );
+  // _.assert( !_.entityIdentical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.willfiles' ] ) );
+  // _.assert( _.entityIdentical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( !_.entityIdentical( outModule.pathMap[ 'module.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
 
+  _.assert( !inModule.isOut );
+  _.assert( _.path.map.identical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.willfiles' ] ) );
+  _.assert( !_.path.map.identical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.path.map.identical( inModule.pathMap[ 'module.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
   _.assert( !!outModule.isOut );
-  _.assert( !_.entityIdentical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.willfiles' ] ) );
-  _.assert( _.entityIdentical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
-  _.assert( !_.entityIdentical( outModule.pathMap[ 'module.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.path.map.identical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.willfiles' ] ) );
+  _.assert( _.path.map.identical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.path.map.identical( outModule.pathMap[ 'module.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
 
   return null;
 }

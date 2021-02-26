@@ -431,8 +431,10 @@ function outModuleMake( o )
   _.assert( !!module2.pathMap[ 'module.peer.willfiles' ] );
   _.assert( !!module2.pathMap[ 'module.peer.in' ] );
   _.assert( !!module2.pathMap[ 'module.willfiles' ] );
-  _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
-  _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( _.path.map.identical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.path.map.identical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
 
   module2.stager.stageStateSkipping( 'opened', 1 );
   module2.stager.stageStatePausing( 'opened', 0 );
@@ -5508,7 +5510,8 @@ function _pathChanged( o )
   _.routineOptions( _pathChanged, arguments );
 
   if( o.isIdentical === null )
-  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+  o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
+  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
 
   if( will && module.userArray )
   if( o.touching )
@@ -5527,6 +5530,7 @@ function _pathChanged( o )
       else
       o2.val = path.s.join( module.dirPath, o2.val );
       opener._pathChanged( o2 );
+      /* qqq xxx : use _.entity.identicalShallow()? */
       _.assert( _.identical( opener[ o2.name ], o2.val ) );
     });
   }
@@ -5554,7 +5558,8 @@ function _pathResourceChanged( o )
   _.routineOptions( _pathResourceChanged, arguments );
 
   if( o.isIdentical === null )
-  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+  o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
+  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
 
   if( module.ResourceToPathName.hasKey( o.name ) )
   {
@@ -5913,7 +5918,8 @@ function predefinedPathPut_functor( propName, resourceName, relativizing )
 
     let ex = module[ propName ];
     let isIdentical = false;
-    isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+    isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+    // isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
     /* xxx : optimize? */
 
     if( !module.pathResourceMap[ resourceName ] )
@@ -6041,7 +6047,8 @@ function remotePathSet( filePath )
   let module = this;
   let will = module.will;
   let ex = module.remotePath;
-  let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+  // let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+  let isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
   module._remotePathPut( filePath );
 
@@ -6655,8 +6662,10 @@ function exportStructure( o )
     _.assert( !!o.dst.path[ 'module.willfiles' ] );
     _.assert( !!o.dst.path[ 'module.willfiles' ].path );
     _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
-    _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
-    _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( !_.path.map.identical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
   }
 
   return o.dst;
@@ -9389,7 +9398,8 @@ function assertIsValidIntegrity()
     _.assert( !opener.isFinited() );
     _.assert( opener.openedModule === module );
     _.assert( opener.peerModule === module.peerModule );
-    _.assert( _.entityIdentical( opener.__.willfilesPath, module.willfilesPath ) );
+    // _.assert( _.entityIdentical( opener.__.willfilesPath, module.willfilesPath ) );
+    _.assert( _.path.map.identical( opener.__.willfilesPath, module.willfilesPath ) );
     _.assert( opener.__.dirPath === module.dirPath );
     _.assert( opener.__.commonPath === module.commonPath );
     _.assert( opener.__.localPath === module.localPath );
