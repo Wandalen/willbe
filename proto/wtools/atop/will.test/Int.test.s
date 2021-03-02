@@ -549,7 +549,10 @@ function openNamedFast( test )
     var got = _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
     test.identical( _.setFrom( got ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
+    _.debugger = 1;
+    debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
+    debugger;
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
@@ -4439,59 +4442,59 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
-  {
-    test.case = 'export super';
-    a.reflect();
-    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
-    return opener.open();
-  })
+  // a.ready
+  // .then( () =>
+  // {
+  //   test.case = 'export super';
+  //   a.reflect();
+  //   opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
+  //   return opener.open();
+  // })
+  //
+  // .then( () =>
+  // {
+  //   let module = opener.openedModule;
+  //   let builds = module.exportsResolve({ criterion : { debug : 1 } });
+  //   let build = builds[ 0 ];
+  //   return build.perform();
+  // })
+  //
+  // .finally( ( err, arg ) =>
+  // {
+  //   var module = opener.openedModule;
+  //
+  //   test.true( _.errIs( err ) );
+  //
+  //   test.description = 'files';
+  //   var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+  //   var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } }); /* xxx */
+  //   test.identical( files, exp );
+  //
+  //   test.description = 'finit';
+  //   opener.finit();
+  //   test.true( module.isFinited() );
+  //   test.true( opener.isFinited() );
+  //
+  //   test.description = 'should be only 2 errors, 1 attempt to open corrupted sub.out and 2 attempts to open super.out which does not exist';
+  //   test.identical( _.longOnce( _.select( a.will.openersErrorsArray, '*/err' ) ).length, 3 );
+  //   a.will.openersErrorsRemoveAll();
+  //   test.identical( a.will.openersErrorsArray.length, 0 );
+  //
+  //   test.description = 'no garbage left';
+  //   test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+  //   test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
+  //
+  //   return null;
+  // });
 
-  .then( () =>
-  {
-    let module = opener.openedModule;
-    let builds = module.exportsResolve({ criterion : { debug : 1 } });
-    let build = builds[ 0 ];
-    return build.perform();
-  })
-
-  .finally( ( err, arg ) =>
-  {
-    var module = opener.openedModule;
-
-    test.true( _.errIs( err ) );
-
-    test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
-    test.identical( files, exp );
-
-    test.description = 'finit';
-    opener.finit();
-    test.true( module.isFinited() );
-    test.true( opener.isFinited() );
-
-    test.description = 'should be only 2 errors, 1 attempt to open corrupted sub.out and 2 attempts to open super.out which does not exist';
-    test.identical( _.longOnce( _.select( a.will.openersErrorsArray, '*/err' ) ).length, 3 );
-    a.will.openersErrorsRemoveAll();
-    test.identical( a.will.openersErrorsArray.length, 0 );
-
-    test.description = 'no garbage left';
-    test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
-
-    return null;
-  });
-
-  /* - */
+  /* - xxx */
 
   a.ready
   .then( () =>

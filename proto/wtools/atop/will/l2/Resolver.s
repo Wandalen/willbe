@@ -7,7 +7,7 @@ const _ = _global_.wTools;
 const Parent = _.resolver2.Looker;
 _.assert( !!_.resolver2.resolveQualified );
 _.assert( !!_.resolver2.Looker.resolveQualified );
-_.assert( !!_.resolver2.composite );
+_.assert( !!_.resolver2.compositeSymbol );
 _.will.Resolver = Object.create( _.resolver2 );;
 
 // --
@@ -35,32 +35,33 @@ Defaults.selectorIsPath = 0;
 function _onSelectorReplicate( o )
 {
   let it = this;
-  let rop = it.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = it.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let selector = o.selector;
 
   let result = Parent._onSelectorReplicate.call( it, o );
 
-  if( resolver._selectorIs( selector ) )
+  if( /*resolver*/it._selectorIs( selector ) )
   return result;
 
   if( result === undefined && o.counter > 0 )
   return;
 
-  if( rop.prefixlessAction === 'default' && !it.composite )
+  if( /*rop*/rit.prefixlessAction === 'default' && !it.composite )
   {
     return selector;
   }
-  else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
+  else if( /*rop*/rit.prefixlessAction === 'resolved' || /*rop*/rit.prefixlessAction === 'default' )
   {
-    if( rop.pathResolving )
-    if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
+    if( /*rop*/rit.pathResolving )
+    if( /*rop*/rit.defaultResourceKind === 'path' || /*rop*/rit.selectorIsPath )
     if( _.strIs( selector ) || _.arrayIs( selector ) )
-    if( !resolver.selectorIs( selector ) )
+    if( !/*resolver*/it.selectorIs( selector ) )
     if( !it.composite )
     {
-      selector = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
+      selector = new _.will.PathResource({ module : /*rop*/rit.baseModule, name : null, phantom : 1, path : selector });
       selector.form1();
       // debugger; /* yyy */
       it.src = selector;
@@ -76,13 +77,13 @@ function _onSelectorDown()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  // let rop = it.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
 
   // debugger; /* yyy */
 
-  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.composite )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.compositeSymbol )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -95,9 +96,9 @@ function _onSelectorDown()
 
     it.dst = _.strJoin( it.dst );
 
-    if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
+    if( /*rop*/rit.defaultResourceKind === 'path' || /*rop*/rit.selectorIsPath )
     {
-      it.dst = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst = new _.will.PathResource({ module : /*rop*/rit.baseModule, name : null, phantom : 1, path : it.dst });
       it.dst.form1();
     }
 
@@ -108,7 +109,7 @@ function _onSelectorDown()
   if( !it.dstWritingDown )
   return end();
 
-  resolver._pathPerform.call( it );
+  /*resolver*/it._pathPerform.call( it );
 
   return end();
 
@@ -124,12 +125,13 @@ function _onSelectorDown()
 function _onUpBegin()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
 
-  resolver._statusPreUpdate.call( it );
-  resolver._globCriterionFilter.call( it );
+  /*resolver*/it._statusPreUpdate.call( it );
+  /*resolver*/it._globCriterionFilter.call( it );
 
   if( !it.dstWritingDown )
   return;
@@ -138,9 +140,9 @@ function _onUpBegin()
   _resourceMapSelect, _statusPostUpdate should go after _queryParse
   */
 
-  resolver._queryParse.call( it );
-  resolver._resourceMapSelect.call( it );
-  resolver._statusPostUpdate.call( it );
+  /*resolver*/it._queryParse.call( it );
+  /*resolver*/it._resourceMapSelect.call( it );
+  /*resolver*/it._statusPostUpdate.call( it );
 
 }
 
@@ -149,19 +151,20 @@ function _onUpBegin()
 function _onUpEnd()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   if( !it.dstWritingDown )
   return;
 
-  resolver._exportedWriteThrough.call( it );
-  resolver._currentExclude.call( it );
+  /*resolver*/it._exportedWriteThrough.call( it );
+  /*resolver*/it._currentExclude.call( it );
 
   if( !it.dstWritingDown )
   return;
 
-  resolver._pathsCompositeResolve.call( it );
+  /*resolver*/it._pathsCompositeResolve.call( it );
 
 }
 
@@ -170,13 +173,14 @@ function _onUpEnd()
 function _onDownEnd()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   if( !it.dstWritingDown )
   return;
 
-  resolver._pathPerform.call( it );
+  /*resolver*/it._pathPerform.call( it );
 
   return Parent._onDownEnd.call( it );
 }
@@ -187,7 +191,7 @@ function _onQuantitativeFail( err )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
+  // let rop = rit.iterator;
   let dst = it.dst;
 
   if( _.mapIs( dst ) )
@@ -211,8 +215,8 @@ function _onQuantitativeFail( err )
       isString = 0
     });
 
-    if( rop.criterion )
-    err = _.err( err, '\nCriterions :\n', _.entity.exportString( rop.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
+    if( /*rop*/rit.criterion )
+    err = _.err( err, '\nCriterions :\n', _.entity.exportString( /*rop*/rit.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
 
     /* found */
 
@@ -267,8 +271,8 @@ function _statusPreUpdate()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let will = rop.baseModule.will;
+  // let rop = rit.iterator;
+  let will = /*rop*/rit.baseModule.will;
 
   if( !it.src )
   return;
@@ -333,18 +337,19 @@ function _statusPreUpdate()
 function _statusPostUpdate()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  let will = /*rop*/rit.baseModule.will;
 
-  if( rop.selectorIsPath )
+  if( /*rop*/rit.selectorIsPath )
   it.selectorIsPath = 1;
 
   if( it.parsedSelector )
   {
     let kind = it.parsedSelector.kind;
 
-    if( kind === 'path' && rop.hasPath === null )
-    rop.hasPath = true;
+    if( kind === 'path' && /*rop*/rit.hasPath === null )
+    /*rop*/rit.hasPath = true;
 
     if( kind === 'path' )
     it.selectorIsPath = 1;
@@ -358,14 +363,17 @@ function _statusPostUpdate()
 function _globCriterionFilter()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  let will = /*rop*/rit.baseModule.will;
 
-  if( it.down && it.down.isGlob )
-  if( rop.criterion && it.src && it.src.criterionSattisfy )
+  _.debugger;
+
+  if( it.down && it.down.selectorIsGlob )
+  if( /*rop*/rit.criterion && it.src && it.src.criterionSattisfy )
   {
 
-    let s = rop.strictCriterion ? it.src.criterionSattisfyStrict( rop.criterion ) : it.src.criterionSattisfy( rop.criterion );
+    let s = /*rop*/rit.strictCriterion ? it.src.criterionSattisfyStrict( /*rop*/rit.criterion ) : it.src.criterionSattisfy( /*rop*/rit.criterion );
 
     if( !s )
     {
@@ -383,9 +391,9 @@ function _resourceMapSelect()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -403,15 +411,15 @@ function _resourceMapSelect()
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
-      resolver._functionStringsJoinUp.call( it );
+      /*resolver*/it._functionStringsJoinUp.call( it );
     }
     else if( it.selector === 'os' )
     {
-      resolver._functionOsGetUp.call( it );
+      /*resolver*/it._functionOsGetUp.call( it );
     }
     else if( it.selector === 'this' )
     {
-      resolver._functionThisUp.call( it );
+      /*resolver*/it._functionThisUp.call( it );
     }
     else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
@@ -419,7 +427,6 @@ function _resourceMapSelect()
   else
   {
 
-    // debugger;
     it.src = rit.currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
@@ -447,9 +454,10 @@ function _resourceMapSelect()
 function _exportedWriteThrough()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
 
   if( it.down && it.parsedSelector && it.parsedSelector.kind === 'exported' )
   {
@@ -468,13 +476,14 @@ function _exportedWriteThrough()
 function _currentExclude()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
 
   // debugger; /* yyy */
-  if( rop.currentExcluding )
-  if( it.src === rop.currentContext && it.down )
+  if( /*rop*/rit.currentExcluding )
+  if( it.src === /*rop*/rit.currentContext && it.down )
   it.dstWritingDown = false;
 
 }
@@ -484,6 +493,7 @@ function _currentExclude()
 function _select( visited )
 {
   let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
 
   _.assert( !_.property.own( it, 'criterion' ) );
 
@@ -503,7 +513,9 @@ function _select( visited )
 
 function resolveContextPrepare( o )
 {
-  let resolver = this;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
   _.assert( !!o.baseModule );
   let will = o.baseModule.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
@@ -564,22 +576,23 @@ resolveContextPrepare.defaults =
 function _pathPerform()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
 
   if( !it.dstWritingDown )
   return;
 
-  if( rop.pathResolving || it.isFunction )
-  resolver._pathsResolve.call( it );
+  if( /*rop*/rit.pathResolving || it.isFunction )
+  /*resolver*/it._pathsResolve.call( it );
 
-  resolver._pathsNormalize.call( it );
+  /*resolver*/it._pathsNormalize.call( it );
 
-  if( rop.pathNativizing || it.isFunction )
-  resolver._pathsNativize.call( it );
+  if( /*rop*/rit.pathNativizing || it.isFunction )
+  /*resolver*/it._pathsNativize.call( it );
 
-  resolver._pathsUnwrap.call( it );
+  /*resolver*/it._pathsUnwrap.call( it );
 
 }
 
@@ -588,13 +601,14 @@ function _pathPerform()
 function _pathsTransform( onPath, onStr )
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let resource = it.dst;
-  // debugger; /* xxx yyy */
+  // debugger; /* yyy */
   let transform = it.preservingIteration ? wrapTransform : elementTransform;
-  // let transform = rop.preservingIteration ? wrapTransform : elementTransform;
+  // let transform = /*rop*/rit.preservingIteration ? wrapTransform : elementTransform;
 
   it.dst = transform( it.dst );
 
@@ -654,14 +668,15 @@ function _pathsTransform( onPath, onStr )
 function _pathsNormalize()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let resource = it.dst;
 
-  resolver._pathsTransform.call( it, ( filePath, resource ) =>
+  /*resolver*/it._pathsTransform.call( it, ( filePath, resource ) =>
   {
-    resource.path = resolver._pathNormalize.call( it, filePath, resource )
+    resource.path = /*resolver*/it._pathNormalize.call( it, filePath, resource )
     return resource;
   });
 
@@ -673,9 +688,9 @@ function _pathNormalize( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let currentModule = rit.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
@@ -706,19 +721,20 @@ function _pathNormalize( filePath, resource )
 function _pathsNativize()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let resource = it.dst;
 
-  if( !rop.pathNativizing )
+  if( !/*rop*/rit.pathNativizing )
   return;
 
-  resolver._pathsTransform.call( it, handleResource, handleStr );
+  /*resolver*/it._pathsTransform.call( it, handleResource, handleStr );
 
   function handleResource( filePath, resource )
   {
-    resource.path = resolver._pathNativize.call( it, filePath, resource )
+    resource.path = /*resolver*/it._pathNativize.call( it, filePath, resource )
     return resource;
   }
 
@@ -734,10 +750,10 @@ function _pathsNativize()
 function _pathNativize( filePath, resource )
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
+  // let rop = rit.iterator;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let currentModule = rit.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
@@ -776,25 +792,26 @@ function _pathCompositeResolve( /* currentModule, currentResource, filePath, res
   let resolving = arguments[ 3 ];
 
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let result = filePath;
 
   _.assert( _.strIs( result ) || _.strsAreAll( result ) );
   _.assert( arguments.length === 4 );
 
-  if( resolver.selectorIsComposite( result ) )
+  if( /*resolver*/it.selectorIsComposite( result ) )
   {
 
     result = currentModule.pathResolve
     ({
       selector : result,
-      visited : _.arrayFlatten( null, [ rop.visited, result ] ),
-      pathResolving : resolving ? rop.pathResolving : 0,
+      visited : _.arrayFlatten( null, [ /*rop*/rit.visited, result ] ),
+      pathResolving : resolving ? /*rop*/rit.pathResolving : 0,
       currentContext : currentResource,
-      pathNativizing : rop.pathNativizing,
-      missingAction : rop.missingAction,
+      pathNativizing : /*rop*/rit.pathNativizing,
+      missingAction : /*rop*/rit.missingAction,
     });
 
   }
@@ -808,15 +825,15 @@ function _pathsCompositeResolve()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let currentModule = rit.currentModule;
   let resource = it.dst;
 
   if( resource instanceof _.will.Reflector )
   {
-    if( resolver.selectorIsComposite( resource.src.prefixPath ) || resolver.selectorIsComposite( resource.dst.prefixPath ) )
+    if( /*resolver*/it.selectorIsComposite( resource.src.prefixPath ) || /*resolver*/it.selectorIsComposite( resource.dst.prefixPath ) )
     {
       resource = it.dst = resource.cloneDerivative();
       if( resource.src.prefixPath )
@@ -828,7 +845,7 @@ function _pathsCompositeResolve()
 
   if( resource instanceof _.will.PathResource )
   {
-    if( resolver.selectorIsComposite( resource.path ) )
+    if( /*resolver*/it.selectorIsComposite( resource.path ) )
     {
       resource = it.dst = resource.cloneDerivative();
       resource.path = _pathCompositeResolve.call( it, currentModule, resource, resource.path, 'in' );
@@ -843,18 +860,14 @@ function _pathResolve( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions; /* yyy xxx */
-  _.assert( !!rop );
   _.assert( rit.Looker === rit.ResolverReplicator );
-  _.assert( rop === rit.iterator );
   _.assert( rit.baseModule !== undefined );
   _.assert( rit.currentModule !== undefined );
-  _.assert( rop.baseModule !== undefined );
-  _.assert( rop.currentModule !== undefined );
+  _.assert( /*rop*/rit.baseModule !== undefined );
+  _.assert( /*rop*/rit.currentModule !== undefined );
   _.assert( rit.currentModule !== undefined );
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
-  let currentModule = rit.currentModule || rop.baseModule;
+  let will = /*rop*/rit.baseModule.will;
+  let currentModule = rit.currentModule || /*rop*/rit.baseModule;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let resourceName = resource.name;
@@ -874,7 +887,7 @@ function _pathResolve( filePath, resource )
 
   if( _.errIs( filePath ) )
   {
-    if( rop.missingAction === 'error' )
+    if( /*rop*/rit.missingAction === 'error' )
     return filePath;
     else
     throw filePath;
@@ -883,7 +896,7 @@ function _pathResolve( filePath, resource )
   for( let f = 0 ; f < filePath.length ; f++ )
   if( _.errIs( filePath[ f ] ) )
   {
-    if( rop.missingAction === 'error' )
+    if( /*rop*/rit.missingAction === 'error' )
     return filePath[ f ];
     else
     throw filePath[ f ];
@@ -902,14 +915,14 @@ function _pathResolve( filePath, resource )
   currentModule = resource.module;
 
   let prefixPath = '.';
-  if( rop.pathResolving === 'in' )
+  if( /*rop*/rit.pathResolving === 'in' )
   {
     if( resourceName !== 'in' )
     prefixPath = currentModule.inPath || '.';
     else
     prefixPath = currentModule.dirPath;
   }
-  else if( rop.pathResolving === 'out' )
+  else if( /*rop*/rit.pathResolving === 'out' )
   {
     if( resourceName !== 'out' )
     prefixPath = currentModule.outPath || '.';
@@ -917,9 +930,9 @@ function _pathResolve( filePath, resource )
     prefixPath = currentModule.dirPath;
   }
 
-  if( resolver.selectorIs( prefixPath ) )
+  if( /*resolver*/it.selectorIs( prefixPath ) )
   prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
-  if( resolver.selectorIs( result ) )
+  if( /*resolver*/it.selectorIs( result ) )
   result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
 
   result = path.s.join( prefixPath, result );
@@ -933,15 +946,15 @@ function _pathsResolve()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let currentModule = rit.currentModule;
   let resource = it.dst;
 
-  resolver._pathsTransform.call( it, ( filePath, resource ) =>
+  /*resolver*/it._pathsTransform.call( it, ( filePath, resource ) =>
   {
-    resource.path = resolver._pathResolve.call( it, filePath, resource )
+    resource.path = /*resolver*/it._pathResolve.call( it, filePath, resource )
     return resource;
   });
 
@@ -953,18 +966,18 @@ function _pathsUnwrap()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
   let currentModule = rit.currentModule;
 
-  resolver._pathsTransform.call( it, unwrap );
+  /*resolver*/it._pathsTransform.call( it, unwrap );
 
   function unwrap( filePath, resource )
   {
     let result = resource;
 
-    if( !rop.pathUnwrapping && !resource.phantom )
+    if( !/*rop*/rit.pathUnwrapping && !resource.phantom )
     return result;
 
     result = result.path;
@@ -988,8 +1001,10 @@ function _pathsUnwrap()
 function _functionOsGetUp()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let will = rop.baseModule.will;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  debugger;
+  // let rop = rit.iterator;
+  let will = /*rop*/rit.baseModule.will;
   let Os = require( 'os' );
   let os = 'posix';
 
@@ -1013,17 +1028,19 @@ function _functionOsGetUp()
 function _functionThisUp()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
-  let will = rop.baseModule.will;
-  let currentThis = rop.currentThis;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  debugger;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  let will = /*rop*/rit.baseModule.will;
+  let currentThis = /*rop*/rit.currentThis;
 
   if( currentThis === null )
-  currentThis = resolver.resolveContextPrepare
+  currentThis = /*resolver*/it.resolveContextPrepare
   ({
-    baseModule : rop.baseModule,
+    baseModule : /*rop*/rit.baseModule,
     currentThis,
-    currentContext : rop.currentContext,
+    currentContext : /*rop*/rit.currentContext,
     force : 1,
   });
 
@@ -1041,8 +1058,9 @@ function _functionThisUp()
 function _functionStringsJoinDown()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
@@ -1056,12 +1074,17 @@ function _functionStringsJoinDown()
 
 function errResolving( o )
 {
-  let resolver = this;
-  let module = o.rop.baseModule;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
+  let module = rit.baseModule;
+  // let module = o./*rop*/rit.baseModule;
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
-  if( o.rop.currentContext && o.rop.currentContext.qualifiedName )
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
+  // if( o./*rop*/rit.currentContext && o./*rop*/rit.currentContext.qualifiedName )
+  if( rit.currentContext && rit.currentContext.qualifiedName )
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  // return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', o./*rop*/rit.currentContext.decoratedAbsoluteName );
   else
   return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 }
@@ -1069,7 +1092,7 @@ function errResolving( o )
 errResolving.defaults =
 {
   selector : null,
-  rop : null,
+  // rop : null,
   err : null,
 }
 
@@ -1089,6 +1112,15 @@ function resolve_body( it )
   it.perform();
   return it.result;
 }
+
+  // onSelectorReplicate : _onSelectorReplicate,
+  // onSelectorDown : _onSelectorDown,
+Defaults.onSelectorReplicate = _onSelectorReplicate;
+Defaults.onSelectorDown = _onSelectorDown;
+Defaults.onUpBegin = _onUpBegin;
+Defaults.onUpEnd = _onUpEnd;
+Defaults.onDownEnd = _onDownEnd;
+Defaults.onQuantitativeFail = _onQuantitativeFail;
 
 var defaults = resolve_body.defaults = Defaults
 
@@ -1113,64 +1145,17 @@ function head( routine, args )
   else
   _.routineOptionsPreservingUndefines( null, o, routine );
   o.Looker.optionsForm( routine, o );
-  o.optionsForSelect = o.Looker.optionsForSelectFrom( o );
+  o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
   let it = o.Looker.optionsToIteration( o );
   return it;
 }
 
 //
 
-// function perform()
-// {
-//   let it = this;
-//
-//   // let resolver = this; /* xxx */
-//   // let module = it.baseModule;
-//   // let will = module.will;
-//   // let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-//   // let fileProvider = will.fileProvider;
-//   // let path = fileProvider.path;
-//   // let currentContext = it.currentContext = it.currentContext || module;
-//   //
-//   // _.assert( it.srcForSelect instanceof _.will.Module );
-//   //
-//   // it.iterator.currentThis = it.resolveContextPrepare
-//   // ({
-//   //   currentThis : it.currentThis,
-//   //   currentContext : it.currentContext,
-//   //   baseModule : it.baseModule,
-//   // });
-//   // _.assert( !_.property.own( it, 'currentThis' ) );
-//   //
-//   // /* */
-//   //
-//   // let result;
-//   //
-//   // _.assert( it.iterationProper( it ) );
-//   // if( !( it.currentContext instanceof _.will.AbstractModule ) )
-//   // if( it.iterator.criterion === null && it.currentContext && it.currentContext.criterion )
-//   // it.iterator.criterion = it.currentContext.criterion;
-//   //
-//   // _.assert( it.criterion === null || _.mapIs( it.criterion ) );
-//   // _.assert( it.baseModule instanceof _.will.AbstractModule );
-//   // _.assert( !_.property.own( it, 'criterion' ) );
-//   //
-//   // _.assert( it.Looker === ResolverWillbe );
-//   // _.assert( it.Looker.Iteration.currentModule !== undefined );
-//   // _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
-//
-//   /* */
-//
-//   Parent.perform.apply( this, arguments );
-//
-//   return it;
-// }
-
-//
-
 function performBegin()
 {
   let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
   Parent.performBegin.apply( it, arguments );
 
   let module = it.baseModule;
@@ -1209,8 +1194,8 @@ function performBegin()
 
 function optionsForm( routine, o )
 {
-  if( o.Resolver === null || o.Resolver === undefined )
-  o.Resolver = Self;
+  // if( o.Resolver === null || o.Resolver === undefined )
+  // o.Resolver = Self;
 
   /* qqq : convert to template-string please in all files */
   _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
@@ -1288,14 +1273,14 @@ function pathOrReflectorResolve_head( routine, args )
 
 function pathOrReflectorResolve_body( o )
 {
-  let resolver = this;
+  //let resolver = this;
   let module = o.baseModule;
   let will = module.will;
   let resource;
 
   _.assert( _.aux.is( o ) );
   _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
-  _.assert( !resolver.selectorIs( o.selector ) );
+  _.assert( !/*resolver*/Self.selectorIs( o.selector ) );
   _.assert( o.pathResolving === 'in' );
   _.assert( !o.pathUnwrapping );
 
@@ -1327,14 +1312,14 @@ let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOr
 
 function filesFromResource_head( routine, args )
 {
-  let resolver = this;
+  //let resolver = this;
   let o =_.routineOptions( routine, args );
 
   let prefixlessAction = o.prefixlessAction;
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = 'resolved';
 
-  resolve_head.call( resolver, routine, [ o ] );
+  resolve_head.call( Self, routine, [ o ] );
 
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = prefixlessAction;
@@ -1543,17 +1528,14 @@ function _iterator_functor()
     parent : _.resolver2.ResolverExtraSelector,
     defaults :
     {
-
-      defaultResourceKind : null,
-      prefixlessAction : null,
-      singleUnwrapping : null,
-      mapValsUnwrapping : null,
-      mapFlattening : null,
-      arrayWrapping : null,
-      arrayFlattening : null,
-      Resolver : null,
-
-      ... Defaults,
+      // defaultResourceKind : null,
+      // prefixlessAction : null,
+      // singleUnwrapping : null,
+      // mapValsUnwrapping : null,
+      // mapFlattening : null,
+      // arrayWrapping : null,
+      // arrayFlattening : null,
+      // ... Defaults,
     },
     looker :
     {
@@ -1564,13 +1546,15 @@ function _iterator_functor()
   /* */
 
   _.assert( !!_.resolver2.ResolverExtra );
-  _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
+  // _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
+  _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions === undefined );
 
+  /* xxx : redefine _.resolver.define() */
   let ResolverWillbeReplicator = _.looker.define
   ({
     name : 'ResolverWillbeReplicator',
     parent : _.resolver2.ResolverExtra,
-    defaults : Defaults, /* xxx */
+    // defaults : Defaults, /* yyy */
     looker :
     {
       ... Common,
@@ -1579,7 +1563,7 @@ function _iterator_functor()
       resolveMaybe,
       head,
       performBegin,
-      performMaking : resolve,
+      exec : resolve,
       optionsForm,
       optionsToIteration,
 
@@ -1594,7 +1578,9 @@ function _iterator_functor()
 
   /* */
 
-  _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions !== undefined );
+  _.assert( ResolverWillbeReplicator.IterationPreserve.isFunction !== undefined );
+  _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions === undefined );
+  // _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions !== undefined );
   _.assert( ResolverWillbeReplicator.Looker === ResolverWillbeReplicator );
 
   ResolverWillbeReplicator.ResolverSelector = ResolverWillbeSelector;
@@ -1625,12 +1611,12 @@ let Common =
   _onDownEnd,
   _onQuantitativeFail,
 
-  onSelectorReplicate : _onSelectorReplicate,
-  onSelectorDown : _onSelectorDown,
-  onUpBegin : _onUpBegin,
-  onUpEnd : _onUpEnd,
-  onDownEnd : _onDownEnd,
-  onQuantitativeFail : _onQuantitativeFail,
+  // onSelectorReplicate : _onSelectorReplicate,
+  // onSelectorDown : _onSelectorDown,
+  // onUpBegin : _onUpBegin,
+  // onUpEnd : _onUpEnd,
+  // onDownEnd : _onDownEnd,
+  // onQuantitativeFail : _onQuantitativeFail,
 
   // etc
 
