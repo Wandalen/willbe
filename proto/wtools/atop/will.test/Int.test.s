@@ -8843,6 +8843,46 @@ function modulesEachDuplicates( test )
 
 //
 
+function filesFromResource( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open({ all : 1, resourcesFormed : 1 });
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve resource';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
+    test.identical( got, [ 'out' ] );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve with criterion';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
+    test.identical( got, [ './out/debug' ] );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function submodulesRemoteResolve( test )
 {
   let context = this;
@@ -10974,6 +11014,7 @@ let Self =
 
     modulesEach,
     modulesEachDuplicates,
+    filesFromResource,
     submodulesRemoteResolve,
     submodulesLocalResolve,
     submodulesDeleteAndDownload,
