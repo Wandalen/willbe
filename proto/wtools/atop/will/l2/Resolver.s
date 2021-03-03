@@ -1157,6 +1157,7 @@ function performBegin()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   Parent.performBegin.apply( it, arguments );
+  _.assert( Object.is( it.originalSrc, it.src ) );
 
   let module = it.baseModule;
   let will = module.will;

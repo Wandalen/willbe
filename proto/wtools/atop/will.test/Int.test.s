@@ -4596,13 +4596,6 @@ exportCourrputedSubmoduleOutfileUnknownSection.description =
 
 //
 
-/*
-test
-  - no extra errors made
-  - outfile of submodule with not-supported version of format is not a problem
-  - recursive export works
-*/
-
 function exportCourrputedSubmoduleOutfileFormatVersion( test )
 {
   let context = this;
@@ -4762,6 +4755,13 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   return a.ready;
 
 } /* end of function exportCourrputedSubmoduleOutfileFormatVersion */
+
+exportCourrputedSubmoduleOutfileFormatVersion.description =
+`
+  - no extra errors made
+  - outfile of submodule with not-supported version of format is not a problem
+  - recursive export works
+`
 
 //
 
