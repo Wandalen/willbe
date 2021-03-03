@@ -5,8 +5,8 @@
 
 const _ = _global_.wTools;
 const Parent = _.resolver2.Looker;
-_.assert( !!_.resolver2.resolveQualified );
-_.assert( !!_.resolver2.Looker.resolveQualified );
+_.assert( !!_.resolver2.resolve );
+_.assert( !!_.resolver2.Looker.resolve );
 _.assert( !!_.resolver2.compositeSymbol );
 _.will.Resolver = Object.create( _.resolver2 );;
 
@@ -14,7 +14,7 @@ _.will.Resolver = Object.create( _.resolver2 );;
 // relation
 // --
 
-let Defaults = _.mapExtend( null, Parent.resolveQualified.body.defaults );
+let Defaults = _.mapExtend( null, Parent.resolve.body.defaults );
 
 Defaults.currentThis = null;
 Defaults.currentContext = null;
