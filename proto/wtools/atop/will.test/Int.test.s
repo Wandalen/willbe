@@ -8863,7 +8863,7 @@ function filesFromResource( test )
     test.case = 'resolve resource';
     let module = opener.openedModule;
     let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
-    test.identical( got, [ 'out' ] );
+    test.identical( got, a.abs([ 'out' ]) );
     return null;
   });
 
@@ -8872,7 +8872,7 @@ function filesFromResource( test )
     test.case = 'resolve with criterion';
     let module = opener.openedModule;
     let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
-    test.identical( got, [ './out/debug' ] );
+    test.identical( got, a.abs([ './out/debug' ]) );
     return null;
   });
 

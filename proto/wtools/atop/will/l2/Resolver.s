@@ -1316,11 +1316,22 @@ function filesFromResource_head( routine, args )
   //let resolver = this;
   let o =_.routineOptions( routine, args );
 
+  _.assert( args.length === 1 );
+  _.assert( arguments.length === 2 );
+  // if( _.routineIs( routine ) )
+  // o.Looker = o.Looker || routine.defaults.Looker || Self;
+  // else
+  // o.Looker = o.Looker || routine.Looker || Self;
+  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
+  _.routineOptionsPreservingUndefines( routine, o );
+  else
+  _.routineOptionsPreservingUndefines( null, o, routine );
+
   let prefixlessAction = o.prefixlessAction;
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = 'resolved';
 
-  resolve_head.call( Self, routine, [ o ] );
+  // resolve_head.call( Self, routine, [ o ] );
 
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = prefixlessAction;
@@ -1339,6 +1350,7 @@ function filesFromResource_body( o )
 
   if( o.prefixlessAction === 'pathOrReflector' )
   {
+
     let o2 = _.mapOnly( o, module.resolve.defaults );
     o2.prefixlessAction = 'default';
     o2.missingAction = 'undefine';
