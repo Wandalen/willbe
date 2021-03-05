@@ -796,6 +796,7 @@ exportStructure.defaults = Object.create( _.will.Resource.prototype.exportStruct
 
 //
 
+/* qqq : write test */
 function exportString( o )
 {
   let relation = this;
@@ -830,6 +831,7 @@ function exportString( o )
 exportString.defaults =
 {
   verbosity : 2,
+  it : null,
 }
 
 // --

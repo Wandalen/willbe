@@ -7232,7 +7232,9 @@ function pathsResolveOfSubmodulesRemote( test )
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
     var expected = a.abs( '.module/ModuleForTesting1/out' ); /* qqq xxx : ask */
+    debugger;
     test.identical( resolved, expected );
+    debugger;
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;

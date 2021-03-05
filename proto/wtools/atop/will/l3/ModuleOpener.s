@@ -2462,6 +2462,7 @@ function toJunction()
 // export
 // --
 
+/* qqq : write test */
 function exportString( o )
 {
   let opener = this;
@@ -2488,6 +2489,7 @@ function exportString( o )
 exportString.defaults =
 {
   verbosity : 2,
+  it : null,
 }
 
 // --

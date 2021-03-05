@@ -500,7 +500,7 @@ function _select( visited )
   let it2 = Parent._select.apply( this, arguments );
 
   _.assert( it2 !== it );
-  // _.assert( it2.criterion === undefined ); /* xxx : uncomment */
+  _.assert( it2.criterion === undefined ); /* xxx yyy : uncomment */
   _.assert( it._onUpBegin === Self._onUpBegin );
   _.assert( it.onUpBegin === Self._onUpBegin );
   _.assert( it2._onUpBegin === Self._onUpBegin );
@@ -1563,7 +1563,7 @@ function _iterator_functor()
   _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions === undefined );
 
   /* xxx : redefine _.resolver.define() */
-  let ResolverWillbeReplicator = _.looker.define
+  let ResolverWillbeReplicator = _.resolver2.define
   ({
     name : 'ResolverWillbeReplicator',
     parent : _.resolver2.ResolverExtra,
