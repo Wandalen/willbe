@@ -4382,7 +4382,7 @@ function commandWillfileMergeIntoSingle( e )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
-  if( e.propertiesMap.submoduleDisabling )
+  if( e.propertiesMap.submodulesDisabling )
   {
     let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });
     for( let dependency in config.submodule )
@@ -4446,13 +4446,13 @@ commandWillfileMergeIntoSingle.defaults =
 {
   primaryPath : null,
   secondaryPath : null,
-  submoduleDisabling : 1,
+  submodulesDisabling : 1,
 };
 commandWillfileMergeIntoSingle.commandProperties =
 {
   primaryPath : 'Name of destination willfile',
   secondaryPath : 'Name of file to extend destination willfile',
-  submoduleDisabling : 'Disables submodules in the destination willfile',
+  submodulesDisabling : 'Disables submodules in the destination willfile',
 };
 
 //
