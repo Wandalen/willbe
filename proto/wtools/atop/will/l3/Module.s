@@ -6487,7 +6487,7 @@ function exportString( o )
   let will = module.will;
   let result = '';
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routineOptions( exportString, o );
 
   if( o.verbosity >= 1 )
   result += module.decoratedAbsoluteName + '#' + module.id;
@@ -6522,6 +6522,7 @@ function exportString( o )
 exportString.defaults =
 {
   verbosity : 2,
+  it : null,
 }
 
 //
