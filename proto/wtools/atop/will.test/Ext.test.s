@@ -38084,6 +38084,377 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
 commandWillfileSupplementWillfileWithOptions.rapidity = -1;
 
+//
+
+function commandWillfileMergeIntoSingle( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without options';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    delete config.about.interpreters;
+    delete partEx.about.interpreters;
+    test.contains( config, partEx );
+    test.contains( config, partIm );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single primaryPath:NamedWillfile' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - name';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NamedWillfile.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    delete config.about.interpreters;
+    delete partEx.about.interpreters;
+    test.contains( config, partEx );
+    test.contains( config, partIm );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect
+    ({
+      reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm/package.json' ) ] : a.abs( 'was.package.json' ) }
+    });
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single secondaryPath:"was.package.json"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'secondaryPath - path to json file';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let submodulesSection =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 0
+      },
+      'NpmFromWillfile' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'newsubmodule' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'babel' :
+      {
+        'path' : 'npm:///babel#^0.3.0',
+        'enabled' : 0,
+        'criterion' : { 'debug' : 1 }
+      },
+      'willbe' :
+      {
+        'path' : 'npm:///willbe#alpha',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'willfilefromnpm' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, submodulesSection );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect
+    ({
+      reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm/package.json' ) ] : a.abs( 'was.package.json' ) }
+    });
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single primaryPath:NamedWillfile secondaryPath:"was.package.json"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - name, secondaryPath - path to json file';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NamedWillfile.will.yml' ), encoding : 'yaml' });
+    let submodulesSection =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 0
+      },
+      'NpmFromWillfile' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'newsubmodule' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'babel' :
+      {
+        'path' : 'npm:///babel#^0.3.0',
+        'enabled' : 0,
+        'criterion' : { 'debug' : 1 }
+      },
+      'willbe' :
+      {
+        'path' : 'npm:///willbe#alpha',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'willfilefromnpm' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, submodulesSection );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect
+    ({
+      reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm/package.json' ) ] : a.abs( 'was.package.json' ) }
+    });
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single primaryPath:NamedWillfile secondaryPath:"was.package.json" submodulesDisabling:0' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - name, secondaryPath - path to json file, submodulesDisabling - 0';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NamedWillfile.will.yml' ), encoding : 'yaml' });
+    let submodulesSection =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 1
+      },
+      'NpmFromWillfile' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 1,
+        'criterion' : { 'development' : 1 }
+      },
+      'newsubmodule' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 1,
+        'criterion' : { 'development' : 1 }
+      },
+      'babel' :
+      {
+        'path' : 'npm:///babel#^0.3.0',
+        'enabled' : 0,
+        'criterion' : { 'debug' : 1 }
+      },
+      'willbe' :
+      {
+        'path' : 'npm:///willbe#alpha',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'willfilefromnpm' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 1,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, submodulesSection );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
 // --
 // declare
 // --
@@ -38432,6 +38803,7 @@ let Self =
     commandWillfileSupplementWillfileDstIsWillfile,
     commandWillfileSupplementWillfileDstIsJson,
     commandWillfileSupplementWillfileWithOptions,
+    commandWillfileMergeIntoSingle,
 
   }
 
