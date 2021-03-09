@@ -440,7 +440,7 @@ function _resourceMapSelect()
     if( !it.src )
     {
       debugger;
-      throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
+      throw _.LookingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
     it.iterable = null;
@@ -1132,21 +1132,25 @@ defaults.missingAction = 'undefine';
 
 //
 
+/* xxx : remove */
 function head( routine, args )
 {
   _.assert( arguments.length === 2 );
-  let o = Self.optionsFromArguments( args );
+  let o = routine.defaults.Looker.optionsFromArguments( args );
   if( _.routineIs( routine ) )
-  o.Looker = o.Looker || routine.defaults.Looker || Self;
+  o.Looker = o.Looker || routine.defaults.Looker;
   else
-  o.Looker = o.Looker || routine.Looker || Self;
+  o.Looker = o.Looker || routine.Looker;
+  _.assert( _.routineIs( routine ) || _.auxIs( routine ) );
   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefines( routine, o );
-  else
-  _.routineOptionsPreservingUndefines( null, o, routine );
-  o.Looker.optionsForm( routine, o );
+  _.assertMapHasOnly( o, routine.defaults );
+  // _.routineOptionsPreservingUndefines( routine, o );
+  else if( routine !== null )
+  _.assertMapHasOnly( o, routine );
+  // _.routineOptionsPreservingUndefines( null, o, routine );
+  // o.Looker.optionsForm( routine, o );
   o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
-  let it = o.Looker.optionsToIteration( o );
+  let it = o.Looker.optionsToIteration( null, o );
   return it;
 }
 
@@ -1157,7 +1161,7 @@ function performBegin()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   Parent.performBegin.apply( it, arguments );
-  _.assert( Object.is( it.originalSrc, it.src ) );
+  // _.assert( Object.is( it.originalSrc, it.src ) );
 
   let module = it.baseModule;
   let will = module.will;
@@ -1198,6 +1202,7 @@ function optionsForm( routine, o )
   // if( o.Resolver === null || o.Resolver === undefined )
   // o.Resolver = Self;
 
+  _.assert( o.iteratorProper( o ) );
   /* qqq : convert to template-string please in all files */
   _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
   _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
@@ -1213,9 +1218,10 @@ function optionsForm( routine, o )
 
 //
 
-function optionsToIteration( o )
+function optionsToIteration( iterator, o )
 {
-  let it = Parent.optionsToIteration.call( this, o );
+  let it = Parent.optionsToIteration.call( this, iterator, o );
+  _.assert( arguments.length === 2 );
   _.assert( !!Self.ResolverSelector );
   _.assert( it.ResolverSelector === Self.ResolverSelector );
   _.assert( it.Looker.ResolverSelector === Self.ResolverSelector );
