@@ -273,8 +273,10 @@ function _filePathChanged2( o )
   o.isIdentical =
   (
     o.willfilesPath === this.willfilesPath
-    || _.entityIdentical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) )
+    // || _.entityIdentical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) )
+    || _.path.map.identical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) )
   );
+  /* yyy */
 
   if( o.willfilesPath && o.willfilesPath.length )
   o.commonPath = _.Will.CommonPathFor( o.willfilesPath );

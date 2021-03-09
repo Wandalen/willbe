@@ -139,7 +139,7 @@ function MakeForEachCriterion( o )
 
     if( o.resource.criterion && _.mapKeys( o.resource.criterion ).length > 0 )
     {
-      let samples = _.eachSample({ sets : o.resource.criterion });
+      let samples = _.eachSample_({ sets : o.resource.criterion });
       if( samples.length > 1 )
       for( let index = 0 ; index < samples.length ; index++ )
       {
@@ -1148,22 +1148,32 @@ function resolve_head( routine, args )
 {
   let resource = this;
   let module = resource.module;
-  let o = module.resolve.head.apply( module, arguments );
-  return o;
+  let o = args[ 0 ];
+  if( !_.mapIs( o ) )
+  o = { selector : o }
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.aux.is( o ) );
+  _.assert( o.currentContext === undefined || o.currentContext === null || o.currentContext === resource );
+  o.currentContext = resource;
+  let it = module.resolve.head.call( module, routine, [ o ] );
+  return it;
 }
 
 function resolve_body( o )
 {
   let resource = this;
   let module = resource.module;
+  _.assert( !!module );
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.currentContext === null || o.currentContext === resource )
+  // _.assert( o.currentContext === null || o.currentContext === resource );
+  _.assert( o.currentContext === resource )
 
-  o.currentContext = resource;
+  // o.currentContext = resource;
 
   let resolved = module.resolve.body.call( module, o );
 
@@ -1177,6 +1187,28 @@ let resolve = _.routineUnite( resolve_head, resolve_body );
 
 //
 
+function inPathResolve_head( routine, args )
+{
+  let resource = this;
+  let o = args[ 0 ];
+  if( !_.mapIs( o ) )
+  o = { selector : o }
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.aux.is( o ) );
+  _.assert( _.strIs( o.selector ) || _.strsAreAll( o.selector ) );
+
+  if( o.prefixlessAction !== 'default' )
+  o.defaultResourceKind = null;
+
+  let it = resource.resolve.head.call( resource, routine, [ o ] );
+  _.assert( _.looker.iterationIs( it ) );
+  return it;
+}
+
+//
+
 function inPathResolve_body( o )
 {
   let resource = this;
@@ -1186,13 +1218,15 @@ function inPathResolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( o.selector ) || _.strsAreAll( o.selector ) );
-  _.assertRoutineOptions( inPathResolve_body, arguments );
+  _.assert( _.looker.iterationIs( o ) );
+  // _.assert( _.strIs( o.selector ) || _.strsAreAll( o.selector ) );
+  // // _.assertRoutineOptions( inPathResolve_body, arguments );
+  //
+  // if( o.prefixlessAction !== 'default' )
+  // o.defaultResourceKind = null;
 
-  if( o.prefixlessAction !== 'default' )
-  o.defaultResourceKind = null;
-
-  let result = resource.resolve( o );
+  // let result = resource.resolve( o );
+  let result = resource.resolve.body.call( resource, o );
 
   return result;
 }
@@ -1202,9 +1236,33 @@ defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
 
-let inPathResolve = _.routineUnite( resolve.head, inPathResolve_body );
+let inPathResolve = _.routineUnite( inPathResolve_head, inPathResolve_body );
+// let inPathResolve = _.routineUnite( resolve.head, inPathResolve_body );
 
 //
+
+function reflectorResolve_head( routine, args )
+{
+  let resource = this;
+  let o = args[ 0 ];
+
+  if( !_.mapIs( o ) )
+  o = { selector : o }
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.aux.is( o ) );
+  _.assert( o.currentContext === undefined || o.currentContext === null || o.currentContext === resource )
+
+  o.currentContext = resource;
+
+  if( o.prefixlessAction !== 'default' )
+  o.defaultResourceKind = null;
+
+  let it = resource.resolve.head.call( resource, routine, [ o ] );
+  _.assert( _.looker.iterationIs( it ) );
+  return it;
+}
 
 function reflectorResolve_body( o )
 {
@@ -1215,9 +1273,9 @@ function reflectorResolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.currentContext === null || o.currentContext === resource )
-
-  o.currentContext = resource;
+  _.assert( _.looker.iterationIs( o ) );;
+  // _.assert( o.currentContext === null || o.currentContext === resource )
+  // o.currentContext = resource;
 
   let resolved = module.reflectorResolve.body.call( module, o );
 
@@ -1226,7 +1284,8 @@ function reflectorResolve_body( o )
 
 reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
 
-let reflectorResolve = _.routineUnite( resolve.head, reflectorResolve_body );
+let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
+// let reflectorResolve = _.routineUnite( resolve.head, reflectorResolve_body );
 
 // --
 // etc

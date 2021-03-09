@@ -346,7 +346,8 @@ function _pathSet( src )
 
   if( module && resource.name && !resource.original )
   {
-    _.assert( resource.path === null || _.entityIdentical( module.pathMap[ resource.name ], resource.path ) );
+    // _.assert( resource.path === null || _.entityIdentical( module.pathMap[ resource.name ], resource.path ) );
+    _.assert( resource.path === null || _.path.map.identical( module.pathMap[ resource.name ], resource.path ) );
     delete module.pathMap[ resource.name ];
   }
 

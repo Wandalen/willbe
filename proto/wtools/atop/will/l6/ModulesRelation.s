@@ -796,6 +796,7 @@ exportStructure.defaults = Object.create( _.will.Resource.prototype.exportStruct
 
 //
 
+/* qqq : write test */
 function exportString( o )
 {
   let relation = this;
@@ -830,6 +831,7 @@ function exportString( o )
 exportString.defaults =
 {
   verbosity : 2,
+  it : null,
 }
 
 // --
@@ -886,7 +888,21 @@ function resolve_head( routine, args )
   let module = resource.module;
   if( resource.opener && resource.opener.openedModule )
   module = resource.opener.openedModule;
-  return module.resolve.head.apply( module, arguments );
+
+  let o = args[ 0 ];
+  if( !_.mapIs( o ) )
+  o = { selector : o }
+
+  _.assert( _.aux.is( o ) );
+  _.assert( o.currentContext === undefined || o.currentContext === null || o.currentContext === resource );
+
+  o.currentContext = resource;
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+
+  // debugger;
+  return module.resolve.head.call( module, routine, [ o ] );
 }
 
 function resolve_body( o )
@@ -897,9 +913,11 @@ function resolve_body( o )
   module = resource.opener.openedModule;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.currentContext === null || o.currentContext === resource )
+  // _.assert( o.currentContext === null || o.currentContext === resource );
+  _.assert( o.currentContext === resource );
 
-  o.currentContext = resource;
+  // debugger;
+  // o.currentContext = resource;
   return module.resolve.body.call( module, o );
 }
 

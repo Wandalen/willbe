@@ -749,6 +749,7 @@ function _pathChanged( o )
   o.val = _.path.simplify( o.val );
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+  /* qqq xxx : try _.entity.identical() */
 
   if( o.val )
   if( o.propName === 'currentRemotePath' || o.propName === 'currentRemote' )
@@ -1658,24 +1659,27 @@ function modulesFindEachAt( o )
   .then( () =>
   {
     let con2 = new _.Consequence();
+    // _.debugger = 1;
+    // debugger;
     let resolved = opener.openedModule.submodulesResolve
     ({
       selector : o.selector,
-      preservingIteration : 1,
+      preservingIteration : 1, /* xxx yyy */
+      // preservingIteration : 0,
       pathUnwrapping : 1,
     });
+    // debugger;
 
     if( !_.mapIs( resolved ) )
     resolved = _.arrayAs( resolved );
 
-    _.each( resolved, ( context ) =>
+    _.each( resolved, ( it ) =>
     {
-      _.assert( context.currentModule instanceof _.will.Module );
-      _.assert( context.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
-
-      _.arrayAppendOnce( op.openers, context.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
-
-      return context;
+      // debugger;
+      _.assert( it.replicateIteration.currentModule instanceof _.will.Module );
+      _.assert( it.replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+      _.arrayAppendOnce( op.openers, it.replicateIteration.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
+      return it;
     })
 
     return op;

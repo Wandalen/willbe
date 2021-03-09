@@ -29,7 +29,7 @@ function onGitMake( context )
     if( config && config.about && config.path.remoteRepository )
     {
       _.mapSupplement( config, context );
-      remotePath = _.resolver.resolveQualified
+      remotePath = _.resolver2.resolve
       ({
         src : config,
         selector : config.path.remoteRepository,

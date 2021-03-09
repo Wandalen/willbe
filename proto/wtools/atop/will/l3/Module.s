@@ -58,9 +58,6 @@ function finit()
 
   _.assert( !module.isFinited() );
 
-  // if( module.id === 1004 )
-  // debugger;
-
   try
   {
 
@@ -434,8 +431,10 @@ function outModuleMake( o )
   _.assert( !!module2.pathMap[ 'module.peer.willfiles' ] );
   _.assert( !!module2.pathMap[ 'module.peer.in' ] );
   _.assert( !!module2.pathMap[ 'module.willfiles' ] );
-  _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
-  _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  // _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( _.path.map.identical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.path.map.identical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
 
   module2.stager.stageStateSkipping( 'opened', 1 );
   module2.stager.stageStatePausing( 'opened', 0 );
@@ -4957,22 +4956,21 @@ defaults.asCommand = 0;
 // resolver
 // --
 
-function resolve_head( routine, args )
+function _resolve_head( routine, args )
 {
   let module = this;
   let o = args[ 0 ];
 
-  if( _.strIs( o ) || _.arrayIs( o ) )
+  if( !_.mapIs( o ) )
   o = { selector : o }
 
+  _.assert( _.aux.is( o ) );
   _.routineOptions( routine, o );
 
   if( o.visited === null )
   o.visited = [];
 
   o.baseModule = module;
-
-  _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -4983,11 +4981,45 @@ function resolve_head( routine, args )
 
 //
 
+function resolve_head( routine, args )
+{
+  let module = this;
+  let o = module._resolve_head.call( module, routine, args );
+
+  // let o = args[ 0 ];
+  //
+  // if( !_.mapIs( o ) )
+  // o = { selector : o }
+  //
+  // _.assert( _.aux.is( o ) );
+  // _.routineOptions( routine, o );
+  //
+  // if( o.visited === null )
+  // o.visited = [];
+  //
+  // o.baseModule = module;
+
+  let it = _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
+
+  _.assert( _.looker.iteratorIs( o ) );
+  _.assert( _.looker.iterationIs( it ) );
+  _.assert( arguments.length === 2 );
+  // _.assert( args.length === 1 );
+  // _.assert( _.arrayIs( o.visited ) );
+
+  return it;
+}
+
+//
+
 function resolve_body( o )
 {
   let module = this;
   let will = module.will;
+
+  _.assert( _.looker.iterationIs( o ) );
   _.assert( o.baseModule === module );
+
   let result = _.will.Resolver.resolve.body.call( _.will.Resolver, o );
 
   if( o.pathUnwrapping )
@@ -5015,8 +5047,10 @@ _.routineExtend( resolveRaw, _.will.Resolver.resolveRaw );
 //
 
 let pathResolve = _.routineUnite( resolve_head, resolve_body );
-
+_.assert( pathResolve.defaults.defaultResourceKind === null );
 _.routineExtend( pathResolve, _.will.Resolver.pathResolve );
+_.assert( _.will.Resolver.pathResolve.defaults.defaultResourceKind === 'path' );
+_.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 
 //
 
@@ -5057,6 +5091,14 @@ _.routineExtend( pathResolve, _.will.Resolver.pathResolve );
 //   selector : null,
 // }
 
+function pathOrReflectorResolve_head( routine, args )
+{
+  let module = this;
+  let o = module._resolve_head.call( module, routine, args );
+  _.assert( arguments.length === 2 );
+  return _.will.Resolver.pathOrReflectorResolve.head.call( _.will.Resolver, routine, [ o ] );
+}
+
 function pathOrReflectorResolve_body( o )
 {
   let module = this;
@@ -5069,7 +5111,8 @@ function pathOrReflectorResolve_body( o )
 
 _.routineExtend( pathOrReflectorResolve_body, _.will.Resolver.pathOrReflectorResolve );
 
-let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+// let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
 
 //
 
@@ -5467,7 +5510,8 @@ function _pathChanged( o )
   _.routineOptions( _pathChanged, arguments );
 
   if( o.isIdentical === null )
-  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+  o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
+  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
 
   if( will && module.userArray )
   if( o.touching )
@@ -5486,6 +5530,7 @@ function _pathChanged( o )
       else
       o2.val = path.s.join( module.dirPath, o2.val );
       opener._pathChanged( o2 );
+      /* qqq xxx : use _.entity.identicalShallow()? */
       _.assert( _.identical( opener[ o2.name ], o2.val ) );
     });
   }
@@ -5513,7 +5558,8 @@ function _pathResourceChanged( o )
   _.routineOptions( _pathResourceChanged, arguments );
 
   if( o.isIdentical === null )
-  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+  o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
+  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
 
   if( module.ResourceToPathName.hasKey( o.name ) )
   {
@@ -5872,7 +5918,8 @@ function predefinedPathPut_functor( propName, resourceName, relativizing )
 
     let ex = module[ propName ];
     let isIdentical = false;
-    isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+    isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+    // isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
     /* xxx : optimize? */
 
     if( !module.pathResourceMap[ resourceName ] )
@@ -6000,7 +6047,8 @@ function remotePathSet( filePath )
   let module = this;
   let will = module.will;
   let ex = module.remotePath;
-  let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+  // let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+  let isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
   module._remotePathPut( filePath );
 
@@ -6439,7 +6487,7 @@ function exportString( o )
   let will = module.will;
   let result = '';
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routineOptions( exportString, o );
 
   if( o.verbosity >= 1 )
   result += module.decoratedAbsoluteName + '#' + module.id;
@@ -6474,6 +6522,7 @@ function exportString( o )
 exportString.defaults =
 {
   verbosity : 2,
+  it : null,
 }
 
 //
@@ -6614,8 +6663,10 @@ function exportStructure( o )
     _.assert( !!o.dst.path[ 'module.willfiles' ] );
     _.assert( !!o.dst.path[ 'module.willfiles' ].path );
     _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
-    _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
-    _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( !_.path.map.identical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
   }
 
   return o.dst;
@@ -7612,10 +7663,20 @@ function willfileExtendWillfile( o )
       let firstExt = ext === 'yaml' ? 'yml' : ext;
       let secondExt = opts.format === 'json' ? '.' : '.will.';
 
-      if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
-      return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
-      else
+      let splits = _.strIsolateRightOrAll( request[ 0 ], path.upToken );
+
+      if( splits[ 2 ] === request[ 0 ] )
       return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
+
+      if( splits[ 2 ] === '' )
+      return path.join( willPath, splits[ 0 ], opts.format === 'json' ? 'package.json' : 'will.yml' );
+      else
+      return path.join( willPath, splits[ 0 ], path.name( splits[ 2 ] ) + secondExt + firstExt );
+
+      // if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
+      // return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
+      // else
+      // return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
     }
   }
 
@@ -9348,7 +9409,8 @@ function assertIsValidIntegrity()
     _.assert( !opener.isFinited() );
     _.assert( opener.openedModule === module );
     _.assert( opener.peerModule === module.peerModule );
-    _.assert( _.entityIdentical( opener.__.willfilesPath, module.willfilesPath ) );
+    // _.assert( _.entityIdentical( opener.__.willfilesPath, module.willfilesPath ) );
+    _.assert( _.path.map.identical( opener.__.willfilesPath, module.willfilesPath ) );
     _.assert( opener.__.dirPath === module.dirPath );
     _.assert( opener.__.commonPath === module.commonPath );
     _.assert( opener.__.localPath === module.localPath );
@@ -9750,6 +9812,7 @@ let Extension =
 
   // resolver
 
+  _resolve_head,
   resolve,
 
   resolveMaybe,
