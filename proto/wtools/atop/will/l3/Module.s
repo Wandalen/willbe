@@ -7703,9 +7703,9 @@ function willfileExtendWillfile( o )
     if( !path.isGlob( filePath ) )
     {
       if( fileProvider.isDir( filePath ) )
-      filePath = path.join( filePath, '*.(yml|yaml|json)' );
+      filePath = path.join( filePath, '*.will.(yml|yaml|json)' );
       else
-      filePath = filePath + '*.(yml|yaml|json)';
+      filePath = filePath + '*.will.(yml|yaml|json)';
     }
 
     let filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
