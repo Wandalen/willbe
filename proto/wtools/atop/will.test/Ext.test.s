@@ -15672,7 +15672,8 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.s',
+      './.module/ModuleForTesting12/sample/trivial',
+      './.module/ModuleForTesting12/sample/trivial/Sample.s'
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
