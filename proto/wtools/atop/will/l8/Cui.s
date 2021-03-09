@@ -4356,6 +4356,7 @@ function commandWillfileMergeIntoSingle( e )
   let cui = this;
   let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
+  let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
   _.routineOptions( commandWillfileMergeIntoSingle, e.propertiesMap );
 
@@ -4401,7 +4402,7 @@ function commandWillfileMergeIntoSingle( e )
     if( dst && path.isGlob( srcPath ) )
     throw _.err( 'Path to destination file should have not globs.' );
 
-    srcPath = path.join( cui.inPath ? cui.inPath : path.current(), srcPath );
+    srcPath = path.join( inPath, srcPath );
 
     if( fileProvider.isDir( srcPath ) )
     srcPath = path.join( srcPath, './' );
