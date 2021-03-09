@@ -431,6 +431,7 @@ function _commandsMake()
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
+    'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -4345,6 +4346,118 @@ commandWillfileSupplementWillfile.commandProperties = _.mapExtend( null, command
 
 //
 
+function commandWillfileMergeIntoSingle( e )
+{
+  /*
+   * Dmytro : this strange command is temporary script.
+   * The command contains of all main logic. If it needs
+   * then command will be divided into separate reusable parts
+  */
+  let cui = this;
+  let fileProvider = cui.fileProvider;
+  let path = cui.fileProvider.path;
+  let inPath = cui.inPath ? cui.inPath : path.current();
+  cui._command_head( commandWillfileMergeIntoSingle, arguments );
+  _.routineOptions( commandWillfileMergeIntoSingle, e.propertiesMap );
+
+  let willfileName = e.propertiesMap.primaryPath || 'CommandWillfileMergeIntoSingle';
+
+  let o =
+  {
+    request : willfileName + ' ./',
+    onSection : _.mapSupplement,
+  };
+  _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
+
+  if( e.propertiesMap.secondaryPath )
+  {
+    let o2 =
+    {
+      request : `${ willfileName } ${ e.propertiesMap.secondaryPath }`,
+      onSection : _.mapExtend,
+    };
+    _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
+  }
+
+  let dstPath = filesFind( willfileName, 1 );
+  _.assert( dstPath.length === 1 );
+  dstPath = dstPath[ 0 ];
+
+  if( e.propertiesMap.submodulesDisabling )
+  {
+    let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });
+    for( let dependency in config.submodule )
+    config.submodule[ dependency ].enabled = 0;
+    fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml' });
+  }
+
+  renameFiles();
+
+  return null;
+
+  /* */
+
+  function filesFind( srcPath, dst )
+  {
+    if( dst && path.isGlob( srcPath ) )
+    throw _.err( 'Path to destination file should have not globs.' );
+
+    srcPath = path.join( inPath, srcPath );
+
+    if( fileProvider.isDir( srcPath ) )
+    srcPath = path.join( srcPath, './' );
+
+    return cui.willfilesFind
+    ({
+      commonPath : srcPath,
+      withIn : 1,
+      withOut : 0,
+    });
+  }
+
+  /* */
+
+  function renameFiles()
+  {
+    let unnamedWillfiles = filesFind( './.*' );
+    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+    {
+      let oldName = unnamedWillfiles[ i ].absolute;
+      let newName = path.join( unnamedWillfiles[ i ].dir, 'Old' + unnamedWillfiles[ i ].fullName );
+      fileProvider.fileRename( newName, oldName );
+    }
+
+    if( !e.propertiesMap.primaryPath )
+    {
+      let oldName = dstPath.absolute;
+      let newName = path.join( dstPath.dir, 'will.yml' );
+      fileProvider.fileRename( newName, oldName );
+    }
+  }
+}
+
+commandWillfileMergeIntoSingle.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
+commandWillfileMergeIntoSingle.commandSubjectHint = false;
+commandWillfileMergeIntoSingle.defaults =
+{
+  primaryPath : null,
+  secondaryPath : null,
+  submodulesDisabling : 1,
+};
+commandWillfileMergeIntoSingle.commandProperties =
+{
+  primaryPath : 'Name of destination willfile',
+  secondaryPath : 'Name of file to extend destination willfile',
+  submodulesDisabling : 'Disables submodules in the destination willfile',
+};
+
+//
+
 function commandPackageInstall( e )
 {
   let cui = this;
@@ -5100,6 +5213,7 @@ let Extension =
 
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
+  commandWillfileMergeIntoSingle,
   /* aaa2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
