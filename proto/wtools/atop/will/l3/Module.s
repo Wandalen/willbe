@@ -7663,10 +7663,20 @@ function willfileExtendWillfile( o )
       let firstExt = ext === 'yaml' ? 'yml' : ext;
       let secondExt = opts.format === 'json' ? '.' : '.will.';
 
-      if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
-      return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
-      else
+      let splits = _.strIsolateRightOrAll( request[ 0 ], path.upToken );
+
+      if( splits[ 2 ] === request[ 0 ] )
       return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
+
+      if( splits[ 2 ] === '' )
+      return path.join( willPath, splits[ 0 ], opts.format === 'json' ? 'package.json' : 'will.yml' );
+      else
+      return path.join( willPath, splits[ 0 ], path.name( splits[ 2 ] ) + secondExt + firstExt );
+
+      // if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
+      // return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
+      // else
+      // return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
     }
   }
 
