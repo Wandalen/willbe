@@ -8415,7 +8415,7 @@ function willfileVersionBump( o )
   }
 
   let extensionMap = Object.create( null );
-  extensionMap[ 'about/version' ] = versionArray.join( '.' );
+  version = extensionMap[ 'about/version' ] = versionArray.join( '.' );
 
   let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
 
@@ -8436,7 +8436,192 @@ willfileVersionBump.defaults =
 {
   verbosity : 3,
   versionDelta : 1,
+};
+
+//
+
+function npmModulePublish( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routineOptions( npmModulePublish, o );
+  _.assert( path.isTrailed( module.localPath ), 'not tested' );
+
+  if( !module.about.enabled )
+  return;
+
+  let ready = _.take( null );
+
+  ready.then( () =>
+  {
+    return module.gitSync
+    ({
+      commit : o.commit,
+      restoringHardLinks : 1,
+      v : 0,
+    });
+  });
+
+  /* */
+
+  let noDiffs = 0;
+  ready.then( () =>
+  {
+    let diff;
+    if( !o.force )
+    {
+      try
+      {
+        diff = _.git.diff
+        ({
+          state2 : `!${ o.tag }`,
+          localPath : module.dirPath,
+          sync : 1,
+        });
+      }
+      catch( err )
+      {
+        _.errAttend( err );
+        logger.log( err );
+      }
+    }
+
+    if( o.force || !diff || diff.status )
+    {
+      if( o.verbosity )
+      logger.log( ` + Publishing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+      if( o.verbosity >= 2 && diff && diff.status )
+      {
+        logger.up();
+        logger.log( _.entity.exportStringNice( diff.status ) );
+        logger.down();
+      }
+    }
+    else
+    {
+      if( o.verbosity )
+      logger.log( ` x Nothing to publish in ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+      noDiffs = 1;
+    }
+    return null;
+  });
+
+  if( o.dry )
+  return ready;
+
+  /* */
+
+  let version;
+  ready.then( () =>
+  {
+    version = module.about.version = module.willfileVersionBump( Object.create( null ) );
+    return null;
+  });
+
+  ready.then( () =>
+  {
+    let currentContext = module.stepMap[ 'willfile.generate' ];
+    module.npmGenerateFromWillfile
+    ({
+      packagePath : '{path::in}/package.json',
+      currentContext,
+      verbosity : o.verbosity,
+    });
+    return null;
+  });
+
+  ready.then( () =>
+  {
+    let filterProperties = _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } );
+    return module.modulesExport
+    ({
+      ... filterProperties,
+      doneContainer : [],
+      name : '',
+      criterion : { default : 1 },
+      recursive : 0,
+      kind : 'export',
+    });
+  });
+
+  let aboutCache = Object.create( null );
+  ready.then( () =>
+  {
+    let configPath = path.join( module.dirPath, 'package.json' );
+    return _.npm.fixate
+    ({
+      dry : o.dry,
+      localPath : module.dirPath,
+      configPath,
+      tag : o.tag,
+      onDependency,
+      verbosity : o.verbosity - 2,
+    });
+  });
+
+  ready.then( () =>
+  {
+    return module.gitSync
+    ({
+      commit : `-am "version ${ version }"`,
+      restoringHardLinks : 1,
+      v : 0,
+    });
+  });
+
+  ready.then( () => module.gitTag({ name : `v${ version }` }) );
+  ready.then( () => module.gitTag({ name : o.tag }) );
+  ready.then( () => module.gitPush( Object.create( null ) ) );
+
+  ready.then( () =>
+  {
+    return _.npm.publish
+    ({
+      localPath : module.dirPath,
+      tag : o.tag,
+      verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
+    });
+  });
+
+  return ready;
+
+  /* */
+
+  function onDependency( dep )
+  {
+
+    if( dep.version )
+    return;
+
+    let about = aboutCache[ dep.name ];
+    if( !about )
+    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
+    {
+      dep.version = o.tag;
+      return;
+    }
+    if( about && about.version )
+    {
+      dep.version = about.version;
+    }
+  }
+
 }
+
+npmModulePublish.defaults =
+{
+  commit : '-am "."',
+  tag : '',
+
+  force : 0,
+  dry : 0,
+  v : 1,
+  verbosity : 1,
+};
 
 //
 
@@ -9943,6 +10128,7 @@ let Extension =
   willfileExtendProperty,
 
   willfileVersionBump,
+  npmModulePublish,
 
   // remote
 
