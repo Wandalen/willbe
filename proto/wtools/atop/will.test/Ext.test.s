@@ -5657,19 +5657,19 @@ function hookGitMake( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.reflect();
 
-  /* - */
-
-  test.true( true );
-
-  let config = a.fileProvider.configUserRead();
+  let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
-  return null;
+  return test.true( true );
   let user = config.about.user;
 
-
   /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  });
 
   a.appStart({ execPath : '.module.new New2/' })
 
@@ -5686,6 +5686,11 @@ function hookGitMake( test )
     });
   })
 
+  .then( () =>
+  {
+    debugger;
+    return null;
+  });
   a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
   .then( ( op ) =>
@@ -5721,14 +5726,19 @@ function hookPrepare( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.reflect();
 
-  test.true( true );
-
-  let config = a.fileProvider.configUserRead();
+  let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
-  return null;
+  return test.true( true );
   let user = config.about.user;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  });
 
   /* - */
 
