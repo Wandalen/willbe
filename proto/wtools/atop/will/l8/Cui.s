@@ -432,6 +432,7 @@ function _commandsMake()
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
+    'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -2949,6 +2950,7 @@ function commandExport( e )
 
   function handleEach( it )
   {
+    debugger;
     let filterProperties = _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
@@ -4440,20 +4442,68 @@ commandWillfileMergeIntoSingle.defaults =
 {
   verbosity : 3,
   v : 3,
-};
-commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
-commandWillfileMergeIntoSingle.commandSubjectHint = false;
-commandWillfileMergeIntoSingle.defaults =
-{
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
 };
+commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
+commandWillfileMergeIntoSingle.commandSubjectHint = false;
 commandWillfileMergeIntoSingle.commandProperties =
 {
   primaryPath : 'Name of destination willfile',
   secondaryPath : 'Name of file to extend destination willfile',
   submodulesDisabling : 'Disables submodules in the destination willfile',
+};
+
+//
+
+function commandNpmPublish( e )
+{
+  let cui = this;
+  cui._command_head( commandNpmPublish, arguments );
+
+  debugger;
+  _.routineOptions( commandNpmPublish, e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'publish',
+    onEach : handleEach,
+    commandRoutine : commandNpmPublish,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.npmModulePublish
+    ({
+      commit : e.subject,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandNpmPublish.defaults =
+{
+  commit : null,
+  tag : null,
+
+  force : 0,
+  dry : 0,
+  v : 1,
+  verbosity : 1,
+};
+commandNpmPublish.hint = 'To publish NPM module.';
+commandNpmPublish.commandSubjectHint = 'A commit message for uncommitted changes. Default is ".".';
+commandNpmPublish.commandProperties =
+{
+  commit : 'message',
+  tag : 'tag',
+
+  force : 'forces diff',
+  dry : 'dry run',
+  v : 'verbosity',
+  verbosity : 'verbosity',
 };
 
 //
@@ -5214,6 +5264,7 @@ let Extension =
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   commandWillfileMergeIntoSingle,
+  commandNpmPublish,
   /* aaa2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
