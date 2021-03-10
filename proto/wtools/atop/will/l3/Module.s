@@ -8453,61 +8453,53 @@ function npmModulePublish( o )
   if( !module.about.enabled )
   return;
 
-  let ready = _.take( null );
-
-  ready.then( () =>
-  {
-    return module.gitSync
-    ({
-      commit : o.commit,
-      restoringHardLinks : 1,
-      v : 0,
-    });
+  let ready = module.gitSync
+  ({
+    commit : o.commit,
+    restoringHardLinks : 1,
+    v : 0,
   });
+
+  ready.deasync();
 
   /* */
 
-  let noDiffs = 0;
-  ready.then( () =>
+  let diff;
+  if( !o.force )
   {
-    let diff;
-    if( !o.force )
+    try
     {
-      try
-      {
-        diff = _.git.diff
-        ({
-          state2 : `!${ o.tag }`,
-          localPath : module.dirPath,
-          sync : 1,
-        });
-      }
-      catch( err )
-      {
-        _.errAttend( err );
-        logger.log( err );
-      }
+      diff = _.git.diff
+      ({
+        state2 : `!${ o.tag }`,
+        localPath : module.dirPath,
+        sync : 1,
+      });
     }
+    catch( err )
+    {
+      _.errAttend( err );
+      logger.log( err );
+    }
+  }
 
-    if( o.force || !diff || diff.status )
+  if( o.force || !diff || diff.status )
+  {
+    if( o.verbosity )
+    logger.log( ` + Publishing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    if( o.verbosity >= 2 && diff && diff.status )
     {
-      if( o.verbosity )
-      logger.log( ` + Publishing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
-      if( o.verbosity >= 2 && diff && diff.status )
-      {
-        logger.up();
-        logger.log( _.entity.exportStringNice( diff.status ) );
-        logger.down();
-      }
+      logger.up();
+      logger.log( _.entity.exportStringNice( diff.status ) );
+      logger.down();
     }
-    else
-    {
-      if( o.verbosity )
-      logger.log( ` x Nothing to publish in ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
-      noDiffs = 1;
-    }
-    return null;
-  });
+  }
+  else
+  {
+    if( o.verbosity )
+    logger.log( ` x Nothing to publish in ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    return ready;
+  }
 
   if( o.dry )
   return ready;
