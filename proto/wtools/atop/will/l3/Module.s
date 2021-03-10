@@ -369,7 +369,6 @@ function outModuleMake( o )
   let moduleWas = will.moduleWithCommonPathMap[ _.Will.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
-    debugger;
     _.assert( 0, 'not tested' );
     _.assert( moduleWas.peerModule === module );
     _.assert( moduleWas === module.peerModule );
@@ -534,7 +533,6 @@ function outModuleOpen( o )
 
     if( !opener2.openedModule.isConsistent() )
     {
-      debugger;
       opener2.error = _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` );
       logger.log( opener2.error );
       return module2;
@@ -582,7 +580,6 @@ function outModuleOpen( o )
       }
       catch( err2 )
       {
-        debugger;
         let error2 = _.err( err2 );
         logger.log( _.errOnce( error2 ) );
         throw error2;
@@ -795,8 +792,6 @@ function upform( o )
 
   o = _.routineOptions( upform, arguments );
   module.optionsFormingForward( o );
-
-  // debugger;
 
   if( o.attachedWillfilesFormed )
   if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
@@ -1521,7 +1516,6 @@ function predefinedStepMake( o )
   _.assert( module === o.module );
   _.assert( arguments.length === 1 );
 
-  // debugger;
   let result = new _.will.Step( o ).form1();
   result.writable = 0;
   return result;
@@ -1599,7 +1593,6 @@ function usedBy( user )
     }
     else if( user.remotePath && !module.remotePath )
     {
-      debugger;
       _.assert( _.strDefined( user.downloadPath ) );
       module.remotePathEachAdopt({ remotePath : user.remotePath, downloadPath : user.downloadPath });
     }
@@ -1828,7 +1821,6 @@ function reopen()
 
   ready.finally( ( err, module2 ) =>
   {
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} at ${commonPath}` );
     _.assert( module.isFinited() );
@@ -1961,7 +1953,6 @@ function _willfilesOpen()
 
   /* */
 
-  // debugger;
   for( let i = 0 ; i < module.willfilesArray.length ; i++ )
   {
     let willfile = module.willfilesArray[ i ];
@@ -2093,7 +2084,6 @@ function willfileRegister( willf )
 
   if( _.arrayIs( willf ) )
   {
-    debugger;
     willf.forEach( ( willf ) => module.willfileRegister( willf ) );
     return;
   }
@@ -2249,7 +2239,6 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
 
     willfile._read();
 
-    // debugger;
     for( let modulePath in willfile.structure.module )
     {
       let moduleStructure = willfile.structure.module[ modulePath ];
@@ -2267,7 +2256,6 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
       });
 
     }
-    // debugger;
 
   }
 
@@ -2338,7 +2326,6 @@ function exportAuto()
   let logger = will.logger;
   let clonePath = module.cloneDirPathGet();
 
-  debugger;
   _.assert( 'not implemented' );
 
   // _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -2400,7 +2387,6 @@ function exportAuto()
   // module.pickedWillfilesPath = clonePath + module.aliasName;
   // module._willfilesFindPickedFile()
   //
-  // debugger;
 
 }
 
@@ -2532,7 +2518,6 @@ function exportedMake( o )
     return new _.Consequence().take( makeFromPeer() );
   }
 
-  debugger
   return new _.Consequence().take( make() );
 
   /* */
@@ -3176,7 +3161,6 @@ function moduleFixate( o )
 
       if( !o.dry && fixatedPath )
       {
-        debugger;
         superModule.remotePath = fixatedPath;
         superModule._currentRemotePathPut( fixatedPath );
         _.assert( superModule.remotePath === fixatedPath );
@@ -3232,7 +3216,6 @@ function moduleFixate( o )
     let grouped = Object.create( null );
     let result = '';
 
-    debugger;
     if( _.mapKeys( report ).length === 0 )
     return;
 
@@ -3366,7 +3349,6 @@ function moduleFixateAct( o )
   function fileReplace( willfilePath )
   {
 
-    debugger;
     try
     {
 
@@ -8446,6 +8428,7 @@ function npmModulePublish( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let packagePath = path.join( module.dirPath, 'package.json' );
 
   _.routineOptions( npmModulePublish, o );
   _.assert( path.isTrailed( module.localPath ), 'not tested' );
@@ -8518,7 +8501,7 @@ function npmModulePublish( o )
     let currentContext = module.stepMap[ 'willfile.generate' ];
     module.npmGenerateFromWillfile
     ({
-      packagePath : '{path::in}/package.json',
+      packagePath,
       currentContext,
       verbosity : o.verbosity,
     });
@@ -8534,7 +8517,7 @@ function npmModulePublish( o )
       doneContainer : [],
       name : '',
       criterion : { default : 1 },
-      recursive : 0,
+      recursive : 2,
       kind : 'export',
     });
   });
@@ -8553,6 +8536,8 @@ function npmModulePublish( o )
       verbosity : o.verbosity - 2,
     });
   });
+
+  ready.then( () => packageJsonFormat() );
 
   ready.then( () =>
   {
@@ -8602,6 +8587,41 @@ function npmModulePublish( o )
     }
   }
 
+  /* */
+
+  function packageJsonFormat()
+  {
+    // let formatter = require.resolve( 'pkgfmt' );
+    // return _.process.start
+    // ({
+    //   mode : 'shell',
+    //   args : [ packagePath ],
+    //   execPath : `node ${ formatter }`,
+    //   currentPath : module.dirPath,
+    // });
+    let dependencies = [ 'dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies' ];
+    // let config = JSON.parse( fs.readFileSync( packagePath, { encoding : 'utf-8' } ) );
+    let config = JSON.parse( fileProvider.fileRead( packagePath ) );
+    for( let i = 0; i < dependencies.length; i++ )
+    if( config[ dependencies[ i ] ] )
+    config[ dependencies[ i ] ] = sortProperties( config[ dependencies[ i ] ] );
+    fileProvider.fileWrite( packagePath, JSON.stringify( config, null, "  " ) + "\n" );
+
+    return null;
+  }
+
+  /* */
+
+  function sortProperties( src )
+  {
+    let result = Object.create( null );
+    let keys = _.mapKeys( src );
+    keys.sort( ( a, b ) => a.toLowerCase().localeCompare( b.toLowerCase() ) );
+
+    for( let i = 0; i < keys.length; i++ )
+    result[ keys[ i ] ] = src[ keys[ i ] ];
+    return result;
+  }
 }
 
 npmModulePublish.defaults =

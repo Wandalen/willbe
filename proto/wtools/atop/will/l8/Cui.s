@@ -4462,7 +4462,6 @@ function commandNpmPublish( e )
   let cui = this;
   cui._command_head( commandNpmPublish, arguments );
 
-  debugger;
   _.routineOptions( commandNpmPublish, e.propertiesMap );
 
   return cui._commandBuildLike
