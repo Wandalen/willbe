@@ -5881,7 +5881,7 @@ function hookHlink( test )
   let context = this;
   let a = context.assetFor( test, 'git-conflict' );
 
-  let originalShell = _.process.starter
+  let originalShell = _.process.starter /* qqq : for Dmytro : ? */
   ({
     currentPath : a.abs( 'original' ),
     outputCollecting : 1,
@@ -5890,7 +5890,7 @@ function hookHlink( test )
     mode : 'shell',
   })
 
-  let cloneShell = _.process.starter
+  let cloneShell = _.process.starter /* qqq : for Dmytro : ? */
   ({
     currentPath : a.abs( 'clone' ),
     outputCollecting : 1,

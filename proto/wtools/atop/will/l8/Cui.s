@@ -555,7 +555,7 @@ function _commandListLike( o )
 
         let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         _.assert( e.request === undefined );
-        e.request = _.will.resolver.Looker.strRequestParse( e.commandArgument );
+        e.request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
 
         if( _.will.resolver.Resolver.selectorIs( e.request.subject ) )
         {
@@ -1214,7 +1214,7 @@ commandImply.commandProperties =
 //   /* qqq xxx : apply to other top modules */
 //   _.assert( !!isolated );
 //
-//   let request = _.will.resolver.Looker.strRequestParse( isolated.commandArgument );
+//   let request = _.will.resolver.Resolver.strRequestParse( isolated.commandArgument );
 //   will._propertiesImply( request.map );
 //
 //   // let namesMap =
@@ -1507,7 +1507,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = cui.logger;
-    let request = _.will.resolver.Looker.strRequestParse( e.commandArgument );
+    let request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -1541,7 +1541,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = cui.logger;
-    let request = _.will.resolver.Looker.strRequestParse( e.commandArgument );
+    let request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,

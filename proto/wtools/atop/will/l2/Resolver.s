@@ -521,7 +521,7 @@ function _select( visited )
 
 //
 
-function resolveContextPrepare( o )
+function сontextPrepare( o )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
@@ -532,7 +532,7 @@ function resolveContextPrepare( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptions( resolveContextPrepare, arguments );
+  _.routineOptions( сontextPrepare, arguments );
 
   if( !o.currentThis )
   {
@@ -571,7 +571,7 @@ function resolveContextPrepare( o )
   return o.currentThis;
 }
 
-resolveContextPrepare.defaults =
+сontextPrepare.defaults =
 {
   currentThis : null,
   currentContext : null,
@@ -1047,7 +1047,7 @@ function _functionThisUp()
   let currentThis = /*rop*/rit.currentThis;
 
   if( currentThis === null )
-  currentThis = /*resolver*/it.resolveContextPrepare
+  currentThis = /*resolver*/it.сontextPrepare
   ({
     baseModule : /*rop*/rit.baseModule,
     currentThis,
@@ -1179,7 +1179,7 @@ function performBegin()
 
   _.assert( it.srcForSelect instanceof _.will.Module );
 
-  it.iterator.currentThis = it.resolveContextPrepare
+  it.iterator.currentThis = it.сontextPrepare
   ({
     currentThis : it.currentThis,
     currentContext : it.currentContext,
@@ -1366,7 +1366,7 @@ let Common =
   _exportedWriteThrough,
   _currentExclude,
   _select,
-  resolveContextPrepare,
+  сontextPrepare,
 
   // path
 
