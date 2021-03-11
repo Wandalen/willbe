@@ -1837,6 +1837,10 @@ function commandSubmodulesVersionsDownload( e )
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+  
   cui._propertiesImply( implyMap );
 
   return cui._commandCleanLike
@@ -1862,7 +1866,7 @@ function commandSubmodulesVersionsDownload( e )
 
 }
 
-commandSubmodulesVersionsDownload.defaults = commandImply.defaults;
+commandSubmodulesVersionsDownload.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
 commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
@@ -1882,6 +1886,10 @@ function commandSubmodulesVersionsUpdate( e )
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
@@ -1902,6 +1910,7 @@ function commandSubmodulesVersionsUpdate( e )
 }
 
 commandSubmodulesVersionsUpdate.defaults = commandImply.defaults;
+commandSubmodulesVersionsUpdate.defaults.withSubmodules = 1;
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
