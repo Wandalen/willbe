@@ -4965,9 +4965,10 @@ function _resolve_head( routine, args )
   o = { selector : o }
 
   _.assert( _.aux.is( o ) );
-  _.routineOptions( routine, o );
+  // _.routineOptions( routine, o );
+  _.assertMapHasOnly( o, routine.defaults );
 
-  if( o.visited === null )
+  if( o.visited === null || o.visited === undefined )
   o.visited = [];
 
   o.baseModule = module;
@@ -4999,7 +5000,7 @@ function resolve_head( routine, args )
   //
   // o.baseModule = module;
 
-  let it = _.will.Resolver.resolve.head.call( _.will.Resolver, routine, [ o ] );
+  let it = _.will.resolver.resolve.head.call( _.will.resolver, routine, [ o ] );
 
   _.assert( _.looker.iteratorIs( o ) );
   _.assert( _.looker.iterationIs( it ) );
@@ -5020,7 +5021,7 @@ function resolve_body( o )
   _.assert( _.looker.iterationIs( o ) );
   _.assert( o.baseModule === module );
 
-  let result = _.will.Resolver.resolve.body.call( _.will.Resolver, o );
+  let result = _.will.resolver.resolve.body.call( _.will.resolver, o );
 
   if( o.pathUnwrapping )
   _.assert( !result || !( result instanceof _.will.PathResource ) );
@@ -5028,29 +5029,58 @@ function resolve_body( o )
   return result;
 }
 
-_.routineExtend( resolve_body, _.will.Resolver.resolve );
+// _.routineExtend( resolve_body, _.will.resolver.resolve.body );
+// let resolve = _.routineUnite( resolve_head, resolve_body );
 
-let resolve = _.routineUnite( resolve_head, resolve_body );
-
-//
-
-let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
-
-_.routineExtend( resolveMaybe, _.will.Resolver.resolveMaybe );
-
-//
-
-let resolveRaw = _.routineUnite( resolve_head, resolve_body );
-
-_.routineExtend( resolveRaw, _.will.Resolver.resolveRaw );
+_.routine.extendReplacing( resolve_body, _.will.resolver.resolve.body );
+let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
+// let resolve = _.routineUnite({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
+// resolve.defaults.Looker = resolve.defaults;
+_.assert( resolve.defaults === resolve.body.defaults );
+_.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
+_.assert( resolve.defaults === resolve.defaults.Looker );
 
 //
 
-let pathResolve = _.routineUnite( resolve_head, resolve_body );
-_.assert( pathResolve.defaults.defaultResourceKind === null );
-_.routineExtend( pathResolve, _.will.Resolver.pathResolve );
-_.assert( _.will.Resolver.pathResolve.defaults.defaultResourceKind === 'path' );
+// let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
+// _.routineExtend( resolveMaybe, _.will.resolver.resolveMaybe );
+
+// debugger;
+_.assert( _.will.resolver.resolveMaybe.defaults.missingAction === 'undefine' );
+// _.assert( _.will.resolver.resolveMaybe.body.defaults.missingAction === 'undefine' ); /* xxx : uncomment */
+let resolveMaybe_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.resolveMaybe.defaults } );
+_.assert( resolve.defaults === resolve.body.defaults );
+_.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
+_.assert( resolveMaybe_body !== resolve_body );
+_.assert( resolveMaybe_body.defaults === _.will.resolver.resolveMaybe.defaults );
+_.assert( resolveMaybe_body.defaults !== resolve_body.defaults );
+let resolveMaybe = _.routine.uniteReplacing( resolve_head, resolveMaybe_body );
+// let resolveMaybe = _.routineUnite({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
+_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Looker );
+_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Looker );
+
+//
+
+// let resolveRaw = _.routineUnite( resolve_head, resolve_body );
+// _.routineExtend( resolveRaw, _.will.resolver.resolveRaw );
+
+let resolveRaw_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.resolveMaybe.defaults } );
+let resolveRaw = _.routine.uniteReplacing( resolve_head, resolveRaw_body );
+// let resolveRaw = _.routineUnite({ head : resolve_head, body : resolveRaw_body, strategy : 'replacing' });
+
+//
+
+let pathResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.pathResolve.defaults } );
+let pathResolve = _.routine.uniteReplacing( resolve_head, pathResolve_body );
+// let pathResolve = _.routineUnite({ head : resolve_head, body : pathResolve_body, strategy : 'replacing' });
+_.assert( _.will.resolver.pathResolve.defaults.defaultResourceKind === 'path' );
 _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
+
+// let pathResolve = _.routineUnite( resolve_head, resolve_body );
+// _.assert( pathResolve.defaults.defaultResourceKind === null );
+// _.routineExtend( pathResolve, _.will.resolver.pathResolve );
+// _.assert( _.will.resolver.pathResolve.defaults.defaultResourceKind === 'path' );
+// _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 
 //
 
@@ -5096,7 +5126,7 @@ function pathOrReflectorResolve_head( routine, args )
   let module = this;
   let o = module._resolve_head.call( module, routine, args );
   _.assert( arguments.length === 2 );
-  return _.will.Resolver.pathOrReflectorResolve.head.call( _.will.Resolver, routine, [ o ] );
+  return _.will.resolver.pathOrReflectorResolve.head.call( _.will.resolver, routine, [ o ] );
 }
 
 function pathOrReflectorResolve_body( o )
@@ -5105,11 +5135,11 @@ function pathOrReflectorResolve_body( o )
   let will = module.will;
   _.assert( o.baseModule === module );
   _.assert( arguments.length === 1 );
-  let result = _.will.Resolver.pathOrReflectorResolve.body.call( _.will.Resolver, o );
+  let result = _.will.resolver.pathOrReflectorResolve.body.call( _.will.resolver, o );
   return result;
 }
 
-_.routineExtend( pathOrReflectorResolve_body, _.will.Resolver.pathOrReflectorResolve );
+_.routineExtend( pathOrReflectorResolve_body, _.will.resolver.pathOrReflectorResolve );
 
 let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
 // let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
@@ -5131,7 +5161,7 @@ function filesFromResource_head( routine, args )
 
   o.baseModule = module;
 
-  _.will.Resolver.filesFromResource.head.call( _.will.Resolver, routine, [ o ] );
+  _.will.resolver.filesFromResource.head.call( _.will.resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -5149,21 +5179,28 @@ function filesFromResource_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = _.will.Resolver.filesFromResource.body.call( _.will.Resolver, o );
+  let result = _.will.resolver.filesFromResource.body.call( _.will.resolver, o );
   return result;
 }
 
-_.routineExtend( filesFromResource_body, _.will.Resolver.filesFromResource );
+_.routineExtend( filesFromResource_body, _.will.resolver.filesFromResource );
 
 let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
 
 //
 
-let submodulesResolve = _.routineUnite( resolve_head, resolve_body );
+let submodulesResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.submodulesResolve.defaults } );
+let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolve_body );
+// let submodulesResolve = _.routineUnite({ head : resolve_head, body : submodulesResolve_body, strategy : 'replacing' });
 
-_.routineExtend( submodulesResolve, _.will.Resolver.submodulesResolve );
+// let submodulesResolve = _.routineUnite( resolve_head, resolve_body );
+// _.routineExtend( submodulesResolve, _.will.resolver.submodulesResolve );
 
-_.assert( _.will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
+_.assert( submodulesResolve.defaults === submodulesResolve.body.defaults );
+_.assert( submodulesResolve.defaults === _.will.resolver.submodulesResolve.defaults );
+_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Looker );
+
+_.assert( _.will.resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 
 //
@@ -5173,15 +5210,14 @@ function reflectorResolve_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = _.will.Resolver.reflectorResolve.body.call( _.will.Resolver, o );
+  let result = _.will.resolver.reflectorResolve.body.call( _.will.resolver, o );
   return result;
 }
 
-_.routineExtend( reflectorResolve_body, _.will.Resolver.reflectorResolve );
-
-let reflectorResolve = _.routineUnite( resolve_head, reflectorResolve_body );
-
+_.routine.extendReplacing( reflectorResolve_body, _.will.resolver.reflectorResolve );
+let reflectorResolve = _.routine.uniteReplacing( resolve_head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
 
 // --
 // other resolver
@@ -5409,7 +5445,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = _.will.Resolver;
+  // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -5883,7 +5919,7 @@ function predefinedPathGet_functor( propName, resourceName, absolutize )
     result = null;
 
     if( result )
-    if( _.will.Resolver.selectorIs( result ) )
+    if( _.will.resolver.Resolver.selectorIs( result ) )
     {
       result = module.pathResolve( result );
     }

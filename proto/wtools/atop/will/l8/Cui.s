@@ -554,11 +554,11 @@ function _commandListLike( o )
 
         let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         _.assert( e.request === undefined );
-        e.request = _.will.Resolver.strRequestParse( e.commandArgument );
+        e.request = _.will.resolver.Looker.strRequestParse( e.commandArgument );
 
-        if( _.will.Resolver.selectorIs( e.request.subject ) )
+        if( _.will.resolver.Resolver.selectorIs( e.request.subject ) )
         {
-          let splits = _.will.Resolver.selectorShortSplit
+          let splits = _.will.resolver.Resolver.selectorShortSplit
           ({
             selector : e.request.subject,
             defaultResourceKind : o.resourceKind,
@@ -567,7 +567,7 @@ function _commandListLike( o )
           resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         }
 
-        if( resourceKindIsGlob && e.request.subject && !_.will.Resolver.selectorIs( e.request.subject ) )
+        if( resourceKindIsGlob && e.request.subject && !_.will.resolver.Resolver.selectorIs( e.request.subject ) )
         {
           e.request.subject = '*::' + e.request.subject;
         }
@@ -1213,7 +1213,7 @@ commandImply.commandProperties =
 //   /* qqq xxx : apply to other top modules */
 //   _.assert( !!isolated );
 //
-//   let request = _.will.Resolver.strRequestParse( isolated.commandArgument );
+//   let request = _.will.resolver.Looker.strRequestParse( isolated.commandArgument );
 //   will._propertiesImply( request.map );
 //
 //   // let namesMap =
@@ -1506,7 +1506,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = cui.logger;
-    let request = _.will.Resolver.strRequestParse( e.commandArgument );
+    let request = _.will.resolver.Looker.strRequestParse( e.commandArgument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -1540,7 +1540,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = cui.logger;
-    let request = _.will.Resolver.strRequestParse( e.commandArgument );
+    let request = _.will.resolver.Looker.strRequestParse( e.commandArgument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -3551,7 +3551,7 @@ function commandEach( e )
   _.assert( e.parsedCommands[ commandIndex + 1 ], 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
   let con;
-  if( _.will.Resolver.selectorIs( e.commandArgument ) )
+  if( _.will.resolver.Resolver.selectorIs( e.commandArgument ) )
   {
     con = cui.modulesFindEachAt
     ({

@@ -1182,8 +1182,10 @@ function resolve_body( o )
 
 var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
+defaults.Looker = defaults;
 
-let resolve = _.routineUnite( resolve_head, resolve_body );
+// let resolve = _.routineUnite( resolve_head, resolve_body );
+let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 
 //
 
@@ -1231,13 +1233,32 @@ function inPathResolve_body( o )
   return result;
 }
 
-var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
+// var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
+// defaults.defaultResourceKind = 'path';
+// defaults.prefixlessAction = 'default';
+// defaults.pathResolving = 'in';
+//
+// let inPathResolve = _.routineUnite( inPathResolve_head, inPathResolve_body );
+// // let inPathResolve = _.routineUnite( resolve.head, inPathResolve_body );
+
+// var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
+// defaults.defaultResourceKind = 'path';
+// defaults.prefixlessAction = 'default';
+// defaults.pathResolving = 'in';
+// let inPathResolve = _.routineUnite( inPathResolve_head, inPathResolve_body );
+
+_.assert( _.prototype.has( resolve.defaults, resolve.defaults.OriginalLooker ) );
+_.routine.extendInheriting( inPathResolve_body, { defaults : resolve.defaults } );
+_.assert( inPathResolve_body.defaults !== resolve.defaults );
+var defaults = inPathResolve_body.defaults;
 defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
-
-let inPathResolve = _.routineUnite( inPathResolve_head, inPathResolve_body );
-// let inPathResolve = _.routineUnite( resolve.head, inPathResolve_body );
+defaults.Looker = defaults;
+// let inPathResolve = _.routineUnite({ head : inPathResolve_head, body : inPathResolve_body, strategy : 'replacing' });
+let inPathResolve = _.routine.uniteReplacing( inPathResolve_head, inPathResolve_body );
+_.assert( inPathResolve.defaults === inPathResolve.body.defaults );
+_.assert( _.prototype.has( inPathResolve.defaults, inPathResolve.defaults.OriginalLooker ) );
 
 //
 
@@ -1282,10 +1303,14 @@ function reflectorResolve_body( o )
   return resolved;
 }
 
-reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
+// reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
+// let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
+// // let reflectorResolve = _.routineUnite( resolve.head, reflectorResolve_body );
 
-let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
-// let reflectorResolve = _.routineUnite( resolve.head, reflectorResolve_body );
+reflectorResolve_body.defaults = _.will.Module.prototype.reflectorResolve.defaults;
+let reflectorResolve = _.routine.uniteReplacing( resolve.head, reflectorResolve_body );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+// let reflectorResolve = _.routineUnite({ head : resolve.head, body : reflectorResolve_body, strategy : 'replacing' });
 
 // --
 // etc
@@ -1298,16 +1323,16 @@ function pathRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let Resolver = _.will.Resolver;
+  // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathRebase, arguments );
 
   if( o.filePath )
   if( path.isRelative( o.filePath ) )
   {
-    if( Resolver.selectorIs( o.filePath ) )
+    if( _.will.resolver.Resolver.selectorIs( o.filePath ) )
     {
-      let filePath2 = Resolver.selectorNormalize( o.filePath );
+      let filePath2 = _.will.resolver.Resolver.selectorNormalize( o.filePath );
       if( _.strBegins( filePath2, '{' ) )
       return o.filePath;
       o.filePath = filePath2;

@@ -1739,7 +1739,7 @@ function modulesFindEachAt( o )
 //
 //   /* */
 //
-//   if( _.will.Resolver.selectorIs( o.selector ) )
+//   if( _.will.resolver.Resolver.selectorIs( o.selector ) )
 //   {
 //
 //     let opener = o.currentOpener;
@@ -5056,7 +5056,7 @@ function hookCall( o )
 
   /* */
 
-  if( o.module && o.withPath && _.will.Resolver.selectorIs( o.withPath ) )
+  if( o.module && o.withPath && _.will.resolver.Resolver.selectorIs( o.withPath ) )
   o.withPath = o.module.pathResolve
   ({
     selector : o.withPath,
@@ -5072,7 +5072,7 @@ function hookCall( o )
 
   /* */
 
-  if( o.module && _.will.Resolver.selectorIs( o.execPath ) )
+  if( o.module && _.will.resolver.Resolver.selectorIs( o.execPath ) )
   o.execPath = o.module.resolve
   ({
     selector : o.execPath,

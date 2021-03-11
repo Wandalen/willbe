@@ -6,15 +6,18 @@
 const _ = _global_.wTools;
 const Parent = _.resolver2.Looker;
 _.assert( !!_.resolver2.resolve );
-_.assert( !!_.resolver2.Looker.resolve );
+// _.assert( !!_.resolver2.Looker.resolve );
+_.assert( !_.resolver2.Looker.resolve );
+_.assert( !!_.resolver2.Looker.exec );
 _.assert( !!_.resolver2.compositeSymbol );
-_.will.Resolver = Object.create( _.resolver2 );;
+_.will.resolver = Object.create( _.resolver2 );
 
 // --
 // relation
 // --
 
-let Defaults = _.mapExtend( null, Parent.resolve.body.defaults );
+// let Defaults = _.mapExtend( null, Parent.resolve.body.defaults );
+let Defaults = _.mapExtend( null, Parent.Prime );
 
 Defaults.currentThis = null;
 Defaults.currentContext = null;
@@ -27,6 +30,13 @@ Defaults.strictCriterion = 0;
 Defaults.currentExcluding = 1;
 Defaults.hasPath = null;
 Defaults.selectorIsPath = 0;
+
+Defaults.onSelectorReplicate = _onSelectorReplicate;
+Defaults.onSelectorDown = _onSelectorDown;
+Defaults.onUpBegin = _onUpBegin;
+Defaults.onUpEnd = _onUpEnd;
+Defaults.onDownEnd = _onDownEnd;
+Defaults.onQuantitativeFail = _onQuantitativeFail;
 
 // --
 // handler
@@ -500,7 +510,7 @@ function _select( visited )
   let it2 = Parent._select.apply( this, arguments );
 
   _.assert( it2 !== it );
-  _.assert( it2.criterion === undefined ); /* xxx yyy : uncomment */
+  _.assert( it2.criterion === undefined ); /* yyy : uncomment */
   _.assert( it._onUpBegin === Self._onUpBegin );
   _.assert( it.onUpBegin === Self._onUpBegin );
   _.assert( it2._onUpBegin === Self._onUpBegin );
@@ -860,7 +870,8 @@ function _pathResolve( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  _.assert( rit.Looker === rit.ResolverReplicator );
+  _.assert( rit.OriginalLooker === rit.Replicator );
+  _.assert( _.prototype.has( rit.Looker, rit.Replicator ) );
   _.assert( rit.baseModule !== undefined );
   _.assert( rit.currentModule !== undefined );
   _.assert( /*rop*/rit.baseModule !== undefined );
@@ -1102,7 +1113,7 @@ errResolving.defaults =
 
 function resolve_head( routine, args )
 {
-  return Self.head( routine, args );
+  return routine.defaults.head( routine, args );
 }
 
 //
@@ -1113,46 +1124,42 @@ function resolve_body( it )
   return it.result;
 }
 
-  // onSelectorReplicate : _onSelectorReplicate,
-  // onSelectorDown : _onSelectorDown,
-Defaults.onSelectorReplicate = _onSelectorReplicate;
-Defaults.onSelectorDown = _onSelectorDown;
-Defaults.onUpBegin = _onUpBegin;
-Defaults.onUpEnd = _onUpEnd;
-Defaults.onDownEnd = _onDownEnd;
-Defaults.onQuantitativeFail = _onQuantitativeFail;
-
-var defaults = resolve_body.defaults = Defaults
-
-let resolve = _.routineUnite( resolve_head, resolve_body );
-let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
-
-var defaults = resolveMaybe.defaults;
-defaults.missingAction = 'undefine';
-
+// Defaults.onSelectorReplicate = _onSelectorReplicate;
+// Defaults.onSelectorDown = _onSelectorDown;
+// Defaults.onUpBegin = _onUpBegin;
+// Defaults.onUpEnd = _onUpEnd;
+// Defaults.onDownEnd = _onDownEnd;
+// Defaults.onQuantitativeFail = _onQuantitativeFail;
 //
+// var defaults = resolve_body.defaults = Defaults
 
-/* xxx : remove */
-function head( routine, args )
-{
-  _.assert( arguments.length === 2 );
-  let o = routine.defaults.Looker.optionsFromArguments( args );
-  if( _.routineIs( routine ) )
-  o.Looker = o.Looker || routine.defaults.Looker;
-  else
-  o.Looker = o.Looker || routine.Looker;
-  _.assert( _.routineIs( routine ) || _.auxIs( routine ) );
-  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.assertMapHasOnly( o, routine.defaults );
-  // _.routineOptionsPreservingUndefines( routine, o );
-  else if( routine !== null )
-  _.assertMapHasOnly( o, routine );
-  // _.routineOptionsPreservingUndefines( null, o, routine );
-  // o.Looker.optionsForm( routine, o );
-  o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
-  let it = o.Looker.optionsToIteration( null, o );
-  return it;
-}
+// let resolve = _.routineUnite( resolve_head, resolve_body );
+// let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
+// var defaults = resolveMaybe.defaults;
+// defaults.missingAction = 'undefine';
+
+// //
+//
+// function head( routine, args )
+// {
+//   _.assert( arguments.length === 2 );
+//   let o = routine.defaults.Looker.optionsFromArguments( args );
+//   if( _.routineIs( routine ) )
+//   o.Looker = o.Looker || routine.defaults.Looker;
+//   else
+//   o.Looker = o.Looker || routine.Looker;
+//   _.assert( _.routineIs( routine ) || _.auxIs( routine ) );
+//   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
+//   _.assertMapHasOnly( o, routine.defaults );
+//   // _.routineOptionsPreservingUndefines( routine, o );
+//   else if( routine !== null )
+//   _.assertMapHasOnly( o, routine );
+//   // _.routineOptionsPreservingUndefines( null, o, routine );
+//   // o.Looker.optionsForm( routine, o );
+//   o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
+//   let it = o.Looker.optionsToIteration( null, o );
+//   return it;
+// }
 
 //
 
@@ -1188,7 +1195,9 @@ function performBegin()
   _.assert( it.criterion === null || _.mapIs( it.criterion ) );
   _.assert( it.baseModule instanceof _.will.AbstractModule );
   _.assert( !_.property.own( it, 'criterion' ) );
-  _.assert( it.Looker === ResolverWillbe );
+  // _.assert( it.Looker === ResolverWillbe );
+  _.assert( it.OriginalLooker === ResolverWillbe );
+  _.assert( _.prototype.has( it.Looker, ResolverWillbe ) );
   _.assert( it.Looker.Iteration.currentModule !== undefined );
   _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
 
@@ -1222,329 +1231,23 @@ function optionsToIteration( iterator, o )
 {
   let it = Parent.optionsToIteration.call( this, iterator, o );
   _.assert( arguments.length === 2 );
-  _.assert( !!Self.ResolverSelector );
-  _.assert( it.ResolverSelector === Self.ResolverSelector );
-  _.assert( it.Looker.ResolverSelector === Self.ResolverSelector );
+  _.assert( !!Self.Selector );
+  _.assert( it.Selector === Self.Selector );
+  _.assert( it.Looker.Selector === Self.Selector );
   return it;
 }
-
-// --
-// wraps
-// --
-
-let resolveRaw = _.routineUnite( resolve_head, resolve_body );
-
-var defaults = resolveRaw.defaults;
-defaults.pathResolving = 0;
-defaults.pathNativizing = 0;
-defaults.pathUnwrapping = 0;
-defaults.singleUnwrapping = 0;
-defaults.mapValsUnwrapping = 0;
-defaults.mapFlattening = 0;
-defaults.arrayWrapping = 0;
-defaults.arrayFlattening = 0;
-defaults.missingAction = 'undefine';
-
-/*
-missingAction should be 'undefine'
-alternatively adjust call from finit of class Exported
-*/
-
-//
-
-let pathResolve = _.routineUnite( resolve_head, resolve_body );
-
-var defaults = pathResolve.defaults;
-defaults.pathResolving = 'in';
-defaults.prefixlessAction = 'resolved';
-defaults.arrayFlattening = 1;
-defaults.selectorIsPath = 1;
-defaults.mapValsUnwrapping = 1;
-
-defaults.defaultResourceKind = 'path'; /* yyy */
-_.assert( pathResolve.defaults.defaultResourceKind === 'path' );
-
-//
-
-function pathOrReflectorResolve_head( routine, args )
-{
-  let o = args[ 0 ];
-  let module = o.baseModule;
-  let will = module.will;
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-  _.assert( _.aux.is( o ) );
-  _.routineOptions( routine, o );
-  return o;
-}
-
-function pathOrReflectorResolve_body( o )
-{
-  //let resolver = this;
-  let module = o.baseModule;
-  let will = module.will;
-  let resource;
-
-  _.assert( _.aux.is( o ) );
-  _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
-  _.assert( !/*resolver*/Self.selectorIs( o.selector ) );
-  _.assert( o.pathResolving === 'in' );
-  _.assert( !o.pathUnwrapping );
-
-  let o2 = _.mapExtend( null, o );
-  o2.missingAction = 'undefine';
-  o2.selector = 'reflector::' + o.selector;
-  resource = module.reflectorResolve( o2 );
-
-  if( resource )
-  return resource;
-
-  let o3 = _.mapExtend( null, o );
-  o3.missingAction = 'undefine';
-  o3.selector = 'path::' + o.selector;
-  resource = module.reflectorResolve( o3 );
-
-  return resource;
-}
-
-var defaults = pathOrReflectorResolve_body.defaults = Object.create( resolve_body.defaults );
-
-defaults.pathResolving = 'in';
-defaults.missingAction = 'undefine';
-defaults.pathUnwrapping = 0;
-
-let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
-
-//
-
-function filesFromResource_head( routine, args )
-{
-  //let resolver = this;
-  let o =_.routineOptions( routine, args );
-
-  _.assert( args.length === 1 );
-  _.assert( arguments.length === 2 );
-  // if( _.routineIs( routine ) )
-  // o.Looker = o.Looker || routine.defaults.Looker || Self;
-  // else
-  // o.Looker = o.Looker || routine.Looker || Self;
-  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefines( routine, o );
-  else
-  _.routineOptionsPreservingUndefines( null, o, routine );
-
-  let prefixlessAction = o.prefixlessAction;
-  if( prefixlessAction === 'pathOrReflector' )
-  o.prefixlessAction = 'resolved';
-
-  // resolve_head.call( Self, routine, [ o ] );
-
-  if( prefixlessAction === 'pathOrReflector' )
-  o.prefixlessAction = prefixlessAction;
-
-  return o;
-}
-
-function filesFromResource_body( o )
-{
-  let module = o.baseModule;
-  let will = module.will;
-  let result = [];
-  let fileProvider = will.fileProvider
-  let path = fileProvider.path;
-  let resources;
-
-  if( o.prefixlessAction === 'pathOrReflector' )
-  {
-
-    let o2 = _.mapOnly( o, module.resolve.defaults );
-    o2.prefixlessAction = 'default';
-    o2.missingAction = 'undefine';
-    o2.defaultResourceKind = 'path';
-    resources = module.resolve( o2 );
-    if( !resources )
-    {
-      let o2 = _.mapOnly( o, module.resolve.defaults );
-      o2.prefixlessAction = 'default';
-      o2.missingAction = 'undefine';
-      o2.defaultResourceKind = 'reflector';
-      resources = module.resolve( o2 );
-    }
-
-    if( resources === undefined )
-    {
-      let err = _.err( `No path::${o.selector}, neither reflecotr::${o.selector} exists` );
-      if( o.missingAction === 'throw' )
-      throw err;
-      else if( o.missingAction === 'error' )
-      return err;
-      else
-      return undefined;
-    }
-
-  }
-  else
-  {
-    let o2 = _.mapOnly( o, module.resolve.defaults );
-    resources = module.resolve( o2 );
-  }
-
-  if( _.arrayIs( resources ) )
-  resources.forEach( ( resource ) => resourceHandle( resource ) );
-  else
-  resourceHandle( resources );
-
-  return result;
-
-  function resourceHandle( resource )
-  {
-
-    if( resource === null )
-    {
-    }
-    else if( resource instanceof _.will.Reflector )
-    {
-      let o2 = resource.optionsForFindExport();
-      let files = filesFind( o2 );
-      filesAdd( files );
-    }
-    else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
-    {
-      if( o.globOnly )
-      if( _.strIs( resource ) )
-      _.sure( path.isGlob( resource ), `${resource} is not glob. Only glob allowed` );
-      let o2 = Object.create( null );
-      o2.filter = Object.create( null );
-      o2.filter.filePath = resource;
-      let files = filesFind( o2 );
-      filesAdd( files );
-    }
-    else _.assert( 0, 'Unknown type of resource ' + _.entity.strType( resource ) );
-
-  }
-
-  function filesFind( o2 )
-  {
-    o2.outputFormat = 'absolute';
-    o2.mode = 'distinct';
-    if( o.withDirs !== null )
-    o2.withDirs = o.withDirs;
-    if( o.withTerminals !== null )
-    o2.withTerminals = o.withTerminals;
-    if( o.withStem !== null )
-    o2.withStem = o.withStem;
-    let files = fileProvider.filesFind( o2 );
-    return files;
-  }
-
-  function filesAdd( files )
-  {
-    _.arrayAppendArrayOnce( result, files );
-  }
-
-}
-
-var defaults = filesFromResource_body.defaults = Object.create( resolve.defaults );
-defaults.selector = null;
-defaults.prefixlessAction = 'resolved';
-defaults.currentContext = null;
-defaults.pathResolving = 'in';
-defaults.pathNativizing = 0;
-defaults.selectorIsPath = 1;
-defaults.pathUnwrapping = 1;
-
-defaults.globOnly = 0;
-defaults.withDirs = null;
-defaults.withTerminals = null;
-defaults.withStem = null;
-
-let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
-
-//
-
-function reflectorResolve_head( routine, args )
-{
-  let o = args[ 0 ];
-  let module = o.baseModule;
-  let will = module.will;
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-  _.assert( _.aux.is( o ) );
-
-  o.pathResolving = 'in';
-
-  let it = resolve_head.call( this, routine, [ o ] );
-
-  return it;
-}
-
-function reflectorResolve_body( o )
-{
-  let module = o.baseModule;
-  let will = module.will;
-
-  _.assert( _.looker.iterationIs( o ) );
-  _.assert( o.pathResolving === 'in' );
-
-  let reflector = module.resolve.body.call( module, o );
-
-  /*
-    `pathResolving` should be `in` for proper resolving of external resources
-  */
-
-  if( o.missingAction === 'undefine' && reflector === undefined )
-  return reflector;
-  else if( o.missingAction === 'error' && _.errIs( reflector ) )
-  return reflector;
-
-  if( reflector instanceof _.will.Reflector )
-  {
-    _.sure( reflector instanceof _.will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.entity.strType( reflector ) );
-    reflector.form();
-    _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
-  }
-
-  return reflector;
-}
-
-var defaults = reflectorResolve_body.defaults = Object.create( resolve.defaults );
-defaults.selector = null;
-defaults.defaultResourceKind = 'reflector';
-defaults.prefixlessAction = 'default';
-defaults.currentContext = null;
-defaults.pathResolving = 'in';
-
-let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
-
-//
-
-function submodulesResolve_body( o )
-{
-  let module = o.baseModule;
-  let will = module.will;
-
-  let result = module.resolve( o );
-
-  return result;
-}
-
-var defaults = submodulesResolve_body.defaults = Object.create( resolve.defaults );
-defaults.selector = null;
-defaults.prefixlessAction = 'default';
-defaults.defaultResourceKind = 'submodule';
-
-let submodulesResolve = _.routineUnite( resolve.head, submodulesResolve_body );
 
 //
 
 function _iterator_functor()
 {
 
-  _.assert( !!_.resolver2.ResolverExtraSelector );
-  let ResolverWillbeSelector = _.looker.define
+  _.assert( !!_.resolver2.Resolver.Selector );
+  // let ResolverWillbeSelector = _.looker.classDefine
+  let ResolverWillbeSelector =
   ({
     name : 'ResolverWillbeSelector',
-    parent : _.resolver2.ResolverExtraSelector,
+    parent : _.resolver2.Resolver.Selector,
     defaults :
     {
       // defaultResourceKind : null,
@@ -1564,25 +1267,28 @@ function _iterator_functor()
 
   /* */
 
-  _.assert( !!_.resolver2.ResolverExtra );
-  // _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
-  _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions === undefined );
+  _.assert( !!_.resolver2.Resolver );
+  _.assert( !!_.resolver2.Resolver.Replicator );
+  _.assert( _.resolver2.Resolver.Replicator === _.resolver2.Resolver );
+  // _.assert( _.resolver2.Resolver.Iterator.resolveExtraOptions !== undefined );
+  _.assert( _.resolver2.Resolver.Iterator.resolveExtraOptions === undefined );
 
-  /* xxx : redefine _.resolver.define() */
-  let ResolverWillbeReplicator = _.resolver2.define
+  /* xxx : redefine _.resolver.classDefine() */
+  // let ResolverWillbeReplicator = _.resolver2.classDefine
+  let ResolverWillbeReplicator =
   ({
     name : 'ResolverWillbeReplicator',
-    parent : _.resolver2.ResolverExtra,
-    // defaults : Defaults, /* yyy */
+    parent : _.resolver2.Resolver.Replicator,
+    defaults : Defaults, /* yyy */
     looker :
     {
       ... Common,
 
-      resolve,
-      resolveMaybe,
-      head,
+      // resolve,
+      // resolveMaybe,
+      // head,
       performBegin,
-      exec : resolve,
+      // exec : resolve,
       optionsForm,
       optionsToIteration,
 
@@ -1593,21 +1299,34 @@ function _iterator_functor()
       currentModule : null,
       selectorIsPath : 0,
     },
+    iteration :
+    {
+      exported : null,
+      currentModule : null,
+      selectorIsPath : 0,
+    },
   });
 
   /* */
 
-  _.assert( ResolverWillbeReplicator.IterationPreserve.isFunction !== undefined );
-  _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions === undefined );
-  // _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions !== undefined );
-  _.assert( ResolverWillbeReplicator.Looker === ResolverWillbeReplicator );
+  let ResolverWillbe = _.resolver.classDefine
+  ({
+    selector : ResolverWillbeSelector,
+    replicator : ResolverWillbeReplicator,
+  });
 
-  ResolverWillbeReplicator.ResolverSelector = ResolverWillbeSelector;
-  ResolverWillbeReplicator.ResolverReplicator = ResolverWillbeReplicator;
-  ResolverWillbeSelector.ResolverSelector = ResolverWillbeSelector;
-  ResolverWillbeSelector.ResolverReplicator = ResolverWillbeReplicator;
+  _.assert( ResolverWillbe.IterationPreserve.isFunction !== undefined );
+  _.assert( ResolverWillbe.Iterator.resolveExtraOptions === undefined );
+  // _.assert( ResolverWillbe.Iterator.resolveExtraOptions !== undefined );
+  _.assert( ResolverWillbe.Looker === ResolverWillbe );
 
-  return ResolverWillbeReplicator;
+  // ResolverWillbeReplicator.Selector = ResolverWillbeSelector;
+  // ResolverWillbeReplicator.Replicator = ResolverWillbeReplicator;
+  // ResolverWillbeSelector.Selector = ResolverWillbeSelector;
+  // ResolverWillbeSelector.Replicator = ResolverWillbeReplicator;
+
+  // return ResolverWillbeReplicator;
+  return ResolverWillbe;
 }
 
 // --
@@ -1671,9 +1390,424 @@ let Common =
 
   // err
 
-  errResolving,
+  errResolving, /* xxx : remove? */
 
-  // wraps
+  // // wraps
+  //
+  // resolveRaw,
+  // pathResolve,
+  // pathOrReflectorResolve,
+  // filesFromResource,
+  // reflectorResolve,
+  // submodulesResolve,
+
+}
+
+//
+
+const ResolverWillbe = _iterator_functor();
+const Self = ResolverWillbe;
+
+/* xxx */
+// let resolveMaybe = _.routineUnite({ head : ResolverWillbe.exec.head, body : ResolverWillbe.exec.body, strategy : 'inheriting' });
+let resolveMaybe = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
+var defaults = resolveMaybe.defaults;
+defaults.Looker = defaults;
+defaults.missingAction = 'undefine';
+
+// resolve_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+// let resolve = _.routineUnite( resolve_head, resolve_body );
+
+// --
+// wraps
+// --
+
+// let resolveRaw = _.routineUnite( resolve_head, resolve_body );
+// let resolveRaw = _.routineUnite({ head : ResolverWillbe.exec.head, body : ResolverWillbe.exec.body, strategy : 'inheriting' });
+let resolveRaw = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
+
+var defaults = resolveRaw.defaults;
+defaults.Looker = defaults;
+defaults.pathResolving = 0;
+defaults.pathNativizing = 0;
+defaults.pathUnwrapping = 0;
+defaults.singleUnwrapping = 0;
+defaults.mapValsUnwrapping = 0;
+defaults.mapFlattening = 0;
+defaults.arrayWrapping = 0;
+defaults.arrayFlattening = 0;
+defaults.missingAction = 'undefine';
+
+/*
+missingAction should be 'undefine'
+alternatively adjust call from finit of class Exported
+*/
+
+//
+
+// let pathResolve = _.routineUnite( resolve_head, resolve_body );
+// let pathResolve = _.routineUnite({ head : ResolverWillbe.exec.head, body : ResolverWillbe.exec.body, strategy : 'inheriting' });
+let pathResolve = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
+
+var defaults = pathResolve.defaults;
+defaults.Looker = defaults;
+defaults.pathResolving = 'in';
+defaults.prefixlessAction = 'resolved';
+defaults.arrayFlattening = 1;
+defaults.selectorIsPath = 1;
+defaults.mapValsUnwrapping = 1;
+
+defaults.defaultResourceKind = 'path'; /* yyy */
+_.assert( pathResolve.defaults.defaultResourceKind === 'path' );
+
+//
+
+function pathOrReflectorResolve_head( routine, args )
+{
+  let o = args[ 0 ];
+  let module = o.baseModule;
+  let will = module.will;
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.aux.is( o ) );
+  _.routineOptions( routine, o );
+  return o;
+}
+
+function pathOrReflectorResolve_body( o )
+{
+  //let resolver = this;
+  let module = o.baseModule;
+  let will = module.will;
+  let resource;
+
+  _.assert( _.aux.is( o ) );
+  _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
+  _.assert( !/*resolver*/Self.selectorIs( o.selector ) );
+  _.assert( o.pathResolving === 'in' );
+  _.assert( !o.pathUnwrapping );
+
+  let o2 = _.mapExtend( null, o );
+  o2.missingAction = 'undefine';
+  o2.selector = 'reflector::' + o.selector;
+  resource = module.reflectorResolve( o2 );
+
+  if( resource )
+  return resource;
+
+  let o3 = _.mapExtend( null, o );
+  o3.missingAction = 'undefine';
+  o3.selector = 'path::' + o.selector;
+  resource = module.reflectorResolve( o3 );
+
+  return resource;
+}
+
+// var defaults = pathOrReflectorResolve_body.defaults = Object.create( resolve_body.defaults );
+var defaults = pathOrReflectorResolve_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+
+defaults.pathResolving = 'in';
+defaults.missingAction = 'undefine';
+defaults.pathUnwrapping = 0;
+
+let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+
+//
+
+function filesFromResource_head( routine, args )
+{
+  //let resolver = this;
+  let o =_.routineOptions( routine, args );
+
+  _.assert( args.length === 1 );
+  _.assert( arguments.length === 2 );
+  // if( _.routineIs( routine ) )
+  // o.Looker = o.Looker || routine.defaults.Looker || Self;
+  // else
+  // o.Looker = o.Looker || routine.Looker || Self;
+  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
+  _.routineOptionsPreservingUndefines( routine, o );
+  else
+  _.routineOptionsPreservingUndefines( null, o, routine );
+
+  let prefixlessAction = o.prefixlessAction;
+  if( prefixlessAction === 'pathOrReflector' )
+  o.prefixlessAction = 'resolved';
+
+  // resolve_head.call( Self, routine, [ o ] );
+
+  if( prefixlessAction === 'pathOrReflector' )
+  o.prefixlessAction = prefixlessAction;
+
+  return o;
+}
+
+function filesFromResource_body( o )
+{
+  let module = o.baseModule;
+  let will = module.will;
+  let result = [];
+  let fileProvider = will.fileProvider
+  let path = fileProvider.path;
+  let resources;
+
+  if( o.prefixlessAction === 'pathOrReflector' )
+  {
+
+    let o2 = _.mapOnly( o, module.resolve.defaults );
+    delete o2.constructor;
+    o2.prefixlessAction = 'default';
+    o2.missingAction = 'undefine';
+    o2.defaultResourceKind = 'path';
+    resources = module.resolve( o2 );
+    if( !resources )
+    {
+      let o2 = _.mapOnly( o, module.resolve.defaults );
+      delete o2.constructor;
+      o2.prefixlessAction = 'default';
+      o2.missingAction = 'undefine';
+      o2.defaultResourceKind = 'reflector';
+      resources = module.resolve( o2 );
+    }
+
+    if( resources === undefined )
+    {
+      let err = _.err( `No path::${o.selector}, neither reflecotr::${o.selector} exists` );
+      if( o.missingAction === 'throw' )
+      throw err;
+      else if( o.missingAction === 'error' )
+      return err;
+      else
+      return undefined;
+    }
+
+  }
+  else
+  {
+    let o2 = _.mapOnly( o, module.resolve.defaults );
+    debugger;
+    delete o2.constructor;
+    resources = module.resolve( o2 );
+  }
+
+  if( _.arrayIs( resources ) )
+  resources.forEach( ( resource ) => resourceHandle( resource ) );
+  else
+  resourceHandle( resources );
+
+  return result;
+
+  function resourceHandle( resource )
+  {
+
+    if( resource === null )
+    {
+    }
+    else if( resource instanceof _.will.Reflector )
+    {
+      let o2 = resource.optionsForFindExport();
+      let files = filesFind( o2 );
+      filesAdd( files );
+    }
+    else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
+    {
+      if( o.globOnly )
+      if( _.strIs( resource ) )
+      _.sure( path.isGlob( resource ), `${resource} is not glob. Only glob allowed` );
+      let o2 = Object.create( null );
+      o2.filter = Object.create( null );
+      o2.filter.filePath = resource;
+      let files = filesFind( o2 );
+      filesAdd( files );
+    }
+    else _.assert( 0, 'Unknown type of resource ' + _.entity.strType( resource ) );
+
+  }
+
+  function filesFind( o2 )
+  {
+    o2.outputFormat = 'absolute';
+    o2.mode = 'distinct';
+    if( o.withDirs !== null )
+    o2.withDirs = o.withDirs;
+    if( o.withTerminals !== null )
+    o2.withTerminals = o.withTerminals;
+    if( o.withStem !== null )
+    o2.withStem = o.withStem;
+    let files = fileProvider.filesFind( o2 );
+    return files;
+  }
+
+  function filesAdd( files )
+  {
+    _.arrayAppendArrayOnce( result, files );
+  }
+
+}
+
+// var defaults = filesFromResource_body.defaults = Object.create( resolve.defaults );
+
+var defaults = filesFromResource_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+
+_.assert( ResolverWillbe.Prime.Looker === undefined );
+
+defaults.selector = null;
+defaults.prefixlessAction = 'resolved';
+defaults.currentContext = null;
+defaults.pathResolving = 'in';
+defaults.pathNativizing = 0;
+defaults.selectorIsPath = 1;
+defaults.pathUnwrapping = 1;
+
+defaults.globOnly = 0;
+defaults.withDirs = null;
+defaults.withTerminals = null;
+defaults.withStem = null;
+
+let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
+
+_.assert( defaults.Looker === undefined );
+
+//
+
+function reflectorResolve_head( routine, args )
+{
+  let o = args[ 0 ];
+  let module = o.baseModule;
+  let will = module.will;
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.aux.is( o ) );
+
+  o.pathResolving = 'in';
+
+  let it = resolve_head.call( this, routine, [ o ] );
+
+  return it;
+}
+
+function reflectorResolve_body( o )
+{
+  let module = o.baseModule;
+  let will = module.will;
+
+  _.assert( _.looker.iterationIs( o ) );
+  _.assert( o.pathResolving === 'in' );
+
+  let reflector = module.resolve.body.call( module, o );
+
+  /*
+    `pathResolving` should be `in` for proper resolving of external resources
+  */
+
+  if( o.missingAction === 'undefine' && reflector === undefined )
+  return reflector;
+  else if( o.missingAction === 'error' && _.errIs( reflector ) )
+  return reflector;
+
+  if( reflector instanceof _.will.Reflector )
+  {
+    _.sure( reflector instanceof _.will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.entity.strType( reflector ) );
+    reflector.form();
+    _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
+  }
+
+  return reflector;
+}
+
+// var defaults = reflectorResolve_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+//
+// defaults.selector = null;
+// defaults.defaultResourceKind = 'reflector';
+// defaults.prefixlessAction = 'default';
+// defaults.currentContext = null;
+// defaults.pathResolving = 'in';
+//
+// let reflectorResolve = _.routineUnite( ResolverWillbe.exec.head, reflectorResolve_body );
+
+var defaults = reflectorResolve_body.defaults = Object.create( ResolverWillbe );
+defaults.selector = null;
+defaults.defaultResourceKind = 'reflector';
+defaults.prefixlessAction = 'default';
+defaults.currentContext = null;
+defaults.pathResolving = 'in';
+defaults.Looker = defaults;
+
+// let reflectorResolve = _.routineUnite({ head : ResolverWillbe.exec.head, body : reflectorResolve_body, strategy : 'replacing' });
+let reflectorResolve = _.routine.uniteReplacing( ResolverWillbe.exec.head, reflectorResolve_body );
+
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === defaults );
+_.assert( reflectorResolve.body.defaults === defaults );
+
+// var defaults = reflectorResolve.defaults = Object.create( ResolverWillbe.exec.defaults );
+// var defaults = reflectorResolve.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+
+// var defaults = reflectorResolve_body.defaults = Object.create( resolve.defaults );
+
+// var defaults = reflectorResolve_body.defaults;
+// defaults.selector = null;
+// defaults.defaultResourceKind = 'reflector';
+// defaults.prefixlessAction = 'default';
+// defaults.currentContext = null;
+// defaults.pathResolving = 'in';
+
+// let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
+
+//
+
+function submodulesResolve_body( o )
+{
+  let module = o.baseModule;
+  let will = module.will;
+
+  _.assert( o.iteratorProper( o ) );
+  _.assert( o.prefixlessAction === 'default' );
+
+  let result = module.resolve.body.call( module, o );
+
+  return result;
+}
+
+// submodulesResolve
+// defaults.selector = null;
+
+var defaults = submodulesResolve_body.defaults = Object.create( ResolverWillbe );
+defaults.selector = null;
+defaults.prefixlessAction = 'default';
+defaults.defaultResourceKind = 'submodule';
+defaults.Looker = defaults;
+
+// let submodulesResolve = _.routineUnite({ head : ResolverWillbe.exec.head, body : submodulesResolve_body, strategy : 'replacing' });
+let submodulesResolve = _.routine.uniteReplacing( ResolverWillbe.exec.head, submodulesResolve_body );
+
+_.assert( submodulesResolve.body.defaults === defaults );
+_.assert( submodulesResolve.defaults === defaults );
+_.assert( defaults.prefixlessAction === 'default' );
+
+// var defaults = submodulesResolve_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+// // var defaults = submodulesResolve_body.defaults = Object.create( resolve.defaults );
+// defaults.selector = null;
+// defaults.prefixlessAction = 'default';
+// defaults.defaultResourceKind = 'submodule';
+//
+// let submodulesResolve = _.routineUnite( ResolverWillbe.exec.head, submodulesResolve_body );
+
+//
+
+let Extension =
+{
+
+  // ... _.resolver2,
+  // ... Common,
+
+  Looker : ResolverWillbe,
+  Resolver : ResolverWillbe,
+  // ResolverExtra : ResolverWillbe,
+  // ResolverWillbe,
+
+  resolve : ResolverWillbe.exec,
+  resolveMaybe,
 
   resolveRaw,
   pathResolve,
@@ -1684,27 +1818,7 @@ let Common =
 
 }
 
-//
-
-const ResolverWillbe = _iterator_functor();
-const Self = ResolverWillbe;
-
-let Extension =
-{
-
-  ... _.resolver2,
-  ... Common,
-
-  Looker : ResolverWillbe,
-  ResolverExtra : ResolverWillbe,
-  ResolverWillbe,
-
-  resolve,
-  resolveMaybe,
-
-}
-
-_.mapExtend( _.will.Resolver, Extension );
+_.mapExtend( _.will.resolver, Extension );
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;

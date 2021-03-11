@@ -421,7 +421,7 @@ function submodulesRelationsFilter( o )
 //   let junctions = junction.submodulesJunctionsFilter( o );
 //
 //   // if( o.withPeers )
-//   // _.arrayPrependOnce( junctions, junction ); /* xxx */
+//   // _.arrayPrependOnce( junctions, junction ); 
 //
 //   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 //
@@ -659,7 +659,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = _.will.Resolver;
+  // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -921,9 +921,9 @@ function resolve_body( o )
   return module.resolve.body.call( module, o );
 }
 
-_.routineExtend( resolve_body, Parent.prototype.resolve.body );
+_.routine.extendReplacing( resolve_body, Parent.prototype.resolve.body );
 
-let resolve = _.routineUnite( resolve_head, resolve_body );
+let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 
 // --
 // relations
