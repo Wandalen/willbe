@@ -19536,6 +19536,59 @@ function submodulesDownloadSwitchBranch( test )
 
 submodulesDownloadSwitchBranch.timeOut = 300000;
 
+//
+
+function submodulesDownloadWithSubmodulesDefault( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-download' );
+  a.appStartNonThrowing2 = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : a.ready,
+  })
+  a.reflect();
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = 'download using command submodules.download'
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    return null;
+  })
+  a.appStartNonThrowing2( 'git init' )
+  a.appStartNonThrowing2( 'git add .' )
+  a.appStartNonThrowing2( 'git commit -m init' )
+
+  a.appStart({ execPath : '.submodules.download' })
+
+  .then( ( op ) =>
+  {
+    let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( downloadedModules, [ 'submodule' ] );
+
+    test.identical( _.strCount( op.output, /. Opened ./ ), 3 );
+    test.identical( _.strCount( op.output, /. Opened .*\/\.will.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /. Opened .*\.module\/submodule\/out\/submodule\.out\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /. Opened .*\.module\/submodule\/submodule.will.yml./ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) .* downloaded/ ), 1 );
+
+    return null;
+  })
+
+  return a.ready;
+}
+
+submodulesDownloadWithSubmodulesDefault.rapidity = 1;
+submodulesDownloadWithSubmodulesDefault.timeOut = 300000;
+
+
 // //
 //
 // function submodulesDownloadRecursive( test )
@@ -38830,6 +38883,7 @@ let Self =
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
+    submodulesDownloadWithSubmodulesDefault,
     // submodulesDownloadRecursive, /* xxx */
     submodulesDownloadThrowing,
     submodulesDownloadStepAndCommand,
