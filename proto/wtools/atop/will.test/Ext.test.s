@@ -5657,19 +5657,19 @@ function hookGitMake( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.reflect();
 
-  /* - */
-
-  test.true( true );
-
-  let config = a.fileProvider.configUserRead();
+  let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
-  return null;
+  return test.true( true );
   let user = config.about.user;
 
-
   /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  });
 
   a.appStart({ execPath : '.module.new New2/' })
 
@@ -5686,6 +5686,11 @@ function hookGitMake( test )
     });
   })
 
+  .then( () =>
+  {
+    debugger;
+    return null;
+  });
   a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
   .then( ( op ) =>
@@ -5721,14 +5726,19 @@ function hookPrepare( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.reflect();
 
-  test.true( true );
-
-  let config = a.fileProvider.configUserRead();
+  let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
-  return null;
+  return test.true( true );
   let user = config.about.user;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  });
 
   /* - */
 
@@ -15672,7 +15682,8 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.s',
+      './.module/ModuleForTesting12/sample/trivial',
+      './.module/ModuleForTesting12/sample/trivial/Sample.s'
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
@@ -22007,108 +22018,75 @@ function submodulesDownloadedUpdate( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.each module .export' })
-  a.appStart({ execPath : '.submodules.download' })
+  a.appStart({ execPath : '.each module .export' });
+  a.appStart({ execPath : '.submodules.download' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, / \+ 1\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     return op;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'check module branch after download';
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( '.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of supermodule should stay on dev';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'dev' ) );
+    test.true( _.strHas( op.output, 'dev1' ) );
     return op;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( 'module/.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of informal submodule should stay on master';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'master' ) );
     return op;
-  })
+  });
 
   /* */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'update downloaded module and check branch';
     return op;
-  })
+  });
 
   a.appStart({ execPath : '.submodules.update' })
 
-  _.process.start
-  ({
-    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( '.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of supermodule should stay on dev';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'dev' ) );
+    test.true( _.strHas( op.output, 'dev1' ) );
     return op;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : a.routinePath,
-    ready : a.ready,
-    outputCollecting : 1,
-    outputGraying : 1,
-  })
-
+  a.shell({ currentPath : a.abs( 'module/.module/ModuleForTesting1' ), execPath : 'git rev-parse --abbrev-ref HEAD' })
   .then( ( op ) =>
   {
     test.will = 'submodule of informal submodule should stay on master';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'master' ) );
     return op;
-  })
+  });
 
   return a.ready;
 }
@@ -27080,6 +27058,63 @@ function killWillbe( test )
   });
 
   /* - */
+
+  return con;
+}
+
+//
+
+function runDebugWill( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+  let con = _.take( null );
+  a.reflect();
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'debug-will .help';
+
+    var debugWillPath = a.abs( a.path.dir( _.Will.WillPathGet() ), 'ExecDebug' );
+    var o =
+    {
+      execPath : debugWillPath + ' .help',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    _.process.start( o );
+
+    return a.ready.then( ( op ) =>
+    {
+      if( op.exitCode === 0 )
+      {
+        test.description = 'utility debugnode exists';
+        test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
+        test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
+        test.identical( _.strCount( op.output, 'Command ".help"' ), 1 );
+        test.identical( _.strCount( op.output, '.help - Get help.' ), 1 );
+        test.identical( _.strCount( op.output, '.imply - Change state or imply value of a variable.' ), 1 );
+      }
+      else
+      {
+        test.description = 'utility debugnode exists';
+        test.identical( _.strCount( op.output, 'spawn debugnode ENOENT' ), 1 );
+        test.identical( _.strCount( op.output, 'errno : \'ENOENT\'' ), 1 );
+        test.identical( _.strCount( op.output, 'code : \'ENOENT\'' ), 1 );
+        test.identical( _.strCount( op.output, 'syscall : \'spawn debugnode\'' ), 1 );
+        test.identical( _.strCount( op.output, 'path : \'debugnode\'' ), 1 );
+        test.identical( _.strCount( op.output, 'spawnargs' ), 1 );
+        test.identical( _.strCount( op.output, 'Error starting the process' ), 1 );
+      }
+      return null;
+    });
+  });
 
   return con;
 }
@@ -38841,6 +38876,7 @@ let Self =
 
     // runWillbe, // zzz : help to fix, please
     killWillbe,
+    runDebugWill,
 
     // resourcesFormReflectorsExperiment, // xxx : look
 
