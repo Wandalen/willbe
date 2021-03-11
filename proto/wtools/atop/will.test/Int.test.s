@@ -4944,73 +4944,75 @@ function buildsResolve( test )
 
 //
 
-function framePerform( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'make' );
-  a.reflect();
-  a.fileProvider.filesDelete( a.abs( 'out' ) );
-
-  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
-  opener.find();
-
-  return opener.open().split()
-  .then( () =>
-  {
-
-    var expected = [];
-    var files = a.find( a.abs( 'out' ) );
-    let builds = opener.openedModule.buildsResolve();
-
-    test.identical( builds.length, 1 );
-
-    let build = builds[ 0 ];
-    let run = new _.will.BuildRun({ build });
-    run.form();
-    let frame = run.frameUp( build );
-    let steps = build.stepsEach();
-    let step = steps[ 0 ];
-
-    /* */
-
-    let frame2 = frame.frameUp( steps[ 0 ] );
-    build.formed = 3; /* Dmytro : hack */
-    step.form();
-    step.framePerform( frame2 )
-    .finally( ( err, arg ) =>
-    {
-
-      test.description = 'files';
-      test.true( true );
-
-      var files = a.find( a.routinePath );
-      var exp =
-      [
-        '.',
-        './v1.will.yml',
-        './v2.will.yml',
-        './file',
-        './file/File.js',
-        './file/File.test.js',
-        './file/Produce.js',
-        './file/Src1.txt',
-        './file/Src2.txt',
-        './out',
-        './out/Produced.js2',
-        './out/Produced.txt2',
-        './out/shouldbe.txt'
-      ];
-      test.identical( files, exp );
-
-      opener.finit();
-
-      if( err )
-      throw err;
-      return arg;
-    });
-
-  });
-}
+// qqq : for Dmytro : bad, write proper test
+// function framePerform( test )
+// {
+//   let context = this;
+//   let a = context.assetFor( test, 'make' );
+//   a.reflect();
+//   a.fileProvider.filesDelete( a.abs( 'out' ) );
+//
+//   var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
+//   opener.find();
+//
+//   return opener.open().split()
+//   .then( () =>
+//   {
+//
+//     var expected = [];
+//     var files = a.find( a.abs( 'out' ) );
+//     let builds = opener.openedModule.buildsResolve();
+//
+//     test.identical( builds.length, 1 );
+//
+//     let build = builds[ 0 ];
+//     let run = new _.will.BuildRun({ build });
+//     run.form();
+//     let frame = run.frameUp( build );
+//     let steps = build.stepsEach();
+//     let step = steps[ 0 ];
+//
+//     /* */
+//
+//     let frame2 = frame.frameUp( steps[ 0 ] );
+//     build.formed = 3; /* Dmytro : hack */
+//     step.form();
+//
+//     return step.framePerform( frame2 )
+//     .finally( ( err, arg ) =>
+//     {
+//
+//       test.description = 'files';
+//       test.true( true );
+//
+//       var files = a.find( a.routinePath );
+//       var exp =
+//       [
+//         '.',
+//         './v1.will.yml',
+//         './v2.will.yml',
+//         './file',
+//         './file/File.js',
+//         './file/File.test.js',
+//         './file/Produce.js',
+//         './file/Src1.txt',
+//         './file/Src2.txt',
+//         './out',
+//         './out/Produced.js2',
+//         './out/Produced.txt2',
+//         './out/shouldbe.txt'
+//       ];
+//       test.identical( files, exp );
+//
+//       opener.finit();
+//
+//       if( err )
+//       throw err;
+//       return arg;
+//     });
+//
+//   });
+// }
 
 //
 
@@ -11068,7 +11070,7 @@ let Self =
     exportsResolve,
     buildsResolve,
 
-    framePerform,
+    // framePerform,
 
     trivialResolve,
     detailedResolve,
