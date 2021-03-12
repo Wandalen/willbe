@@ -38745,6 +38745,7 @@ let Self =
     stepGitStatus,
     stepGitTag,
 
+
     /* xxx : cover "will .module.new.with prepare" */
 
     // upgradeDryDetached, // xxx : look later
