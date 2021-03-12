@@ -29318,6 +29318,21 @@ function commandModulesGit( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
@@ -29500,7 +29515,20 @@ function commandModulesGit( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -29515,7 +29543,20 @@ function commandModulesGitRemoteSubmodules( test )
   let a = context.assetFor( test, 'modules-git' );
   a.reflect();
 
-  /* - */
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   a.shell( 'git init' );
   a.shell( 'git add --all' );
@@ -29580,7 +29621,21 @@ function commandModulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -29594,7 +29649,20 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   let a = context.assetFor( test, 'modules-git' );
   a.reflect();
 
-  /* - */
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   a.shell( 'git init' );
   a.shell( 'git add --all' );
@@ -29659,7 +29727,21 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -30784,6 +30866,21 @@ function commandModulesGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
@@ -30949,7 +31046,20 @@ function commandModulesGitSync( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines2' ), 1 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -30965,14 +31075,34 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.path || !config.path.hlink )
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( !config.path || !config.path.hlink )
+    return test.true( true );
+
+    config.path.hlink1 = config.path.hlink; /* save */
+    config.path.hlink = a.path.join( a.routinePath, '../..' );
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+  else
   {
     context.suiteTempPath = temp;
-    test.true( true );
-    return null;
+    return test.true( true );
   }
+
   let linkPath = config.path.hlink;
+
+  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  // if( !config || !config.path || !config.path.hlink )
+  // {
+  //   context.suiteTempPath = temp;
+  //   test.true( true );
+  //   return null;
+  // }
+  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31128,7 +31258,7 @@ super
     return null;
   })
 
-  a.ready.then( () =>
+  a.ready.finally( () =>
   {
     a.fileProvider.filesDelete( context.suiteTempPath );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
@@ -31137,8 +31267,14 @@ super
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
+
+    /* */
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
-  })
+  });
 
   /* - */
 
@@ -31154,14 +31290,34 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.path || !config.path.hlink )
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( !config.path || !config.path.hlink )
+    return test.true( true );
+
+    config.path.hlink1 = config.path.hlink; /* save */
+    config.path.hlink = a.path.join( a.routinePath, '../..' );
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+  else
   {
     context.suiteTempPath = temp;
-    test.true( true );
-    return null;
+    return test.true( true );
   }
+
   let linkPath = config.path.hlink;
+
+  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  // if( !config || !config.path || !config.path.hlink )
+  // {
+  //   context.suiteTempPath = temp;
+  //   test.true( true );
+  //   return null;
+  // }
+  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31334,6 +31490,12 @@ original/f2.txt
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
+
+    /* */
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
   })
 
@@ -31351,14 +31513,34 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.path || !config.path.hlink )
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( !config.path || !config.path.hlink )
+    return test.true( true );
+
+    config.path.hlink1 = config.path.hlink; /* save */
+    config.path.hlink = a.path.join( a.routinePath, '../..' );
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+  else
   {
     context.suiteTempPath = temp;
-    test.true( true );
-    return null;
+    return test.true( true );
   }
+
   let linkPath = config.path.hlink;
+
+  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  // if( !config || !config.path || !config.path.hlink )
+  // {
+  //   context.suiteTempPath = temp;
+  //   test.true( true );
+  //   return null;
+  // }
+  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31525,8 +31707,14 @@ original/f2.txt
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
+
+    /* */
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
-  })
+  });
 
   /* - */
 
@@ -31542,14 +31730,34 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.path || !config.path.hlink )
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( !config.path || !config.path.hlink )
+    return test.true( true );
+
+    config.path.hlink1 = config.path.hlink; /* save */
+    config.path.hlink = a.path.join( a.routinePath, '../..' );
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+  else
   {
     context.suiteTempPath = temp;
-    test.true( true );
-    return null;
+    return test.true( true );
   }
+
   let linkPath = config.path.hlink;
+
+  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  // if( !config || !config.path || !config.path.hlink )
+  // {
+  //   context.suiteTempPath = temp;
+  //   test.true( true );
+  //   return null;
+  // }
+  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31636,6 +31844,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
   .then( ( op ) =>
   {
+    debugger;
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
@@ -31704,8 +31913,14 @@ original/f.txt
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
+
+    /* */
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
-  })
+  });
 
   /* - */
 

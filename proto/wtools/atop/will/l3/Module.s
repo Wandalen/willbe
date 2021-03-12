@@ -369,7 +369,6 @@ function outModuleMake( o )
   let moduleWas = will.moduleWithCommonPathMap[ _.Will.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
-    debugger;
     _.assert( 0, 'not tested' );
     _.assert( moduleWas.peerModule === module );
     _.assert( moduleWas === module.peerModule );
@@ -534,7 +533,6 @@ function outModuleOpen( o )
 
     if( !opener2.openedModule.isConsistent() )
     {
-      debugger;
       opener2.error = _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` );
       logger.log( opener2.error );
       return module2;
@@ -582,7 +580,6 @@ function outModuleOpen( o )
       }
       catch( err2 )
       {
-        debugger;
         let error2 = _.err( err2 );
         logger.log( _.errOnce( error2 ) );
         throw error2;
@@ -795,8 +792,6 @@ function upform( o )
 
   o = _.routineOptions( upform, arguments );
   module.optionsFormingForward( o );
-
-  // debugger;
 
   if( o.attachedWillfilesFormed )
   if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
@@ -1521,7 +1516,6 @@ function predefinedStepMake( o )
   _.assert( module === o.module );
   _.assert( arguments.length === 1 );
 
-  // debugger;
   let result = new _.will.Step( o ).form1();
   result.writable = 0;
   return result;
@@ -1599,7 +1593,6 @@ function usedBy( user )
     }
     else if( user.remotePath && !module.remotePath )
     {
-      debugger;
       _.assert( _.strDefined( user.downloadPath ) );
       module.remotePathEachAdopt({ remotePath : user.remotePath, downloadPath : user.downloadPath });
     }
@@ -9201,10 +9194,7 @@ function gitSync( o )
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : o.dirPath + '**', safe : 0 });
 
-  let status = _.git.statusFull
-  ({
-    insidePath : o.dirPath,
-  });
+  let status = _.git.statusFull({ insidePath : o.dirPath });
 
   if( o.dry )
   return null;
