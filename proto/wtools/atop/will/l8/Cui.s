@@ -1909,8 +1909,7 @@ function commandSubmodulesVersionsUpdate( e )
 
 }
 
-commandSubmodulesVersionsUpdate.defaults = commandImply.defaults;
-commandSubmodulesVersionsUpdate.defaults.withSubmodules = 1;
+commandSubmodulesVersionsUpdate.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
