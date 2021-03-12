@@ -38699,6 +38699,143 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
   return a.ready;
 }
 
+//
+
+function commandsSubmoduleSafety( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-safety' );
+  let localPath = a.abs( '.module/ModuleForTesting1' );
+
+  let routinesMap = Object.create( null );
+  routineForCasesRegister();
+
+  /* */
+
+  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
+
+  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1 })
+  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1 })
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1 })
+
+  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })
+
+  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1 })
+  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1 })
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })
+
+  /* */
+
+  function run( env )
+  {
+    a.ready.then( () => 
+    {
+      test.case = `${_.entity.exportStringSolo( env )}`;
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      return null;
+    })
+
+    if( env.downloaded )
+    {
+      a.appStart({ args : '.submodules.download' });
+      a.ready.then( () => 
+      {
+        env.moduleGitStatusBefore = _.git.statusLocal
+        ({
+          localPath,
+          uncommitted : 1,
+          detailing : 1,
+          sync : 1,
+        });
+        return null;
+      })
+    }
+
+    a.ready.then( () => 
+    {
+      let routine = routinesMap[ env.case ];
+      return routine() || true;
+    })
+
+    a.appStart({ args : `.submodules.${env.command}` });
+
+    a.ready.finally( ( err, op ) => 
+    {
+      if( err && !env.error )
+      throw _.err( err );
+
+      if( err )
+      {
+        _.errAttend( err );
+        _.errLogOnce( err );
+      }
+
+      if( env.error )
+      return test.true( _.errIs( err ) );
+
+      test.identical( op.exitCode, 0 );
+      test.identical( _.strCount( op.output, /\+ 0\/1 .* were downloaded/ ), 1 );
+
+      let moduleDirExists = a.fileProvider.isDir( localPath );
+      test.true( moduleDirExists );
+      if( !moduleDirExists )
+      return null;
+
+      test.true( _.git.isRepository({ localPath }) );
+      
+      env.moduleGitStatusAfter = _.git.statusLocal
+      ({
+        localPath,
+        uncommitted : 1,
+        detailing : 1,
+        sync : 1,
+      });
+      test.identical( env.moduleGitStatusAfter, env.moduleGitStatusBefore );
+
+      return null;
+    })
+  }
+
+  /* */
+
+  function routineForCasesRegister()
+  {
+    routinesMap[ 'missing/tag' ] = () => 
+    {
+      let filePath = a.abs( '.will.yml' );
+      let data = a.fileProvider.fileRead({ filePath });
+      data = _.strReplace( data, '/!master', '/!missing' );
+      a.fileProvider.fileWrite({ filePath, data });
+    }
+
+    routinesMap[ 'invalid/url' ] = () => 
+    {
+      let filePath = a.abs( '.will.yml' );
+      let data = a.fileProvider.fileRead({ filePath });
+      data = _.strReplace( data, 'https:///', 'https:' );
+      a.fileProvider.fileWrite({ filePath, data });
+    }
+  }
+
+  /* */
+
+  return a.ready;
+}
+
+commandsSubmoduleSafety.rapidity = 1;
+commandsSubmoduleSafety.routineTimeOut = 300000;
+commandsSubmoduleSafety.description = 
+`
+Checks if .submodules.* commands are safe to use in different situations.
+It means that utility doesn't modify the data of the module if it's not required.
+`
+
+
 // --
 // declare
 // --
@@ -39053,6 +39190,8 @@ let Self =
     commandWillfileSupplementWillfileWithOptions,
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
+
+    commandsSubmoduleSafety,
 
   }
 
