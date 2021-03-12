@@ -4798,7 +4798,6 @@ function exportsResolve( test )
   /* - */
 
   return a.ready;
-
 } /* end of function exportsResolve */
 
 //
