@@ -24005,6 +24005,17 @@ function stepGitPull( test )
   let a = context.assetFor( test, 'git-conflict' );
   a.reflect();
 
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
   let originalShell = _.process.starter
   ({
     currentPath : a.abs( 'original' ),
@@ -24012,7 +24023,7 @@ function stepGitPull( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
+  });
 
   let cloneShell = _.process.starter
   ({
@@ -24021,15 +24032,15 @@ function stepGitPull( test )
     outputGraying : 1,
     ready : a.ready,
     mode : 'shell',
-  })
+  });
 
   /* - */
 
   a.ready.then( () =>
   {
     a.reflect();
-    return null
-  })
+    return null;
+  });
 
   /* */
 
@@ -24305,7 +24316,20 @@ original
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
