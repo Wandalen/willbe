@@ -34782,29 +34782,17 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
 
   let linkPath = config.path.hlink;
 
-  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  // if( !config || !config.path || !config.path.hlink )
-  // {
-  //   context.suiteTempPath = temp;
-  //   test.true( true );
-  //   return null;
-  // }
-  // let linkPath = config.path.hlink;
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
   /* */
 
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
+  a.ready.then( () =>
+  {
+    test.case = 'conflict';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell( `git clone original clone` );
   a.ready.then( () =>
   {
@@ -34832,16 +34820,13 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
 
     return null;
-  })
+  });
 
-  /* */
-
-  originalShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
 
   a.appStartNonThrowing( '.with clone/ .git.sync v:5' )
   .then( ( op ) =>
   {
-    test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
     test.identical( _.strCount( op.output, 'Command ".with clone/ .git.sync v:5"' ), 1 );
@@ -34863,14 +34848,14 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -34882,7 +34867,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
@@ -34890,12 +34875,14 @@ original
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
+
+  /* */
 
   a.ready.finally( () =>
   {
@@ -34905,13 +34892,11 @@ original/f.txt
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
 
-    /* */
-
     config.path.hlink = config.path.hlink1;
     delete config.path.hlink1;
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
-  })
+  });
 
   /* - */
 
