@@ -24031,7 +24031,7 @@ function stepGitPull( test )
     return null
   })
 
-  /* */
+  /* */ /* qqq : for Dmytro : ?? */
 
   originalShell( 'git init' );
   originalShell( 'git add --all' );
@@ -24135,7 +24135,7 @@ function stepGitPull( test )
     return null;
   })
 
-  /* */
+  /* */ /* qqq : for Dmytro : bad! carelessly. */
 
   a.ready.then( ( op ) =>
   {
@@ -38859,7 +38859,7 @@ let Self =
     stepBuild,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
-    stepGitPull,
+    stepGitPull, /* qqq : for Dmytro : bad! */
     stepGitPush,
     stepGitReset,
     stepGitSync,
