@@ -56,45 +56,11 @@ let _ = _global_.wTools;
 
 function onSuiteBegin()
 {
-  let context = this; /* xxx qqq : rename */
+  let context = this;
   context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
-
-  // a.find = _.fileProvider.filesFinder /* xxx qqq : remove that from context. asset should have such routines */
-  // ({
-  //   withTerminals : 1,
-  //   withDirs : 1,
-  //   withStem : 1,
-  //   allowingMissed : 1,
-  //   maskPreset : 0,
-  //   outputFormat : 'relative',
-  //   filter :
-  //   {
-  //     recursive : 2,
-  //     maskAll :
-  //     {
-  //       excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
-  //     },
-  //     maskTransientAll :
-  //     {
-  //       excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
-  //     },
-  //   },
-  // });
-  //
-  // a.findAll = _.fileProvider.filesFinder
-  // ({
-  //   withTerminals : 1,
-  //   withDirs : 1,
-  //   withStem : 1,
-  //   withTransient : 1,
-  //   allowingMissed : 1,
-  //   maskPreset : 0,
-  //   outputFormat : 'relative',
-  // });
-
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
   {
@@ -117,25 +83,11 @@ function onSuiteEnd()
 function assetFor( test, name )
 {
   let context = this;
-  // let a = Object.create( null );
 
   if( !name )
   name = test.name;
 
   let a = test.assetFor( name );
-
-  // a.test = test;
-  // a.name = name;
-  // a.originalAssetPath = _.path.join( context.assetsOriginalPath, name );
-  // a.originalAbs = context.abs_functor( a.originalAssetPath );
-  // a.originalRel = context.rel_functor( a.originalAssetPath );
-  // a.routinePath = _.path.join( context.suiteTempPath, test.name );
-  // a.abs = context.abs_functor( a.routinePath );
-  // a.rel = context.rel_functor( a.routinePath );
-  // a.will = new _.Will;
-  // a.fileProvider = _.fileProvider;
-  // a.path = _.fileProvider.path;
-  // a.ready = _.Consequence().take( null );
 
   a.will = new _.Will;
 
@@ -204,77 +156,10 @@ function assetFor( test, name )
     return null
   }
 
-  // a.shell = _.process.starter
-  // ({
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
-  //
-  // a.appStart = _.process.starter
-  // ({
-  //   execPath : context.appJsPath,
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'fork',
-  // })
-  //
-  // a.appStartNonThrowing = _.process.starter
-  // ({
-  //   execPath : context.appJsPath,
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : a.ready,
-  //   mode : 'fork',
-  // })
-
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
 
   return a;
 }
-
-// //
-//
-// function abs_functor( routinePath )
-// {
-//   _.assert( _.strIs( routinePath ) );
-//   _.assert( arguments.length === 1 );
-//   return function abs( filePath )
-//   {
-//     if( arguments.length === 1 && filePath === null )
-//     return filePath;
-//     let args = _.longSlice( arguments );
-//     args.unshift( routinePath );
-//     return _.uri.s.join.apply( _.uri.s, args );
-//   }
-// }
-//
-// //
-//
-// function rel_functor( routinePath )
-// {
-//   _.assert( _.strIs( routinePath ) );
-//   _.assert( arguments.length === 1 );
-//   return function rel( filePath )
-//   {
-//     _.assert( arguments.length === 1 );
-//     if( filePath === null )
-//     return filePath;
-//     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
-//     {
-//       return _.filter_( null, filePath, ( filePath ) => rel( filePath ) );
-//     }
-//     if( _.uri.isRelative( filePath ) && !_.uri.isRelative( routinePath ) )
-//     return filePath;
-//     return _.uri.s.relative.apply( _.uri.s, [ routinePath, filePath ] );
-//   }
-// }
 
 // --
 // tests
@@ -15760,7 +15645,6 @@ function importLocalRepo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'import-auto' );
-  // let modulePath = a.abs( '.module' ); /* aaa */ /* Dmytro : corrected */
   a.reflect();
 
   /* - */
@@ -15787,7 +15671,7 @@ function importLocalRepo( test )
     test.identical( _.strCount( op.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( op.output, /Write out willfile .*\/.module\/ModuleForTesting12.out.will.yml/ ), 1 );
 
-    var outfile = a.fileProvider.configRead( a.abs( '.module/ModuleForTesting12.out.will.yml' ) ); /* qqq xxx */
+    var outfile = a.fileProvider.configRead( a.abs( '.module/ModuleForTesting12.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.out' ];
 
     var expectedReflector =
@@ -22551,7 +22435,6 @@ subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
-/* qqq : improve test coverage of submodulesVerify */
 function submodulesVerify( test )
 {
   let context = this;
@@ -24136,7 +24019,7 @@ function stepGitPull( test )
     return null
   })
 
-  /* */
+  /* */ /* qqq : for Dmytro : ?? */
 
   originalShell( 'git init' );
   originalShell( 'git add --all' );
@@ -24240,7 +24123,7 @@ function stepGitPull( test )
     return null;
   })
 
-  /* */
+  /* */ /* qqq : for Dmytro : bad! carelessly. */
 
   a.ready.then( ( op ) =>
   {
@@ -39127,12 +39010,7 @@ let Self =
     assetsOriginalPath : null,
     appJsPath : null,
     repoDirPath : null,
-
-    // find : null, /* xxx : remove */
-    // findAll : null, /* xxx : remove */
     assetFor,
-    // abs_functor, /* xxx : remove */
-    // rel_functor, /* xxx : remove */
   },
 
   tests :
@@ -39161,7 +39039,7 @@ let Self =
     // CUI
 
     commandsSeveral,
-    implyWithSubmodulesModulesList, /* qqq : cover all implies. ask how to */
+    implyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     // reflect
 
@@ -39375,12 +39253,13 @@ let Self =
     stepBuild,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
-    stepGitPull,
+    stepGitPull, /* qqq : for Dmytro : bad! */
     stepGitPush,
     stepGitReset,
     stepGitSync,
     stepGitStatus,
     stepGitTag,
+
 
     /* xxx : cover "will .module.new.with prepare" */
 
@@ -39474,4 +39353,4 @@ Self = wTestSuite( Self );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-})()
+})();
