@@ -34925,39 +34925,9 @@ function commandGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
+  /* */
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-
+  begin();
   a.appStart( '.with original/ .git.tag name:v1.0' )
   .then( ( op ) =>
   {
@@ -34966,24 +34936,18 @@ function commandGitTag( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
     return null;
-  })
-  originalShell( 'git tag -l -n' )
-  .then( ( op ) =>
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'v1.0' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
-    return null;
-  })
-
-  originalShell( 'git commit -am second' );
+  begin();
   a.appStart( '.with original/ .git.tag name:v2.0 description:"Version 2.0"' )
   .then( ( op ) =>
   {
@@ -34992,25 +34956,18 @@ function commandGitTag( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
     return null;
-  })
-  originalShell( 'git tag -l -n' )
-  .then( ( op ) =>
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
     test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
-    return null;
-  })
-
-  originalShell( 'git commit -am third' );
+  begin();
   a.appStart( '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1' )
   .then( ( op ) =>
   {
@@ -35019,26 +34976,18 @@ function commandGitTag( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
     return null;
-  })
-  originalShell( 'git tag -l -n' )
-  .then( ( op ) =>
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
-    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
     test.identical( _.strCount( op.output, 'v3.0' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
-    return null;
-  })
-
-  originalShell( 'git commit -am fourth' );
+  begin();
   a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1' )
   .then( ( op ) =>
   {
@@ -35047,22 +34996,20 @@ function commandGitTag( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
     return null;
-  })
-  originalShell( 'git tag -l -n' )
-  .then( ( op ) =>
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
-    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
-    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
     test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 0 );
     return null;
-  })
+  });
 
   /* */
 
+  begin();
   a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0' )
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
@@ -35070,20 +35017,29 @@ function commandGitTag( test )
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
     return null;
   })
-  originalShell( 'git tag -l -n' )
-  .then( ( op ) =>
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
-    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
-    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
     test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    return a.ready;
+  }
 }
 
 //
