@@ -225,7 +225,6 @@ function assetFor( test, name )
 //     }
 //     catch( err )
 //     {
-//       debugger;
 //       _.Consequence().take( null ).delay( 3000 ).deasync();
 //       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
 //       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
@@ -291,14 +290,11 @@ function assetFor( test, name )
 //
 //   logger.log( file.productExportInfo() );
 //
-//   debugger;
 //   file.product.nodes.map( null, ( node ) =>
 //   {
 //     let found = file.nodeSearch( node, 'setsAreIdentical' );
 //     if( _.mapKeys( found ).length )
-//     debugger;
 //   });
-//   debugger;
 //
 //   file.arrange();
 // }
@@ -552,7 +548,6 @@ function openNamedFast( test )
     _.debugger = 1;
     debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    debugger;
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
@@ -1873,9 +1868,7 @@ function moduleClone( test )
     test.identical( a.rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( a.rel( opener2.remotePath ), null );
 
-    debugger;
     opener2.finit();
-    debugger;
     opener.openedModule = null;
 
     test.description = 'instances';
@@ -1921,10 +1914,8 @@ function moduleClone( test )
     test.identical( a.rel( opener2.remotePath ), null );
 
     test.case = 'finit';
-    debugger;
     opener.finit();
     module.finit();
-    debugger;
     return null;
   })
 
@@ -4944,75 +4935,74 @@ function buildsResolve( test )
 
 //
 
-// qqq : for Dmytro : bad, write proper test
-// function framePerform( test )
-// {
-//   let context = this;
-//   let a = context.assetFor( test, 'make' );
-//   a.reflect();
-//   a.fileProvider.filesDelete( a.abs( 'out' ) );
-//
-//   var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
-//   opener.find();
-//
-//   return opener.open().split()
-//   .then( () =>
-//   {
-//
-//     var expected = [];
-//     var files = a.find( a.abs( 'out' ) );
-//     let builds = opener.openedModule.buildsResolve();
-//
-//     test.identical( builds.length, 1 );
-//
-//     let build = builds[ 0 ];
-//     let run = new _.will.BuildRun({ build });
-//     run.form();
-//     let frame = run.frameUp( build );
-//     let steps = build.stepsEach();
-//     let step = steps[ 0 ];
-//
-//     /* */
-//
-//     let frame2 = frame.frameUp( steps[ 0 ] );
-//     build.formed = 3; /* Dmytro : hack */
-//     step.form();
-//
-//     return step.framePerform( frame2 )
-//     .finally( ( err, arg ) =>
-//     {
-//
-//       test.description = 'files';
-//       test.true( true );
-//
-//       var files = a.find( a.routinePath );
-//       var exp =
-//       [
-//         '.',
-//         './v1.will.yml',
-//         './v2.will.yml',
-//         './file',
-//         './file/File.js',
-//         './file/File.test.js',
-//         './file/Produce.js',
-//         './file/Src1.txt',
-//         './file/Src2.txt',
-//         './out',
-//         './out/Produced.js2',
-//         './out/Produced.txt2',
-//         './out/shouldbe.txt'
-//       ];
-//       test.identical( files, exp );
-//
-//       opener.finit();
-//
-//       if( err )
-//       throw err;
-//       return arg;
-//     });
-//
-//   });
-// }
+// aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
+function framePerform( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'make' );
+  a.reflect();
+
+  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
+  opener.find();
+
+  return opener.open().split()
+  .then( () =>
+  {
+
+    var expected = [];
+    var files = a.find( a.abs( 'out' ) );
+    let builds = opener.openedModule.buildsResolve();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+    build.form();
+    let run = new _.will.BuildRun({ build });
+    run.form();
+    let frame = run.frameUp( build );
+    let steps = build.stepsEach();
+    let step = steps[ 0 ];
+    step.opts.currentPath = a.routinePath;
+
+    /* */
+
+    let frame2 = frame.frameUp( step );
+    step.form();
+
+    return step.framePerform( frame2 )
+    .finally( ( err, arg ) =>
+    {
+      test.description = 'files';
+
+      var files = a.find( a.routinePath );
+      var exp =
+      [
+        '.',
+        './v1.will.yml',
+        './v2.will.yml',
+        './file',
+        './file/File.js',
+        './file/File.test.js',
+        './file/Produce.js',
+        './file/Src1.txt',
+        './file/Src2.txt',
+        './out',
+        './out/Produced.js2',
+        './out/Produced.txt2',
+        './out/shouldbe.txt'
+      ];
+      test.identical( files, exp );
+
+      opener.finit();
+      frame2.finit();
+
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+}
 
 //
 
@@ -7292,9 +7282,7 @@ function pathsResolveOfSubmodulesRemote( test )
   {
 
     test.case = 'resolve submodules';
-    debugger;
     var submodules = opener.openedModule.submodulesResolve({ selector : '*' });
-    debugger;
     test.identical( submodules.length, 2 );
 
     test.case = 'path::in, supermodule';
@@ -7304,9 +7292,7 @@ function pathsResolveOfSubmodulesRemote( test )
 
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
-    debugger;
     var resolved = submodule.resolve( 'path::in' );
-    debugger;
     var expected = a.abs( '.module/ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
@@ -8190,9 +8176,7 @@ function pathsResolveOutFileOfExports( test )
     if( err )
     throw err;
     test.true( err === undefined );
-    debugger;
     opener.finit();
-    debugger;
     return arg;
   });
 
@@ -8258,9 +8242,7 @@ function pathsResolveComposite( test )
     test.identical( resolved, expected );
 
     test.case = 'path::protoMain';
-    debugger;
     var resolved = opener.openedModule.resolve( 'path::protoMain' );
-    debugger;
     var expected = pin( 'proto/Main.s' );
     test.identical( resolved, expected );
 
@@ -8492,7 +8474,6 @@ function pathsResolveResolvedPath( test )
       pathResolving : 'in',
       selectorIsPath : 0,
     });
-    debugger;
     test.identical( got, exp );
 
     var src = 'some';
@@ -8648,7 +8629,6 @@ function pathsResolveFailing( test )
       missingAction : 'undefine',
       mapValsUnwrapping : 1,
     });
-    debugger;
     var expected = null;
     test.identical( got, expected );
 
@@ -11070,7 +11050,7 @@ let Self =
     exportsResolve,
     buildsResolve,
 
-    // framePerform,
+    framePerform,
 
     trivialResolve,
     detailedResolve,
