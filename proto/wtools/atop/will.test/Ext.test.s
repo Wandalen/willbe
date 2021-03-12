@@ -25101,17 +25101,15 @@ function stepGitSync( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
-
 
   a.ready.then( () =>
   {
@@ -25335,12 +25333,8 @@ function stepGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
