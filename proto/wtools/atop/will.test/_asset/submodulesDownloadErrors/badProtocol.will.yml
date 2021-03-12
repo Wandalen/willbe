@@ -1,5 +1,5 @@
 about :
-  name : submodulesDownloadErrors-bad-protocol
+  name : submodulesDownloadErrorsBadProtocol
 
 submodule :
   ModuleForTesting2a : git+bad:///github.com/Wandalen/wModuleForTesting2a.git/

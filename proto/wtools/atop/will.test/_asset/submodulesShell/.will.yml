@@ -1,6 +1,6 @@
 about :
 
-  name : "submodulesShell-unnamed"
+  name : "submodulesShellUnnamed"
   description : "Unnamed module. To check execution of commands for modules"
   version : "0.0.1"
   enabled : 1

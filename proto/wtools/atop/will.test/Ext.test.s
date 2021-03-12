@@ -19886,7 +19886,7 @@ function submodulesDownloadThrowing( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, 'Failed to download module' ) );
     test.true( _.strHas( op.output, 'module::wModuleForTesting2a was downloaded version master in' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrors-good were downloaded' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrorsGood were downloaded' ) );
 
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     // test.gt( files.length, 10 );
@@ -19909,7 +19909,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    var exp = `Module module::submodulesDownloadErrors-bad / opener::ModuleForTesting2a is downloaded, but it's not a git repo`;
+    var exp = `Module module::submodulesDownloadErrorsBad / opener::ModuleForTesting2a is downloaded, but it's not a git repo`;
     test.true( _.strHas( op.output, exp ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
@@ -19930,7 +19930,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    var expected = `Module module::submodulesDownloadErrors-bad / opener::ModuleForTesting2a is not downloaded, but file at`;
+    var expected = `Module module::submodulesDownloadErrorsBad / opener::ModuleForTesting2a is not downloaded, but file at`;
     test.true( _.strHas( op.output, expected ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
@@ -19961,7 +19961,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodulesDownloadErrors-good were downloaded' ) );
+    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodulesDownloadErrorsGood were downloaded' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore );
@@ -21514,7 +21514,7 @@ function submodulesUpdateThrowing( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, 'Failed to download update' ) );
     test.true( _.strHas( op.output, 'module::wModuleForTesting2a was updated to version master in' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrors-good were updated in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrorsGood were updated in' ) );
 
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.ge( files.length, 1 );
@@ -21536,7 +21536,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    var exp = `Module module::submodulesDownloadErrors-good / opener::ModuleForTesting2a is downloaded, but it's not a git rep`;
+    var exp = `Module module::submodulesDownloadErrorsGood / opener::ModuleForTesting2a is downloaded, but it's not a git rep`;
     test.true( _.strHas( op.output, exp ) );
     test.true( _.strHas( op.output, 'Failed to update module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
@@ -21557,7 +21557,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'Module module::submodulesDownloadErrors-good / opener::ModuleForTesting2a is not downloaded, but file at' ) );
+    test.true( _.strHas( op.output, 'Module module::submodulesDownloadErrorsGood / opener::ModuleForTesting2a is not downloaded, but file at' ) );
     test.true( _.strHas( op.output, 'Failed to update submodules' ) );
     test.true( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
@@ -21711,7 +21711,7 @@ function submodulesAgreeThrowing( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, 'Failed to agree module' ) );
     test.true( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrors-good were agreed' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrorsGood were agreed' ) );
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
@@ -21754,7 +21754,7 @@ function submodulesAgreeThrowing( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, 'Failed to agree module' ) );
     test.true( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrors-good were agreed' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrorsGood were agreed' ) );
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
@@ -21794,7 +21794,7 @@ function submodulesAgreeThrowing( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, 'Failed to agree module' ) );
     test.true( _.strHas( op.output, 'module::wModuleForTesting2a was agreed with version master' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrors-good were agreed in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrorsGood were agreed in' ) );
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
     return null;
@@ -21814,7 +21814,7 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrors-good were agreed' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodulesDownloadErrorsGood were agreed' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
@@ -21840,8 +21840,8 @@ function submodulesAgreeThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'Module at module::submodulesDownloadErrors-good / opener::ModuleForTesting2a needs to be updated, but has local changes' ) );
-    test.true( _.strHas( op.output, 'Failed to agree module::submodulesDownloadErrors-good / opener::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, 'Module at module::submodulesDownloadErrorsGood / opener::ModuleForTesting2a needs to be updated, but has local changes' ) );
+    test.true( _.strHas( op.output, 'Failed to agree module::submodulesDownloadErrorsGood / opener::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -21864,7 +21864,7 @@ function submodulesAgreeThrowing( test )
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'needs to be deleted, but has local changes' ) );
-    test.true( _.strHas( op.output, 'Failed to agree module::submodulesDownloadErrors-good / opener::ModuleForTesting2a' ) );
+    test.true( _.strHas( op.output, 'Failed to agree module::submodulesDownloadErrorsGood / opener::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -21909,7 +21909,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodulesDownloadErrors-good were agreed' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodulesDownloadErrorsGood were agreed' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
