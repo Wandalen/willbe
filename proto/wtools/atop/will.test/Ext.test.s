@@ -34325,8 +34325,6 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  /* */
-
   let config, configPath;
   if( _.censor )
   {
@@ -34340,57 +34338,11 @@ function commandGitSync( test )
 
   /* */
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
-
-  /* */
-
-  a.ready.then( () =>
+  begin().then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with original/ .git.sync' )
   .then( ( op ) =>
@@ -34402,26 +34354,26 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   })
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am second' );
-  originalShell( 'git push -u origin --all' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with clone/ .git.sync' )
   .then( ( op ) =>
@@ -34434,23 +34386,23 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     return null;
   })
-  cloneShell( 'git log' )
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'second' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   })
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am third' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am third' });
 
   a.appStart( '.with original/ .git.sync' )
   .then( ( op ) =>
@@ -34463,8 +34415,8 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
   })
-  cloneShell( 'git pull' );
-  cloneShell( 'git log' )
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -34474,14 +34426,14 @@ function commandGitSync( test )
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   })
-  cloneShell( 'git commit -am "fourth"' );
-  cloneShell( 'git push -u origin --all' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "fourth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am fifth' )
   .then( ( op ) =>
@@ -34494,7 +34446,7 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
   })
-  originalShell( 'git log' )
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -34502,8 +34454,8 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
   })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -34513,14 +34465,14 @@ function commandGitSync( test )
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am seventh v:0' )
   .then( ( op ) =>
@@ -34536,15 +34488,16 @@ function commandGitSync( test )
 
   /* */
 
-  cloneShell( 'git pull' );
+  begin();
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
   a.ready.then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
   a.appStart( '.with original/ .git.sync -am seventh dry:1' )
   .then( ( op ) =>
@@ -34574,6 +34527,27 @@ function commandGitSync( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
+    a.shell( 'git clone repo/ clone' );
+    return a.ready;
+  }
 }
 
 //
@@ -34582,8 +34556,6 @@ function commandGitSyncRestoringHardlinks( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
-
-  /* */
 
   let config, configPath;
   if( _.censor )
@@ -34598,27 +34570,16 @@ function commandGitSyncRestoringHardlinks( test )
 
   /* */
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
-  /* - */
-
   a.ready.then( ( op ) =>
   {
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
-  })
+  });
 
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell( `git clone original clone` );
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
@@ -34664,11 +34625,11 @@ clone
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
-  originalShell( 'git commit -am second' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
 
   a.appStartNonThrowing( '.with clone/ .git.sync v:5' )
   .then( ( op ) =>
@@ -34784,30 +34745,9 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'conflict';
-    return null;
-  });
-
-  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
-  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
-  a.shell( `git clone original clone` );
-  a.ready.then( () =>
-  {
-    a.fileProvider.hardLink
-    ({
-      srcPath : a.abs( 'clone/f1.txt' ),
-      dstPath : a.abs( linkPath, 'f1.lnk' ),
-      sync : 1,
-    });
-    a.fileProvider.hardLink
-    ({
-      srcPath : a.abs( 'clone/f2.txt' ),
-      dstPath : a.abs( linkPath, 'f2.lnk' ),
-      sync : 1,
-    });
     return null;
   });
 
@@ -34901,6 +34841,31 @@ original/f.txt
   /* - */
 
   return a.ready;
+
+  function begin()
+  {
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+    a.ready.then( () =>
+    {
+      a.fileProvider.hardLink
+      ({
+        srcPath : a.abs( 'clone/f1.txt' ),
+        dstPath : a.abs( linkPath, 'f1.lnk' ),
+        sync : 1,
+      });
+      a.fileProvider.hardLink
+      ({
+        srcPath : a.abs( 'clone/f2.txt' ),
+        dstPath : a.abs( linkPath, 'f2.lnk' ),
+        sync : 1,
+      });
+      return null;
+    });
+    return a.ready;
+  }
 }
 
 //
