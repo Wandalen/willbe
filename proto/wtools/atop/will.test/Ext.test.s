@@ -23590,6 +23590,19 @@ function stepGitCheckHardLinkRestoring( test )
 
   /* */
 
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   begin().then( () =>
   {
     test.case = '.with clone/Git.* .build git.pull - succefull pulling';
@@ -23841,6 +23854,19 @@ copy
     return null;
   });
 
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -23889,6 +23915,19 @@ function stepGitDifferentCommands( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
 
   let originalShell = _.process.starter
   ({
@@ -23990,7 +24029,20 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -24054,7 +24106,7 @@ function stepGitPull( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
   a.appStart( '.with clone/ .build git.pull' )
@@ -24068,7 +24120,7 @@ function stepGitPull( test )
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -24077,7 +24129,7 @@ function stepGitPull( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'clone' ) );
     return null;
-  })
+  });
 
   originalShell( 'git init' );
   originalShell( 'git add --all' );
@@ -24089,7 +24141,7 @@ function stepGitPull( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   originalShell( 'git commit -am second' );
   a.appStart( '.imply v:0 .with clone/ .build pull.with.dir' )
@@ -25178,12 +25230,26 @@ function stepGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+
   a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     return null;
-  })
+  });
 
   _.process.start
   ({
@@ -25394,7 +25460,20 @@ function stepGitSync( test )
     test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
