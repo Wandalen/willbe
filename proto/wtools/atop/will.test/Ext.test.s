@@ -27678,33 +27678,31 @@ function commandSubmodulesGit( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.dirMake( a.abs( 'repo2' ) );
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo2' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+  a.shell({ currentPath : a.abs( 'repo2' ), execPath : 'git init --bare' });
 
   let originalShell = _.process.starter
   ({
@@ -27846,21 +27844,34 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, '> git remote add origin1 https://github.com/user' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
   originalShell( 'git remote -v' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/git-sync.git' ), 0 );
     return null;
-  })
+  });
   localShell( 'git remote -v' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -27875,7 +27886,20 @@ function commandSubmodulesGitRemoteSubmodules( test )
   let a = context.assetFor( test, 'modules-git' );
   a.reflect();
 
-  /* - */
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   a.shell( 'git init' );
   a.shell( 'git add --all' );
@@ -27920,7 +27944,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -27940,7 +27964,21 @@ function commandSubmodulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -27954,7 +27992,20 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   let a = context.assetFor( test, 'modules-git' );
   a.reflect();
 
-  /* - */
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   a.shell( 'git init' );
   a.shell( 'git add --all' );
@@ -28019,7 +28070,21 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -28980,6 +29045,21 @@ function commandSubmodulesGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
@@ -29146,6 +29226,19 @@ function commandSubmodulesGitSync( test )
     test.identical( _.strCount( op.output, 'new lines2' ), 0 );
     return null;
   })
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
