@@ -1,5 +1,5 @@
 about :
-  name : reflectWithOptions-from-predefined
+  name : reflectWithOptionsFromPredefined
   description : "To set step option of reflector"
   version : 0.0.1
 
