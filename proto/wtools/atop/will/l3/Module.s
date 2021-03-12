@@ -8637,7 +8637,7 @@ function gitExecCommand( o )
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake( o.dirPath, o.verbosity );
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -8673,6 +8673,7 @@ gitExecCommand.defaults =
 {
   command : null,
   dirPath : null,
+  profile : 'default',
   hardLinkMaybe : 0,
   v : null,
   verbosity : 2,
@@ -8805,23 +8806,25 @@ gitPrOpen.defaults =
 
 //
 
-function _providerArchiveMake( dirPath, verbosity )
+function _providerArchiveMake( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  debugger;
+  let config = _.censor.configRead({ profileDir : o.profile });
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   if( !config )
   config = fileProvider.configUserRead();
 
   let provider = _.FileFilter.Archive();
-  provider.archive.basePath = dirPath;
+  provider.archive.basePath = o.dirPath;
 
   if( config && config.path && config.path.hlink )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
 
-  if( verbosity )
+  if( o.verbosity )
   provider.archive.verbosity = 2;
   else
   provider.archive.verbosity = 0;
@@ -8943,7 +8946,7 @@ function gitPull( o )
     //   provider.archive.restoreLinksEnd();
     // }
 
-    provider = module._providerArchiveMake( will.currentOpener.dirPath, o.verbosity );
+    provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -8977,6 +8980,7 @@ function gitPull( o )
 
 gitPull.defaults =
 {
+  profile : 'default',
   dirPath : null,
   v : null,
   verbosity : 2,
@@ -9217,7 +9221,7 @@ function gitSync( o )
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.' } ) );
+    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
     return null;
   })
 
@@ -9249,6 +9253,7 @@ function gitSync( o )
 gitSync.defaults =
 {
   commit : '.',
+  profile : 'default',
   dirPath : null,
   restoringHardLinks : 1,
   dry : 0,

@@ -2058,10 +2058,12 @@ function commandSubmodulesGit( e )
 
 commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesGit.defaults.withSubmodules = 1;
+commandSubmodulesGit.defaults.profile = 'default';
 commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.';
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandSubmodulesGit.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
 
 //
 
@@ -2264,6 +2266,7 @@ commandSubmodulesGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -2275,6 +2278,7 @@ commandSubmodulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A config profile to use from utility Censor. Default is "default".',
 };
 
 //
@@ -2424,10 +2428,12 @@ function commandModulesGit( e )
 
 commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandModulesGit.defaults.withSubmodules = 1;
+commandModulesGit.defaults.profile = 'default';
 commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
 commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandModulesGit.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
 
 //
 
@@ -2629,6 +2635,7 @@ commandModulesGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -2640,6 +2647,7 @@ commandModulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A config profile to use from utility Censor. Default is "default".',
 };
 
 //
@@ -3200,9 +3208,11 @@ function commandGitPull( e )
 
 commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPull.defaults.withSubmodules = 0;
+commandGitPull.defaults.profile = 'default';
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
+commandGitPull.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
 
 //
 
@@ -3373,6 +3383,7 @@ commandGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -3384,6 +3395,7 @@ commandGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A config profile to use from utility Censor. Default is "default".',
 };
 
 //
