@@ -31934,6 +31934,21 @@ function commandGitCheckHardLinkRestoring( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   let originalShell = _.process.starter
   ({
     currentPath : a.abs( 'original' ),
@@ -32302,7 +32317,20 @@ original
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -32317,6 +32345,21 @@ function commandGitDifferentCommands( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   let originalShell = _.process.starter
   ({
@@ -32419,7 +32462,20 @@ function commandGitDifferentCommands( test )
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -32791,6 +32847,19 @@ function commandGitPull( test )
 
   /* */
 
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   begin().then( () =>
   {
     test.case = '.git.pull - succefull pulling';
@@ -33070,6 +33139,19 @@ original
     return null;
   });
 
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -33120,6 +33202,21 @@ function commandGitPullRestoreHardlinkOnFail( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   let originalShell = _.process.starter
   ({
@@ -33225,7 +33322,20 @@ original
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -34215,6 +34325,21 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
+
   a.ready.then( () =>
   {
     a.reflect();
@@ -34431,7 +34556,20 @@ function commandGitSync( test )
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -34444,6 +34582,21 @@ function commandGitSyncRestoringHardlinks( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
+
+  /* */
+
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( config.path && config.path.hlink )
+    config.path.hlink1 = config.path.hlink; /* save */
+    delete config.path.hlink;
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* */
 
   let originalShell = _.process.starter
   ({
@@ -34579,7 +34732,20 @@ original
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( !_.censor )
+    return null;
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    return null;
+  });
 
   /* - */
 
@@ -34596,14 +34762,34 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
   let a = context.assetFor( test, 'git-push' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.path || !config.path.hlink )
+  let config, configPath;
+  if( _.censor )
+  {
+    config = _.censor.configRead();
+    if( !config.path || !config.path.hlink )
+    return test.true( true );
+
+    config.path.hlink1 = config.path.hlink; /* save */
+    config.path.hlink = a.path.join( a.routinePath, '../..' );
+    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+  else
   {
     context.suiteTempPath = temp;
-    test.true( true );
-    return null;
+    return test.true( true );
   }
+
   let linkPath = config.path.hlink;
+
+  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  // if( !config || !config.path || !config.path.hlink )
+  // {
+  //   context.suiteTempPath = temp;
+  //   test.true( true );
+  //   return null;
+  // }
+  // let linkPath = config.path.hlink;
 
   let originalShell = _.process.starter
   ({
@@ -34711,13 +34897,19 @@ original/f.txt
     return null;
   })
 
-  a.ready.then( () =>
+  a.ready.finally( () =>
   {
     a.fileProvider.filesDelete( context.suiteTempPath );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
+
+    /* */
+
+    config.path.hlink = config.path.hlink1;
+    delete config.path.hlink1;
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
   })
 
