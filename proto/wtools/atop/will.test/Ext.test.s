@@ -24032,7 +24032,6 @@ function stepGitPull( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.filesDelete( a.abs( 'clone' ) );
     return null;
   })
@@ -24042,11 +24041,16 @@ function stepGitPull( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.description = 'hardlink';
 
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
@@ -24063,7 +24067,7 @@ function stepGitPull( test )
     test.identical( _.strCount( op.output, 'Building module::original' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
     return null;
   })
@@ -24072,14 +24076,13 @@ function stepGitPull( test )
 
   a.ready.then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  })
-
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-  .then( ( op ) =>
-  {
     test.description = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
