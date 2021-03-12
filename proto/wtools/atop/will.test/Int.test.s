@@ -19,7 +19,6 @@ let _global = _global_;
 let _ = _global_.wTools;
 
 /*
-qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
 xxx : should work
   > local-will .imply withOut:0 .with * .call GitStatus
   not only
@@ -7292,9 +7291,7 @@ function pathsResolveOfSubmodulesRemote( test )
   {
 
     test.case = 'resolve submodules';
-    debugger;
     var submodules = opener.openedModule.submodulesResolve({ selector : '*' });
-    debugger;
     test.identical( submodules.length, 2 );
 
     test.case = 'path::in, supermodule';
@@ -7304,10 +7301,8 @@ function pathsResolveOfSubmodulesRemote( test )
 
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
-    debugger;
     var resolved = submodule.resolve( 'path::in' );
-    debugger;
-    var expected = a.abs( '.module/ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
