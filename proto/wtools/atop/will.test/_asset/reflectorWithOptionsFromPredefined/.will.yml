@@ -1,0 +1,53 @@
+about :
+  name : reflectWithOptions-from-predefined
+  description : "To set step option of reflector"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : 'proto'
+  file1 : 'proto/File.js'
+  file2 : 'proto/File2.js'
+
+reflector :
+
+  reflect.proto0 :
+    filePath :
+      path::file1 : '{path::out}/debug/File.js'
+
+  reflect.proto1 :
+    filePath :
+      path::file2 : '{path::out}/debug/File.js'
+    linking : fileCopy
+    dstRewritingOnlyPreserving : 0
+    breakingDstHardLink : 1
+
+  reflect.proto2 :
+    inherit : predefined.*
+    filePath :
+      path::file2 : '{path::out}/debug/File.js'
+    linking : fileCopy
+    dstRewritingOnlyPreserving : 0
+    breakingDstHardLink : 1
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out
+
+build :
+
+  variant1 :
+    steps :
+      - clean.out
+      - reflect.proto0
+      - reflect.proto1
+
+  variant2 :
+    steps :
+      - clean.out
+      - reflect.proto0
+      - reflect.proto2

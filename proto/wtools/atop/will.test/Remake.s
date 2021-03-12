@@ -30,7 +30,7 @@ let reposDownload = require( `./ReposDownload.s` );
 ready.then( () => _.fileProvider.filesDelete( repoDirPath ) );
 ready.then( () => reposDownload() );
 
-var asset = `export-multiple-exported`;
+var asset = `exportMultipleExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/ .export debug:0` );
 will( `.with ${asset}/ .export debug:1` );
@@ -39,7 +39,7 @@ will( `.with ${asset}/super .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
-var asset = `two-exported`;
+var asset = `twoExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub .export debug:0` );
 will( `.with ${asset}/sub .export debug:1` );
@@ -48,7 +48,7 @@ will( `.with ${asset}/super .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
-var asset = `two-in-exported`;
+var asset = `twoInExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub .export debug:0` );
 will( `.with ${asset}/sub .export debug:1` );
@@ -57,7 +57,7 @@ will( `.with ${asset}/super .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
-var asset = `two-dotless-single-exported`;
+var asset = `twoDotlessSingleExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub/ .export debug:0` );
 will( `.with ${asset}/sub/ .export debug:1` );
@@ -66,7 +66,7 @@ will( `.with ${asset}/ .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
-var asset = `two-dotless-exported`;
+var asset = `twoDotlessExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub/ .export debug:0` );
 will( `.with ${asset}/sub/ .export debug:1` );
@@ -75,7 +75,7 @@ will( `.with ${asset}/ .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
-var asset = `two-anon-exported`;
+var asset = `twoAnonExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub/ .export debug:0` );
 will( `.with ${asset}/sub/ .export debug:1` );
