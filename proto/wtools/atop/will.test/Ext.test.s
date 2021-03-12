@@ -38731,6 +38731,12 @@ function commandsSubmoduleSafety( test )
       outputFormat : 'absolute'
     });
   }
+  a.moduleFixateTag = ( tag ) => 
+  {
+    let data = a.rootWillFileRead();
+    data = _.strReplace( data, '/!master', `/!${tag}` );
+    a.rootWillFileWrite( data );
+  }
   a.moduleShell = _.process.starter
   ({
     currentPath : a.localPath,
@@ -38749,27 +38755,27 @@ function commandsSubmoduleSafety( test )
 
   /* */
 
-  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 }) // FAIL
-  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1 }) // FAIL
-  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1 }) // FAIL
-  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 })// OK
-  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })//OK
-  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 })//OK
-  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 })//OK
+  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 }) // FAIL
+  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
+  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 })
 
   /* */
 
   run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1 })
+  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })// FAIL
+  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
   run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 0 })
   run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 })
@@ -38862,6 +38868,11 @@ function commandsSubmoduleSafety( test )
 
     a.ready.then( () => 
     {
+      if( env.command == 'update' )
+      {
+        a.moduleFixateTag( 'dev1' );
+      }
+
       if( routinesPre[ env.case ] )
       return routinesPre[ env.case ]( env ) || true;
       return null;
@@ -38872,6 +38883,20 @@ function commandsSubmoduleSafety( test )
 
     a.ready.tap( () => 
     {
+      let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
+      if( env.command == 'update' && isGitModuleInCurrentState )
+      {
+        let branch = _.git.tagLocalRetrive( a.localPath );
+        
+        if( env.error )
+        test.identical( branch, 'master' );
+        else
+        test.identical( branch, 'dev1' );
+
+        if( !env.error )
+        a.moduleShell( 'git checkout master' );
+      }
+
       if( routinesPost[ env.case ] )
       return routinesPost[ env.case ]( env ) || true;
       return null;
@@ -38942,7 +38967,7 @@ function commandsSubmoduleSafety( test )
     routinesPre[ 'invalid/url' ] = () => 
     {
       let data = a.rootWillFileRead();
-      data = _.strReplace( data, 'https:///', 'https:' );
+      data = _.strReplace( data, 'git+https', 'test+https' );
       a.rootWillFileWrite( data );
     }
 
@@ -38959,6 +38984,12 @@ function commandsSubmoduleSafety( test )
       a.fileProvider.fileWrite({ filePath, data : ' ' });
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'local/unstaged', 
+      set : { update : `needs to be updated, but has local changes` }
+    })
 
     routinesPre[ 'local/staged' ] = ( env ) => 
     {
@@ -38967,6 +38998,12 @@ function commandsSubmoduleSafety( test )
       a.moduleShell( 'git add README.md' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'local/staged', 
+      set : { update : `needs to be updated, but has local changes` }
+    })
 
     routinesPre[ 'local/commit' ] = ( env ) => 
     {
@@ -38988,22 +39025,29 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/conflict' ] = ( env ) => 
     {
-      a.moduleShell( 'git branch testbranch' );
+      a.moduleShell( 'git branch dev1' );
       let filePath = a.path.join( a.localPath, 'README.md');
-
       let data = a.fileProvider.fileRead({ filePath });
-      let data2 = 'master ' + data;
+
+      a.moduleShell( 'git checkout dev1' );
+      let data2 = 'dev1 ' + data;
       a.fileProvider.fileWrite({ filePath, data : data2 });
       a.moduleShell( 'git commit -am test' );
 
-      a.moduleShell( 'git checkout testbranch' );
-      let data3 = 'testbranch ' + data;
+      a.moduleShell( 'git checkout master' );
+      let data3 = 'master ' + data;
       a.fileProvider.fileWrite({ filePath, data : data3 });
       a.moduleShell( 'git commit -am test' );
-      a.moduleShell( 'git merge master' );
+      a.moduleShell( 'git merge dev1' );
 
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'local/conflict', 
+      set : { update : `needs to be updated, but has local changes` }
+    })
 
     routinesPre[ 'notGitReporOrNpmModule' ] = ( env ) => 
     {
@@ -39019,6 +39063,7 @@ function commandsSubmoduleSafety( test )
       if( env.isNpmModule )
       a.fileProvider.fileRename( a.path.join( a.localPath, 'package.json' ), a.path.join( a.localPath, 'package_disabled.json' ) );
     }
+   
     outputMap[ 'notGitReporOrNpmModule' ] = 
     {
       'download' : `it's not a git repository or npm module`,
@@ -39030,11 +39075,16 @@ function commandsSubmoduleSafety( test )
     {
       a.moduleShell( 'git remote set-url origin https://github.com/Wandalen/SomeModule.git' );
     }
-    outputMap[ 'different/origin' ] = 
-    {
-      'update' : `but has different origin`,
-      'versions.verify' : `but has different origin`,
-    }
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'different/origin', 
+      set : 
+      {
+        'update' : `but has different origin`,
+        'versions.verify' : `but has different origin`,
+      }
+    })
 
     routinesPre[ 'different/branch' ] = ( env ) => 
     {
