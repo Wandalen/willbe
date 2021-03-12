@@ -27856,7 +27856,7 @@ function commandSubmodulesGit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
+    test.identical( _.strCount( op.output, /origin1.*github.com.user\/local.git/ ), 2 );
     return null;
   });
 
