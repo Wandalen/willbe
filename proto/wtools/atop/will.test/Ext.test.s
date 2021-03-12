@@ -22330,7 +22330,6 @@ subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
-/* qqq : improve test coverage of submodulesVerify */
 function submodulesVerify( test )
 {
   let context = this;
@@ -38527,7 +38526,7 @@ let Self =
     // CUI
 
     commandsSeveral,
-    implyWithSubmodulesModulesList, /* qqq : cover all implies. ask how to */
+    implyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     // reflect
 
@@ -38836,4 +38835,4 @@ Self = wTestSuite( Self );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-})()
+})();
