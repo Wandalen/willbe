@@ -5881,23 +5881,23 @@ function hookHlink( test )
   let context = this;
   let a = context.assetFor( test, 'git-conflict' );
 
-  let originalShell = _.process.starter /* qqq : for Dmytro : ? */
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter /* qqq : for Dmytro : ? */
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  // let originalShell = _.process.starter /* aaa : for Dmytro : ? */ /* Dmytro : improved */
+  // ({
+  //   currentPath : a.abs( 'original' ),
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : a.ready,
+  //   mode : 'shell',
+  // })
+  //
+  // let cloneShell = _.process.starter /* aaa : for Dmytro : ? */ /* Dmytro : not used */
+  // ({
+  //   currentPath : a.abs( 'clone' ),
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : a.ready,
+  //   mode : 'shell',
+  // })
 
   /* - */
 
@@ -5911,9 +5911,9 @@ function hookHlink( test )
     return null;
   })
 
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell( `git clone original clone` );
 
   a.appStart( '.with original/ .call hlink beeping:0' )
