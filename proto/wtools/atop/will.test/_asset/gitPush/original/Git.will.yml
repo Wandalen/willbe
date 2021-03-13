@@ -15,6 +15,7 @@ step :
 
   git.pull.command :
     command : 'pull'
+    profile : 'test-profile'
 
   git.status.command :
     command : 'status'

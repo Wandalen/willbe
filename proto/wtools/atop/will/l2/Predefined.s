@@ -702,6 +702,7 @@ stepRoutineGitExecCommand.stepOptions =
 {
   command : null,
   hardLinkMaybe : 1,
+  profile : 'default',
 }
 
 stepRoutineGitExecCommand.uniqueOptions =
@@ -728,6 +729,7 @@ function stepRoutineGitPull( frame )
 stepRoutineGitPull.stepOptions =
 {
   dirPath : null,
+  profile : 'default',
 }
 
 stepRoutineGitPull.uniqueOptions =
@@ -845,6 +847,7 @@ stepRoutineGitSync.stepOptions =
 {
   commit : '-am "."',
   dirPath : null,
+  profile : 'default',
   dry : 0,
 }
 

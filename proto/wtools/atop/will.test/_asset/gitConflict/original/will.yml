@@ -11,6 +11,7 @@ step :
   pull.with.dir :
     inherit : git.pull
     dirPath : 'path::git'
+    profile : 'test-profile'
 
 build :
 
