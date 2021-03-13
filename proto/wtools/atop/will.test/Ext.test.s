@@ -32376,7 +32376,7 @@ function commandGitReset( test )
   let context = this;
   let a = context.assetFor( test, 'gitReset' );
 
-  /* - */
+  /* */
 
   begin().then( () =>
   {
@@ -32803,38 +32803,14 @@ File.txt
 
   function begin()
   {
-
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-
-    _.process.start
-    ({
-      execPath : 'git init --bare',
-      currentPath : a.abs( 'repo' ),
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    let cloneShell = _.process.starter
-    ({
-      currentPath : a.abs( 'clone' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* - */
-
-    cloneShell( 'git init' );
-    cloneShell( 'git remote add origin ../repo' );
-    cloneShell( 'git add --all' );
-    cloneShell( 'git commit -am first' );
-
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( 'clone' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     return a.ready;
   }
 }
