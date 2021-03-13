@@ -32169,57 +32169,7 @@ function commandGitPullRestoreHardlinkOnFail( test )
 
   /* */
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  a.ready.then( ( op ) =>
-  {
-    a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  /* */
-
-  a.ready.then( ( op ) =>
-  {
-    a.fileProvider.hardLink
-    ({
-      srcPath : a.abs( 'clone/f1.txt' ),
-      dstPath : a.abs( 'clone/f2.txt' ),
-      sync : 1,
-    });
-    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
-    return null;
-  })
-  originalShell( 'git commit -am second' );
-  cloneShell( 'git commit -am second' );
-
-  /* */
-
+  begin();
   a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
@@ -32292,6 +32242,37 @@ original
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.hardLink
+      ({
+        srcPath : a.abs( 'clone/f1.txt' ),
+        dstPath : a.abs( 'clone/f2.txt' ),
+        sync : 1,
+      });
+      a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+      return null;
+    })
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+    a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
+    return a.ready;
+  }
 }
 
 //
@@ -33667,6 +33648,8 @@ original/f.txt
   /* - */
 
   return a.ready;
+
+  /* */
 
   function begin()
   {
