@@ -32710,14 +32710,13 @@ function commandGitPull( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -32729,7 +32728,7 @@ function commandGitPull( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git.pull profile:${ profile }` })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32750,7 +32749,7 @@ function commandGitPull( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull v:0' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git.pull v:0 profile:${ profile }` })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32767,20 +32766,19 @@ function commandGitPull( test )
 
   begin().then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  });
-
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-  .then( ( op ) =>
-  {
     test.description = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git.pull profile:${ profile }` })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git.pull - succefull pulling with hardlinks';
@@ -32789,7 +32787,7 @@ function commandGitPull( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
     return null;
   });
@@ -32798,14 +32796,13 @@ function commandGitPull( test )
 
   begin().then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  });
-
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-  .then( ( op ) =>
-  {
     test.description = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
@@ -32851,7 +32848,7 @@ clone
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
 
-  a.appStartNonThrowing( '.with clone/ .git.pull v:5' )
+  a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'has local changes';
@@ -32901,7 +32898,7 @@ clone
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
 
-  a.appStartNonThrowing( '.with clone/ .git.pull v:5' )
+  a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -32968,7 +32965,7 @@ original
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull withSubmodules:1' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git.pull withSubmodules:1 profile:${ profile }` })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32989,7 +32986,7 @@ original
     return null;
   });
 
-  a.appStart( '.imply withSubmodules:2 .with clone/ .git.pull withSubmodules:1' )
+  a.appStart( `.imply withSubmodules:2 .with clone/ .git.pull withSubmodules:1 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -33006,12 +33003,8 @@ original
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -33068,14 +33061,13 @@ function commandGitPullRestoreHardlinkOnFail( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -33115,9 +33107,14 @@ function commandGitPullRestoreHardlinkOnFail( test )
 
   /* */
 
-  a.appStart( '.with clone/ .call hlink beeping:0' )
   a.ready.then( ( op ) =>
   {
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     return null;
@@ -33127,7 +33124,7 @@ function commandGitPullRestoreHardlinkOnFail( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with clone/ .git.pull v:5' )
+  a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -33191,12 +33188,8 @@ original
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 

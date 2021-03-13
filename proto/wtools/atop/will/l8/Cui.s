@@ -3202,6 +3202,9 @@ function commandGitPull( e )
 {
   let cui = this;
   cui._command_head( commandGitPull, arguments );
+  let profile = e.propertiesMap.profile;
+  if( 'profile' in e.propertiesMap )
+  delete e.propertiesMap.profile;
 
   _.routineOptions( commandGitPull, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -3220,13 +3223,13 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.verbosity,
+      profile,
     });
   }
 }
 
 commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPull.defaults.withSubmodules = 0;
-commandGitPull.defaults.profile = 'default';
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
