@@ -5888,15 +5888,15 @@ function hookGitPull( test )
 
   /* */
 
-  begin().then( () =>
-  {
-    return null;
-  });
-
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-  .then( ( op ) =>
+  begin().then( ( op ) =>
   {
     test.case = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     return null;
@@ -5911,7 +5911,7 @@ function hookGitPull( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
     return null;
   });
@@ -5951,29 +5951,18 @@ function hookGitPull( test )
       return null;
     });
 
-    let originalShell = _.process.starter
-    ({
-      currentPath : a.abs( 'original' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    originalShell( 'git init' );
-    originalShell( 'git add --all' );
-    originalShell( 'git commit -am first' );
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     a.shell( `git clone original clone` );
-
     a.ready.then( ( op ) =>
     {
       a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
       a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
       return null;
     });
-
-    originalShell( 'git commit -am second' );
-
+    a.shell({ currentPath, execPath : 'git commit -am second' });
     return a.ready;
   }
 }
@@ -6021,12 +6010,15 @@ function hookGitPullConflict( test )
   originalShell( 'git add --all' );
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
-
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.description = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -6813,11 +6805,16 @@ function hookGitSyncConflict( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.appStart( '.with clone/ .call hlink beeping:0' )
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.description = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -7129,7 +7126,6 @@ function hookGitSyncArguments( test )
 
   a.ready.then( ( op ) =>
   {
-    test.description = 'hardlink';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     return null;
