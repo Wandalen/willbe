@@ -5786,15 +5786,14 @@ function hookHlink( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
     return null;
-  })
+  });
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
@@ -5836,7 +5835,7 @@ hookHlink.description =
 `
 - same files are hardlinked
 - same files from different modules are not hardlinked
-`
+`;
 hookHlink.timeOut = 300000;
 
 //
@@ -5976,28 +5975,9 @@ function hookGitPullConflict( test )
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  /* */
 
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
-  /* - */
-
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
@@ -6006,12 +5986,14 @@ function hookGitPullConflict( test )
     return null;
   })
 
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell( `git clone original clone` );
   a.ready.then( ( op ) =>
   {
+    test.case = 'hardlink';
+
     test.description = 'hardlink';
     a.fileProvider.hardLink
     ({
@@ -6019,7 +6001,6 @@ function hookGitPullConflict( test )
       dstPath : a.abs( 'clone/f2.txt' ),
       sync : 1,
     });
-
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
@@ -6048,7 +6029,7 @@ copy
 original/f.txt
 copy
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -6057,15 +6038,16 @@ clone
 original/f.txt
 copy
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
-  originalShell( 'git commit -am second' );
+  /* */
 
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.appStartNonThrowing( '.with clone/ .call GitPull v:5' )
   .then( ( op ) =>
   {
@@ -6112,10 +6094,11 @@ clone
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
-  cloneShell( 'git commit -am second' );
+  /* */
 
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
   a.appStartNonThrowing( '.with clone/ .call GitPull v:5' )
   .then( ( op ) =>
   {
@@ -6173,12 +6156,12 @@ original
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookGitPullConflict */
+}
 
 hookGitPullConflict.timeOut = 300000;
 hookGitPullConflict.description =
@@ -6303,25 +6286,11 @@ function hookGitPush( test )
     });
 
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    /* */
-
-    let originalShell = _.process.starter
-    ({
-      currentPath : a.abs( 'original' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    originalShell( 'git init' );
-    originalShell( 'git remote add origin ../repo' );
-    originalShell( 'git add --all' );
-    originalShell( 'git commit -am first' );
-
-    /* */
-
+    let currentPath = a.abs( 'original' ); 
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     return a.ready;
   }
 }
