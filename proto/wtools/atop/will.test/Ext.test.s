@@ -1634,6 +1634,16 @@ function openModuleWithLostSubmodule( test )
 }
 
 openModuleWithLostSubmodule.rapidity = -1;
+openModuleWithLostSubmodule.description =
+`
+Routine is intended to verify that utility throws error when local submodule is lost.
+Utility should throw error even if submodule exists in another directory of module and
+utility command has part '.with' :
+will .with ** .export
+
+The regular commands do not depend of submodules presence, the export commands depend.
+Maybe, some scenarios exist where utility does not throw error.
+`;
 
 //
 
