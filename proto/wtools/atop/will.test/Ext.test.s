@@ -6891,60 +6891,23 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
   }
   let linkPath = config.path.hlink;
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
+  /* */
 
-  /* - */
-
-  a.ready.then( ( op ) =>
+  begin().then( () =>
   {
-    a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-  a.ready.then( () =>
-  {
-    a.fileProvider.hardLink
-    ({
-      srcPath : a.abs( 'clone/f1.txt' ),
-      dstPath : a.abs( linkPath, 'f1.lnk' ),
-      sync : 1,
-    });
-    a.fileProvider.hardLink
-    ({
-      srcPath : a.abs( 'clone/f2.txt' ),
-      dstPath : a.abs( linkPath, 'f2.lnk' ),
-      sync : 1,
-    });
-    return null;
-  });
-
-  a.ready.then( () =>
-  {
+    test.case = 'hardlink';
+    hardlink( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) );
+    hardlink( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
-
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
-
     return null;
   })
 
   /* */
 
-  originalShell( 'git commit -am second' );
-
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.appStartNonThrowing( '.with clone/ .call GitSync' )
   .then( ( op ) =>
   {
@@ -7011,10 +6974,40 @@ original/f.txt
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
+
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+    return a.ready;
+  }
+
+  /* */
+
+  function hardlink( src, dst )
+  {
+    a.fileProvider.hardLink
+    ({
+      srcPath : src,
+      dstPath : dst,
+      sync : 1,
+    });
+  }
 }
 
 //
