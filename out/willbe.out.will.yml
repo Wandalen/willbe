@@ -233,10 +233,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal/l4.will.yml
           - ../proto/wtools/atop/will.test/_asset/brokenOut
           - ../proto/wtools/atop/will.test/_asset/brokenOut/module1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/brokenOut/module1/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/brokenOut/module1/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/brokenOut/module1/.ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/brokenOut/module1/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/brokenOut/module1/+out
           - >-
             ../proto/wtools/atop/will.test/_asset/brokenOut/module1/+out/module1.out.will.yml
@@ -279,8 +277,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/.ex.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/.module
+          - ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/.module/ModuleForTesting1
           - >-
@@ -519,8 +516,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/+out
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/+out/ForGit.txt
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/.module
+          - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/.module/ForGit.txt
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/out
@@ -612,12 +608,10 @@ module:
             ../proto/wtools/atop/will.test/_asset/corruptedOutfileSyntax/+sub.out
           - >-
             ../proto/wtools/atop/will.test/_asset/corruptedOutfileSyntax/+sub.out/sub.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/corruptedOutfileSyntax/sub.out
+          - ../proto/wtools/atop/will.test/_asset/corruptedOutfileSyntax/sub.out
           - >-
             ../proto/wtools/atop/will.test/_asset/corruptedOutfileSyntax/sub.out/sub.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/corruptedOutfileUnknownSection
+          - ../proto/wtools/atop/will.test/_asset/corruptedOutfileUnknownSection
           - >-
             ../proto/wtools/atop/will.test/_asset/corruptedOutfileUnknownSection/sub.ex.will.yml
           - >-
@@ -836,8 +830,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportAuto/manual.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportAuto/will.yml
           - ../proto/wtools/atop/will.test/_asset/exportAuto/local
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportAuto/local/LocalFile.txt
+          - ../proto/wtools/atop/will.test/_asset/exportAuto/local/LocalFile.txt
           - ../proto/wtools/atop/will.test/_asset/exportAuto/submodule
           - >-
             ../proto/wtools/atop/will.test/_asset/exportAuto/submodule/local.will.yml
@@ -848,8 +841,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/+submodule.out.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/submodule.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module
+          - ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module
           - >-
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module/submodule.will.yml
           - >-
@@ -871,8 +863,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/exportDefaultPath/reflector.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportDisabledModule
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportDisabledModule/will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportDisabledModule/will.yml
           - ../proto/wtools/atop/will.test/_asset/exportImplicit
           - ../proto/wtools/atop/will.test/_asset/exportImplicit/explicit
           - >-
@@ -900,6 +891,10 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.release.js
+          - ../proto/wtools/atop/will.test/_asset/exportMinimal
+          - ../proto/wtools/atop/will.test/_asset/exportMinimal/will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportMinimal/proto
+          - ../proto/wtools/atop/will.test/_asset/exportMinimal/proto/File.js
           - ../proto/wtools/atop/will.test/_asset/exportMultiple
           - ../proto/wtools/atop/will.test/_asset/exportMultiple/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportMultiple/.im.will.yml
@@ -920,8 +915,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/out
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/out/submodule.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/out-copy
+          - ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/out-copy
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/out-copy/submodule.out.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/proto
@@ -930,17 +924,14 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleBroken/proto/File.release.js
           - ../proto/wtools/atop/will.test/_asset/exportMultipleDoc
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/.ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/.im.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/doc.ex.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/doc.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/doc
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/doc/file.md
+          - ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/doc/file.md
           - ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleDoc/proto/File.debug.js
@@ -992,8 +983,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportMultipleExported/proto/File.debug.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleExported/proto/File.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportMultipleExported/sub.out
+          - ../proto/wtools/atop/will.test/_asset/exportMultipleExported/sub.out
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMultipleExported/sub.out/submodule.debug.out.tgs
           - >-
@@ -1116,8 +1106,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithReflector/proto/include/MustBeExcluded.s
           - ../proto/wtools/atop/will.test/_asset/exportWithSubmodules
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/a.will.yml
           - >-
@@ -1172,8 +1161,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/bc-named.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/c.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto
+          - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/a
           - >-
@@ -1204,10 +1192,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test/File.test.js
-          - ../proto/wtools/atop/will.test/_asset/exportMinimal
-          - ../proto/wtools/atop/will.test/_asset/exportMinimal/will.yml
-          - ../proto/wtools/atop/will.test/_asset/exportMinimal/proto
-          - ../proto/wtools/atop/will.test/_asset/exportMinimal/proto/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted
           - >-
@@ -1251,11 +1235,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/functionPlatform
           - ../proto/wtools/atop/will.test/_asset/functionPlatform/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/functionPlatform/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/functionPlatform/proto/File.js
+          - ../proto/wtools/atop/will.test/_asset/functionPlatform/proto/File.js
           - ../proto/wtools/atop/will.test/_asset/functionStringsJoin
-          - >-
-            ../proto/wtools/atop/will.test/_asset/functionStringsJoin/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/functionStringsJoin/.will.yml
           - ../proto/wtools/atop/will.test/_asset/functionStringsJoin/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/functionStringsJoin/proto/Echo.js
@@ -1290,8 +1272,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/gitPush/original/GitTag.will.yml
           - ../proto/wtools/atop/will.test/_asset/gitPush/original/will.yml
           - ../proto/wtools/atop/will.test/_asset/gitPush/original/.local
-          - >-
-            ../proto/wtools/atop/will.test/_asset/gitPush/original/.local/f1.txt
+          - ../proto/wtools/atop/will.test/_asset/gitPush/original/.local/f1.txt
           - >-
             ../proto/wtools/atop/will.test/_asset/gitPush/original/.local/will.yml
           - ../proto/wtools/atop/will.test/_asset/gitReset
@@ -1366,8 +1347,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/a.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/.module
+          - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/.module/ModuleForTesting1
           - >-
@@ -1376,8 +1356,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/.module/ModuleForTesting1b
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/.module/ModuleForTesting1b/.gitkeep
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/group10
+          - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/group10
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/group1/group10/a0.will.yml
           - >-
@@ -1397,19 +1376,22 @@ module:
             ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group1/a.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group1/b.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group1/group10
+          - ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group1/group10
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group1/group10/a0.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group2
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyRemote/group2/c.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin/z.will.yml
+          - ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin/z.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin/group1/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/import-auto
+          - ../proto/wtools/atop/will.test/_asset/import-auto/module
+          - ../proto/wtools/atop/will.test/_asset/import-auto/module/.module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/import-auto/module/.module/Proto
           - ../proto/wtools/atop/will.test/_asset/importAuto
           - ../proto/wtools/atop/will.test/_asset/importAuto/Auto.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/importAuto/Auto.im.will.yml
@@ -1420,9 +1402,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/importAuto/module
           - >-
             ../proto/wtools/atop/will.test/_asset/importAuto/module/ModuleForTesting12.will.yml
-          - ../proto/wtools/atop/will.test/_asset/importAuto/module/.module
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importAuto/module/.module/Proto
           - ../proto/wtools/atop/will.test/_asset/importAuto/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/importAuto/proto/WithSubmodules.s
@@ -1508,10 +1487,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/original
           - >-
             ../proto/wtools/atop/will.test/_asset/modulesGitSync/original/.gitignore
-          - >-
-            ../proto/wtools/atop/will.test/_asset/modulesGitSync/original/f1.txt
-          - >-
-            ../proto/wtools/atop/will.test/_asset/modulesGitSync/original/f2.txt
+          - ../proto/wtools/atop/will.test/_asset/modulesGitSync/original/f1.txt
+          - ../proto/wtools/atop/will.test/_asset/modulesGitSync/original/f2.txt
           - >-
             ../proto/wtools/atop/will.test/_asset/modulesGitSync/original/GitSync.will.yml
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super
@@ -1519,8 +1496,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/.gitignore
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/f1.txt
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/f2.txt
-          - >-
-            ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/will.yml
+          - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.im.will.yml
@@ -1540,8 +1516,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/npmFromWillfile/Keywords.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/npmFromWillfile/License.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/npmFromWillfile/Name.will.yml
+          - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/Name.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/npmFromWillfile/NpmName.will.yml
           - >-
@@ -1576,9 +1551,25 @@ module:
           - ../proto/wtools/atop/will.test/_asset/openNonWillfile/dir
           - >-
             ../proto/wtools/atop/will.test/_asset/openNonWillfile/dir/.will.state.json
-          - ../proto/wtools/atop/will.test/_asset/pathComposite
+          - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule
+          - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/will.yml
+          - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/proto
           - >-
-            ../proto/wtools/atop/will.test/_asset/pathComposite/Module1.will.yml
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/proto/file.txt
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/submodule2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/submodule2/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/submodule2/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/submodule2/out/submodule.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/submodule2/out/debug
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/submodule2/out/debug/will.yml
+          - ../proto/wtools/atop/will.test/_asset/pathComposite
+          - ../proto/wtools/atop/will.test/_asset/pathComposite/Module1.will.yml
           - ../proto/wtools/atop/will.test/_asset/performance
           - ../proto/wtools/atop/will.test/_asset/performance/new-out-file
           - >-
@@ -1622,8 +1613,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/reflectInherit/proto/File.s
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectInherit/proto/File.test.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectInherit/proto/some.test
+          - ../proto/wtools/atop/will.test/_asset/reflectInherit/proto/some.test
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectInherit/proto/some.test/File2.js
           - ../proto/wtools/atop/will.test/_asset/reflectInheritSubmodules
@@ -1657,8 +1647,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/reflectInheritSubmodules/module/proto2
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectInheritSubmodules/module/proto2/File2.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectNothingFromSubmodules
+          - ../proto/wtools/atop/will.test/_asset/reflectNothingFromSubmodules
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectNothingFromSubmodules/.ex.will.yml
           - >-
@@ -1669,15 +1658,63 @@ module:
             ../proto/wtools/atop/will.test/_asset/reflectNothingFromSubmodules/proto/Single.s
           - ../proto/wtools/atop/will.test/_asset/reflectNpmModules
           - ../proto/wtools/atop/will.test/_asset/reflectNpmModules/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectorMasks
+          - ../proto/wtools/atop/will.test/_asset/reflectorMasks/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/build.txt.js
+          - ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/manual.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/tutorial.md
+          - ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/proto.two
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/proto.two/script.js
+          - ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/import.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/proto/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/proto/File2.js
+          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStep
+          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStep/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStep/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionStep/proto/File.js
+          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing/proto/File.js
+          - ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix/proto/Source.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/proto/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/proto/File2.js
           - ../proto/wtools/atop/will.test/_asset/reflectRemoteGit
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectRemoteGit/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectRemoteGit/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/reflectRemoteHttp
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectRemoteHttp/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectRemoteHttp/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/reflectSelectingDst
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectSelectingDst/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/reflectSelectingDst/.will.yml
           - ../proto/wtools/atop/will.test/_asset/reflectSelectingDst/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectSelectingDst/proto/Single.s
@@ -1731,8 +1768,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/reflectWithOptions/proto/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectWithOptions/proto/File.test.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectWithOptionsDstRewriting
+          - ../proto/wtools/atop/will.test/_asset/reflectWithOptionsDstRewriting
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectWithOptionsDstRewriting/will.yml
           - >-
@@ -1746,60 +1782,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/reflectWithOptionsLinking/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectWithOptionsLinking/proto/File.js
-          - ../proto/wtools/atop/will.test/_asset/reflectorMasks
-          - ../proto/wtools/atop/will.test/_asset/reflectorMasks/.will.yml
-          - ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/build.txt.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/manual.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/package.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/tutorial.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/proto.two
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorMasks/proto/proto.two/script.js
-          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStep
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionStep/.will.yml
-          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStep/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionStep/proto/File.js
-          - ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing/.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionStepThrowing/proto/File.js
-          - ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/import.will.yml
-          - ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/proto/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorOptionsCheck/proto/File2.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/proto/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorWithOptionsFromPredefined/proto/File2.js
-          - ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix/.will.yml
-          - ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/reflectorsCommonPrefix/proto/Source.js
           - ../proto/wtools/atop/will.test/_asset/renormalization
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/.will.yml
@@ -1872,8 +1854,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/runWillbe/wConsequence.out.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/runWillbe/wInstancing.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/runWillbe/wLogger.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/runWillbe/wLogger.out.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/runWillbe/wLoggerToJs.out.will.yml
           - ../proto/wtools/atop/will.test/_asset/runWillbe/wTools.out.will.yml
@@ -1918,10 +1899,13 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/single with
             space/proto/Single.s
+          - ../proto/wtools/atop/will.test/_asset/stepBuild
+          - ../proto/wtools/atop/will.test/_asset/stepBuild/bad1.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepBuild/bad2.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepBuild/basic.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShell
           - ../proto/wtools/atop/will.test/_asset/stepShell/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue
+          - ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue
           - >-
             ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellVerbosity
@@ -1945,22 +1929,18 @@ module:
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated/module/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated/module/proto/TestFile
-          - ../proto/wtools/atop/will.test/_asset/step-submodulesDownload
+          - ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload
           - >-
-            ../proto/wtools/atop/will.test/_asset/step-submodulesDownload/.will.yml
-          - ../proto/wtools/atop/will.test/_asset/step-submodulesDownload/proto
+            ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/proto
           - >-
-            ../proto/wtools/atop/will.test/_asset/step-submodulesDownload/proto/Simple.js
+            ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/proto/Simple.js
           - ../proto/wtools/atop/will.test/_asset/stepView
           - ../proto/wtools/atop/will.test/_asset/stepView/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView/File.html
           - ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck
           - >-
             ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck/.will.yaml
-          - ../proto/wtools/atop/will.test/_asset/stepBuild
-          - ../proto/wtools/atop/will.test/_asset/stepBuild/bad1.will.yml
-          - ../proto/wtools/atop/will.test/_asset/stepBuild/bad2.will.yml
-          - ../proto/wtools/atop/will.test/_asset/stepBuild/basic.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules
           - ../proto/wtools/atop/will.test/_asset/submodules/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules/.im.will.yml
@@ -1968,10 +1948,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/submodules/proto/WithSubmodules.s
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+.module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+.module/ModuleForTesting2
@@ -2034,10 +2012,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken1/proto/WithSubmodules.s
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken2
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module/ModuleForTesting2
@@ -2045,8 +2021,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module/ModuleForTesting2/out
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module/ModuleForTesting2/out/wModuleForTesting2.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module-copy
+          - ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module-copy
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken2/.module-copy/ModuleForTesting2
           - >-
@@ -2099,10 +2074,16 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesDownloadCrlf
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadCrlf/.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDownloadCrlf/module
+          - ../proto/wtools/atop/will.test/_asset/submodulesDownloadCrlf/module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadCrlf/module/submodule.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDownloadErrors
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadErrors/bad.will.yml
@@ -2113,13 +2094,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesDownloadNpm
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadNpm/.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesGit
           - ../proto/wtools/atop/will.test/_asset/submodulesGit/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesGit/.im.will.yml
@@ -2186,18 +2160,15 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesRemoteRepos/proto/WithSubmodules.s
           - ../proto/wtools/atop/will.test/_asset/submodulesShell
           - ../proto/wtools/atop/will.test/_asset/submodulesShell/.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesShell/Named.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesShell/Named.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdate
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesUpdate/+.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/+.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdate/proto/WithSubmodules.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch
+          - ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/.will.yml
           - >-
@@ -2215,8 +2186,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/.ex.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/module
+          - ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/module/A.will.yml
           - >-
@@ -2258,14 +2228,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/transpileOptions/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/transpileOptions/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/transpileOptions/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/transpileOptions/proto/File.js
+          - ../proto/wtools/atop/will.test/_asset/transpileOptions/proto/File.js
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported/+sub.out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoAnonExported/+sub.out/debug
+          - ../proto/wtools/atop/will.test/_asset/twoAnonExported/+sub.out/debug
           - >-
             ../proto/wtools/atop/will.test/_asset/twoAnonExported/+sub.out/debug/File.debug.js
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported/+sub.out/out
@@ -2301,8 +2269,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/twoAnonExported/sub/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported/sub.out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoAnonExported/sub.out/debug
+          - ../proto/wtools/atop/will.test/_asset/twoAnonExported/sub.out/debug
           - >-
             ../proto/wtools/atop/will.test/_asset/twoAnonExported/sub.out/debug/File.debug.js
           - ../proto/wtools/atop/will.test/_asset/twoAnonExported/sub.out/out
@@ -2328,10 +2295,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/twoAnonExported/super.out/release/File.release.js
           - ../proto/wtools/atop/will.test/_asset/twoDotlessExported
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoDotlessExported/ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoDotlessExported/im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/twoDotlessExported/ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/twoDotlessExported/im.will.yml
           - ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+sub.out
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+sub.out/sub.out.will.yml
@@ -2343,8 +2308,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+sub.out/release
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+sub.out/release/File.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+super.out
+          - ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+super.out
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessExported/+super.out/supermodule.out.will.yml
           - >-
@@ -2426,14 +2390,12 @@ module:
             ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/+super.out/release/File.debug.js
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/+super.out/release/File.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/proto
+          - ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/proto/File.debug.js
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/proto/File.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/sub
+          - ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/sub
           - >-
             ../proto/wtools/atop/will.test/_asset/twoDotlessSingleExported/sub/will.yml
           - >-
@@ -2486,8 +2448,7 @@ module:
             ../proto/wtools/atop/will.test/_asset/twoExported/+super.out/debug/File.debug.js
           - >-
             ../proto/wtools/atop/will.test/_asset/twoExported/+super.out/debug/File.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoExported/+super.out/release
+          - ../proto/wtools/atop/will.test/_asset/twoExported/+super.out/release
           - >-
             ../proto/wtools/atop/will.test/_asset/twoExported/+super.out/release/File.debug.js
           - >-
@@ -2520,10 +2481,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/twoExported/super.out/release/File.release.js
           - ../proto/wtools/atop/will.test/_asset/twoInExported
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoInExported/sub.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoInExported/sub.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/twoInExported/sub.ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/twoInExported/sub.im.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/super.ex.will.yml
           - >-
@@ -2534,15 +2493,13 @@ module:
           - ../proto/wtools/atop/will.test/_asset/twoInExported/+sub.out/debug
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/+sub.out/debug/File.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoInExported/+sub.out/release
+          - ../proto/wtools/atop/will.test/_asset/twoInExported/+sub.out/release
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/+sub.out/release/File.release.js
           - ../proto/wtools/atop/will.test/_asset/twoInExported/+super.out
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/+super.out/supermodule.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoInExported/+super.out/debug
+          - ../proto/wtools/atop/will.test/_asset/twoInExported/+super.out/debug
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/+super.out/debug/File.debug.js
           - >-
@@ -2564,15 +2521,13 @@ module:
           - ../proto/wtools/atop/will.test/_asset/twoInExported/sub.out/debug
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/sub.out/debug/File.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoInExported/sub.out/release
+          - ../proto/wtools/atop/will.test/_asset/twoInExported/sub.out/release
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/sub.out/release/File.release.js
           - ../proto/wtools/atop/will.test/_asset/twoInExported/super.out
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/super.out/supermodule.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/twoInExported/super.out/debug
+          - ../proto/wtools/atop/will.test/_asset/twoInExported/super.out/debug
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/super.out/debug/File.debug.js
           - >-
@@ -2583,15 +2538,15 @@ module:
             ../proto/wtools/atop/will.test/_asset/twoInExported/super.out/release/File.debug.js
           - >-
             ../proto/wtools/atop/will.test/_asset/twoInExported/super.out/release/File.release.js
+          - ../proto/wtools/atop/will.test/_asset/verbosity-step-delete
+          - ../proto/wtools/atop/will.test/_asset/verbosity-step-delete/proto
           - ../proto/wtools/atop/will.test/_asset/verbosityStepDelete
-          - >-
-            ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/.will.yml
           - ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/+proto
           - ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/+proto/B
           - ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/+proto/A
           - >-
             ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/+proto/A/file
-          - ../proto/wtools/atop/will.test/_asset/verbosityStepDelete/proto
           - ../proto/wtools/atop/will.test/_asset/verbosityStepPrintName
           - >-
             ../proto/wtools/atop/will.test/_asset/verbosityStepPrintName/.will.yml
@@ -2605,21 +2560,17 @@ module:
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Enabled.json
           - >-
             ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Interpreters.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Keywords.json
+          - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Keywords.json
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/License.json
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Name.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Named.will.yml
+          - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Named.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/willfileFromNpm/NpmScripts.json
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/package.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/willfileFromNpm/PathMain.json
+          - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/PathMain.json
           - >-
             ../proto/wtools/atop/will.test/_asset/willfileFromNpm/PathRepository.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Submodule.json
+          - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Submodule.json
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Version.json
     submodule:
       wTools:

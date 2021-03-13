@@ -1,6 +1,6 @@
 {
   "name": "willbe",
-  "version": "0.5.319",
+  "version": "0.5.320",
   "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors": [
@@ -25,17 +25,17 @@
     "out"
   ],
   "bin": {
-    "single-process-will": "proto/wtools/atop/will/entry/Exec",
-    "debug-will": "proto/wtools/atop/will/entry/ExecDebug",
-    "unrestricted-will": "proto/wtools/atop/will/entry/ExecUnrestricted",
-    "will": "proto/wtools/atop/will/entry/ExecUnrestricted"
+    "will.singleproc": "proto/wtools/atop/will/entry/Exec",
+    "will.debug": "proto/wtools/atop/will/entry/ExecDebug",
+    "will": "proto/wtools/atop/will/entry/ExecUnrestricted",
+    "will.unrestricted": "proto/wtools/atop/will/entry/ExecUnrestricted"
   },
   "scripts": {
     "test": "wtest .run 'proto/**' rapidity:-1",
     "docgen": "wdocgen .build proto",
-    "single-process-will": "node proto/wtools/atop/will/entry/Exec",
-    "debug-will": "node proto/wtools/atop/will/entry/ExecDebug",
-    "unrestricted-will": "node proto/wtools/atop/will/entry/ExecUnrestricted",
+    "will.singleproc": "node proto/wtools/atop/will/entry/Exec",
+    "will.debug": "node proto/wtools/atop/will/entry/ExecDebug",
+    "will.unrestricted": "node proto/wtools/atop/will/entry/ExecUnrestricted",
     "will": "node proto/wtools/atop/will/entry/ExecUnrestricted",
     "docker-build-centos": "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
     "docker-build-ubuntu": "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
