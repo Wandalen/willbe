@@ -7213,25 +7213,25 @@ function pathsResolveOfSubmodulesLocal( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' ); /* aaa xxx : ask */ /* Dmytro : fixed */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
