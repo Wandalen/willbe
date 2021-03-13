@@ -24751,7 +24751,7 @@ function stepGitStatus( test )
   function begin()
   {
     a.ready.then( () => a.reflect() );
-    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null });
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
@@ -24785,62 +24785,17 @@ function stepGitSync( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  a.ready.then( () =>
-  {
-    a.reflect();
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  });
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  originalShell( 'git push -u origin --all' );
-  a.shell( 'git clone repo/ clone' );
-
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with original/GitSync .build git.sync.default - committing and pushing, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
-
+  });
   a.appStart( '.with original/GitSync .build git.sync.default' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.default - committing and pushing, without message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
@@ -24848,149 +24803,142 @@ function stepGitSync( test )
     test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
     return null;
   })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.with clone/GitSync .build git.sync.default - only pulling, without message';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am second' );
-  originalShell( 'git push -u origin --all' );
-
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin --all' });
   a.appStart( '.with clone/GitSync .build git.sync.default' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/GitSync .build git.sync.default - only pulling, without message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
     return null;
-  })
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'second' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    test.case = '.with original/GitSync .build git.sync.default - only pushing, without message';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     return null;
-  })
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am third' );
-
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am third' });
   a.appStart( '.with original/GitSync .build git.sync.default' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.default - only pushing, without message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
     return null;
-  })
-  cloneShell( 'git pull' );
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'third' ), 1 );
+    test.identical( _.strCount( op.output, 'first' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    test.case = '.with original/GitSync .build git.sync.message - committing, pulling and pushing with message';
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "fourth"' );
-  cloneShell( 'git push -u origin --all' );
-
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "fourth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
   a.appStart( '.with original/GitSync .build git.sync.message' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .build git.sync.message - committing, pulling and pushing with message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
     return null;
-  })
-  originalShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'fourth' ), 1 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
-  cloneShell( 'git pull' )
-  cloneShell( 'git log' )
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'fifth' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
+    test.case = '.imply v:0 .with original/GitSync .build git.sync.message - checking of option verbosity';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
-
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
   a.appStart( '.imply v:0 .with original/GitSync .build git.sync.message' )
   .then( ( op ) =>
   {
-    test.case = '.imply v:0 .with original/GitSync .build git.sync.message - checking of option verbosity';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
     return null;
-  })
+  });
 
   /* */
 
-  cloneShell( 'git pull' );
-  a.ready.then( () =>
+  begin().then( () =>
   {
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
-  })
-  cloneShell( 'git commit -am "sixth"' );
-  cloneShell( 'git push -u origin --all' );
-
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
   a.appStart( '.with original/GitSync .build git.sync.dry' )
   .then( ( op ) =>
   {
@@ -25015,7 +24963,26 @@ function stepGitSync( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
+    a.shell( 'git clone repo/ clone' );
+    return a.ready;
+  }
 }
+
+stepGitSync.rapidity = -1;
 
 //
 
