@@ -20016,7 +20016,7 @@ function submodulesDownloadInvalidUrl( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodules-download-errors' );
-  
+
   a.reflect();
 
   /* - */
@@ -20044,9 +20044,9 @@ function submodulesDownloadInvalidUrl( test )
 }
 
 submodulesDownloadInvalidUrl.timeOut = 300000;
-submodulesDownloadInvalidUrl.description = 
+submodulesDownloadInvalidUrl.description =
 `
-Module path is contain unsupported protocol. 
+Module path is contain unsupported protocol.
 Utility should throw error and exit with non-zero code.
 `
 
@@ -29305,14 +29305,13 @@ function commandModulesGit( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -29396,7 +29395,7 @@ function commandModulesGit( test )
     return null;
   })
 
-  a.appStart( '.with original/ .modules.git status' )
+  a.appStart( `.with original/ .modules.git status profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original .modules.git status - committing and pushing, without remote submodule';
@@ -29491,14 +29490,14 @@ function commandModulesGit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/git-sync.git' ), 2 );
+    test.identical( _.strCount( op.output, /origin1.*github.com.user\/git-sync\.git/ ), 2 );
     return null;
   })
   localShell( 'git remote -v' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
+    test.identical( _.strCount( op.output, /origin1.*github.com.user\/local\.git/ ), 2 );
     return null;
   });
 
@@ -29506,12 +29505,8 @@ function commandModulesGit( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 

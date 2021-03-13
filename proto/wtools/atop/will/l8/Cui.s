@@ -2403,6 +2403,9 @@ function commandModulesGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -2429,13 +2432,13 @@ function commandModulesGit( e )
       command : e.subject,
       verbosity : cui.verbosity,
       hardLinkMaybe,
+      profile,
     });
   }
 }
 
 commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandModulesGit.defaults.withSubmodules = 1;
-commandModulesGit.defaults.profile = 'default';
 commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
