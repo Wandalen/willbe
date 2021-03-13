@@ -23479,7 +23479,6 @@ clone
   /* */
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-
   a.appStartNonThrowing( `.with clone/Git.* .build git.pull` )
   .then( ( op ) =>
   {
@@ -23621,33 +23620,18 @@ copy
 
   function begin()
   {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      return null
-    });
-
-    let originalShell = _.process.starter
-    ({
-      currentPath : a.abs( 'original' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    originalShell( 'git init' );
-    originalShell( 'git add --all' );
-    originalShell( 'git commit -am first' );
+    a.ready.then( () => a.reflect() );
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     a.shell( `git clone original clone` );
-
     a.ready.then( ( op ) =>
     {
       a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
       a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
       return null;
     });
-
     return a.ready;
   }
 }
@@ -23674,44 +23658,9 @@ function stepGitDifferentCommands( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  /* */
 
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    a.reflect();
-    return null
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'copy\n' );
-    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'copy\n' );
-    return null;
-  })
-
+  begin();
   a.appStart( '.with clone/Git.* .build git.status' )
   .then( ( op ) =>
   {
@@ -23788,6 +23737,25 @@ function stepGitDifferentCommands( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'copy\n' );
+      a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'copy\n' );
+      return null;
+    });
+    return a.ready;
+  }
 }
 
 //
