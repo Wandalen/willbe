@@ -224,7 +224,6 @@ function assetFor( test, name )
 //     }
 //     catch( err )
 //     {
-//       debugger;
 //       _.Consequence().take( null ).delay( 3000 ).deasync();
 //       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
 //       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
@@ -290,14 +289,11 @@ function assetFor( test, name )
 //
 //   logger.log( file.productExportInfo() );
 //
-//   debugger;
 //   file.product.nodes.map( null, ( node ) =>
 //   {
 //     let found = file.nodeSearch( node, 'setsAreIdentical' );
 //     if( _.mapKeys( found ).length )
-//     debugger;
 //   });
-//   debugger;
 //
 //   file.arrange();
 // }
@@ -381,7 +377,7 @@ function buildSimple( test )
 function openNamedFast( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   a.reflect()
 
   a.will.prefer
@@ -400,7 +396,7 @@ function openNamedFast( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     check( opener1 );
     return null;
   })
@@ -409,7 +405,7 @@ function openNamedFast( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -420,7 +416,7 @@ function openNamedFast( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     check( opener2 );
     return null;
   })
@@ -429,7 +425,7 @@ function openNamedFast( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -551,7 +547,6 @@ function openNamedFast( test )
     _.debugger = 1;
     debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    debugger;
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
@@ -565,7 +560,7 @@ function openNamedFast( test )
 function openNamedForming( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   a.reflect();
 
   a.will.prefer
@@ -610,7 +605,7 @@ function openNamedForming( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     check( opener1 );
     return null;
   })
@@ -619,7 +614,7 @@ function openNamedForming( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -630,7 +625,7 @@ function openNamedForming( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     check( opener2 );
     return null;
   })
@@ -639,7 +634,7 @@ function openNamedForming( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -777,7 +772,7 @@ function openNamedForming( test )
 function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener1, ready1, opener2, ready2;
   a.reflect();
 
@@ -909,7 +904,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 function openSkippingSubButAttachedWillfiles( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener1, ready1, opener2, ready2;
   a.reflect();
 
@@ -1062,7 +1057,7 @@ function openSkippingSubButAttachedWillfiles( test )
 function openAnon( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-anon-exported' );
+  let a = context.assetFor( test, 'twoAnonExported' );
   a.reflect();
 
   /* */
@@ -1077,7 +1072,7 @@ function openAnon( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-anon-exported/.';
+    test.case = 'opened filePath : twoAnonExported/.';
     check( opener1 );
     return null;
   })
@@ -1086,7 +1081,7 @@ function openAnon( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-anon-exported/.';
+    test.case = 'opened filePath : twoAnonExported/.';
     test.true( err === undefined );
     opener1.finit();
     if( err )
@@ -1098,7 +1093,7 @@ function openAnon( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-anon-exported/.';
+    test.case = 'opened dirPath : twoAnonExported/.';
     check( opener2 );
     return null;
   })
@@ -1107,7 +1102,7 @@ function openAnon( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-anon-exported/.';
+    test.case = 'opened dirPath : twoAnonExported/.';
     test.true( err === undefined );
     opener2.finit();
     if( err )
@@ -1194,7 +1189,7 @@ function openAnon( test )
 function openOutNamed( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   a.reflect();
 
   var opener1 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super.out/supermodule' ) });
@@ -1206,14 +1201,14 @@ function openOutNamed( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super.out/supermodule';
+    test.case = 'opened filePath : twoExported/super.out/supermodule';
     check( opener1 );
     return null;
   })
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super.out/supermodule';
+    test.case = 'opened filePath : twoExported/super.out/supermodule';
     test.true( err === undefined );
     opener1.finit();
     if( err )
@@ -1225,14 +1220,14 @@ function openOutNamed( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super.out/supermodule';
+    test.case = 'opened dirPath : twoExported/super.out/supermodule';
     check( opener2 );
     return null;
   })
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super.out/supermodule';
+    test.case = 'opened dirPath : twoExported/super.out/supermodule';
     test.true( err === undefined );
     opener2.finit();
     if( err )
@@ -1327,7 +1322,7 @@ function openOutNamed( test )
 function openCurruptedUnknownField( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-infile-unknown-field' );
+  let a = context.assetFor( test, 'corruptedInfileUnknownField' );
   let opener;
 
   /* - */
@@ -1378,7 +1373,7 @@ function openCurruptedUnknownField( test )
 
   .finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : corrupted-infile-unknown-field/sub';
+    test.case = 'opened dirPath : corruptedInfileUnknownField/sub';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -1458,7 +1453,7 @@ function openCurruptedUnknownField( test )
 function openerClone( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -1688,7 +1683,7 @@ function openerClone( test )
 function moduleClone( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -1872,9 +1867,7 @@ function moduleClone( test )
     test.identical( a.rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( a.rel( opener2.remotePath ), null );
 
-    debugger;
     opener2.finit();
-    debugger;
     opener.openedModule = null;
 
     test.description = 'instances';
@@ -1920,10 +1913,8 @@ function moduleClone( test )
     test.identical( a.rel( opener2.remotePath ), null );
 
     test.case = 'finit';
-    debugger;
     opener.finit();
     module.finit();
-    debugger;
     return null;
   })
 
@@ -2016,7 +2007,7 @@ test
 function exportSeveralExports( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'inconsistent-outfile' );
+  let a = context.assetFor( test, 'inconsistentOutfile' );
   let opener;
 
   /* - */
@@ -2266,7 +2257,7 @@ function exportSeveralExports( test )
 function exportSuper( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -2595,7 +2586,7 @@ function exportSuper( test )
 function exportSuperIn( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-in-exported' );
+  let a = context.assetFor( test, 'twoInExported' );
   let opener;
 
   /* - */
@@ -3029,7 +3020,7 @@ test
 function exportDefaultPath( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-default-path' );
+  let a = context.assetFor( test, 'exportDefaultPath' );
   let opener;
 
   /* - */
@@ -3255,7 +3246,7 @@ test
 function exportOutdated( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'inconsistent-outfile' );
+  let a = context.assetFor( test, 'inconsistentOutfile' );
   let opener;
 
   /* - */
@@ -3397,7 +3388,7 @@ test
 function exportRecursive( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'resolve-path-of-submodules-exported' );
+  let a = context.assetFor( test, 'resolvePathOfSubmodulesExported' );
   let opener;
 
   /* - */
@@ -3475,7 +3466,7 @@ test
 function exportDotless( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-dotless-exported' );
+  let a = context.assetFor( test, 'twoDotlessExported' );
   let opener;
 
   /* - */
@@ -3590,7 +3581,7 @@ test
 function exportDotlessSingle( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-dotless-single-exported' );
+  let a = context.assetFor( test, 'twoDotlessSingleExported' );
   let opener;
 
   /* - */
@@ -3703,7 +3694,7 @@ test
 function exportStepOpts( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-step-opts' );
+  let a = context.assetFor( test, 'exportStepOpts' );
   let opener;
 
   /* - */
@@ -3861,7 +3852,7 @@ test
 function exportRecursiveUsingSubmodule( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple-exported' );
+  let a = context.assetFor( test, 'exportMultipleExported' );
   let opener;
 
   /* - */
@@ -3960,7 +3951,7 @@ function exportRecursiveUsingSubmodule( test )
 function exportSteps( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple-exported' );
+  let a = context.assetFor( test, 'exportMultipleExported' );
   let opener;
 
   /* - */
@@ -4115,7 +4106,7 @@ test
 function exportCourrputedOutfileUnknownSection( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-outfile-unknown-section' );
+  let a = context.assetFor( test, 'corruptedOutfileUnknownSection' );
   let opener;
 
   /* - */
@@ -4215,7 +4206,7 @@ test
 function exportCourruptedOutfileSyntax( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-outfile-syntax' );
+  let a = context.assetFor( test, 'corruptedOutfileSyntax' );
   let opener;
 
   /* - */
@@ -4313,7 +4304,7 @@ test
 function exportCourruptedSubmodulesDisabled( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodules-disabled' );
+  let a = context.assetFor( test, 'corruptedSubmodulesDisabled' );
   let opener;
 
   /* - */
@@ -4436,7 +4427,7 @@ function exportCourruptedSubmodulesDisabled( test )
 function exportCourrputedSubmoduleOutfileUnknownSection( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodule-outfile-unknown-section' );
+  let a = context.assetFor( test, 'corruptedSubmoduleOutfileUnknownSection' );
   let opener;
 
   /* - */
@@ -4598,7 +4589,7 @@ exportCourrputedSubmoduleOutfileUnknownSection.description =
 function exportCourrputedSubmoduleOutfileFormatVersion( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodule-outfile-format-version' );
+  let a = context.assetFor( test, 'corruptedSubmoduleOutfileFormatVersion' );
   let opener;
 
   /* - */
@@ -4767,7 +4758,7 @@ exportCourrputedSubmoduleOutfileFormatVersion.description =
 function exportsResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodule-outfile-unknown-section' );
+  let a = context.assetFor( test, 'corruptedSubmoduleOutfileUnknownSection' );
   let opener;
 
   /* - */
@@ -4814,7 +4805,7 @@ function exportsResolve( test )
 function buildsResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple' );
+  let a = context.assetFor( test, 'exportMultiple' );
   let opener;
 
   /* - */
@@ -4942,75 +4933,74 @@ function buildsResolve( test )
 
 //
 
-// qqq : for Dmytro : bad, write proper test
-// function framePerform( test )
-// {
-//   let context = this;
-//   let a = context.assetFor( test, 'make' );
-//   a.reflect();
-//   a.fileProvider.filesDelete( a.abs( 'out' ) );
-//
-//   var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
-//   opener.find();
-//
-//   return opener.open().split()
-//   .then( () =>
-//   {
-//
-//     var expected = [];
-//     var files = a.find( a.abs( 'out' ) );
-//     let builds = opener.openedModule.buildsResolve();
-//
-//     test.identical( builds.length, 1 );
-//
-//     let build = builds[ 0 ];
-//     let run = new _.will.BuildRun({ build });
-//     run.form();
-//     let frame = run.frameUp( build );
-//     let steps = build.stepsEach();
-//     let step = steps[ 0 ];
-//
-//     /* */
-//
-//     let frame2 = frame.frameUp( steps[ 0 ] );
-//     build.formed = 3; /* Dmytro : hack */
-//     step.form();
-//
-//     return step.framePerform( frame2 )
-//     .finally( ( err, arg ) =>
-//     {
-//
-//       test.description = 'files';
-//       test.true( true );
-//
-//       var files = a.find( a.routinePath );
-//       var exp =
-//       [
-//         '.',
-//         './v1.will.yml',
-//         './v2.will.yml',
-//         './file',
-//         './file/File.js',
-//         './file/File.test.js',
-//         './file/Produce.js',
-//         './file/Src1.txt',
-//         './file/Src2.txt',
-//         './out',
-//         './out/Produced.js2',
-//         './out/Produced.txt2',
-//         './out/shouldbe.txt'
-//       ];
-//       test.identical( files, exp );
-//
-//       opener.finit();
-//
-//       if( err )
-//       throw err;
-//       return arg;
-//     });
-//
-//   });
-// }
+// aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
+function framePerform( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'make' );
+  a.reflect();
+
+  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
+  opener.find();
+
+  return opener.open().split()
+  .then( () =>
+  {
+
+    var expected = [];
+    var files = a.find( a.abs( 'out' ) );
+    let builds = opener.openedModule.buildsResolve();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+    build.form();
+    let run = new _.will.BuildRun({ build });
+    run.form();
+    let frame = run.frameUp( build );
+    let steps = build.stepsEach();
+    let step = steps[ 0 ];
+    step.opts.currentPath = a.routinePath;
+
+    /* */
+
+    let frame2 = frame.frameUp( step );
+    step.form();
+
+    return step.framePerform( frame2 )
+    .finally( ( err, arg ) =>
+    {
+      test.description = 'files';
+
+      var files = a.find( a.routinePath );
+      var exp =
+      [
+        '.',
+        './v1.will.yml',
+        './v2.will.yml',
+        './file',
+        './file/File.js',
+        './file/File.test.js',
+        './file/Produce.js',
+        './file/Src1.txt',
+        './file/Src2.txt',
+        './out',
+        './out/Produced.js2',
+        './out/Produced.txt2',
+        './out/shouldbe.txt'
+      ];
+      test.identical( files, exp );
+
+      opener.finit();
+      frame2.finit();
+
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+}
 
 //
 
@@ -5077,7 +5067,7 @@ function trivialResolve( test )
 function detailedResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -5130,7 +5120,7 @@ function detailedResolve( test )
 function reflectorResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'composite-reflector' );
+  let a = context.assetFor( test, 'compositeReflector' );
   let opener;
 
   /* - */
@@ -5521,7 +5511,7 @@ function reflectorResolve( test )
 function reflectorInheritedResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'reflect-inherit' );
+  let a = context.assetFor( test, 'reflectInherit' );
   let opener;
 
   function pin( filePath )
@@ -5775,7 +5765,7 @@ function reflectorInheritedResolve( test )
 function superResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-in-exported' );
+  let a = context.assetFor( test, 'twoInExported' );
   let opener;
 
   /* - */
@@ -5892,7 +5882,7 @@ function superResolve( test )
 function pathsResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple' );
+  let a = context.assetFor( test, 'exportMultiple' );
   let opener;
 
   function pin( filePath )
@@ -6457,7 +6447,7 @@ function pathsResolve( test )
 function pathsResolveImportIn( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   function pin( filePath )
@@ -7188,7 +7178,7 @@ function pathsResolveImportIn( test )
 function pathsResolveOfSubmodulesLocal( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-local-repos' );
+  let a = context.assetFor( test, 'submodulesLocalRepos' );
   let opener;
 
   /* - */
@@ -7266,7 +7256,7 @@ function pathsResolveOfSubmodulesLocal( test )
 function pathsResolveOfSubmodulesRemote( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
   let opener;
 
   /* - */
@@ -7344,7 +7334,7 @@ function pathsResolveOfSubmodulesRemote( test )
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'resolve-path-of-submodules-exported' );
+  let a = context.assetFor( test, 'resolvePathOfSubmodulesExported' );
   let opener;
 
   function pin( filePath )
@@ -7410,7 +7400,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
 function pathsResolveOutFileOfExports( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple-exported' );
+  let a = context.assetFor( test, 'exportMultipleExported' );
   let opener;
 
   function pin( filePath )
@@ -8184,9 +8174,7 @@ function pathsResolveOutFileOfExports( test )
     if( err )
     throw err;
     test.true( err === undefined );
-    debugger;
     opener.finit();
-    debugger;
     return arg;
   });
 
@@ -8200,7 +8188,7 @@ function pathsResolveOutFileOfExports( test )
 function pathsResolveComposite( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'composite-path' );
+  let a = context.assetFor( test, 'compositePath' );
   let opener;
 
   function pin( filePath )
@@ -8252,9 +8240,7 @@ function pathsResolveComposite( test )
     test.identical( resolved, expected );
 
     test.case = 'path::protoMain';
-    debugger;
     var resolved = opener.openedModule.resolve( 'path::protoMain' );
-    debugger;
     var expected = pin( 'proto/Main.s' );
     test.identical( resolved, expected );
 
@@ -8307,7 +8293,7 @@ function pathsResolveComposite( test )
 function pathsResolveComposite2( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'path-composite' );
+  let a = context.assetFor( test, 'pathComposite' );
   let opener;
 
   function pin( filePath )
@@ -8486,7 +8472,6 @@ function pathsResolveResolvedPath( test )
       pathResolving : 'in',
       selectorIsPath : 0,
     });
-    debugger;
     test.identical( got, exp );
 
     var src = 'some';
@@ -8595,7 +8580,7 @@ relative resolved path absolutized if pathResolving:1
 function pathsResolveFailing( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-with-submodules' );
+  let a = context.assetFor( test, 'exportWithSubmodules' );
   let opener;
 
   function pin( filePath )
@@ -8642,7 +8627,6 @@ function pathsResolveFailing( test )
       missingAction : 'undefine',
       mapValsUnwrapping : 1,
     });
-    debugger;
     var expected = null;
     test.identical( got, expected );
 
@@ -8705,7 +8689,7 @@ function pathsResolveFailing( test )
 function modulesEach( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-in-exported' );
+  let a = context.assetFor( test, 'twoInExported' );
   let opener;
 
   /* - */
@@ -8822,7 +8806,7 @@ function modulesEach( test )
 function modulesEachDuplicates( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'hierarchy-duplicate' );
+  let a = context.assetFor( test, 'hierarchyDuplicate' );
   let opener;
 
   /* - */
@@ -8916,7 +8900,7 @@ function modulesEachDuplicates( test )
 function filesFromResource( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
   let opener;
 
   /* - */
@@ -8956,7 +8940,7 @@ function filesFromResource( test )
 function submodulesRemoteResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
   let opener;
 
   /* - */
@@ -9066,7 +9050,7 @@ function submodulesRemoteResolve( test )
 function submodulesLocalResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-local-repos' );
+  let a = context.assetFor( test, 'submodulesLocalRepos' );
   let opener;
 
   /* - */
@@ -9175,7 +9159,7 @@ function submodulesLocalResolve( test )
 function submodulesDeleteAndDownload( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-del-download' );
+  let a = context.assetFor( test, 'submodulesDelDownload' );
   let opener;
 
   /* */
@@ -9361,7 +9345,7 @@ function customLogger( test )
 function resourcePathRemote( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-informal' );
+  let a = context.assetFor( test, 'exportInformal' );
   let opener;
 
   a.ready
@@ -9417,7 +9401,7 @@ function resourcePathRemote( test )
 function moduleIsNotValid( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-download-errors' );
+  let a = context.assetFor( test, 'submodulesDownloadErrors' );
   let opener;
 
   a.ready
@@ -11064,7 +11048,7 @@ let Self =
     exportsResolve,
     buildsResolve,
 
-    // framePerform,
+    framePerform,
 
     trivialResolve,
     detailedResolve,

@@ -1,0 +1,59 @@
+about :
+
+  name : gitReset
+
+path :
+
+  git.proto : 'proto'
+
+step :
+
+  git.reset.dir :
+    inherit : git.reset
+    dirPath : 'path::git.proto'
+
+  git.reset.dry :
+    inherit : git.reset
+    dirPath : '.'
+    dry : 1
+
+  git.reset.removingUntracked :
+    dirPath : '.'
+    removingUntracked : 1
+
+  git.reset.removingIgnored :
+    dirPath : '.'
+    removingUntracked : 1
+    removingIgnored : 1
+
+  git.reset.removingSubrepositories :
+    dirPath : '.'
+    removingUntracked : 1
+    removingIgnored : 1
+    removingSubrepositories : 1
+
+build :
+
+  git.reset.default :
+    steps :
+      - git.reset
+
+  git.reset.dir :
+    steps :
+      - git.reset.dir
+
+  git.reset.dry :
+    steps :
+      - git.reset.dry
+
+  git.reset.removingUntracked :
+    steps :
+      - git.reset.removingUntracked
+
+  git.reset.removingIgnored :
+    steps :
+      - git.reset.removingIgnored
+
+  git.reset.removingSubrepositories :
+    steps :
+      - git.reset.removingSubrepositories
