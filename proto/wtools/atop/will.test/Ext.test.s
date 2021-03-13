@@ -34181,14 +34181,13 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -34200,7 +34199,7 @@ function commandGitSync( test )
     return null;
   });
 
-  a.appStart( '.with original/ .git.sync' )
+  a.appStart( `.with original/ .git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original .git.sync - committing and pushing, without message';
@@ -34231,7 +34230,7 @@ function commandGitSync( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( '.with clone/ .git.sync' )
+  a.appStart( `.with clone/ .git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git.sync - only pulling, without message';
@@ -34260,7 +34259,7 @@ function commandGitSync( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am third' });
 
-  a.appStart( '.with original/ .git.sync' )
+  a.appStart( `.with original/ .git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/ .git.sync - only pushing, without message';
@@ -34291,7 +34290,7 @@ function commandGitSync( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "fourth"' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( '.with original/ .git.sync -am fifth' )
+  a.appStart( `.with original/ .git.sync -am fifth profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/ .git.sync -am fifth - committing, pulling and pushing with message';
@@ -34330,7 +34329,7 @@ function commandGitSync( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( '.with original/ .git.sync -am seventh v:0' )
+  a.appStart( `.with original/ .git.sync -am seventh v:0 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
@@ -34355,7 +34354,7 @@ function commandGitSync( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( '.with original/ .git.sync -am seventh dry:1' )
+  a.appStart( `.with original/ .git.sync -am seventh dry:1 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
@@ -34371,12 +34370,8 @@ function commandGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -34413,35 +34408,33 @@ function commandGitSyncRestoringHardlinks( test )
   let context = this;
   let a = context.assetFor( test, 'git-push' );
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
   /* */
 
-  a.ready.then( ( op ) =>
-  {
-    a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  });
-
+  a.ready.then( ( op ) => a.reflect() );
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell( `git clone original clone` );
 
-  a.appStart( '.with clone/ .call hlink beeping:0' )
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.description = 'hardlink';
+    a.fileProvider.hardLink
+    ({
+      srcPath : a.abs( 'clone/f1.txt' ),
+      dstPath : a.abs( 'clone/f2.txt' ),
+      sync : 1,
+    });
 
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
@@ -34555,12 +34548,8 @@ original
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
