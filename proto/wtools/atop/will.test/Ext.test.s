@@ -24250,14 +24250,14 @@ new line
     var exp =
 `
 console.log( 'File.js' );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
     var exp =
 `
 File.txt
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
@@ -24316,14 +24316,14 @@ File.txt
     var exp =
 `
 console.log( 'File.js' );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
     var exp =
 `
 File.txt
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
@@ -24386,14 +24386,14 @@ File.txt
     var exp =
 `
 console.log( 'File.js' );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
     var exp =
 `
 File.txt
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
@@ -24458,14 +24458,14 @@ File.txt
     var exp =
 `
 console.log( 'File.js' );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
     var exp =
 `
 File.txt
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
@@ -24501,14 +24501,14 @@ File.txt
     var exp =
 `
 console.log( 'File.js' );
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/proto/File.js' ) );
     test.equivalent( read, exp );
 
     var exp =
 `
 File.txt
-`
+`;
     var read = a.fileProvider.fileRead( a.abs( 'clone/File.txt' ) );
     test.equivalent( read, exp );
 
@@ -24523,37 +24523,17 @@ File.txt
 
   function begin()
   {
+    a.ready.then( () => a.reflect() );
+    let currentPath = a.abs( 'clone' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     a.ready.then( () =>
     {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    let cloneShell = _.process.starter
-    ({
-      currentPath : a.abs( 'clone' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    cloneShell( 'git init' );
-    cloneShell( 'git remote add origin ../repo' );
-    cloneShell( 'git add --all' );
-    cloneShell( 'git commit -am first' );
-
-    a.ready.then( () =>
-    {
-
       a.fileProvider.fileAppend( a.abs( 'clone/proto/File.js' ), 'console.log( "new line" );\n' );
       a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
       return null;
     });
-
     return a.ready;
   }
 }
