@@ -7070,7 +7070,7 @@ hookGitSyncArguments.timeOut = 300000;
 hookGitSyncArguments.description =
 `
 - quoted argument passed to git through willbe properly
-`
+`;
 
 //
 
@@ -7211,28 +7211,12 @@ function hookGitTag( test )
     {
       a.reflect();
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
       return null;
     });
-
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    let originalShell = _.process.starter
-    ({
-      currentPath : a.abs( 'original' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* */
-
-    originalShell( 'git init' );
-    originalShell( 'git remote add origin ../repo' );
-    originalShell( 'git add --all' );
-    originalShell( 'git commit -am first' );
-
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     return a.ready;
   }
 }
