@@ -1564,6 +1564,89 @@ moduleNewNamed.rapidity = -1;
 
 //
 
+function openModuleWithLostSubmodule( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'openWithLostSubmodule' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.export using no command with'
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.export' });
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".export"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '! Failed to open module::super' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::super / build::export' ), 1 );
+    test.identical( _.strCount( op.output, '+ reflector::reflect.proto reflected 2 file' ), 1 );
+    test.identical( _.strCount( op.output, 'Found no out-willfile for relation::Submodule' ), 1 );
+    test.identical( _.strCount( op.output, 'Error looking for willfiles for module at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module::super / module::super / relation::Submodule' ), 1 );
+    var exp =
+    'Exporting is impossible because module::super / module::super / relation::Submodule is not downloaded or not valid!';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to export module::super / module::super / exported::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::super / step::export' ), 1 );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/super.out.will.yml' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.export using command with'
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with "**" .export' });
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with ** .export"' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 5 );
+    test.identical( _.strCount( op.output, '! Failed to open module::super' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::super / build::export' ), 1 );
+    test.identical( _.strCount( op.output, '+ reflector::reflect.proto reflected 2 file' ), 1 );
+    test.identical( _.strCount( op.output, 'Found no out-willfile for relation::Submodule' ), 1 );
+    test.identical( _.strCount( op.output, 'Error looking for willfiles for module at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module::super / module::super / relation::Submodule' ), 1 );
+    var exp =
+    'Exporting is impossible because module::super / module::super / relation::Submodule is not downloaded or not valid!';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to export module::super / module::super / exported::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::super / step::export' ), 1 );
+    test.true( !a.fileProvider.fileExists( a.abs( 'out/super.out.will.yml' ) ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+openModuleWithLostSubmodule.rapidity = -1;
+openModuleWithLostSubmodule.description =
+`
+Routine is intended to verify that utility throws error when local submodule is lost.
+Utility should throw error even if submodule exists in another directory of module and
+utility command has part '.with' :
+will .with ** .export
+
+The regular commands do not depend of submodules presence, the export commands depend.
+Maybe, some scenarios exist where utility does not throw error.
+`;
+
+//
+
 function openWith( test )
 {
   let context = this;
@@ -38849,6 +38932,8 @@ let Self =
     moduleNewDotless,
     moduleNewDotlessSingle,
     moduleNewNamed,
+
+    openModuleWithLostSubmodule,
 
     openWith,
     openEach,

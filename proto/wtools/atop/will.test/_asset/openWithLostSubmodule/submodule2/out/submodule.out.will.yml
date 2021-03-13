@@ -1,0 +1,223 @@
+format: outwillfile-2.0
+root:
+  - submodule.out
+consistency:
+  ../will.yml: &ref_0
+    hash: b518c04767d2261314ac2fb21de52514
+    size: 640
+module:
+  submodule.out:
+    about:
+      name: submodule
+      org: noorg
+      description: Submodule in another directory
+      enabled: 1
+      version: 0.0.1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: submodule.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: submodule.out
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: ../will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: ../will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: ..
+      download:
+        criterion:
+          predefined: 1
+      proto:
+        path: ../
+      in:
+        path: .
+      out:
+        path: .
+      out.debug:
+        path: debug
+      doc:
+        path: ../doc
+      temp:
+        path:
+          - .
+          - ../doc.out
+          - ../doc/out
+          - ../doc/doc.out
+      exported.dir.export:
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        path: debug
+      exported.files.export:
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        path:
+          - debug
+          - debug/will.yml
+    submodule: {}
+    reflector:
+      reflect.proto:
+        src:
+          filePath:
+            'path::proto': 'path::out.debug'
+      exported.export:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: debug
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+    step:
+      export:
+        opts:
+          export: '{path::out.debug}/**'
+          tar: 0
+        inherit:
+          - module.export
+      reflect.proto:
+        opts:
+          filePath: 'reflector::reflect.proto'
+          verbosity: null
+        inherit:
+          - files.reflect
+    build:
+      debug:
+        steps:
+          - 'step::reflect.proto'
+        criterion:
+          default: 1
+      export:
+        steps:
+          - 'build::*=1'
+          - 'step::export*=1'
+        criterion:
+          default: 1
+          export: 1
+    exported:
+      export:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      ../will.yml: *ref_0
+  ../:
+    about:
+      name: submodule
+      org: noorg
+      description: Submodule in another directory
+      enabled: 1
+      version: 0.0.1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: out/submodule.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      download:
+        criterion:
+          predefined: 1
+      proto:
+        path: ./
+      in:
+        path: .
+      out:
+        path: out
+      out.debug:
+        path: out/debug
+      doc:
+        path: doc
+      temp:
+        path:
+          - out
+          - doc.out
+          - doc/out
+          - doc/doc.out
+    submodule: {}
+    reflector:
+      reflect.proto:
+        src:
+          filePath:
+            'path::proto': 'path::out.debug'
+    step:
+      export:
+        opts:
+          export: '{path::out.debug}/**'
+          tar: 0
+        inherit:
+          - module.export
+      reflect.proto:
+        opts:
+          filePath: 'reflector::reflect.proto'
+          verbosity: null
+        inherit:
+          - files.reflect
+    build:
+      debug:
+        steps:
+          - 'step::reflect.proto'
+        criterion:
+          default: 1
+      export:
+        steps:
+          - 'build::*=1'
+          - 'step::export*=1'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      ../will.yml:
+        hash: b518c04767d2261314ac2fb21de52514
+        size: 640
