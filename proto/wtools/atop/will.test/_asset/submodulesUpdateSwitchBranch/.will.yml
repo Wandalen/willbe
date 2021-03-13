@@ -1,0 +1,6 @@
+about :
+  name : submodulesUpdateSwitchBranch
+
+submodule :
+
+  willbe-experiment : git+hd://./experiment?out=out/experiment.out.will!master
