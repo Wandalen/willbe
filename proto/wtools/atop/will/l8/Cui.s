@@ -2066,7 +2066,7 @@ commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
-commandSubmodulesGit.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
+commandSubmodulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -2285,7 +2285,7 @@ commandSubmodulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A config profile to use from utility Censor. Default is "default".',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -2443,7 +2443,7 @@ commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
 commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
-commandModulesGit.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
+commandModulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -2661,7 +2661,7 @@ commandModulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A config profile to use from utility Censor. Default is "default".',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -3110,7 +3110,7 @@ commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandProperties = commandImply.commandProperties;
 commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
-commandGit.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
+commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -3233,7 +3233,7 @@ commandGitPull.defaults.withSubmodules = 0;
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
-commandGitPull.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
+commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -3416,7 +3416,7 @@ commandGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A config profile to use from utility Censor. Default is "default".',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
