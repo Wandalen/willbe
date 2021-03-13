@@ -1324,7 +1324,7 @@ var defaults = moduleFit_body.defaults = _.mapExtend( null, ModuleFilterDefaults
 defaults.withStem = 0;
 defaults.withPeers = 0;
 
-let moduleFit = _.routineUnite( moduleFit_head, moduleFit_body );
+let moduleFit = _.routine.uniteCloning_( moduleFit_head, moduleFit_body );
 
 //
 
@@ -1374,7 +1374,7 @@ var defaults = relationFit_body.defaults =
 
 }
 
-let relationFit = _.routineUnite( moduleFit_head, relationFit_body );
+let relationFit = _.routine.uniteCloning_( moduleFit_head, relationFit_body );
 
 //
 
@@ -2458,7 +2458,7 @@ _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 _.assert( defaults.withPeers === 0 );
 
-let modulesEach = _.routineUnite( modulesEach_head, modulesEach_body );
+let modulesEach = _.routine.uniteCloning_( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, RelationFilterOn );
 
 //
@@ -2662,7 +2662,7 @@ _.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesFor = _.routineUnite( modulesFor_head, modulesFor_body );
+let modulesFor = _.routine.uniteCloning_( modulesFor_head, modulesFor_body );
 
 //
 
@@ -3086,7 +3086,7 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-let modulesDownload = _.routineUnite( modulesDownload_head, modulesDownload_body );
+let modulesDownload = _.routine.uniteCloning_( modulesDownload_head, modulesDownload_body );
 
 //
 
@@ -3349,11 +3349,11 @@ _.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesBuild = _.routineUnite( modulesBuild_head, modulesBuild_body );
+let modulesBuild = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
 
-let modulesExport = _.routineUnite( modulesBuild_head, modulesBuild_body );
+let modulesExport = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
@@ -3465,7 +3465,7 @@ delete defaults.onEach;
 delete defaults.onEachModule;
 delete defaults.onEachJunction;
 
-let modulesVerify = _.routineUnite( modulesVerify_head, modulesVerify_body );
+let modulesVerify = _.routine.uniteCloning_( modulesVerify_head, modulesVerify_body );
 
 // --
 // object
@@ -4062,7 +4062,7 @@ _openerMake_body.defaults =
 
 }
 
-let _openerMake = _.routineUnite( _openerMake_head, _openerMake_body );
+let _openerMake = _.routine.uniteCloning_( _openerMake_head, _openerMake_body );
 
 //
 

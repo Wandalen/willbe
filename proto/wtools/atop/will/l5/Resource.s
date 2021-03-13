@@ -95,7 +95,7 @@ MakeFor_body.defaults =
 
 }
 
-let MakeFor = _.routineUnite( MakeFor_head, MakeFor_body );
+let MakeFor = _.routine.uniteCloning_( MakeFor_head, MakeFor_body );
 
 //
 
@@ -1184,7 +1184,7 @@ var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.re
 defaults.prefixlessAction = 'default';
 defaults.Looker = defaults;
 
-// let resolve = _.routineUnite( resolve_head, resolve_body );
+// let resolve = _.routine.uniteCloning_( resolve_head, resolve_body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 
 //
@@ -1238,14 +1238,14 @@ function inPathResolve_body( o )
 // defaults.prefixlessAction = 'default';
 // defaults.pathResolving = 'in';
 //
-// let inPathResolve = _.routineUnite( inPathResolve_head, inPathResolve_body );
-// // let inPathResolve = _.routineUnite( resolve.head, inPathResolve_body );
+// let inPathResolve = _.routine.uniteCloning_( inPathResolve_head, inPathResolve_body );
+// // let inPathResolve = _.routine.uniteCloning_( resolve.head, inPathResolve_body );
 
 // var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
 // defaults.defaultResourceKind = 'path';
 // defaults.prefixlessAction = 'default';
 // defaults.pathResolving = 'in';
-// let inPathResolve = _.routineUnite( inPathResolve_head, inPathResolve_body );
+// let inPathResolve = _.routine.uniteCloning_( inPathResolve_head, inPathResolve_body );
 
 _.assert( _.prototype.has( resolve.defaults, resolve.defaults.OriginalLooker ) );
 _.routine.extendInheriting( inPathResolve_body, { defaults : resolve.defaults } );
@@ -1255,7 +1255,7 @@ defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
 defaults.Looker = defaults;
-// let inPathResolve = _.routineUnite({ head : inPathResolve_head, body : inPathResolve_body, strategy : 'replacing' });
+// let inPathResolve = _.routine.uniteCloning_({ head : inPathResolve_head, body : inPathResolve_body, strategy : 'replacing' });
 let inPathResolve = _.routine.uniteReplacing( inPathResolve_head, inPathResolve_body );
 _.assert( inPathResolve.defaults === inPathResolve.body.defaults );
 _.assert( _.prototype.has( inPathResolve.defaults, inPathResolve.defaults.OriginalLooker ) );
@@ -1304,13 +1304,13 @@ function reflectorResolve_body( o )
 }
 
 // reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
-// let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
-// // let reflectorResolve = _.routineUnite( resolve.head, reflectorResolve_body );
+// let reflectorResolve = _.routine.uniteCloning_( reflectorResolve_head, reflectorResolve_body );
+// // let reflectorResolve = _.routine.uniteCloning_( resolve.head, reflectorResolve_body );
 
 reflectorResolve_body.defaults = _.will.Module.prototype.reflectorResolve.defaults;
 let reflectorResolve = _.routine.uniteReplacing( resolve.head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
-// let reflectorResolve = _.routineUnite({ head : resolve.head, body : reflectorResolve_body, strategy : 'replacing' });
+// let reflectorResolve = _.routine.uniteCloning_({ head : resolve.head, body : reflectorResolve_body, strategy : 'replacing' });
 
 // --
 // etc

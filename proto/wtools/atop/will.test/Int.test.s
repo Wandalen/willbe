@@ -20,9 +20,9 @@ let _ = _global_.wTools;
 
 /*
 xxx : should work
-  > local-will .imply withOut:0 .with * .call GitStatus
+  > will.local .imply withOut:0 .with * .call GitStatus
   not only
-  > local-will .imply withOut:0 ; .with * .call GitStatus
+  > will.local .imply withOut:0 ; .with * .call GitStatus
 xxx : find solution
   > git push --tags
   fatal: TaskCanceledException encountered.

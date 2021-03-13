@@ -15,7 +15,6 @@ _.will.resolver = Object.create( _.resolverAdv );
 // relation
 // --
 
-// let Prime = _.mapExtend( null, Parent.Prime );
 let Prime = Object.create( null )
 
 Prime.currentThis = null;
@@ -1345,7 +1344,7 @@ defaults.pathResolving = 'in';
 defaults.missingAction = 'undefine';
 defaults.pathUnwrapping = 0;
 
-let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routine.uniteCloning_( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
 
 //
 
@@ -1490,7 +1489,7 @@ defaults.withDirs = null;
 defaults.withTerminals = null;
 defaults.withStem = null;
 
-let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
+let filesFromResource = _.routine.uniteCloning_( filesFromResource_head, filesFromResource_body );
 
 _.assert( defaults.Looker === undefined );
 

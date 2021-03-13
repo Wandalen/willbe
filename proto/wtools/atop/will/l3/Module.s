@@ -2483,9 +2483,9 @@ moduleBuild_body.defaults =
   purging : 0,
 }
 
-let moduleBuild = _.routineUnite( moduleBuild_head, moduleBuild_body );
+let moduleBuild = _.routine.uniteCloning_( moduleBuild_head, moduleBuild_body );
 moduleBuild.defaults.kind = 'build';
-let moduleExport = _.routineUnite( moduleBuild_head, moduleBuild_body );
+let moduleExport = _.routine.uniteCloning_( moduleBuild_head, moduleBuild_body );
 moduleExport.defaults.kind = 'export';
 
 //
@@ -2613,7 +2613,7 @@ delete defaults.modules;
 
 _.assert( defaults.withPeers === 0 );
 
-let modulesEach = _.routineUnite( modulesEach_head, modulesEach_body );
+let modulesEach = _.routine.uniteCloning_( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, _.Will.RelationFilterOn );
 
 //
@@ -2652,11 +2652,11 @@ _.assert( defaults.outputFormat === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesBuild = _.routineUnite( modulesBuild_head, modulesBuild_body );
+let modulesBuild = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
 
-let modulesExport = _.routineUnite( modulesBuild_head, modulesBuild_body );
+let modulesExport = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
@@ -3040,23 +3040,23 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-let _subModulesDownload = _.routineUnite( _subModulesDownload_head, _subModulesDownload_body );
+let _subModulesDownload = _.routine.uniteCloning_( _subModulesDownload_head, _subModulesDownload_body );
 
 //
 
-let subModulesDownload = _.routineUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesDownload' });
+let subModulesDownload = _.routine.uniteCloning_({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesDownload' });
 var defaults = subModulesDownload.defaults;
 defaults.mode = 'download';
 
 //
 
-let subModulesUpdate = _.routineUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesUpdate' });
+let subModulesUpdate = _.routine.uniteCloning_({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesUpdate' });
 var defaults = subModulesUpdate.defaults;
 defaults.mode = 'update';
 
 //
 
-let subModulesAgree = _.routineUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesAgree' });
+let subModulesAgree = _.routine.uniteCloning_({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesAgree' });
 var defaults = subModulesAgree.defaults;
 defaults.mode = 'agree';
 
@@ -4264,7 +4264,7 @@ var defaults = submodulesPeersOpen_body.defaults = _.mapExtend( null, modulesEac
 
 defaults.throwing = 1;
 
-let submodulesPeersOpen = _.routineUnite( modulesEach_head, submodulesPeersOpen_body );
+let submodulesPeersOpen = _.routine.uniteCloning_( modulesEach_head, submodulesPeersOpen_body );
 
 //
 
@@ -4631,7 +4631,7 @@ resourceAllocate_body.defaults =
   generating : 0,
 }
 
-let resourceAllocate = _.routineUnite( resourceAllocate_head, resourceAllocate_body );
+let resourceAllocate = _.routine.uniteCloning_( resourceAllocate_head, resourceAllocate_body );
 let resourceGenerate = _.routineDefaults( null, resourceAllocate, { generating : 1 } );
 
 //
@@ -4703,7 +4703,7 @@ resourceNameAllocate_body.defaults =
   generating : 0,
 }
 
-let resourceNameAllocate = _.routineUnite( resourceNameAllocate_head, resourceNameAllocate_body );
+let resourceNameAllocate = _.routine.uniteCloning_( resourceNameAllocate_head, resourceNameAllocate_body );
 let resourceNameGenerate = _.routineDefaults( null, resourceNameAllocate, { generating : 1 } );
 
 // --
@@ -5030,11 +5030,11 @@ function resolve_body( o )
 }
 
 // _.routineExtend( resolve_body, _.will.resolver.resolve.body );
-// let resolve = _.routineUnite( resolve_head, resolve_body );
+// let resolve = _.routine.uniteCloning_( resolve_head, resolve_body );
 
 _.routine.extendReplacing( resolve_body, _.will.resolver.resolve.body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
-// let resolve = _.routineUnite({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
+// let resolve = _.routine.uniteCloning_({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
 // resolve.defaults.Looker = resolve.defaults;
 _.assert( resolve.defaults === resolve.body.defaults );
 _.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
@@ -5042,7 +5042,7 @@ _.assert( resolve.defaults === resolve.defaults.Looker );
 
 //
 
-// let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
+// let resolveMaybe = _.routine.uniteCloning_( resolve_head, resolve_body );
 // _.routineExtend( resolveMaybe, _.will.resolver.resolveMaybe );
 
 // debugger;
@@ -5055,28 +5055,28 @@ _.assert( resolveMaybe_body !== resolve_body );
 _.assert( resolveMaybe_body.defaults === _.will.resolver.resolveMaybe.defaults );
 _.assert( resolveMaybe_body.defaults !== resolve_body.defaults );
 let resolveMaybe = _.routine.uniteReplacing( resolve_head, resolveMaybe_body );
-// let resolveMaybe = _.routineUnite({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
+// let resolveMaybe = _.routine.uniteCloning_({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
 _.assert( resolveMaybe.defaults === resolveMaybe.defaults.Looker );
 _.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Looker );
 
 //
 
-// let resolveRaw = _.routineUnite( resolve_head, resolve_body );
+// let resolveRaw = _.routine.uniteCloning_( resolve_head, resolve_body );
 // _.routineExtend( resolveRaw, _.will.resolver.resolveRaw );
 
 let resolveRaw_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.resolveMaybe.defaults } );
 let resolveRaw = _.routine.uniteReplacing( resolve_head, resolveRaw_body );
-// let resolveRaw = _.routineUnite({ head : resolve_head, body : resolveRaw_body, strategy : 'replacing' });
+// let resolveRaw = _.routine.uniteCloning_({ head : resolve_head, body : resolveRaw_body, strategy : 'replacing' });
 
 //
 
 let pathResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.pathResolve.defaults } );
 let pathResolve = _.routine.uniteReplacing( resolve_head, pathResolve_body );
-// let pathResolve = _.routineUnite({ head : resolve_head, body : pathResolve_body, strategy : 'replacing' });
+// let pathResolve = _.routine.uniteCloning_({ head : resolve_head, body : pathResolve_body, strategy : 'replacing' });
 _.assert( _.will.resolver.pathResolve.defaults.defaultResourceKind === 'path' );
 _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 
-// let pathResolve = _.routineUnite( resolve_head, resolve_body );
+// let pathResolve = _.routine.uniteCloning_( resolve_head, resolve_body );
 // _.assert( pathResolve.defaults.defaultResourceKind === null );
 // _.routineExtend( pathResolve, _.will.resolver.pathResolve );
 // _.assert( _.will.resolver.pathResolve.defaults.defaultResourceKind === 'path' );
@@ -5139,10 +5139,10 @@ function pathOrReflectorResolve_body( o )
   return result;
 }
 
-_.routineExtend( pathOrReflectorResolve_body, _.will.resolver.pathOrReflectorResolve );
+_.routineExtend( pathOrReflectorResolve_body, _.will.resolver.pathOrReflectorResolve.body );
 
-let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
-// let pathOrReflectorResolve = _.routineUnite( resolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routine.uniteCloning_( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+// let pathOrReflectorResolve = _.routine.uniteCloning_( resolve_head, pathOrReflectorResolve_body );
 
 //
 
@@ -5183,17 +5183,17 @@ function filesFromResource_body( o )
   return result;
 }
 
-_.routineExtend( filesFromResource_body, _.will.resolver.filesFromResource );
+_.routineExtend( filesFromResource_body, _.will.resolver.filesFromResource.body );
 
-let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
+let filesFromResource = _.routine.uniteCloning_( filesFromResource_head, filesFromResource_body );
 
 //
 
 let submodulesResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.submodulesResolve.defaults } );
 let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolve_body );
-// let submodulesResolve = _.routineUnite({ head : resolve_head, body : submodulesResolve_body, strategy : 'replacing' });
+// let submodulesResolve = _.routine.uniteCloning_({ head : resolve_head, body : submodulesResolve_body, strategy : 'replacing' });
 
-// let submodulesResolve = _.routineUnite( resolve_head, resolve_body );
+// let submodulesResolve = _.routine.uniteCloning_( resolve_head, resolve_body );
 // _.routineExtend( submodulesResolve, _.will.resolver.submodulesResolve );
 
 _.assert( submodulesResolve.defaults === submodulesResolve.body.defaults );
@@ -5214,7 +5214,7 @@ function reflectorResolve_body( o )
   return result;
 }
 
-_.routine.extendReplacing( reflectorResolve_body, _.will.resolver.reflectorResolve );
+_.routine.extendReplacing( reflectorResolve_body, _.will.resolver.reflectorResolve.body );
 let reflectorResolve = _.routine.uniteReplacing( resolve_head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
 _.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
@@ -5339,17 +5339,17 @@ _buildsResolve_body.defaults =
   strictCriterion : 1,
 }
 
-let _buildsResolve = _.routineUnite( _buildsResolve_head, _buildsResolve_body );
+let _buildsResolve = _.routine.uniteCloning_( _buildsResolve_head, _buildsResolve_body );
 
 //
 
-let buildsResolve = _.routineUnite( _buildsResolve_head, _buildsResolve_body );
+let buildsResolve = _.routine.uniteCloning_( _buildsResolve_head, _buildsResolve_body );
 var defaults = buildsResolve.defaults;
 defaults.kind = 'build';
 
 //
 
-let exportsResolve = _.routineUnite( _buildsResolve_head, _buildsResolve_body );
+let exportsResolve = _.routine.uniteCloning_( _buildsResolve_head, _buildsResolve_body );
 var defaults = exportsResolve.defaults;
 defaults.kind = 'export';
 

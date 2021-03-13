@@ -8865,7 +8865,7 @@ modulesTreeHierarchyRemoteDownloaded.timeOut = 300000;
 //
 
 /*
-cls && local-will .with group1/group10/a0 .clean recursive:2 && local-will .with group1/group10/a0 .export && local-debug-will .with group1/a .export
+cls && will.local .with group1/group10/a0 .clean recursive:2 && will.local .with group1/group10/a0 .export && local-debug-will .with group1/a .export
 */
 
 function modulesTreeHierarchyRemotePartiallyDownloaded( test )

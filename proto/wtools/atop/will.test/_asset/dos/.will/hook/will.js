@@ -20,7 +20,7 @@ function onModule( context )
   context.startWill( `${context.request.original}` );
 
   // let relativeLocalPath = path.relative( context.junction.dirPath, context.junction.localPath );
-  // context.start( `local-will .with ${relativeLocalPath} ${context.request.original}` );
+  // context.start( `will.local .with ${relativeLocalPath} ${context.request.original}` );
 
 }
 
