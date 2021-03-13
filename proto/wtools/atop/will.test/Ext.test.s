@@ -27647,6 +27647,8 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
+  /* */
+
   begin().then( () =>
   {
     test.case = '.submodules.git.diff v:0 - no diffs, verbosity - 0';
@@ -27702,6 +27704,8 @@ function commandSubmodulesGitDiff( test )
 
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -27769,6 +27773,8 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
+  /* */
+
   begin().then( () =>
   {
     test.case = '.submodules.git.diff v:0 - with diffs in submodule';
@@ -27835,6 +27841,8 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
+  /* */
+
   begin().then( () =>
   {
     test.case = '.submodules.git.diff v:0 - with diffs in root module and submodule';
@@ -27882,34 +27890,20 @@ function commandSubmodulesGitDiff( test )
       a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
       return null;
     });
-
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    let superShell = _.process.starter
-    ({
-      currentPath : a.abs( 'super' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* */
-
-    superShell( 'git init' );
-    superShell( 'git remote add origin ../repo' );
-    superShell( 'git add --all' );
-    superShell( 'git commit -am first' );
-    superShell( 'git push -u origin master' );
+    let currentPath = a.abs( 'super' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin master' });
     a.shell( `git clone ./repo ./clone` );
     a.shell( `git clone ./repo ./original` );
-
     a.ready.then( () =>
     {
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
       return null;
     });
-
     return a.ready;
   }
 }
@@ -27924,12 +27918,11 @@ function commandSubmodulesGitPrOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  {
-    test.true( true );
-    return;
-  }
+  return test.true( true );
 
   /* - */
 
@@ -28048,33 +28041,16 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
 
   function begin()
   {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    let originalShell = _.process.starter
-    ({
-      currentPath : a.abs( 'original' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* */
-
-    originalShell( 'git init' );
-    originalShell( 'git remote add origin ../repo' );
-    originalShell( 'git add --all' );
-    originalShell( 'git commit -am first' );
-    originalShell( 'git push -u origin --all' );
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
     a.shell( 'git clone repo/ clone' );
-
     return a.ready;
   }
 }
@@ -28529,34 +28505,20 @@ function commandSubmodulesGitStatus( test )
       a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
       return null;
     });
-
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    let superShell = _.process.starter
-    ({
-      currentPath : a.abs( 'super' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* */
-
-    superShell( 'git init' );
-    superShell( 'git remote add origin ../repo' );
-    superShell( 'git add --all' );
-    superShell( 'git commit -am first' );
-    superShell( 'git push -u origin master' );
+    let currentPath = a.abs( 'super' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin master' });
     a.shell( `git clone ./repo ./clone` );
     a.shell( `git clone ./repo ./original` );
-
     a.ready.then( () =>
     {
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
       return null;
     });
-
     return a.ready;
   }
 }
