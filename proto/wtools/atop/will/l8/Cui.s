@@ -3072,6 +3072,9 @@ function commandGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -3107,6 +3110,7 @@ commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandProperties = commandImply.commandProperties;
 commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandGit.commandProperties.profile = 'A config profile to use from utility Censor. Default is "default".';
 
 //
 
