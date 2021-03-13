@@ -7631,21 +7631,11 @@ function verbositySet( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodules' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
 
-  a.ready
-  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.clean' });
   a.appStart({ execPath : '.imply verbosity:3 ; .build' })
   .finally( ( err, op ) =>
   {
@@ -7672,7 +7662,7 @@ function verbositySet( test )
     test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -7703,7 +7693,7 @@ function verbositySet( test )
     test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -7734,7 +7724,7 @@ function verbositySet( test )
     test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
-  })
+  });
 
   /* - */
 
