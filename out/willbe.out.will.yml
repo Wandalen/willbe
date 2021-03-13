@@ -2107,6 +2107,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/submodules-download-errors/bad.will.yml
           - >-
+            ../proto/wtools/atop/will.test/_asset/submodules-download-errors/badProtocol.will.yml
+          - >-
             ../proto/wtools/atop/will.test/_asset/submodules-download-errors/good.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules-download-npm
           - >-

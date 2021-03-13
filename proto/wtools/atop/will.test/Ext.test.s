@@ -20012,6 +20012,46 @@ submodulesDownloadThrowing.timeOut = 300000;
 
 //
 
+function submodulesDownloadInvalidUrl( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-download-errors' );
+  
+  a.reflect();
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '';
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.with badProtocol .submodules.download' })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+submodulesDownloadInvalidUrl.timeOut = 300000;
+submodulesDownloadInvalidUrl.description = 
+`
+Module path is contain unsupported protocol. 
+Utility should throw error and exit with non-zero code.
+`
+
+//
+
 function submodulesDownloadStepAndCommand( test )
 {
   let context = this;
@@ -39174,6 +39214,7 @@ let Self =
     submodulesDownloadSwitchBranch,
     // submodulesDownloadRecursive, /* xxx */
     submodulesDownloadThrowing,
+    submodulesDownloadInvalidUrl,
     submodulesDownloadStepAndCommand,
     submodulesDownloadDiffDownloadPathsRegular,
     submodulesDownloadDiffDownloadPathsIrregular,
