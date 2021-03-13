@@ -14,9 +14,11 @@ step :
 
   git.sync.message :
     commit : '-am fifth'
+    profile : 'test-profile'
 
   git.sync.dry :
     commit : '-am fifth'
+    profile : 'test-profile'
     dry : 1
 
 build :

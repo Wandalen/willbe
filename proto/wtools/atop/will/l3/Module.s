@@ -369,7 +369,6 @@ function outModuleMake( o )
   let moduleWas = will.moduleWithCommonPathMap[ _.Will.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
-    debugger;
     _.assert( 0, 'not tested' );
     _.assert( moduleWas.peerModule === module );
     _.assert( moduleWas === module.peerModule );
@@ -534,7 +533,6 @@ function outModuleOpen( o )
 
     if( !opener2.openedModule.isConsistent() )
     {
-      debugger;
       opener2.error = _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` );
       logger.log( opener2.error );
       return module2;
@@ -582,7 +580,6 @@ function outModuleOpen( o )
       }
       catch( err2 )
       {
-        debugger;
         let error2 = _.err( err2 );
         logger.log( _.errOnce( error2 ) );
         throw error2;
@@ -795,8 +792,6 @@ function upform( o )
 
   o = _.routineOptions( upform, arguments );
   module.optionsFormingForward( o );
-
-  // debugger;
 
   if( o.attachedWillfilesFormed )
   if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
@@ -1521,7 +1516,6 @@ function predefinedStepMake( o )
   _.assert( module === o.module );
   _.assert( arguments.length === 1 );
 
-  // debugger;
   let result = new _.will.Step( o ).form1();
   result.writable = 0;
   return result;
@@ -1599,7 +1593,6 @@ function usedBy( user )
     }
     else if( user.remotePath && !module.remotePath )
     {
-      debugger;
       _.assert( _.strDefined( user.downloadPath ) );
       module.remotePathEachAdopt({ remotePath : user.remotePath, downloadPath : user.downloadPath });
     }
@@ -1828,7 +1821,6 @@ function reopen()
 
   ready.finally( ( err, module2 ) =>
   {
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} at ${commonPath}` );
     _.assert( module.isFinited() );
@@ -1961,7 +1953,6 @@ function _willfilesOpen()
 
   /* */
 
-  // debugger;
   for( let i = 0 ; i < module.willfilesArray.length ; i++ )
   {
     let willfile = module.willfilesArray[ i ];
@@ -2093,7 +2084,6 @@ function willfileRegister( willf )
 
   if( _.arrayIs( willf ) )
   {
-    debugger;
     willf.forEach( ( willf ) => module.willfileRegister( willf ) );
     return;
   }
@@ -2249,7 +2239,6 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
 
     willfile._read();
 
-    // debugger;
     for( let modulePath in willfile.structure.module )
     {
       let moduleStructure = willfile.structure.module[ modulePath ];
@@ -2267,7 +2256,6 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
       });
 
     }
-    // debugger;
 
   }
 
@@ -2338,7 +2326,6 @@ function exportAuto()
   let logger = will.logger;
   let clonePath = module.cloneDirPathGet();
 
-  debugger;
   _.assert( 'not implemented' );
 
   // _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -2399,8 +2386,6 @@ function exportAuto()
   // module.pickedWillfileData = autoWillfileData;
   // module.pickedWillfilesPath = clonePath + module.aliasName;
   // module._willfilesFindPickedFile()
-  //
-  // debugger;
 
 }
 
@@ -2532,7 +2517,6 @@ function exportedMake( o )
     return new _.Consequence().take( makeFromPeer() );
   }
 
-  debugger
   return new _.Consequence().take( make() );
 
   /* */
@@ -8644,7 +8628,7 @@ function gitExecCommand( o )
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake( o.dirPath, o.verbosity );
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -8680,6 +8664,7 @@ gitExecCommand.defaults =
 {
   command : null,
   dirPath : null,
+  profile : 'default',
   hardLinkMaybe : 0,
   v : null,
   verbosity : 2,
@@ -8812,23 +8797,24 @@ gitPrOpen.defaults =
 
 //
 
-function _providerArchiveMake( dirPath, verbosity )
+function _providerArchiveMake( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead({ profileDir : o.profile });
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   if( !config )
   config = fileProvider.configUserRead();
 
   let provider = _.FileFilter.Archive();
-  provider.archive.basePath = dirPath;
+  provider.archive.basePath = o.dirPath;
 
   if( config && config.path && config.path.hlink )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
 
-  if( verbosity )
+  if( o.verbosity )
   provider.archive.verbosity = 2;
   else
   provider.archive.verbosity = 0;
@@ -8950,7 +8936,7 @@ function gitPull( o )
     //   provider.archive.restoreLinksEnd();
     // }
 
-    provider = module._providerArchiveMake( will.currentOpener.dirPath, o.verbosity );
+    provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -8984,6 +8970,7 @@ function gitPull( o )
 
 gitPull.defaults =
 {
+  profile : 'default',
   dirPath : null,
   v : null,
   verbosity : 2,
@@ -9201,10 +9188,7 @@ function gitSync( o )
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : o.dirPath + '**', safe : 0 });
 
-  let status = _.git.statusFull
-  ({
-    insidePath : o.dirPath,
-  });
+  let status = _.git.statusFull({ insidePath : o.dirPath });
 
   if( o.dry )
   return null;
@@ -9227,7 +9211,7 @@ function gitSync( o )
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.' } ) );
+    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
     return null;
   })
 
@@ -9259,6 +9243,7 @@ function gitSync( o )
 gitSync.defaults =
 {
   commit : '.',
+  profile : 'default',
   dirPath : null,
   restoringHardLinks : 1,
   dry : 0,

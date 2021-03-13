@@ -2026,6 +2026,9 @@ function commandSubmodulesGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -2052,6 +2055,7 @@ function commandSubmodulesGit( e )
       command : e.subject,
       verbosity : cui.verbosity,
       hardLinkMaybe,
+      profile,
     });
   }
 }
@@ -2062,6 +2066,7 @@ commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandSubmodulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -2232,7 +2237,12 @@ function commandSubmodulesGitSync( e )
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
     provider =
-    rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    rootOpener.openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : e.propertiesMap.verbosity,
+      profile : e.propertiesMap.profile
+    });
 
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -2255,7 +2265,6 @@ function commandSubmodulesGitSync( e )
 
   function onModulesEnd( openers )
   {
-    debugger;
     provider.archive.restoreLinksEnd();
   }
 }
@@ -2264,6 +2273,7 @@ commandSubmodulesGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -2275,6 +2285,7 @@ commandSubmodulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -2392,6 +2403,9 @@ function commandModulesGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -2418,6 +2432,7 @@ function commandModulesGit( e )
       command : e.subject,
       verbosity : cui.verbosity,
       hardLinkMaybe,
+      profile,
     });
   }
 }
@@ -2428,6 +2443,7 @@ commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
 commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandModulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -2597,8 +2613,12 @@ function commandModulesGitSync( e )
     let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    provider = openers[ 0 ].openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : e.propertiesMap.verbosity,
+      profile : e.propertiesMap.profile,
+    });
 
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -2629,6 +2649,7 @@ commandModulesGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -2640,6 +2661,7 @@ commandModulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -3050,6 +3072,9 @@ function commandGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -3085,6 +3110,7 @@ commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandProperties = commandImply.commandProperties;
 commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -3176,6 +3202,9 @@ function commandGitPull( e )
 {
   let cui = this;
   cui._command_head( commandGitPull, arguments );
+  let profile = e.propertiesMap.profile;
+  if( 'profile' in e.propertiesMap )
+  delete e.propertiesMap.profile;
 
   _.routineOptions( commandGitPull, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -3194,6 +3223,7 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.verbosity,
+      profile,
     });
   }
 }
@@ -3203,6 +3233,7 @@ commandGitPull.defaults.withSubmodules = 0;
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
+commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -3373,6 +3404,7 @@ commandGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -3384,6 +3416,7 @@ commandGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
