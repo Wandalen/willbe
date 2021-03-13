@@ -27436,7 +27436,6 @@ function commandSubmodulesGitRemoteSubmodules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'modulesGit' );
-  a.reflect();
 
   /* */
 
@@ -27452,40 +27451,16 @@ function commandSubmodulesGitRemoteSubmodules( test )
 
   /* */
 
-  a.shell( 'git init' );
-  a.shell( 'git add --all' );
-  a.shell( 'git commit -am first' );
-
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    a.fileProvider.dirMake( a.abs( 'repo' ) );
-    return null;
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  a.shell( 'git remote add origin repo/' )
-
-  /* */
-
-  a.ready.then( () =>
-  {
+    test.case = '.submodules.git status - without remote git submodule';
     a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( '.submodules.git status' )
   .then( ( op ) =>
   {
-    test.case = '.submodules.git status - without remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
@@ -27499,11 +27474,16 @@ function commandSubmodulesGitRemoteSubmodules( test )
 
   /* */
 
+  begin().then( () =>
+  {
+    test.case = '.submodules.git status - with remote git submodule';
+    a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
+    return null;
+  });
   a.appStart( '.build' );
   a.appStart( '.submodules.git status' )
   .then( ( op ) =>
   {
-    test.case = '.submodules.git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -27529,6 +27509,20 @@ function commandSubmodulesGitRemoteSubmodules( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    a.shell( 'git init' );
+    a.shell( 'git add --all' );
+    a.shell( 'git commit -am first' );
+    a.shell( 'git remote add origin repo/' )
+    return a.ready;
+  }
 }
 
 //
