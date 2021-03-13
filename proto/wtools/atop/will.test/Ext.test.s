@@ -6178,6 +6178,8 @@ function hookGitPush( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
+  /* */
+
   begin().then( () =>
   {
     test.case = '.with original/ .call GitPush v:1 - succefull pushing of commit';
@@ -6286,7 +6288,7 @@ function hookGitPush( test )
     });
 
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( 'original' ); 
+    let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -6302,7 +6304,7 @@ function hookGitReset( test )
   let context = this;
   let a = context.assetFor( test, 'gitReset' );
 
-  /* - */
+  /* */
 
   begin().then( () =>
   {
@@ -6698,34 +6700,13 @@ File.txt
     {
       a.reflect();
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
       return null;
     });
 
-    _.process.start
-    ({
-      execPath : 'git init --bare',
-      currentPath : a.abs( 'repo' ),
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    let cloneShell = _.process.starter
-    ({
-      currentPath : a.abs( 'clone' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* - */
-
-    cloneShell( 'git init' );
-    cloneShell( 'git remote add origin ../repo' );
-    cloneShell( 'git add --all' );
-    cloneShell( 'git commit -am first' );
-
+    let currentPath = a.abs( 'clone' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
     return a.ready;
   }
 }
@@ -6739,43 +6720,9 @@ function hookGitSyncConflict( test )
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
+  /* */
 
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-
-  /* - */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
-    return null;
-  });
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-
-  a.ready.then( ( op ) =>
+  begin().then( ( op ) =>
   {
     test.description = 'hardlink';
     a.fileProvider.hardLink
@@ -6784,7 +6731,6 @@ function hookGitSyncConflict( test )
       dstPath : a.abs( 'clone/f2.txt' ),
       sync : 1,
     });
-
     test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
@@ -6829,8 +6775,9 @@ clone
     return null;
   });
 
-  originalShell( 'git commit -am second' );
+  /* */
 
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.appStartNonThrowing( '.with clone/ .call GitSync -am "second"' )
   .then( ( op ) =>
   {
@@ -6851,7 +6798,7 @@ clone
 original/f.txt
 copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -6859,7 +6806,7 @@ original
 `
 original/f.txt
 copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -6891,12 +6838,31 @@ original
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookGitSyncConflict */
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+    return a.ready;
+  }
+}
 
 hookGitSyncConflict.timeOut = 300000;
 hookGitSyncConflict.description =
@@ -6904,7 +6870,7 @@ hookGitSyncConflict.description =
 - pull done
 - conflict is not obstacle to relink files
 - if conflict then application returns error code
-`
+`;
 
 //
 
