@@ -1821,7 +1821,6 @@ function reopen()
 
   ready.finally( ( err, module2 ) =>
   {
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} at ${commonPath}` );
     _.assert( module.isFinited() );
@@ -1954,7 +1953,6 @@ function _willfilesOpen()
 
   /* */
 
-  // debugger;
   for( let i = 0 ; i < module.willfilesArray.length ; i++ )
   {
     let willfile = module.willfilesArray[ i ];
@@ -2086,7 +2084,6 @@ function willfileRegister( willf )
 
   if( _.arrayIs( willf ) )
   {
-    debugger;
     willf.forEach( ( willf ) => module.willfileRegister( willf ) );
     return;
   }
@@ -2242,7 +2239,6 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
 
     willfile._read();
 
-    // debugger;
     for( let modulePath in willfile.structure.module )
     {
       let moduleStructure = willfile.structure.module[ modulePath ];
@@ -2260,7 +2256,6 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
       });
 
     }
-    // debugger;
 
   }
 
@@ -2331,7 +2326,6 @@ function exportAuto()
   let logger = will.logger;
   let clonePath = module.cloneDirPathGet();
 
-  debugger;
   _.assert( 'not implemented' );
 
   // _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -2392,8 +2386,6 @@ function exportAuto()
   // module.pickedWillfileData = autoWillfileData;
   // module.pickedWillfilesPath = clonePath + module.aliasName;
   // module._willfilesFindPickedFile()
-  //
-  // debugger;
 
 }
 
@@ -2525,7 +2517,6 @@ function exportedMake( o )
     return new _.Consequence().take( makeFromPeer() );
   }
 
-  debugger
   return new _.Consequence().take( make() );
 
   /* */
@@ -8812,7 +8803,6 @@ function _providerArchiveMake( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  debugger;
   let config = _.censor.configRead({ profileDir : o.profile });
   // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   if( !config )

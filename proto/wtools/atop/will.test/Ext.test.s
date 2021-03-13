@@ -29054,14 +29054,13 @@ function commandSubmodulesGitSync( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -29073,27 +29072,10 @@ function commandSubmodulesGitSync( test )
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.dirMake( a.abs( 'repo2' ) );
     return null;
-  })
+  });
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo2' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+  a.shell({ currentPath : a.abs( 'repo2' ), execPath : 'git init --bare' });
 
   let originalShell = _.process.starter
   ({
@@ -29145,7 +29127,7 @@ function commandSubmodulesGitSync( test )
     return null;
   })
 
-  a.appStart( '.with original/ .submodules.git.sync' )
+  a.appStart( `.with original/ .submodules.git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original .submodules.git.sync - committing and pushing, without remote submodule';
@@ -29175,7 +29157,7 @@ function commandSubmodulesGitSync( test )
     return null;
   })
 
-  a.appStart( '.with original/GitSync .submodules.git.sync -am "new lines"' )
+  a.appStart( `.with original/GitSync .submodules.git.sync -am "new lines" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
@@ -29208,7 +29190,7 @@ function commandSubmodulesGitSync( test )
     return null;
   })
 
-  a.appStart( '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2"' )
+  a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git.sync -am "new lines2"` )
   .then( ( op ) =>
   {
     test.case = '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" - committing and pushing with local submodule';
@@ -29238,12 +29220,8 @@ function commandSubmodulesGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 

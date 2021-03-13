@@ -2237,7 +2237,12 @@ function commandSubmodulesGitSync( e )
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
     provider =
-    rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    rootOpener.openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : e.propertiesMap.verbosity,
+      profile : e.propertiesMap.profile
+    });
 
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -2260,7 +2265,6 @@ function commandSubmodulesGitSync( e )
 
   function onModulesEnd( openers )
   {
-    debugger;
     provider.archive.restoreLinksEnd();
   }
 }
