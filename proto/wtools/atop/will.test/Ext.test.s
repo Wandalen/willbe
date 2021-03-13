@@ -33042,33 +33042,16 @@ function commandGitStatus( test )
 
   function begin()
   {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-
-    let originalShell = _.process.starter
-    ({
-      currentPath : a.abs( 'original' ),
-      outputCollecting : 1,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'shell',
-    });
-
-    /* */
-
-    originalShell( 'git init' );
-    originalShell( 'git remote add origin ../repo' );
-    originalShell( 'git add --all' );
-    originalShell( 'git commit -am first' );
-    originalShell( 'git push -u origin --all' );
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
     a.shell( 'git clone repo/ clone' );
-
     return a.ready;
   }
 }
@@ -33081,78 +33064,16 @@ function commandGitStatusWithPR( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
-  a.reflect();
-
-  /* - */
 
   let config = a.fileProvider.configUserRead();
   if( !_.process.insideTestContainer() || !config || !config.about || !config.about[ 'github.token' ] )
-  {
-    test.true( true );
-    return null;
-  }
+  return test.true( true );
+
   let user = config.about.user;
 
-  /* prepare data */
+  /* */
 
-  a.ready.then( () =>
-  {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    return null;
-  });
-
-  a.ready.then( ( op ) =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  });
-
-  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
-    return null;
-  });
-
-  originalShell
-  (
-    `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
-  );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -m first' );
-  originalShell( 'git push -u origin master' );
-  originalShell( 'git checkout -b new' );
-  a.ready.then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-    return null;
-  });
-  originalShell( 'git commit -am second' );
-  originalShell( 'git push -u origin new' );
-
-  a.appStart( '.with original/GitPrOpen .git.pr.open "New PR" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
-    return null;
-  })
-
-  /* test */
-
+  begin();
   a.appStart( '.with original/ .git.status' )
   .then( ( op ) =>
   {
@@ -33205,6 +33126,45 @@ function commandGitStatusWithPR( test )
   /* */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+    a.ready.then( ( op ) =>
+    {
+      return _.git.repositoryDelete
+      ({
+        remotePath : `https://github.com/${user}/New2`,
+        token : config.about[ 'github.token' ],
+      });
+    });
+    a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
+    a.shell
+    ({
+      currentPath,
+      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+    });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -m first' });
+    a.shell({ currentPath, execPath : 'git push -u origin master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new' });
+    a.appStart( '.with original/GitPrOpen .git.pr.open "New PR" srcBranch:new' )
+    return a.ready;
+  }
 }
 
 //
