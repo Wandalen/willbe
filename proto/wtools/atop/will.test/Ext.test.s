@@ -29525,14 +29525,13 @@ function commandModulesGitRemoteSubmodules( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -29607,12 +29606,8 @@ function commandModulesGitRemoteSubmodules( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -29631,14 +29626,13 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -29713,12 +29707,8 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -30848,14 +30838,13 @@ function commandModulesGitSync( test )
 
   /* */
 
-  let config, configPath;
+  let config, profile, profileDir;
   if( _.censor )
   {
-    config = _.censor.configRead();
-    if( config.path && config.path.hlink )
-    config.path.hlink1 = config.path.hlink; /* save */
-    delete config.path.hlink;
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
@@ -30939,7 +30928,7 @@ function commandModulesGitSync( test )
     return null;
   })
 
-  a.appStart( '.with original/ .modules.git.sync' )
+  a.appStart( `.with original/ .modules.git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original .modules.git.sync - committing and pushing, without remote submodule';
@@ -30969,7 +30958,7 @@ function commandModulesGitSync( test )
     return null;
   })
 
-  a.appStart( '.with original/GitSync .modules.git.sync -am "new lines"' )
+  a.appStart( `.with original/GitSync .modules.git.sync -am "new lines" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/GitSync .modules.git.sync -am "new lines" - committing and pushing with local submodule';
@@ -31002,7 +30991,7 @@ function commandModulesGitSync( test )
     return null;
   })
 
-  a.appStart( '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2"' )
+  a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .modules.git.sync -am "new lines2"` )
   .then( ( op ) =>
   {
     test.case = '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2" - committing and pushing with local submodule';
@@ -31032,12 +31021,8 @@ function commandModulesGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( !_.censor )
-    return null;
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -31055,34 +31040,16 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config, configPath;
-  if( _.censor )
-  {
-    config = _.censor.configRead();
-    if( !config.path || !config.path.hlink )
-    return test.true( true );
+  if( !_.censor )
+  return test.true( true );
 
-    config.path.hlink1 = config.path.hlink; /* save */
-    config.path.hlink = a.path.join( a.routinePath, '../..' );
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
-  else
-  {
-    context.suiteTempPath = temp;
-    return test.true( true );
-  }
+  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let profile = 'test-profile';
+  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let configPath = a.abs( profileDir, 'config.yaml' );
+  a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
-
-  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  // if( !config || !config.path || !config.path.hlink )
-  // {
-  //   context.suiteTempPath = temp;
-  //   test.true( true );
-  //   return null;
-  // }
-  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31183,13 +31150,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     return null;
   })
 
-  a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
+  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'without conflict';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::super' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
@@ -31246,13 +31213,8 @@ super
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
-
-    /* */
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
   });
 
@@ -31270,34 +31232,16 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config, configPath;
-  if( _.censor )
-  {
-    config = _.censor.configRead();
-    if( !config.path || !config.path.hlink )
-    return test.true( true );
+  if( !_.censor )
+  return test.true( true );
 
-    config.path.hlink1 = config.path.hlink; /* save */
-    config.path.hlink = a.path.join( a.routinePath, '../..' );
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
-  else
-  {
-    context.suiteTempPath = temp;
-    return test.true( true );
-  }
+  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let profile = 'test-profile';
+  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let configPath = a.abs( profileDir, 'config.yaml' );
+  a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
-
-  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  // if( !config || !config.path || !config.path.hlink )
-  // {
-  //   context.suiteTempPath = temp;
-  //   test.true( true );
-  //   return null;
-  // }
-  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31398,13 +31342,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
     return null;
   })
 
-  a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
+  a.appStartNonThrowing( `.with super/ .imply profile:${ profile } .modules.git.sync v:5` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .imply profile:${ profile } .modules.git.sync v:5"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
@@ -31469,13 +31413,8 @@ original/f2.txt
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
-
-    /* */
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
   })
 
@@ -31493,34 +31432,16 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config, configPath;
-  if( _.censor )
-  {
-    config = _.censor.configRead();
-    if( !config.path || !config.path.hlink )
-    return test.true( true );
+  if( !_.censor )
+  return test.true( true );
 
-    config.path.hlink1 = config.path.hlink; /* save */
-    config.path.hlink = a.path.join( a.routinePath, '../..' );
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
-  else
-  {
-    context.suiteTempPath = temp;
-    return test.true( true );
-  }
+  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let profile = 'test-profile';
+  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let configPath = a.abs( profileDir, 'config.yaml' );
+  a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
-
-  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  // if( !config || !config.path || !config.path.hlink )
-  // {
-  //   context.suiteTempPath = temp;
-  //   test.true( true );
-  //   return null;
-  // }
-  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31616,13 +31537,13 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   originalShell( 'git commit -am second' );
   originalShell( 'git push' );
 
-  a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
+  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -31686,13 +31607,8 @@ original/f2.txt
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
-
-    /* */
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
   });
 
@@ -31710,34 +31626,16 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modules-git-sync' );
 
-  let config, configPath;
-  if( _.censor )
-  {
-    config = _.censor.configRead();
-    if( !config.path || !config.path.hlink )
-    return test.true( true );
+  if( !_.censor )
+  return test.true( true );
 
-    config.path.hlink1 = config.path.hlink; /* save */
-    config.path.hlink = a.path.join( a.routinePath, '../..' );
-    configPath = a.abs( process.env.HOME, _.censor.storageConfigPath );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
-  else
-  {
-    context.suiteTempPath = temp;
-    return test.true( true );
-  }
+  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let profile = 'test-profile';
+  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let configPath = a.abs( profileDir, 'config.yaml' );
+  a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
-
-  // let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  // if( !config || !config.path || !config.path.hlink )
-  // {
-  //   context.suiteTempPath = temp;
-  //   test.true( true );
-  //   return null;
-  // }
-  // let linkPath = config.path.hlink;
 
   a.ready.then( () =>
   {
@@ -31821,14 +31719,13 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   originalShell( 'git commit -am second' );
   originalShell( 'git push' );
 
-  a.appStartNonThrowing( '.with super/ .modules.git.sync v:5' )
+  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
-    debugger;
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with super/ .modules.git.sync v:5"' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -31892,13 +31789,8 @@ original/f.txt
     a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
     a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
-
-    /* */
-
-    config.path.hlink = config.path.hlink1;
-    delete config.path.hlink1;
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
     return null;
   });
 
