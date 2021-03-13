@@ -3849,13 +3849,13 @@ function graphGroupMake( o )
 
     /*
     "junction:: : #1448
-      path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
+      path::local : hd:///atop/will.test/_asset/hierarchyHdBug/.module/PathTools
       module::z / module::wPathTools / opener::wPathTools #1447 #1576
       module::z / module::wPathTools / relation::wPathTools #1446 #1575
     "
     will.junctionWithId( 922 ).exportString()
     "junction:: : #922
-      path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
+      path::local : hd:///atop/will.test/_asset/hierarchyHdBug/group1/group10/.module/PathTools
       module::z / module::wPathTools / opener::wPathTools #921 #1050
       module::z / module::wPathTools / relation::wPathTools #920 #1049
     */
