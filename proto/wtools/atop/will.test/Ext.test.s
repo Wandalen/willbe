@@ -24020,35 +24020,10 @@ function stepGitPush( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-  a.fileProvider.dirMake( a.abs( 'repo' ) );
 
-  _.process.start
-  ({
-    execPath : 'git init --bare',
-    currentPath : a.abs( 'repo' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  /* */
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  originalShell( 'git init' );
-  originalShell( 'git remote add origin ../repo' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-
+  begin();
   a.appStart( '.with original/ .build git.push' )
   .then( ( op ) =>
   {
@@ -24059,9 +24034,8 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-
     return null;
-  })
+  });
 
   /* */
 
@@ -24080,16 +24054,8 @@ function stepGitPush( test )
 
   /* */
 
-  a.ready.then( ( op ) =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
-    return null;
-  })
-
-  originalShell( 'git commit -am second' );
-  originalShell( 'git tag -a v1.0 -m v1.0' );
-
+  begin();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -a v1.0 -m v1.0' });
   a.appStart( '.imply v:0 .with original/ .build push.with.dir' )
   .then( ( op ) =>
   {
@@ -24101,7 +24067,7 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -24116,11 +24082,26 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    return a.ready;
+  }
 }
 
 //
