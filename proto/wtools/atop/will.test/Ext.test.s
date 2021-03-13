@@ -6882,12 +6882,14 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config;
+  if( _.censor )
+  config =_.censor.configRead();
   if( !config || !config.path || !config.path.hlink )
   {
     context.suiteTempPath = temp;
     test.true( true );
-    return null;
+    return ;
   }
   let linkPath = config.path.hlink;
 
@@ -6903,7 +6905,7 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     return null;
-  })
+  });
 
   /* */
 
@@ -7017,50 +7019,9 @@ function hookGitSyncArguments( test )
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
 
-  let originalShell = _.process.starter
-  ({
-    currentPath : a.abs( 'original' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
+  /* */
 
-  let cloneShell = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  })
-
-  /* - */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
-    return null;
-  })
-
-  originalShell( 'git init' );
-  originalShell( 'git add --all' );
-  originalShell( 'git commit -am first' );
-  a.shell( `git clone original clone` );
-
-  a.ready.then( ( op ) =>
-  {
-    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
-    return null;
-  })
-
-  originalShell( 'git commit -am second' );
-
+  begin();
   a.appStartNonThrowing( '.with clone/ .call GitSync -am "second commit"' )
   .then( ( op ) =>
   {
@@ -7072,12 +7033,38 @@ function hookGitSyncArguments( test )
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
     test.identical( _.strCount( op.output, '> git push' ), 0 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookGitSyncArguments */
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
+    a.shell( `git clone original clone` );
+    a.ready.then( ( op ) =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
+    return a.ready;
+  }
+}
 
 hookGitSyncArguments.timeOut = 300000;
 hookGitSyncArguments.description =
