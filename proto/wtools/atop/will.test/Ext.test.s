@@ -5928,6 +5928,16 @@ function hookGitPull( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
+  let config, profile, profileDir;
+  if( _.censor )
+  {
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
   /* */
 
   begin().then( () =>
@@ -5935,7 +5945,7 @@ function hookGitPull( test )
     test.case = '.call GitPull - succefull pulling';
     return null;
   });
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.call GitPull' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.call GitPull profile:${ profile }` })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5955,7 +5965,7 @@ function hookGitPull( test )
     test.case = '.imply v:0 .call GitPull v:0 - succefull pulling';
     return null;
   });
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.imply v:0 .call GitPull v:0' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.imply v:0 .call GitPull v:0 profile:${ profile }` })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5984,7 +5994,7 @@ function hookGitPull( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.call GitPull' })
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.call GitPull profile:${ profile }` })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .call GitPull - succefull pulling with hardlinks';
@@ -6005,7 +6015,7 @@ function hookGitPull( test )
     test.case = '.imply withSubmodules:2 .with clone/ .call GitPull - succefull pulling';
     return null;
   })
-  a.appStart( '.imply withSubmodules:2 .with clone/ .call GitPull' )
+  a.appStart( `.imply withSubmodules:2 .with clone/ .call GitPull profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -6015,6 +6025,15 @@ function hookGitPull( test )
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -6057,6 +6076,16 @@ function hookGitPullConflict( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
+
+  let config, profile, profileDir;
+  if( _.censor )
+  {
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
 
   /* */
 
@@ -6131,7 +6160,7 @@ clone
   /* */
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( '.with clone/ .call GitPull v:5' )
+  a.appStartNonThrowing( `.with clone/ .call GitPull v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'has local changes';
@@ -6182,7 +6211,7 @@ clone
   /* */
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( '.with clone/ .call GitPull v:5' )
+  a.appStartNonThrowing( `.with clone/ .call GitPull v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -6238,6 +6267,15 @@ original
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
@@ -6803,6 +6841,16 @@ function hookGitSyncConflict( test )
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
 
+  let config, profile, profileDir;
+  if( _.censor )
+  {
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
   /* */
 
   begin().then( ( op ) =>
@@ -6861,7 +6909,7 @@ clone
   /* */
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( '.with clone/ .call GitSync -am "second"' )
+  a.appStartNonThrowing( `.with clone/ .call GitSync -am "second" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -6923,6 +6971,15 @@ original
     return null;
   });
 
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -6965,15 +7022,19 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config;
+  if( !_.censor )
+  return test.true( true );
+
+  let config, profile, profileDir;
   if( _.censor )
-  config =_.censor.configRead();
-  if( !config || !config.path || !config.path.hlink )
   {
-    context.suiteTempPath = temp;
-    test.true( true );
-    return ;
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
+
   let linkPath = config.path.hlink;
 
   /* */
@@ -6993,13 +7054,13 @@ function hookGitSyncRestoreHardLinksWithConfigPath( test )
   /* */
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( '.with clone/ .call GitSync' )
+  a.appStartNonThrowing( `.with clone/ .call GitSync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'Command ".with clone/ .call GitSync"' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with clone/ .call GitSync profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -7049,14 +7110,17 @@ original/f.txt
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
+
+  /* */
 
   a.ready.then( () =>
   {
     a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    // a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
+    // a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
+    // a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
   });
@@ -7102,10 +7166,24 @@ function hookGitSyncArguments( test )
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
 
+  if( !_.censor )
+  return test.true( true );
+
+  let config, profile, profileDir;
+  if( _.censor )
+  {
+    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  let linkPath = config.path.hlink;
   /* */
 
   begin();
-  a.appStartNonThrowing( '.with clone/ .call GitSync -am "second commit"' )
+  a.appStartNonThrowing( `.with clone/ .call GitSync -am "second commit" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.description = 'conflict';
@@ -7115,6 +7193,18 @@ function hookGitSyncArguments( test )
     test.identical( _.strCount( op.output, '> git add' ), 1 );
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
     test.identical( _.strCount( op.output, '> git push' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    a.fileProvider.filesDelete( context.suiteTempPath );
+    // a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
+    // a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
+    // a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( profileDir );
     return null;
   });
 
