@@ -7,8 +7,9 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let configPath = path.join( context.junction.dirPath, 'package.json' );
-  let wasСonfigPath = path.join( context.junction.dirPath, 'was.package.json' );
+  let abs = _.routine.join( path, path.join, [ context.junction.dirPath ] );
+  let configPath = abs( 'package.json' );
+  let wasСonfigPath = abs( 'was.package.json' );
   let wasPublished = null;
 
   if( o.v !== null && o.v !== undefined )
@@ -81,6 +82,9 @@ function onModule( context )
 
   if( o.dry )
   return;
+
+  fileProvider.filesDelete( abs( 'node_modules' ) );
+  fileProvider.filesDelete( abs( 'package-lock.json' ) );
 
   let bumped = _.npm.bump
   ({
