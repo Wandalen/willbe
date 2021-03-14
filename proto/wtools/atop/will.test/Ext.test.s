@@ -38790,9 +38790,9 @@ function commandsSubmoduleSafety( test )
   /* */
 
   run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1 })
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })//FAIL
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
   run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 })
   run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 })
   run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 })
@@ -38823,22 +38823,20 @@ function commandsSubmoduleSafety( test )
 
   /* */
 
-  //qqq Vova : implement option force for clean
-
-  run({ command : 'clean force', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
   
   /* */
 
@@ -38963,7 +38961,14 @@ function commandsSubmoduleSafety( test )
       data = _.strReplace( data, '/!master', '/!missing' );
       a.rootWillFileWrite( data );
     }
-
+    
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'missing/tag', 
+      set : { 'versions.verify' : `does not have files` }
+    })
+    
     routinesPre[ 'invalid/url' ] = () => 
     {
       let data = a.rootWillFileRead();
@@ -39063,6 +39068,18 @@ function commandsSubmoduleSafety( test )
       if( env.isNpmModule )
       a.fileProvider.fileRename( a.path.join( a.localPath, 'package.json' ), a.path.join( a.localPath, 'package_disabled.json' ) );
     }
+    
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'notGitReporOrNpmModule', 
+      set : 
+      {
+        'download' : `it's not a git repository or npm module`,
+        'update' : `it's not a git repository or npm module`,
+        'versions.verify' : `is downloaded, but it's not a repository`
+      }
+    })
    
     outputMap[ 'notGitReporOrNpmModule' ] = 
     {
@@ -39082,7 +39099,7 @@ function commandsSubmoduleSafety( test )
       set : 
       {
         'update' : `but has different origin`,
-        'versions.verify' : `but has different origin`,
+        'versions.verify' : `has different origin url`,
       }
     })
 
@@ -39091,6 +39108,15 @@ function commandsSubmoduleSafety( test )
       a.moduleShell( 'git checkout -b testbranch' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
+    _.select
+    ({ 
+      src : outputMap, 
+      selector : 'different/branch', 
+      set : 
+      {
+        'versions.verify' : `has version different from that is specified in will-file`
+      }
+    })
   }
 
   /* */
