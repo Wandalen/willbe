@@ -2616,13 +2616,12 @@ function implyWithSubmodulesModulesList( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'default withSubmodules';
     a.reflect();
     return null;
-  })
+  });
   a.appStart( '".with l4 .modules.list"' )
   .then( ( op ) =>
   {
@@ -2639,12 +2638,11 @@ function implyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'module::l1' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'withSubmodules:0';
     a.reflect();
@@ -2667,8 +2665,7 @@ function implyWithSubmodulesModulesList( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'withSubmodules:1';
     a.reflect();
@@ -22505,21 +22502,6 @@ function versionsAgree( test )
 {
   let context = this;
   let a = context.assetFor( test, 'commandVersionsAgree' );
-  a.appStart2 = _.process.starter
-  ({
-    currentPath : a.abs( 'module' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-  })
-
-  a.appStart3 = _.process.starter
-  ({
-    currentPath : a.abs( '.module/local' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
@@ -22528,16 +22510,16 @@ function versionsAgree( test )
   {
     test.case = 'setup';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.with ./module/ .export' )
-  a.appStart2( 'git init' )
-  a.appStart2( 'git add -fA .' )
-  a.appStart2( 'git commit -m init' )
+  a.appStartNonThrowing( '.with ./module/ .export' );
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git add -fA .' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit -m init' });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'agree not downloaded';
     return null;
@@ -22550,11 +22532,11 @@ function versionsAgree( test )
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'agree after download';
     return null;
@@ -22577,7 +22559,7 @@ function versionsAgree( test )
     return null;
   })
 
-  a.appStart3( 'git commit --allow-empty -m test' )
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git commit --allow-empty -m test' })
   a.appStartNonThrowing( '.submodules.versions.agree' )
   .then( ( op ) =>
   {
@@ -22585,7 +22567,7 @@ function versionsAgree( test )
     test.true( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  a.appStart3( 'git status' )
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git status' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -22601,7 +22583,7 @@ function versionsAgree( test )
     return null;
   })
 
-  a.appStart2( 'git commit --allow-empty -m test' )
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit --allow-empty -m test' });
   a.appStartNonThrowing( '.submodules.versions.agree' )
   .then( ( op ) =>
   {
@@ -22611,24 +22593,24 @@ function versionsAgree( test )
     test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  a.appStart3( 'git status' )
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git status' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'local is not up to date with remote, no local changes';
     return null;
-  })
+  });
 
-  a.appStart3( 'git reset --hard origin' )
-  a.appStart2( 'git commit --allow-empty -m test2' )
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git reset --hard origin' })
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit --allow-empty -m test2' });
   a.appStartNonThrowing( '.submodules.versions.agree' )
   .then( ( op ) =>
   {
@@ -22636,14 +22618,16 @@ function versionsAgree( test )
 
     test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
-  })
-  a.appStart3( 'git status' )
+  });
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git status' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Your branch is up to date/ ) );
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -22896,48 +22880,45 @@ function stepSubmodulesDownload( test )
   /* - */
 
   a.appStart({ execPath : '.resources.list' })
-
   .then( ( op ) =>
   {
     test.case = 'list'
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master` ) );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'build'
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
     test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     a.fileProvider.filesDelete( a.abs( 'out/Download.out.will.yml' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -22945,7 +22926,7 @@ function stepSubmodulesDownload( test )
     test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
     test.true( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
