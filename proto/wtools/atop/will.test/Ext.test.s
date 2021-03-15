@@ -38108,7 +38108,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
   run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })// FAIL
   run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
-  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'local/commit', downloaded : 1, error : 0 })
@@ -38199,6 +38199,7 @@ function commandsSubmoduleSafety( test )
     a.ready.then( () =>
     {
       if( env.command == 'update' )
+      if( env.case !== 'missing/tag' )
       {
         a.moduleFixateTag( 'dev1' );
       }
