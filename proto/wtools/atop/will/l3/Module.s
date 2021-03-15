@@ -4743,7 +4743,7 @@ function cleanWhatSingle( o )
         _.assert( status.hasLocalChanges !== undefined );
 
         if( status.hasLocalChanges )
-        throw _.err( 'Module at', module.decoratedAbsoluteName, 'needs to be removed, but has local changes.' );
+        throw _.err( 'Module at', module.decoratedAbsoluteName, 'needs to be removed, but has local changes. Use option "force" for forced removal.' );
       });
     }
 
