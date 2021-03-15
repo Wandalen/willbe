@@ -3199,6 +3199,7 @@ defaults.asCommand = 0;
 defaults.recursive = 0;
 defaults.withStem = 1;
 defaults.withPeers = 1;
+defaults.force = 0;
 
 delete defaults.outputFormat;
 delete defaults.onUp;

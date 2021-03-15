@@ -4717,11 +4717,39 @@ function cleanWhatSingle( o )
 
   if( o.cleaningSubmodules )
   {
+    if( !o.force )
+    {
+      let modules = module.modulesEachAll
+      ({
+        withPeers : 1,
+        withStem : 0,
+        recursive : 2,
+        outputFormat : '/'
+      });
+      modules.forEach( ( junction ) =>
+      {
+        let module2 = junction.module || junction.opener;
+        if( module2 === null )
+        return;
+
+        let status = module2.repo.status
+        ({
+          all : 0,
+          invalidating : 1,
+          hasLocalChanges : 1
+        })
+        .sync();
+
+        _.assert( status.hasLocalChanges !== undefined );
+
+        if( status.hasLocalChanges )
+        throw _.err( 'Module at', module.decoratedAbsoluteName, 'needs to be removed, but has local changes. Use option "force" for forced removal.' );
+      });
+    }
 
     find( module.cloneDirPathGet() );
     if( module.rootModule !== module )
     find( module.cloneDirPathGet( module ) );
-
   }
 
   /* out */
@@ -4825,6 +4853,7 @@ cleanWhatSingle.defaults =
   cleaningTemp : 1,
   fast : 0,
   files : null,
+  force : 0
 }
 
 //
