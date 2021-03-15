@@ -1837,6 +1837,10 @@ function commandSubmodulesVersionsDownload( e )
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+  
   cui._propertiesImply( implyMap );
 
   return cui._commandCleanLike
@@ -1862,7 +1866,7 @@ function commandSubmodulesVersionsDownload( e )
 
 }
 
-commandSubmodulesVersionsDownload.defaults = commandImply.defaults;
+commandSubmodulesVersionsDownload.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
 commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
@@ -1882,6 +1886,10 @@ function commandSubmodulesVersionsUpdate( e )
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
@@ -1901,7 +1909,7 @@ function commandSubmodulesVersionsUpdate( e )
 
 }
 
-commandSubmodulesVersionsUpdate.defaults = commandImply.defaults;
+commandSubmodulesVersionsUpdate.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
@@ -2915,6 +2923,7 @@ commandSubmodulesClean.commandProperties =
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+  force : 'Force cleaning. force:0 - checks submodules for local changes before cleanup, force:1 - removes submodules without any checks.',
   ... commandImply.commandProperties,
 }
 

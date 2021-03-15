@@ -1305,7 +1305,19 @@ function _repoDownload( o )
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   return ready
-  .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
+  // .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
+  .then( () => 
+  {
+    return opener.repo.status
+    ({ 
+      all : 1, 
+      invalidating : 1,
+      isUpToDate : o.mode !== 'download',
+      downloadRequired : o.mode === 'download',
+      updateRequired : o.mode === 'update',
+      agreeRequired : o.mode === 'agree',
+    })
+  })
   .then( function( arg )
   {
     status = arg;

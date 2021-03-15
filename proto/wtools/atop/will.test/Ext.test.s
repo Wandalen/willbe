@@ -19421,6 +19421,111 @@ function submodulesDownloadSwitchBranch( test )
 
 submodulesDownloadSwitchBranch.timeOut = 300000;
 
+//
+
+function submodulesDownloadWithSubmodulesDefault( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-download' );
+  a.appStartNonThrowing2 = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : a.ready,
+  })
+  a.reflect();
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = 'download using command submodules.download'
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    return null;
+  })
+  a.appStartNonThrowing2( 'git init' )
+  a.appStartNonThrowing2( 'git add .' )
+  a.appStartNonThrowing2( 'git commit -m init' )
+
+  a.appStart({ execPath : '.submodules.download' })
+
+  .then( ( op ) =>
+  {
+    let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( downloadedModules, [ 'submodule' ] );
+
+    test.identical( _.strCount( op.output, /. Opened ./ ), 3 );
+    test.identical( _.strCount( op.output, /. Opened .*\/\.will.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /. Opened .*\.module\/submodule\/out\/submodule\.out\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /. Opened .*\.module\/submodule\/submodule.will.yml./ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) .* downloaded/ ), 1 );
+
+    return null;
+  })
+
+  return a.ready;
+}
+
+submodulesDownloadWithSubmodulesDefault.rapidity = 1;
+submodulesDownloadWithSubmodulesDefault.timeOut = 300000;
+
+//
+
+function submodulesDownloadUpdateWithSubmodulesDefault( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-download' );
+  a.appStartNonThrowing2 = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : a.ready,
+  })
+  a.reflect();
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = 'download using command submodules.download'
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    return null;
+  })
+  a.appStartNonThrowing2( 'git init' )
+  a.appStartNonThrowing2( 'git add .' )
+  a.appStartNonThrowing2( 'git commit -m init' )
+
+  a.appStart({ execPath : '.submodules.update' })
+
+  .then( ( op ) =>
+  {
+    let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( downloadedModules, [ 'submodule' ] );
+
+    test.identical( _.strCount( op.output, /. Opened ./ ), 3 );
+    test.identical( _.strCount( op.output, /. Opened .*\/\.will.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /. Opened .*\.module\/submodule\/out\/submodule\.out\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, /. Opened .*\.module\/submodule\/submodule.will.yml./ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) .* updated/ ), 1 );
+
+    return null;
+  })
+
+  return a.ready;
+}
+
+submodulesDownloadUpdateWithSubmodulesDefault.rapidity = 1;
+submodulesDownloadUpdateWithSubmodulesDefault.timeOut = 300000;
+
+
 // //
 //
 // function submodulesDownloadRecursive( test )
@@ -37926,6 +38031,435 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
   return a.ready;
 }
 
+//
+
+function commandsSubmoduleSafety( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-safety' );
+
+  a.rooWillFilePath = a.abs( '.will.yml' );
+  a.localPath = a.abs( '.module/ModuleForTesting1' );
+
+  a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath })
+  a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data })
+  a.moduleGitStatusGet = () =>
+  {
+    return _.git.statusLocal
+    ({
+      localPath : a.localPath,
+      uncommitted : 1,
+      detailing : 1,
+      sync : 1,
+    });
+  }
+  a.moduleFilesGet = () =>
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.localPath,
+      filter : { recursive : 2 },
+      maskPreset : 0,
+      outputFormat : 'absolute'
+    });
+  }
+  a.moduleFixateTag = ( tag ) =>
+  {
+    let data = a.rootWillFileRead();
+    data = _.strReplace( data, '/!master', `/!${tag}` );
+    a.rootWillFileWrite( data );
+  }
+  a.moduleShell = _.process.starter
+  ({
+    currentPath : a.localPath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  let routinesPre = Object.create( null );
+  let routinesPost = Object.create( null );
+  let outputMap = Object.create( null );
+  routineForCasesRegister();
+
+  /* */
+
+  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 }) // FAIL
+  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
+  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 })
+
+  /* */
+
+  run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })// FAIL
+  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
+  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'local/commit', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'local/branch', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'local/tag', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'local/conflict', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'different/origin', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'different/branch', downloaded : 1, error : 0 })
+
+  /* */
+
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })//FAIL
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
+  run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'local/commit', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'local/branch', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'local/tag', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'local/conflict', downloaded : 1, error : 0 })
+  run({ command : 'versions.verify', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'different/origin', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'different/branch', downloaded : 1, error : 1 })
+
+  /* */
+
+  run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+
+  /* */
+
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+
+  /* */
+
+  function run( env )
+  {
+    a.ready.then( () =>
+    {
+      test.case = `${_.entity.exportStringSolo( env )}`;
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      return null;
+    })
+
+    if( env.downloaded )
+    {
+      a.appStart({ args : '.submodules.download' });
+      a.ready.then( () =>
+      {
+        env.isGitRepo = _.git.isRepository({ localPath : a.localPath });
+        env.isNpmModule = _.npm.isRepository({ localPath : a.localPath });
+        if( env.isGitRepo )
+        env.moduleGitStatusBefore = a.moduleGitStatusGet();
+        env.moduleFilesBefore = a.moduleFilesGet();
+        return null;
+      })
+    }
+
+    a.ready.then( () =>
+    {
+      if( env.command == 'update' )
+      if( env.case !== 'missing/tag' )
+      {
+        a.moduleFixateTag( 'dev1' );
+      }
+
+      if( routinesPre[ env.case ] )
+      return routinesPre[ env.case ]( env ) || true;
+      return null;
+    })
+
+    let op = { args : `.submodules.${env.command}` };
+    a.appStart( op );
+
+    a.ready.tap( () =>
+    {
+      let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
+      if( env.command == 'update' && isGitModuleInCurrentState )
+      {
+        let branch = _.git.tagLocalRetrive( a.localPath );
+
+        if( env.error )
+        test.identical( branch, 'master' );
+        else
+        test.identical( branch, 'dev1' );
+
+        if( !env.error )
+        a.moduleShell( 'git checkout master' );
+      }
+
+      if( routinesPost[ env.case ] )
+      routinesPost[ env.case ]( env );
+    })
+
+    if( env.error )
+    a.ready.finally( ( err, op ) =>
+    {
+      if( err )
+      {
+        _.errAttend( err );
+        _.errLogOnce( err );
+      }
+      test.true( _.errIs( err ) );
+      return null;
+    })
+
+    a.ready.then( () =>
+    {
+      if( env.error )
+      test.notIdentical( op.exitCode, 0 );
+      else
+      test.identical( op.exitCode, 0 );
+
+      let expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
+      if( expectedOutput )
+      _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
+
+      let moduleDirExists = a.fileProvider.isDir( a.localPath );
+
+      if( env.deleted )
+      test.false( moduleDirExists );
+      else
+      test.true( moduleDirExists );
+
+      if( !moduleDirExists )
+      return null;
+
+      env.moduleFilesAfter = a.moduleFilesGet();
+      test.ge( env.moduleFilesAfter.length, env.moduleFilesBefore.length );
+
+      if( env.isGitRepo )
+      {
+        test.true( _.git.isRepository({ localPath : a.localPath }) );
+        env.moduleGitStatusAfter = a.moduleGitStatusGet();
+        test.identical( env.moduleGitStatusAfter, env.moduleGitStatusBefore );
+      }
+      else
+      {
+        test.true( _.npm.isRepository({ localPath : a.localPath }) );
+      }
+
+      return null;
+    })
+  }
+
+  /* */
+
+  function routineForCasesRegister()
+  {
+    routinesPre[ 'missing/tag' ] = () =>
+    {
+      let data = a.rootWillFileRead();
+      data = _.strReplace( data, '/!master', '/!missing' );
+      a.rootWillFileWrite( data );
+    }
+
+    _.select
+    ({
+      src : outputMap,
+      selector : 'missing/tag',
+      set : { 'versions.verify' : `does not have files` }
+    })
+
+    routinesPre[ 'invalid/url' ] = () =>
+    {
+      let data = a.rootWillFileRead();
+      data = _.strReplace( data, 'git+https', 'test+https' );
+      a.rootWillFileWrite( data );
+    }
+
+    routinesPre[ 'local/untracked' ] = ( env ) =>
+    {
+      let filePath = a.path.join( a.localPath, 'untracked' + _.idWithTime() );
+      a.fileProvider.fileWrite({ filePath, data : ' ' });
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+
+    routinesPre[ 'local/unstaged' ] = ( env ) =>
+    {
+      let filePath = a.path.join( a.localPath, 'README.md');
+      a.fileProvider.fileWrite({ filePath, data : ' ' });
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+    _.select
+    ({
+      src : outputMap,
+      selector : 'local/unstaged',
+      set : { update : `needs to be updated, but has local changes` }
+    })
+
+    routinesPre[ 'local/staged' ] = ( env ) =>
+    {
+      let filePath = a.path.join( a.localPath, 'README.md');
+      a.fileProvider.fileWrite({ filePath, data : ' ' });
+      a.moduleShell( 'git add README.md' );
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+    _.select
+    ({
+      src : outputMap,
+      selector : 'local/staged',
+      set : { update : `needs to be updated, but has local changes` }
+    })
+
+    routinesPre[ 'local/commit' ] = ( env ) =>
+    {
+      a.moduleShell( 'git commit --allow-empty -m test' );
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+
+    routinesPre[ 'local/branch' ] = ( env ) =>
+    {
+      a.moduleShell( 'git branch test' );
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+
+    routinesPre[ 'local/tag' ] = ( env ) =>
+    {
+      a.moduleShell( 'git tag test' );
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+
+    routinesPre[ 'local/conflict' ] = ( env ) =>
+    {
+      a.moduleShell( 'git branch dev1' );
+      let filePath = a.path.join( a.localPath, 'README.md');
+      let data = a.fileProvider.fileRead({ filePath });
+
+      a.moduleShell( 'git checkout dev1' );
+      let data2 = 'dev1 ' + data;
+      a.fileProvider.fileWrite({ filePath, data : data2 });
+      a.moduleShell( 'git commit -am test' );
+
+      a.moduleShell( 'git checkout master' );
+      let data3 = 'master ' + data;
+      a.fileProvider.fileWrite({ filePath, data : data3 });
+      a.moduleShell( 'git commit -am test' );
+      a.moduleShell( 'git merge dev1' );
+
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+    _.select
+    ({
+      src : outputMap,
+      selector : 'local/conflict',
+      set : { update : `needs to be updated, but has local changes` }
+    })
+
+    routinesPre[ 'notGitReporOrNpmModule' ] = ( env ) =>
+    {
+      if( env.isGitRepo )
+      a.fileProvider.fileRename( a.path.join( a.localPath, '.git_disabled' ), a.path.join( a.localPath, '.git' ) );
+      if( env.isNpmModule )
+      a.fileProvider.fileRename( a.path.join( a.localPath, 'package_disabled.json' ), a.path.join( a.localPath, 'package.json' ) );
+    }
+    routinesPost[ 'notGitReporOrNpmModule' ] = ( env ) =>
+    {
+      if( env.deleted )
+      return;
+      if( env.isGitRepo )
+      a.fileProvider.fileRename( a.path.join( a.localPath, '.git' ), a.path.join( a.localPath, '.git_disabled' ) );
+      if( env.isNpmModule )
+      a.fileProvider.fileRename( a.path.join( a.localPath, 'package.json' ), a.path.join( a.localPath, 'package_disabled.json' ) );
+    }
+
+    _.select
+    ({
+      src : outputMap,
+      selector : 'notGitReporOrNpmModule',
+      set :
+      {
+        'download' : `it's not a git repository or npm module`,
+        'update' : `it's not a git repository or npm module`,
+        'versions.verify' : `is downloaded, but it's not a repository`
+      }
+    })
+
+    routinesPre[ 'different/origin' ] = () =>
+    {
+      a.moduleShell( 'git remote set-url origin https://github.com/Wandalen/SomeModule.git' );
+    }
+    _.select
+    ({
+      src : outputMap,
+      selector : 'different/origin',
+      set :
+      {
+        'update' : `but has different origin`,
+        'versions.verify' : `has different origin url`,
+      }
+    })
+
+    routinesPre[ 'different/branch' ] = ( env ) =>
+    {
+      a.moduleShell( 'git checkout -b testbranch' );
+      env.moduleGitStatusBefore = a.moduleGitStatusGet();
+    }
+    _.select
+    ({
+      src : outputMap,
+      selector : 'different/branch',
+      set :
+      {
+        'versions.verify' : `has version different from that is specified in will-file`
+      }
+    })
+  }
+
+  /* */
+
+  return a.ready;
+}
+
+commandsSubmoduleSafety.rapidity = 1;
+commandsSubmoduleSafety.routineTimeOut = 300000;
+commandsSubmoduleSafety.description =
+`
+Checks if .submodules.* commands are safe to use in different situations.
+It means that utility doesn't modify the data of the module if it's not required.
+`
+
+
 // --
 // declare
 // --
@@ -38159,6 +38693,9 @@ let Self =
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
+    submodulesDownloadWithSubmodulesDefault,
+    submodulesDownloadUpdateWithSubmodulesDefault,
+
     // submodulesDownloadRecursive, /* xxx */
     submodulesDownloadThrowing,
     submodulesDownloadInvalidUrl,
@@ -38276,6 +38813,8 @@ let Self =
     commandWillfileSupplementWillfileWithOptions,
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
+
+    commandsSubmoduleSafety,
 
   }
 
