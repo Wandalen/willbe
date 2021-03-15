@@ -99,7 +99,7 @@ function production( test )
   if( isFork )
   version = _.git.path.nativize( remotePath );
   else
-  version = _.npm.versionRemoteRetrive( `npm:///${ mdl.name }!alpha` ) === '' ? 'latest' : 'alpha';
+  version = mdl.version;
 
   if( !version )
   throw _.err( 'Cannot obtain version to install' );
@@ -353,7 +353,7 @@ function eslint( test )
   })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 ); debugger;
+    test.identical( op.exitCode, 0 );
     if( op.output.length < 1000 )
     logger.log( op.output );
     return null;
