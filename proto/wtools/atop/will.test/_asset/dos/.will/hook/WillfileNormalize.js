@@ -81,7 +81,7 @@ function willfileExtend( context )
   if( !fileProvider.fileExists( abs( 'was.package.json' ) ) )
   return;
 
-  context.start( 'local-will .willfile.extend.willfile . -package.json' );
+  context.start( 'will.local .willfile.extend.willfile . -package.json' );
 
 }
 

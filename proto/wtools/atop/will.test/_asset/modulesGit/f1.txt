@@ -1,0 +1,5 @@
+original/f.txt
+copy
+copy
+copy
+copy

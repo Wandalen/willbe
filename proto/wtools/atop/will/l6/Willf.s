@@ -862,7 +862,7 @@ _resourcesImport_body.defaults =
   resources : null,
 }
 
-let _resourcesImport = _.routineUnite( _resourcesImport_head, _resourcesImport_body );
+let _resourcesImport = _.routine.uniteCloning_( _resourcesImport_head, _resourcesImport_body );
 
 // --
 // peer

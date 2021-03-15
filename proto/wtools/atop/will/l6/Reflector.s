@@ -89,7 +89,7 @@ function MakeFor_body( o )
 
 _.routineExtend( MakeFor_body, Parent.MakeFor.body );
 
-let MakeFor = _.routineUnite( Parent.MakeFor.head, MakeFor_body );
+let MakeFor = _.routine.uniteCloning_( Parent.MakeFor.head, MakeFor_body );
 
 //
 
