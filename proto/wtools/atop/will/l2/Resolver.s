@@ -17,6 +17,8 @@ _.will.resolver = Object.create( _.resolverAdv );
 
 let Prime = Object.create( null )
 
+Prime.src = undefined;
+
 Prime.currentThis = null;
 Prime.currentContext = null;
 Prime.baseModule = null;
@@ -1101,25 +1103,6 @@ function performBegin()
 
 //
 
-function optionsForm( routine, o )
-{
-
-  _.assert( o.iteratorProper( o ) );
-  /* qqq : convert to template-string please in all files */
-  _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
-  _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
-  _.assert( o.baseModule !== undefined );
-
-  if( o.src === null )
-  o.src = o.baseModule;
-
-  Parent.optionsForm.call( this, routine, o );
-
-  return o;
-}
-
-//
-
 function optionsToIteration( iterator, o )
 {
   let it = Parent.optionsToIteration.call( this, iterator, o );
@@ -1128,6 +1111,32 @@ function optionsToIteration( iterator, o )
   _.assert( it.Selector === Self.Selector );
   _.assert( it.Looker.Selector === Self.Selector );
   return it;
+}
+
+//
+
+function iteratorInitEnd( iterator )
+{
+  let looker = this;
+
+  _.assert( iterator.iteratorProper( iterator ) );
+  /* qqq : convert to template-string please in all files */
+  _.assert
+  (
+    _.longHas( [ null, 0, false, 'in', 'out' ], iterator.pathResolving ),
+    () => 'Unknown value of option path resolving ' + iterator.pathResolving
+  );
+  _.assert
+  (
+    !iterator.defaultResourceKind || !_.path.isGlob( iterator.defaultResourceKind ),
+    () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( iterator.defaultResourceKind )
+  );
+  _.assert( iterator.baseModule !== undefined );
+
+  if( iterator.src === null || iterator.src === undefined )
+  iterator.src = iterator.baseModule;
+
+  return Parent.iteratorInitEnd.call( this, iterator );
 }
 
 // --
@@ -1194,7 +1203,7 @@ _.assert( !!_.resolverAdv.Resolver.Selector );
 let ResolverWillbeSelector =
 ({
   name : 'ResolverWillbeSelector',
-  parent : _.resolverAdv.Resolver.Selector, /* xxx : should work woithout it */
+  // parent : _.resolverAdv.Resolver.Selector, /* yyy : should work woithout it */
   prime :
   {
   },
@@ -1211,19 +1220,17 @@ _.assert( !!_.resolverAdv.Resolver.Replicator );
 _.assert( _.resolverAdv.Resolver.Replicator === _.resolverAdv.Resolver );
 _.assert( _.resolverAdv.Resolver.Iterator.resolveExtraOptions === undefined );
 
-/* xxx : redefine _.resolver.classDefine() */
 let ResolverWillbeReplicator =
 ({
   name : 'ResolverWillbeReplicator',
-  parent : _.resolverAdv.Resolver.Replicator, /* xxx : should work woithout it */
+  // parent : _.resolverAdv.Resolver.Replicator, /* yyy : should work woithout it */
   prime : Prime,
   looker :
   {
     ... Common,
     performBegin,
-    optionsForm,
     optionsToIteration,
-
+    iteratorInitEnd,
   },
   iterationPreserve :
   {
@@ -1241,13 +1248,14 @@ let ResolverWillbeReplicator =
 
 /* */
 
-const ResolverWillbe = _.resolver.classDefine
+const ResolverWillbe = _.resolverAdv.classDefine
 ({
   selector : ResolverWillbeSelector,
   replicator : ResolverWillbeReplicator,
 });
 
 _.assert( ResolverWillbe.IterationPreserve.isFunction !== undefined );
+// _.assert( ResolverWillbe.Iteration.isFunction !== undefined ); /* xxx : uncomment? */
 _.assert( ResolverWillbe.Iterator.resolveExtraOptions === undefined );
 _.assert( ResolverWillbe.Looker === ResolverWillbe );
 
