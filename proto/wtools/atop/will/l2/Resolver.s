@@ -503,7 +503,7 @@ function сontextPrepare( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptions( сontextPrepare, arguments );
+  _.routineOptionsPreservingUndefines( сontextPrepare, arguments );
 
   if( !o.currentThis )
   {
@@ -1314,7 +1314,7 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
-  _.routineOptions( routine, o );
+  _.routineOptionsPreservingUndefines( routine, o );
   return o;
 }
 
@@ -1325,7 +1325,7 @@ function pathOrReflectorResolve_body( o )
   let resource;
 
   _.assert( _.aux.is( o ) );
-  _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
+  _.assertRoutineOptionsPreservingUndefines( pathOrReflectorResolve_body, arguments );
   _.assert( !Self.selectorIs( o.selector ) );
   _.assert( o.pathResolving === 'in' );
   _.assert( !o.pathUnwrapping );
@@ -1358,14 +1358,14 @@ let pathOrReflectorResolve = _.routine.uniteCloning_( pathOrReflectorResolve_hea
 
 function filesFromResource_head( routine, args )
 {
-  let o =_.routineOptions( routine, args );
+  let o =_.routineOptionsPreservingUndefines( routine, args );
 
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefines( routine, o );
+  _.routineOptionsPreservingUndefinesPreservingUndefines( routine, o );
   else
-  _.routineOptionsPreservingUndefines( null, o, routine );
+  _.routineOptionsPreservingUndefinesPreservingUndefines( null, o, routine );
 
   let prefixlessAction = o.prefixlessAction;
   if( prefixlessAction === 'pathOrReflector' )

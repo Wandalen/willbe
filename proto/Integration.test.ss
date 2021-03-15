@@ -330,6 +330,7 @@ function eslint( test )
       '--ignore-pattern', '*.xml',
       '--ignore-pattern', '*.css',
       '--ignore-pattern', '_asset',
+      '--ignore-pattern', '_*',
       '--ignore-pattern', 'out',
       '--ignore-pattern', '*.tgs',
       '--ignore-pattern', '*.bat',
