@@ -15209,7 +15209,7 @@ exportAuto.description =
 function exportOutdated2( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* qqq xxx : assets naming transition is required. ask */
+  let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* aaa xxx : assets naming transition is required. ask */ /* Dmytro : Yevgen renamed assets */
 
   /* - */
 
@@ -22890,16 +22890,7 @@ versionsAgreeNpm.timeOut = 300000;
 function stepSubmodulesDownload( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'step-submodulesDownload' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    verbosity : 3,
-    ready : a.ready
-  })
+  let a = context.assetFor( test, 'stepSubmodulesDownload' );
   a.reflect();
 
   /* - */
@@ -38231,7 +38222,7 @@ let Self =
     stepBuild,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
-    stepGitPull, /* qqq : for Dmytro : bad! */
+    stepGitPull, /* aaa : for Dmytro : bad! */ /* Dmytro : improved */
     stepGitPush,
     stepGitReset,
     stepGitSync,
