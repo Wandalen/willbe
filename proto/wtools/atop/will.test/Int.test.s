@@ -4933,6 +4933,69 @@ function buildsResolve( test )
 
 //
 
+function moduleResolve( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithSubmodulesResolve' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'ab/' ) });
+    return opener.open();
+  });
+
+  a.ready.then( ( arg ) =>
+  {
+    let module = opener.openedModule;
+    let o =
+    {
+      arrayWrapping : 1,
+      criterion : {},
+      currentExcluding : 0,
+      defaultResourceKind : null,
+      mapValsUnwrapping : 0,
+      pathResolving : 0,
+      pathUnwrapping : 0,
+      prefixlessAction : "throw",
+      selector : "*::*",
+      strictCriterion : 1,
+    };
+
+    let resolve = module.resolve( o );
+    test.true( _.aux.is( resolve ) );
+    test.true( 'step/files.delete' in resolve );
+    test.true( 'step/files.reflect' in resolve );
+    test.true( 'path/in' in resolve );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+moduleResolve.description =
+`
+Test routine checks that module can open submodules and  resolve the resources.
+Submodules are exported willfiles.
+`;
+
+//
+
 // aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
 function framePerform( test )
 {
@@ -11047,6 +11110,7 @@ let Self =
 
     exportsResolve,
     buildsResolve,
+    moduleResolve,
 
     framePerform,
 
