@@ -12,6 +12,10 @@ path :
 
 step :
 
+  sync :
+    inherit : git.sync
+    profile : 'test-profile'
+
   git.sync.message :
     commit : '-am fifth'
     profile : 'test-profile'
@@ -25,7 +29,7 @@ build :
 
   git.sync.default :
     steps :
-      - git.sync
+      - sync
 
   git.sync.message :
     steps :
