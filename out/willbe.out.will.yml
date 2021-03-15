@@ -1192,6 +1192,50 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test/File.test.js
+          - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/a.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/b.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/ab/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/module-a.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/module-b.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/ab/module-ab.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/a/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File.test.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File1.debug.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File1.release.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File2.debug.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File2.release.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/dir3.test
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/dir3.test/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/dir3.test/File.test.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted
           - >-
