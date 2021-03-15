@@ -4717,11 +4717,42 @@ function cleanWhatSingle( o )
 
   if( o.cleaningSubmodules )
   {
-
-    find( module.cloneDirPathGet() );
-    if( module.rootModule !== module )
-    find( module.cloneDirPathGet( module ) );
-
+    // find( module.cloneDirPathGet() );
+    // if( module.rootModule !== module )
+    // find( module.cloneDirPathGet( module ) );
+    
+    let visitedObjectSet = new Set;
+    
+    will.modulesFor
+    ({ 
+      modules : [ module ], 
+      recursive : 2, 
+      onEachVisitedObject 
+    })
+    .deasync();//qqq Vova: make cleanWhatSingle return consequence
+    
+    function onEachVisitedObject( module, op )
+    {
+      if( visitedObjectSet.has( module ) )
+      return null;
+      visitedObjectSet.add( module );
+      
+      return module.opener.repo.status
+      ({ 
+        all : 0, 
+        invalidating : 1, 
+        hasLocalChanges : 1 
+      })
+      .then( ( hasLocalChanges ) => 
+      { 
+        if( hasLocalChanges && !o.force )
+        throw _.err( 'Module at', module.opener.decoratedAbsoluteName, 'needs to be removed, but has local changes.' );
+        
+        find( module.opener.downloadPathGet() );
+        
+        return null;
+      })
+    }
   }
 
   /* out */
@@ -4825,6 +4856,7 @@ cleanWhatSingle.defaults =
   cleaningTemp : 1,
   fast : 0,
   files : null,
+  force : 0
 }
 
 //
