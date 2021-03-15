@@ -3,7 +3,7 @@ root:
   - willbe.out
 consistency:
   ../.ex.will.yml: &ref_0
-    hash: 006d4327512be41c9e0762bd4314f92e
+    hash: fd9115e082204dc96496882797909fba
     size: 2605
   ../.im.will.yml: &ref_1
     hash: ab11116916c92686820339ebb48bb11f
@@ -14,7 +14,7 @@ module:
       name: willbe
       org: noorg
       description: Utility to manage modules of complex modular systems.
-      enabled: 0
+      enabled: 1
       version: 0.6.0
       interpreters: &ref_2
         - njs >= 10.0.0
@@ -3370,7 +3370,7 @@ module:
       name: willbe
       org: noorg
       description: Utility to manage modules of complex modular systems.
-      enabled: 0
+      enabled: 1
       version: 0.6.0
       interpreters: *ref_2
       keywords: *ref_3
@@ -4173,7 +4173,7 @@ module:
           - 'build::npm'
     consistency:
       ../.ex.will.yml:
-        hash: 006d4327512be41c9e0762bd4314f92e
+        hash: fd9115e082204dc96496882797909fba
         size: 2605
       ../.im.will.yml:
         hash: ab11116916c92686820339ebb48bb11f
