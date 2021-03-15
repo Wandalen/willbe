@@ -1338,6 +1338,7 @@ function pathOrReflectorResolve_body( o )
   if( resource )
   return resource;
 
+
   let o3 = _.mapExtend( null, o );
   o3.missingAction = 'undefine';
   o3.selector = 'path::' + o.selector;
