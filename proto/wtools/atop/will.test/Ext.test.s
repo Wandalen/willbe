@@ -22374,20 +22374,6 @@ function submodulesVerify( test )
 {
   let context = this;
   let a = context.assetFor( test, 'commandVersionsVerify' );
-  a.appStart2 = _.process.starter
-  ({
-    currentPath : a.abs( 'module' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-  });
-  a.appStart3 = _.process.starter
-  ({
-    currentPath : a.abs( '.module/local' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-  });
   a.reflect();
 
   /* - */
@@ -22396,20 +22382,20 @@ function submodulesVerify( test )
   {
     test.case = 'setup';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.with ./module/ .export' )
-  a.appStart2( 'git init' )
-  a.appStart2( 'git add -fA .' )
-  a.appStart2( 'git commit -m init' )
+  a.appStartNonThrowing( '.with ./module/ .export' );
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git add -fA .' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit -m init' });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'verify not downloaded';
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.submodules.versions.verify' )
 
@@ -22463,7 +22449,7 @@ function submodulesVerify( test )
     return null;
   })
 
-  a.appStart3( 'git commit --allow-empty -m test' )
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git commit --allow-empty -m test' })
 
   a.appStartNonThrowing( '.submodules.versions.verify' )
 
@@ -22482,7 +22468,7 @@ function submodulesVerify( test )
     return null;
   })
 
-  a.appStart3( 'git checkout -b testbranch' )
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git checkout -b testbranch' })
 
   a.appStartNonThrowing( '.submodules.versions.verify' )
 
