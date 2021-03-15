@@ -4717,42 +4717,39 @@ function cleanWhatSingle( o )
 
   if( o.cleaningSubmodules )
   {
-    // find( module.cloneDirPathGet() );
-    // if( module.rootModule !== module )
-    // find( module.cloneDirPathGet( module ) );
-    
-    let visitedObjectSet = new Set;
-    
-    will.modulesFor
-    ({ 
-      modules : [ module ], 
-      recursive : 2, 
-      onEachVisitedObject 
-    })
-    .deasync();//qqq Vova: make cleanWhatSingle return consequence
-    
-    function onEachVisitedObject( module, op )
+    if( !o.force )
     {
-      if( visitedObjectSet.has( module ) )
-      return null;
-      visitedObjectSet.add( module );
-      
-      return module.opener.repo.status
-      ({ 
-        all : 0, 
-        invalidating : 1, 
-        hasLocalChanges : 1 
-      })
-      .then( ( hasLocalChanges ) => 
-      { 
-        if( hasLocalChanges && !o.force )
-        throw _.err( 'Module at', module.opener.decoratedAbsoluteName, 'needs to be removed, but has local changes.' );
-        
-        find( module.opener.downloadPathGet() );
-        
-        return null;
-      })
+      let modules = module.modulesEachAll
+      ({
+        withPeers : 1,
+        withStem : 0,
+        recursive : 2,
+        outputFormat : '/'
+      });
+      modules.forEach( ( junction ) =>
+      {
+        let module2 = junction.module || junction.opener;
+        if( module2 === null )
+        return;
+
+        let status = module2.repo.status
+        ({
+          all : 0,
+          invalidating : 1,
+          hasLocalChanges : 1
+        })
+        .sync();
+
+        _.assert( status.hasLocalChanges !== undefined );
+
+        if( status.hasLocalChanges )
+        throw _.err( 'Module at', module.decoratedAbsoluteName, 'needs to be removed, but has local changes.' );
+      });
     }
+
+    find( module.cloneDirPathGet() );
+    if( module.rootModule !== module )
+    find( module.cloneDirPathGet( module ) );
   }
 
   /* out */
