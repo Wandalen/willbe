@@ -354,7 +354,7 @@ function outModuleMake( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( outModuleMake, arguments );
+  o = _.routineOptionsPreservingUndefines( outModuleMake, arguments );
 
   _.assert( module.original === null );
   _.assert( !module.isOut );
@@ -497,7 +497,7 @@ function outModuleOpen( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( outModuleOpen, arguments );
+  o = _.routineOptionsPreservingUndefines( outModuleOpen, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
   let o2 =
@@ -605,7 +605,7 @@ function outModuleOpenOrMake( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( outModuleOpenOrMake, arguments );
+  o = _.routineOptionsPreservingUndefines( outModuleOpenOrMake, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
   _.assert( !module.isFinited() );
@@ -790,7 +790,7 @@ function upform( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( upform, arguments );
+  o = _.routineOptionsPreservingUndefines( upform, arguments );
   module.optionsFormingForward( o );
 
   if( o.attachedWillfilesFormed )
@@ -831,7 +831,7 @@ function reform_( o ) /* xxx */
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( reform_, arguments );
+  o = _.routineOptionsPreservingUndefines( reform_, arguments );
   module.optionsFormingForward( o );
 
   if( o.attachedWillfilesFormed )
@@ -1720,7 +1720,7 @@ function isConsistent( o )
 {
   let module = this;
 
-  o = _.routineOptions( isConsistent, arguments );
+  o = _.routineOptionsPreservingUndefines( isConsistent, arguments );
   _.assert( o.recursive === 0 );
 
   let willfiles = module.willfilesEach({ recursive : o.recursive, withPeers : 0 });
@@ -1761,7 +1761,7 @@ function isFull( o )
   if( !module.isOpened() )
   return false;
 
-  o = _.routineOptions( isFull, arguments );
+  o = _.routineOptionsPreservingUndefines( isFull, arguments );
   o.only = o.only || Object.create( null );
   o.only.all = 1;
   o.only = module.optionsFormingForward( o.only );
@@ -2124,7 +2124,7 @@ function willfilesEach( o )
 
   if( _.routineIs( arguments[ 0 ] ) )
   o = { onUp : arguments[ 0 ] }
-  o = _.routineOptions( willfilesEach, o );
+  o = _.routineOptionsPreservingUndefines( willfilesEach, o );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   let o2 = Object.create( null );
@@ -2223,7 +2223,7 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( _attachedWillfilesOpen, arguments );
+  o = _.routineOptionsPreservingUndefines( _attachedWillfilesOpen, arguments );
   o.rootModule = o.rootModule || module.rootModule || module;
   o.willfilesArray = o.willfilesArray || module.willfilesArray;
 
@@ -2278,7 +2278,7 @@ function _attachedWillfileOpen( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  o = _.routineOptions( _attachedWillfileOpen, arguments );
+  o = _.routineOptionsPreservingUndefines( _attachedWillfileOpen, arguments );
 
   let filePath = path.join( module.dirPath, o.modulePath );
   filePath = will.LocalPathNormalize( filePath )
@@ -2393,7 +2393,7 @@ function exportAuto()
 
 function moduleBuild_head( routine, args )
 {
-  let o = _.routineOptions( routine, args );
+  let o = _.routineOptionsPreservingUndefines( routine, args );
   return o;
 }
 
@@ -2481,7 +2481,7 @@ function exportedMake( o )
   let outModule = module;
   let will = module.will;
 
-  o = _.routineOptions( exportedMake, arguments );
+  o = _.routineOptionsPreservingUndefines( exportedMake, arguments );
   _.assert( o.build instanceof _.will.Build );
   _.assert( !module.isFinited() );
 
@@ -2568,7 +2568,7 @@ function modulesEach_head( routine, args )
   let o = args[ 0 ]
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
-  o = _.routineOptions( routine, o );
+  o = _.routineOptionsPreservingUndefines( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) )
 
@@ -2604,7 +2604,7 @@ let modulesEachAll = _.routineDefaults( null, modulesEach, _.Will.RelationFilter
 
 function modulesBuild_head( routine, args )
 {
-  let o = _.routineOptions( routine, args );
+  let o = _.routineOptionsPreservingUndefines( routine, args );
   return o;
 }
 
@@ -2654,7 +2654,7 @@ function modulesUpform( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  o = _.routineOptions( modulesUpform, arguments );
+  o = _.routineOptionsPreservingUndefines( modulesUpform, arguments );
 
   let o2 = _.mapExtend( null, o );
   o2.modules = [ module ];
@@ -2831,7 +2831,7 @@ function submodulesAreDownloaded( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptions( submodulesAreDownloaded, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesAreDownloaded, arguments );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let o2 = _.mapExtend( null, o );
@@ -2870,7 +2870,7 @@ function submodulesAllAreDownloaded( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptions( submodulesAllAreDownloaded, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesAllAreDownloaded, arguments );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let o2 = _.mapExtend( null, o );
@@ -2898,7 +2898,7 @@ function submodulesAreValid( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptions( submodulesAreValid, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesAreValid, arguments );
   // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -2940,7 +2940,7 @@ function submodulesAllAreValid( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptions( submodulesAllAreValid, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesAllAreValid, arguments );
   // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -2991,7 +2991,7 @@ function _subModulesDownload_head( routine, args )
   let o;
   o = args[ 0 ];
 
-  o = _.routineOptions( routine, o );
+  o = _.routineOptionsPreservingUndefines( routine, o );
 
   return o;
 }
@@ -3054,7 +3054,7 @@ function submodulesFixate( o )
 
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptions( submodulesFixate, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesFixate, arguments );
 
   let o2 = _.mapExtend( null, o );
   o2.module = module;
@@ -3099,7 +3099,7 @@ function moduleFixate( o )
   if( !_.mapIs( o ) )
   o = { module : o }
 
-  _.routineOptions( moduleFixate, o );
+  _.routineOptionsPreservingUndefines( moduleFixate, o );
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
@@ -3293,7 +3293,7 @@ function moduleFixateAct( o )
   if( !_.mapIs( o ) )
   o = { submodule : o }
 
-  _.routineOptions( moduleFixateAct, o );
+  _.routineOptionsPreservingUndefines( moduleFixateAct, o );
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
@@ -3435,7 +3435,7 @@ function moduleFixatePathFor( o )
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.upgrading ) );
-  _.routineOptions( moduleFixatePathFor, o );
+  _.routineOptionsPreservingUndefines( moduleFixatePathFor, o );
 
   if( !o.originalPath )
   return false;
@@ -3475,7 +3475,7 @@ function submodulesVerify( o )
   let will = module.will;
   let logger = will.logger;
 
-  _.routineOptions( submodulesVerify, o );
+  _.routineOptionsPreservingUndefines( submodulesVerify, o );
 
   let o2 = _.mapExtend( null, o );
   o2.modules = _.mapVals( module.submoduleMap );
@@ -3531,7 +3531,7 @@ _.assert( defaults.withDisabledModules === 0 );
 //   _.assert( module.preformed > 0  );
 //   _.assert( arguments.length === 1 );
 //
-//   _.routineOptions( submodulesVerify, o );
+//   _.routineOptionsPreservingUndefines( submodulesVerify, o );
 //
 //   logger.up();
 //
@@ -3692,7 +3692,7 @@ function submodulesRelationsFilter( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( submodulesRelationsFilter, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesRelationsFilter, arguments );
 
   // if( module.id === 178 )
   // debugger;
@@ -3752,7 +3752,7 @@ function submodulesRelationsOwnFilter( o )
   let will = module.will;
   let result = [];
 
-  o = _.routineOptions( submodulesRelationsOwnFilter, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesRelationsOwnFilter, arguments );
 
   let filter = _.mapOnly( o, will.relationFit.defaults );
 
@@ -3840,7 +3840,7 @@ function submodulesAdd( o )
   let ready = new _.Consequence().take( null );
   let counter = 0;
 
-  o = _.routineOptions( submodulesAdd, arguments );
+  o = _.routineOptionsPreservingUndefines( submodulesAdd, arguments );
 
   let junctions = will.junctionsReform( o.modules );
 
@@ -3977,7 +3977,7 @@ function peerModuleOpen( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  o = _.routineOptions( peerModuleOpen, arguments );
+  o = _.routineOptionsPreservingUndefines( peerModuleOpen, arguments );
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( !!will.formed );
   _.assert( !!module.preformed );
@@ -4556,7 +4556,7 @@ function resourceAllocate_head( routine, args )
   if( args.length === 2 )
   o = { resourceKind : args[ 0 ], resourceName : args[ 1 ] }
 
-  o = _.routineOptions( routine, o );
+  o = _.routineOptionsPreservingUndefines( routine, o );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4568,7 +4568,7 @@ function resourceAllocate_body( o )
   let module = this;
   let will = module.will;
 
-  o = _.assertRoutineOptions( resourceAllocate, o );
+  o = _.assertRoutineOptionsPreservingUndefines( resourceAllocate, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4629,7 +4629,7 @@ function resourceNameAllocate_head( routine, args )
   if( args.length === 2 )
   o = { resourceKind : args[ 0 ], resourceName : args[ 1 ] }
 
-  o = _.routineOptions( routine, o );
+  o = _.routineOptionsPreservingUndefines( routine, o );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4641,7 +4641,7 @@ function resourceNameAllocate_body( o )
   let module = this;
   let will = module.will;
 
-  o = _.assertRoutineOptions( resourceAllocate, o );
+  o = _.assertRoutineOptionsPreservingUndefines( resourceAllocate, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4703,7 +4703,7 @@ function cleanWhatSingle( o )
   let exps = module.exportsResolve();
   let filePaths = [];
 
-  o = _.routineOptions( cleanWhatSingle, arguments );
+  o = _.routineOptionsPreservingUndefines( cleanWhatSingle, arguments );
 
   if( o.files === null )
   o.files = Object.create( null );
@@ -4837,7 +4837,7 @@ function cleanWhat( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptions( cleanWhat, arguments );
+  _.routineOptionsPreservingUndefines( cleanWhat, arguments );
 
   if( o.files === null )
   o.files = Object.create( null );
@@ -4877,7 +4877,7 @@ function cleanLog( o )
   let path = fileProvider.path;
   let time = _.time.now();
 
-  o = _.routineOptions( cleanLog, arguments );
+  o = _.routineOptionsPreservingUndefines( cleanLog, arguments );
 
   if( !o.files )
   {
@@ -4911,7 +4911,7 @@ function clean( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( clean, arguments );
+  o = _.routineOptionsPreservingUndefines( clean, arguments );
 
   if( o.beginTime === null )
   o.beginTime = _.time.now();
@@ -4949,7 +4949,7 @@ function _resolve_head( routine, args )
   o = { selector : o }
 
   _.assert( _.aux.is( o ) );
-  // _.routineOptions( routine, o );
+  // _.routineOptionsPreservingUndefines( routine, o );
   _.assertMapHasOnly( o, routine.defaults );
 
   if( o.visited === null || o.visited === undefined )
@@ -4977,7 +4977,7 @@ function resolve_head( routine, args )
   // o = { selector : o }
   //
   // _.assert( _.aux.is( o ) );
-  // _.routineOptions( routine, o );
+  // _.routineOptionsPreservingUndefines( routine, o );
   //
   // if( o.visited === null )
   // o.visited = [];
@@ -5077,7 +5077,7 @@ _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 //   if( _.strIs( o ) )
 //   o = { selector : arguments[ 0 ] }
 //   _.assert( _.strIs( o.selector ) );
-//   _.routineOptions( pathOrReflectorResolve, o );
+//   _.routineOptionsPreservingUndefines( pathOrReflectorResolve, o );
 //
 //   resource = module.reflectorResolve
 //   ({
@@ -5138,7 +5138,7 @@ function filesFromResource_head( routine, args )
   if( _.strIs( o ) || _.arrayIs( o ) )
   o = { selector : o }
 
-  _.routineOptions( routine, o );
+  _.routineOptionsPreservingUndefines( routine, o );
 
   if( o.visited === null )
   o.visited = [];
@@ -5220,7 +5220,7 @@ function _buildsResolve_head( routine, args )
   else
   o = args[ 0 ];
 
-  o = _.routineOptions( routine, o );
+  o = _.routineOptionsPreservingUndefines( routine, o );
   _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
   _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
@@ -5238,7 +5238,7 @@ function _buildsResolve_body( o )
   let module = this;
   let elements = module.buildMap;
 
-  _.assertRoutineOptions( _buildsResolve_body, arguments );
+  _.assertRoutineOptionsPreservingUndefines( _buildsResolve_body, arguments );
   _.assert( arguments.length === 1 );
 
   if( o.name )
@@ -5385,7 +5385,7 @@ function pathsRelative( o )
     return o.filePath;
   }
 
-  o = _.routineOptions( pathsRelative, o );
+  o = _.routineOptionsPreservingUndefines( pathsRelative, o );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( path.isAbsolute( o.basePath ) );
 
@@ -5431,7 +5431,7 @@ function pathsRebase( o )
   let logger = will.logger;
   // let Resolver = _.will.resolver;
 
-  o = _.routineOptions( pathsRebase, arguments );
+  o = _.routineOptionsPreservingUndefines( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
 
   let inPathResource = module.resourceObtain( 'path', 'in' );
@@ -5527,7 +5527,7 @@ function _pathChanged( o )
   let logger = will.logger;
 
   _.assert( o.val !== undefined );
-  _.routineOptions( _pathChanged, arguments );
+  _.routineOptionsPreservingUndefines( _pathChanged, arguments );
 
   if( o.isIdentical === null )
   o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
@@ -5575,7 +5575,7 @@ function _pathResourceChanged( o )
 
   _.assert( o.val !== undefined );
   _.assert( _.strDefined( o.name ) );
-  _.routineOptions( _pathResourceChanged, arguments );
+  _.routineOptionsPreservingUndefines( _pathResourceChanged, arguments );
 
   if( o.isIdentical === null )
   o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
@@ -6096,7 +6096,7 @@ function remotePathEachAdoptAct( o )
   let module = this;
   let will = module.will;
 
-  _.assertRoutineOptions( remotePathEachAdoptAct, o );
+  _.assertRoutineOptionsPreservingUndefines( remotePathEachAdoptAct, o );
 
   moduleAdoptPath( module );
 
@@ -6507,7 +6507,7 @@ function exportString( o )
   let will = module.will;
   let result = '';
 
-  o = _.routineOptions( exportString, o );
+  o = _.routineOptionsPreservingUndefines( exportString, o );
 
   if( o.verbosity >= 1 )
   result += module.decoratedAbsoluteName + '#' + module.id;
@@ -6641,7 +6641,7 @@ function exportStructure( o )
   o.dst = o.dst || Object.create( null );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routineOptionsPreservingUndefines( exportStructure, arguments );
 
   o.module = module;
 
@@ -6717,7 +6717,7 @@ function structureExportOut( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptions( structureExportOut, arguments );
+  o = _.routineOptionsPreservingUndefines( structureExportOut, arguments );
 
   o.module = module;
   if( !o.exportModule )
@@ -6821,7 +6821,7 @@ function structureExportForModuleExport( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( structureExportForModuleExport, arguments );
+  o = _.routineOptionsPreservingUndefines( structureExportForModuleExport, arguments );
   _.assert( module.original === null );
 
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
@@ -6961,7 +6961,7 @@ function structureExportConsistency( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  _.routineOptions( structureExportConsistency, arguments );
+  _.routineOptionsPreservingUndefines( structureExportConsistency, arguments );
   _.assert( arguments.length === 1 );
   _.assert( o.exportModule.isOut );
 
@@ -6995,7 +6995,7 @@ function resourceImport( o )
   _.assert( _.mapIs( o ) );
   _.assert( arguments.length === 1 );
   _.assert( o.srcResource instanceof _.will.Resource );
-  _.routineOptions( resourceImport, arguments );
+  _.routineOptionsPreservingUndefines( resourceImport, arguments );
 
   let srcModule = o.srcResource.module;
 
@@ -7565,7 +7565,7 @@ function willfileExtendWillfile( o )
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let opts = _.routineOptions( willfileExtendWillfile, o );
+  let opts = _.routineOptionsPreservingUndefines( willfileExtendWillfile, o );
   let request = opts.request.split( /\s+/ );
 
   _.assert( arguments.length === 1 );
@@ -7984,7 +7984,7 @@ function _willfileOnPropertyAct( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( _willfileOnPropertyAct, o );
+  _.routineOptionsPreservingUndefines( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o ) );
 
@@ -8094,7 +8094,7 @@ function willfileGetProperty( o )
   let will = this.will ? this.will : this;
   let logger = will.logger;
 
-  _.routineOptions( willfileGetProperty, o );
+  _.routineOptionsPreservingUndefines( willfileGetProperty, o );
 
   o.act = getProperty;
   o.onConfig = configChooseByKeys;
@@ -8163,7 +8163,7 @@ function willfileSetProperty( o )
 {
   let will = this.will ? this.will : this;
 
-  _.routineOptions( willfileSetProperty, o );
+  _.routineOptionsPreservingUndefines( willfileSetProperty, o );
 
   o.act = setProperty;
   o.onConfig = configChooseByKeys;
@@ -8254,7 +8254,7 @@ function willfileDeleteProperty( o )
   let will = this.will ? this.will : this;
   let logger = will.logger;
 
-  _.routineOptions( willfileDeleteProperty, o );
+  _.routineOptionsPreservingUndefines( willfileDeleteProperty, o );
 
   o.act = deleteProperty;
   o.onConfig = configChooseByKeys;
@@ -8330,7 +8330,7 @@ function willfileExtendProperty( o )
 {
   let will = this;
 
-  _.routineOptions( willfileExtendProperty, o );
+  _.routineOptionsPreservingUndefines( willfileExtendProperty, o );
   o.act = extendProperty;
   o.onConfig = configChooseByKeys;
 
@@ -8408,7 +8408,7 @@ function willfileVersionBump( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptions( willfileVersionBump, o );
+  _.routineOptionsPreservingUndefines( willfileVersionBump, o );
 
   let version = module.willfilesArray[ 0 ].structure.about.version;
   _.assert( _.strIs( version ), 'Expexts version in format "x.x.x".' );
@@ -8462,7 +8462,7 @@ willfileVersionBump.defaults =
 
 function ResourceSetter_functor( op )
 {
-  _.routineOptions( ResourceSetter_functor, arguments );
+  _.routineOptionsPreservingUndefines( ResourceSetter_functor, arguments );
 
   let resourceName = op.resourceName;
   let mapName = op.mapName;
@@ -8597,7 +8597,7 @@ function gitExecCommand( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitExecCommand, o );
+  _.routineOptionsPreservingUndefines( gitExecCommand, o );
 
   o.command = module.resolve( o.command );
 
@@ -8678,7 +8678,7 @@ function gitDiff( o )
   let will = module.will;
   let logger = will.logger;
 
-  _.routineOptions( gitDiff, o );
+  _.routineOptionsPreservingUndefines( gitDiff, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -8730,7 +8730,7 @@ function gitPrOpen( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  _.routineOptions( gitPrOpen, o );
+  _.routineOptionsPreservingUndefines( gitPrOpen, o );
 
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
@@ -8836,7 +8836,7 @@ function gitPull( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitPull, o );
+  _.routineOptionsPreservingUndefines( gitPull, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -8987,7 +8987,7 @@ function gitPush( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitPush, o );
+  _.routineOptionsPreservingUndefines( gitPush, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9052,7 +9052,7 @@ function gitReset( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitReset, o );
+  _.routineOptionsPreservingUndefines( gitReset, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9103,7 +9103,7 @@ function gitStatus( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitStatus, o );
+  _.routineOptionsPreservingUndefines( gitStatus, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9173,7 +9173,7 @@ function gitSync( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitSync, o );
+  _.routineOptionsPreservingUndefines( gitSync, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9261,7 +9261,7 @@ function gitTag( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( gitTag, o );
+  _.routineOptionsPreservingUndefines( gitTag, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9332,7 +9332,7 @@ function shell( o )
   if( !_.mapIs( arguments[ 0 ] ) )
   o = { execPath : arguments[ 0 ] }
 
-  o = _.routineOptions( shell, o );
+  o = _.routineOptionsPreservingUndefines( shell, o );
   _.assert( _.strIs( o.execPath ) );
   _.assert( arguments.length === 1 );
   _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );

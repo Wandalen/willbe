@@ -1363,9 +1363,9 @@ function filesFromResource_head( routine, args )
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefinesPreservingUndefines( routine, o );
+  _.routineOptionsPreservingUndefines( routine, o );
   else
-  _.routineOptionsPreservingUndefinesPreservingUndefines( null, o, routine );
+  _.routineOptionsPreservingUndefines( null, o, routine );
 
   let prefixlessAction = o.prefixlessAction;
   if( prefixlessAction === 'pathOrReflector' )
