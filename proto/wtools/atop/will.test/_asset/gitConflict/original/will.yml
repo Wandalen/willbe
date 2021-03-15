@@ -8,6 +8,10 @@ path :
 
 step :
 
+  pull :
+    inherit : git.pull
+    profile : 'test-profile'
+
   pull.with.dir :
     inherit : git.pull
     dirPath : 'path::git'
@@ -17,7 +21,7 @@ build :
 
   git.pull :
     steps :
-      - git.pull
+      - pull
 
   pull.with.dir :
     steps :
