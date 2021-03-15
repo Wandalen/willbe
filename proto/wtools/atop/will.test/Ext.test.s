@@ -37995,7 +37995,7 @@ function commandsSubmoduleSafety( test )
 
   a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath })
   a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data })
-  a.moduleGitStatusGet = () => 
+  a.moduleGitStatusGet = () =>
   {
     return _.git.statusLocal
     ({
@@ -38005,17 +38005,17 @@ function commandsSubmoduleSafety( test )
       sync : 1,
     });
   }
-  a.moduleFilesGet = () => 
+  a.moduleFilesGet = () =>
   {
     return a.fileProvider.filesFind
-    ({ 
-      filePath : a.localPath, 
+    ({
+      filePath : a.localPath,
       filter : { recursive : 2 },
       maskPreset : 0,
       outputFormat : 'absolute'
     });
   }
-  a.moduleFixateTag = ( tag ) => 
+  a.moduleFixateTag = ( tag ) =>
   {
     let data = a.rootWillFileRead();
     data = _.strReplace( data, '/!master', `/!${tag}` );
@@ -38121,12 +38121,12 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
-  
+
   /* */
 
   function run( env )
   {
-    a.ready.then( () => 
+    a.ready.then( () =>
     {
       test.case = `${_.entity.exportStringSolo( env )}`;
       a.fileProvider.filesDelete( a.abs( '.' ) );
@@ -38137,7 +38137,7 @@ function commandsSubmoduleSafety( test )
     if( env.downloaded )
     {
       a.appStart({ args : '.submodules.download' });
-      a.ready.then( () => 
+      a.ready.then( () =>
       {
         env.isGitRepo = _.git.isRepository({ localPath : a.localPath });
         env.isNpmModule = _.npm.isRepository({ localPath : a.localPath });
@@ -38148,7 +38148,7 @@ function commandsSubmoduleSafety( test )
       })
     }
 
-    a.ready.then( () => 
+    a.ready.then( () =>
     {
       if( env.command == 'update' )
       {
@@ -38163,13 +38163,13 @@ function commandsSubmoduleSafety( test )
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
 
-    a.ready.tap( () => 
+    a.ready.tap( () =>
     {
       let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
       if( env.command == 'update' && isGitModuleInCurrentState )
       {
         let branch = _.git.tagLocalRetrive( a.localPath );
-        
+
         if( env.error )
         test.identical( branch, 'master' );
         else
@@ -38180,13 +38180,12 @@ function commandsSubmoduleSafety( test )
       }
 
       if( routinesPost[ env.case ] )
-      return routinesPost[ env.case ]( env ) || true;
-      return null;
+      routinesPost[ env.case ]( env );
     })
 
     if( env.error )
-    a.ready.finally( ( err, op ) => 
-    { 
+    a.ready.finally( ( err, op ) =>
+    {
       if( err )
       {
         _.errAttend( err );
@@ -38196,7 +38195,7 @@ function commandsSubmoduleSafety( test )
       return null;
     })
 
-    a.ready.then( () => 
+    a.ready.then( () =>
     {
       if( env.error )
       test.notIdentical( op.exitCode, 0 );
@@ -38239,48 +38238,48 @@ function commandsSubmoduleSafety( test )
 
   function routineForCasesRegister()
   {
-    routinesPre[ 'missing/tag' ] = () => 
+    routinesPre[ 'missing/tag' ] = () =>
     {
       let data = a.rootWillFileRead();
       data = _.strReplace( data, '/!master', '/!missing' );
       a.rootWillFileWrite( data );
     }
-    
+
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'missing/tag', 
+    ({
+      src : outputMap,
+      selector : 'missing/tag',
       set : { 'versions.verify' : `does not have files` }
     })
-    
-    routinesPre[ 'invalid/url' ] = () => 
+
+    routinesPre[ 'invalid/url' ] = () =>
     {
       let data = a.rootWillFileRead();
       data = _.strReplace( data, 'git+https', 'test+https' );
       a.rootWillFileWrite( data );
     }
 
-    routinesPre[ 'local/untracked' ] = ( env ) => 
+    routinesPre[ 'local/untracked' ] = ( env ) =>
     {
       let filePath = a.path.join( a.localPath, 'untracked' + _.idWithTime() );
       a.fileProvider.fileWrite({ filePath, data : ' ' });
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
 
-    routinesPre[ 'local/unstaged' ] = ( env ) => 
+    routinesPre[ 'local/unstaged' ] = ( env ) =>
     {
       let filePath = a.path.join( a.localPath, 'README.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'local/unstaged', 
+    ({
+      src : outputMap,
+      selector : 'local/unstaged',
       set : { update : `needs to be updated, but has local changes` }
     })
 
-    routinesPre[ 'local/staged' ] = ( env ) => 
+    routinesPre[ 'local/staged' ] = ( env ) =>
     {
       let filePath = a.path.join( a.localPath, 'README.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
@@ -38288,31 +38287,31 @@ function commandsSubmoduleSafety( test )
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'local/staged', 
+    ({
+      src : outputMap,
+      selector : 'local/staged',
       set : { update : `needs to be updated, but has local changes` }
     })
 
-    routinesPre[ 'local/commit' ] = ( env ) => 
+    routinesPre[ 'local/commit' ] = ( env ) =>
     {
       a.moduleShell( 'git commit --allow-empty -m test' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
 
-    routinesPre[ 'local/branch' ] = ( env ) => 
+    routinesPre[ 'local/branch' ] = ( env ) =>
     {
       a.moduleShell( 'git branch test' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
 
-    routinesPre[ 'local/tag' ] = ( env ) => 
+    routinesPre[ 'local/tag' ] = ( env ) =>
     {
       a.moduleShell( 'git tag test' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
 
-    routinesPre[ 'local/conflict' ] = ( env ) => 
+    routinesPre[ 'local/conflict' ] = ( env ) =>
     {
       a.moduleShell( 'git branch dev1' );
       let filePath = a.path.join( a.localPath, 'README.md');
@@ -38332,71 +38331,66 @@ function commandsSubmoduleSafety( test )
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'local/conflict', 
+    ({
+      src : outputMap,
+      selector : 'local/conflict',
       set : { update : `needs to be updated, but has local changes` }
     })
 
-    routinesPre[ 'notGitReporOrNpmModule' ] = ( env ) => 
+    routinesPre[ 'notGitReporOrNpmModule' ] = ( env ) =>
     {
       if( env.isGitRepo )
       a.fileProvider.fileRename( a.path.join( a.localPath, '.git_disabled' ), a.path.join( a.localPath, '.git' ) );
       if( env.isNpmModule )
       a.fileProvider.fileRename( a.path.join( a.localPath, 'package_disabled.json' ), a.path.join( a.localPath, 'package.json' ) );
     }
-    routinesPost[ 'notGitReporOrNpmModule' ] = ( env ) => 
+    routinesPost[ 'notGitReporOrNpmModule' ] = ( env ) =>
     {
+      if( env.deleted )
+      return;
       if( env.isGitRepo )
       a.fileProvider.fileRename( a.path.join( a.localPath, '.git' ), a.path.join( a.localPath, '.git_disabled' ) );
       if( env.isNpmModule )
       a.fileProvider.fileRename( a.path.join( a.localPath, 'package.json' ), a.path.join( a.localPath, 'package_disabled.json' ) );
     }
-    
+
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'notGitReporOrNpmModule', 
-      set : 
+    ({
+      src : outputMap,
+      selector : 'notGitReporOrNpmModule',
+      set :
       {
         'download' : `it's not a git repository or npm module`,
         'update' : `it's not a git repository or npm module`,
         'versions.verify' : `is downloaded, but it's not a repository`
       }
     })
-   
-    outputMap[ 'notGitReporOrNpmModule' ] = 
-    {
-      'download' : `it's not a git repository or npm module`,
-      'update' : `it's not a git repository or npm module`,
-      'versions.verify' : `is downloaded, but it's not a repository`,
-    }
 
-    routinesPre[ 'different/origin' ] = () => 
+    routinesPre[ 'different/origin' ] = () =>
     {
       a.moduleShell( 'git remote set-url origin https://github.com/Wandalen/SomeModule.git' );
     }
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'different/origin', 
-      set : 
+    ({
+      src : outputMap,
+      selector : 'different/origin',
+      set :
       {
         'update' : `but has different origin`,
         'versions.verify' : `has different origin url`,
       }
     })
 
-    routinesPre[ 'different/branch' ] = ( env ) => 
+    routinesPre[ 'different/branch' ] = ( env ) =>
     {
       a.moduleShell( 'git checkout -b testbranch' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
-    ({ 
-      src : outputMap, 
-      selector : 'different/branch', 
-      set : 
+    ({
+      src : outputMap,
+      selector : 'different/branch',
+      set :
       {
         'versions.verify' : `has version different from that is specified in will-file`
       }
@@ -38410,7 +38404,7 @@ function commandsSubmoduleSafety( test )
 
 commandsSubmoduleSafety.rapidity = 1;
 commandsSubmoduleSafety.routineTimeOut = 300000;
-commandsSubmoduleSafety.description = 
+commandsSubmoduleSafety.description =
 `
 Checks if .submodules.* commands are safe to use in different situations.
 It means that utility doesn't modify the data of the module if it's not required.
