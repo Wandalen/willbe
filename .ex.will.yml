@@ -4,7 +4,7 @@ about :
   name : 'willbe'
   description : 'Utility to manage modules of complex modular systems.'
   version : '0.6.0'
-  enabled : 1
+  enabled : 0
   interpreters :
   - njs >= 10.0.0
   - chrome >= 60.0.0
