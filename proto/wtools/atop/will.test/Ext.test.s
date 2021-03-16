@@ -38432,7 +38432,7 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'different/branch' ] = ( env ) =>
     {
-      a.moduleShell( 'git checkout -b testbranch' );
+      a.moduleShell( 'git checkout dev1' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
@@ -38452,7 +38452,7 @@ function commandsSubmoduleSafety( test )
 }
 
 commandsSubmoduleSafety.rapidity = 1;
-commandsSubmoduleSafety.routineTimeOut = 300000;
+commandsSubmoduleSafety.routineTimeOut = 12000000;
 commandsSubmoduleSafety.description =
 `
 Checks if .submodules.* commands are safe to use in different situations.
