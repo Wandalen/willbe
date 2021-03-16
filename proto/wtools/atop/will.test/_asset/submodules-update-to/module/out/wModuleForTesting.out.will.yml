@@ -1,0 +1,181 @@
+format: outwillfile-2.0
+root:
+  - wModuleForTesting.out
+consistency:
+  ../.will.yml: &ref_0
+    hash: aea44028e5e5b4d53b5db4870a3cb9b7
+    size: 325
+module:
+  wModuleForTesting.out:
+    about:
+      name: wModuleForTesting
+      org: noorg
+      enabled: 1
+      version: 1.0.0
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: wModuleForTesting.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: wModuleForTesting.out
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: ../.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: ../.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: ..
+      download:
+        criterion:
+          predefined: 1
+      in:
+        path: .
+      out:
+        path: .
+      export:
+        path: ../**
+      exported.dir.proto.export:
+        criterion:
+          generated: 1
+          default: 1
+          proto: 1
+          export: 1
+        path: ..
+      exported.files.proto.export:
+        criterion:
+          generated: 1
+          default: 1
+          proto: 1
+          export: 1
+        path:
+          - ..
+          - ../.will.yml
+          - ../File.js
+    submodule: {}
+    reflector:
+      exported.proto.export:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: ..
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          proto: 1
+          export: 1
+      exported.files.proto.export:
+        src:
+          filePath:
+            'path::exported.files.proto.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.proto.export'
+          recursive: 0
+        recursive: 0
+        criterion:
+          generated: 1
+          default: 1
+          proto: 1
+          export: 1
+    step:
+      export:
+        opts:
+          export: 'path::export'
+          tar: 0
+        criterion:
+          proto: 1
+        inherit:
+          - module.export
+    build:
+      proto.export:
+        steps:
+          - 'step::export'
+        criterion:
+          default: 1
+          proto: 1
+          export: 1
+    exported:
+      proto.export:
+        version: 1.0.0
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
+        criterion:
+          default: 1
+          proto: 1
+          export: 1
+    consistency:
+      ../.will.yml: *ref_0
+  ../:
+    about:
+      name: wModuleForTesting
+      org: noorg
+      enabled: 1
+      version: 1.0.0
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: .will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: .will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: out/wModuleForTesting.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      download:
+        criterion:
+          predefined: 1
+      in:
+        path: .
+      out:
+        path: out
+      export:
+        path: '**'
+    submodule: {}
+    reflector: {}
+    step:
+      export:
+        opts:
+          export: 'path::export'
+          tar: 0
+        criterion:
+          proto: 1
+        inherit:
+          - module.export
+    build:
+      proto.export:
+        steps:
+          - 'step::export'
+        criterion:
+          default: 1
+          proto: 1
+          export: 1
+    consistency:
+      ../.will.yml:
+        hash: aea44028e5e5b4d53b5db4870a3cb9b7
+        size: 325

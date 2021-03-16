@@ -1840,7 +1840,7 @@ function commandSubmodulesVersionsDownload( e )
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
-  
+
   cui._propertiesImply( implyMap );
 
   return cui._commandCleanLike
@@ -1904,6 +1904,7 @@ function commandSubmodulesVersionsUpdate( e )
   {
     let o2 = cui.filterImplied();
     o2 = _.mapExtend( o2, e.propertiesMap );
+
     return it.opener.openedModule.subModulesUpdate( o2 );
   }
 
@@ -1917,6 +1918,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  to : 'Checkouts root and each of it submodules to specified version/tag',
   ... commandImply.commandProperties,
 }
 
