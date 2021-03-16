@@ -427,7 +427,7 @@ function _resourceMapSelect()
     if( !it.src )
     {
       debugger;
-      throw _.LookingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
+      throw _.looker.LookingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
     it.iterable = null;
@@ -1020,24 +1020,37 @@ function _functionStringsJoinDown()
 // err
 // --
 
-function errResolving( o )
+function errResolvingMake( o )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let module = rit.baseModule;
-  _.assertRoutineOptions( errResolving, arguments );
+  _.assertRoutineOptions( errResolvingMake, arguments );
   _.assert( arguments.length === 1 );
+
+  if( o.err && o.err.ResolvingError )
+  {
+    debugger;
+    return o.err;
+  }
+
   if( rit.currentContext && rit.currentContext.qualifiedName )
-  return it.errMake( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   else
-  return it.errMake( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+
   // if( rit.currentContext && rit.currentContext.qualifiedName )
-  // return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   // else
-  // return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+
+  _._errFields( o.err, { ResolvingError : true } );
+  debugger;
+
+  return o.err;
 }
 
-errResolving.defaults =
+errResolvingMake.defaults =
 {
   selector : null,
   err : null,
@@ -1193,7 +1206,7 @@ let Common =
 
   // err
 
-  errResolving,
+  errResolvingMake,
 
 }
 
@@ -1255,7 +1268,9 @@ const ResolverWillbe = _.resolverAdv.classDefine
 });
 
 _.assert( ResolverWillbe.IterationPreserve.isFunction !== undefined );
-// _.assert( ResolverWillbe.Iteration.isFunction !== undefined ); /* xxx : uncomment? */
+_.assert( ResolverWillbe.Iteration.isFunction === undefined );
+_.assert( ResolverWillbe.Iterator.isFunction === undefined );
+_.assert( ResolverWillbe.isFunction !== undefined );
 _.assert( ResolverWillbe.Iterator.resolveExtraOptions === undefined );
 _.assert( ResolverWillbe.Looker === ResolverWillbe );
 
