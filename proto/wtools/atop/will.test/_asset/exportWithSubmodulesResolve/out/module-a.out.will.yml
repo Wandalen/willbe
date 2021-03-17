@@ -2,7 +2,10 @@ format: outwillfile-2.0
 root:
   - module-a.out
 consistency:
-  ../a.will.yml: &ref_0
+  module-a.out.will.yml: &ref_0
+    hash: 85decfe58ff163afeeb32ae4c5c21ee9
+    size: 4727
+  ../a.will.yml: &ref_1
     hash: da8cd48c703d068755cd82de53dec28c
     size: 550
 module:
@@ -108,6 +111,24 @@ module:
           filePath: 'reflector::files'
         inherit:
           - files.reflect
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export'
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export'
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        inherit:
+          - files.reflect
     build:
       files:
         steps:
@@ -134,7 +155,8 @@ module:
           default: 1
           export: 1
     consistency:
-      ../a.will.yml: *ref_0
+      module-a.out.will.yml: *ref_0
+      ../a.will.yml: *ref_1
   ../a:
     about:
       name: module-a
@@ -143,8 +165,6 @@ module:
       enabled: 1
       version: 0.0.1
     path:
-      in:
-        path: .
       module.willfiles:
         criterion:
           predefined: 1
@@ -165,6 +185,8 @@ module:
         criterion:
           predefined: 1
         path: a
+      in:
+        path: .
       download:
         criterion:
           predefined: 1
@@ -209,6 +231,7 @@ module:
           default: 1
           export: 1
     consistency:
-      ../a.will.yml:
-        hash: da8cd48c703d068755cd82de53dec28c
-        size: 550
+      ../a.will.yml: *ref_1
+      module-a.out.will.yml:
+        hash: 85decfe58ff163afeeb32ae4c5c21ee9
+        size: 4727
