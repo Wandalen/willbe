@@ -1,26 +1,24 @@
 
 about :
 
-  name : "module-ab"
+  name : "module-b"
   description : "Module for testing"
   version : "0.0.1"
 
 submodule :
 
   sub-a : ../out/module-a.out
-  sub-b : ../out/module-b.out
 
 path :
 
   proto : '../proto'
-  out : '../out/ab'
+  out : '../out/b'
   files : '{path::out}/files'
   temp :
     - ../out
     - ../out2
   export :
     - 'submodule::sub-a/path::exported.files.proto.export'
-    - 'submodule::sub-b/path::exported.files.proto.export'
     - '{path::proto}/dir3.test'
 
 reflector :
@@ -30,8 +28,6 @@ reflector :
       recursive : 1
       filePath :
         'submodule::sub-a/reflector::exported.files.proto.export' : '{path::files}/a'
-        'submodule::sub-b/reflector::exported.files.proto.export' : '{path::files}/b'
-        '{path::proto}/dir3.test' : '{path::files}/dir3.test'
 
 step :
 
