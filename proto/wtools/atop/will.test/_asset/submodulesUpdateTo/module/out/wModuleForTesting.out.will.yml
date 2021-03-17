@@ -1,37 +1,34 @@
 format: outwillfile-2.0
 root:
-  - module-b.out
+  - wModuleForTesting.out
 consistency:
-  ../b.will.yml: &ref_0
-    hash: b04914a967e5879a90724eb8728ab946
-    size: 550
+  ../.will.yml: &ref_0
+    hash: aea44028e5e5b4d53b5db4870a3cb9b7
+    size: 325
 module:
-  module-b.out:
+  wModuleForTesting.out:
     about:
-      name: module-b
+      name: wModuleForTesting
       org: noorg
-      description: Module for testing
       enabled: 1
-      version: 0.0.1
+      version: 1.0.0
     path:
       module.willfiles:
         criterion:
           predefined: 1
-        path: module-b.out.will.yml
+        path: wModuleForTesting.out.will.yml
       module.common:
         criterion:
           predefined: 1
-        path: module-b.out
-      in:
-        path: .
+        path: wModuleForTesting.out
       module.original.willfiles:
         criterion:
           predefined: 1
-        path: ../b.will.yml
+        path: ../.will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: ../b.will.yml
+        path: ../.will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -39,56 +36,43 @@ module:
       download:
         criterion:
           predefined: 1
-      proto:
-        path: ../proto
+      in:
+        path: .
       out:
         path: .
-      temp:
-        path:
-          - 'path::out'
-          - ../out2
+      export:
+        path: ../**
       exported.dir.proto.export:
         criterion:
           generated: 1
           default: 1
+          proto: 1
           export: 1
-        path: ../proto/b
+        path: ..
       exported.files.proto.export:
         criterion:
           generated: 1
           default: 1
+          proto: 1
           export: 1
         path:
-          - ../proto/b
-          - ../proto/b/-Excluded.js
-          - ../proto/b/File.js
-          - ../proto/b/File.test.js
-          - ../proto/b/File1.debug.js
-          - ../proto/b/File1.release.js
-          - ../proto/b/File2.debug.js
-          - ../proto/b/File2.release.js
+          - ..
+          - ../.will.yml
+          - ../File.js
     submodule: {}
     reflector:
-      files:
-        src:
-          filePath:
-            '{path::proto}/b/**': '{path::out}/b'
-          prefixPath: ''
-          recursive: 1
-        dst:
-          prefixPath: ''
-        recursive: 1
       exported.proto.export:
         src:
           filePath:
             '**': ''
-          prefixPath: ../proto/b
+          prefixPath: ..
         mandatory: 1
         dstRewritingOnlyPreserving: 1
         linking: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
+          proto: 1
           export: 1
       exported.files.proto.export:
         src:
@@ -101,34 +85,28 @@ module:
         criterion:
           generated: 1
           default: 1
+          proto: 1
           export: 1
     step:
-      export.proto:
+      export:
         opts:
-          export: '{path::proto}/b/**'
+          export: 'path::export'
           tar: 0
+        criterion:
+          proto: 1
         inherit:
           - module.export
-      files:
-        opts:
-          filePath: 'reflector::files'
-        inherit:
-          - files.reflect
     build:
-      files:
-        steps:
-          - 'step::files'
-        criterion:
-          default: 1
       proto.export:
         steps:
-          - 'step::export.proto'
+          - 'step::export'
         criterion:
           default: 1
+          proto: 1
           export: 1
     exported:
       proto.export:
-        version: 0.0.1
+        version: 1.0.0
         recursive: 0
         withIntegrated: 2
         tar: 0
@@ -138,31 +116,29 @@ module:
         exportedFilesPath: 'path::exported.files.proto.export'
         criterion:
           default: 1
+          proto: 1
           export: 1
     consistency:
-      ../b.will.yml: *ref_0
-  ../b:
+      ../.will.yml: *ref_0
+  ../:
     about:
-      name: module-b
+      name: wModuleForTesting
       org: noorg
-      description: Module for testing
       enabled: 1
-      version: 0.0.1
+      version: 1.0.0
     path:
-      in:
-        path: .
       module.willfiles:
         criterion:
           predefined: 1
-        path: b.will.yml
+        path: .will.yml
       module.original.willfiles:
         criterion:
           predefined: 1
-        path: b.will.yml
+        path: .will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: out/module-b.out.will.yml
+        path: out/wModuleForTesting.out.will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -170,51 +146,36 @@ module:
       module.common:
         criterion:
           predefined: 1
-        path: b
+        path: ./
       download:
         criterion:
           predefined: 1
-      proto:
-        path: proto
+      in:
+        path: .
       out:
         path: out
-      temp:
-        path:
-          - 'path::out'
-          - out2
+      export:
+        path: '**'
     submodule: {}
-    reflector:
-      files:
-        src:
-          filePath:
-            '{path::proto}/b/**': '{path::out}/b'
-          recursive: 1
-        recursive: 1
+    reflector: {}
     step:
-      export.proto:
+      export:
         opts:
-          export: '{path::proto}/b/**'
+          export: 'path::export'
           tar: 0
+        criterion:
+          proto: 1
         inherit:
           - module.export
-      files:
-        opts:
-          filePath: 'reflector::files'
-        inherit:
-          - files.reflect
     build:
-      files:
-        steps:
-          - 'step::files'
-        criterion:
-          default: 1
       proto.export:
         steps:
-          - 'step::export.proto'
+          - 'step::export'
         criterion:
           default: 1
+          proto: 1
           export: 1
     consistency:
-      ../b.will.yml:
-        hash: b04914a967e5879a90724eb8728ab946
-        size: 550
+      ../.will.yml:
+        hash: aea44028e5e5b4d53b5db4870a3cb9b7
+        size: 325

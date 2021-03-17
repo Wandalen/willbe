@@ -19426,7 +19426,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 function submodulesDownloadWithSubmodulesDefault( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-download' );
+  let a = context.assetFor( test, 'submodulesDownload' );
   a.appStartNonThrowing2 = _.process.starter
   ({
     currentPath : a.abs( 'module' ),
@@ -38036,7 +38036,7 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 function commandsSubmoduleSafety( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-safety' );
+  let a = context.assetFor( test, 'submodulesSafety' );
 
   a.rooWillFilePath = a.abs( '.will.yml' );
   a.localPath = a.abs( '.module/ModuleForTesting1' );
@@ -38432,7 +38432,7 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'different/branch' ] = ( env ) =>
     {
-      a.moduleShell( 'git checkout -b testbranch' );
+      a.moduleShell( 'git checkout dev1' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
@@ -38452,13 +38452,148 @@ function commandsSubmoduleSafety( test )
 }
 
 commandsSubmoduleSafety.rapidity = 1;
-commandsSubmoduleSafety.routineTimeOut = 300000;
+commandsSubmoduleSafety.routineTimeOut = 12000000;
 commandsSubmoduleSafety.description =
 `
 Checks if .submodules.* commands are safe to use in different situations.
 It means that utility doesn't modify the data of the module if it's not required.
 `
 
+//
+
+function commandSubmodulesUpdateOptionTo( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesUpdateTo' );
+
+  a.localPath = a.abs( '.module/ModuleForTesting' );
+  a.remotePath = a.abs( 'module' );
+
+  a.moduleShell = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.moduleDownloadedShell = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 0,
+    deasync : 0,
+    ready : null
+  })
+
+  a.moduleDownloadedShellSync = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.init = ()=>
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      a.moduleShell( 'git init && git add -fA . && git commit -m initial' )
+      a.moduleShell( 'git tag dev1' )
+      return null;
+    })
+    a.appStart( '.submodules.download' );
+    return a.ready;
+  }
+
+  /* */
+
+  a.init()
+  a.appStart( '.submodules.update to:!dev1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var got = a.moduleDownloadedShellSync( 'git describe --tags' )
+    test.true( _.strHas( got.output, 'dev1' ) );
+    let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 1, remote : 0 });
+    let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 0, remote : 1 });
+    test.identical( tagVersionLocal, tagVersionRemote );
+
+    return null;
+  })
+
+  /* */
+
+  a.init()
+  a.moduleDownloadedShell( 'git fetch --tags' )
+  .then( () =>
+  {
+    a.moduleShell( 'git commit --allow-empty -m test' )
+    a.moduleShell( 'git tag -f dev1' )
+    let tagVersionLocal = _.git.exists({ localPath : a.localPath, local : '!dev1', returnVersion : 1 });
+    let tagVersionRemote = _.git.exists({ localPath : a.localPath, remotePath : a.remotePath, remote : '!dev1', returnVersion : 1 });
+    test.notIdentical( tagVersionLocal, tagVersionRemote );
+    return null;
+  })
+  a.appStart( '.submodules.update to:!dev1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var got = a.moduleDownloadedShellSync( 'git describe --tags' )
+    test.true( _.strHas( got.output, 'dev1' ) );
+    let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 1, remote : 0 });
+    let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 0, remote : 1 });
+    test.identical( tagVersionLocal, tagVersionRemote );
+
+    return null;
+  })
+
+  /* */
+
+  a.init()
+  a.moduleDownloadedShell( 'git fetch --tags' )
+  .then( () =>
+  {
+    a.moduleShell( 'git commit --allow-empty -m test' )
+    a.moduleShell( 'git tag dev2' )
+    return null;
+  })
+  a.appStart( '.submodules.update to:!dev2' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var got = a.moduleDownloadedShellSync( 'git describe --tags' )
+    test.true( _.strHas( got.output, 'dev2' ) );
+    let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev2', local : 1, remote : 0 });
+    let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev2', local : 0, remote : 1 });
+    test.identical( tagVersionLocal, tagVersionRemote );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+commandSubmodulesUpdateOptionTo.rapidity = 1;
+commandSubmodulesUpdateOptionTo.routineTimeOut = 120000;
+commandSubmodulesUpdateOptionTo.description =
+`
+Checks if command tag:
+ - Downloads new tags from the remote
+ - Updates existing tag
+ - Checkouts selected submodules to specific tag
+`
 
 // --
 // declare
@@ -38815,6 +38950,7 @@ let Self =
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
 
     commandsSubmoduleSafety,
+    commandSubmodulesUpdateOptionTo
 
   }
 

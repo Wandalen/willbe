@@ -1306,11 +1306,11 @@ function _repoDownload( o )
 
   return ready
   // .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
-  .then( () => 
+  .then( () =>
   {
     return opener.repo.status
-    ({ 
-      all : 1, 
+    ({
+      all : 1,
       invalidating : 1,
       isUpToDate : o.mode !== 'download',
       downloadRequired : o.mode === 'download',
