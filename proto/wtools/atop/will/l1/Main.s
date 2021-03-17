@@ -2931,6 +2931,39 @@ function modulesDownload_body( o )
       junctionDone( junction.peer );
     }
 
+    if( o.mode === 'update' )
+    if( o.to )
+    {
+      _.assert( _.strDefined( o.to ) );
+
+      var vcs = will.vcsToolsFor( junction.opener.remotePath );
+      var remoteParsed = vcs.pathParse( junction.opener.remotePath )
+
+      var globalTo = vcs.path.globalFromPreferred( o.to );
+
+      var toParsed = vcs.pathParse( globalTo );
+
+      if( toParsed.tag )
+      {
+        remoteParsed.tag = toParsed.tag;
+        remoteParsed.hash = null;
+      }
+      else if( toParsed.hash )
+      {
+        remoteParsed.tag = null;
+        remoteParsed.hash = toParsed.hash;
+      }
+      else
+      {
+        throw _.err( `Option "to" should be either tag or version. Got:${o.to}` );
+      }
+
+      let remotePathNew = vcs.path.str( remoteParsed );
+
+      junction.opener.remotePathSet( remotePathNew );
+      junction.opener.repo.remotePathChange( remotePathNew );
+    }
+
     if( o.dry )
     {
       let statusOptions =
@@ -3079,6 +3112,8 @@ defaults.withOut = 1;
 defaults.withIn = 1;
 defaults.withPeers = 1;
 defaults.nodesGroup = null;
+
+defaults.to = null;
 
 delete defaults.withPeers;
 delete defaults.outputFormat;
