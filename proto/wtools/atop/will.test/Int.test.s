@@ -4932,67 +4932,68 @@ function buildsResolve( test )
 } /* end of function buildsResolve */
 
 //
-//
-// function moduleResolve( test ) /* qqq for Dmytro : simplify and write good test for resolving */
-// {
-//   let context = this;
-//   let a = context.assetFor( test, 'exportWithSubmodulesResolve' );
-//   let opener;
-//
-//   /* - */
-//
-//   a.ready.then( () =>
-//   {
-//     a.reflect();
-//     a.fileProvider.filesDelete( a.abs( 'out' ) );
-//     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'ab/' ) });
-//     return opener.open({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
-//   });
-//
-//   a.ready.then( ( arg ) =>
-//   {
-//     let module = opener.openedModule;
-//     let o =
-//     {
-//       arrayWrapping : 1,
-//       criterion : {},
-//       currentExcluding : 0,
-//       defaultResourceKind : null,
-//       mapValsUnwrapping : 0,
-//       pathResolving : 0,
-//       pathUnwrapping : 0,
-//       prefixlessAction : "throw",
-//       selector : "*::*",
-//       strictCriterion : 1,
-//     };
-//
-//     let resolve = module.resolve( o );
-//     test.true( _.aux.is( resolve ) );
-//     test.true( 'step/files.delete' in resolve );
-//     test.true( 'step/files.reflect' in resolve );
-//     test.true( 'path/in' in resolve );
-//     return null;
-//   });
-//
-//   /* - */
-//
-//   a.ready.finally( ( err, arg ) =>
-//   {
-//     if( err )
-//     throw err;
-//     test.true( err === undefined );
-//     opener.finit();
-//     return arg;
-//   });
-//
-//   return a.ready;
-// }
-//
-// moduleResolve.description =
-// `
-// Test routine checks that module can open submodules and  resolve the resources.
-// Submodules are exported willfiles.
-// `;
+/* qqq for Dmytro : write good test for resolving of resources in supermodule and submodule */
+
+function moduleResolveSimple( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithSubmodulesResolve' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'a' ) });
+    return opener.open();
+  });
+
+  a.ready.then( ( arg ) =>
+  {
+    let module = opener.openedModule;
+    let o =
+    {
+      arrayWrapping : 1,
+      criterion : {},
+      currentExcluding : 0,
+      defaultResourceKind : null,
+      mapValsUnwrapping : 0,
+      pathResolving : 0,
+      pathUnwrapping : 0,
+      prefixlessAction : "throw",
+      selector : "*::*",
+      strictCriterion : 1,
+    };
+
+    let resolve = module.resolve( o );
+    test.true( _.aux.is( resolve ) );
+    test.true( 'step/files.delete' in resolve );
+    test.true( 'step/files.reflect' in resolve );
+    test.true( 'path/in' in resolve );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+moduleResolveSimple.description =
+`
+Test routine checks that module can open submodules and  resolve the resources.
+Submodules are exported willfiles.
+`;
 
 //
 
@@ -11110,7 +11111,7 @@ let Self =
 
     exportsResolve,
     buildsResolve,
-    // moduleResolve,
+    moduleResolveSimple,
 
     framePerform,
 
