@@ -1645,7 +1645,11 @@ function _repoDownload( o )
     {
       reflectMap : { [ opener.remotePath ] : opener.downloadPath },
       verbosity : will.verbosity - 5,
-      extra : { fetching : 0 },
+      extra :
+      {
+        fetching : 0,
+        fetchingTags : o.mode === 'update'
+      },
     }
 
     if( downloading && !o.dry )
