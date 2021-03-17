@@ -5026,7 +5026,9 @@ function moduleResolve( test )
   {
     test.case = 'resolve all resources from module, including submodule paths';
     let module = opener.openedModule;
+    debugger;
     let resolve = module.resolve( '*::*' );
+    debugger;
     test.true( _.aux.is( resolve ) );
     test.true( 'step/files.delete' in resolve );
     test.true( 'step/files.reflect' in resolve );

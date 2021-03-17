@@ -415,15 +415,21 @@ function _resourceMapSelect()
   else
   {
 
-    debugger;
     it.src = rit.currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
+      debugger;
       it.selectorArray.splice( it.absoluteLevel, 1, '*', it.selector );
       it.selector = it.selectorArray[ it.absoluteLevel ];
       _.assert( it.selector !== undefined );
+
+      // it.iterationSelectorChanged();
+      it.selectorType = null;
+      // it.iterable = null;
       it.iterationSelectorChanged();
+      // it.srcChanged();
+
     }
 
     if( !it.src )
@@ -974,6 +980,7 @@ function _functionOsGetUp()
   it.src = os;
   it.dst = os;
   it.selector = undefined;
+  it.selectorType = null;
   it.iterable = null;
   it.iterationSelectorChanged();
   it.srcChanged();
@@ -1000,6 +1007,7 @@ function _functionThisUp()
   it.isFunction = it.selector;
   it.src = [ currentThis ]; /* zzz : write result of selection to dst, never to src? */
   it.selector = 0;
+  it.selectorType = null;
   it.iterable = null;
   it.iterationSelectorChanged();
   it.srcChanged();
