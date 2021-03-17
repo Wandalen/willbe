@@ -38469,7 +38469,7 @@ function commandSubmodulesUpdateOptionTo( test )
   a.localPath = a.abs( '.module/ModuleForTesting' );
   a.remotePath = a.abs( 'module' );
 
-  a.moduleShell = _.process.starter
+  a.moduleShellSync = _.process.starter
   ({
     currentPath : a.abs( 'module' ),
     outputCollecting : 1,
@@ -38482,18 +38482,18 @@ function commandSubmodulesUpdateOptionTo( test )
 
   a.moduleDownloadedShell = _.process.starter
   ({
-    currentPath : a.abs( 'module' ),
+    currentPath : a.abs( '.module/ModuleForTesting' ),
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 0,
     sync : 0,
     deasync : 0,
-    ready : null
+    ready : a.ready
   })
 
   a.moduleDownloadedShellSync = _.process.starter
   ({
-    currentPath : a.abs( 'module' ),
+    currentPath : a.abs( '.module/ModuleForTesting' ),
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 0,
@@ -38508,8 +38508,9 @@ function commandSubmodulesUpdateOptionTo( test )
     {
       a.fileProvider.filesDelete( a.abs( '.' ) );
       a.reflect();
-      a.moduleShell( 'git init && git add -fA . && git commit -m initial' )
-      a.moduleShell( 'git tag dev1' )
+      a.willFileBefore = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
+      a.moduleShellSync( 'git init && git add -fA . && git commit -m initial' )
+      a.moduleShellSync( 'git tag dev1' )
       return null;
     })
     a.appStart( '.submodules.download' );
@@ -38522,12 +38523,15 @@ function commandSubmodulesUpdateOptionTo( test )
   a.appStart( '.submodules.update to:!dev1' )
   .then( ( op ) =>
   {
+    test.case = 'switch to dev1 after download'
     test.identical( op.exitCode, 0 );
-    var got = a.moduleDownloadedShellSync( 'git describe --tags' )
-    test.true( _.strHas( got.output, 'dev1' ) );
+    var got = a.moduleDownloadedShellSync( 'git status' )
+    test.true( _.strHas( got.output, `HEAD detached at dev1` ) );
     let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 1, remote : 0 });
     let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 0, remote : 1 });
     test.identical( tagVersionLocal, tagVersionRemote );
+    let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
+    test.identical( willFileAftet, a.willFileBefore );
 
     return null;
   })
@@ -38535,13 +38539,14 @@ function commandSubmodulesUpdateOptionTo( test )
   /* */
 
   a.init()
-  a.moduleDownloadedShell( 'git fetch --tags' )
   .then( () =>
   {
-    a.moduleShell( 'git commit --allow-empty -m test' )
-    a.moduleShell( 'git tag -f dev1' )
-    let tagVersionLocal = _.git.exists({ localPath : a.localPath, local : '!dev1', returnVersion : 1 });
-    let tagVersionRemote = _.git.exists({ localPath : a.localPath, remotePath : a.remotePath, remote : '!dev1', returnVersion : 1 });
+    test.case = 'switch to dev1 after tag update on the remote, should update local tag'
+    a.moduleDownloadedShellSync( 'git fetch --tags' );
+    a.moduleShellSync( 'git commit --allow-empty -m test' )
+    a.moduleShellSync( 'git tag -f dev1' )
+    let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 1, remote : 0 });
+    let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 0, remote : 1 });
     test.notIdentical( tagVersionLocal, tagVersionRemote );
     return null;
   })
@@ -38549,35 +38554,89 @@ function commandSubmodulesUpdateOptionTo( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var got = a.moduleDownloadedShellSync( 'git describe --tags' )
-    test.true( _.strHas( got.output, 'dev1' ) );
+    var got = a.moduleDownloadedShellSync( 'git status' )
+    test.true( _.strHas( got.output, `HEAD detached at dev1` ) );
     let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 1, remote : 0 });
     let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 0, remote : 1 });
     test.identical( tagVersionLocal, tagVersionRemote );
-
+    let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
+    test.identical( willFileAftet, a.willFileBefore );
     return null;
   })
 
   /* */
 
   a.init()
-  a.moduleDownloadedShell( 'git fetch --tags' )
   .then( () =>
   {
-    a.moduleShell( 'git commit --allow-empty -m test' )
-    a.moduleShell( 'git tag dev2' )
+    test.case = 'switch to dev2, new tag was created on the remote after download'
+    a.moduleDownloadedShellSync( 'git fetch --tags' )
+    a.moduleShellSync( 'git commit --allow-empty -m test' )
+    a.moduleShellSync( 'git tag dev2' )
     return null;
   })
   a.appStart( '.submodules.update to:!dev2' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var got = a.moduleDownloadedShellSync( 'git describe --tags' )
-    test.true( _.strHas( got.output, 'dev2' ) );
+    var got = a.moduleDownloadedShellSync( 'git status' )
+    test.true( _.strHas( got.output, `HEAD detached at dev2` ) );
     let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev2', local : 1, remote : 0 });
     let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev2', local : 0, remote : 1 });
     test.identical( tagVersionLocal, tagVersionRemote );
+    let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
+    test.identical( willFileAftet, a.willFileBefore );
+    return null;
+  })
 
+  /* */
+
+  a.init()
+  .then( () =>
+  {
+    test.case = 'switch to dev3, dev1 was renamed to dev3 on the remote after download'
+    a.moduleDownloadedShellSync( 'git fetch --tags' )
+    a.moduleShellSync( 'git tag dev3 dev1^{}' )
+    a.moduleShellSync( 'git tag -d dev1' )
+    return null;
+  })
+  a.appStart( '.submodules.update to:!dev3' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var got = a.moduleDownloadedShellSync( 'git status' )
+    test.true( _.strHas( got.output, `HEAD detached at dev3` ) );
+    let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev3', local : 1, remote : 0 });
+    let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev3', local : 0, remote : 1 });
+    test.identical( tagVersionLocal, tagVersionRemote );
+    let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
+    test.identical( willFileAftet, a.willFileBefore );
+    return null;
+  })
+
+  /* */
+
+  a.init()
+  .then( () =>
+  {
+    test.case = 'switch to tag removed on remote after download'
+    a.moduleDownloadedShellSync( 'git fetch --tags' )
+    a.moduleShellSync( 'git tag -d dev1' )
+    return null;
+  })
+  a.appStart( '.submodules.update to:!dev1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var got = a.moduleDownloadedShellSync( 'git status' )
+    test.true( _.strHas( got.output, `HEAD detached at dev1` ) );
+    let tagVersionLocal = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 1, remote : 0 });
+    let tagVersionRemote = _.git.repositoryTagToVersion({ localPath : a.localPath, tag : 'dev1', local : 0, remote : 1 });
+    var got = a.moduleDownloadedShellSync( 'git show-ref --tags -- dev1' )
+    test.true( _.strHas( got.output, tagVersionLocal ) );
+    test.identical( tagVersionRemote, false );
+    let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
+    test.identical( willFileAftet, a.willFileBefore );
     return null;
   })
 
