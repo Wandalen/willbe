@@ -415,6 +415,7 @@ function _resourceMapSelect()
   else
   {
 
+    debugger;
     it.src = rit.currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
