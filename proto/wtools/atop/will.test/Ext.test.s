@@ -38036,7 +38036,7 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 function commandsSubmoduleSafety( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-safety' );
+  let a = context.assetFor( test, 'submodulesSafety' );
 
   a.rooWillFilePath = a.abs( '.will.yml' );
   a.localPath = a.abs( '.module/ModuleForTesting1' );
@@ -38464,7 +38464,7 @@ It means that utility doesn't modify the data of the module if it's not required
 function commandSubmodulesUpdateOptionTo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-update-to' );
+  let a = context.assetFor( test, 'submodulesUpdateTo' );
 
   a.localPath = a.abs( '.module/ModuleForTesting' );
   a.remotePath = a.abs( 'module' );
