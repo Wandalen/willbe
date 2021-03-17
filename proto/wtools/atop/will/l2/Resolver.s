@@ -358,7 +358,8 @@ function _globCriterionFilter()
 
   _.debugger;
 
-  if( it.down && it.down.selectorIsGlob )
+  // if( it.down && it.down.selectorIsGlob )
+  if( it.down && it.down.selectorType === 'glob' )
   if( rit.criterion && it.src && it.src.criterionSattisfy )
   {
 
