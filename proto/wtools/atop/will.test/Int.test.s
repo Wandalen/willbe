@@ -4932,7 +4932,6 @@ function buildsResolve( test )
 } /* end of function buildsResolve */
 
 //
-/* qqq for Dmytro : write good test for resolving of resources in supermodule and submodule */
 
 function moduleResolveSimple( test )
 {
@@ -4991,7 +4990,97 @@ function moduleResolveSimple( test )
 
 moduleResolveSimple.description =
 `
-Test routine checks that module can open submodules and  resolve the resources.
+Test routine checks that module resolves all resources.
+`;
+
+//
+
+function moduleResolve( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithSubmodulesResolve' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'b/' ) });
+    return opener.open({ all : 1 });
+  });
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve concrete resource from submodule';
+    let module = opener.openedModule;
+    let resolve = module.resolve( 'submodule::sub-a/path::exported.files.proto.export' );
+    test.true( _.longIs( resolve ) );
+    test.true( resolve.length === 2 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve all resources from module, including submodule paths';
+    let module = opener.openedModule;
+    let resolve = module.resolve( '*::*' );
+    test.true( _.aux.is( resolve ) );
+    test.true( 'step/files.delete' in resolve );
+    test.true( 'step/files.reflect' in resolve );
+    test.true( 'path/in' in resolve );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve all resources from module, including submodule paths, pathResolving - 0';
+    let module = opener.openedModule;
+    let o =
+    {
+      arrayWrapping : 1,
+      criterion : {},
+      currentExcluding : 0,
+      defaultResourceKind : null,
+      mapValsUnwrapping : 0,
+      pathResolving : 0,
+      pathUnwrapping : 0,
+      prefixlessAction : 'throw',
+      selector : '*::*',
+      strictCriterion : 1,
+    };
+
+    let resolve = module.resolve( o );
+    test.true( _.aux.is( resolve ) );
+    test.true( 'step/files.delete' in resolve );
+    test.true( 'step/files.reflect' in resolve );
+    test.true( 'path/in' in resolve );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
+moduleResolve.description =
+`
+Test routine checks that module resolves the own export resources.
+Resource is export paths map with paths from submodule.
 Submodules are exported willfiles.
 `;
 
@@ -6540,6 +6629,7 @@ function pathsResolveImportIn( test )
   a.ready.then( ( arg ) =>
   {
 
+    debugger;
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = opener.openedModule.resolve( 'submodule::*/path::in*=1' )
     var expected = ( 'sub.out' );
@@ -11112,6 +11202,7 @@ let Self =
     exportsResolve,
     buildsResolve,
     moduleResolveSimple,
+    moduleResolve,
 
     framePerform,
 
