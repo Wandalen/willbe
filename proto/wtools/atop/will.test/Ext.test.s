@@ -19426,7 +19426,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 function submodulesDownloadWithSubmodulesDefault( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-download' );
+  let a = context.assetFor( test, 'submodulesDownload' );
   a.appStartNonThrowing2 = _.process.starter
   ({
     currentPath : a.abs( 'module' ),
