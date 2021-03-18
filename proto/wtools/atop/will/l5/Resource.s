@@ -1142,6 +1142,7 @@ function moduleSet( src )
 
 //
 
+
 function moduleForResolveGet()
 {
   let resource = this;
