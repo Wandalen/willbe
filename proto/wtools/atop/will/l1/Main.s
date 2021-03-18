@@ -4569,6 +4569,148 @@ willfilesFind.defaults =
 
 //
 
+function WillfilesFindAtDir( o )
+{
+
+  if( _.strIs( o ) )
+  o = { filePath : o };
+
+  let fileProvider = o.fileProvider || _.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( WillfilesFindAtDir, o );
+  _.assert( !path.isGlob( o.filePath ), 'Expects no glob in {-o.filePath-}' );
+  _.assert( o.withIn || o.withOut, 'Routine searches in and out willfiles. Please, define option {-o.withIn-} or {-o.withOut-}' );
+
+  if( o.filePath === '.' )
+  o.filePath = './';
+  o.filePath = path.normalize( o.filePath );
+  o.filePath = path.resolve( o.filePath );
+
+  if( fileProvider.isTerminal( o.filePath ) )
+  {
+    _.assert( _.Will.WillfilePathIs( o.filePath ), 'Expects path to willfile' );
+    return [ fileProvider.record( o.filePath ) ];
+  }
+
+  let namePrefix = '';
+  if( _.strEnds( o.filePath, path.upToken ) )
+  if( o.withAllNamed )
+  namePrefix = '*';
+
+  return _willfilesFindAtDir( o.filePath );
+
+  /* */
+
+  function _willfilesFindAtDir( filePath )
+  {
+
+    if( !path.isSafe( filePath, 1 ) )
+    return [];
+
+    let filter =
+    {
+      filePath : filePath,
+      maskTransientDirectory :
+      {
+      },
+      maskDirectory :
+      {
+      },
+      maskTerminal :
+      {
+        includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
+        excludeAny :
+        [
+          /\.DS_Store$/,
+          /(^|\/)-/,
+        ],
+        includeAll : []
+      }
+    };
+
+    if( !o.withIn )
+    filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+    if( !o.withOut )
+    filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+
+    filter.recursive = 1;
+
+    let o2 =
+    {
+      filter,
+      maskPreset : 0,
+      mandatory : 0,
+      safe : 0,
+      mode : 'distinct',
+    };
+
+    filter.filePath = path.mapExtend( filter.filePath );
+    filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
+    {
+      if( !_.strIs( it.dst ) )
+      return { [ it.src ] : it.dst };
+
+      _.sure( !path.isGlob( it.src ) )
+
+      let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
+      let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );
+
+      let postfix = '?(.)';
+      if( !hasWill )
+      {
+        postfix += '?(im.|ex.)';
+
+        if( !o.exact )
+        if( o.withOut && o.withIn )
+        postfix += '?(out.)';
+        else if( o.withIn )
+        postfix += '';
+        else if( o.withOut )
+        postfix += 'out.';
+
+        postfix += 'will';
+      }
+
+      if( !hasExt )
+      postfix += '.*';
+
+      it.src += namePrefix + postfix;
+
+      return { [ it.src ] : it.dst };
+    });
+
+    let files = fileProvider.filesFind( o2 );
+
+    let files2 = [];
+    files.forEach( ( file ) =>
+    {
+      if( _.Will.PathIsOut( file.absolute ) )
+      files2.push( file );
+    });
+    files.forEach( ( file ) =>
+    {
+      if( !_.Will.PathIsOut( file.absolute ) )
+      files2.push( file );
+    });
+
+    return files2;
+  }
+}
+
+WillfilesFindAtDir.defaults =
+{
+  filePath : null,
+  withIn : 1,
+  withOut : 1,
+  withAllNamed : 0,
+  exact : 0,
+  fileProvider : null,
+};
+
+//
+
 function willfilesSelectPaired( record, records )
 {
   let will = this;
@@ -5483,6 +5625,7 @@ let Statics =
   LocalPathNormalize,
   IsModuleAt,
   WillfilesFind,
+  WillfilesFindAtDir,
 
 }
 
@@ -5655,6 +5798,7 @@ let Extension =
   WillfilePathIs,
   WillfilesFind,
   willfilesFind,
+  WillfilesFindAtDir,
   willfilesSelectPaired,
   willfileWithCommon,
   _willfileWithFilePath,
