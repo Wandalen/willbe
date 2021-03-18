@@ -5026,13 +5026,10 @@ function moduleResolve( test )
   {
     test.case = 'resolve all resources from module, including submodule paths';
     let module = opener.openedModule;
-    debugger;
     let resolve = module.resolve( '*::*' );
-    debugger;
-    test.true( _.aux.is( resolve ) );
-    test.true( 'step/files.delete' in resolve );
-    test.true( 'step/files.reflect' in resolve );
-    test.true( 'path/in' in resolve );
+    test.true( _.arrayIs( resolve ) );
+    test.true( resolve[ 0 ] instanceof _.will.Module );
+    test.true( resolve[ resolve.length - 1 ] instanceof _.will.Build );
     return null;
   });
 
