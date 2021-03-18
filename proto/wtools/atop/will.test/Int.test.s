@@ -568,6 +568,36 @@ WillfilesFindAtDirWithOptions.rapidity = -1;
 
 //
 
+function WillfilesFindAtDirWillfilesWithDifferentExtensions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  test.case = 'path to dir, withAllNamed - 1, standard exetensions';
+  a.reflect();
+  var got = _.Will.WillfilesFindAtDir({ filePath : a.abs( './' ), withAllNamed : 1 });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, withAllNamed - 1, not standard exetensions';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Author.will.yml' ), dstPath : a.abs( 'Author.will.yaml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Keywords.will.yml' ), dstPath : a.abs( 'Keywords.will.bson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Name.will.yml' ), dstPath : a.abs( 'Name.will.cson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Version.will.yml' ), dstPath : a.abs( 'Version.out.will.json' ) });
+  var got = _.Will.WillfilesFindAtDir({ filePath : a.abs( './' ), withAllNamed : 1 });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].absolute, a.abs( './Version.out.will.json' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.ex.will.yml' ) );
+}
+
+//
+
 function buildSimple( test )
 {
   let context = this;
@@ -11425,6 +11455,7 @@ let Self =
 
     WillfilesFindAtDir,
     WillfilesFindAtDirWithOptions,
+    WillfilesFindAtDirWillfilesWithDifferentExtensions,
 
     buildSimple,
     openNamedFast,
