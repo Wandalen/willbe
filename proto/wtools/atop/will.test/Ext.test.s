@@ -28927,6 +28927,196 @@ commandSubmodulesGitSync.rapidity = -1;
 
 //
 
+function commandModulesUpdate( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesUpdate' );
+
+  a.remotePath = a.abs( 'module' );
+  a.appStart.predefined.currentPath = a.abs( 'clone' );
+  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.shellSyncClone = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.shellSyncSubmodule = _.process.starter
+  ({
+    currentPath : a.abs( 'clone/.module/ModuleForTesting1' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.moduleShellSync = _.process.starter
+  ({
+    currentPath : a.remotePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.init = ( o ) =>
+  {
+    o = o || {}
+
+    a.ready.then( () =>
+    {
+      test.case = _.entity.exportString( o );
+
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      a.moduleShellSync( 'git init' )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'module/.gitignore' ), data : '.module' });
+      a.moduleShellSync( 'git add -fA .' )
+      a.moduleShellSync( 'git commit -m initial' )
+      a.moduleShellSync( 'git tag gamma' )
+      a.shellSync( 'git clone module clone' )
+
+      if( o.rootLocalChange )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'clone/file' ), data : 'file' });
+
+      return null;
+    })
+
+    if( o.downloadSubmodules )
+    {
+      a.appStart( '.submodules.download' );
+
+      if( o.submoduleLocalChange )
+      a.ready.then( () =>
+      {
+        a.fileProvider.fileWrite
+        ({
+           filePath : a.abs( 'clone/.module/ModuleForTesting1/file' ),
+           data : 'file'
+        });
+        return null;
+      })
+    }
+
+
+
+    return a.ready;
+  }
+
+  /* */
+
+  a.init({ case : 'update downloads submodules', downloadSubmodules : 0 })
+  a.appStart( '.modules.update' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1' ] );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'update downloads submodules', downloadSubmodules : 1 })
+  a.appStart( '.modules.update' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1' ] );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'update downloads submodules and checkouts root and submodules to specified tag', downloadSubmodules : 0 })
+  a.appStart( '.modules.update to:!gamma' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'update checkouts root and submodules to specified tag', downloadSubmodules : 1 })
+  a.appStart( '.modules.update to:!gamma' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'update gives error if root has local changes', downloadSubmodules : 1, rootLocalChange : 1 })
+  a.appStartNonThrowing( '.modules.update to:!gamma' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'needs to be updated, but has local changes' ) );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'update gives error if root has local changes', downloadSubmodules : 1, submoduleLocalChange : 1 })
+  a.appStartNonThrowing( '.modules.update to:!gamma' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'needs to be updated, but has local changes' ) );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 function commandModulesShell( test )
 {
   let context = this;
@@ -38958,6 +39148,7 @@ let Self =
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
 
+    commandModulesUpdate,
     commandModulesShell,
     commandModulesGit,
     commandModulesGitRemoteSubmodules,

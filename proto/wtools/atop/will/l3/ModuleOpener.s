@@ -1186,6 +1186,24 @@ function _repoForm()
   else
   {
     opener._.localPath = opener.commonPath;
+
+    if( opener.isOut )
+    {
+      downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
+      remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
+    }
+    else
+    {
+      downloadPath = opener._.downloadPath = opener._.localPath;
+      if( _.git.isRepository({ localPath : opener.localPath }) )
+      {
+        let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+        remotePath = opener._.remotePath = remotePathFromLocal;
+      }
+    }
+
+    isRemote = opener.repoIsRemote();
+
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
     opener.repo = will.repoFrom
     ({
@@ -1297,11 +1315,11 @@ function _repoDownload( o )
   _.assert( arguments.length === 1 );
   _.assert( opener.formed >= 2 );
   _.assert( !!opener.willfilesPath );
-  _.assert( _.strDefined( opener.aliasName ) );
+  _.assert( !o.strict || _.strDefined( opener.aliasName ) );
   _.assert( _.strDefined( opener.remotePath ) );
   _.assert( _.strDefined( opener.downloadPath ) );
   _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.superRelation );
+  _.assert( !o.strict || !!opener.superRelation );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   return ready
@@ -2182,6 +2200,45 @@ remotePathEachAdoptAct.defaults =
 
 //
 
+function remotePathChangeVersionTo( to )
+{
+  let opener = this;
+  let will = opener.will;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( to ) );
+
+  var vcs = will.vcsToolsFor( opener.remotePath );
+  var remoteParsed = vcs.pathParse( opener.remotePath )
+
+  var globalTo = vcs.path.globalFromPreferred( to );
+  var toParsed = vcs.pathParse( globalTo );
+
+  if( toParsed.tag )
+  {
+    remoteParsed.tag = toParsed.tag;
+    remoteParsed.hash = null;
+  }
+  else if( toParsed.hash )
+  {
+    remoteParsed.tag = null;
+    remoteParsed.hash = toParsed.hash;
+  }
+  else
+  {
+    throw _.err( `Argument "to" should be either tag or version. Got:${to}` );
+  }
+
+  let remotePathNew = vcs.path.str( remoteParsed );
+
+  opener.remotePathSet( remotePathNew );
+  opener.repo.remotePathChange( remotePathNew );
+
+  return true;
+}
+
+//
+
 function sharedFieldPut_functor( propName )
 {
   let symbol = Symbol.for( propName );
@@ -2719,6 +2776,7 @@ let Extension =
   _localPathPut,
   remotePathPut,
   remotePathEachAdoptAct,
+  remotePathChangeVersionTo,
 
   // name
 
