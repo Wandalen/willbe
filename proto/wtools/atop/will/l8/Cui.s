@@ -1712,14 +1712,9 @@ function commandModulesUpdate( e )
       if( e.propertiesMap.to )
       it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
 
-      return it.opener._repoDownload
-      ({
-        mode : 'update',
-        dry : 0,
-        opening : 1,
-        recursive : 0,
-        strict : 0
-      })
+      let o2 = _.mapOnly( e.propertiesMap, it.opener.repoUpdate.defaults );
+      o2.strict = 0;
+      return it.opener.repoUpdate( o2 );
     })
 
     con.then( () =>

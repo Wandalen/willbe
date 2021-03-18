@@ -1959,21 +1959,31 @@ _repoDownload.defaults =
 
 //
 
-function repoDownload()
+function repoDownload( o )
 {
   let opener = this;
   let will = opener.will;
-  return opener._repoDownload({ updating : 0 });
+  o = o || Object.create( null );
+  _.routineOptions( repoDownload, o );
+  return opener._repoDownload( o );
 }
+
+var defaults = repoDownload.defaults = _.mapExtend( null, _repoDownload.defaults );
+defaults.mode = 'download';
 
 //
 
-function repoUpdate()
+function repoUpdate( o )
 {
   let opener = this;
   let will = opener.will;
-  return opener._repoDownload({ updating : 1 });
+  o = o || Object.create( null );
+  _.routineOptions( repoUpdate, o );
+  return opener._repoDownload( o );
 }
+
+var defaults = repoUpdate.defaults = _.mapExtend( null, _repoDownload.defaults );
+defaults.mode = 'update';
 
 // --
 // path
