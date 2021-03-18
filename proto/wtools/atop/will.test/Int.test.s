@@ -598,6 +598,33 @@ function WillfilesFindAtDirWillfilesWithDifferentExtensions( test )
 
 //
 
+function WillfilesFindAtDirWillfilesInSubdirectories( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  test.case = 'path to dir, withAllNamed - 1, no willfiles in subdirectory';
+  a.reflect();
+  var got = _.Will.WillfilesFindAtDir({ filePath : a.abs( './' ), withAllNamed : 1 });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, withAllNamed - 1, willfiles in subdirectory';
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+  var got = _.Will.WillfilesFindAtDir({ filePath : a.abs( './' ), withAllNamed : 1 });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+}
+
+//
+
 function buildSimple( test )
 {
   let context = this;
@@ -11456,6 +11483,7 @@ let Self =
     WillfilesFindAtDir,
     WillfilesFindAtDirWithOptions,
     WillfilesFindAtDirWillfilesWithDifferentExtensions,
+    WillfilesFindAtDirWillfilesInSubdirectories,
 
     buildSimple,
     openNamedFast,
