@@ -1685,9 +1685,9 @@ commandModulesTree.commandProperties =
 function commandModulesUpdate( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesVersionsUpdate, arguments );
+  cui._command_head( commandModulesUpdate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
+  let implyMap = _.mapOnly( e.propertiesMap, commandModulesUpdate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
@@ -1741,7 +1741,7 @@ commandModulesUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
-  to : 'Checkouts submodules to specified version/tag.',
+  to : 'Checkouts root and it submodules to specified version/tag.',
   ... commandImply.commandProperties,
 }
 
