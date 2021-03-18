@@ -5495,13 +5495,10 @@ function moduleResolve( test )
   {
     test.case = 'resolve all resources from module, including submodule paths';
     let module = opener.openedModule;
-    debugger;
     let resolve = module.resolve( '*::*' );
-    debugger;
-    test.true( _.aux.is( resolve ) );
-    test.true( 'step/files.delete' in resolve );
-    test.true( 'step/files.reflect' in resolve );
-    test.true( 'path/in' in resolve );
+    test.true( _.arrayIs( resolve ) );
+    test.true( resolve[ 0 ] instanceof _.will.Module );
+    test.true( resolve[ resolve.length - 1 ] instanceof _.will.Build );
     return null;
   });
 
@@ -9570,8 +9567,7 @@ function submodulesRemoteResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
@@ -9669,6 +9665,95 @@ function submodulesRemoteResolve( test )
 
   return a.ready;
 } /* end of function submodulesRemoteResolve */
+
+//
+
+function submodulesRemoteResolveNotDownloaded( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfSub : 1, });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  });
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+
+    test.case = 'resolve all submodules, default options';
+    var submodules = module.submodulesResolve({ selector : 'submodule::*' });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 0';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 0,
+      pathUnwrapping : 0,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 1, preservingIteration - 0';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 0,
+      pathUnwrapping : 1,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 1';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 1,
+      pathUnwrapping : 0,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ].replicateIteration.currentModule instanceof _.will.Module );
+    test.true( submodules[ 1 ].replicateIteration.currentModule instanceof _.will.Module );
+    test.true( submodules[ 0 ].replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+    test.true( submodules[ 1 ].replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 1, preservingIteration - 1';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 1,
+      pathUnwrapping : 1,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ].replicateIteration.currentModule instanceof _.will.Module );
+    test.true( submodules[ 1 ].replicateIteration.currentModule instanceof _.will.Module );
+    test.true( submodules[ 0 ].replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+    test.true( submodules[ 1 ].replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -11708,6 +11793,7 @@ let Self =
     modulesEachDuplicates,
     filesFromResource,
     submodulesRemoteResolve,
+    submodulesRemoteResolveNotDownloaded,
     submodulesLocalResolve,
     submodulesDeleteAndDownload,
 

@@ -421,7 +421,7 @@ function submodulesRelationsFilter( o )
 //   let junctions = junction.submodulesJunctionsFilter( o );
 //
 //   // if( o.withPeers )
-//   // _.arrayPrependOnce( junctions, junction ); 
+//   // _.arrayPrependOnce( junctions, junction );
 //
 //   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 //
@@ -540,6 +540,17 @@ function moduleSet( src )
   _.assert( resource.module === null || resource.module instanceof _.will.Module );
 
   return src;
+}
+
+//
+
+function moduleForResolveGet()
+{
+  let resource = this;
+  _.assert( arguments.length === 0 );
+  if( !resource.opener || !resource.opener.openedModule )
+  return null;
+  return resource.opener.openedModule;
 }
 
 // --
@@ -978,7 +989,9 @@ let Accessors =
   longPath : { get : longPathGet },
   path : { set : pathSet },
   module : { combining : 'rewrite' },
+  moduleForResolve : { get : moduleForResolveGet, set : 0, combining : 'rewrite' },
 }
+
 
 let Forbids =
 {
@@ -1026,6 +1039,7 @@ let Extension =
   isAvailableGet,
   isAliveGet,
   moduleSet,
+  moduleForResolveGet,
 
   // path
 

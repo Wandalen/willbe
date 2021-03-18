@@ -112,7 +112,7 @@ function _onSelectorDown()
   if( !it.dstWritingDown )
   return end();
 
-  it._pathPerform.call( it );
+  it._pathPerform();
 
   return end();
 
@@ -131,8 +131,8 @@ function _onUpBegin()
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
 
-  it._statusPreUpdate.call( it );
-  it._globCriterionFilter.call( it );
+  it._statusPreUpdate();
+  it._globCriterionFilter();
 
   if( !it.dstWritingDown )
   return;
@@ -141,9 +141,9 @@ function _onUpBegin()
   _resourceMapSelect, _statusPostUpdate should go after _queryParse
   */
 
-  it._queryParse.call( it );
-  it._resourceMapSelect.call( it );
-  it._statusPostUpdate.call( it );
+  it._queryParse();
+  it._resourceMapSelect();
+  it._statusPostUpdate();
 
 }
 
@@ -157,13 +157,13 @@ function _onUpEnd()
   if( !it.dstWritingDown )
   return;
 
-  it._exportedWriteThrough.call( it );
-  it._currentExclude.call( it );
+  it._exportedWriteThrough();
+  it._currentExclude();
 
   if( !it.dstWritingDown )
   return;
 
-  it._pathsCompositeResolve.call( it );
+  it._pathsCompositeResolve();
 
 }
 
@@ -177,7 +177,7 @@ function _onDownEnd()
   if( !it.dstWritingDown )
   return;
 
-  it._pathPerform.call( it );
+  it._pathPerform();
 
   return Parent._onDownEnd.call( it );
 }
@@ -189,6 +189,9 @@ function _onQuantitativeFail( err )
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let dst = it.dst;
+  let currentModule = it.currentModule || rit.currentModule;
+
+  _.assert( rit !== it );
 
   if( _.mapIs( dst ) )
   dst = _.mapVals( dst );
@@ -224,7 +227,7 @@ function _onQuantitativeFail( err )
 
     /* information about outdated status of the module */
 
-    if( rit.currentModule.peerModuleIsOutdated )
+    if( currentModule.peerModuleIsOutdated )
     if
     (
          ( it.parsedSelector && it.parsedSelector.kind === 'exported' )
@@ -232,13 +235,13 @@ function _onQuantitativeFail( err )
       || ( it.down && it.down.parsedSelector && it.down.parsedSelector.kind === 'submodule' )
     )
     {
-      let willfile = rit.currentModule.willfilesArray[ 0 ];
+      let willfile = currentModule.willfilesArray[ 0 ];
       let storagePath = willfile ? willfile.storagePath : '';
       if( willfile )
       err = _.err
       (
         err,
-        `\n${ rit.currentModule.decoratedAbsoluteName } loaded from `
+        `\n${ currentModule.decoratedAbsoluteName } loaded from `
         + `${ willfile.storageWillfile.openedModule.decoratedAbsoluteName } is outdated!`,
         `\nPlease re-export ${ _.ct.format( storagePath, 'path' ) } first.`
       );
@@ -246,7 +249,7 @@ function _onQuantitativeFail( err )
       err = _.err
       (
         err,
-        `\n${ rit.currentModule.decoratedAbsoluteName } is outdated!`,
+        `\n${ currentModule.decoratedAbsoluteName } is outdated!`,
         `\nPlease re-export it first.`
       );
     }
@@ -272,6 +275,7 @@ function _statusPreUpdate()
   if( !it.src )
   return;
 
+  _.assert( it !== rit );
   _.assert( !_.mapOwn( it.src, 'composite' ) );
 
   if( it.down && it.down.src && it.down.src instanceof _.will.ModulesRelation )
@@ -288,7 +292,9 @@ function _statusPreUpdate()
 
   if( it.src instanceof _.will.Module )
   {
-    rit.currentModule = it.src;
+    // debugger;
+    it.currentModule = it.src;
+    // rit.currentModule = it.src;
   }
   else if( it.src instanceof _.will.ModulesRelation )
   {
@@ -311,13 +317,16 @@ function _statusPreUpdate()
       if( it.selector !== undefined )
       throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
       else
-      module2 = rit.currentModule;
+      module2 = it.currentModule;
+      // module2 = rit.currentModule;
     }
 
-    rit.currentModule = module2;
+    it.currentModule = module2;
+    // rit.currentModule = module2;
   }
   else if( it.src instanceof _.will.Exported )
   {
+    // debugger;
     it.exported = it.src;
   }
 
@@ -384,6 +393,9 @@ function _resourceMapSelect()
   let will = rit.baseModule.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let currentModule = it.currentModule || rit.currentModule;
+
+  _.assert( rit !== it );
 
   if( it.selector === undefined || it.selector === null )
   return;
@@ -399,15 +411,15 @@ function _resourceMapSelect()
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
-      it._functionStringsJoinUp.call( it );
+      it._functionStringsJoinUp();
     }
     else if( it.selector === 'os' )
     {
-      it._functionOsGetUp.call( it );
+      it._functionOsGetUp();
     }
     else if( it.selector === 'this' )
     {
-      it._functionThisUp.call( it );
+      it._functionThisUp();
     }
     else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
@@ -415,11 +427,11 @@ function _resourceMapSelect()
   else
   {
 
-    it.src = rit.currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
+    it.src = currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
-      debugger;
+      // debugger; // xxx
       it.selectorArray.splice( it.absoluteLevel, 1, '*', it.selector );
       it.selector = it.selectorArray[ it.absoluteLevel ];
       _.assert( it.selector !== undefined );
@@ -476,6 +488,21 @@ function _currentExclude()
   if( it.src === rit.currentContext && it.down )
   it.dstWritingDown = false;
 
+}
+
+//
+
+function _selectOptionsMake()
+{
+  let it = this;
+
+  _.assert( arguments.length === 0 );
+
+  let op = Parent._selectOptionsMake.call( it );
+
+  op.currentModule = it.currentModule;
+
+  return op;
 }
 
 //
@@ -572,14 +599,14 @@ function _pathPerform()
   return;
 
   if( rit.pathResolving || it.isFunction )
-  it._pathsResolve.call( it );
+  it._pathsResolve();
 
-  it._pathsNormalize.call( it );
+  it._pathsNormalize();
 
   if( rit.pathNativizing || it.isFunction )
-  it._pathsNativize.call( it );
+  it._pathsNativize();
 
-  it._pathsUnwrap.call( it );
+  it._pathsUnwrap();
 
 }
 
@@ -652,9 +679,9 @@ function _pathsNormalize()
   let will = rit.baseModule.will;
   let resource = it.dst;
 
-  it._pathsTransform.call( it, ( filePath, resource ) =>
+  it._pathsTransform( ( filePath, resource ) =>
   {
-    resource.path = it._pathNormalize.call( it, filePath, resource )
+    resource.path = it._pathNormalize( filePath, resource )
     return resource;
   });
 
@@ -667,7 +694,6 @@ function _pathNormalize( filePath, resource )
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  let currentModule = rit.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
 
@@ -704,11 +730,11 @@ function _pathsNativize()
   if( !rit.pathNativizing )
   return;
 
-  it._pathsTransform.call( it, handleResource, handleStr );
+  it._pathsTransform( handleResource, handleStr );
 
   function handleResource( filePath, resource )
   {
-    resource.path = it._pathNativize.call( it, filePath, resource )
+    resource.path = it._pathNativize( filePath, resource )
     return resource;
   }
 
@@ -726,7 +752,6 @@ function _pathNativize( filePath, resource )
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  let currentModule = rit.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
 
@@ -774,6 +799,9 @@ function _pathCompositeResolve( /* currentModule, currentResource, filePath, res
   if( it.selectorIsComposite( result ) )
   {
 
+    /* xxx : use currentResource.module instead of currentModule? */
+    // if( result.length === 2 )
+    // debugger;
     result = currentModule.pathResolve
     ({
       selector : result,
@@ -796,8 +824,10 @@ function _pathsCompositeResolve()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let currentModule = it.currentModule || rit.currentModule;
   let resource = it.dst;
+
+  _.assert( it !== rit );
 
   if( resource instanceof _.will.Reflector )
   {
@@ -805,9 +835,9 @@ function _pathsCompositeResolve()
     {
       resource = it.dst = resource.cloneDerivative();
       if( resource.src.prefixPath )
-      resource.src.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.src.prefixPath, 'in' );
+      resource.src.prefixPath = it._pathCompositeResolve( currentModule, resource, resource.src.prefixPath, 'in' );
       if( resource.dst.prefixPath )
-      resource.dst.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.dst.prefixPath, 'in' );
+      resource.dst.prefixPath = it._pathCompositeResolve( currentModule, resource, resource.dst.prefixPath, 'in' );
     }
   }
 
@@ -816,7 +846,7 @@ function _pathsCompositeResolve()
     if( it.selectorIsComposite( resource.path ) )
     {
       resource = it.dst = resource.cloneDerivative();
-      resource.path = _pathCompositeResolve.call( it, currentModule, resource, resource.path, 'in' );
+      resource.path = it._pathCompositeResolve( currentModule, resource, resource.path, 'in' );
     }
   }
 
@@ -836,12 +866,14 @@ function _pathResolve( filePath, resource )
   _.assert( rit.currentModule !== undefined );
   _.assert( rit.currentModule !== undefined );
   let will = rit.baseModule.will;
-  let currentModule = rit.currentModule || rit.baseModule;
+  let currentModule = it.currentModule || rit.currentModule || rit.baseModule;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let resourceName = resource.name;
   let result = filePath;
 
+  if( rit.currentModule )
+  debugger;
   if( _.mapIs( filePath ) )
   debugger;
 
@@ -881,7 +913,7 @@ function _pathResolve( filePath, resource )
     return result;
   }
 
-  currentModule = resource.module;
+  currentModule = resource.module; /* xxx */
 
   let prefixPath = '.';
   if( rit.pathResolving === 'in' )
@@ -916,12 +948,12 @@ function _pathsResolve()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let currentModule = it.currentModule || rit.currentModule;
   let resource = it.dst;
 
-  it._pathsTransform.call( it, ( filePath, resource ) =>
+  it._pathsTransform( ( filePath, resource ) =>
   {
-    resource.path = it._pathResolve.call( it, filePath, resource )
+    resource.path = it._pathResolve( filePath, resource )
     return resource;
   });
 
@@ -934,9 +966,8 @@ function _pathsUnwrap()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  let currentModule = rit.currentModule;
 
-  it._pathsTransform.call( it, unwrap );
+  it._pathsTransform( unwrap );
 
   function unwrap( filePath, resource )
   {
@@ -1129,10 +1160,23 @@ function performBegin()
 function optionsToIteration( iterator, o )
 {
   let it = Parent.optionsToIteration.call( this, iterator, o );
+
   _.assert( arguments.length === 2 );
   _.assert( !!Self.Selector );
   _.assert( it.Selector === Self.Selector );
   _.assert( it.Looker.Selector === Self.Selector );
+
+  _.assert
+  (
+    !it.baseModule
+    || !it.currentContext
+    || !it.currentContext.moduleForResolve
+    || it.currentContext.moduleForResolve === it.baseModule
+    ,
+    `Current context belong to another base module, something wrong!`
+  );
+
+
   return it;
 }
 
@@ -1155,6 +1199,14 @@ function iteratorInitEnd( iterator )
     () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( iterator.defaultResourceKind )
   );
   _.assert( iterator.baseModule !== undefined );
+
+  if( !iterator.baseModule )
+  {
+    debugger;
+    _.assert( 0, 'not tested' ); /* xxx */
+    if( iterator.currentContext && _.routineIs( iterator.currentContext.moduleForResolveGet ) )
+    iterator.baseModule = iterator.currentContext.moduleForResolveGet();
+  }
 
   if( iterator.src === null || iterator.src === undefined )
   iterator.src = iterator.baseModule;
@@ -1191,6 +1243,7 @@ let Common =
 
   _exportedWriteThrough,
   _currentExclude,
+  _selectOptionsMake,
   _select,
   сontextPrepare,
 
@@ -1234,6 +1287,14 @@ let ResolverWillbeSelector =
   {
     ... Common,
   },
+  iterationPreserve :
+  {
+    currentModule : null,
+  },
+  iteration :
+  {
+    // currentModule : null,
+  },
 });
 
 /* */
@@ -1258,13 +1319,13 @@ let ResolverWillbeReplicator =
   iterationPreserve :
   {
     exported : null,
-    currentModule : null,
+    currentModule : null, /* xxx : remove? */
     selectorIsPath : 0,
   },
   iteration :
   {
     exported : null,
-    currentModule : null,
+    currentModule : null, /* xxx : remove? */
     selectorIsPath : 0,
   },
 });
