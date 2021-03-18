@@ -326,7 +326,7 @@ function _statusPreUpdate()
   }
   else if( it.src instanceof _.will.Exported )
   {
-    debugger;
+    // debugger;
     it.exported = it.src;
   }
 
@@ -1170,8 +1170,8 @@ function optionsToIteration( iterator, o )
   (
     !it.baseModule
     || !it.currentContext
-    || !it.currentContext.module
-    || it.currentContext.module === it.baseModule
+    || !it.currentContext.moduleForResolve
+    || it.currentContext.moduleForResolve === it.baseModule
     ,
     `Current context belong to another base module, something wrong!`
   );
@@ -1198,6 +1198,14 @@ function iteratorInitEnd( iterator )
     () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( iterator.defaultResourceKind )
   );
   _.assert( iterator.baseModule !== undefined );
+
+  if( !iterator.baseModule )
+  {
+    debugger;
+    _.assert( 0, 'not tested' ); /* xxx */
+    if( iterator.currentContext && _.routineIs( iterator.currentContext.moduleForResolveGet ) )
+    iterator.baseModule = iterator.currentContext.moduleForResolveGet();
+  }
 
   if( iterator.src === null || iterator.src === undefined )
   iterator.src = iterator.baseModule;
