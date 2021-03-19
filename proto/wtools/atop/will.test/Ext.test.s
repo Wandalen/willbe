@@ -19478,33 +19478,22 @@ submodulesDownloadWithSubmodulesDefault.timeOut = 300000;
 function submodulesDownloadUpdateWithSubmodulesDefault( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-download' );
-  a.appStartNonThrowing2 = _.process.starter
-  ({
-    currentPath : a.abs( 'module' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : a.ready,
-  })
+  let a = context.assetFor( test, 'submodulesDownload' );
   a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'download using command submodules.download'
+    test.case = 'download using command submodules.download';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
-  a.appStartNonThrowing2( 'git init' )
-  a.appStartNonThrowing2( 'git add .' )
-  a.appStartNonThrowing2( 'git commit -m init' )
+  });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit -m init' });
 
   a.appStart({ execPath : '.submodules.update' })
-
   .then( ( op ) =>
   {
     let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -19517,7 +19506,9 @@ function submodulesDownloadUpdateWithSubmodulesDefault( test )
     test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) .* updated/ ), 1 );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
