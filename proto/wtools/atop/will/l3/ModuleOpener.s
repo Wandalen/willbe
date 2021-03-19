@@ -1672,7 +1672,7 @@ function _repoDownload( o )
     if( o.mode === 'update' )
     {
       let vscTools = will.vcsToolsFor( opener.remotePath );
-      _.asert( !!vscTools )
+      _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
       o2.extra.fetchingTags = 1;
     }
