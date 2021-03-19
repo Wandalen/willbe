@@ -23028,6 +23028,323 @@ stepSubmodulesDownload.timeOut = 300000;
 
 //
 
+function stepSubmodulesUpdate( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSubmodulesUpdate' );
+
+  a.remotePath = a.abs( 'module' );
+  a.appStart.predefined.currentPath = a.abs( 'clone' );
+  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.shellSyncClone = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.shellSyncSubmodule = _.process.starter
+  ({
+    currentPath : a.abs( 'clone/.module/ModuleForTesting3' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.moduleShellSync = _.process.starter
+  ({
+    currentPath : a.remotePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.init = ( o ) =>
+  {
+    o = o || {}
+
+    a.ready.then( () =>
+    {
+      test.case = _.entity.exportString( o );
+
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      /* init main module */
+
+      a.moduleShellSync( 'git init' )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'module/.gitignore' ), data : '.module' });
+      a.moduleShellSync( 'git add -fA .' )
+      a.moduleShellSync( 'git commit -m initial' )
+      a.moduleShellSync( 'git tag gamma' )
+
+      /* clone main module to simulate clone from the remote */
+
+      a.shellSync( 'git clone module clone' )
+
+      if( o.rootLocalChange )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'clone/file' ), data : 'file' });
+
+      return null;
+    })
+
+    if( o.predownloadSubmodules )
+    {
+      a.appStart( '.submodules.download' );
+
+      if( o.submoduleLocalChange )
+      a.ready.then( () =>
+      {
+        a.fileProvider.fileWrite
+        ({
+           filePath : a.abs( 'clone/.module/ModuleForTesting3/file' ),
+           data : 'file'
+        });
+        return null;
+      })
+    }
+
+    return a.ready;
+  }
+
+  /* */
+
+  a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
+  a.appStart( '.build default' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
+  a.appStart( '.build default' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'to:master', predownloadSubmodules : 0 })
+  a.appStart( `.build to.!master` )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'to:master', predownloadSubmodules : 1 })
+  a.appStart( `.build to.!gamma` )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
+  a.appStart( '.build dry.clean' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
+  a.appStart( '.build dry' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
+  a.appStart( '.build recursive.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
+  a.appStart( '.build recursive.one' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'recursive:2, should download all submodules', predownloadSubmodules : 0 })
+  a.appStart( '.build recursive.two' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3'  ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
+  a.appStart( '.build loggingNoChanges.on' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3'  ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
+  a.appStart( '.build loggingNoChanges.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3'  ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
+  a.appStart( '.build withStem.on' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3'  ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
+  a.appStart( '.build withStem.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3'  ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+stepSubmodulesUpdate.timeOut = 300000;
+
+//
+
 function stepWillbeVersionCheck( test )
 {
   let context = this;
@@ -39104,6 +39421,7 @@ let Self =
     versionsAgreeNpm,
 
     stepSubmodulesDownload,
+    stepSubmodulesUpdate,
     stepWillbeVersionCheck,
     stepVersionBump,
     stepSubmodulesAreUpdated,
