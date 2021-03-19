@@ -914,15 +914,41 @@ function stepRoutineSubmodulesUpdate( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
+  _.assert( _.objectIs( opts ) );
 
-  return module.subModulesUpdate();
+  for( let opt in opts )
+  {
+    opts[ opt ] = module.resolve
+    ({
+      selector : opts[ opt ],
+      prefixlessAction : 'resolved',
+      currentContext : step,
+    });
+  }
+
+  return module.subModulesUpdate( opts );
 }
 
 stepRoutineSubmodulesUpdate.stepOptions =
 {
+  dry : null,
+  loggingNoChanges : null,
+  recursive : null,
+  withStem : null,
+  withDisabledStem : null,
+  to : null
+}
+
+stepRoutineSubmodulesUpdate.uniqueOptions =
+{
+  loggingNoChanges : null,
+  withStem : null,
+  withDisabledStem : null,
+  to : null
 }
 
 //
