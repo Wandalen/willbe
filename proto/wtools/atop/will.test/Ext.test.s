@@ -27424,6 +27424,71 @@ function commandVersionBump( test )
 
 //
 
+function commandSubmodulesClean( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesClean' );
+  a.reflect();
+
+  /* OK */
+
+  a.appStart( '.build clean.and.update.recursive.1' )
+  .then( ( op ) =>
+  {
+    test.case = 'build config, clean submodules and run submodules.update with recursive : 1'
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  /* FAILS */
+
+  a.appStart( '.build clean.and.update.recursive.2' )
+  .then( ( op ) =>
+  {
+    test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  /* FAILS */
+
+  a.appStart( '.with ./* .submodules.clean ; .submodules.update recursive:1' )
+  .then( ( op ) =>
+  {
+    test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  /* FAILS */
+
+  a.appStart( '.with ./* .submodules.clean ; .submodules.update recursive:2' )
+  .then( ( op ) =>
+  {
+    test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 function commandSubmodulesShell( test )
 {
   let context = this;
@@ -38948,6 +39013,7 @@ let Self =
     commandVersionCheck,
     commandVersionBump,
 
+    commandSubmodulesClean,
     commandSubmodulesShell,
     commandSubmodulesGit,
     commandSubmodulesGitRemoteSubmodules,
