@@ -1651,8 +1651,13 @@ function _repoDownload( o )
       },
     }
 
-    if( opener.repo.isRepository )
-    o2.extra.fetchingTags = o.mode === 'update';
+    if( o.mode === 'update' )
+    {
+      let vscTools = will.vcsToolsFor( opener.remotePath );
+      _.assert( !!vscTools )
+      if( _.longHas( vscTools.protocols, 'git' ) )
+      o2.extra.fetchingTags = 1;
+    }
 
     if( downloading && !o.dry )
     return _.will.Predefined.filesReflect.call( fileProvider, o2 );
