@@ -5707,8 +5707,7 @@ function hookPrepare( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     var exp = [];
     var files = a.find( a.abs( 'New2' ) );
@@ -5718,10 +5717,17 @@ function hookPrepare( test )
       remotePath : `https://github.com/${user}/New2`,
       token : config.about[ 'github.token' ],
     });
-  })
+  });
+
+  a.appStart({ execPath : '.module.new New2/' })
+
+  a.ready.then( () =>
+  {
+    debugger;
+    return null;
+  });
 
   a.appStart({ execPath : '.with New2/ .module.new.with prepare v:3' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5770,8 +5776,7 @@ function hookPrepare( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     var exp = [];
     var files = a.find( a.abs( 'New3/New4' ) );
@@ -5781,7 +5786,7 @@ function hookPrepare( test )
       remotePath : `https://github.com/${user}/New4`,
       token : config.about[ 'github.token' ],
     });
-  })
+  });
 
   a.appStart({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
 
@@ -10649,7 +10654,7 @@ function exportNonExportable( test )
 
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'rror' ), 1 );
+    test.identical( _.strCount( op.output, 'rror' ), 2 );
     test.identical( _.strCount( op.output, '====' ), 0 );
 
     test.identical( _.strCount( op.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
@@ -30578,7 +30583,8 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( '/tmp/willbe/commandModulesGitSyncRestoreHardLinksInModuleWithSuccess' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  // context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
