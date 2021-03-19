@@ -13860,13 +13860,11 @@ function exportWithRemoteSubmodulesMin( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'export'
+    test.case = 'export';
     return null;
-  })
+  });
 
   a.appStart( '.with group1/a .export' )
   a.appStart( '.with z .export' )
@@ -13935,7 +13933,7 @@ function exportWithRemoteSubmodulesMin( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -14098,6 +14096,7 @@ function exportWithRemoteSubmodules( test )
       './.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting1b/sample',
+      './.module/ModuleForTesting1b/sample/trivial',
       './group1',
       './group1/.module',
       './group1/.module/ModuleForTesting1',
@@ -14112,6 +14111,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1',
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
       './group1/.module/ModuleForTesting1/sample',
+      './group1/.module/ModuleForTesting1/sample/trivial',
       './group1/.module/ModuleForTesting12',
       './group1/.module/ModuleForTesting12/.circleci',
       './group1/.module/ModuleForTesting12/.github',
@@ -14125,6 +14125,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3/testing12',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting12/sample',
+      './group1/.module/ModuleForTesting12/sample/trivial',
       './group1/.module/ModuleForTesting1b',
       './group1/.module/ModuleForTesting1b/.circleci',
       './group1/.module/ModuleForTesting1b/.github',
@@ -14138,6 +14139,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting1b/sample',
+      './group1/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10',
       './group1/group10/.module',
       './group1/group10/.module/ModuleForTesting1b',
@@ -14153,6 +14155,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
+      './group1/group10/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10/.module/ModuleForTesting2a',
       './group1/group10/.module/ModuleForTesting2a/.circleci',
       './group1/group10/.module/ModuleForTesting2a/.github',
@@ -14166,6 +14169,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3/testing2a',
       './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting2a/sample',
+      './group1/group10/.module/ModuleForTesting2a/sample/trivial',
       './group1/group10/out',
       './group1/group10/out/debug',
       './group1/group10/out/debug/wtools',
@@ -14200,6 +14204,7 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4/testing12ab',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4.test',
       './group2/.module/ModuleForTesting12ab/sample',
+      './group2/.module/ModuleForTesting12ab/sample/trivial',
       './group2/out',
       './group2/out/debug',
       './group2/out/debug/wtools',
