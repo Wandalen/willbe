@@ -1187,23 +1187,21 @@ function _repoForm()
   {
     opener._.localPath = opener.commonPath;
 
-    if( opener.remotePath === null ) //qqq Vova: probably still not most optimal way to determine if its a root module
+    if( opener.remotePath === null )
     {
-      if( opener.isOut )
+      if( opener.isOut && opener.peerModule && opener.peerModule.remotePath )
       {
         downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
         remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
+        isRemote = opener.repoIsRemote();
       }
-      else
+      else if( _.git.isRepository({ localPath : opener.localPath }) )
       {
         downloadPath = opener._.downloadPath = opener._.localPath;
-        if( _.git.isRepository({ localPath : opener.localPath }) )
-        {
-          let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
-          remotePath = opener._.remotePath = remotePathFromLocal;
-        }
+        let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+        remotePath = opener._.remotePath = remotePathFromLocal;
+        isRemote = opener.repoIsRemote();
       }
-      isRemote = opener.repoIsRemote();
     }
 
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
