@@ -1667,10 +1667,12 @@ function _repoDownload( o )
       verbosity : will.verbosity - 5,
       extra :
       {
-        fetching : 0,
-        fetchingTags : o.mode === 'update'
+        fetching : 0
       },
     }
+
+    if( opener.repo.isRepository )
+    o2.extra.fetchingTags = o.mode === 'update';
 
     if( downloading && !o.dry )
     return _.will.Predefined.filesReflect.call( fileProvider, o2 );
