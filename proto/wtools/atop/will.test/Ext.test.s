@@ -39061,6 +39061,23 @@ function commandsSubmoduleSafety( test )
 
   /* */
 
+  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
+  run({ command : 'versions.agree', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 })
+
+  /* */
+
   function run( env )
   {
     a.ready.then( () =>
@@ -39087,7 +39104,7 @@ function commandsSubmoduleSafety( test )
 
     a.ready.then( () =>
     {
-      if( env.command == 'update' )
+      if( _.longHas( [ 'update', 'versions.agree' ], env.command ) )
       if( env.case !== 'missing/tag' )
       {
         a.moduleFixateTag( 'dev1' );
@@ -39104,7 +39121,7 @@ function commandsSubmoduleSafety( test )
     a.ready.tap( () =>
     {
       let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
-      if( env.command == 'update' && isGitModuleInCurrentState )
+      if( _.longHas( [ 'update', 'versions.agree' ], env.command ) && isGitModuleInCurrentState )
       {
         let branch = _.git.tagLocalRetrive( a.localPath );
 
