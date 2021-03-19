@@ -1659,26 +1659,24 @@ function modulesFindEachAt( o )
   .then( () =>
   {
     let con2 = new _.Consequence();
-    // _.debugger = 1;
-    // debugger;
     let resolved = opener.openedModule.submodulesResolve
     ({
       selector : o.selector,
-      preservingIteration : 1, /* xxx yyy */
-      // preservingIteration : 0,
+      preservingIteration : 1,
       pathUnwrapping : 1,
     });
-    // debugger;
 
     if( !_.mapIs( resolved ) )
     resolved = _.arrayAs( resolved );
 
     _.each( resolved, ( it ) =>
     {
-      // debugger;
-      _.assert( it.replicateIteration.currentModule instanceof _.will.Module );
-      _.assert( it.replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
-      _.arrayAppendOnce( op.openers, it.replicateIteration.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
+      _.assert( it.currentModule instanceof _.will.Module );
+      _.assert( it.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+      _.arrayAppendOnce( op.openers, it.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
+      // _.assert( it.replicateIteration.currentModule instanceof _.will.Module ); /* yyy */
+      // _.assert( it.replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+      // _.arrayAppendOnce( op.openers, it.replicateIteration.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
       return it;
     })
 

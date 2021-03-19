@@ -4985,7 +4985,14 @@ function _resolve_head( routine, args )
   if( o.visited === null || o.visited === undefined )
   o.visited = [];
 
-  o.baseModule = module;
+  if( !o.baseModule )
+  {
+    _.debugger;
+    if( o.currentContext )
+    o.baseModule = o.currentContext.moduleForResolve || module;
+    else
+    o.baseModule = module;
+  }
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );

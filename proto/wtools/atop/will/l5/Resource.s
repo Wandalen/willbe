@@ -1140,6 +1140,17 @@ function moduleSet( src )
   return src;
 }
 
+//
+
+
+function moduleForResolveGet()
+{
+  let resource = this;
+  _.assert( arguments.length === 0 );
+  _.assert( resource.module === null || resource.module instanceof _.will.Module );
+  return resource.module;
+}
+
 // --
 // resolver
 // --
@@ -1433,6 +1444,7 @@ let Accessors =
   decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
   inherit : { set : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
   module : {},
+  moduleForResolve : { get : moduleForResolveGet, set : 0 },
 }
 
 // --
@@ -1497,6 +1509,7 @@ let Extension =
   shortNameArrayGet,
   willfSet,
   moduleSet,
+  moduleForResolveGet,
 
   // resolver
 
