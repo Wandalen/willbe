@@ -1187,22 +1187,24 @@ function _repoForm()
   {
     opener._.localPath = opener.commonPath;
 
-    if( opener.isOut )
+    if( opener.remotePath === null ) //qqq Vova: probably still not most optimal way to determine if its a root module
     {
-      downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
-      remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
-    }
-    else
-    {
-      downloadPath = opener._.downloadPath = opener._.localPath;
-      if( _.git.isRepository({ localPath : opener.localPath }) )
+      if( opener.isOut )
       {
-        let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
-        remotePath = opener._.remotePath = remotePathFromLocal;
+        downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
+        remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
       }
+      else
+      {
+        downloadPath = opener._.downloadPath = opener._.localPath;
+        if( _.git.isRepository({ localPath : opener.localPath }) )
+        {
+          let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+          remotePath = opener._.remotePath = remotePathFromLocal;
+        }
+      }
+      isRemote = opener.repoIsRemote();
     }
-
-    isRemote = opener.repoIsRemote();
 
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
     opener.repo = will.repoFrom
@@ -2217,12 +2219,15 @@ function remotePathChangeVersionTo( to )
 
   _.assert( arguments.length === 1 );
   _.assert( _.strDefined( to ) );
+  _.sure( _.strBegins( to, '!' ) || _.strBegins( to, '#' ), `Argument "to" should begins with "!" or "#" Got:${to}` )
 
   var vcs = will.vcsToolsFor( opener.remotePath );
-  var remoteParsed = vcs.pathParse( opener.remotePath )
+  // var remoteParsed = vcs.pathParse( opener.remotePath )
+  var remoteParsed = vcs.path.parse({ remotePath : opener.remotePath, full : 1, atomic : 0 })
 
   var globalTo = vcs.path.globalFromPreferred( to );
-  var toParsed = vcs.pathParse( globalTo );
+  // var toParsed = vcs.pathParse( globalTo );
+  var toParsed = vcs.path.parse({ remotePath : globalTo, full : 1, atomic : 0 })
 
   if( toParsed.tag )
   {
