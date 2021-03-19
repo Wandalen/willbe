@@ -20,7 +20,6 @@ step :
     inherit : submodules.update
 
     criterion :
-      debug : 1
       dry : [ 0, 1 ]
       loggingNoChanges : [ 0, 1 ]
       recursive : [ 0, 1, 2 ]
@@ -74,23 +73,23 @@ build :
 
   loggingNoChanges.on :
     criterion :
-        dry : 0
-        loggingNoChanges : 1
-        recursive : 1
-        withStem : 1
-        withDisabledStem : 1
-        to : 0
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
     steps :
       - step::_submodules.update.*=1
 
   loggingNoChanges.off :
     criterion :
-        dry : 0
-        loggingNoChanges : 0
-        recursive : 1
-        withStem : 1
-        withDisabledStem : 1
-        to : 0
+      dry : 0
+      loggingNoChanges : 0
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
     steps :
       - step::_submodules.update.*=1
 
