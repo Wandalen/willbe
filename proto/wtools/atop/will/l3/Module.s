@@ -1114,6 +1114,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'modules.update',
+    stepRoutine : Predefined.stepRoutineModulesUpdate,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
