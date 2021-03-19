@@ -789,6 +789,140 @@ function WillfilesFindWithGlobFilePathWithoutGlobs( test )
 
 //
 
+function WillfilesFindWithGlobFilePathWithGlobs( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  test.case = 'directory without willfiles';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to unnamed willfile, willfile does not exist';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './.im.will.yml*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, willfile does not exist';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author.will.yml*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, not full path';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author.will*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, has im, not full path';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './.im*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author/*' ) );
+  test.identical( got, [] );
+
+  /* */
+
+  a.reflect();
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './*' ) );
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './*' ) );
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './will.yml' ) );
+
+  test.case = 'path to willfile, willfile exists';
+  a.reflect();
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './.im.will.yml*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author.will.yml*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author.will*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './.im*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.Will.WillfilesFindWithGlob( a.abs( './Author/*' ) );
+  test.identical( got, [] );
+
+  /* */
+
+  a.reflect();
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './will.yml' ) );
+
+  test.case = 'path to willfile, willfile exists';
+  a.reflect();
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './.im.will.yml' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author.will.yml*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author.will*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './.im*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author/*' ) });
+  test.identical( got, [] );
+}
+
+//
+
 function buildSimple( test )
 {
   let context = this;
@@ -11735,6 +11869,7 @@ let Self =
     WillfilesFindAtDirWillfilesInSubdirectories,
 
     WillfilesFindWithGlobFilePathWithoutGlobs,
+    WillfilesFindWithGlobFilePathWithGlobs,
 
     buildSimple,
     openNamedFast,
