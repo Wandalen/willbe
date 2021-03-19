@@ -7366,7 +7366,7 @@ function pathsResolveOfSubmodulesLocal( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = a.abs( '.module', 'ModuleForTesting1/out' ); /* aaa xxx : ask */ /* Dmytro : fixed */
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
@@ -9218,47 +9218,50 @@ function submodulesRemoteResolveNotDownloaded( test )
   {
     let module = opener.openedModule;
 
-    test.case = 'resolve all submodules, default options';
-    var submodules = module.submodulesResolve({ selector : 'submodule::*' });
-    test.true( _.arrayIs( submodules ) );
-    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
-    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
-    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
-    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
-
-    test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 0';
-    var submodules = module.submodulesResolve
-    ({
-      selector : 'submodule::*',
-      preservingIteration : 0,
-      pathUnwrapping : 0,
-    });
-    test.true( _.arrayIs( submodules ) );
-    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
-    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
-    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
-    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
-
-    test.case = 'resolve all submodules, pathUnwrapping - 1, preservingIteration - 0';
-    var submodules = module.submodulesResolve
-    ({
-      selector : 'submodule::*',
-      preservingIteration : 0,
-      pathUnwrapping : 1,
-    });
-    test.true( _.arrayIs( submodules ) );
-    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
-    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
-    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
-    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+    // xxx
+    // test.case = 'resolve all submodules, default options';
+    // var submodules = module.submodulesResolve({ selector : 'submodule::*' });
+    // test.true( _.arrayIs( submodules ) );
+    // test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    // test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    // test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    // test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+    //
+    // test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 0';
+    // var submodules = module.submodulesResolve
+    // ({
+    //   selector : 'submodule::*',
+    //   preservingIteration : 0,
+    //   pathUnwrapping : 0,
+    // });
+    // test.true( _.arrayIs( submodules ) );
+    // test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    // test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    // test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    // test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+    //
+    // test.case = 'resolve all submodules, pathUnwrapping - 1, preservingIteration - 0';
+    // var submodules = module.submodulesResolve
+    // ({
+    //   selector : 'submodule::*',
+    //   preservingIteration : 0,
+    //   pathUnwrapping : 1,
+    // });
+    // test.true( _.arrayIs( submodules ) );
+    // test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    // test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    // test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    // test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
 
     test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 1';
+    debugger;
     var submodules = module.submodulesResolve
     ({
       selector : 'submodule::*',
       preservingIteration : 1,
       pathUnwrapping : 0,
     });
+    debugger;
     test.true( _.arrayIs( submodules ) );
     test.true( submodules[ 0 ].replicateIteration.currentModule instanceof _.will.Module );
     test.true( submodules[ 1 ].replicateIteration.currentModule instanceof _.will.Module );
