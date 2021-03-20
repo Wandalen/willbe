@@ -5636,9 +5636,9 @@ function hookGitMake( test )
     return null;
   });
 
-  a.appStart({ execPath : '.module.new New2/' })
+  a.appStart({ execPath : '.module.new New2/' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     var exp = [ '.', './will.yml' ];
     var files = a.find( a.abs( 'New2' ) );
@@ -5649,25 +5649,19 @@ function hookGitMake( test )
       remotePath : `https://github.com/${user}/New2`,
       token : config.about[ 'github.token' ],
     });
-  })
-
-  .then( () =>
-  {
-    debugger;
-    return null;
   });
-  a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
+  a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/New2` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/New2` ), 1 );
     test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
     test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2` ), 1 );
     test.identical( _.strCount( op.output, `> ` ), 3 );
 
     var exp = [ '.', './will.yml' ];
@@ -5675,7 +5669,16 @@ function hookGitMake( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  });
 
   /* - */
 
@@ -14050,13 +14053,11 @@ function exportWithRemoteSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
   a.appStart( '.with group1/group10/a0 .clean' )
   a.appStart( '.with group1/a .clean' )
@@ -14256,13 +14257,11 @@ function exportWithRemoteSubmodulesRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
   a.appStart( '.with "**" .clean' )
   a.appStart( '.with "**" .export.recursive' )
@@ -14504,14 +14503,12 @@ function exportHierarchyRemote( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with z .clean recursive:2' )
   a.appStart( '.with z .export.recursive' )
