@@ -26901,9 +26901,8 @@ function runDebugWill( test )
       }
       else
       {
-        test.description = 'utility debugnode exists';
+        test.description = 'utility debugnode not exists';
         test.identical( _.strCount( op.output, 'spawn debugnode ENOENT' ), 1 );
-        test.identical( _.strCount( op.output, 'errno : \'ENOENT\'' ), 1 );
         test.identical( _.strCount( op.output, 'code : \'ENOENT\'' ), 1 );
         test.identical( _.strCount( op.output, 'syscall : \'spawn debugnode\'' ), 1 );
         test.identical( _.strCount( op.output, 'path : \'debugnode\'' ), 1 );
