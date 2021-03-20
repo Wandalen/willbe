@@ -3563,6 +3563,8 @@ function commandWith( e )
         `No module sattisfy criteria.`
         , `\nLooked at ${ _.strQuote( path.resolve( e.commandArgument ) )}`
       );
+      else
+      cui.currentOpeners = null;
     }
 
     return it;
