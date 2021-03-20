@@ -7119,9 +7119,6 @@ original/f.txt
   a.ready.then( () =>
   {
     a.fileProvider.filesDelete( context.suiteTempPath );
-    // a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    // a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    // a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -30588,13 +30585,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30686,12 +30683,7 @@ super
 
   a.ready.finally( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -30743,13 +30735,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30813,14 +30805,14 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -30832,7 +30824,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
@@ -30840,25 +30832,20 @@ original
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
 
   /* - */
 
@@ -30906,13 +30893,13 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31006,12 +30993,7 @@ original/f2.txt
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -31062,13 +31044,13 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31164,12 +31146,7 @@ original/f.txt
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
