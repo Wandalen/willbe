@@ -5698,6 +5698,9 @@ function hookPrepare( test )
   let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return test.true( true );
+  if( !config.path || !config.path.remoteRepository )
+  return test.true( true );
+
   let user = config.about.user;
 
   /* - */
@@ -5713,37 +5716,29 @@ function hookPrepare( test )
   a.ready.then( ( op ) =>
   {
     var exp = [];
-    var files = a.find( a.abs( 'New2' ) );
+    var files = a.find( a.abs( 'wNew2' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
-      remotePath : `https://github.com/${user}/New2`,
+      remotePath : `https://github.com/${user}/wNew2`,
       token : config.about[ 'github.token' ],
     });
   });
 
-  a.appStart({ execPath : '.module.new New2/' })
-
-  a.ready.then( () =>
-  {
-    debugger;
-    return null;
-  });
-
-  a.appStart({ execPath : '.with New2/ .module.new.with prepare v:3' })
+  a.appStart({ execPath : '.with wNew2/ .module.new.with prepare v:3' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( op.output, `Making repository for module::wNew2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/wNew2` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/wNew2` ), 1 );
     test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
     test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/wNew2` ), 1 );
     test.identical( _.strCount( op.output, `git push -u origin --all --follow-tags` ), 1 );
     test.identical( _.strCount( op.output, `> ` ), 12 );
-    test.identical( _.strCount( op.output, `+ hardLink` ), 5 );
+    test.ge( _.strCount( op.output, `+ hardLink` ), 1 );
 
     var exp =
     [
@@ -5757,68 +5752,8 @@ function hookPrepare( test )
       './LICENSE',
       './README.md',
       './was.package.json',
-      './.github',
-      './.github/workflows',
-      './.github/workflows/Test.yml',
-      './proto',
-      './proto/Integration.test.s',
-      './proto/wtools',
-      './proto/wtools/Tools.s',
-      './proto/wtools/abase',
-      './proto/wtools/amid',
-      './proto/wtools/atop',
-      './sample',
-      './sample/Sample.html',
-      './sample/Sample.s',
-    ]
-    var files = a.find( a.abs( 'New2' ) );
-    test.identical( files, exp );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready.then( ( op ) =>
-  {
-    var exp = [];
-    var files = a.find( a.abs( 'New3/New4' ) );
-    test.identical( files, exp );
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New4`,
-      token : config.about[ 'github.token' ],
-    });
-  });
-
-  a.appStart({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New4 at` ), 1 );
-    test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New4.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New4.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
-    test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New4.git` ), 1 );
-    test.identical( _.strCount( op.output, `git push -u origin --all --follow-tags` ), 1 );
-    test.identical( _.strCount( op.output, `> ` ), 12 );
-    test.identical( _.strCount( op.output, `+ hardLink` ), 5 );
-
-    var exp =
-    [
-      '.',
-      './-New4.will.yml',
-      './.eslintrc.yml',
-      './.ex.will.yml',
-      './.gitattributes',
-      './.gitignore',
-      './.im.will.yml',
-      './LICENSE',
-      './README.md',
-      './was.package.json',
+      './.circleci',
+      './.circleci/config.yml',
       './.github',
       './.github/workflows',
       './.github/workflows/Test.yml',
@@ -5832,12 +5767,94 @@ function hookPrepare( test )
       './sample',
       './sample/Sample.html',
       './sample/Sample.s'
-    ]
-    var files = a.find( a.abs( 'New3' ) );
+    ];
+    var files = a.find( a.abs( 'wNew2' ) );
     test.identical( files, exp );
 
     return null;
-  })
+  });
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/wNew2`,
+      token : config.about[ 'github.token' ],
+    });
+  });
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    var exp = [];
+    var files = a.find( a.abs( 'wNew3/wNew4' ) );
+    test.identical( files, exp );
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/wNew4`,
+      token : config.about[ 'github.token' ],
+    });
+  });
+
+  a.appStart({ execPath : '.with wNew3/wNew4 .module.new.with prepare v:3' })
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::wNew4 at` ), 1 );
+    test.identical( _.strCount( op.output, `localPath :` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/wNew4` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/wNew4` ), 1 );
+    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
+    test.identical( _.strCount( op.output, `git init .` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/wNew4` ), 1 );
+    test.identical( _.strCount( op.output, `git push -u origin --all --follow-tags` ), 1 );
+    test.identical( _.strCount( op.output, `> ` ), 12 );
+    test.ge( _.strCount( op.output, `+ hardLink` ), 1 );
+
+    var exp =
+    [
+      '.',
+      './-wNew4.will.yml',
+      './.eslintrc.yml',
+      './.ex.will.yml',
+      './.gitattributes',
+      './.gitignore',
+      './.im.will.yml',
+      './LICENSE',
+      './README.md',
+      './was.package.json',
+      './.circleci',
+      './.circleci/config.yml',
+      './.github',
+      './.github/workflows',
+      './.github/workflows/Test.yml',
+      './proto',
+      './proto/Integration.test.s',
+      './proto/wtools',
+      './proto/wtools/Tools.s',
+      './proto/wtools/abase',
+      './proto/wtools/amid',
+      './proto/wtools/atop',
+      './sample',
+      './sample/Sample.html',
+      './sample/Sample.s'
+    ];
+    var files = a.find( a.abs( 'wNew3' ) );
+    test.identical( files, exp );
+
+    return null;
+  });
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/wNew4`,
+      token : config.about[ 'github.token' ],
+    });
+  });
 
   /* - */
 
