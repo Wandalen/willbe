@@ -30588,8 +30588,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( '/tmp/willbe/commandModulesGitSyncRestoreHardLinksInModuleWithSuccess' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
-  // context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
