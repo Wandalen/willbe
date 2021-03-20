@@ -5085,6 +5085,83 @@ Submodules are exported willfiles.
 
 //
 
+function moduleResolveWithFThisInSelector( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellUsingCriterionValue' );
+  let opener;
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open({ all : 1, resourcesFormed : 1 });
+  });
+
+  /* - */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve criterion from step resource';
+    let module = opener.openedModule;
+    let resolved = module.resolve
+    ({
+      selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
+      prefixlessAction : 'resolved',
+      currentThis : undefined,
+      currentContext : module.stepMap[ 'print.criterion.value.' ],
+      pathNativizing : 1,
+      arrayFlattening : 0,
+    });
+    test.true( _.longIs( resolved ) );
+    test.true( resolved.length === 1 );
+    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:0\' )"' );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve criterion from step resource';
+    let module = opener.openedModule;
+    let resolved = module.resolve
+    ({
+      selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
+      prefixlessAction : 'resolved',
+      currentThis : undefined,
+      currentContext : module,
+      pathNativizing : 1,
+      arrayFlattening : 0,
+    });
+    test.true( _.longIs( resolved ) );
+    test.true( resolved.length === 1 );
+    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:undefined\' )"' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
+moduleResolveWithFThisInSelector.description =
+`
+Test routine checks that module resolves resources when the selector contains part f::this.
+`;
+
+//
+
 // aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
 function framePerform( test )
 {
@@ -11319,6 +11396,7 @@ let Self =
     buildsResolve,
     moduleResolveSimple,
     moduleResolve,
+    moduleResolveWithFThisInSelector,
 
     framePerform,
 
