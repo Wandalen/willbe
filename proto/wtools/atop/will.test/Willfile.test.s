@@ -936,6 +936,15 @@ function WillfilesFindWithGlobWithOptionRecursive( test )
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].absolute, a.abs( 'z.will.yml' ) );
 
+  test.case = 'path to main dir, withAllNamed - 0, recursive - 1, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 1, withAllNamed : 0 });
+  test.identical( got.length, 0 );
+
+  test.case = 'path to main dir, withAllNamed - 1, recursive - 1, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 1, withAllNamed : 1 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( 'z.will.yml' ) );
+
   test.case = 'path to main dir, withAllNamed - 0, recursive - 1, glob - recursive';
   var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), recursive : 1, withAllNamed : 0 });
   test.identical( got.length, 0 );
@@ -963,6 +972,18 @@ function WillfilesFindWithGlobWithOptionRecursive( test )
   test.identical( got[ 2 ].absolute, a.abs( 'group1/b.will.yml' ) );
   test.identical( got[ 3 ].absolute, a.abs( 'group1/group10/a0.will.yml' ) );
   test.identical( got[ 4 ].absolute, a.abs( 'group2/c.will.yml' ) );
+
+  test.case = 'path to main dir, withAllNamed - 0, recursive - 2, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 2, withAllNamed : 0 });
+  test.identical( got.length, 0 );
+
+  test.case = 'path to main dir, withAllNamed - 1, recursive - 2, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 2, withAllNamed : 1 });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].absolute, a.abs( 'z.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( 'group1/a.will.yml' ) );
+  test.identical( got[ 2 ].absolute, a.abs( 'group1/b.will.yml' ) );
+  test.identical( got[ 3 ].absolute, a.abs( 'group2/c.will.yml' ) );
 
   test.case = 'path to main dir, withAllNamed - 0, recursive - 2, glob - recursive';
   var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), recursive : 2, withAllNamed : 0 });
@@ -995,6 +1016,15 @@ function WillfilesFindWithGlobWithOptionRecursive( test )
 
   test.case = 'path to main dir, withAllNamed - 1, recursive - 1, no glob';
   var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './' ), recursive : 1, withAllNamed : 1 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( 'z.will.yml' ) );
+
+  test.case = 'path to main dir, withAllNamed - 0, recursive - 1, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 1, withAllNamed : 0 });
+  test.identical( got.length, 0 );
+
+  test.case = 'path to main dir, withAllNamed - 1, recursive - 1, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 1, withAllNamed : 1 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].absolute, a.abs( 'z.will.yml' ) );
 
@@ -1033,6 +1063,21 @@ function WillfilesFindWithGlobWithOptionRecursive( test )
   test.identical( got[ 2 ].absolute, a.abs( 'group1/.im.will.yml' ) );
   test.identical( got[ 3 ].absolute, a.abs( 'group1/group10/will.yml' ) );
   test.identical( got[ 4 ].absolute, a.abs( 'group2/.will.yml' ) );
+
+  test.case = 'path to main dir, withAllNamed - 0, recursive - 2, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 2, withAllNamed : 0 });
+  test.identical( got.length, 3 );
+  test.identical( got[ 0 ].absolute, a.abs( 'group1/.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( 'group1/.im.will.yml' ) );
+  test.identical( got[ 2 ].absolute, a.abs( 'group2/.will.yml' ) );
+
+  test.case = 'path to main dir, withAllNamed - 1, recursive - 2, glob - not recursive';
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './*' ), recursive : 2, withAllNamed : 1 });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].absolute, a.abs( 'z.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( 'group1/.ex.will.yml' ) );
+  test.identical( got[ 2 ].absolute, a.abs( 'group1/.im.will.yml' ) );
+  test.identical( got[ 3 ].absolute, a.abs( 'group2/.will.yml' ) );
 
   test.case = 'path to main dir, withAllNamed - 0, recursive - 2, glob - recursive';
   var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), recursive : 2, withAllNamed : 0 });

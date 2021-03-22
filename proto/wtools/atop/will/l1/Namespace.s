@@ -143,10 +143,12 @@ function WillfilesFindWithGlob( o )
     let filter =
     {
       filePath : o.filePath,
-      recursive : o.recursive,
       maskDirectory : {},
       maskTransientDirectory : {},
     };
+
+    if( !path.isGlob( o.filePath ) )
+    filter.recursive = recursive;
 
     if( excludingUnderscore && path.isGlob( o.filePath ) )
     {
@@ -167,6 +169,10 @@ function WillfilesFindWithGlob( o )
     };
     _.filter_( terminals, terminals, onRecord );
 
+    if( recursive < 2 )
+    if( !_.strHas( o.filePath, '**' ) )
+    return terminals;
+
     let o2 =
     {
       filter,
@@ -186,7 +192,8 @@ function WillfilesFindWithGlob( o )
     for( let i = 0; i < dirs.length; i++ )
     {
       o.filePath = path.join( dirs[ i ], './' );
-      _.arrayAppendArrayOnce( result, _.Will.WillfilesFindAtDir( o ), ( e1, e2 ) => e1.absolute === e2.absolute );
+      let records = _.Will.WillfilesFindAtDir( o );
+      _.arrayAppendArrayOnce( result, records, ( e1, e2 ) => e1.absolute === e2.absolute );
     }
 
     return result;
