@@ -4698,6 +4698,8 @@ function WillfilesFindWithGlob( o )
     {
       filePath : o.filePath,
       recursive : o.recursive,
+      maskDirectory : {},
+      maskTransientDirectory : {},
     };
 
     if( excludingUnderscore && path.isGlob( o.filePath ) )
