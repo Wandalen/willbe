@@ -8536,22 +8536,22 @@ function modulesTreeHierarchyRemote( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
   a.reflect();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
+  let submodulesZ = a.fileProvider.configRead( a.abs( 'z.will.yml' ) ).submodule;
+  let submodulesA = a.fileProvider.configRead( a.abs( 'group1/a.will.yml' ) ).submodule;
+  let submodulesB = a.fileProvider.configRead( a.abs( 'group1/b.will.yml' ) ).submodule;
+  let submodulesA0 = a.fileProvider.configRead( a.abs( 'group1/group10/a0.will.yml' ) ).submodule;
+  let submodulesC = a.fileProvider.configRead( a.abs( 'group2/c.will.yml' ) ).submodule;
+  let keysZ = _.mapKeys( submodulesZ );
+  let keysA = _.mapKeys( submodulesA );
+  let keysB = _.mapKeys( submodulesB );
+  let keysA0 = _.mapKeys( submodulesA0 );
+  let keysC = _.mapKeys( submodulesC );
 
   /* - */
 
   a.appStart({ execPath : '.with * .modules.tree' })
-
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree';
@@ -8560,22 +8560,22 @@ function modulesTreeHierarchyRemote( test )
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1
-   | +-- module::ModuleForTesting1b
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b
-   |   +-- module::ModuleForTesting2a
-   +-- module::b
-   | +-- module::ModuleForTesting1b
-   | +-- module::ModuleForTesting12
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b
-   | | +-- module::ModuleForTesting2a
-   | +-- module::ModuleForTesting12ab
-   +-- module::ModuleForTesting1b
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] }
+   | +-- module::${ keysA[ 1 ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] }
+   |   +-- module::${ keysA0[ 1 ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] }
+   | +-- module::${ keysB[ 1 ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] }
+   | | +-- module::${ keysA0[ 1 ] }
+   | +-- module::${ keysC[ 1 ] }
+   +-- module::${ keysZ[ 3 ] }
+`;
 
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
@@ -8591,36 +8591,36 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
+    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   +-- module::b
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
-   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+`;
 
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
@@ -8636,12 +8636,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with * .modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree withLocalPath:1';
@@ -8660,12 +8659,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with ** .modules.tree' })
-
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree';
@@ -8674,22 +8672,23 @@ function modulesTreeHierarchyRemote( test )
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1
-   | +-- module::ModuleForTesting1b
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b
-   |   +-- module::ModuleForTesting2a
-   +-- module::b
-   | +-- module::ModuleForTesting1b
-   | +-- module::ModuleForTesting12
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b
-   | | +-- module::ModuleForTesting2a
-   | +-- module::ModuleForTesting12ab
-   +-- module::ModuleForTesting1b
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] }
+   | +-- module::${ keysA[ 1 ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] }
+   |   +-- module::${ keysA0[ 1 ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] }
+   | +-- module::${ keysB[ 1 ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] }
+   | | +-- module::${ keysA0[ 1 ] }
+   | +-- module::${ keysC[ 1 ] }
+   +-- module::${ keysZ[ 3 ] }
+`;
+
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
     test.identical( _.strCount( op.output, '+-- module::z' ), 1 );
@@ -8704,36 +8703,36 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
+    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   +-- module::b
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
-   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+`;
 
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
@@ -8749,12 +8748,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with ** .modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree withLocalPath:1';
@@ -8773,12 +8771,12 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeHierarchyRemote */
+}
 
 modulesTreeHierarchyRemote.rapidity = -1;
 modulesTreeHierarchyRemote.timeOut = 300000;
