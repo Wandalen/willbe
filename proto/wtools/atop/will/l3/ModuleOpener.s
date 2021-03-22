@@ -1647,9 +1647,16 @@ function _repoDownload( o )
       verbosity : will.verbosity - 5,
       extra :
       {
-        fetching : 0,
-        fetchingTags : o.mode === 'update'
+        fetching : 0
       },
+    }
+
+    if( o.mode === 'update' )
+    {
+      let vscTools = will.vcsToolsFor( opener.remotePath );
+      _.assert( !!vscTools )
+      if( _.longHas( vscTools.protocols, 'git' ) )
+      o2.extra.fetchingTags = 1;
     }
 
     if( downloading && !o.dry )
