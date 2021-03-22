@@ -4348,7 +4348,7 @@ function WillfilesFind( o )
 {
 
   if( _.strIs( o ) )
-  o = { commonPath : o }
+  o = { commonPath : o };
 
   _.routineOptions( WillfilesFind, o );
 
@@ -4369,142 +4369,208 @@ function WillfilesFind( o )
 
   _.assert( arguments.length === 1 );
   _.assert( _.boolIs( o.recursive ) );
-  _.assert( o.recursive === false );
+  _.assert( o.recursive === false, 'not tested' );
   _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
 
+  let recursive = o.recursive;
+  if( _.boolIs( recursive ) )
+  recursive = recursive === false ? 1 : 2;
+
   if( !o.tracing )
-  return findFor( o.commonPath );
+  return _willfilesFind( o.commonPath );
 
   let commonPaths = path.traceToRoot( o.commonPath );
 
-  {
-    let result = findFor( commonPaths[ commonPaths.length-1 ] );
-    if( result.length )
-    return result;
-  }
+  let result = _willfilesFind( commonPaths[ commonPaths.length - 1 ] );
+  if( result.length )
+  return result;
 
-  for( let d = commonPaths.length-1 ; d >= 0 ; d-- )
+  for( let d = commonPaths.length - 1 ; d >= 0 ; d-- )
   {
     let commonPath = commonPaths[ d ];
-    let result = findFor( path.trail( commonPath ) );
+    let result = _willfilesFind( path.trail( commonPath ) );
     if( result.length )
     return result;
   }
 
   return [];
 
-  function findFor( commonPath )
+  /* */
+
+  function _willfilesFind( filePath )
   {
-
-    if( !path.isSafe( commonPath, 1 ) )
-    return [];
-
-    let filter =
-    {
-      filePath : commonPath,
-      maskTransientDirectory :
-      {
-      },
-      maskDirectory :
-      {
-      },
-      maskTerminal :
-      {
-        includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
-        excludeAny :
-        [
-          /\.DS_Store$/,
-          /(^|\/)-/,
-        ],
-        includeAll : []
-      }
-    };
-
-    if( o.excludingUnderscore && path.isGlob( commonPath ) )
-    {
-      filter.maskDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
-      filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
-    }
-
-    if( !o.withIn )
-    filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
-    if( !o.withOut )
-    filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
-
-    if( !path.isGlob( commonPath ) )
-    filter.recursive = o.recursive ? 2 : 1;
-
-    let o2 =
-    {
-      filter,
-      maskPreset : 0,
-      mandatory : 0,
-      safe : 0,
-      mode : 'distinct',
-    }
-
-    filter.filePath = path.mapExtend( filter.filePath );
-    filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
-    {
-      if( !_.strIs( it.dst ) )
-      return { [ it.src ] : it.dst };
-
-      _.sure( !o.tracing || !path.isGlob( it.src ) )
-
-      let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
-      let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );
-      let hasImEx = /(^|\.|\/)(im|ex)[^\/]*$\./.test( it.src );
-
-      let postfix = '?(.)';
-      if( !hasWill )
-      {
-        postfix += '?(im.|ex.)';
-        if( !o.exact )
-        if( o.withOut && o.withIn )
-        {
-          postfix += '?(out.)';
-        }
-        else if( o.withIn )
-        {
-          postfix += '';
-        }
-        else if( o.withOut )
-        {
-          postfix += 'out.';
-        }
-        postfix += 'will';
-      }
-
-      if( !hasExt )
-      postfix += '.*';
-
-      it.src += postfix;
-
-      return { [ it.src ] : it.dst };
+    return _.Will.WillfilesFindWithGlob
+    ({
+      filePath,
+      recursive,
+      withIn : o.withIn,
+      withOut : o.withOut,
+      exact : o.exact,
+      withAllNamed : _.strEnds( filePath, '*' ),
+      excludingUnderscore : o.excludingUnderscore,
     });
-
-    // if( _.strEnds( o.commonPath, '/l2' ) )
-    // debugger;
-    // debugger;
-    let files = fileProvider.filesFind( o2 );
-    // debugger;
-    // if( _.strEnds( o.commonPath, '/l2' ) )
-    // debugger;
-
-    let files2 = [];
-    files.forEach( ( file ) =>
-    {
-      if( _.Will.PathIsOut( file.absolute ) )
-      files2.push( file );
-    });
-    files.forEach( ( file ) =>
-    {
-      if( !_.Will.PathIsOut( file.absolute ) )
-      files2.push( file );
-    });
-
-    return files2;
   }
+
+  // if( _.strIs( o ) )
+  // o = { commonPath : o };
+  //
+  // _.routineOptions( WillfilesFind, o );
+  //
+  // if( !o.fileProvider )
+  // o.fileProvider = _.fileProvider;
+  // if( !o.logger )
+  // o.logger = _global_.logger;
+  //
+  // let fileProvider = o.fileProvider;
+  // let path = fileProvider.path;
+  // let logger = o.logger;
+  //
+  // if( o.commonPath === '.' )
+  // o.commonPath = './';
+  // o.commonPath = path.normalize( o.commonPath );
+  // o.commonPath = _.strRemoveEnd( o.commonPath, '.' );
+  // o.commonPath = path.resolve( o.commonPath );
+  //
+  // _.assert( arguments.length === 1 );
+  // _.assert( _.boolIs( o.recursive ) );
+  // _.assert( o.recursive === false );
+  // _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
+  //
+  // if( !o.tracing )
+  // return findFor( o.commonPath );
+  //
+  // let commonPaths = path.traceToRoot( o.commonPath );
+  //
+  // {
+  //   let result = findFor( commonPaths[ commonPaths.length-1 ] );
+  //   if( result.length )
+  //   return result;
+  // }
+  //
+  // for( let d = commonPaths.length-1 ; d >= 0 ; d-- )
+  // {
+  //   let commonPath = commonPaths[ d ];
+  //   let result = findFor( path.trail( commonPath ) );
+  //   if( result.length )
+  //   return result;
+  // }
+  //
+  // return [];
+  //
+  // /* */
+  //
+  // function findFor( commonPath )
+  // {
+  //
+  //   if( !path.isSafe( commonPath, 1 ) )
+  //   return [];
+  //
+  //   let filter =
+  //   {
+  //     filePath : commonPath,
+  //     maskTransientDirectory :
+  //     {
+  //     },
+  //     maskDirectory :
+  //     {
+  //     },
+  //     maskTerminal :
+  //     {
+  //       includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
+  //       excludeAny :
+  //       [
+  //         /\.DS_Store$/,
+  //         /(^|\/)-/,
+  //       ],
+  //       includeAll : []
+  //     }
+  //   };
+  //
+  //   if( o.excludingUnderscore && path.isGlob( commonPath ) )
+  //   {
+  //     filter.maskDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
+  //     filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
+  //   }
+  //
+  //   if( !o.withIn )
+  //   filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+  //   if( !o.withOut )
+  //   filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+  //
+  //   if( !path.isGlob( commonPath ) )
+  //   filter.recursive = o.recursive ? 2 : 1;
+  //
+  //   let o2 =
+  //   {
+  //     filter,
+  //     maskPreset : 0,
+  //     mandatory : 0,
+  //     safe : 0,
+  //     mode : 'distinct',
+  //   }
+  //
+  //   filter.filePath = path.mapExtend( filter.filePath );
+  //   filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
+  //   {
+  //     if( !_.strIs( it.dst ) )
+  //     return { [ it.src ] : it.dst };
+  //
+  //     _.sure( !o.tracing || !path.isGlob( it.src ) )
+  //
+  //     let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
+  //     let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );
+  //     let hasImEx = /(^|\.|\/)(im|ex)[^\/]*$\./.test( it.src );
+  //
+  //     let postfix = '?(.)';
+  //     if( !hasWill )
+  //     {
+  //       postfix += '?(im.|ex.)';
+  //       if( !o.exact )
+  //       if( o.withOut && o.withIn )
+  //       {
+  //         postfix += '?(out.)';
+  //       }
+  //       else if( o.withIn )
+  //       {
+  //         postfix += '';
+  //       }
+  //       else if( o.withOut )
+  //       {
+  //         postfix += 'out.';
+  //       }
+  //       postfix += 'will';
+  //     }
+  //
+  //     if( !hasExt )
+  //     postfix += '.*';
+  //
+  //     it.src += postfix;
+  //
+  //     return { [ it.src ] : it.dst };
+  //   });
+  //
+  //   // if( _.strEnds( o.commonPath, '/l2' ) )
+  //   // debugger;
+  //   // debugger;
+  //   let files = fileProvider.filesFind( o2 );
+  //   // debugger;
+  //   // if( _.strEnds( o.commonPath, '/l2' ) )
+  //   // debugger;
+  //
+  //   let files2 = [];
+  //   files.forEach( ( file ) =>
+  //   {
+  //     if( _.Will.PathIsOut( file.absolute ) )
+  //     files2.push( file );
+  //   });
+  //   files.forEach( ( file ) =>
+  //   {
+  //     if( !_.Will.PathIsOut( file.absolute ) )
+  //     files2.push( file );
+  //   });
+  //
+  //   return files2;
+  // }
 }
 
 WillfilesFind.defaults =
@@ -4556,6 +4622,7 @@ function willfilesFind( o )
   o2.fileProvider = fileProvider;
   delete o2.usingCache;
 
+  debugger;
   return will.WillfilesFind( o2 );
 }
 

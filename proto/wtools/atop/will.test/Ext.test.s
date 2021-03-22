@@ -1612,7 +1612,7 @@ function openModuleWithLostSubmodule( test )
   {
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".with ** .export"' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 5 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
     test.identical( _.strCount( op.output, '! Failed to open module::super' ), 1 );
     test.identical( _.strCount( op.output, 'Exporting module::super / build::export' ), 1 );
     test.identical( _.strCount( op.output, '+ reflector::reflect.proto reflected 2 file' ), 1 );
@@ -2048,7 +2048,6 @@ function openEach( test )
 
   a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.each . .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5162,21 +5161,11 @@ function withDoInfo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    mode : 'spawn',
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -5190,9 +5179,9 @@ function withDoInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.hook.call info.js' )
   .then( ( op ) =>
@@ -5207,7 +5196,7 @@ function withDoInfo( test )
     return null;
   })
 
-  /* - */
+  /* */
 
   a.appStart( '.with . .hook.call info.js' )
   .then( ( op ) =>
@@ -5220,9 +5209,9 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with * .hook.call info.js' )
   .then( ( op ) =>
@@ -5235,9 +5224,9 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5245,14 +5234,14 @@ function withDoInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.ge( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5265,9 +5254,9 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5281,13 +5270,13 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 
-} /* end of function withDoInfo */
+}
 
 withDoInfo.rapidity = -1;
 withDoInfo.timeOut = 300000;
