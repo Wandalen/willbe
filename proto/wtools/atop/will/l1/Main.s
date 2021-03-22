@@ -4572,7 +4572,7 @@ function WillfilesFindAtDir( o )
   if( _.strIs( o ) )
   o = { filePath : o };
 
-  let fileProvider = o.fileProvider || _.fileProvider;
+  let fileProvider = o.fileProvider = o.fileProvider || _.fileProvider;
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
@@ -4607,73 +4607,10 @@ function WillfilesFindAtDir( o )
     if( !path.isSafe( filePath, 1 ) )
     return [];
 
-    let filter =
-    {
-      filePath : filePath,
-      maskTerminal :
-      {
-        includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
-        excludeAny :
-        [
-          /\.DS_Store$/,
-          /(^|\/)-/,
-        ],
-        includeAll : []
-      }
-    };
-
-    if( !o.withIn )
-    filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
-    if( !o.withOut )
-    filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
-
-    filter.recursive = 1;
-
-    let o2 =
-    {
-      filter,
-      maskPreset : 0,
-      mandatory : 0,
-      safe : 0,
-      mode : 'distinct',
-    };
-
-    filter.filePath = path.mapExtend( filter.filePath );
-    filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
-    {
-      if( !_.strIs( it.dst ) )
-      return { [ it.src ] : it.dst };
-
-      _.sure( !path.isGlob( it.src ) )
-
-      let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
-      let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );
-
-      let postfix = '?(.)';
-      if( !hasWill )
-      {
-        postfix += '?(im.|ex.)';
-
-        if( !o.exact )
-        if( o.withOut && o.withIn )
-        postfix += '?(out.)';
-        else if( o.withIn )
-        postfix += '';
-        else if( o.withOut )
-        postfix += 'out.';
-
-        postfix += 'will';
-      }
-
-      if( !hasExt )
-      postfix += '.*';
-
-      it.src += namePrefix + postfix;
-
-      return { [ it.src ] : it.dst };
-    });
-
-    let files = fileProvider.filesFind( o2 );
+    let o2 = _.mapExtend( null, o );
+    o2.filePath += namePrefix;
+    o2.recursive = 1;
+    let files = _WillfilesFindTerminalsWithGlob( o2 );
 
     let files2 = [];
     files.forEach( ( file ) =>
@@ -4766,6 +4703,19 @@ function WillfilesFindWithGlob( o )
       filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
     }
 
+    /* */
+
+    let terminals = _WillfilesFindTerminalsWithGlob( o );
+    let globGetsAllNames = _.strBegins( path.name( o.filePath ), [ '?', '*' ] );
+    let onRecord = ( record ) =>
+    {
+      record = path.globShortFilter({ src : record, selector : o.filePath, onEvaluate : ( el ) => el.absolute });
+      if( globGetsAllNames && !o.withAllNamed )
+      record = _.longHas( [ 'will', '.will', '.im.will', '.ex.will', '.out.will' ], record.name ) ? record : undefined;
+      return record === null ? undefined : record;
+    };
+    _.filter_( terminals, terminals, onRecord );
+
     let o2 =
     {
       filter,
@@ -4777,18 +4727,9 @@ function WillfilesFindWithGlob( o )
       mode : 'distinct',
       outputFormat : 'absolute',
     };
-
     let dirs = fileProvider.filesFind( o2 );
-    let terminals = willfilesFindTerminalsWithGlob( o.filePath );
-    let globGetsAllNames = _.strBegins( path.name( o.filePath ), [ '?', '*' ] );
-    let onRecord = ( record ) =>
-    {
-      record = path.globShortFilter({ src : record, selector : o.filePath, onEvaluate : ( el ) => el.absolute });
-      if( globGetsAllNames && !o.withAllNamed )
-      record = _.longHas( [ 'will', '.will', '.im.will', '.ex.will', '.out.will' ], record.name ) ? record : undefined;
-      return record === null ? undefined : record;
-    };
-    _.filter_( terminals, terminals, onRecord );
+
+    /* */
 
     let result = terminals;
     for( let i = 0; i < dirs.length; i++ )
@@ -4798,69 +4739,6 @@ function WillfilesFindWithGlob( o )
     }
 
     return result;
-  }
-
-  /* */
-
-  function willfilesFindTerminalsWithGlob( filePath )
-  {
-    let filter =
-    {
-      maskTerminal :
-      {
-        includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
-        excludeAny :
-        [
-          /\.DS_Store$/,
-          /(^|\/)-/,
-        ],
-        includeAll : []
-      }
-    };
-
-    if( !o.withIn )
-    filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
-    if( !o.withOut )
-    filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
-
-    let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( filePath );
-    let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( filePath );
-
-    let postfix = '?(.)';
-    if( !hasWill )
-    {
-      postfix += '?(im.|ex.)';
-
-      if( !o.exact )
-      if( o.withOut && o.withIn )
-      postfix += '?(out.)';
-      else if( o.withIn )
-      postfix += '';
-      else if( o.withOut )
-      postfix += 'out.';
-
-      postfix += 'will';
-
-      if( !hasExt )
-      postfix += '.*';
-
-      filePath += postfix;
-    }
-
-    var globTerminals = fileProvider.filesGlober
-    ({
-      filter,
-      withTerminals : 1,
-      withDirs : 0,
-      withTransient : 0,
-      allowingMissed : 0,
-      maskPreset : 0,
-      mandatory : 0,
-      safe : 0,
-      mode : 'distinct',
-    });
-
-    return globTerminals( filePath );
   }
 }
 
@@ -4875,6 +4753,70 @@ WillfilesFindWithGlob.defaults =
   fileProvider : null,
   recursive : 1,
 };
+
+//
+
+function _WillfilesFindTerminalsWithGlob( o )
+{
+  let filter =
+   {
+     maskTerminal :
+     {
+      includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
+      excludeAny :
+      [
+        /\.DS_Store$/,
+        /(^|\/)-/,
+      ],
+      includeAll : []
+    },
+    recursive : o.recursive >= 0 ? o.recursive : 1,
+  };
+
+  if( !o.withIn )
+  filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+  if( !o.withOut )
+  filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+
+  let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( o.filePath );
+  let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( o.filePath );
+
+  let postfix = '?(.)';
+  if( !hasWill )
+  {
+    postfix += '?(im.|ex.)';
+
+    if( !o.exact )
+    if( o.withOut && o.withIn )
+    postfix += '?(out.)';
+    else if( o.withIn )
+    postfix += '';
+    else if( o.withOut )
+    postfix += 'out.';
+
+    postfix += 'will';
+
+    if( !hasExt )
+    postfix += '.*';
+
+    o.filePath += postfix;
+  }
+
+  var globTerminals = o.fileProvider.filesFinder
+  ({
+    filter,
+    withTerminals : 1,
+    withDirs : 0,
+    maskPreset : 0,
+    mandatory : 0,
+    safe : 0,
+    mode : 'distinct',
+  });
+
+  if( !o.fileProvider.path.isGlob( o.filePath ) )
+  o.filePath += '*';
+  return globTerminals( o.filePath );
+}
 
 //
 
@@ -5792,8 +5734,10 @@ let Statics =
   LocalPathNormalize,
   IsModuleAt,
   WillfilesFind,
+
   WillfilesFindAtDir,
   WillfilesFindWithGlob,
+  _WillfilesFindTerminalsWithGlob,
 
 }
 
@@ -5966,8 +5910,11 @@ let Extension =
   WillfilePathIs,
   WillfilesFind,
   willfilesFind,
+
   WillfilesFindAtDir,
   WillfilesFindWithGlob,
+  _WillfilesFindTerminalsWithGlob,
+
   willfilesSelectPaired,
   willfileWithCommon,
   _willfileWithFilePath,
