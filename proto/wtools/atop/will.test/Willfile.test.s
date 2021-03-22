@@ -818,6 +818,95 @@ function WillfilesFindWithGlobWithOptionsWithoutGlobs( test )
 
 WillfilesFindWithGlobWithOptionsWithoutGlobs.rapidity = -1;
 
+//
+
+function WillfilesFindWithGlobWithOptionsWithGlobs( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  test.case = 'path to dir, withAllNamed - 1';
+  a.reflect();
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), withAllNamed : 1 });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to file, withAllNamed - 1';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( '.ex.will.yml' ), dstPath : a.abs( 'AuthorSecond.ex.will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( '.im.will.yml' ), dstPath : a.abs( 'AuthorSecond.im.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author**' ), withAllNamed : 1 });
+  test.identical( got.length, 3 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './AuthorSecond.ex.will.yml' ) );
+  test.identical( got[ 2 ].absolute, a.abs( './AuthorSecond.im.will.yml' ) );
+
+
+  /* */
+
+  test.case = 'path to dir, withIn - 1, withOut - 0';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Author.will.yml' ), dstPath : a.abs( '.out.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ) });
+  test.identical( got.length, 3 );
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), withIn : 1, withOut : 0 });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 0, withOut - 1';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Author.will.yml' ), dstPath : a.abs( '.out.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ) });
+  test.identical( got.length, 3 );
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), withIn : 0, withOut : 1 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './.out.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to named willfile, withIn - 1, withOut - 0';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( '.ex.will.yml' ), dstPath : a.abs( 'Author.out.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author**' ) });
+  test.identical( got.length, 2 );
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author**' ), withIn : 1, withOut : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 0, withOut - 1';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( '.ex.will.yml' ), dstPath : a.abs( 'Author.out.will.yml' ) });
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author**' ) });
+  test.identical( got.length, 2 );
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './Author**' ), withIn : 0, withOut : 1 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].absolute, a.abs( './Author.out.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, fileProvider - _.fileProvider';
+  a.reflect();
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), fileProvider : _.fileProvider });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, exact - 1';
+  a.reflect();
+  var got = _.Will.WillfilesFindWithGlob({ filePath : a.abs( './**' ), exact : 1 });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].absolute, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].absolute, a.abs( './.im.will.yml' ) );
+}
+
+WillfilesFindWithGlobWithOptionsWithGlobs.rapidity = -1;
+
 // --
 // declare
 // --
@@ -852,6 +941,7 @@ let Self =
     WillfilesFindWithGlobFilePathWithoutGlobs,
     WillfilesFindWithGlobFilePathWithGlobs,
     WillfilesFindWithGlobWithOptionsWithoutGlobs,
+    WillfilesFindWithGlobWithOptionsWithGlobs,
 
   }
 
