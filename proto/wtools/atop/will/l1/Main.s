@@ -4680,7 +4680,10 @@ function WillfilesFindWithGlob( o )
   else
   {
     if( recursive === 2 )
-    return willfilesFindRecursively( o );
+    {
+      o.filePath += '**';
+      return willfilesFindRecursively( o );
+    }
     return _.Will.WillfilesFindAtDir( o )
   }
 
