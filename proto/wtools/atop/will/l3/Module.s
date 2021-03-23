@@ -9058,6 +9058,7 @@ function gitPush( o )
   ({
     localPath : o.dirPath,
     withTags : status.unpushedTags,
+    force : 1, /* Dmytro : can be a command option */
     sync : 0,
     throwing : 1,
   });
