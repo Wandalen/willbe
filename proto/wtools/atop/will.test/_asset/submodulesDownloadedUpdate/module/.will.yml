@@ -1,0 +1,26 @@
+about :
+  name : exportedModule
+  version : 0.0.1
+
+submodule :
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git!master
+
+path :
+  in : '.'
+  out : '../out'
+
+step  :
+  export.module :
+    inherit : module.export
+    export : './**'
+    tar : 0
+
+build :
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - submodules.download
+      - submodules.reload
+      - export.module

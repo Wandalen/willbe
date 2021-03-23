@@ -272,7 +272,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = _.will.Resolver;
+  // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );

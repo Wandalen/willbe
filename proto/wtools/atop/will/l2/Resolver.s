@@ -4,29 +4,39 @@
 'use strict';
 
 const _ = _global_.wTools;
-const Parent = _.resolver2.Looker;
-_.assert( !!_.resolver2.resolve );
-_.assert( !!_.resolver2.Looker.resolve );
-_.assert( !!_.resolver2.compositeSymbol );
-_.will.Resolver = Object.create( _.resolver2 );;
+const Parent = _.resolverAdv.Looker;
+_.assert( !!_.resolverAdv.resolve );
+_.assert( !_.resolverAdv.Looker.resolve );
+_.assert( !!_.resolverAdv.Looker.exec );
+_.assert( !!_.resolverAdv.compositeSymbol );
+_.will.resolver = Object.create( _.resolverAdv );
 
 // --
 // relation
 // --
 
-let Defaults = _.mapExtend( null, Parent.resolve.body.defaults );
+let Prime = Object.create( null )
 
-Defaults.currentThis = null;
-Defaults.currentContext = null;
-Defaults.baseModule = null;
-Defaults.criterion = null;
-Defaults.pathResolving = 'in';
-Defaults.pathNativizing = 0;
-Defaults.pathUnwrapping = 1;
-Defaults.strictCriterion = 0;
-Defaults.currentExcluding = 1;
-Defaults.hasPath = null;
-Defaults.selectorIsPath = 0;
+Prime.src = undefined;
+
+Prime.currentThis = null;
+Prime.currentContext = null;
+Prime.baseModule = null;
+Prime.criterion = null;
+Prime.pathResolving = 'in';
+Prime.pathNativizing = 0;
+Prime.pathUnwrapping = 1;
+Prime.strictCriterion = 0;
+Prime.currentExcluding = 1;
+Prime.hasPath = null;
+Prime.selectorIsPath = 0;
+
+Prime.onSelectorReplicate = _onSelectorReplicate;
+Prime.onSelectorDown = _onSelectorDown;
+Prime.onUpBegin = _onUpBegin;
+Prime.onUpEnd = _onUpEnd;
+Prime.onDownEnd = _onDownEnd;
+Prime.onQuantitativeFail = _onQuantitativeFail;
 
 // --
 // handler
@@ -36,34 +46,31 @@ function _onSelectorReplicate( o )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = it.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let selector = o.selector;
 
   let result = Parent._onSelectorReplicate.call( it, o );
 
-  if( /*resolver*/it._selectorIs( selector ) )
+  if( it._selectorIs( selector ) )
   return result;
 
   if( result === undefined && o.counter > 0 )
   return;
 
-  if( /*rop*/rit.prefixlessAction === 'default' && !it.composite )
+  if( rit.prefixlessAction === 'default' && !it.composite )
   {
     return selector;
   }
-  else if( /*rop*/rit.prefixlessAction === 'resolved' || /*rop*/rit.prefixlessAction === 'default' )
+  else if( rit.prefixlessAction === 'resolved' || rit.prefixlessAction === 'default' )
   {
-    if( /*rop*/rit.pathResolving )
-    if( /*rop*/rit.defaultResourceKind === 'path' || /*rop*/rit.selectorIsPath )
+    if( rit.pathResolving )
+    if( rit.defaultResourceKind === 'path' || rit.selectorIsPath )
     if( _.strIs( selector ) || _.arrayIs( selector ) )
-    if( !/*resolver*/it.selectorIs( selector ) )
+    if( !it.selectorIs( selector ) )
     if( !it.composite )
     {
-      selector = new _.will.PathResource({ module : /*rop*/rit.baseModule, name : null, phantom : 1, path : selector });
+      selector = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : 1, path : selector });
       selector.form1();
-      // debugger; /* yyy */
       it.src = selector;
     }
   }
@@ -77,13 +84,9 @@ function _onSelectorDown()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = it.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
-  // debugger; /* yyy */
-
-  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.compositeSymbol )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolverAdv.compositeSymbol )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -96,9 +99,9 @@ function _onSelectorDown()
 
     it.dst = _.strJoin( it.dst );
 
-    if( /*rop*/rit.defaultResourceKind === 'path' || /*rop*/rit.selectorIsPath )
+    if( rit.defaultResourceKind === 'path' || rit.selectorIsPath )
     {
-      it.dst = new _.will.PathResource({ module : /*rop*/rit.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : 1, path : it.dst });
       it.dst.form1();
     }
 
@@ -109,7 +112,7 @@ function _onSelectorDown()
   if( !it.dstWritingDown )
   return end();
 
-  /*resolver*/it._pathPerform.call( it );
+  it._pathPerform();
 
   return end();
 
@@ -126,12 +129,10 @@ function _onUpBegin()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
-  /*resolver*/it._statusPreUpdate.call( it );
-  /*resolver*/it._globCriterionFilter.call( it );
+  it._statusPreUpdate();
+  it._globCriterionFilter();
 
   if( !it.dstWritingDown )
   return;
@@ -140,9 +141,9 @@ function _onUpBegin()
   _resourceMapSelect, _statusPostUpdate should go after _queryParse
   */
 
-  /*resolver*/it._queryParse.call( it );
-  /*resolver*/it._resourceMapSelect.call( it );
-  /*resolver*/it._statusPostUpdate.call( it );
+  it._queryParse();
+  it._resourceMapSelect();
+  it._statusPostUpdate();
 
 }
 
@@ -152,19 +153,17 @@ function _onUpEnd()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
 
   if( !it.dstWritingDown )
   return;
 
-  /*resolver*/it._exportedWriteThrough.call( it );
-  /*resolver*/it._currentExclude.call( it );
+  it._exportedWriteThrough();
+  it._currentExclude();
 
   if( !it.dstWritingDown )
   return;
 
-  /*resolver*/it._pathsCompositeResolve.call( it );
+  it._pathsCompositeResolve();
 
 }
 
@@ -174,13 +173,11 @@ function _onDownEnd()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
 
   if( !it.dstWritingDown )
   return;
 
-  /*resolver*/it._pathPerform.call( it );
+  it._pathPerform();
 
   return Parent._onDownEnd.call( it );
 }
@@ -191,8 +188,10 @@ function _onQuantitativeFail( err )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
   let dst = it.dst;
+  let currentModule = it.currentModule || rit.currentModule;
+
+  _.assert( rit !== it );
 
   if( _.mapIs( dst ) )
   dst = _.mapVals( dst );
@@ -215,8 +214,8 @@ function _onQuantitativeFail( err )
       isString = 0
     });
 
-    if( /*rop*/rit.criterion )
-    err = _.err( err, '\nCriterions :\n', _.entity.exportString( /*rop*/rit.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
+    if( rit.criterion )
+    err = _.err( err, '\nCriterions :\n', _.entity.exportString( rit.criterion, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } ) );
 
     /* found */
 
@@ -228,7 +227,7 @@ function _onQuantitativeFail( err )
 
     /* information about outdated status of the module */
 
-    if( rit.currentModule.peerModuleIsOutdated )
+    if( currentModule.peerModuleIsOutdated )
     if
     (
          ( it.parsedSelector && it.parsedSelector.kind === 'exported' )
@@ -236,13 +235,13 @@ function _onQuantitativeFail( err )
       || ( it.down && it.down.parsedSelector && it.down.parsedSelector.kind === 'submodule' )
     )
     {
-      let willfile = rit.currentModule.willfilesArray[ 0 ];
+      let willfile = currentModule.willfilesArray[ 0 ];
       let storagePath = willfile ? willfile.storagePath : '';
       if( willfile )
       err = _.err
       (
         err,
-        `\n${ rit.currentModule.decoratedAbsoluteName } loaded from `
+        `\n${ currentModule.decoratedAbsoluteName } loaded from `
         + `${ willfile.storageWillfile.openedModule.decoratedAbsoluteName } is outdated!`,
         `\nPlease re-export ${ _.ct.format( storagePath, 'path' ) } first.`
       );
@@ -250,7 +249,7 @@ function _onQuantitativeFail( err )
       err = _.err
       (
         err,
-        `\n${ rit.currentModule.decoratedAbsoluteName } is outdated!`,
+        `\n${ currentModule.decoratedAbsoluteName } is outdated!`,
         `\nPlease re-export it first.`
       );
     }
@@ -271,12 +270,12 @@ function _statusPreUpdate()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
   if( !it.src )
   return;
 
+  _.assert( it !== rit );
   _.assert( !_.mapOwn( it.src, 'composite' ) );
 
   if( it.down && it.down.src && it.down.src instanceof _.will.ModulesRelation )
@@ -293,9 +292,9 @@ function _statusPreUpdate()
 
   if( it.src instanceof _.will.Module )
   {
-    // debugger; /* yyy : should selector iteration have individual currentModule? */
-    rit.currentModule = it.src;
-    // it.currentModule = it.src;
+    // debugger;
+    it.currentModule = it.src;
+    // rit.currentModule = it.src;
   }
   else if( it.src instanceof _.will.ModulesRelation )
   {
@@ -310,7 +309,7 @@ function _statusPreUpdate()
     else
     module2 = opener.peerModule;
 
-    if( !module2 ) /* yyy */
+    if( !module2 )
     module2 = opener.openedModule;
 
     if( !module2 )
@@ -318,15 +317,16 @@ function _statusPreUpdate()
       if( it.selector !== undefined )
       throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
       else
-      module2 = rit.currentModule;
-      // module2 = it.currentModule;
+      module2 = it.currentModule;
+      // module2 = rit.currentModule;
     }
 
-    rit.currentModule = module2;
-    // it.currentModule = module2;
+    it.currentModule = module2;
+    // rit.currentModule = module2;
   }
   else if( it.src instanceof _.will.Exported )
   {
+    // debugger;
     it.exported = it.src;
   }
 
@@ -338,18 +338,17 @@ function _statusPostUpdate()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
-  if( /*rop*/rit.selectorIsPath )
+  if( rit.selectorIsPath )
   it.selectorIsPath = 1;
 
   if( it.parsedSelector )
   {
     let kind = it.parsedSelector.kind;
 
-    if( kind === 'path' && /*rop*/rit.hasPath === null )
-    /*rop*/rit.hasPath = true;
+    if( kind === 'path' && rit.hasPath === null )
+    rit.hasPath = true;
 
     if( kind === 'path' )
     it.selectorIsPath = 1;
@@ -364,16 +363,16 @@ function _globCriterionFilter()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
   _.debugger;
 
-  if( it.down && it.down.selectorIsGlob )
-  if( /*rop*/rit.criterion && it.src && it.src.criterionSattisfy )
+  // if( it.down && it.down.selectorIsGlob )
+  if( it.down && it.down.selectorType === 'glob' )
+  if( rit.criterion && it.src && it.src.criterionSattisfy )
   {
 
-    let s = /*rop*/rit.strictCriterion ? it.src.criterionSattisfyStrict( /*rop*/rit.criterion ) : it.src.criterionSattisfy( /*rop*/rit.criterion );
+    let s = rit.strictCriterion ? it.src.criterionSattisfyStrict( rit.criterion ) : it.src.criterionSattisfy( rit.criterion );
 
     if( !s )
     {
@@ -391,11 +390,12 @@ function _resourceMapSelect()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let currentModule = it.currentModule || rit.currentModule;
+
+  _.assert( rit !== it );
 
   if( it.selector === undefined || it.selector === null )
   return;
@@ -411,15 +411,15 @@ function _resourceMapSelect()
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
-      /*resolver*/it._functionStringsJoinUp.call( it );
+      it._functionStringsJoinUp();
     }
     else if( it.selector === 'os' )
     {
-      /*resolver*/it._functionOsGetUp.call( it );
+      it._functionOsGetUp();
     }
     else if( it.selector === 'this' )
     {
-      /*resolver*/it._functionThisUp.call( it );
+      it._functionThisUp();
     }
     else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
@@ -427,20 +427,27 @@ function _resourceMapSelect()
   else
   {
 
-    it.src = rit.currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
+    it.src = currentModule.resourceMapsForKind( kind ); /* zzz : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
+      // debugger; // xxx
       it.selectorArray.splice( it.absoluteLevel, 1, '*', it.selector );
       it.selector = it.selectorArray[ it.absoluteLevel ];
       _.assert( it.selector !== undefined );
+
+      // it.iterationSelectorChanged();
+      it.selectorType = null;
+      // it.iterable = null;
       it.iterationSelectorChanged();
+      // it.srcChanged();
+
     }
 
     if( !it.src )
     {
       debugger;
-      throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
+      throw _.looker.LookingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
     it.iterable = null;
@@ -455,9 +462,7 @@ function _exportedWriteThrough()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
   if( it.down && it.parsedSelector && it.parsedSelector.kind === 'exported' )
   {
@@ -477,15 +482,27 @@ function _currentExclude()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
-  // debugger; /* yyy */
-  if( /*rop*/rit.currentExcluding )
-  if( it.src === /*rop*/rit.currentContext && it.down )
+  if( rit.currentExcluding )
+  if( it.src === rit.currentContext && it.down )
   it.dstWritingDown = false;
 
+}
+
+//
+
+function _selectOptionsMake()
+{
+  let it = this;
+
+  _.assert( arguments.length === 0 );
+
+  let op = Parent._selectOptionsMake.call( it );
+
+  op.currentModule = it.currentModule;
+
+  return op;
 }
 
 //
@@ -500,7 +517,7 @@ function _select( visited )
   let it2 = Parent._select.apply( this, arguments );
 
   _.assert( it2 !== it );
-  _.assert( it2.criterion === undefined ); /* xxx yyy : uncomment */
+  _.assert( it2.criterion === undefined );
   _.assert( it._onUpBegin === Self._onUpBegin );
   _.assert( it.onUpBegin === Self._onUpBegin );
   _.assert( it2._onUpBegin === Self._onUpBegin );
@@ -511,18 +528,17 @@ function _select( visited )
 
 //
 
-function resolveContextPrepare( o )
+function сontextPrepare( o )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  //let resolver = this;
   _.assert( !!o.baseModule );
   let will = o.baseModule.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptions( resolveContextPrepare, arguments );
+  _.routineOptionsPreservingUndefines( сontextPrepare, arguments );
 
   if( !o.currentThis )
   {
@@ -561,7 +577,7 @@ function resolveContextPrepare( o )
   return o.currentThis;
 }
 
-resolveContextPrepare.defaults =
+сontextPrepare.defaults =
 {
   currentThis : null,
   currentContext : null,
@@ -577,22 +593,20 @@ function _pathPerform()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
 
   if( !it.dstWritingDown )
   return;
 
-  if( /*rop*/rit.pathResolving || it.isFunction )
-  /*resolver*/it._pathsResolve.call( it );
+  if( rit.pathResolving || it.isFunction )
+  it._pathsResolve();
 
-  /*resolver*/it._pathsNormalize.call( it );
+  it._pathsNormalize();
 
-  if( /*rop*/rit.pathNativizing || it.isFunction )
-  /*resolver*/it._pathsNativize.call( it );
+  if( rit.pathNativizing || it.isFunction )
+  it._pathsNativize();
 
-  /*resolver*/it._pathsUnwrap.call( it );
+  it._pathsUnwrap();
 
 }
 
@@ -602,13 +616,9 @@ function _pathsTransform( onPath, onStr )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let resource = it.dst;
-  // debugger; /* yyy */
   let transform = it.preservingIteration ? wrapTransform : elementTransform;
-  // let transform = /*rop*/rit.preservingIteration ? wrapTransform : elementTransform;
 
   it.dst = transform( it.dst );
 
@@ -616,11 +626,8 @@ function _pathsTransform( onPath, onStr )
 
   function wrapTransform( resource )
   {
-    // debugger;
-    // if( _.prototype.isPrototypeFor( _.Looker, resource ) )
     if( _.looker.iterationIs( resource ) )
     {
-      // debugger;
       resource.dst = elementTransform( resource.dst );
     }
     return elementTransform( resource );
@@ -669,14 +676,12 @@ function _pathsNormalize()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let resource = it.dst;
 
-  /*resolver*/it._pathsTransform.call( it, ( filePath, resource ) =>
+  it._pathsTransform( ( filePath, resource ) =>
   {
-    resource.path = /*resolver*/it._pathNormalize.call( it, filePath, resource )
+    resource.path = it._pathNormalize( filePath, resource )
     return resource;
   });
 
@@ -688,10 +693,7 @@ function _pathNormalize( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let will = rit.baseModule.will;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
 
@@ -722,19 +724,17 @@ function _pathsNativize()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let resource = it.dst;
 
-  if( !/*rop*/rit.pathNativizing )
+  if( !rit.pathNativizing )
   return;
 
-  /*resolver*/it._pathsTransform.call( it, handleResource, handleStr );
+  it._pathsTransform( handleResource, handleStr );
 
   function handleResource( filePath, resource )
   {
-    resource.path = /*resolver*/it._pathNativize.call( it, filePath, resource )
+    resource.path = it._pathNativize( filePath, resource )
     return resource;
   }
 
@@ -750,11 +750,8 @@ function _pathsNativize()
 function _pathNativize( filePath, resource )
 {
   let it = this;
-  // let rop = rit.iterator;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let will = rit.baseModule.will;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
 
@@ -793,25 +790,26 @@ function _pathCompositeResolve( /* currentModule, currentResource, filePath, res
 
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let result = filePath;
 
   _.assert( _.strIs( result ) || _.strsAreAll( result ) );
   _.assert( arguments.length === 4 );
 
-  if( /*resolver*/it.selectorIsComposite( result ) )
+  if( it.selectorIsComposite( result ) )
   {
 
+    /* xxx : use currentResource.module instead of currentModule? */
+    // if( result.length === 2 )
+    // debugger;
     result = currentModule.pathResolve
     ({
       selector : result,
-      visited : _.arrayFlatten( null, [ /*rop*/rit.visited, result ] ),
-      pathResolving : resolving ? /*rop*/rit.pathResolving : 0,
+      visited : _.arrayFlatten( null, [ rit.visited, result ] ),
+      pathResolving : resolving ? rit.pathResolving : 0,
       currentContext : currentResource,
-      pathNativizing : /*rop*/rit.pathNativizing,
-      missingAction : /*rop*/rit.missingAction,
+      pathNativizing : rit.pathNativizing,
+      missingAction : rit.missingAction,
     });
 
   }
@@ -825,30 +823,30 @@ function _pathsCompositeResolve()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let will = rit.baseModule.will;
+  let currentModule = it.currentModule || rit.currentModule;
   let resource = it.dst;
+
+  _.assert( it !== rit );
 
   if( resource instanceof _.will.Reflector )
   {
-    if( /*resolver*/it.selectorIsComposite( resource.src.prefixPath ) || /*resolver*/it.selectorIsComposite( resource.dst.prefixPath ) )
+    if( it.selectorIsComposite( resource.src.prefixPath ) || it.selectorIsComposite( resource.dst.prefixPath ) )
     {
       resource = it.dst = resource.cloneDerivative();
       if( resource.src.prefixPath )
-      resource.src.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.src.prefixPath, 'in' );
+      resource.src.prefixPath = it._pathCompositeResolve( currentModule, resource, resource.src.prefixPath, 'in' );
       if( resource.dst.prefixPath )
-      resource.dst.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.dst.prefixPath, 'in' );
+      resource.dst.prefixPath = it._pathCompositeResolve( currentModule, resource, resource.dst.prefixPath, 'in' );
     }
   }
 
   if( resource instanceof _.will.PathResource )
   {
-    if( /*resolver*/it.selectorIsComposite( resource.path ) )
+    if( it.selectorIsComposite( resource.path ) )
     {
       resource = it.dst = resource.cloneDerivative();
-      resource.path = _pathCompositeResolve.call( it, currentModule, resource, resource.path, 'in' );
+      resource.path = it._pathCompositeResolve( currentModule, resource, resource.path, 'in' );
     }
   }
 
@@ -860,19 +858,22 @@ function _pathResolve( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  _.assert( rit.Looker === rit.ResolverReplicator );
+  _.assert( rit.OriginalLooker === rit.Replicator );
+  _.assert( _.prototype.has( rit.Looker, rit.Replicator ) );
   _.assert( rit.baseModule !== undefined );
   _.assert( rit.currentModule !== undefined );
-  _.assert( /*rop*/rit.baseModule !== undefined );
-  _.assert( /*rop*/rit.currentModule !== undefined );
+  _.assert( rit.baseModule !== undefined );
   _.assert( rit.currentModule !== undefined );
-  let will = /*rop*/rit.baseModule.will;
-  let currentModule = rit.currentModule || /*rop*/rit.baseModule;
+  _.assert( rit.currentModule !== undefined );
+  let will = rit.baseModule.will;
+  let currentModule = it.currentModule || rit.currentModule || rit.baseModule;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let resourceName = resource.name;
   let result = filePath;
 
+  if( rit.currentModule )
+  debugger;
   if( _.mapIs( filePath ) )
   debugger;
 
@@ -887,7 +888,7 @@ function _pathResolve( filePath, resource )
 
   if( _.errIs( filePath ) )
   {
-    if( /*rop*/rit.missingAction === 'error' )
+    if( rit.missingAction === 'error' )
     return filePath;
     else
     throw filePath;
@@ -896,7 +897,7 @@ function _pathResolve( filePath, resource )
   for( let f = 0 ; f < filePath.length ; f++ )
   if( _.errIs( filePath[ f ] ) )
   {
-    if( /*rop*/rit.missingAction === 'error' )
+    if( rit.missingAction === 'error' )
     return filePath[ f ];
     else
     throw filePath[ f ];
@@ -912,17 +913,17 @@ function _pathResolve( filePath, resource )
     return result;
   }
 
-  currentModule = resource.module;
+  currentModule = resource.module; /* xxx */
 
   let prefixPath = '.';
-  if( /*rop*/rit.pathResolving === 'in' )
+  if( rit.pathResolving === 'in' )
   {
     if( resourceName !== 'in' )
     prefixPath = currentModule.inPath || '.';
     else
     prefixPath = currentModule.dirPath;
   }
-  else if( /*rop*/rit.pathResolving === 'out' )
+  else if( rit.pathResolving === 'out' )
   {
     if( resourceName !== 'out' )
     prefixPath = currentModule.outPath || '.';
@@ -930,9 +931,9 @@ function _pathResolve( filePath, resource )
     prefixPath = currentModule.dirPath;
   }
 
-  if( /*resolver*/it.selectorIs( prefixPath ) )
+  if( it.selectorIs( prefixPath ) )
   prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
-  if( /*resolver*/it.selectorIs( result ) )
+  if( it.selectorIs( result ) )
   result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
 
   result = path.s.join( prefixPath, result );
@@ -946,15 +947,13 @@ function _pathsResolve()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let will = rit.baseModule.will;
+  let currentModule = it.currentModule || rit.currentModule;
   let resource = it.dst;
 
-  /*resolver*/it._pathsTransform.call( it, ( filePath, resource ) =>
+  it._pathsTransform( ( filePath, resource ) =>
   {
-    resource.path = /*resolver*/it._pathResolve.call( it, filePath, resource )
+    resource.path = it._pathResolve( filePath, resource )
     return resource;
   });
 
@@ -966,18 +965,15 @@ function _pathsUnwrap()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
-  let currentModule = rit.currentModule;
+  let will = rit.baseModule.will;
 
-  /*resolver*/it._pathsTransform.call( it, unwrap );
+  it._pathsTransform( unwrap );
 
   function unwrap( filePath, resource )
   {
     let result = resource;
 
-    if( !/*rop*/rit.pathUnwrapping && !resource.phantom )
+    if( !rit.pathUnwrapping && !resource.phantom )
     return result;
 
     result = result.path;
@@ -1002,9 +998,7 @@ function _functionOsGetUp()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  debugger;
-  // let rop = rit.iterator;
-  let will = /*rop*/rit.baseModule.will;
+  let will = rit.baseModule.will;
   let Os = require( 'os' );
   let os = 'posix';
 
@@ -1013,11 +1007,11 @@ function _functionOsGetUp()
   else if( Os.platform() === 'darwin' )
   os = 'osx';
 
-  debugger; /* yyy */
   it.isFunction = it.selector;
   it.src = os;
   it.dst = os;
   it.selector = undefined;
+  it.selectorType = null;
   it.iterable = null;
   it.iterationSelectorChanged();
   it.srcChanged();
@@ -1029,25 +1023,22 @@ function _functionThisUp()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  debugger;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
-  let will = /*rop*/rit.baseModule.will;
-  let currentThis = /*rop*/rit.currentThis;
+  let will = rit.baseModule.will;
+  let currentThis = rit.currentThis;
 
   if( currentThis === null )
-  currentThis = /*resolver*/it.resolveContextPrepare
+  currentThis = it.сontextPrepare
   ({
-    baseModule : /*rop*/rit.baseModule,
+    baseModule : rit.baseModule,
     currentThis,
-    currentContext : /*rop*/rit.currentContext,
+    currentContext : rit.currentContext,
     force : 1,
   });
 
   it.isFunction = it.selector;
-  debugger; /* yyy */
   it.src = [ currentThis ]; /* zzz : write result of selection to dst, never to src? */
   it.selector = 0;
+  it.selectorType = null;
   it.iterable = null;
   it.iterationSelectorChanged();
   it.srcChanged();
@@ -1059,8 +1050,6 @@ function _functionStringsJoinDown()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = /*rop*/rit.Resolver;
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
@@ -1072,27 +1061,39 @@ function _functionStringsJoinDown()
 // err
 // --
 
-function errResolving( o )
+function errResolvingMake( o )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  //let resolver = this;
   let module = rit.baseModule;
-  // let module = o./*rop*/rit.baseModule;
-  _.assertRoutineOptions( errResolving, arguments );
+  _.assertRoutineOptions( errResolvingMake, arguments );
   _.assert( arguments.length === 1 );
-  // if( o./*rop*/rit.currentContext && o./*rop*/rit.currentContext.qualifiedName )
+
+  if( o.err && o.err.ResolvingError )
+  {
+    debugger;
+    return o.err;
+  }
+
   if( rit.currentContext && rit.currentContext.qualifiedName )
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
-  // return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', o./*rop*/rit.currentContext.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   else
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+
+  // if( rit.currentContext && rit.currentContext.qualifiedName )
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  // else
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+
+  _._errFields( o.err, { ResolvingError : true } );
+  debugger;
+
+  return o.err;
 }
 
-errResolving.defaults =
+errResolvingMake.defaults =
 {
   selector : null,
-  // rop : null,
   err : null,
 }
 
@@ -1102,7 +1103,7 @@ errResolving.defaults =
 
 function resolve_head( routine, args )
 {
-  return Self.head( routine, args );
+  return routine.defaults.head( routine, args );
 }
 
 //
@@ -1113,43 +1114,6 @@ function resolve_body( it )
   return it.result;
 }
 
-  // onSelectorReplicate : _onSelectorReplicate,
-  // onSelectorDown : _onSelectorDown,
-Defaults.onSelectorReplicate = _onSelectorReplicate;
-Defaults.onSelectorDown = _onSelectorDown;
-Defaults.onUpBegin = _onUpBegin;
-Defaults.onUpEnd = _onUpEnd;
-Defaults.onDownEnd = _onDownEnd;
-Defaults.onQuantitativeFail = _onQuantitativeFail;
-
-var defaults = resolve_body.defaults = Defaults
-
-let resolve = _.routineUnite( resolve_head, resolve_body );
-let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
-
-var defaults = resolveMaybe.defaults;
-defaults.missingAction = 'undefine';
-
-//
-
-function head( routine, args )
-{
-  _.assert( arguments.length === 2 );
-  let o = Self.optionsFromArguments( args );
-  if( _.routineIs( routine ) )
-  o.Looker = o.Looker || routine.defaults.Looker || Self;
-  else
-  o.Looker = o.Looker || routine.Looker || Self;
-  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefines( routine, o );
-  else
-  _.routineOptionsPreservingUndefines( null, o, routine );
-  o.Looker.optionsForm( routine, o );
-  o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
-  let it = o.Looker.optionsToIteration( o );
-  return it;
-}
-
 //
 
 function performBegin()
@@ -1157,7 +1121,6 @@ function performBegin()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   Parent.performBegin.apply( it, arguments );
-  _.assert( Object.is( it.originalSrc, it.src ) );
 
   let module = it.baseModule;
   let will = module.will;
@@ -1168,7 +1131,7 @@ function performBegin()
 
   _.assert( it.srcForSelect instanceof _.will.Module );
 
-  it.iterator.currentThis = it.resolveContextPrepare
+  it.iterator.currentThis = it.сontextPrepare
   ({
     currentThis : it.currentThis,
     currentContext : it.currentContext,
@@ -1184,7 +1147,8 @@ function performBegin()
   _.assert( it.criterion === null || _.mapIs( it.criterion ) );
   _.assert( it.baseModule instanceof _.will.AbstractModule );
   _.assert( !_.property.own( it, 'criterion' ) );
-  _.assert( it.Looker === ResolverWillbe );
+  _.assert( it.OriginalLooker === ResolverWillbe );
+  _.assert( _.prototype.has( it.Looker, ResolverWillbe ) );
   _.assert( it.Looker.Iteration.currentModule !== undefined );
   _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
 
@@ -1193,42 +1157,209 @@ function performBegin()
 
 //
 
-function optionsForm( routine, o )
+function optionsToIteration( iterator, o )
 {
-  // if( o.Resolver === null || o.Resolver === undefined )
-  // o.Resolver = Self;
+  let it = Parent.optionsToIteration.call( this, iterator, o );
 
-  /* qqq : convert to template-string please in all files */
-  _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
-  _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
-  _.assert( o.baseModule !== undefined );
+  _.assert( arguments.length === 2 );
+  _.assert( !!Self.Selector );
+  _.assert( it.Selector === Self.Selector );
+  _.assert( it.Looker.Selector === Self.Selector );
 
-  if( o.src === null )
-  o.src = o.baseModule;
+  _.assert
+  (
+    !it.baseModule
+    || !it.currentContext
+    || !it.currentContext.moduleForResolve
+    || it.currentContext.moduleForResolve === it.baseModule
+    ,
+    `Current context belong to another base module, something wrong!`
+  );
 
-  Parent.optionsForm.call( this, routine, o );
 
-  return o;
+  return it;
 }
 
 //
 
-function optionsToIteration( o )
+function iteratorInitEnd( iterator )
 {
-  let it = Parent.optionsToIteration.call( this, o );
-  _.assert( !!Self.ResolverSelector );
-  _.assert( it.ResolverSelector === Self.ResolverSelector );
-  _.assert( it.Looker.ResolverSelector === Self.ResolverSelector );
-  return it;
+  let looker = this;
+
+  _.assert( iterator.iteratorProper( iterator ) );
+  /* qqq : convert to template-string please in all files */
+  _.assert
+  (
+    _.longHas( [ null, 0, false, 'in', 'out' ], iterator.pathResolving ),
+    () => 'Unknown value of option path resolving ' + iterator.pathResolving
+  );
+  _.assert
+  (
+    !iterator.defaultResourceKind || !_.path.isGlob( iterator.defaultResourceKind ),
+    () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( iterator.defaultResourceKind )
+  );
+  _.assert( iterator.baseModule !== undefined );
+
+  if( !iterator.baseModule )
+  {
+    debugger;
+    _.assert( 0, 'not tested' ); /* xxx */
+    if( iterator.currentContext && _.routineIs( iterator.currentContext.moduleForResolveGet ) )
+    iterator.baseModule = iterator.currentContext.moduleForResolveGet();
+  }
+
+  if( iterator.src === null || iterator.src === undefined )
+  iterator.src = iterator.baseModule;
+
+  return Parent.iteratorInitEnd.call( this, iterator );
 }
+
+// --
+// declare
+// --
+
+let functionSymbol = Symbol.for( 'function' );
+let Common =
+{
+
+  name : 'wWillResolver',
+  shortName : 'Resolver',
+
+  // handler
+
+  _onSelectorReplicate,
+  _onSelectorDown,
+  _onUpBegin,
+  _onUpEnd,
+  _onDownEnd,
+  _onQuantitativeFail,
+
+  // etc
+
+  _statusPreUpdate,
+  _statusPostUpdate,
+  _globCriterionFilter,
+  _resourceMapSelect,
+
+  _exportedWriteThrough,
+  _currentExclude,
+  _selectOptionsMake,
+  _select,
+  сontextPrepare,
+
+  // path
+
+  _pathPerform,
+  _pathsTransform,
+  _pathsNormalize,
+  _pathNormalize,
+  _pathsNativize,
+  _pathNativize,
+  _pathCompositeResolve,
+  _pathsCompositeResolve,
+  _pathResolve,
+  _pathsResolve,
+  _pathsUnwrap,
+
+  // function
+
+  _functionOsGetUp,
+  _functionThisUp,
+  _functionStringsJoinDown,
+
+  // err
+
+  errResolvingMake,
+
+}
+
+//
+
+_.assert( !!_.resolverAdv.Resolver.Selector );
+let ResolverWillbeSelector =
+({
+  name : 'ResolverWillbeSelector',
+  // parent : _.resolverAdv.Resolver.Selector, /* yyy : should work woithout it */
+  prime :
+  {
+  },
+  looker :
+  {
+    ... Common,
+  },
+  iterationPreserve :
+  {
+    currentModule : null,
+  },
+  iteration :
+  {
+    // currentModule : null,
+  },
+});
+
+/* */
+
+_.assert( !!_.resolverAdv.Resolver );
+_.assert( !!_.resolverAdv.Resolver.Replicator );
+_.assert( _.resolverAdv.Resolver.Replicator === _.resolverAdv.Resolver );
+_.assert( _.resolverAdv.Resolver.Iterator.resolveExtraOptions === undefined );
+
+let ResolverWillbeReplicator =
+({
+  name : 'ResolverWillbeReplicator',
+  // parent : _.resolverAdv.Resolver.Replicator, /* yyy : should work woithout it */
+  prime : Prime,
+  looker :
+  {
+    ... Common,
+    performBegin,
+    optionsToIteration,
+    iteratorInitEnd,
+  },
+  iterationPreserve :
+  {
+    exported : null,
+    currentModule : null, /* xxx : remove? */
+    selectorIsPath : 0,
+  },
+  iteration :
+  {
+    exported : null,
+    currentModule : null, /* xxx : remove? */
+    selectorIsPath : 0,
+  },
+});
+
+/* */
+
+const ResolverWillbe = _.resolverAdv.classDefine
+({
+  selector : ResolverWillbeSelector,
+  replicator : ResolverWillbeReplicator,
+});
+
+_.assert( ResolverWillbe.IterationPreserve.isFunction !== undefined );
+_.assert( ResolverWillbe.Iteration.isFunction === undefined );
+_.assert( ResolverWillbe.Iterator.isFunction === undefined );
+_.assert( ResolverWillbe.isFunction !== undefined );
+_.assert( ResolverWillbe.Iterator.resolveExtraOptions === undefined );
+_.assert( ResolverWillbe.Looker === ResolverWillbe );
+
+const Self = ResolverWillbe;
+
+let resolveMaybe = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
+var defaults = resolveMaybe.defaults;
+defaults.Looker = defaults;
+defaults.missingAction = 'undefine';
 
 // --
 // wraps
 // --
 
-let resolveRaw = _.routineUnite( resolve_head, resolve_body );
+let resolveRaw = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
 
 var defaults = resolveRaw.defaults;
+defaults.Looker = defaults;
 defaults.pathResolving = 0;
 defaults.pathNativizing = 0;
 defaults.pathUnwrapping = 0;
@@ -1246,9 +1377,10 @@ alternatively adjust call from finit of class Exported
 
 //
 
-let pathResolve = _.routineUnite( resolve_head, resolve_body );
+let pathResolve = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
 
 var defaults = pathResolve.defaults;
+defaults.Looker = defaults;
 defaults.pathResolving = 'in';
 defaults.prefixlessAction = 'resolved';
 defaults.arrayFlattening = 1;
@@ -1268,20 +1400,19 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
-  _.routineOptions( routine, o );
+  _.routineOptionsPreservingUndefines( routine, o );
   return o;
 }
 
 function pathOrReflectorResolve_body( o )
 {
-  //let resolver = this;
   let module = o.baseModule;
   let will = module.will;
   let resource;
 
   _.assert( _.aux.is( o ) );
-  _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
-  _.assert( !/*resolver*/Self.selectorIs( o.selector ) );
+  _.assertRoutineOptionsPreservingUndefines( pathOrReflectorResolve_body, arguments );
+  _.assert( !Self.selectorIs( o.selector ) );
   _.assert( o.pathResolving === 'in' );
   _.assert( !o.pathUnwrapping );
 
@@ -1293,6 +1424,7 @@ function pathOrReflectorResolve_body( o )
   if( resource )
   return resource;
 
+
   let o3 = _.mapExtend( null, o );
   o3.missingAction = 'undefine';
   o3.selector = 'path::' + o.selector;
@@ -1301,27 +1433,22 @@ function pathOrReflectorResolve_body( o )
   return resource;
 }
 
-var defaults = pathOrReflectorResolve_body.defaults = Object.create( resolve_body.defaults );
+var defaults = pathOrReflectorResolve_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
 
 defaults.pathResolving = 'in';
 defaults.missingAction = 'undefine';
 defaults.pathUnwrapping = 0;
 
-let pathOrReflectorResolve = _.routineUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routine.uniteCloning_( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
 
 //
 
 function filesFromResource_head( routine, args )
 {
-  //let resolver = this;
-  let o =_.routineOptions( routine, args );
+  let o =_.routineOptionsPreservingUndefines( routine, args );
 
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
-  // if( _.routineIs( routine ) )
-  // o.Looker = o.Looker || routine.defaults.Looker || Self;
-  // else
-  // o.Looker = o.Looker || routine.Looker || Self;
   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
   _.routineOptionsPreservingUndefines( routine, o );
   else
@@ -1330,8 +1457,6 @@ function filesFromResource_head( routine, args )
   let prefixlessAction = o.prefixlessAction;
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = 'resolved';
-
-  // resolve_head.call( Self, routine, [ o ] );
 
   if( prefixlessAction === 'pathOrReflector' )
   o.prefixlessAction = prefixlessAction;
@@ -1352,6 +1477,7 @@ function filesFromResource_body( o )
   {
 
     let o2 = _.mapOnly( o, module.resolve.defaults );
+    delete o2.constructor;
     o2.prefixlessAction = 'default';
     o2.missingAction = 'undefine';
     o2.defaultResourceKind = 'path';
@@ -1359,6 +1485,7 @@ function filesFromResource_body( o )
     if( !resources )
     {
       let o2 = _.mapOnly( o, module.resolve.defaults );
+      delete o2.constructor;
       o2.prefixlessAction = 'default';
       o2.missingAction = 'undefine';
       o2.defaultResourceKind = 'reflector';
@@ -1380,6 +1507,8 @@ function filesFromResource_body( o )
   else
   {
     let o2 = _.mapOnly( o, module.resolve.defaults );
+    debugger;
+    delete o2.constructor;
     resources = module.resolve( o2 );
   }
 
@@ -1438,7 +1567,10 @@ function filesFromResource_body( o )
 
 }
 
-var defaults = filesFromResource_body.defaults = Object.create( resolve.defaults );
+var defaults = filesFromResource_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+
+_.assert( ResolverWillbe.Prime.Looker === undefined );
+
 defaults.selector = null;
 defaults.prefixlessAction = 'resolved';
 defaults.currentContext = null;
@@ -1452,7 +1584,9 @@ defaults.withDirs = null;
 defaults.withTerminals = null;
 defaults.withStem = null;
 
-let filesFromResource = _.routineUnite( filesFromResource_head, filesFromResource_body );
+let filesFromResource = _.routine.uniteCloning_( filesFromResource_head, filesFromResource_body );
+
+_.assert( defaults.Looker === undefined );
 
 //
 
@@ -1501,14 +1635,19 @@ function reflectorResolve_body( o )
   return reflector;
 }
 
-var defaults = reflectorResolve_body.defaults = Object.create( resolve.defaults );
+var defaults = reflectorResolve_body.defaults = Object.create( ResolverWillbe );
 defaults.selector = null;
 defaults.defaultResourceKind = 'reflector';
 defaults.prefixlessAction = 'default';
 defaults.currentContext = null;
 defaults.pathResolving = 'in';
+defaults.Looker = defaults;
 
-let reflectorResolve = _.routineUnite( reflectorResolve_head, reflectorResolve_body );
+let reflectorResolve = _.routine.uniteReplacing( ResolverWillbe.exec.head, reflectorResolve_body );
+
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === defaults );
+_.assert( reflectorResolve.body.defaults === defaults );
 
 //
 
@@ -1517,157 +1656,37 @@ function submodulesResolve_body( o )
   let module = o.baseModule;
   let will = module.will;
 
-  let result = module.resolve( o );
+  _.assert( o.iteratorProper( o ) );
+  _.assert( o.prefixlessAction === 'default' );
+
+  let result = module.resolve.body.call( module, o );
 
   return result;
 }
 
-var defaults = submodulesResolve_body.defaults = Object.create( resolve.defaults );
+var defaults = submodulesResolve_body.defaults = Object.create( ResolverWillbe );
 defaults.selector = null;
 defaults.prefixlessAction = 'default';
 defaults.defaultResourceKind = 'submodule';
+defaults.Looker = defaults;
 
-let submodulesResolve = _.routineUnite( resolve.head, submodulesResolve_body );
+let submodulesResolve = _.routine.uniteReplacing( ResolverWillbe.exec.head, submodulesResolve_body );
+
+_.assert( submodulesResolve.body.defaults === defaults );
+_.assert( submodulesResolve.defaults === defaults );
+_.assert( defaults.prefixlessAction === 'default' );
 
 //
 
-function _iterator_functor()
+let NamespaceExtension =
 {
 
-  _.assert( !!_.resolver2.ResolverExtraSelector );
-  let ResolverWillbeSelector = _.looker.define
-  ({
-    name : 'ResolverWillbeSelector',
-    parent : _.resolver2.ResolverExtraSelector,
-    defaults :
-    {
-      // defaultResourceKind : null,
-      // prefixlessAction : null,
-      // singleUnwrapping : null,
-      // mapValsUnwrapping : null,
-      // mapFlattening : null,
-      // arrayWrapping : null,
-      // arrayFlattening : null,
-      // ... Defaults,
-    },
-    looker :
-    {
-      ... Common,
-    },
-  });
+  name : 'resolverWillbe',
+  Looker : ResolverWillbe,
+  Resolver : ResolverWillbe,
 
-  /* */
-
-  _.assert( !!_.resolver2.ResolverExtra );
-  // _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions !== undefined );
-  _.assert( _.resolver2.ResolverExtra.Iterator.resolveExtraOptions === undefined );
-
-  /* xxx : redefine _.resolver.define() */
-  let ResolverWillbeReplicator = _.resolver2.define
-  ({
-    name : 'ResolverWillbeReplicator',
-    parent : _.resolver2.ResolverExtra,
-    // defaults : Defaults, /* yyy */
-    looker :
-    {
-      ... Common,
-
-      resolve,
-      resolveMaybe,
-      head,
-      performBegin,
-      exec : resolve,
-      optionsForm,
-      optionsToIteration,
-
-    },
-    iterationPreserve :
-    {
-      exported : null,
-      currentModule : null,
-      selectorIsPath : 0,
-    },
-  });
-
-  /* */
-
-  _.assert( ResolverWillbeReplicator.IterationPreserve.isFunction !== undefined );
-  _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions === undefined );
-  // _.assert( ResolverWillbeReplicator.Iterator.resolveExtraOptions !== undefined );
-  _.assert( ResolverWillbeReplicator.Looker === ResolverWillbeReplicator );
-
-  ResolverWillbeReplicator.ResolverSelector = ResolverWillbeSelector;
-  ResolverWillbeReplicator.ResolverReplicator = ResolverWillbeReplicator;
-  ResolverWillbeSelector.ResolverSelector = ResolverWillbeSelector;
-  ResolverWillbeSelector.ResolverReplicator = ResolverWillbeReplicator;
-
-  return ResolverWillbeReplicator;
-}
-
-// --
-// declare
-// --
-
-let functionSymbol = Symbol.for( 'function' );
-let Common =
-{
-
-  name : 'wWillResolver',
-  shortName : 'Resolver',
-
-  // handler
-
-  _onSelectorReplicate,
-  _onSelectorDown,
-  _onUpBegin,
-  _onUpEnd,
-  _onDownEnd,
-  _onQuantitativeFail,
-
-  // onSelectorReplicate : _onSelectorReplicate,
-  // onSelectorDown : _onSelectorDown,
-  // onUpBegin : _onUpBegin,
-  // onUpEnd : _onUpEnd,
-  // onDownEnd : _onDownEnd,
-  // onQuantitativeFail : _onQuantitativeFail,
-
-  // etc
-
-  _statusPreUpdate,
-  _statusPostUpdate,
-  _globCriterionFilter,
-  _resourceMapSelect,
-
-  _exportedWriteThrough,
-  _currentExclude,
-  _select,
-  resolveContextPrepare,
-
-  // path
-
-  _pathPerform,
-  _pathsTransform,
-  _pathsNormalize,
-  _pathNormalize,
-  _pathsNativize,
-  _pathNativize,
-  _pathCompositeResolve,
-  _pathsCompositeResolve,
-  _pathResolve,
-  _pathsResolve,
-  _pathsUnwrap,
-
-  // function
-
-  _functionOsGetUp,
-  _functionThisUp,
-  _functionStringsJoinDown,
-
-  // err
-
-  errResolving,
-
-  // wraps
+  resolve : ResolverWillbe.exec,
+  resolveMaybe,
 
   resolveRaw,
   pathResolve,
@@ -1678,28 +1697,7 @@ let Common =
 
 }
 
-//
-
-const ResolverWillbe = _iterator_functor();
-const Self = ResolverWillbe;
-
-let Extension =
-{
-
-  ... _.resolver2,
-  ... Common,
-
-  Looker : ResolverWillbe,
-  ResolverExtra : ResolverWillbe,
-  ResolverWillbe,
-
-  resolve,
-  resolveMaybe,
-
-}
-
-_.mapExtend( _.will.Resolver, Extension );
-
+_.mapExtend( _.will.resolver, NamespaceExtension );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 

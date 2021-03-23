@@ -1,0 +1,28 @@
+about :
+
+  name : original
+
+path :
+
+  git : '.'
+
+step :
+
+  pull :
+    inherit : git.pull
+    profile : 'test-profile'
+
+  pull.with.dir :
+    inherit : git.pull
+    dirPath : 'path::git'
+    profile : 'test-profile'
+
+build :
+
+  git.pull :
+    steps :
+      - pull
+
+  pull.with.dir :
+    steps :
+      - pull.with.dir

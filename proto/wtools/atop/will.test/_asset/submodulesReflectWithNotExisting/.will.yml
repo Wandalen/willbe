@@ -1,0 +1,30 @@
+about :
+
+  name : submodulesReflectWithNotExisting
+  version : 0.0.1
+
+submodule :
+
+  moduleA : module/moduleA/
+  moduleB : module/moduleB/
+
+path :
+
+  temp : out
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      prefixPath : out/debug
+    criterion :
+      debug : 1
+
+build :
+
+  copy :
+    criterion :
+      default : 1
+    steps :
+      - reflect.submodules

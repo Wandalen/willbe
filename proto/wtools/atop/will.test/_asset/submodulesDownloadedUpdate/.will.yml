@@ -1,0 +1,6 @@
+about :
+  name : submodulesUpdateDownloaded
+
+submodule :
+  local-module : './out/exportedModule'
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git!dev1

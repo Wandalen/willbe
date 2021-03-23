@@ -19,11 +19,10 @@ let _global = _global_;
 let _ = _global_.wTools;
 
 /*
-qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
 xxx : should work
-  > local-will .imply withOut:0 .with * .call GitStatus
+  > will.local .imply withOut:0 .with * .call GitStatus
   not only
-  > local-will .imply withOut:0 ; .with * .call GitStatus
+  > will.local .imply withOut:0 ; .with * .call GitStatus
 xxx : find solution
   > git push --tags
   fatal: TaskCanceledException encountered.
@@ -225,7 +224,6 @@ function assetFor( test, name )
 //     }
 //     catch( err )
 //     {
-//       debugger;
 //       _.Consequence().take( null ).delay( 3000 ).deasync();
 //       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
 //       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
@@ -291,14 +289,11 @@ function assetFor( test, name )
 //
 //   logger.log( file.productExportInfo() );
 //
-//   debugger;
 //   file.product.nodes.map( null, ( node ) =>
 //   {
 //     let found = file.nodeSearch( node, 'setsAreIdentical' );
 //     if( _.mapKeys( found ).length )
-//     debugger;
 //   });
-//   debugger;
 //
 //   file.arrange();
 // }
@@ -382,7 +377,7 @@ function buildSimple( test )
 function openNamedFast( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   a.reflect()
 
   a.will.prefer
@@ -401,7 +396,7 @@ function openNamedFast( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     check( opener1 );
     return null;
   })
@@ -410,7 +405,7 @@ function openNamedFast( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -421,7 +416,7 @@ function openNamedFast( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     check( opener2 );
     return null;
   })
@@ -430,7 +425,7 @@ function openNamedFast( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -552,7 +547,6 @@ function openNamedFast( test )
     _.debugger = 1;
     debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    debugger;
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
@@ -566,7 +560,7 @@ function openNamedFast( test )
 function openNamedForming( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   a.reflect();
 
   a.will.prefer
@@ -611,7 +605,7 @@ function openNamedForming( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     check( opener1 );
     return null;
   })
@@ -620,7 +614,7 @@ function openNamedForming( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super';
+    test.case = 'opened filePath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -631,7 +625,7 @@ function openNamedForming( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     check( opener2 );
     return null;
   })
@@ -640,7 +634,7 @@ function openNamedForming( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super';
+    test.case = 'opened dirPath : twoExported/super';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -778,7 +772,7 @@ function openNamedForming( test )
 function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener1, ready1, opener2, ready2;
   a.reflect();
 
@@ -910,7 +904,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 function openSkippingSubButAttachedWillfiles( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener1, ready1, opener2, ready2;
   a.reflect();
 
@@ -1063,7 +1057,7 @@ function openSkippingSubButAttachedWillfiles( test )
 function openAnon( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-anon-exported' );
+  let a = context.assetFor( test, 'twoAnonExported' );
   a.reflect();
 
   /* */
@@ -1078,7 +1072,7 @@ function openAnon( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-anon-exported/.';
+    test.case = 'opened filePath : twoAnonExported/.';
     check( opener1 );
     return null;
   })
@@ -1087,7 +1081,7 @@ function openAnon( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-anon-exported/.';
+    test.case = 'opened filePath : twoAnonExported/.';
     test.true( err === undefined );
     opener1.finit();
     if( err )
@@ -1099,7 +1093,7 @@ function openAnon( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-anon-exported/.';
+    test.case = 'opened dirPath : twoAnonExported/.';
     check( opener2 );
     return null;
   })
@@ -1108,7 +1102,7 @@ function openAnon( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-anon-exported/.';
+    test.case = 'opened dirPath : twoAnonExported/.';
     test.true( err === undefined );
     opener2.finit();
     if( err )
@@ -1195,7 +1189,7 @@ function openAnon( test )
 function openOutNamed( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   a.reflect();
 
   var opener1 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super.out/supermodule' ) });
@@ -1207,14 +1201,14 @@ function openOutNamed( test )
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super.out/supermodule';
+    test.case = 'opened filePath : twoExported/super.out/supermodule';
     check( opener1 );
     return null;
   })
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : two-exported/super.out/supermodule';
+    test.case = 'opened filePath : twoExported/super.out/supermodule';
     test.true( err === undefined );
     opener1.finit();
     if( err )
@@ -1226,14 +1220,14 @@ function openOutNamed( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super.out/supermodule';
+    test.case = 'opened dirPath : twoExported/super.out/supermodule';
     check( opener2 );
     return null;
   })
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : two-exported/super.out/supermodule';
+    test.case = 'opened dirPath : twoExported/super.out/supermodule';
     test.true( err === undefined );
     opener2.finit();
     if( err )
@@ -1328,7 +1322,7 @@ function openOutNamed( test )
 function openCurruptedUnknownField( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-infile-unknown-field' );
+  let a = context.assetFor( test, 'corruptedInfileUnknownField' );
   let opener;
 
   /* - */
@@ -1379,7 +1373,7 @@ function openCurruptedUnknownField( test )
 
   .finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : corrupted-infile-unknown-field/sub';
+    test.case = 'opened dirPath : corruptedInfileUnknownField/sub';
     test.true( err === undefined );
     if( err )
     throw err;
@@ -1459,7 +1453,7 @@ function openCurruptedUnknownField( test )
 function openerClone( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -1689,7 +1683,7 @@ function openerClone( test )
 function moduleClone( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -1873,9 +1867,7 @@ function moduleClone( test )
     test.identical( a.rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( a.rel( opener2.remotePath ), null );
 
-    debugger;
     opener2.finit();
-    debugger;
     opener.openedModule = null;
 
     test.description = 'instances';
@@ -1921,10 +1913,8 @@ function moduleClone( test )
     test.identical( a.rel( opener2.remotePath ), null );
 
     test.case = 'finit';
-    debugger;
     opener.finit();
     module.finit();
-    debugger;
     return null;
   })
 
@@ -2017,7 +2007,7 @@ test
 function exportSeveralExports( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'inconsistent-outfile' );
+  let a = context.assetFor( test, 'inconsistentOutfile' );
   let opener;
 
   /* - */
@@ -2267,7 +2257,7 @@ function exportSeveralExports( test )
 function exportSuper( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -2596,7 +2586,7 @@ function exportSuper( test )
 function exportSuperIn( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-in-exported' );
+  let a = context.assetFor( test, 'twoInExported' );
   let opener;
 
   /* - */
@@ -3030,7 +3020,7 @@ test
 function exportDefaultPath( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-default-path' );
+  let a = context.assetFor( test, 'exportDefaultPath' );
   let opener;
 
   /* - */
@@ -3256,7 +3246,7 @@ test
 function exportOutdated( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'inconsistent-outfile' );
+  let a = context.assetFor( test, 'inconsistentOutfile' );
   let opener;
 
   /* - */
@@ -3398,7 +3388,7 @@ test
 function exportRecursive( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'resolve-path-of-submodules-exported' );
+  let a = context.assetFor( test, 'resolvePathOfSubmodulesExported' );
   let opener;
 
   /* - */
@@ -3476,7 +3466,7 @@ test
 function exportDotless( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-dotless-exported' );
+  let a = context.assetFor( test, 'twoDotlessExported' );
   let opener;
 
   /* - */
@@ -3591,7 +3581,7 @@ test
 function exportDotlessSingle( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-dotless-single-exported' );
+  let a = context.assetFor( test, 'twoDotlessSingleExported' );
   let opener;
 
   /* - */
@@ -3704,7 +3694,7 @@ test
 function exportStepOpts( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-step-opts' );
+  let a = context.assetFor( test, 'exportStepOpts' );
   let opener;
 
   /* - */
@@ -3862,7 +3852,7 @@ test
 function exportRecursiveUsingSubmodule( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple-exported' );
+  let a = context.assetFor( test, 'exportMultipleExported' );
   let opener;
 
   /* - */
@@ -3961,7 +3951,7 @@ function exportRecursiveUsingSubmodule( test )
 function exportSteps( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple-exported' );
+  let a = context.assetFor( test, 'exportMultipleExported' );
   let opener;
 
   /* - */
@@ -4116,7 +4106,7 @@ test
 function exportCourrputedOutfileUnknownSection( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-outfile-unknown-section' );
+  let a = context.assetFor( test, 'corruptedOutfileUnknownSection' );
   let opener;
 
   /* - */
@@ -4216,7 +4206,7 @@ test
 function exportCourruptedOutfileSyntax( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-outfile-syntax' );
+  let a = context.assetFor( test, 'corruptedOutfileSyntax' );
   let opener;
 
   /* - */
@@ -4314,7 +4304,7 @@ test
 function exportCourruptedSubmodulesDisabled( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodules-disabled' );
+  let a = context.assetFor( test, 'corruptedSubmodulesDisabled' );
   let opener;
 
   /* - */
@@ -4437,64 +4427,64 @@ function exportCourruptedSubmodulesDisabled( test )
 function exportCourrputedSubmoduleOutfileUnknownSection( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodule-outfile-unknown-section' );
+  let a = context.assetFor( test, 'corruptedSubmoduleOutfileUnknownSection' );
   let opener;
 
   /* - */
 
-  // a.ready
-  // .then( () =>
-  // {
-  //   test.case = 'export super';
-  //   a.reflect();
-  //   opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
-  //   return opener.open();
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   let builds = module.exportsResolve({ criterion : { debug : 1 } });
-  //   let build = builds[ 0 ];
-  //   return build.perform();
-  // })
-  //
-  // .finally( ( err, arg ) =>
-  // {
-  //   var module = opener.openedModule;
-  //
-  //   test.true( _.errIs( err ) );
-  //
-  //   test.description = 'files';
-  //   var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
-  //   var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } }); /* xxx */
-  //   test.identical( files, exp );
-  //
-  //   test.description = 'finit';
-  //   opener.finit();
-  //   test.true( module.isFinited() );
-  //   test.true( opener.isFinited() );
-  //
-  //   test.description = 'should be only 2 errors, 1 attempt to open corrupted sub.out and 2 attempts to open super.out which does not exist';
-  //   test.identical( _.longOnce( _.select( a.will.openersErrorsArray, '*/err' ) ).length, 3 );
-  //   a.will.openersErrorsRemoveAll();
-  //   test.identical( a.will.openersErrorsArray.length, 0 );
-  //
-  //   test.description = 'no garbage left';
-  //   test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
-  //   test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
-  //
-  //   return null;
-  // });
+  a.ready
+  .then( () =>
+  {
+    test.case = 'export super';
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
+    return opener.open();
+  })
 
-  /* - xxx */
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve({ criterion : { debug : 1 } });
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.true( _.errIs( err ) );
+
+    test.description = 'files';
+    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } }); /* xxx */
+    test.identical( files, exp );
+
+    test.description = 'finit';
+    opener.finit();
+    test.true( module.isFinited() );
+    test.true( opener.isFinited() );
+
+    test.description = 'should be only 2 errors, 1 attempt to open corrupted sub.out and 2 attempts to open super.out which does not exist';
+    test.identical( _.longOnce( _.select( a.will.openersErrorsArray, '*/err' ) ).length, 3 );
+    a.will.openersErrorsRemoveAll();
+    test.identical( a.will.openersErrorsArray.length, 0 );
+
+    test.description = 'no garbage left';
+    test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
+
+    return null;
+  });
+
+  /* - */
 
   a.ready
   .then( () =>
@@ -4599,7 +4589,7 @@ exportCourrputedSubmoduleOutfileUnknownSection.description =
 function exportCourrputedSubmoduleOutfileFormatVersion( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodule-outfile-format-version' );
+  let a = context.assetFor( test, 'corruptedSubmoduleOutfileFormatVersion' );
   let opener;
 
   /* - */
@@ -4768,7 +4758,7 @@ exportCourrputedSubmoduleOutfileFormatVersion.description =
 function exportsResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'corrupted-submodule-outfile-unknown-section' );
+  let a = context.assetFor( test, 'corruptedSubmoduleOutfileUnknownSection' );
   let opener;
 
   /* - */
@@ -4808,7 +4798,6 @@ function exportsResolve( test )
   /* - */
 
   return a.ready;
-
 } /* end of function exportsResolve */
 
 //
@@ -4816,7 +4805,7 @@ function exportsResolve( test )
 function buildsResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple' );
+  let a = context.assetFor( test, 'exportMultiple' );
   let opener;
 
   /* - */
@@ -4944,6 +4933,229 @@ function buildsResolve( test )
 
 //
 
+function moduleResolveSimple( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithSubmodulesResolve' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'a' ) });
+    return opener.open();
+  });
+
+  a.ready.then( ( arg ) =>
+  {
+    let module = opener.openedModule;
+    let o =
+    {
+      arrayWrapping : 1,
+      criterion : {},
+      currentExcluding : 0,
+      defaultResourceKind : null,
+      mapValsUnwrapping : 0,
+      pathResolving : 0,
+      pathUnwrapping : 0,
+      prefixlessAction : "throw",
+      selector : "*::*",
+      strictCriterion : 1,
+    };
+
+    let resolve = module.resolve( o );
+    test.true( _.aux.is( resolve ) );
+    test.true( 'step/files.delete' in resolve );
+    test.true( 'step/files.reflect' in resolve );
+    test.true( 'path/in' in resolve );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+moduleResolveSimple.description =
+`
+Test routine checks that module resolves all resources.
+`;
+
+//
+
+function moduleResolve( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithSubmodulesResolve' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'b/' ) });
+    return opener.open({ all : 1 });
+  });
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve concrete resource from submodule';
+    let module = opener.openedModule;
+    let resolve = module.resolve( 'submodule::sub-a/path::exported.files.proto.export' );
+    test.true( _.longIs( resolve ) );
+    test.true( resolve.length === 2 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve all resources from module, including submodule paths';
+    let module = opener.openedModule;
+    let resolve = module.resolve( '*::*' );
+    test.true( _.arrayIs( resolve ) );
+    test.true( resolve[ 0 ] instanceof _.will.Module );
+    test.true( resolve[ resolve.length - 1 ] instanceof _.will.Build );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve all resources from module, including submodule paths, pathResolving - 0';
+    let module = opener.openedModule;
+    let o =
+    {
+      arrayWrapping : 1,
+      criterion : {},
+      currentExcluding : 0,
+      defaultResourceKind : null,
+      mapValsUnwrapping : 0,
+      pathResolving : 0,
+      pathUnwrapping : 0,
+      prefixlessAction : 'throw',
+      selector : '*::*',
+      strictCriterion : 1,
+    };
+
+    let resolve = module.resolve( o );
+    test.true( _.aux.is( resolve ) );
+    test.true( 'step/files.delete' in resolve );
+    test.true( 'step/files.reflect' in resolve );
+    test.true( 'path/in' in resolve );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
+moduleResolve.description =
+`
+Test routine checks that module resolves the own export resources.
+Resource is export paths map with paths from submodule.
+Submodules are exported willfiles.
+`;
+
+//
+
+// aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
+function framePerform( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'make' );
+  a.reflect();
+
+  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
+  opener.find();
+
+  return opener.open().split()
+  .then( () =>
+  {
+
+    var expected = [];
+    var files = a.find( a.abs( 'out' ) );
+    let builds = opener.openedModule.buildsResolve();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+    build.form();
+    let run = new _.will.BuildRun({ build });
+    run.form();
+    let frame = run.frameUp( build );
+    let steps = build.stepsEach();
+    let step = steps[ 0 ];
+    step.opts.currentPath = a.routinePath;
+
+    /* */
+
+    let frame2 = frame.frameUp( step );
+    step.form();
+
+    return step.framePerform( frame2 )
+    .finally( ( err, arg ) =>
+    {
+      test.description = 'files';
+
+      var files = a.find( a.routinePath );
+      var exp =
+      [
+        '.',
+        './v1.will.yml',
+        './v2.will.yml',
+        './file',
+        './file/File.js',
+        './file/File.test.js',
+        './file/Produce.js',
+        './file/Src1.txt',
+        './file/Src2.txt',
+        './out',
+        './out/Produced.js2',
+        './out/Produced.txt2',
+        './out/shouldbe.txt'
+      ];
+      test.identical( files, exp );
+
+      opener.finit();
+      frame2.finit();
+
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+}
+
+//
+
 function trivialResolve( test )
 {
   let context = this;
@@ -5007,7 +5219,7 @@ function trivialResolve( test )
 function detailedResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   /* - */
@@ -5060,7 +5272,7 @@ function detailedResolve( test )
 function reflectorResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'composite-reflector' );
+  let a = context.assetFor( test, 'compositeReflector' );
   let opener;
 
   /* - */
@@ -5451,7 +5663,7 @@ function reflectorResolve( test )
 function reflectorInheritedResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'reflect-inherit' );
+  let a = context.assetFor( test, 'reflectInherit' );
   let opener;
 
   function pin( filePath )
@@ -5705,7 +5917,7 @@ function reflectorInheritedResolve( test )
 function superResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-in-exported' );
+  let a = context.assetFor( test, 'twoInExported' );
   let opener;
 
   /* - */
@@ -5822,7 +6034,7 @@ function superResolve( test )
 function pathsResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple' );
+  let a = context.assetFor( test, 'exportMultiple' );
   let opener;
 
   function pin( filePath )
@@ -6387,7 +6599,7 @@ function pathsResolve( test )
 function pathsResolveImportIn( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-exported' );
+  let a = context.assetFor( test, 'twoExported' );
   let opener;
 
   function pin( filePath )
@@ -6416,6 +6628,7 @@ function pathsResolveImportIn( test )
   a.ready.then( ( arg ) =>
   {
 
+    debugger;
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = opener.openedModule.resolve( 'submodule::*/path::in*=1' )
     var expected = ( 'sub.out' );
@@ -7118,7 +7331,7 @@ function pathsResolveImportIn( test )
 function pathsResolveOfSubmodulesLocal( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-local-repos' );
+  let a = context.assetFor( test, 'submodulesLocalRepos' );
   let opener;
 
   /* - */
@@ -7153,25 +7366,25 @@ function pathsResolveOfSubmodulesLocal( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module', 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -7196,7 +7409,7 @@ function pathsResolveOfSubmodulesLocal( test )
 function pathsResolveOfSubmodulesRemote( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
   let opener;
 
   /* - */
@@ -7231,10 +7444,8 @@ function pathsResolveOfSubmodulesRemote( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = a.abs( '.module/ModuleForTesting1/out' ); /* qqq xxx : ask */
-    debugger;
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
-    debugger;
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
@@ -7276,7 +7487,7 @@ function pathsResolveOfSubmodulesRemote( test )
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'resolve-path-of-submodules-exported' );
+  let a = context.assetFor( test, 'resolvePathOfSubmodulesExported' );
   let opener;
 
   function pin( filePath )
@@ -7342,7 +7553,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
 function pathsResolveOutFileOfExports( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-multiple-exported' );
+  let a = context.assetFor( test, 'exportMultipleExported' );
   let opener;
 
   function pin( filePath )
@@ -8116,9 +8327,7 @@ function pathsResolveOutFileOfExports( test )
     if( err )
     throw err;
     test.true( err === undefined );
-    debugger;
     opener.finit();
-    debugger;
     return arg;
   });
 
@@ -8132,7 +8341,7 @@ function pathsResolveOutFileOfExports( test )
 function pathsResolveComposite( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'composite-path' );
+  let a = context.assetFor( test, 'compositePath' );
   let opener;
 
   function pin( filePath )
@@ -8184,9 +8393,7 @@ function pathsResolveComposite( test )
     test.identical( resolved, expected );
 
     test.case = 'path::protoMain';
-    debugger;
     var resolved = opener.openedModule.resolve( 'path::protoMain' );
-    debugger;
     var expected = pin( 'proto/Main.s' );
     test.identical( resolved, expected );
 
@@ -8239,7 +8446,7 @@ function pathsResolveComposite( test )
 function pathsResolveComposite2( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'path-composite' );
+  let a = context.assetFor( test, 'pathComposite' );
   let opener;
 
   function pin( filePath )
@@ -8418,7 +8625,6 @@ function pathsResolveResolvedPath( test )
       pathResolving : 'in',
       selectorIsPath : 0,
     });
-    debugger;
     test.identical( got, exp );
 
     var src = 'some';
@@ -8527,7 +8733,7 @@ relative resolved path absolutized if pathResolving:1
 function pathsResolveFailing( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-with-submodules' );
+  let a = context.assetFor( test, 'exportWithSubmodules' );
   let opener;
 
   function pin( filePath )
@@ -8574,7 +8780,6 @@ function pathsResolveFailing( test )
       missingAction : 'undefine',
       mapValsUnwrapping : 1,
     });
-    debugger;
     var expected = null;
     test.identical( got, expected );
 
@@ -8637,7 +8842,7 @@ function pathsResolveFailing( test )
 function modulesEach( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'two-in-exported' );
+  let a = context.assetFor( test, 'twoInExported' );
   let opener;
 
   /* - */
@@ -8754,7 +8959,7 @@ function modulesEach( test )
 function modulesEachDuplicates( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'hierarchy-duplicate' );
+  let a = context.assetFor( test, 'hierarchyDuplicate' );
   let opener;
 
   /* - */
@@ -8848,7 +9053,7 @@ function modulesEachDuplicates( test )
 function filesFromResource( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
   let opener;
 
   /* - */
@@ -8862,10 +9067,19 @@ function filesFromResource( test )
 
   a.ready.then( () =>
   {
-    test.case = 'resolve resource';
+    test.case = 'resolve resource - directory does not exist';
     let module = opener.openedModule;
     let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
     test.identical( got, a.abs([ 'out' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve resource - directory exists';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::proto}', currentContext : module });
+    test.identical( got, a.abs([ 'proto' ]) );
     return null;
   });
 
@@ -8875,6 +9089,26 @@ function filesFromResource( test )
     let module = opener.openedModule;
     let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
     test.identical( got, a.abs([ './out/debug' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve directory from absolute path';
+    let module = opener.openedModule;
+    let selector = a.abs( 'proto/' );
+    let got = module.filesFromResource({ selector, currentContext : module });
+    test.identical( got, a.abs([ './proto' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve directory from relative path';
+    let module = opener.openedModule;
+    let selector = './proto/';
+    let got = module.filesFromResource({ selector, currentContext : module });
+    test.identical( got, a.abs([ './proto' ]) );
     return null;
   });
 
@@ -8888,13 +9122,12 @@ function filesFromResource( test )
 function submodulesRemoteResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-remote-repos' );
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
   let opener;
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
@@ -8995,10 +9228,99 @@ function submodulesRemoteResolve( test )
 
 //
 
+function submodulesRemoteResolveNotDownloaded( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfSub : 1, });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  });
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+
+    test.case = 'resolve all submodules, default options';
+    var submodules = module.submodulesResolve({ selector : 'submodule::*' });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 0';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 0,
+      pathUnwrapping : 0,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 1, preservingIteration - 0';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 0,
+      pathUnwrapping : 1,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ] instanceof _.will.ModulesRelation );
+    test.true( submodules[ 1 ] instanceof _.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 0, preservingIteration - 1';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 1,
+      pathUnwrapping : 0,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ].currentModule instanceof _.will.Module );
+    test.true( submodules[ 1 ].currentModule instanceof _.will.Module );
+    test.true( submodules[ 0 ].currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+    test.true( submodules[ 1 ].currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+
+    test.case = 'resolve all submodules, pathUnwrapping - 1, preservingIteration - 1';
+    var submodules = module.submodulesResolve
+    ({
+      selector : 'submodule::*',
+      preservingIteration : 1,
+      pathUnwrapping : 1,
+    });
+    test.true( _.arrayIs( submodules ) );
+    test.true( submodules[ 0 ].currentModule instanceof _.will.Module );
+    test.true( submodules[ 1 ].currentModule instanceof _.will.Module );
+    test.true( submodules[ 0 ].currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+    test.true( submodules[ 1 ].currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function submodulesLocalResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-local-repos' );
+  let a = context.assetFor( test, 'submodulesLocalRepos' );
   let opener;
 
   /* - */
@@ -9107,7 +9429,7 @@ function submodulesLocalResolve( test )
 function submodulesDeleteAndDownload( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-del-download' );
+  let a = context.assetFor( test, 'submodulesDelDownload' );
   let opener;
 
   /* */
@@ -9293,7 +9615,7 @@ function customLogger( test )
 function resourcePathRemote( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'export-informal' );
+  let a = context.assetFor( test, 'exportInformal' );
   let opener;
 
   a.ready
@@ -9349,7 +9671,7 @@ function resourcePathRemote( test )
 function moduleIsNotValid( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-download-errors' );
+  let a = context.assetFor( test, 'submodulesDownloadErrors' );
   let opener;
 
   a.ready
@@ -10995,6 +11317,10 @@ let Self =
 
     exportsResolve,
     buildsResolve,
+    moduleResolveSimple,
+    moduleResolve,
+
+    framePerform,
 
     trivialResolve,
     detailedResolve,
@@ -11018,6 +11344,7 @@ let Self =
     modulesEachDuplicates,
     filesFromResource,
     submodulesRemoteResolve,
+    submodulesRemoteResolveNotDownloaded,
     submodulesLocalResolve,
     submodulesDeleteAndDownload,
 

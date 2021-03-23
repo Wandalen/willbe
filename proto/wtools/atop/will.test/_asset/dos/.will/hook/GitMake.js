@@ -26,10 +26,10 @@ function onGitMake( context )
   {
 
     let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    if( config && config.about && config.path.remoteRepository )
+    if( config && config.path && config.path.remoteRepository )
     {
       _.mapSupplement( config, context );
-      remotePath = _.resolver2.resolve
+      remotePath = _.resolverAdv.resolve
       ({
         src : config,
         selector : config.path.remoteRepository,

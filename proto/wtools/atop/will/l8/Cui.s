@@ -556,11 +556,11 @@ function _commandListLike( o )
 
         let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         _.assert( e.request === undefined );
-        e.request = _.will.Resolver.strRequestParse( e.commandArgument );
+        e.request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
 
-        if( _.will.Resolver.selectorIs( e.request.subject ) )
+        if( _.will.resolver.Resolver.selectorIs( e.request.subject ) )
         {
-          let splits = _.will.Resolver.selectorShortSplit
+          let splits = _.will.resolver.Resolver.selectorShortSplit
           ({
             selector : e.request.subject,
             defaultResourceKind : o.resourceKind,
@@ -569,7 +569,7 @@ function _commandListLike( o )
           resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         }
 
-        if( resourceKindIsGlob && e.request.subject && !_.will.Resolver.selectorIs( e.request.subject ) )
+        if( resourceKindIsGlob && e.request.subject && !_.will.resolver.Resolver.selectorIs( e.request.subject ) )
         {
           e.request.subject = '*::' + e.request.subject;
         }
@@ -1215,7 +1215,7 @@ commandImply.commandProperties =
 //   /* qqq xxx : apply to other top modules */
 //   _.assert( !!isolated );
 //
-//   let request = _.will.Resolver.strRequestParse( isolated.commandArgument );
+//   let request = _.will.resolver.Resolver.strRequestParse( isolated.commandArgument );
 //   will._propertiesImply( request.map );
 //
 //   // let namesMap =
@@ -1508,7 +1508,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = cui.logger;
-    let request = _.will.Resolver.strRequestParse( e.commandArgument );
+    let request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -1542,7 +1542,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = cui.logger;
-    let request = _.will.Resolver.strRequestParse( e.commandArgument );
+    let request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -1838,6 +1838,10 @@ function commandSubmodulesVersionsDownload( e )
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+
   cui._propertiesImply( implyMap );
 
   return cui._commandCleanLike
@@ -1863,7 +1867,7 @@ function commandSubmodulesVersionsDownload( e )
 
 }
 
-commandSubmodulesVersionsDownload.defaults = commandImply.defaults;
+commandSubmodulesVersionsDownload.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
 commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
@@ -1883,6 +1887,10 @@ function commandSubmodulesVersionsUpdate( e )
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
@@ -1897,12 +1905,13 @@ function commandSubmodulesVersionsUpdate( e )
   {
     let o2 = cui.filterImplied();
     o2 = _.mapExtend( o2, e.propertiesMap );
+
     return it.opener.openedModule.subModulesUpdate( o2 );
   }
 
 }
 
-commandSubmodulesVersionsUpdate.defaults = commandImply.defaults;
+commandSubmodulesVersionsUpdate.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
@@ -1910,6 +1919,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  to : 'Checkouts root and each of it submodules to specified version/tag',
   ... commandImply.commandProperties,
 }
 
@@ -2027,6 +2037,9 @@ function commandSubmodulesGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -2053,6 +2066,7 @@ function commandSubmodulesGit( e )
       command : e.subject,
       verbosity : cui.verbosity,
       hardLinkMaybe,
+      profile,
     });
   }
 }
@@ -2063,6 +2077,7 @@ commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandSubmodulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -2233,7 +2248,12 @@ function commandSubmodulesGitSync( e )
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
     provider =
-    rootOpener.openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    rootOpener.openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : e.propertiesMap.verbosity,
+      profile : e.propertiesMap.profile
+    });
 
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -2256,7 +2276,6 @@ function commandSubmodulesGitSync( e )
 
   function onModulesEnd( openers )
   {
-    debugger;
     provider.archive.restoreLinksEnd();
   }
 }
@@ -2265,6 +2284,7 @@ commandSubmodulesGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -2276,6 +2296,7 @@ commandSubmodulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -2393,6 +2414,9 @@ function commandModulesGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -2419,6 +2443,7 @@ function commandModulesGit( e )
       command : e.subject,
       verbosity : cui.verbosity,
       hardLinkMaybe,
+      profile,
     });
   }
 }
@@ -2429,6 +2454,7 @@ commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandModulesGit.commandProperties = commandImply.commandProperties;
 commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandModulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -2598,8 +2624,12 @@ function commandModulesGitSync( e )
     let pathsContainer = [];
     for( let i = 0 ; i < openers.length ; i++ )
     pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    openers[ 0 ].openedModule._providerArchiveMake( cui.fileProvider.path.common( pathsContainer ), e.propertiesMap.verbosity );
+    provider = openers[ 0 ].openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : e.propertiesMap.verbosity,
+      profile : e.propertiesMap.profile,
+    });
 
     if( e.propertiesMap.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
@@ -2630,6 +2660,7 @@ commandModulesGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -2641,6 +2672,7 @@ commandModulesGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -2894,6 +2926,7 @@ commandSubmodulesClean.commandProperties =
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+  force : 'Force cleaning. force:0 - checks submodules for local changes before cleanup, force:1 - removes submodules without any checks.',
   ... commandImply.commandProperties,
 }
 
@@ -3052,6 +3085,9 @@ function commandGit( e )
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
+  let profile = commandOptions.profile;
+  if( profile !== undefined )
+  delete commandOptions.profile;
 
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -3087,6 +3123,7 @@ commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandProperties = commandImply.commandProperties;
 commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -3178,6 +3215,9 @@ function commandGitPull( e )
 {
   let cui = this;
   cui._command_head( commandGitPull, arguments );
+  let profile = e.propertiesMap.profile;
+  if( 'profile' in e.propertiesMap )
+  delete e.propertiesMap.profile;
 
   _.routineOptions( commandGitPull, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -3196,6 +3236,7 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.verbosity,
+      profile,
     });
   }
 }
@@ -3205,6 +3246,7 @@ commandGitPull.defaults.withSubmodules = 0;
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
+commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
 
@@ -3375,6 +3417,7 @@ commandGitSync.defaults =
 {
   dirPath : null,
   dry : 0,
+  profile : 'default',
   v : null,
   verbosity : 1,
 };
@@ -3386,6 +3429,7 @@ commandGitSync.commandProperties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
 
 //
@@ -3554,7 +3598,7 @@ function commandEach( e )
   _.assert( e.parsedCommands[ commandIndex + 1 ], 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
   let con;
-  if( _.will.Resolver.selectorIs( e.commandArgument ) )
+  if( _.will.resolver.Resolver.selectorIs( e.commandArgument ) )
   {
     con = cui.modulesFindEachAt
     ({

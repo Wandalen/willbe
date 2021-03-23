@@ -421,7 +421,7 @@ function submodulesRelationsFilter( o )
 //   let junctions = junction.submodulesJunctionsFilter( o );
 //
 //   // if( o.withPeers )
-//   // _.arrayPrependOnce( junctions, junction ); /* xxx */
+//   // _.arrayPrependOnce( junctions, junction );
 //
 //   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 //
@@ -542,6 +542,17 @@ function moduleSet( src )
   return src;
 }
 
+//
+
+function moduleForResolveGet()
+{
+  let resource = this;
+  _.assert( arguments.length === 0 );
+  if( !resource.opener || !resource.opener.openedModule )
+  return null;
+  return resource.opener.openedModule;
+}
+
 // --
 // path
 // --
@@ -659,7 +670,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = _.will.Resolver;
+  // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -921,9 +932,9 @@ function resolve_body( o )
   return module.resolve.body.call( module, o );
 }
 
-_.routineExtend( resolve_body, Parent.prototype.resolve.body );
+_.routine.extendReplacing( resolve_body, Parent.prototype.resolve.body );
 
-let resolve = _.routineUnite( resolve_head, resolve_body );
+let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 
 // --
 // relations
@@ -978,7 +989,9 @@ let Accessors =
   longPath : { get : longPathGet },
   path : { set : pathSet },
   module : { combining : 'rewrite' },
+  moduleForResolve : { get : moduleForResolveGet, set : 0, combining : 'rewrite' },
 }
+
 
 let Forbids =
 {
@@ -1026,6 +1039,7 @@ let Extension =
   isAvailableGet,
   isAliveGet,
   moduleSet,
+  moduleForResolveGet,
 
   // path
 

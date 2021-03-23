@@ -46,7 +46,8 @@ function onModule( context )
   context.start( `git add --force .github` );
 
   context.start( `git add --all` );
-  context.start( `git commit ${context.request.original}` );
+  context.start( `git commit ${context.request.subject}` );
+  // context.start( `git commit ${context.request.original}` );
 
 }
 

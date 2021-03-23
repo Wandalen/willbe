@@ -1305,7 +1305,19 @@ function _repoDownload( o )
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   return ready
-  .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
+  // .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
+  .then( () =>
+  {
+    return opener.repo.status
+    ({
+      all : 1,
+      invalidating : 1,
+      isUpToDate : o.mode !== 'download',
+      downloadRequired : o.mode === 'download',
+      updateRequired : o.mode === 'update',
+      agreeRequired : o.mode === 'agree',
+    })
+  })
   .then( function( arg )
   {
     status = arg;
@@ -1633,7 +1645,18 @@ function _repoDownload( o )
     {
       reflectMap : { [ opener.remotePath ] : opener.downloadPath },
       verbosity : will.verbosity - 5,
-      extra : { fetching : 0 },
+      extra :
+      {
+        fetching : 0
+      },
+    }
+
+    if( o.mode === 'update' )
+    {
+      let vscTools = will.vcsToolsFor( opener.remotePath );
+      _.assert( !!vscTools )
+      if( _.longHas( vscTools.protocols, 'git' ) )
+      o2.extra.fetchingTags = 1;
     }
 
     if( downloading && !o.dry )

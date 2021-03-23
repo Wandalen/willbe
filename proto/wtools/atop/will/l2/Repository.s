@@ -546,6 +546,7 @@ function status( o )
     _.assert( _.boolIs( repo.isRepository ) );
     _.assert( _.boolIs( repo.remoteIsValid ) );
     _.assert( _.boolIs( repo.isUpToDate ) );
+
     let result = !repo.dirExists || !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate;
     repo._.updateRequired = result;
     return result;
@@ -715,6 +716,15 @@ Hash.defaults =
   remotePath : null,
 }
 
+//
+
+function remotePathChange( remotePath )
+{
+  let repo = this;
+  _.assert( _.strDefined( remotePath ) );
+  repo._.remotePath = remotePath;
+}
+
 // --
 // relations
 // --
@@ -845,6 +855,8 @@ let Extension =
 
   exportString,
   Hash,
+
+  remotePathChange,
 
   // relation
 

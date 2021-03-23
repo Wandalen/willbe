@@ -88,7 +88,7 @@ function onModule( context )
     verbosity : o.verbosity,
   });
 
-  context.start( 'local-will .export' );
+  context.start( 'will.local .export' );
 
   _.npm.fixate
   ({

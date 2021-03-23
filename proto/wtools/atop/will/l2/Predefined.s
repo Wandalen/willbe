@@ -379,7 +379,7 @@ function stepRoutineShell( frame )
   {
 
     _.assert( forEachDstReflector instanceof _.will.Reflector );
-    forEachDst = _.will.Resolver.resolveContextPrepare({ currentThis : forEachDstReflector, baseModule : module });
+    forEachDst = _.will.resolver.Resolver.сontextPrepare({ currentThis : forEachDstReflector, baseModule : module });
 
     for( let dst in forEachDst.filesGrouped )
     {
@@ -702,6 +702,7 @@ stepRoutineGitExecCommand.stepOptions =
 {
   command : null,
   hardLinkMaybe : 1,
+  profile : 'default',
 }
 
 stepRoutineGitExecCommand.uniqueOptions =
@@ -728,6 +729,7 @@ function stepRoutineGitPull( frame )
 stepRoutineGitPull.stepOptions =
 {
   dirPath : null,
+  profile : 'default',
 }
 
 stepRoutineGitPull.uniqueOptions =
@@ -845,6 +847,7 @@ stepRoutineGitSync.stepOptions =
 {
   commit : '-am "."',
   dirPath : null,
+  profile : 'default',
   dry : 0,
 }
 

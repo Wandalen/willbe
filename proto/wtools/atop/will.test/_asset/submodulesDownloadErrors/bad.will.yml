@@ -1,0 +1,5 @@
+about :
+  name : submodulesDownloadErrorsBad
+
+submodule :
+  ModuleForTesting2a : git+https:///githu.com/Wandalen/wModuleForTesting2a.git

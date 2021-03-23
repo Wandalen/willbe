@@ -41,7 +41,8 @@ function onModule( context )
     return null;
   }
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead({ profileDir : o.profile });
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = context.opener.dirPath;
   if( config && config.path && config.path.hlink )
@@ -92,5 +93,6 @@ onModule.defaults =
 {
   v : null,
   verbosity : 2,
+  profile : 'default',
 }
 module.exports = onModule;
