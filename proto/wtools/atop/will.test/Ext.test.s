@@ -5466,22 +5466,11 @@ function hookCallInfo( test )
   let a = context.assetFor( test, 'dos' );
   // aaa : modules for testing are still broken !!! /* Dmytro : fixed */
   // aaa : ?? /* Dmytro : a.appStart - mode : 'fork'; a.shell - mode : 'shell' */
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    mode : 'spawn',
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  });
-
   a.reflect();
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -5550,7 +5539,7 @@ function hookCallInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.ge( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );

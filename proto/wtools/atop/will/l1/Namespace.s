@@ -163,7 +163,7 @@ function WillfilesFindWithGlob( o )
     let onRecord = ( record ) =>
     {
       record = path.globShortFilter({ src : record, selector : o.filePath, onEvaluate : ( el ) => el.absolute });
-      if( globGetsAllNames && !o.withAllNamed )
+      if( record && globGetsAllNames && !o.withAllNamed )
       record = _.longHas( [ 'will', '.will', '.im.will', '.ex.will', '.out.will' ], record.name ) ? record : undefined;
       return record === null ? undefined : record;
     };
@@ -171,6 +171,7 @@ function WillfilesFindWithGlob( o )
 
     if( recursive < 2 )
     if( !_.strHas( o.filePath, '**' ) )
+    if( !path.isGlob( path.dir( o.filePath ) ) )
     return terminals;
 
     let o2 =
@@ -193,8 +194,10 @@ function WillfilesFindWithGlob( o )
     {
       o.filePath = path.join( dirs[ i ], './' );
       let records = _.Will.WillfilesFindAtDir( o );
-      _.arrayAppendArrayOnce( result, records, ( e1, e2 ) => e1.absolute === e2.absolute );
+      _.arrayAppendArray( result, records );
     }
+
+    result = _.arrayRemoveDuplicates( result, ( e1, e2 ) => e1.absolute === e2.absolute );
 
     return result;
   }
