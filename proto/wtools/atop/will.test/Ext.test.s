@@ -28077,7 +28077,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
   a.appStart( '.build clean.and.update.recursive.2' )
   .then( ( op ) =>
@@ -28092,7 +28092,7 @@ function commandSubmodulesClean( test )
 
   /* FAILS */
 
-  a.appStart( '.with ./* .submodules.clean ; .submodules.update recursive:1' )
+  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
@@ -28105,7 +28105,7 @@ function commandSubmodulesClean( test )
 
   /* FAILS */
 
-  a.appStart( '.with ./* .submodules.clean ; .submodules.update recursive:2' )
+  a.appStart( '.submodules.clean ; .submodules.update recursive:2' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
