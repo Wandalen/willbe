@@ -2983,7 +2983,6 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    debugger;
     let filterProperties = _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({

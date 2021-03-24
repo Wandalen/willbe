@@ -636,9 +636,6 @@ function unform()
   let module = this;
   let will = module.will;
 
-  // if( module.id === 1004 )
-  // debugger;
-
   if( module.formed2 <= 0 ) /**/
   return;
 
@@ -1505,9 +1502,6 @@ function predefinedStepMake( o )
   let module = this;
   let will = module.will;
 
-  // if( o.name === 'files.delete' )
-  // debugger;
-
   if( module.stepMap[ o.name ] )
   return module.stepMap[ o.name ].form1();
 
@@ -1812,8 +1806,6 @@ function reopen()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let junction = will.junctionReform( module );
-  if( junction.openers.length !== 1 )
-  debugger;
   junction.openers.forEach( ( opener2 ) =>
   {
     ready.then( () => opener2.reopen() );
@@ -2506,8 +2498,6 @@ function exportedMake( o )
     if( !module.peerModule )
     {
       if( o.purging )
-      debugger;
-      if( o.purging )
       return _.Consequence.From( module.outModuleMake() ).then( () => makeFromPeer() );
       else
       return module.outModuleOpenOrMake().then( () => makeFromPeer() );
@@ -3194,14 +3184,10 @@ function moduleFixate( o )
     if( !o.dry && fixatedPath )
     {
       let opened = submodule.formed >= 3;
-      if( opened )
-      debugger;
       submodule.close();
       submodule.path = fixatedPath; /* Dmytro : I think, options path has proxy or setter that affects field longPath */
       if( submodule.opener )
       submodule.opener.remotePath = fixatedPath;
-      if( opened )
-      debugger;
       if( opened )
       submodule.form();
     }
@@ -3355,13 +3341,11 @@ function moduleFixateAct( o )
 
       if( !_.strHas( code, o.originalPath ) )
       {
-        // debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
       if( !_.strHas( code, o.replacer ) )
       {
-        // debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
@@ -3387,7 +3371,6 @@ function moduleFixateAct( o )
     }
     catch( err )
     {
-      debugger;
       let error = _.err( err, '\nFailed to fixated ' + _.color.strFormat( willfilePath, 'path' ) );
       if( o.reportingNegative )
       {
@@ -3713,7 +3696,6 @@ function submodulesRelationsFilter( o )
     return;
     if( !junction2.object )
     return;
-    // debugger;
     _.arrayAppendOnceStrictly( result, junction2.object );
     _.arrayAppendOnceStrictly( resultJunctions, junction2 );
   });
@@ -3853,7 +3835,6 @@ function submodulesAdd( o )
 
     if( _.any( module.submoduleMap, ( relation ) => will.junctionFrom( relation ) === junction ) )
     {
-      debugger;
       return;
     }
 
@@ -3874,13 +3855,11 @@ function submodulesAdd( o )
 
   ready.finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw _.err( err, `\nFaield add new submodules to ${module.nameWithLocationGet()}` );
     return counter;
   });
 
-  debugger;
   return ready;
 }
 
@@ -3948,9 +3927,7 @@ function _subModulesForm()
 
   // console.log( '_subModulesForm', module.absoluteName ); debugger; /* yyy */
 
-  // debugger;
   module._resourcesAllForm( _.will.ModulesRelation, con );
-  // debugger;
 
   con.finally( ( err, arg ) =>
   {
@@ -4035,7 +4012,6 @@ function peerModuleOpen( o )
 
     if( module.isOut && module.rootModule === module )
     {
-      // debugger;
       delete o2.rootModule;
     }
 
@@ -4078,7 +4054,6 @@ function peerModuleOpen( o )
       {
         if( module.isOut && module.rootModule === module )
         {
-          // debugger;
           module.rootModule = peerModule.rootModule;
         }
       }
@@ -4157,7 +4132,6 @@ function peerModuleSet( src )
 
   if( src && src.remotePath )
   {
-    // debugger;
     let peerRemotePath = src.peerRemotePathGet();
     /*
       if peer module is not formed then peerRemotePath is not deducable
@@ -4179,7 +4153,6 @@ function peerModuleSet( src )
     let path = fileProvider.path;
     if( src.peerModule !== null && src.peerModule !== module )
     {
-      debugger;
       throw _.err
       (
         'Several peer modules'
@@ -4914,7 +4887,6 @@ function cleanLog( o )
     o.files = module.cleanWhat( o2 );
   }
 
-  debugger;
   let o3 = _.mapOnly( o, will.cleanLog.defaults );
   return will.cleanLog( o3 );
 }
@@ -4944,8 +4916,6 @@ function clean( o )
 
   let o2 = _.mapOnly( o, module.cleanWhat.defaults );
   o.files = module.cleanWhat( o2 );
-
-  debugger;
 
   let o3 = _.mapOnly( o, will.cleanDelete.defaults );
   will.cleanDelete( o3 );
@@ -5062,7 +5032,6 @@ _.assert( resolve.defaults === resolve.defaults.Looker );
 // let resolveMaybe = _.routine.uniteCloning_( resolve_head, resolve_body );
 // _.routineExtend( resolveMaybe, _.will.resolver.resolveMaybe );
 
-// debugger;
 _.assert( _.will.resolver.resolveMaybe.defaults.missingAction === 'undefine' );
 // _.assert( _.will.resolver.resolveMaybe.body.defaults.missingAction === 'undefine' ); /* xxx : uncomment */
 let resolveMaybe_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.resolveMaybe.defaults } );
@@ -5839,7 +5808,6 @@ function cloneDirPathGet( rootModule )
     let inPath = rootModule.peerInPathGet();
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
-    debugger;
     if( will.verbosity )
     logger.error( ` ! Out willfile of ${rootModule.localPath} does not have path::module.peer.in, but should` );
     return null;
@@ -6593,9 +6561,7 @@ function infoExportPaths( paths )
 
   // paths = module.pathsRelative({ basePath : module.dirPath, filePath : paths, onlyLocal : 1 });
 
-  debugger;
   result += '\n' + _.entity.exportStringNice( paths ) + '';
-  debugger;
 
   result += '\n\n';
 
@@ -6647,7 +6613,6 @@ function infoExportModulesTopological()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  debugger;
   let sorted = will.graphTopSort();
   // let sorted = will.graphTopologicalSort(); /* Dmytro : old routine name */
 
@@ -6807,7 +6772,6 @@ function structureExportOut( o )
   {
     if( !( module2 instanceof _.will.Module ) )
     {
-      debugger;
       let junction = will.junctionFrom( module2 );
       throw _.err
       (
@@ -6860,7 +6824,6 @@ function structureExportForModuleExport( o )
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
   let structure = module2.structureExportOut();
 
-  debugger;
   if( !module2.isUsedManually() )
   debugger;
   if( !module2.isUsedManually() )
@@ -8563,7 +8526,7 @@ function npmModulePublish( o )
   let version;
   ready.then( () =>
   {
-    version = module.about.version = module.willfileVersionBump( Object.create( null ) );
+    version = module.willfileVersionBump( Object.create( null ) );
     return null;
   });
 
@@ -8579,16 +8542,18 @@ function npmModulePublish( o )
     return null;
   });
 
-  ready.then( () =>
+  ready.then( () => module.reopen() );
+  ready.then( ( op ) =>
   {
+    module = op;
     let filterProperties = _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } );
     return module.modulesExport
     ({
       ... filterProperties,
       doneContainer : [],
       name : '',
-      criterion : { default : 1 },
-      recursive : 2,
+      criterion : {},
+      recursive : 0,
       kind : 'export',
     });
   });
