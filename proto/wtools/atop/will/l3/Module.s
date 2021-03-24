@@ -8608,7 +8608,7 @@ function npmModulePublish( o )
     });
   });
 
-  ready.then( () => packageJsonFormat() );
+  ready.then( () => _.npm.packageJsonFormat({ filePath : packagePath }) );
 
   ready.then( () =>
   {
@@ -8656,42 +8656,6 @@ function npmModulePublish( o )
     {
       dep.version = about.version;
     }
-  }
-
-  /* */
-
-  function packageJsonFormat()
-  {
-    // let formatter = require.resolve( 'pkgfmt' );
-    // return _.process.start
-    // ({
-    //   mode : 'shell',
-    //   args : [ packagePath ],
-    //   execPath : `node ${ formatter }`,
-    //   currentPath : module.dirPath,
-    // });
-    let dependencies = [ 'dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies' ];
-    // let config = JSON.parse( fs.readFileSync( packagePath, { encoding : 'utf-8' } ) );
-    let config = JSON.parse( fileProvider.fileRead( packagePath ) );
-    for( let i = 0; i < dependencies.length; i++ )
-    if( config[ dependencies[ i ] ] )
-    config[ dependencies[ i ] ] = sortProperties( config[ dependencies[ i ] ] );
-    fileProvider.fileWrite( packagePath, JSON.stringify( config, null, "  " ) + "\n" );
-
-    return null;
-  }
-
-  /* */
-
-  function sortProperties( src )
-  {
-    let result = Object.create( null );
-    let keys = _.mapKeys( src );
-    keys.sort( ( a, b ) => a.toLowerCase().localeCompare( b.toLowerCase() ) );
-
-    for( let i = 0; i < keys.length; i++ )
-    result[ keys[ i ] ] = src[ keys[ i ] ];
-    return result;
   }
 }
 
