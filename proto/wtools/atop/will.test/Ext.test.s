@@ -38654,6 +38654,36 @@ Checks if command tag:
  - Checkouts selected submodules to specific tag
 `
 
+//
+
+function willFilterFieldsOverwrite( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
+  a.reflect();
+
+  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  return a.ready;
+}
+
+willFilterFieldsOverwrite.rapidity = 1;
+willFilterFieldsOverwrite.description =
+
+`
+Filter fields overwrite problem:
+Command can modify filter fields of main( will ). It can break behavior of other commands that may be executed in the sequence.
+This test runs two commands with different filtering options in the sequence to check if problem is fixed.
+`
+
 // --
 // declare
 // --
@@ -39009,7 +39039,9 @@ let Self =
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
 
     commandsSubmoduleSafety,
-    commandSubmodulesUpdateOptionTo
+    commandSubmodulesUpdateOptionTo,
+
+    willFilterFieldsOverwrite
 
   }
 
