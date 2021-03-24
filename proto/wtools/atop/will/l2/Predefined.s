@@ -922,6 +922,7 @@ function stepRoutineModulesUpdate( frame )
 
     let o2 = _.mapOnly( opts, opener.repoUpdate.defaults );
     o2.strict = 0;
+    o2.opening = 0;
     return opener.repoUpdate( o2 );
   })
 
