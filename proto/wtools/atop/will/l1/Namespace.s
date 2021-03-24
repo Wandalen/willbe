@@ -158,21 +158,15 @@ function WillfilesFindWithGlob( o )
 
     /* */
 
-    let terminals = _WillfilesFindTerminalsWithGlob( o );
-    let globGetsAllNames = _.strBegins( path.name( o.filePath ), [ '?', '*' ] );
-    let onRecord = ( record ) =>
-    {
-      record = path.globShortFilter({ src : record, selector : o.filePath, onEvaluate : ( el ) => el.absolute });
-      if( record && globGetsAllNames && !o.withAllNamed )
-      record = _.longHas( [ 'will', '.will', '.im.will', '.ex.will', '.out.will' ], record.name ) ? record : undefined;
-      return record === null ? undefined : record;
-    };
-    _.filter_( terminals, terminals, onRecord );
+    let terminals = willfilesFindTerminals();
 
     if( recursive < 2 )
     if( !_.strHas( o.filePath, '**' ) )
     if( !path.isGlob( path.dir( o.filePath ) ) )
     return terminals;
+
+    if( !_.strHas( path.fullName( o.filePath ), '**' ) )
+    filter.recursive = 1;
 
     let o2 =
     {
@@ -200,6 +194,23 @@ function WillfilesFindWithGlob( o )
     result = _.arrayRemoveDuplicates( result, ( e1, e2 ) => e1.absolute === e2.absolute );
 
     return result;
+  }
+
+  /* */
+
+  function willfilesFindTerminals()
+  {
+    let terminals = _WillfilesFindTerminalsWithGlob( o );
+    let globGetsAllNames = _.strBegins( path.name( o.filePath ), [ '?', '*' ] );
+    let onRecord = ( record ) =>
+    {
+      record = path.globShortFilter({ src : record, selector : o.filePath, onEvaluate : ( el ) => el.absolute });
+      if( record && globGetsAllNames && !o.withAllNamed )
+      record = _.longHas( [ 'will', '.will', '.im.will', '.ex.will', '.out.will' ], record.name ) ? record : undefined;
+      return record === null ? undefined : record;
+    };
+    _.filter_( terminals, terminals, onRecord );
+    return terminals;
   }
 }
 
