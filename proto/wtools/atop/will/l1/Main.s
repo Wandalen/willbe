@@ -4343,7 +4343,7 @@ function WillfilesFind( o )
 
   function _willfilesFind( filePath )
   {
-    return _.Will.WillfilesFindWithGlob
+    let willfiles = _.Will.WillfilesFindWithGlob
     ({
       filePath,
       recursive,
@@ -4353,6 +4353,24 @@ function WillfilesFind( o )
       withAllNamed : _.strEnds( filePath, '*' ),
       excludingUnderscore : o.excludingUnderscore,
     });
+
+    return willfilesSort( willfiles );
+  }
+
+  function willfilesSort( willfiles )
+  {
+    let result = [];
+    willfiles.forEach( ( willfile ) =>
+    {
+      if( _.Will.PathIsOut( willfile.absolute ) )
+      result.push( willfile );
+    });
+    willfiles.forEach( ( willfile ) =>
+    {
+      if( !_.Will.PathIsOut( willfile.absolute ) )
+      result.push( willfile );
+    });
+    return result;
   }
 
   // if( _.strIs( o ) )
