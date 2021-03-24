@@ -39068,12 +39068,12 @@ function commandsSubmoduleSafety( test )
   run({ command : 'versions.agree', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
   run({ command : 'versions.agree', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
   run({ command : 'versions.agree', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 0, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 0, deleted : 0 })
+  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 0, deleted : 0 })
   run({ command : 'versions.agree', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, redownloaded : 1 })
+  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, redownloaded : 1 })
   run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 })
 
   /* */
@@ -39172,7 +39172,19 @@ function commandsSubmoduleSafety( test )
       return null;
 
       env.moduleFilesAfter = a.moduleFilesGet();
-      test.ge( env.moduleFilesAfter.length, env.moduleFilesBefore.length );
+
+      if( env.redownloaded )
+      {
+        test.le( env.moduleFilesBefore.length, env.moduleFilesAfter.length );
+        let config = _.git.configRead( a.localPath );
+        let originUrl = config[ 'remote "origin"' ].url;
+        let expected = 'https://github.com/Wandalen/wModuleForTesting1.git';
+        test.identical( originUrl, expected );
+      }
+      else
+      {
+        test.ge( env.moduleFilesAfter.length, env.moduleFilesBefore.length );
+      }
 
       if( env.isGitRepo )
       {
@@ -39298,10 +39310,11 @@ function commandsSubmoduleSafety( test )
       a.fileProvider.fileRename( a.path.join( a.localPath, '.git_disabled' ), a.path.join( a.localPath, '.git' ) );
       if( env.isNpmModule )
       a.fileProvider.fileRename( a.path.join( a.localPath, 'package_disabled.json' ), a.path.join( a.localPath, 'package.json' ) );
+      a.moduleFilesBefore = a.moduleFilesGet();
     }
     routinesPost[ 'notGitReporOrNpmModule' ] = ( env ) =>
     {
-      if( env.deleted )
+      if( env.deleted || env.redownloaded )
       return;
       if( env.isGitRepo )
       a.fileProvider.fileRename( a.path.join( a.localPath, '.git' ), a.path.join( a.localPath, '.git_disabled' ) );

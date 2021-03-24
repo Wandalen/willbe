@@ -19,6 +19,11 @@
   module is not valid( - isValid )                              e        e      rd     -
   module is on different branch( - isUpToDate )                 -        c      c      -
   module is not up to date( - isUpToDate )                      -        u      u      .
+  module is downloaded, specified tag doesn't exist             .        e      e      e
+  module is not downloaded, specified tag doesn't exist         e        e      e      e
+  module is not downloaded, specified url is not valid          e        e      e      e
+  module is downloaded, specified url is not valid              .        e      e      e
+
 
   d - downloads module
   r - removes module
