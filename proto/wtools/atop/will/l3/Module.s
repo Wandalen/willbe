@@ -2975,6 +2975,19 @@ function submodulesClean()
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
+  let modules = module.modulesEachAll
+  ({
+    withPeers : 1,
+    withStem : 0,
+    recursive : 2,
+    outputFormat : '/'
+  });
+  modules.forEach( ( junction ) =>
+  {
+    if( junction.opener )
+    junction.opener.close();
+  });
+
   let result = module.clean
   ({
     cleaningSubmodules : 1,
