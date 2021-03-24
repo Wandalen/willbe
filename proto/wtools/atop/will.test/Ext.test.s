@@ -57,7 +57,7 @@ let _ = _global_.wTools;
 function onSuiteBegin()
 {
   let context = this;
-  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
@@ -5614,7 +5614,6 @@ function hookGitMake( test )
   });
 
   a.appStart({ execPath : '.module.new New2/' })
-
   .then( ( op ) =>
   {
     var exp = [ '.', './will.yml' ];
@@ -5626,15 +5625,9 @@ function hookGitMake( test )
       remotePath : `https://github.com/${user}/New2`,
       token : config.about[ 'github.token' ],
     });
-  })
-
-  .then( () =>
-  {
-    debugger;
-    return null;
   });
-  a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
+  a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5652,7 +5645,7 @@ function hookGitMake( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -9391,8 +9384,8 @@ function listSingleModule( test )
   {
     test.case = 'resources list globs negative';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1'  ) );
-    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2'  ) );
+    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1' ) );
+    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2' ) );
     test.true( _.strHas( op.output, 'reflector::reflect.proto.debug' ) );
     test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
     test.true( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
@@ -9411,12 +9404,12 @@ function listSingleModule( test )
     test.case = '.resources.list *proto*';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ) );
     test.true( _.strHas( op.output, `files.reflect` ) );
 
-    test.true( _.strHas( op.output, 'build::proto.export'  ) );
+    test.true( _.strHas( op.output, 'build::proto.export' ) );
     test.true( _.strHas( op.output, `step::export.proto` ) );
 
     return null;
@@ -9430,8 +9423,8 @@ function listSingleModule( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, `out.debug : './out/debug'` ) );
     test.true( !_.strHas( op.output, `reflector::reflect.proto.debug` ) );
-    test.true( !_.strHas( op.output, 'step::reflect.proto.debug'  ) );
-    test.true( !_.strHas( op.output, 'build::debug.raw'  ) );
+    test.true( !_.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'build::debug.raw' ) );
 
     return null;
   })
@@ -9443,11 +9436,11 @@ function listSingleModule( test )
     test.case = 'globs and criterions positive';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'path::proto'  ) );
+    test.true( _.strHas( op.output, 'path::proto' ) );
 
-    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ) );
     test.true( _.strHas( op.output, `files.reflect` ) );
 
     test.identical( _.strCount( op.output, '::' ), 12 );
@@ -9480,8 +9473,8 @@ function listSingleModule( test )
     test.case = '.resources.list * debug:0 raw:1';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.raw'  ) );
-    test.true( _.strHas( op.output, 'build::release.raw'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.raw' ) );
+    test.true( _.strHas( op.output, 'build::release.raw' ) );
     test.identical( _.strCount( op.output, '::' ), 7 );
 
     return null;
@@ -10541,7 +10534,7 @@ function exportSingle( test )
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
     var files = a.find( a.abs( 'out' ) );
-    test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
+    test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.true( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
     var outfile = a.fileProvider.configRead( a.abs( 'out/single.out.will.yml' ) );
@@ -29633,7 +29626,9 @@ function commandModulesGitPrOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   return test.true( true );
 
@@ -31821,7 +31816,9 @@ function commandGitPrOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   return test.true( true );
 
@@ -31898,7 +31895,9 @@ function commandGitPrOpenRemote( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
   if( !config || !config.about || !config.about.name !== 'wtools-bot' )
   return test.true( true );
 
@@ -31994,7 +31993,8 @@ function commandGitPrOpenRemote( test )
     a.shell
     ({
       currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+      execPath :
+      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
     });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
@@ -33343,7 +33343,8 @@ function commandGitStatusWithPR( test )
     a.shell
     ({
       currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+      execPath :
+      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
     });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
@@ -35978,7 +35979,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -36043,7 +36044,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -36415,7 +36416,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -36450,7 +36451,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -36791,7 +36792,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -36856,7 +36857,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -37227,7 +37228,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -37262,7 +37263,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38175,7 +38176,7 @@ function commandsSubmoduleSafety( test )
 
     a.ready.then( () =>
     {
-      if( env.command == 'update' )
+      if( env.command === 'update' )
       if( env.case !== 'missing/tag' )
       {
         a.moduleFixateTag( 'dev1' );
@@ -38184,7 +38185,7 @@ function commandsSubmoduleSafety( test )
       if( routinesPre[ env.case ] )
       return routinesPre[ env.case ]( env ) || true;
       return null;
-    })
+    });
 
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
@@ -38192,7 +38193,7 @@ function commandsSubmoduleSafety( test )
     a.ready.tap( () =>
     {
       let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
-      if( env.command == 'update' && isGitModuleInCurrentState )
+      if( env.command === 'update' && isGitModuleInCurrentState )
       {
         let branch = _.git.tagLocalRetrive( a.localPath );
 
@@ -38228,7 +38229,7 @@ function commandsSubmoduleSafety( test )
       else
       test.identical( op.exitCode, 0 );
 
-      let expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
+      let expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}` });
       if( expectedOutput )
       _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
 
@@ -38479,7 +38480,7 @@ function commandSubmodulesUpdateOptionTo( test )
     ready : null
   })
 
-  a.init = ()=>
+  a.init = () =>
   {
     a.ready.then( () =>
     {
