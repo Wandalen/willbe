@@ -1951,6 +1951,18 @@ function commandSubmodulesVersionsUpdate( e )
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
 
+   /* Vova:
+     Hotfix. Fixes situations when previous command changed with* fields of the main.
+     Remove after moving FilterFields fields out of the main and passing them as options( where possoble ).
+  */
+  _.mapSupplement( implyMap,
+  {
+    withOut : 1,
+    withInvalid : 1,
+    withValid : 1,
+    withEnabled : 1
+  })
+
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
