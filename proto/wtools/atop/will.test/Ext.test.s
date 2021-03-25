@@ -38033,6 +38033,157 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
 //
 
+function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    submodulesDuplicate();
+
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single secondaryPath:Submodule.will.yml' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let submoduleConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
+
+    let willConfigKeys = _.mapKeys( willConfig.submodule );
+    var exp = [ 'eslint', 'NpmFromWillfile', 'wTesting', 'babel', 'willbe' ];
+    test.identical( willConfigKeys, exp );
+    let imWillConfigKeys = _.mapKeys( imWillConfig.submodule );
+    var exp = [ 'eslint', 'NpmFromWillfile', 'wTesting' ];
+    test.identical( imWillConfigKeys, exp );
+    let submoduleConfigkeys = _.mapKeys( submoduleConfig.submodule );
+    var exp =
+    [
+      'eslint',
+      'babel',
+      'NpmFromWillfile',
+      'wTesting',
+      'willbe',
+      'ESLINT',
+      'BABEL',
+      'NPMFROMWILLFILE',
+      'WTESTING',
+      'WILLBE'
+    ];
+    test.identical( submoduleConfigkeys, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    submodulesDuplicate();
+
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single secondaryPath:Submodule.will.yml filterSameSubmodules:0' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let submoduleConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
+
+    let willConfigKeys = _.mapKeys( willConfig.submodule );
+    var exp =
+    [
+      'eslint',
+      'NpmFromWillfile',
+      'wTesting',
+      'newsubmodule',
+      'babel',
+      'willbe',
+      'ESLINT',
+      'BABEL',
+      'NPMFROMWILLFILE',
+      'WTESTING',
+      'WILLBE'
+    ];
+    test.identical( willConfigKeys, exp );
+    let imWillConfigKeys = _.mapKeys( imWillConfig.submodule );
+    var exp = [ 'eslint', 'NpmFromWillfile', 'wTesting' ];
+    test.identical( imWillConfigKeys, exp );
+    let submoduleConfigkeys = _.mapKeys( submoduleConfig.submodule );
+    var exp =
+    [
+      'eslint',
+      'babel',
+      'NpmFromWillfile',
+      'wTesting',
+      'willbe',
+      'ESLINT',
+      'BABEL',
+      'NPMFROMWILLFILE',
+      'WTESTING',
+      'WILLBE'
+    ];
+    test.identical( submoduleConfigkeys, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function submodulesDuplicate()
+  {
+    test.case = 'filterSameSubmodules - 1';
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
+    let keys = _.mapKeys( config.submodule );
+    for( let i = 0 ; i < keys.length ; i++ )
+    config.submodule[ keys[ i ].toUpperCase() ] = config.submodule[ keys[ i ] ];
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Submodule.will.yml' ), data : config, encoding : 'yaml' });
+  }
+}
+
+//
+
 function commandsSubmoduleSafety( test )
 {
   let context = this;
@@ -39007,6 +39158,7 @@ let Self =
     commandWillfileSupplementWillfileWithOptions,
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
+    commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
 
     commandsSubmoduleSafety,
     commandSubmodulesUpdateOptionTo
