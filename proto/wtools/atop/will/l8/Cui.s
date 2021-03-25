@@ -4519,8 +4519,8 @@ function commandNpmPublish( e )
   {
     return it.opener.openedModule.npmModulePublish
     ({
-      commit : e.subject,
       ... e.propertiesMap,
+      commit : e.subject,
     });
   }
 }
