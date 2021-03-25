@@ -8470,35 +8470,9 @@ function npmModulePublish( o )
   if( !module.about.enabled )
   return;
 
-  let ready = module.gitSync
-  ({
-    commit : o.commit,
-    restoringHardLinks : 1,
-    v : 0,
-  });
-
+  let ready = moduleSync( o.commit );
   ready.deasync();
-
-  /* */
-
-  let diff;
-  if( !o.force )
-  {
-    try
-    {
-      diff = _.git.diff
-      ({
-        state2 : `!${ o.tag }`,
-        localPath : module.dirPath,
-        sync : 1,
-      });
-    }
-    catch( err )
-    {
-      _.errAttend( err );
-      logger.log( err );
-    }
-  }
+  let diff = moduleDiffsGet();
 
   if( o.force || !diff || diff.status )
   {
@@ -8530,7 +8504,64 @@ function npmModulePublish( o )
     return null;
   });
 
-  ready.then( () =>
+  ready.then( () => module.reopen() );
+  ready.then( ( reopened ) => { module = reopened; return null } );
+  ready.then( () => packageJsonGenerate() );
+  ready.then( () => moduleExport() );
+
+  let aboutCache = Object.create( null );
+  ready.then( () => npmFixate() );
+  ready.then( () => _.npm.packageJsonFormat({ filePath : packagePath }) );
+
+  ready.then( () => moduleSync( `-am "version ${ version }"` ) );
+  ready.then( () => module.gitTag({ name : `v${ version }` }) );
+  ready.then( () => module.gitTag({ name : o.tag }) );
+  ready.then( () => module.gitPush( Object.create( null ) ) );
+
+  ready.then( () => npmPublish() );
+
+  return ready;
+
+  /* */
+
+  function moduleSync( commit )
+  {
+    return module.gitSync
+    ({
+      commit,
+      restoringHardLinks : 1,
+      v : 0,
+    });
+  }
+
+  /* */
+
+  function moduleDiffsGet()
+  {
+    let diff;
+    if( !o.force )
+    {
+      try
+      {
+        diff = _.git.diff
+        ({
+          state2 : `!${ o.tag }`,
+          localPath : module.dirPath,
+          sync : 1,
+        });
+      }
+      catch( err )
+      {
+        _.errAttend( err );
+        logger.log( err );
+      }
+    }
+    return diff;
+  }
+
+  /* */
+
+  function packageJsonGenerate()
   {
     let currentContext = module.stepMap[ 'willfile.generate' ];
     module.npmGenerateFromWillfile
@@ -8540,12 +8571,12 @@ function npmModulePublish( o )
       verbosity : o.verbosity,
     });
     return null;
-  });
+  }
 
-  ready.then( () => module.reopen() );
-  ready.then( ( op ) =>
+  /* */
+
+  function moduleExport( op )
   {
-    module = op;
     let filterProperties = _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } );
     return module.modulesExport
     ({
@@ -8556,40 +8587,26 @@ function npmModulePublish( o )
       recursive : 0,
       kind : 'export',
     });
-  });
+  }
 
-  let aboutCache = Object.create( null );
-  ready.then( () =>
+  /* */
+
+  function npmFixate()
   {
-    let configPath = path.join( module.dirPath, 'package.json' );
     return _.npm.fixate
     ({
       dry : o.dry,
       localPath : module.dirPath,
-      configPath,
+      configPath : packagePath,
       tag : o.tag,
       onDependency,
       verbosity : o.verbosity - 2,
     });
-  });
+  }
 
-  ready.then( () => _.npm.packageJsonFormat({ filePath : packagePath }) );
+  /* */
 
-  ready.then( () =>
-  {
-    return module.gitSync
-    ({
-      commit : `-am "version ${ version }"`,
-      restoringHardLinks : 1,
-      v : 0,
-    });
-  });
-
-  ready.then( () => module.gitTag({ name : `v${ version }` }) );
-  ready.then( () => module.gitTag({ name : o.tag }) );
-  ready.then( () => module.gitPush( Object.create( null ) ) );
-
-  ready.then( () =>
+  function npmPublish()
   {
     return _.npm.publish
     ({
@@ -8597,9 +8614,7 @@ function npmModulePublish( o )
       tag : o.tag,
       verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
     });
-  });
-
-  return ready;
+  }
 
   /* */
 
