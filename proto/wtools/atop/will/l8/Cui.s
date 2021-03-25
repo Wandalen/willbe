@@ -316,13 +316,13 @@ function _propertiesImply( implyMap )
     verbosity : 'verbosity',
     beeping : 'beeping',
 
-    withOut : 'withOut',
-    withIn : 'withIn',
-    withEnabled : 'withEnabled',
-    withDisabled : 'withDisabled',
-    withValid : 'withValid',
-    withInvalid : 'withInvalid',
-    withSubmodules : 'withSubmodules',
+    // withOut : 'withOut',
+    // withIn : 'withIn',
+    // withEnabled : 'withEnabled',
+    // withDisabled : 'withDisabled',
+    // withValid : 'withValid',
+    // withInvalid : 'withInvalid',
+    // withSubmodules : 'withSubmodules',
   };
 
   _.process.inputReadTo
@@ -330,6 +330,7 @@ function _propertiesImply( implyMap )
     dst : will,
     propertiesMap : implyMap,
     namesMap,
+    only : 0
   });
 
 }
@@ -531,6 +532,9 @@ function _commandListLike( o )
   _.assert( _.objectIs( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+
   will._commandsBegin( o.commandRoutine );
 
   if( will.currentOpeners === null && will.currentOpener === null )
@@ -608,6 +612,9 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    will.transaction = null;
+
     will._commandsEnd( o.commandRoutine );
     if( err )
     logger.error( _.errOnce( err ) );
@@ -635,6 +642,9 @@ function _commandBuildLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -709,6 +719,9 @@ function _commandBuildLike( o )
 
   function end( err, arg )
   {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    will.transaction = null;
+
     will._commandsEnd( o.commandRoutine );
     if( err )
     debugger;
@@ -736,6 +749,9 @@ function _commandCleanLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -807,6 +823,9 @@ function _commandCleanLike( o )
 
   function end( err, arg )
   {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    will.transaction = null;
+
     will._commandsEnd( o.commandRoutine );
     if( err )
     debugger;
@@ -833,6 +852,9 @@ function _commandNewLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandNewLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -904,6 +926,9 @@ function _commandNewLike( o )
 
   function end( err, arg )
   {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    will.transaction = null;
+
     will._commandsEnd( o.commandRoutine );
     if( err )
     debugger;
@@ -949,6 +974,9 @@ function _commandTreeLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+
   will._commandsBegin( o.commandRoutine );
 
   _.assert( will.currentOpener === null );
@@ -979,6 +1007,9 @@ function _commandTreeLike( o )
   })
   .finally( ( err, arg ) =>
   {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    will.transaction = null;
+
     will._commandsEnd( o.commandRoutine );
     if( err )
     err = _.err( err, `\nFailed to ${o.name}` );
@@ -1007,6 +1038,9 @@ function _commandModulesLike( o )
   let cui = this;
   let logger = cui.logger;
   let ready = new _.Consequence().take( null );
+
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandModulesLike, arguments );
   _.mapSupplementNulls( o, cui.filterImplied() );
@@ -1038,6 +1072,9 @@ function _commandModulesLike( o )
 
   return ready.finally( ( err, arg ) =>
   {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    will.transaction = null;
+
     cui.currentOpeners = openers;
     cui._commandsEnd( o.commandRoutine );
     if( err )

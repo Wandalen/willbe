@@ -1055,20 +1055,29 @@ function filterDefaults( o )
 {
   let will = this.form();
 
-  if( o.withEnabledSubmodules === null && will.withEnabled !== undefined && will.withEnabled !== null )
-  o.withEnabledSubmodules = will.withEnabled;
-  if( o.withDisabledSubmodules === null && will.withDisabled !== undefined && will.withDisabled !== null )
-  o.withDisabledSubmodules = will.withDisabled;
+  _.assert( will.transaction instanceof _.will.Transaction );
 
-  if( o.withEnabledModules === null && will.withEnabled !== undefined && will.withEnabled !== null )
-  o.withEnabledModules = will.withEnabled;
-  if( o.withDisabledModules === null && will.withDisabled !== undefined && will.withDisabled !== null )
-  o.withDisabledModules = will.withDisabled;
+  if( o.withEnabledSubmodules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  o.withEnabledSubmodules = will.transaction.withEnabled;
+  if( o.withDisabledSubmodules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  o.withDisabledSubmodules = will.transaction.withDisabled;
+
+  if( o.withEnabledModules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  o.withEnabledModules = will.transaction.withEnabled;
+  if( o.withDisabledModules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  o.withDisabledModules = will.transaction.withDisabled;
 
   for( let n in _.Will.RelationFilterDefaults )
   {
-    if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
-    o[ n ] = will[ n ];
+    // if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
+    // o[ n ] = will[ n ];
+    if( o[ n ] === null )
+    {
+      if( will.transaction[ n ] !== undefined && will.transaction[ n ] !== null )
+      o[ n ] = will.transaction[ n ];
+      else if( will[ n ] !== undefined && will[ n ] !== null )
+      o[ n ] = will[ n ];
+    }
   }
 
   return o;
@@ -1233,13 +1242,37 @@ function moduleAt( willfilesPath )
 
 //
 
+// function filterImplied()
+// {
+//   let will = this;
+//   let result = Object.create( null );
+
+//   result.withDisabledModules = will.transaction.withDisabled;
+//   result.withEnabledModules = will.transaction.withEnabled;
+
+//   for( let f in will.FilterFields )
+//   {
+//     if( f === 'withDisabled' )
+//     continue;
+//     if( f === 'withEnabled' )
+//     continue;
+//     result[ f ] = will[ f ];
+//   }
+
+//   return result;
+// }
+
 function filterImplied()
 {
   let will = this;
   let result = Object.create( null );
 
-  result.withDisabledModules = will.withDisabled;
-  result.withEnabledModules = will.withEnabled;
+  let transaction = will.transaction;
+
+  _.assert( transaction instanceof _.will.Transaction );
+
+  result.withDisabledModules = will.transaction.withDisabled;
+  result.withEnabledModules = will.transaction.withEnabled;
 
   for( let f in will.FilterFields )
   {
@@ -1247,7 +1280,8 @@ function filterImplied()
     continue;
     if( f === 'withEnabled' )
     continue;
-    result[ f ] = will[ f ];
+    _.assert( _.definedIs( transaction[ f ] ) )
+    result[ f ] = transaction[ f ];
   }
 
   return result;
@@ -5373,7 +5407,9 @@ let Composes =
   withPath : null,
   // withSubmodules : null,
 
-  ... FilterFields,
+  // ... FilterFields,
+
+  transaction : null
 
 }
 
@@ -5432,7 +5468,7 @@ let Restricts =
 
 let Medials =
 {
-  withSubmodules : null,
+  // withSubmodules : null,
 }
 
 let Statics =
@@ -5491,7 +5527,11 @@ let Forbids =
   graphGroup : 'graphGroup',
   graphSystem : 'graphSystem',
   filesGraph : 'filesGraph',
+
+  withSubmodules : 'withSubmodules'
 }
+
+_.each( FilterFields, ( val, key ) => { Forbids[ key ] = key });
 
 let Accessors =
 {
@@ -5500,7 +5540,7 @@ let Accessors =
   hooks : { get : hooksGet, writable : 0 },
   environmentPath : { set : environmentPathSet },
   hooksPath : { get : hooksPathGet, writable : 0 },
-  withSubmodules : {},
+  // withSubmodules : {},
 
 }
 

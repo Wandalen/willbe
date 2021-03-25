@@ -10,6 +10,7 @@ if( typeof module !== 'undefined' )
   require( '../l0/Namespace.s' );
 
   require( '../l1/Main.s' );
+  require( '../l1/Transaction.s' );
 
   require( '../l2/About.s' );
   require( '../l2/BuildFrame.s' );

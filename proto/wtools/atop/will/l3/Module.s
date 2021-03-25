@@ -4017,12 +4017,12 @@ function peerModuleOpen( o )
       return null;
     }
 
-    if( module.isOut && !will.withIn )
+    if( module.isOut && !will.transaction.withIn )
     {
       return null;
     }
 
-    if( !module.isOut && !will.withOut )
+    if( !module.isOut && !will.transaction.withOut )
     {
       return null;
     }
