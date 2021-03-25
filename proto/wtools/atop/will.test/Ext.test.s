@@ -38978,8 +38978,8 @@ function commandsSubmoduleSafety( test )
 
   run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
   run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 }) // FAIL
+  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 1 })
+  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
   run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 })
   run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 })
   run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 })
@@ -38995,8 +38995,8 @@ function commandsSubmoduleSafety( test )
 
   run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })// FAIL
-  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
+  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })
+  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
   run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 })
@@ -39012,8 +39012,8 @@ function commandsSubmoduleSafety( test )
 
   run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
   run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })//FAIL
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })//FAIL
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })//qqq: Vova: fails, error is ignored
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })//qqq: Vova: fails, error is ignored
   run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 })
   run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 })
   run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 })
@@ -39029,8 +39029,8 @@ function commandsSubmoduleSafety( test )
 
   run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
   run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
   run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
   run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
@@ -39046,8 +39046,8 @@ function commandsSubmoduleSafety( test )
 
   run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
   run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 })
@@ -39157,7 +39157,9 @@ function commandsSubmoduleSafety( test )
       else
       test.identical( op.exitCode, 0 );
 
-      let expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
+      var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
+      if( _.objectIs( expectedOutput ) )
+      expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
       if( expectedOutput )
       _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
 
@@ -39216,7 +39218,14 @@ function commandsSubmoduleSafety( test )
     ({
       src : outputMap,
       selector : 'missing/tag',
-      set : { 'versions.verify' : `does not have files` }
+      set :
+      {
+        'versions.verify' :
+        {
+          'downloaded:0' : `does not have files`,
+          'downloaded:1' : `doesn't exist in local and remote copy of the repository`
+        },
+      }
     })
 
     routinesPre[ 'invalid/url' ] = () =>
