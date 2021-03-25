@@ -4427,13 +4427,15 @@ function commandWillfileMergeIntoSingle( e )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
+  let config;
+  if( e.propertiesMap.filterSameSubmodules )
+  filterSameSubmodules()
   if( e.propertiesMap.submodulesDisabling )
-  {
-    let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });
-    for( let dependency in config.submodule )
-    config.submodule[ dependency ].enabled = 0;
-    fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml' });
-  }
+  submodulesDisable();
+  if( config )
+  configWrite( dstPath.absolute, config );
+
+  /* */
 
   renameFiles();
 
@@ -4457,6 +4459,68 @@ function commandWillfileMergeIntoSingle( e )
       withIn : 1,
       withOut : 0,
     });
+  }
+
+  /* */
+
+  function filterSameSubmodules()
+  {
+    if( !config )
+    config = configRead( dstPath.absolute );
+
+    let submodules = config.submodule;
+    let regularPaths = new Set();
+    let mergedSubmodules = Object.create( null );
+    for( let name in submodules )
+    {
+      let parsed = _.uri.parse( submodules[ name ].path );
+
+      let parsedModuleName;
+      if( _.longHas( parsed.protocols, 'npm' ) )
+      {
+        parsedModuleName = _.npm.path.parse( submodules[ name ].path ).host;
+      }
+      else if( _.longHas( parsed.protocols, 'git' ) )
+      {
+        parsedModuleName = _.npm.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
+      }
+      else
+      {
+        if( regularPaths.has( submodules[ name ].path ) )
+        continue;
+
+        regularPaths.add( submodules[ name ].path );
+        parsedModuleName = name;
+      }
+
+      if( !( parsedModuleName in mergedSubmodules ) )
+      mergedSubmodules[ parsedModuleName ] = submodules[ name ];
+    }
+    config.submodule = mergedSubmodules;
+  }
+
+  /* */
+
+  function submodulesDisable()
+  {
+    if( !config )
+    config = configRead( dstPath.absolute );
+    for( let dependency in config.submodule )
+    config.submodule[ dependency ].enabled = 0;
+  }
+
+  /* */
+
+  function configRead( filePath )
+  {
+    return fileProvider.fileRead({ filePath, encoding : 'yaml' });
+  }
+
+  /* */
+
+  function configWrite( filePath, data )
+  {
+    fileProvider.fileWrite({ filePath, data, encoding : 'yaml' });
   }
 
   /* */
@@ -4492,12 +4556,14 @@ commandWillfileMergeIntoSingle.defaults =
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
+  filterSameSubmodules : 1,
 };
 commandWillfileMergeIntoSingle.commandProperties =
 {
-  primaryPath : 'Name of destination willfile',
+  primaryPath : 'Name of destination willfile. Default is `will.yml`',
   secondaryPath : 'Name of file to extend destination willfile',
-  submodulesDisabling : 'Disables submodules in the destination willfile',
+  submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1',
+  filterSameSubmodules : 'Enables filtering of submodules with the same path but different names. Default is 1',
 };
 
 //
