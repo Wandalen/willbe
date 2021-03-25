@@ -147,7 +147,7 @@ function init( o )
   let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
 
   will._.hooks = null
-  will._.withSubmodules = null;
+  // will._.withSubmodules = null;
 
   _.workpiece.initFields( will );
   Object.preventExtensions( will );
@@ -1005,8 +1005,8 @@ function recursiveValueDeduceFromBuild( o )
 
   _.routineOptions( recursiveValueDeduceFromBuild, arguments );
 
-  if( will.withSubmodules !== null )
-  return will.withSubmodules;
+  if( will.transaction.withSubmodules !== null )
+  return will.transaction.withSubmodules;
 
   o.modules = _.arrayAs( o.modules );
 
@@ -2057,10 +2057,10 @@ function modulesFindWithAt( o )
     });
 
     context.opener.find();
-    // if( _.boolLike( will.withSubmodules ) && context.opener.openedModule )
+    // if( _.boolLike( will.transaction.withSubmodules ) && context.opener.openedModule )
     // {
     //   debugger;
-    //   context.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubmodules );
+    //   context.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.transaction.withSubmodules );
     // }
     context.opener.open();
 
@@ -5400,7 +5400,7 @@ let OpeningDefaults =
 let Composes =
 {
 
-  verbosity : 3,
+  // verbosity : 3,
   verboseStaging : 0,
 
   environmentPath : null,
@@ -5528,10 +5528,19 @@ let Forbids =
   graphSystem : 'graphSystem',
   filesGraph : 'filesGraph',
 
+  verbosity : 'verbosity',
+
+  withEnabled : 'withEnabled',
+  withDisabled : 'withDisabled',
+  withOut : 'withOut',
+  withIn : 'withIn',
+  withValid : 'withValid',
+  withInvalid : 'withInvalid',
+  withKnown : 'withKnown',
+  withUnknown : 'withUnknown',
+
   withSubmodules : 'withSubmodules'
 }
-
-_.each( FilterFields, ( val, key ) => { Forbids[ key ] = key });
 
 let Accessors =
 {
@@ -5594,8 +5603,8 @@ let Extension =
   versionGet,
   versionIsUpToDate,
 
-  withSubmodulesGet,
-  withSubmodulesSet,
+  // withSubmodulesGet,
+  // withSubmodulesSet,
   recursiveValueDeduceFromBuild,
 
   // defaults

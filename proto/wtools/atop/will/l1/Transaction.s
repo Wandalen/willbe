@@ -40,6 +40,10 @@ function init( o )
   if( o )
   transaction.copy( o );
 
+  for( let p in TransactionFields )
+  if( transaction[ p ] === null )
+  transaction[ p ] = TransactionFields[ p ];
+
   Object.freeze( transaction );
 }
 
@@ -47,7 +51,11 @@ function init( o )
 
 let TransactionFields =
 {
+  v : null,
+  verbosity : 3,
+
   ... _.Will.FilterFields,
+
   withSubmodules : null
 }
 
@@ -83,6 +91,7 @@ let Forbids =
 
 let Accessors =
 {
+  v : { suite : _.accessor.suite.alias({ originalName : 'verbosity' }) },
 }
 
 // --

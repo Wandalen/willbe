@@ -304,7 +304,7 @@ function errEncounter( error )
 
 //
 
-function _propertiesImply( implyMap )
+function _propertiesImplyToMain( implyMap )
 {
   let will = this;
 
@@ -312,8 +312,8 @@ function _propertiesImply( implyMap )
 
   let namesMap =
   {
-    v : 'verbosity',
-    verbosity : 'verbosity',
+    // v : 'verbosity',
+    // verbosity : 'verbosity',
     beeping : 'beeping',
 
     // withOut : 'withOut',
@@ -332,7 +332,17 @@ function _propertiesImply( implyMap )
     namesMap,
     only : 0
   });
+}
 
+//
+
+function _propertiesImply( implyMap )
+{
+  let will = this;
+
+  will._propertiesImplyToMain( implyMap );
+  _.assert( will.transaction === null );
+  will.transaction = _.will.Transaction( _.mapOnly( implyMap, _.will.Transaction.TransactionFields ) );
 }
 
 // --
@@ -482,6 +492,9 @@ function _commandsEnd( command )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
+  _.assert( will.transaction instanceof _.will.Transaction );
+  will.transaction = null;
+
   if( will.topCommand !== command )
   return false;
 
@@ -532,7 +545,7 @@ function _commandListLike( o )
   _.assert( _.objectIs( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
-  _.assert( will.transaction === null );
+  if( will.transaction === null )
   will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   will._commandsBegin( o.commandRoutine );
@@ -612,9 +625,6 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
-    _.assert( will.transaction instanceof _.will.Transaction );
-    will.transaction = null;
-
     will._commandsEnd( o.commandRoutine );
     if( err )
     logger.error( _.errOnce( err ) );
@@ -643,7 +653,7 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  _.assert( will.transaction === null );
+  if( will.transaction === null )
   will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandBuildLike, arguments );
@@ -719,9 +729,6 @@ function _commandBuildLike( o )
 
   function end( err, arg )
   {
-    _.assert( will.transaction instanceof _.will.Transaction );
-    will.transaction = null;
-
     will._commandsEnd( o.commandRoutine );
     if( err )
     debugger;
@@ -750,7 +757,7 @@ function _commandCleanLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  _.assert( will.transaction === null );
+  if( will.transaction === null )
   will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandCleanLike, arguments );
@@ -823,9 +830,6 @@ function _commandCleanLike( o )
 
   function end( err, arg )
   {
-    _.assert( will.transaction instanceof _.will.Transaction );
-    will.transaction = null;
-
     will._commandsEnd( o.commandRoutine );
     if( err )
     debugger;
@@ -853,7 +857,7 @@ function _commandNewLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  _.assert( will.transaction === null );
+  if( will.transaction === null )
   will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandNewLike, arguments );
@@ -926,9 +930,6 @@ function _commandNewLike( o )
 
   function end( err, arg )
   {
-    _.assert( will.transaction instanceof _.will.Transaction );
-    will.transaction = null;
-
     will._commandsEnd( o.commandRoutine );
     if( err )
     debugger;
@@ -974,7 +975,7 @@ function _commandTreeLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  _.assert( will.transaction === null );
+  if( will.transaction === null )
   will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   will._commandsBegin( o.commandRoutine );
@@ -1007,9 +1008,6 @@ function _commandTreeLike( o )
   })
   .finally( ( err, arg ) =>
   {
-    _.assert( will.transaction instanceof _.will.Transaction );
-    will.transaction = null;
-
     will._commandsEnd( o.commandRoutine );
     if( err )
     err = _.err( err, `\nFailed to ${o.name}` );
@@ -1039,8 +1037,8 @@ function _commandModulesLike( o )
   let logger = cui.logger;
   let ready = new _.Consequence().take( null );
 
-  _.assert( will.transaction === null );
-  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  _.assert( cui.transaction === null );
+  cui.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
 
   _.routineOptions( _commandModulesLike, arguments );
   _.mapSupplementNulls( o, cui.filterImplied() );
@@ -1072,9 +1070,6 @@ function _commandModulesLike( o )
 
   return ready.finally( ( err, arg ) =>
   {
-    _.assert( will.transaction instanceof _.will.Transaction );
-    will.transaction = null;
-
     cui.currentOpeners = openers;
     cui._commandsEnd( o.commandRoutine );
     if( err )
@@ -1206,7 +1201,7 @@ function commandImply( e )
   cui._command_head( commandImply, arguments );
 
   cui.implied = e.propertiesMap;
-  cui._propertiesImply( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
+  cui._propertiesImplyToMain( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
 
 }
 
@@ -2041,6 +2036,8 @@ function commandSubmodulesShell( e )
   let cui = this;
   cui._command_head( commandSubmodulesShell, arguments );
 
+  debugger
+
   return cui._commandModulesLike
   ({
     event : e,
@@ -2122,7 +2119,7 @@ function commandSubmodulesGitDiff( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitDiff, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
@@ -2156,7 +2153,7 @@ function commandSubmodulesGitPrOpen( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitPrOpen, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
@@ -2208,7 +2205,7 @@ function commandSubmodulesGitStatus( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitStatus, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
@@ -2262,7 +2259,7 @@ function commandSubmodulesGitSync( e )
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 1 });
 
   return cui._commandModulesLike
@@ -2499,7 +2496,7 @@ function commandModulesGitDiff( e )
   let cui = this;
   cui._command_head( commandModulesGitDiff, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
@@ -2533,7 +2530,7 @@ function commandModulesGitPrOpen( e )
   let cui = this;
   cui._command_head( commandModulesGitPrOpen, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
@@ -2585,7 +2582,7 @@ function commandModulesGitStatus( e )
   let cui = this;
   cui._command_head( commandModulesGitStatus, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
 
   return cui._commandModulesLike
@@ -2639,7 +2636,7 @@ function commandModulesGitSync( e )
   cui._command_head( commandModulesGitSync, arguments );
 
   _.routineOptions( commandModulesGitSync, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 1 });
 
   return cui._commandModulesLike
@@ -2912,6 +2909,7 @@ commandClean.commandProperties =
 function commandSubmodulesClean( e )
 {
   let cui = this;
+  debugger
   cui._command_head( commandSubmodulesClean, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesClean.defaults );
@@ -3200,7 +3198,7 @@ function commandGitPrOpen( e )
   let cui = this;
   cui._command_head( commandGitPrOpen, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
 
   return cui._commandBuildLike
@@ -3325,7 +3323,7 @@ function commandGitReset( e )
   cui._command_head( commandGitReset, arguments );
 
   _.routineOptions( commandGitReset, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   return cui._commandBuildLike
@@ -3376,7 +3374,7 @@ function commandGitStatus( e )
   cui._command_head( commandGitStatus, arguments );
 
   _.routineOptions( commandGitStatus, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   return cui._commandBuildLike
@@ -3427,7 +3425,7 @@ function commandGitSync( e )
   cui._command_head( commandGitSync, arguments );
 
   _.routineOptions( commandGitSync, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   return cui._commandBuildLike
@@ -3475,7 +3473,7 @@ function commandGitTag( e )
   cui._command_head( commandGitTag, arguments );
 
   _.routineOptions( commandGitTag, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   return cui._commandBuildLike
@@ -3815,7 +3813,7 @@ function commandNpmFromWillfile( e )
   cui._command_head( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   if( e.subject )
@@ -3874,7 +3872,7 @@ function commandWillfileFromNpm( e )
   cui._command_head( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   if( e.subject )
@@ -5189,6 +5187,7 @@ let Extension =
 
   _command_head,
   errEncounter,
+  _propertiesImplyToMain,
   _propertiesImply,
 
   // meta command
