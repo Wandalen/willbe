@@ -1612,7 +1612,7 @@ function openModuleWithLostSubmodule( test )
   {
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".with ** .export"' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 5 );
     test.identical( _.strCount( op.output, '! Failed to open module::super' ), 1 );
     test.identical( _.strCount( op.output, 'Exporting module::super / build::export' ), 1 );
     test.identical( _.strCount( op.output, '+ reflector::reflect.proto reflected 2 file' ), 1 );
