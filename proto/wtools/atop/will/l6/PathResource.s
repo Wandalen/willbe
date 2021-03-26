@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-let Parent = _.will.Resource;
+const Parent = _.will.Resource;
 const Self = wWillPathResource;
 function wWillPathResource( o )
 {

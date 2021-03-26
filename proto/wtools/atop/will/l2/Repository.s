@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-let Parent = null;
+const Parent = null;
 const Self = wWillRepository;
 function wWillRepository( o )
 {

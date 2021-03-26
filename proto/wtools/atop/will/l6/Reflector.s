@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-let Parent = _.will.Resource;
+const Parent = _.will.Resource;
 const Self = wWillReflector;
 function wWillReflector( o )
 {
@@ -387,12 +387,12 @@ function form3()
   _.assert
   (
     reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShort( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
   );
   _.assert
   (
     reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShort( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
   );
 
   /* end */

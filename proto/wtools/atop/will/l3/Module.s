@@ -33,7 +33,7 @@
 */
 
 const _ = _global_.wTools;
-let Parent = _.will.AbstractModule;
+const Parent = _.will.AbstractModule;
 const Self = wWillModule;
 function wWillModule( o )
 {

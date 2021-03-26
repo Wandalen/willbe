@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-let Parent = _.will.AbstractModule;
+const Parent = _.will.AbstractModule;
 const Self = wWillModuleOpener;
 function wWillModuleOpener( o )
 {
@@ -100,9 +100,7 @@ function optionsForModuleExport()
 
   }
 
-  debugger;
   let result = _.mapOnly_( null, opener, Import );
-  debugger;
 
   result.superRelations = null;
   result.willfilesArray = _.entity.make( result.willfilesArray );

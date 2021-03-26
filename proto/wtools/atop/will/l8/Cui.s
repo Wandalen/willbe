@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-let Parent = _.Will;
+const Parent = _.Will;
 const Self = wWillCli;
 function wWillCli( o )
 {
@@ -261,7 +261,7 @@ function _command_head( o )
     _.mapExtend( e.propertiesMap, cui.implied );
   }
 
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShort( e.propertiesMap ) );
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( e.propertiesMap ) );
   if( o.routine.commandProperties )
   _.map.sureHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
 
@@ -1273,7 +1273,7 @@ commandVersion.commandSubjectHint = false;
 //   let logger = will.logger;
 //
 //   let implyMap = _.strStructureParse( e.commandArgument );
-//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.entity.exportStringShort( implyMap ) );
+//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( implyMap ) );
 //   will._propertiesImply( implyMap );
 //
 //   // logger.log( 'Current version:', will.versionGet() );
