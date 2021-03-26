@@ -37604,6 +37604,10 @@ function commandWillfileMergeIntoSingle( test )
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
+    test.identical( config.submodule.eslint.criterion.development, 1 );
+    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
+    delete config.submodule.eslint.criterion.development;
+    delete partIm.submodule.eslint.criterion.debug;
     test.contains( config, partIm );
 
     return null;
@@ -37650,7 +37654,10 @@ function commandWillfileMergeIntoSingle( test )
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
-    test.contains( config, partIm );
+    test.identical( config.submodule.eslint.criterion.development, 1 );
+    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
+    delete config.submodule.eslint.criterion.development;
+    delete partIm.submodule.eslint.criterion.debug;
 
     return null;
   });
@@ -37714,17 +37721,11 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
-      'newsubmodule' :
-      {
-        'path' : 'hd://.',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
       'babel' :
       {
         'path' : 'npm:///babel#^0.3.0',
         'enabled' : 0,
-        'criterion' : { 'debug' : 1 }
+        'criterion' : { 'development' : 1 }
       },
       'willbe' :
       {
@@ -37732,12 +37733,6 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
-      'willfilefromnpm' :
-      {
-        'path' : 'hd://.',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      }
     };
     test.identical( config.submodule, submodulesSection );
 
@@ -37803,17 +37798,11 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
-      'newsubmodule' :
-      {
-        'path' : 'hd://.',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
       'babel' :
       {
         'path' : 'npm:///babel#^0.3.0',
         'enabled' : 0,
-        'criterion' : { 'debug' : 1 }
+        'criterion' : { 'development' : 1 }
       },
       'willbe' :
       {
@@ -37821,12 +37810,6 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
-      'willfilefromnpm' :
-      {
-        'path' : 'hd://.',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      }
     };
     test.identical( config.submodule, submodulesSection );
 
@@ -37892,17 +37875,11 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 1,
         'criterion' : { 'development' : 1 }
       },
-      'newsubmodule' :
-      {
-        'path' : 'hd://.',
-        'enabled' : 1,
-        'criterion' : { 'development' : 1 }
-      },
       'babel' :
       {
         'path' : 'npm:///babel#^0.3.0',
         'enabled' : 0,
-        'criterion' : { 'debug' : 1 }
+        'criterion' : { 'development' : 1 }
       },
       'willbe' :
       {
@@ -37910,12 +37887,6 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
-      'willfilefromnpm' :
-      {
-        'path' : 'hd://.',
-        'enabled' : 1,
-        'criterion' : { 'development' : 1 }
-      }
     };
     test.identical( config.submodule, submodulesSection );
 
@@ -37975,7 +37946,10 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
-    test.contains( config, partIm );
+    test.identical( config.submodule.eslint.criterion.development, 1 );
+    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
+    delete config.submodule.eslint.criterion.development;
+    delete partIm.submodule.eslint.criterion.debug;
 
     return null;
   });
@@ -38021,7 +37995,10 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
-    test.contains( config, partIm );
+    test.identical( config.submodule.eslint.criterion.development, 1 );
+    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
+    delete config.submodule.eslint.criterion.development;
+    delete partIm.submodule.eslint.criterion.debug;
 
     return null;
   });

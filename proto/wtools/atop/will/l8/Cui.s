@@ -4427,13 +4427,13 @@ function commandWillfileMergeIntoSingle( e )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
-  let config;
+  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });;
+  filterSubmodulesCriterions();
   if( e.propertiesMap.filterSameSubmodules )
   filterSameSubmodules()
   if( e.propertiesMap.submodulesDisabling )
   submodulesDisable();
-  if( config )
-  configWrite( dstPath.absolute, config );
+  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml' });
 
   /* */
 
@@ -4463,11 +4463,26 @@ function commandWillfileMergeIntoSingle( e )
 
   /* */
 
+  function filterSubmodulesCriterions()
+  {
+    let submodules = config.submodule;
+    for( let name in submodules )
+    {
+      let criterions = submodules[ name ].criterion;
+      if( criterions )
+      if( criterions.debug )
+      if( !_.longHasAny( _.mapKeys( criterions ) ), [ 'development', 'optional' ] )
+      {
+        delete criterions.debug;
+        criterions.development = 1;
+      }
+    }
+  }
+
+  /* */
+
   function filterSameSubmodules()
   {
-    if( !config )
-    config = configRead( dstPath.absolute );
-
     let submodules = config.submodule;
     let regularPaths = new Set();
     let mergedSubmodules = Object.create( null );
@@ -4507,20 +4522,6 @@ function commandWillfileMergeIntoSingle( e )
     config = configRead( dstPath.absolute );
     for( let dependency in config.submodule )
     config.submodule[ dependency ].enabled = 0;
-  }
-
-  /* */
-
-  function configRead( filePath )
-  {
-    return fileProvider.fileRead({ filePath, encoding : 'yaml' });
-  }
-
-  /* */
-
-  function configWrite( filePath, data )
-  {
-    fileProvider.fileWrite({ filePath, data, encoding : 'yaml' });
   }
 
   /* */
