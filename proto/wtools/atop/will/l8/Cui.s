@@ -314,7 +314,7 @@ function _propertiesImplyToMain( implyMap )
   {
     // v : 'verbosity',
     // verbosity : 'verbosity',
-    beeping : 'beeping',
+    // beeping : 'beeping',
 
     // withOut : 'withOut',
     // withIn : 'withIn',
@@ -340,7 +340,7 @@ function _propertiesImply( implyMap )
 {
   let will = this;
 
-  will._propertiesImplyToMain( implyMap );
+  // will._propertiesImplyToMain( implyMap );
 
   _.assert( will.transaction === null || will.transaction && will.transaction.isInitial );
 
@@ -348,6 +348,16 @@ function _propertiesImply( implyMap )
   will.transaction.finit();
 
   will.transaction = _.will.Transaction({ will, ... _.mapOnly( implyMap, _.will.Transaction.TransactionFields ) });
+}
+
+//
+
+function beepingGet()
+{
+  let will = this;
+  let transaction = will.transaction;
+  _.assert( transaction instanceof _.will.Transaction );
+  return transaction.beeping;
 }
 
 // --
@@ -498,6 +508,9 @@ function _commandsEnd( command )
   let logger = will.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
+
+  let beeping = will.transaction.beeping;
+
   will.transaction.finit();
   will.transaction = null;
 
@@ -516,8 +529,7 @@ function _commandsEnd( command )
     if( will.currentOpeners )
     will.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
     will.currentOpeners = null;
-
-    if( will.beeping )
+    if( beeping )
     _.diagnosticBeep();
     _.procedure.terminationBegin();
 
@@ -526,7 +538,7 @@ function _commandsEnd( command )
   {
     will.errEncounter( err );
     will.currentOpenerChange( null );
-    if( will.beeping )
+    if( beeping )
     _.diagnosticBeep();
     _.process.exit( -1 );
   }
@@ -5134,7 +5146,7 @@ let currentOpenerSymbol = Symbol.for( 'currentOpener' );
 
 let Composes =
 {
-  beeping : 0,
+  // beeping : 0,
 }
 
 let Aggregates =
@@ -5166,6 +5178,7 @@ let Forbids =
 let Accessors =
 {
   currentOpener : { writable : 0 },
+  beeping : { get : beepingGet, writable : 0 }
 }
 
 // --
@@ -5194,6 +5207,8 @@ let Extension =
   errEncounter,
   _propertiesImplyToMain,
   _propertiesImply,
+
+  beepingGet,
 
   // meta command
 

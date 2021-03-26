@@ -143,6 +143,8 @@ let TransactionFields =
   v : 3,
   verbosity : 3,
 
+  beeping : 0,
+
   ... _.Will.FilterFields,
 
   withSubmodules : null
