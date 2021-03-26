@@ -38161,6 +38161,87 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
 //
 
+function commandWillfileMergeIntoSingleFilterNpmFields( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    npmScriptsDuplicate();
+
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single secondaryPath:NpmScripts.will.yml' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let exWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let npmScriptsConfig = a.fileProvider.fileRead({ filePath : a.abs( 'NpmScripts.will.yml' ), encoding : 'yaml' });
+
+    let willConfigKeys = _.mapKeys( willConfig.about[ 'npm.scripts' ] );
+    var exp = [ 'eslint', 'test.test', 'TEST', 'docgen.docgen', 'DOCGEN' ];
+    test.identical( willConfigKeys, exp );
+    let exWillConfigKeys = _.mapKeys( exWillConfig.about[ 'npm.scripts' ] );
+    var exp = [ 'test', 'docgen' ];
+    test.identical( exWillConfigKeys, exp );
+    let npmScriptsConfigKeys = _.mapKeys( npmScriptsConfig.about[ 'npm.scripts' ] );
+    var exp =
+    [
+      'test',
+      'docgen',
+      'test-test',
+      'test.test',
+      'TEST',
+      'docgen-docgen',
+      'docgen.docgen',
+      'DOCGEN' ];
+    test.identical( npmScriptsConfigKeys, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function npmScriptsDuplicate()
+  {
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NpmScripts.will.yml' ), encoding : 'yaml' });
+    let keys = _.mapKeys( config.about[ 'npm.scripts' ] );
+    for( let i = 0 ; i < keys.length ; i++ )
+    {
+      config.about[ 'npm.scripts' ][ `${ keys[ i ] }-${ keys[ i ] }` ] = config.about[ 'npm.scripts' ][ keys[ i ] ];
+      config.about[ 'npm.scripts' ][ `${ keys[ i ] }.${ keys[ i ] }` ] = config.about[ 'npm.scripts' ][ keys[ i ] ];
+      config.about[ 'npm.scripts' ][ keys[ i ].toUpperCase() ] = config.about[ 'npm.scripts' ][ keys[ i ] ];
+    }
+    a.fileProvider.fileWrite({ filePath : a.abs( 'NpmScripts.will.yml' ), data : config, encoding : 'yaml' });
+  }
+}
+
+//
+
 function commandsSubmoduleSafety( test )
 {
   let context = this;
@@ -39136,6 +39217,7 @@ let Self =
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
+    commandWillfileMergeIntoSingleFilterNpmFields,
 
     commandsSubmoduleSafety,
     commandSubmodulesUpdateOptionTo
