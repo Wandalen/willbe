@@ -26,37 +26,37 @@ if( !_global._globals_ )
 
 //
 
-let _wasGlobal, _wasCache;
-function globalNamespaceOpen( _global, name )
-{
-  if( _realGlobal_._globals_[ name ] )
-  throw Error( `Global namespace::${name} already exists!` );
-  let ModuleFileNative = require( 'module' );
-  if( _global.moduleNativeFilesMap && _global.moduleNativeFilesMap !== ModuleFileNative._cache )
-  throw Error( `Current global have native module files map of different global` );
-  _global.moduleNativeFilesMap = ModuleFileNative._cache;
-  _wasCache = ModuleFileNative._cache;
-  _wasGlobal = _global;
-  ModuleFileNative._cache = Object.create( null );
-  _global = Object.create( _global );
-  _global.moduleNativeFilesMap = ModuleFileNative._cache;
-  _global.__GLOBAL_NAME__ = name;
-  _global._global_ = _global;
-  _realGlobal_._global_ = _global;
-  _realGlobal_._globals_[ name ] = _global;
-  if( module.nativeFilesMap )
-  module.nativeFilesMap = ModuleFileNative._cache;
-  return _global;
-}
-
+// let _wasGlobal, _wasCache;
+// function globalNamespaceOpen( _global, name )
+// {
+//   if( _realGlobal_._globals_[ name ] )
+//   throw Error( `Global namespace::${name} already exists!` );
+//   let ModuleFileNative = require( 'module' );
+//   if( _global.moduleNativeFilesMap && _global.moduleNativeFilesMap !== ModuleFileNative._cache )
+//   throw Error( `Current global have native module files map of different global` );
+//   _global.moduleNativeFilesMap = ModuleFileNative._cache;
+//   _wasCache = ModuleFileNative._cache;
+//   _wasGlobal = _global;
+//   ModuleFileNative._cache = Object.create( null );
+//   _global = Object.create( _global );
+//   _global.moduleNativeFilesMap = ModuleFileNative._cache;
+//   _global.__GLOBAL_NAME__ = name;
+//   _global._global_ = _global;
+//   _realGlobal_._global_ = _global;
+//   _realGlobal_._globals_[ name ] = _global;
+//   if( module.nativeFilesMap )
+//   module.nativeFilesMap = ModuleFileNative._cache;
+//   return _global;
+// }
 //
-
-function globalNamespaceClose()
-{
-  let ModuleFileNative = require( 'module' );
-  ModuleFileNative._cache = _wasCache;
-  _realGlobal_._global_ = _wasGlobal;
-}
+// //
+//
+// function globalNamespaceClose()
+// {
+//   let ModuleFileNative = require( 'module' );
+//   ModuleFileNative._cache = _wasCache;
+//   _realGlobal_._global_ = _wasGlobal;
+// }
 
 //
 
