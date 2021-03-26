@@ -7,7 +7,7 @@
 // Routines
 // --
 
-let Self = _global_._test_ = _global_._test_ || Object.create( null );
+const Self = _global_._test_ = _global_._test_ || Object.create( null );
 
 function sumOfNumbers()
 {

@@ -1,0 +1,70 @@
+about :
+
+  name : "submodules-safety"
+  description : "Unnamed module. To check execution of commands for modules"
+  version : "0.0.1"
+  enabled : 1
+
+submodule :
+
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!master
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : 1
+    filePath :
+      path::proto : path::out.*=1
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+    criterion :
+      debug : 1
+
+step :
+
+  export.proto :
+    inherit : module.export
+    export : '{path::proto}/**'
+    tar : 0
+
+
+  delete.out.debug :
+    inherit : files.delete
+    filePath : path::out.debug
+    criterion :
+      debug : 1
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - build::debug.raw
+      - step::export.proto
+
+  debug.raw :
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
+      - delete.out.debug
+      - reflect.proto*=1
+      - reflect.submodules*=1
