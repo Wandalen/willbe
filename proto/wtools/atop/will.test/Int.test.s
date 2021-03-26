@@ -320,6 +320,108 @@ function preCloneRepos( test )
 
 //
 
+function modulesFindEachAt( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let opener, o;
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfSub : 1, });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'select all submodules from module without downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( true );
+    test.true( op.options === o );
+    test.identical( op.openers.length, 1 );
+    test.true( op.openers[ 0 ] === opener );
+    test.identical( op.sortedOpeners.length, 1 );
+    test.true( op.sortedOpeners[ 0 ] === opener );
+    test.identical( op.junctions.length, 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () => opener.openedModule.subModulesDownload() );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'select all submodules from module with downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( op.options === o );
+    test.identical( op.openers.length, 2 );
+    test.true( op.openers[ 0 ] !== opener );
+    test.true( op.openers[ 1 ] !== opener );
+    test.identical( op.openers[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( op.openers[ 1 ].name, 'ModuleForTesting2' );
+    test.identical( op.sortedOpeners.length, 2 );
+    test.true( op.sortedOpeners[ 0 ] !== opener );
+    test.true( op.sortedOpeners[ 1 ] !== opener );
+    test.true( op.openers[ 0 ] === op.sortedOpeners[ 0 ] );
+    test.true( op.openers[ 1 ] === op.sortedOpeners[ 1 ] );
+    test.identical( op.junctions.length, 2 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'select submodule by pattern from module with downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( '*Testing1' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( op.options === o );
+    test.identical( op.openers.length, 1 );
+    test.true( op.openers[ 0 ] !== opener );
+    test.identical( op.openers[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( op.sortedOpeners.length, 1 );
+    test.true( op.sortedOpeners[ 0 ] !== opener );
+    test.identical( op.junctions.length, 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function buildSimple( test )
 {
   let context = this;
@@ -11286,6 +11388,8 @@ const Proto =
   {
 
     preCloneRepos,
+
+    modulesFindEachAt,
 
     buildSimple,
     openNamedFast,

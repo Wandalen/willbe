@@ -5636,9 +5636,9 @@ function hookGitMake( test )
     return null;
   });
 
-  a.appStart({ execPath : '.module.new New2/' })
+  a.appStart({ execPath : '.module.new New2/' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     var exp = [ '.', './will.yml' ];
     var files = a.find( a.abs( 'New2' ) );
@@ -5649,25 +5649,19 @@ function hookGitMake( test )
       remotePath : `https://github.com/${user}/New2`,
       token : config.about[ 'github.token' ],
     });
-  })
-
-  .then( () =>
-  {
-    debugger;
-    return null;
   });
-  a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
+  a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/New2` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/New2` ), 1 );
     test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
     test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2` ), 1 );
     test.identical( _.strCount( op.output, `> ` ), 3 );
 
     var exp = [ '.', './will.yml' ];
@@ -5675,7 +5669,16 @@ function hookGitMake( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  });
 
   /* - */
 
@@ -5695,6 +5698,9 @@ function hookPrepare( test )
   let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return test.true( true );
+  if( !config.path || !config.path.remoteRepository )
+  return test.true( true );
+
   let user = config.about.user;
 
   /* - */
@@ -5707,34 +5713,32 @@ function hookPrepare( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     var exp = [];
-    var files = a.find( a.abs( 'New2' ) );
+    var files = a.find( a.abs( 'wNew2' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
-      remotePath : `https://github.com/${user}/New2`,
+      remotePath : `https://github.com/${user}/wNew2`,
       token : config.about[ 'github.token' ],
     });
-  })
+  });
 
-  a.appStart({ execPath : '.with New2/ .module.new.with prepare v:3' })
-
+  a.appStart({ execPath : '.with wNew2/ .module.new.with prepare v:3' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( op.output, `Making repository for module::wNew2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/wNew2` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/wNew2` ), 1 );
     test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
     test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/wNew2` ), 1 );
     test.identical( _.strCount( op.output, `git push -u origin --all --follow-tags` ), 1 );
     test.identical( _.strCount( op.output, `> ` ), 12 );
-    test.identical( _.strCount( op.output, `+ hardLink` ), 5 );
+    test.ge( _.strCount( op.output, `+ hardLink` ), 1 );
 
     var exp =
     [
@@ -5748,69 +5752,8 @@ function hookPrepare( test )
       './LICENSE',
       './README.md',
       './was.package.json',
-      './.github',
-      './.github/workflows',
-      './.github/workflows/Test.yml',
-      './proto',
-      './proto/Integration.test.s',
-      './proto/wtools',
-      './proto/wtools/Tools.s',
-      './proto/wtools/abase',
-      './proto/wtools/amid',
-      './proto/wtools/atop',
-      './sample',
-      './sample/Sample.html',
-      './sample/Sample.s',
-    ]
-    var files = a.find( a.abs( 'New2' ) );
-    test.identical( files, exp );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    var exp = [];
-    var files = a.find( a.abs( 'New3/New4' ) );
-    test.identical( files, exp );
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New4`,
-      token : config.about[ 'github.token' ],
-    });
-  })
-
-  a.appStart({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New4 at` ), 1 );
-    test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New4.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New4.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
-    test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New4.git` ), 1 );
-    test.identical( _.strCount( op.output, `git push -u origin --all --follow-tags` ), 1 );
-    test.identical( _.strCount( op.output, `> ` ), 12 );
-    test.identical( _.strCount( op.output, `+ hardLink` ), 5 );
-
-    var exp =
-    [
-      '.',
-      './-New4.will.yml',
-      './.eslintrc.yml',
-      './.ex.will.yml',
-      './.gitattributes',
-      './.gitignore',
-      './.im.will.yml',
-      './LICENSE',
-      './README.md',
-      './was.package.json',
+      './.circleci',
+      './.circleci/config.yml',
       './.github',
       './.github/workflows',
       './.github/workflows/Test.yml',
@@ -5824,12 +5767,94 @@ function hookPrepare( test )
       './sample',
       './sample/Sample.html',
       './sample/Sample.s'
-    ]
-    var files = a.find( a.abs( 'New3' ) );
+    ];
+    var files = a.find( a.abs( 'wNew2' ) );
     test.identical( files, exp );
 
     return null;
-  })
+  });
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/wNew2`,
+      token : config.about[ 'github.token' ],
+    });
+  });
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    var exp = [];
+    var files = a.find( a.abs( 'wNew3/wNew4' ) );
+    test.identical( files, exp );
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/wNew4`,
+      token : config.about[ 'github.token' ],
+    });
+  });
+
+  a.appStart({ execPath : '.with wNew3/wNew4 .module.new.with prepare v:3' })
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::wNew4 at` ), 1 );
+    test.identical( _.strCount( op.output, `localPath :` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/wNew4` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/wNew4` ), 1 );
+    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
+    test.identical( _.strCount( op.output, `git init .` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/wNew4` ), 1 );
+    test.identical( _.strCount( op.output, `git push -u origin --all --follow-tags` ), 1 );
+    test.identical( _.strCount( op.output, `> ` ), 12 );
+    test.ge( _.strCount( op.output, `+ hardLink` ), 1 );
+
+    var exp =
+    [
+      '.',
+      './-wNew4.will.yml',
+      './.eslintrc.yml',
+      './.ex.will.yml',
+      './.gitattributes',
+      './.gitignore',
+      './.im.will.yml',
+      './LICENSE',
+      './README.md',
+      './was.package.json',
+      './.circleci',
+      './.circleci/config.yml',
+      './.github',
+      './.github/workflows',
+      './.github/workflows/Test.yml',
+      './proto',
+      './proto/Integration.test.s',
+      './proto/wtools',
+      './proto/wtools/Tools.s',
+      './proto/wtools/abase',
+      './proto/wtools/amid',
+      './proto/wtools/atop',
+      './sample',
+      './sample/Sample.html',
+      './sample/Sample.s'
+    ];
+    var files = a.find( a.abs( 'wNew3' ) );
+    test.identical( files, exp );
+
+    return null;
+  });
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/wNew4`,
+      token : config.about[ 'github.token' ],
+    });
+  });
 
   /* - */
 
@@ -7114,9 +7139,6 @@ original/f.txt
   a.ready.then( () =>
   {
     a.fileProvider.filesDelete( context.suiteTempPath );
-    // a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    // a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    // a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -8514,22 +8536,22 @@ function modulesTreeHierarchyRemote( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
   a.reflect();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
+  let submodulesZ = a.fileProvider.configRead( a.abs( 'z.will.yml' ) ).submodule;
+  let submodulesA = a.fileProvider.configRead( a.abs( 'group1/a.will.yml' ) ).submodule;
+  let submodulesB = a.fileProvider.configRead( a.abs( 'group1/b.will.yml' ) ).submodule;
+  let submodulesA0 = a.fileProvider.configRead( a.abs( 'group1/group10/a0.will.yml' ) ).submodule;
+  let submodulesC = a.fileProvider.configRead( a.abs( 'group2/c.will.yml' ) ).submodule;
+  let keysZ = _.mapKeys( submodulesZ );
+  let keysA = _.mapKeys( submodulesA );
+  let keysB = _.mapKeys( submodulesB );
+  let keysA0 = _.mapKeys( submodulesA0 );
+  let keysC = _.mapKeys( submodulesC );
 
   /* - */
 
   a.appStart({ execPath : '.with * .modules.tree' })
-
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree';
@@ -8538,22 +8560,22 @@ function modulesTreeHierarchyRemote( test )
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1
-   | +-- module::ModuleForTesting1b
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b
-   |   +-- module::ModuleForTesting2a
-   +-- module::b
-   | +-- module::ModuleForTesting1b
-   | +-- module::ModuleForTesting12
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b
-   | | +-- module::ModuleForTesting2a
-   | +-- module::ModuleForTesting12ab
-   +-- module::ModuleForTesting1b
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] }
+   | +-- module::${ keysA[ 1 ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] }
+   |   +-- module::${ keysA0[ 1 ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] }
+   | +-- module::${ keysB[ 1 ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] }
+   | | +-- module::${ keysA0[ 1 ] }
+   | +-- module::${ keysC[ 1 ] }
+   +-- module::${ keysZ[ 3 ] }
+`;
 
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
@@ -8569,36 +8591,36 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
+    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   +-- module::b
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
-   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+`;
 
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
@@ -8614,12 +8636,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with * .modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree withLocalPath:1';
@@ -8638,12 +8659,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with ** .modules.tree' })
-
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree';
@@ -8652,22 +8672,23 @@ function modulesTreeHierarchyRemote( test )
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1
-   | +-- module::ModuleForTesting1b
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b
-   |   +-- module::ModuleForTesting2a
-   +-- module::b
-   | +-- module::ModuleForTesting1b
-   | +-- module::ModuleForTesting12
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b
-   | | +-- module::ModuleForTesting2a
-   | +-- module::ModuleForTesting12ab
-   +-- module::ModuleForTesting1b
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] }
+   | +-- module::${ keysA[ 1 ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] }
+   |   +-- module::${ keysA0[ 1 ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] }
+   | +-- module::${ keysB[ 1 ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] }
+   | | +-- module::${ keysA0[ 1 ] }
+   | +-- module::${ keysC[ 1 ] }
+   +-- module::${ keysZ[ 3 ] }
+`;
+
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
     test.identical( _.strCount( op.output, '+-- module::z' ), 1 );
@@ -8682,36 +8703,36 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
+    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
-   +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::a0
-   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   +-- module::b
-   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
-   +-- module::c
-   | +-- module::a0
-   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
-   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-`
+   +-- module::${ keysZ[ 0 ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 2 ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   +-- module::${ keysZ[ 1 ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   +-- module::${ keysZ[ 2 ] }
+   | +-- module::${ keysC[ 0 ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+`;
 
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
@@ -8727,12 +8748,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with ** .modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree withLocalPath:1';
@@ -8751,12 +8771,12 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeHierarchyRemote */
+}
 
 modulesTreeHierarchyRemote.rapidity = -1;
 modulesTreeHierarchyRemote.timeOut = 300000;
@@ -10649,7 +10669,7 @@ function exportNonExportable( test )
 
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'rror' ), 1 );
+    test.identical( _.strCount( op.output, 'rror' ), 2 );
     test.identical( _.strCount( op.output, '====' ), 0 );
 
     test.identical( _.strCount( op.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
@@ -13855,13 +13875,11 @@ function exportWithRemoteSubmodulesMin( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'export'
+    test.case = 'export';
     return null;
-  })
+  });
 
   a.appStart( '.with group1/a .export' )
   a.appStart( '.with z .export' )
@@ -13930,7 +13948,7 @@ function exportWithRemoteSubmodulesMin( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -14050,13 +14068,11 @@ function exportWithRemoteSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
   a.appStart( '.with group1/group10/a0 .clean' )
   a.appStart( '.with group1/a .clean' )
@@ -14093,6 +14109,7 @@ function exportWithRemoteSubmodules( test )
       './.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting1b/sample',
+      './.module/ModuleForTesting1b/sample/trivial',
       './group1',
       './group1/.module',
       './group1/.module/ModuleForTesting1',
@@ -14107,6 +14124,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1',
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
       './group1/.module/ModuleForTesting1/sample',
+      './group1/.module/ModuleForTesting1/sample/trivial',
       './group1/.module/ModuleForTesting12',
       './group1/.module/ModuleForTesting12/.circleci',
       './group1/.module/ModuleForTesting12/.github',
@@ -14120,6 +14138,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3/testing12',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting12/sample',
+      './group1/.module/ModuleForTesting12/sample/trivial',
       './group1/.module/ModuleForTesting1b',
       './group1/.module/ModuleForTesting1b/.circleci',
       './group1/.module/ModuleForTesting1b/.github',
@@ -14133,6 +14152,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting1b/sample',
+      './group1/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10',
       './group1/group10/.module',
       './group1/group10/.module/ModuleForTesting1b',
@@ -14148,6 +14168,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
+      './group1/group10/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10/.module/ModuleForTesting2a',
       './group1/group10/.module/ModuleForTesting2a/.circleci',
       './group1/group10/.module/ModuleForTesting2a/.github',
@@ -14161,6 +14182,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3/testing2a',
       './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting2a/sample',
+      './group1/group10/.module/ModuleForTesting2a/sample/trivial',
       './group1/group10/out',
       './group1/group10/out/debug',
       './group1/group10/out/debug/wtools',
@@ -14195,6 +14217,7 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4/testing12ab',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4.test',
       './group2/.module/ModuleForTesting12ab/sample',
+      './group2/.module/ModuleForTesting12ab/sample/trivial',
       './group2/out',
       './group2/out/debug',
       './group2/out/debug/wtools',
@@ -14249,13 +14272,11 @@ function exportWithRemoteSubmodulesRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
   a.appStart( '.with "**" .clean' )
   a.appStart( '.with "**" .export.recursive' )
@@ -14497,14 +14518,12 @@ function exportHierarchyRemote( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with z .clean recursive:2' )
   a.appStart( '.with z .export.recursive' )
@@ -19478,33 +19497,22 @@ submodulesDownloadWithSubmodulesDefault.timeOut = 300000;
 function submodulesDownloadUpdateWithSubmodulesDefault( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules-download' );
-  a.appStartNonThrowing2 = _.process.starter
-  ({
-    currentPath : a.abs( 'module' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : a.ready,
-  })
+  let a = context.assetFor( test, 'submodulesDownload' );
   a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'download using command submodules.download'
+    test.case = 'download using command submodules.download';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
-  a.appStartNonThrowing2( 'git init' )
-  a.appStartNonThrowing2( 'git add .' )
-  a.appStartNonThrowing2( 'git commit -m init' )
+  });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git add .' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit -m init' });
 
   a.appStart({ execPath : '.submodules.update' })
-
   .then( ( op ) =>
   {
     let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -19517,7 +19525,9 @@ function submodulesDownloadUpdateWithSubmodulesDefault( test )
     test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) .* updated/ ), 1 );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -20126,22 +20136,29 @@ function submodulesDownloadInvalidUrl( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '';
+    test.case = 'download submodule with not supported protocol';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.with badProtocol .submodules.download' })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.identical( _.strCount( op.output, 'Command ".with badProtocol .submodules.download"' ), 1 );
+    test.identical( _.strCount( op.output, /\. Opened \. .*badProtocol\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, '! Failed to open module::submodulesDownloadErrorsBadProtocol' ), 1 );
+    var exp =
+    'Error looking for will files for opener::ModuleForTesting2a at "git+bad:///github.com/Wandalen/wModuleForTesting2a.git/"';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module::submodulesDownloadErrorsBadProtocol / relation::ModuleForTesting2a' ), 2 );
+    // test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
-  })
+
+  });
 
   /* - */
 
@@ -20153,7 +20170,7 @@ submodulesDownloadInvalidUrl.description =
 `
 Module path is contain unsupported protocol.
 Utility should throw error and exit with non-zero code.
-`
+`;
 
 //
 
@@ -26903,9 +26920,8 @@ function runDebugWill( test )
       }
       else
       {
-        test.description = 'utility debugnode exists';
+        test.description = 'utility debugnode not exists';
         test.identical( _.strCount( op.output, 'spawn debugnode ENOENT' ), 1 );
-        test.identical( _.strCount( op.output, 'errno : \'ENOENT\'' ), 1 );
         test.identical( _.strCount( op.output, 'code : \'ENOENT\'' ), 1 );
         test.identical( _.strCount( op.output, 'syscall : \'spawn debugnode\'' ), 1 );
         test.identical( _.strCount( op.output, 'path : \'debugnode\'' ), 1 );
@@ -30587,13 +30603,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30685,12 +30701,7 @@ super
 
   a.ready.finally( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -30742,13 +30753,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30812,14 +30823,14 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -30831,7 +30842,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
@@ -30839,25 +30850,20 @@ original
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
-  })
+  });
 
   /* - */
 
@@ -30905,13 +30911,13 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31005,12 +31011,7 @@ original/f2.txt
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -31061,13 +31062,13 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31163,12 +31164,7 @@ original/f.txt
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2_.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -33656,14 +33652,14 @@ function commandGitSyncRestoringHardlinks( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33671,7 +33667,7 @@ original/f.txt
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33679,7 +33675,7 @@ clone
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
@@ -33774,14 +33770,14 @@ function commandGitSyncRestoreHardLinksWithConfigPath( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '../..' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
@@ -33872,10 +33868,7 @@ original/f.txt
 
   a.ready.finally( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
