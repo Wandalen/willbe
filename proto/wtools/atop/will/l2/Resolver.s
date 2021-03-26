@@ -1507,7 +1507,6 @@ function filesFromResource_body( o )
   else
   {
     let o2 = _.mapOnly_( null, o, module.resolve.defaults );
-    debugger;
     delete o2.constructor;
     resources = module.resolve( o2 );
   }

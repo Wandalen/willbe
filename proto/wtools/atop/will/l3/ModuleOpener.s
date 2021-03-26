@@ -629,9 +629,7 @@ function find( o )
     {
 
       _.assert( opener.openedModule === null );
-      debugger;
       let o2 = opener.optionsForModuleExport();
-      debugger;
       openedModule = opener.openedModule = new _.will.Module( o2 );
       if( openedModule.rootModule === null )
       openedModule.rootModule = openedModule;
