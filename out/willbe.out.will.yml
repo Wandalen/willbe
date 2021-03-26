@@ -2080,6 +2080,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken2/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken2/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/submodulesClean
+          - ../proto/wtools/atop/will.test/_asset/submodulesClean/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDelDownload
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDelDownload/.will.yml
