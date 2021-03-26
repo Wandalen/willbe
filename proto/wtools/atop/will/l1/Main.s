@@ -158,7 +158,7 @@ function init( o )
   will.copy( o );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ isInitial : 1, verbosity : logger.verbosity, will })
+  will.transaction = _.will.Transaction({ isInitial : 1, verbosity : will.logger.verbosity, will })
 
 }
 
@@ -5412,7 +5412,7 @@ let OpeningDefaults =
   resourcesFormedOfSub : null,
   allOfSub : null,
 
-  verbosity : null,
+  // verbosity : null,
 
 }
 
