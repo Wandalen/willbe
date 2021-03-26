@@ -4418,6 +4418,7 @@ function commandWillfileMergeIntoSingle( e )
     let o2 =
     {
       request : `${ willfileName } ${ e.propertiesMap.secondaryPath }`,
+      name : 0,
       onSection : _.mapExtend,
     };
     _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
