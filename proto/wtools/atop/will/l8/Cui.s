@@ -341,8 +341,13 @@ function _propertiesImply( implyMap )
   let will = this;
 
   will._propertiesImplyToMain( implyMap );
-  _.assert( will.transaction === null );
-  will.transaction = _.will.Transaction( _.mapOnly( implyMap, _.will.Transaction.TransactionFields ) );
+
+  _.assert( will.transaction === null || will.transaction && will.transaction.isInitial );
+
+  if( will.transaction )
+  will.transaction.finit();
+
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( implyMap, _.will.Transaction.TransactionFields ) });
 }
 
 // --
@@ -493,6 +498,7 @@ function _commandsEnd( command )
   let logger = will.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
+  will.transaction.finit();
   will.transaction = null;
 
   if( will.topCommand !== command )
@@ -654,7 +660,7 @@ function _commandBuildLike( o )
   let ready = new _.Consequence().take( null );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -2909,7 +2915,6 @@ commandClean.commandProperties =
 function commandSubmodulesClean( e )
 {
   let cui = this;
-  debugger
   cui._command_head( commandSubmodulesClean, arguments );
 
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesClean.defaults );

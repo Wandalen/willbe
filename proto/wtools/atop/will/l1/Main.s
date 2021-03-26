@@ -157,6 +157,9 @@ function init( o )
   if( o )
   will.copy( o );
 
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ isInitial : 1, verbosity : logger.verbosity, will })
+
 }
 
 //
@@ -582,6 +585,15 @@ function _verbosityChange()
   if( will.fileProvider )
   will.fileProvider.verbosity = will.verbosity-2;
 
+}
+
+//
+
+function verbosityGet()
+{
+  let will = this;
+  let transaction = will.transaction;
+  return transaction.verbosity;
 }
 
 //
@@ -5528,8 +5540,6 @@ let Forbids =
   graphSystem : 'graphSystem',
   filesGraph : 'filesGraph',
 
-  verbosity : 'verbosity',
-
   withEnabled : 'withEnabled',
   withDisabled : 'withDisabled',
   withOut : 'withOut',
@@ -5550,6 +5560,8 @@ let Accessors =
   environmentPath : { set : environmentPathSet },
   hooksPath : { get : hooksPathGet, writable : 0 },
   // withSubmodules : {},
+
+  verbosity : { get : verbosityGet, writable : 0  },
 
 }
 
@@ -5592,6 +5604,7 @@ let Extension =
   // etc
 
   _verbosityChange,
+  verbosityGet,
 
   vcsProviderFor,
   vcsToolsFor,

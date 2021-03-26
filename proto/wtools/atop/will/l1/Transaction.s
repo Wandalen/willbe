@@ -21,37 +21,126 @@ Self.shortName = 'Transaction';
 
 function finit()
 {
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
+  let t = this;
+
+  t.unform();
+
+  return _.Copyable.prototype.finit.apply( t, arguments );
 }
 
 //
 
 function init( o )
 {
-  let transaction = this;
+  let t = this;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( arguments.length === 1 );
 
-  _.workpiece.initFields( transaction );
-  Object.preventExtensions( transaction );
+  t.formAssociates( o );
+
+  _.workpiece.initFields( t );
+  Object.preventExtensions( t );
 
   if( o )
-  transaction.copy( o );
+  t.copy( o )
+
+  t.form();
+}
+
+//
+
+function unform()
+{
+  let t = this;
+  let will = t.will;
+  let logger = will.logger;
+  _.assert( logger.verbosity === t.verbosity, 'Verbosity of the main logger was changed' );
+  t.formed = 0;
+  logger.verbosity = t._verbosityPrev;
+}
+
+//
+
+function form()
+{
+  let t = this;
 
   for( let p in TransactionFields )
-  if( transaction[ p ] === null )
-  transaction[ p ] = TransactionFields[ p ];
+  if( t[ p ] === null )
+  t[ p ] = TransactionFields[ p ];
 
-  Object.freeze( transaction );
+  t.formed = 1;
+
+  // Object.freeze( t );
+}
+
+//
+
+function formAssociates( o )
+{
+  let t = this;
+  _.assert( o.will instanceof _.Will );
+  t.will = o.will;
+}
+
+//
+
+function verbosityGet()
+{
+  let t = this;
+  let will = t.will;
+  let logger = will.logger;
+  _.assert( t.formed === 0 || logger.verbosity === t._.verbosity, 'Verbosity of the main logger was changed outside of the transaction' );
+  return t._.verbosity;
+}
+
+//
+
+function verbositySet( src )
+{
+  let t = this;
+  let will = t.will;
+  let logger = will.logger;
+
+  if( t.formed )
+  return;
+
+  if( t._verbosityPrev === null )
+  t._verbosityPrev = logger.verbosity;
+  logger.verbosity = src;
+  t._.verbosity = src;
+}
+
+//
+
+function _transactionPropertyGetter_functor( propName )
+{
+  return function get()
+  {
+    let t = this;
+    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) );
+    return t._[ propName ];
+  }
+}
+
+//
+
+function _transactionPropertySetter_functor( propName )
+{
+  return function set( src )
+  {
+    let t = this;
+    if( t.formed )
+    return;
+    t._[ propName ] = src;
+  }
 }
 
 //
 
 let TransactionFields =
 {
-  v : null,
+  v : 3,
   verbosity : 3,
 
   ... _.Will.FilterFields,
@@ -65,7 +154,9 @@ let TransactionFields =
 
 let Composes =
 {
-  ... TransactionFields
+  ... TransactionFields,
+
+  isInitial : 0
 }
 
 let Aggregates =
@@ -74,10 +165,13 @@ let Aggregates =
 
 let Associates =
 {
+  will : null
 }
 
 let Restricts =
 {
+  formed : 0,
+  _verbosityPrev : null
 }
 
 let Statics =
@@ -91,8 +185,16 @@ let Forbids =
 
 let Accessors =
 {
+  _ : { get : _.accessor.getter.withSymbol, writable : 0 },
+  verbosity : { get : verbosityGet, set : verbositySet },
   v : { suite : _.accessor.suite.alias({ originalName : 'verbosity' }) },
 }
+
+_.each( TransactionFields, ( val, key ) =>
+{
+  if( !Accessors[ key ] )
+  Accessors[ key ] = { get : _transactionPropertyGetter_functor( key ), set : _transactionPropertySetter_functor( key ) }
+})
 
 // --
 // declare
@@ -105,6 +207,12 @@ let Extension =
 
   finit,
   init,
+
+  unform,
+  form,
+  formAssociates,
+
+  verbositySet,
 
   // relation
 
