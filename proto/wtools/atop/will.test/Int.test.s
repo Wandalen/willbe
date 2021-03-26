@@ -5944,7 +5944,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 21 );
+    test.identical( resolved.length, 22 );
 
     test.case = '*::*a*/qualifiedName';
     var exp =
@@ -5962,6 +5962,7 @@ function superResolve( test )
       'step::willfile.generate',
       'step::git.status',
       'step::git.tag',
+      'step::modules.update',
       'step::submodules.download',
       'step::submodules.update',
       'step::submodules.agree',

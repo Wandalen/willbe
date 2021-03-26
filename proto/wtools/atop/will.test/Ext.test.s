@@ -23982,7 +23982,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -24000,7 +24001,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -24018,7 +24020,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
+    // test.true( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local has different origin url' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })

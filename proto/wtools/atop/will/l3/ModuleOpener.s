@@ -1195,12 +1195,16 @@ function _repoForm()
         remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
         isRemote = opener.repoIsRemote();
       }
-      else if( _.git.isRepository({ localPath : opener.localPath }) )
+      else if( opener.isMain )
       {
-        downloadPath = opener._.downloadPath = opener._.localPath;
-        let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
-        remotePath = opener._.remotePath = remotePathFromLocal;
-        isRemote = opener.repoIsRemote();
+        let localPath = fileProvider.path.localFromGlobal( opener.localPath )
+        if( _.git.isRepository({ localPath }) )
+        {
+          downloadPath = opener._.downloadPath = opener._.localPath;
+          let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+          remotePath = opener._.remotePath = remotePathFromLocal;
+          isRemote = opener.repoIsRemote();
+        }
       }
     }
 
