@@ -17,6 +17,7 @@ function onModule( context )
   */
 
   if( context.withPath !== context.junction.localPath )
+  if( context.withPath !== context.junction.localPath )
   {
     debugger;
     throw _.errBrief

@@ -69,6 +69,9 @@ function form()
   if( t[ p ] === null )
   t[ p ] = TransactionFields[ p ];
 
+  if( !t.withPath )
+  t.withPath = _.fileProvider.path.join( _.fileProvider.path.current(), './' );
+
   t.formed = 1;
 
   // Object.freeze( t );
@@ -118,7 +121,7 @@ function _transactionPropertyGetter_functor( propName )
   return function get()
   {
     let t = this;
-    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) );
+    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) || _.strDefined( t._[ propName ] ) );
     return t._[ propName ];
   }
 }
@@ -142,10 +145,13 @@ let TransactionFields =
 {
   v : 3,
   verbosity : 3,
+  verboseStaging : 0,
 
   beeping : 0,
 
   ... _.Will.FilterFields,
+
+  withPath : null,
 
   withSubmodules : null
 }

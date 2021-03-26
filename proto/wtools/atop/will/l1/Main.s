@@ -192,8 +192,8 @@ function form()
 
   if( !will.environmentPath )
   will.environmentPath = will.environmentPathFind( will.fileProvider.path.current() );
-  if( !will.withPath )
-  will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
+  // if( !will.withPath )
+  // will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !will.formed );
@@ -4996,7 +4996,8 @@ function hookContextFrom( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let withPath = path.join( _.path.current(), will.withPath || './' );
+  // let withPath = path.join( _.path.current(), will.withPath || './' );
+  let withPath = path.join( _.path.current(), will.transaction.withPath || './' );
 
   o = will.resourceWrap( o );
 
@@ -5153,7 +5154,8 @@ function hookCall( o )
   if( o.module && o.withPath )
   o.withPath = path.s.join( o.module.inPath, o.withPath );
   else
-  o.withPath = path.s.join( o.will.withPath, o.withPath );
+  // o.withPath = path.s.join( o.will.withPath, o.withPath );
+  o.withPath = path.s.join( o.will.transaction.withPath, o.withPath );
 
   /* */
 
@@ -5418,10 +5420,10 @@ let Composes =
 {
 
   // verbosity : 3,
-  verboseStaging : 0,
+  // verboseStaging : 0,
 
   environmentPath : null,
-  withPath : null,
+  // withPath : null,
   // withSubmodules : null,
 
   // ... FilterFields,
@@ -5554,6 +5556,8 @@ let Forbids =
   withKnown : 'withKnown',
   withUnknown : 'withUnknown',
 
+  withPath : 'withPath',
+
   withSubmodules : 'withSubmodules'
 }
 
@@ -5567,6 +5571,7 @@ let Accessors =
   // withSubmodules : {},
 
   verbosity : { get : verbosityGet, writable : 0 },
+  verboseStaging : { suite : _.accessor.suite.alias({ container : 'transaction', originalName : 'verboseStaging' }) },
 
 }
 

@@ -564,7 +564,7 @@ function _commandListLike( o )
   _.assert( o.resourceKind !== undefined );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   will._commandsBegin( o.commandRoutine );
 
@@ -776,7 +776,7 @@ function _commandCleanLike( o )
   let ready = new _.Consequence().take( null );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -876,7 +876,7 @@ function _commandNewLike( o )
   let ready = new _.Consequence().take( null );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandNewLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -903,7 +903,7 @@ function _commandNewLike( o )
   if( will.currentOpeners !== null || will.currentOpener !== null )
   throw _.errBrief( 'Cant call command new for module which already exists!' );
 
-  let localPath = will.moduleNew({ collision : 'ignore', localPath : will.withPath });
+  let localPath = will.moduleNew({ collision : 'ignore', localPath : will.transaction.withPath });
   let o2 = _.mapExtend( null, o );
   o2.localPath = localPath;
   o2.tracing = 0;
@@ -929,7 +929,7 @@ function _commandNewLike( o )
     ready2.then( () =>
     {
       will.readingEnd();
-      _.assert( it2.opener.localPath === will.withPath );
+      _.assert( it2.opener.localPath === will.transaction.withPath );
       return o.onEach.call( will, it2 );
     });
 
@@ -994,7 +994,7 @@ function _commandTreeLike( o )
   _.assert( _.objectIs( o.event ) );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   will._commandsBegin( o.commandRoutine );
 
@@ -1056,7 +1056,7 @@ function _commandModulesLike( o )
   let ready = new _.Consequence().take( null );
 
   _.assert( cui.transaction === null );
-  cui.transaction = _.will.Transaction( _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) );
+  cui.transaction = _.will.Transaction({ will : cui, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandModulesLike, arguments );
   _.mapSupplementNulls( o, cui.filterImplied() );
@@ -2364,12 +2364,12 @@ function commandModuleNew( e )
   if( e.propertiesMap.verbosity === undefined )
   e.propertiesMap.verbosity = 1;
 
-  if( will.withPath )
+  if( will.transaction.withPath )
   {
     if( e.propertiesMap.localPath )
-    e.propertiesMap.localPath = path.join( will.withPath, e.propertiesMap.localPath );
+    e.propertiesMap.localPath = path.join( will.transaction.withPath, e.propertiesMap.localPath );
     else
-    e.propertiesMap.localPath = will.withPath;
+    e.propertiesMap.localPath = will.transaction.withPath;
   }
 
   return will.moduleNew( e.propertiesMap );
@@ -3595,7 +3595,11 @@ function commandWith( e )
     }
   }
 
-  cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
+  // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
+  let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.commandArgument ) );
+
+  cui._propertiesImply({ withPath })
+
 
   return cui.modulesFindWithAt
   ({
@@ -3604,6 +3608,10 @@ function commandWith( e )
   })
   .then( function( it )
   {
+    _.assert( cui.transaction instanceof _.will.Transaction );
+    cui.transaction.finit();
+    cui.transaction = null;
+
     cui.currentOpeners = it.sortedOpeners;
 
     if( !cui.currentOpeners.length )
