@@ -4,8 +4,8 @@
 'use strict';
 
 let Tar, Open;
-let _ = _global_.wTools;
-let Self = Object.create( null );
+const _ = _global_.wTools;
+const Self = Object.create( null );
 
 // --
 // routines

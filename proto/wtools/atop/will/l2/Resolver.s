@@ -1476,7 +1476,7 @@ function filesFromResource_body( o )
   if( o.prefixlessAction === 'pathOrReflector' )
   {
 
-    let o2 = _.mapOnly( o, module.resolve.defaults );
+    let o2 = _.mapOnly_( null, o, module.resolve.defaults );
     delete o2.constructor;
     o2.prefixlessAction = 'default';
     o2.missingAction = 'undefine';
@@ -1484,7 +1484,7 @@ function filesFromResource_body( o )
     resources = module.resolve( o2 );
     if( !resources )
     {
-      let o2 = _.mapOnly( o, module.resolve.defaults );
+      let o2 = _.mapOnly_( null, o, module.resolve.defaults );
       delete o2.constructor;
       o2.prefixlessAction = 'default';
       o2.missingAction = 'undefine';
@@ -1506,7 +1506,7 @@ function filesFromResource_body( o )
   }
   else
   {
-    let o2 = _.mapOnly( o, module.resolve.defaults );
+    let o2 = _.mapOnly_( null, o, module.resolve.defaults );
     debugger;
     delete o2.constructor;
     resources = module.resolve( o2 );

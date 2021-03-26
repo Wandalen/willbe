@@ -13,9 +13,9 @@ let Tar;
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = _.will.Resource;
-let Self = wWillExported;
+const Self = wWillExported;
 function wWillExported( o )
 {
   return _.workpiece.construct( Self, this, arguments );

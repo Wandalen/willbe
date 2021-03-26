@@ -18,10 +18,10 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Crypto;
 let Parent = null;
-let Self = wWillfile;
+const Self = wWillfile;
 function wWillfile( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -539,9 +539,9 @@ function _open()
     try
     {
       if( willf.structure.format )
-      _.sureMapHasOnly( willf.structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
+      _.map.sureHasOnly( willf.structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
       else
-      _.sureMapHasOnly( willf.structure, willf.KnownSectionsOfIn, () => 'Willfile should not have section(s) :' );
+      _.map.sureHasOnly( willf.structure, willf.KnownSectionsOfIn, () => 'Willfile should not have section(s) :' );
     }
     catch( err )
     {
@@ -755,7 +755,7 @@ function _importToModule()
 
     if( willf.structure.format )
     {
-      _.sureMapHasOnly( structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
+      _.map.sureHasOnly( structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
       _.assert
       (
         _.arrayIs( structure.root ) && structure.root.length === 1,
@@ -764,7 +764,7 @@ function _importToModule()
     }
     else
     {
-      _.sureMapHasOnly( structure, willf.KnownSectionsOfIn, () => 'Willfile should not have section(s) :' );
+      _.map.sureHasOnly( structure, willf.KnownSectionsOfIn, () => 'Willfile should not have section(s) :' );
     }
 
     /* */
@@ -1582,7 +1582,7 @@ function save( o )
 
   o = _.routineOptions( save, arguments );
 
-  let o2 = _.mapOnly( o, willf.exportStructure.defaults );
+  let o2 = _.mapOnly_( null, o, willf.exportStructure.defaults );
   let structure = willf.exportStructure( o2 );
 
   _.assert( _.strIs( willf.filePath ) );
@@ -1615,7 +1615,7 @@ function exportStructure( o )
   o = _.routineOptions( exportStructure, arguments );
   debugger;
 
-  let o2 = _.mapOnly( o, module.exportStructure.defaults );
+  let o2 = _.mapOnly_( null, o, module.exportStructure.defaults );
   o2.willf = willf
   let structure = module.exportStructure( o2 );
 

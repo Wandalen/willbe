@@ -3,9 +3,9 @@
 
 'use strict';
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = null;
-let Self = wWillModuleHandle;
+const Self = wWillModuleHandle;
 function wWillModuleHandle( o )
 {
   return _.workpiece.construct( Self, this, arguments );

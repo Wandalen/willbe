@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = _.will.Resource;
-let Self = wWillReflector;
+const Self = wWillReflector;
 function wWillReflector( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -507,8 +507,8 @@ function _inheritSingle( o )
   _.assert( reflector2.formed === 3 );
 
   let only = _.mapOnlyNulls( reflector );
-  only = _.mapOnly( reflector, reflector.Composes );
-  let extend = _.mapOnly( reflector2, only );
+  only = _.mapOnly_( null, reflector, reflector.Composes );
+  let extend = _.mapOnly_( null, reflector2, only );
 
   delete extend.src;
   delete extend.dst;

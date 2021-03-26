@@ -1,4 +1,4 @@
-let Self =
+const Self =
 {
 
   // 'builder' : [{ softLink : '../../../app/builder', absolute : 0 }],
@@ -213,7 +213,7 @@ eslint.rapidity = -1;
 // declare
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Integration',

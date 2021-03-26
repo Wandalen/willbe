@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = null;
-let Self = wWillRepository;
+const Self = wWillRepository;
 function wWillRepository( o )
 {
   return _.workpiece.construct( Self, this, arguments );

@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = _.will.Resource;
-let Self = wWillModulesRelation;
+const Self = wWillModulesRelation;
 function wWillModulesRelation( o )
 {
   return _.workpiece.construct( Self, this, arguments );

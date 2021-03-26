@@ -32,9 +32,9 @@
   Note: verify throws an error if result of check is false and throwing is enabled
 */
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = _.will.AbstractModule;
-let Self = wWillModule;
+const Self = wWillModule;
 function wWillModule( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -2616,7 +2616,7 @@ function modulesBuild_body( o )
   return will.modulesBuild( o );
 }
 
-var defaults = modulesBuild_body.defaults = _.mapExtend( null, _.mapBut( moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
+var defaults = modulesBuild_body.defaults = _.mapExtend( null, _.mapBut_( null, moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
 
 defaults.recursive = 0;
 defaults.withStem = 1;
@@ -3705,7 +3705,7 @@ function submodulesRelationsFilter( o )
   let resultJunctions = will.junctionsFrom( result );
 
   let junction = will.junctionFrom( module );
-  let junctions = junction.submodulesJunctionsFilter( _.mapOnly( o, junction.submodulesJunctionsFilter.defaults ) );
+  let junctions = junction.submodulesJunctionsFilter( _.mapOnly_( null, o, junction.submodulesJunctionsFilter.defaults ) );
 
   // if( junctions.length )
   // debugger;
@@ -3755,7 +3755,7 @@ function submodulesRelationsOwnFilter( o )
 
   o = _.routineOptionsPreservingUndefines( submodulesRelationsOwnFilter, arguments );
 
-  let filter = _.mapOnly( o, will.relationFit.defaults );
+  let filter = _.mapOnly_( null, o, will.relationFit.defaults );
 
   moduleLook( module );
 
@@ -4919,7 +4919,7 @@ function cleanLog( o )
   }
 
   debugger;
-  let o3 = _.mapOnly( o, will.cleanLog.defaults );
+  let o3 = _.mapOnly_( null, o, will.cleanLog.defaults );
   return will.cleanLog( o3 );
 }
 
@@ -4946,15 +4946,15 @@ function clean( o )
   if( o.beginTime === null )
   o.beginTime = _.time.now();
 
-  let o2 = _.mapOnly( o, module.cleanWhat.defaults );
+  let o2 = _.mapOnly_( null, o, module.cleanWhat.defaults );
   o.files = module.cleanWhat( o2 );
 
   debugger;
 
-  let o3 = _.mapOnly( o, will.cleanDelete.defaults );
+  let o3 = _.mapOnly_( null, o, will.cleanDelete.defaults );
   will.cleanDelete( o3 );
 
-  let o4 = _.mapOnly( o, will.cleanLog.defaults );
+  let o4 = _.mapOnly_( null, o, will.cleanLog.defaults );
   will.cleanLog( o4 );
 
   return o.files;
@@ -4980,7 +4980,7 @@ function _resolve_head( routine, args )
 
   _.assert( _.aux.is( o ) );
   // _.routineOptionsPreservingUndefines( routine, o );
-  _.assertMapHasOnly( o, routine.defaults );
+  _.map.assertHasOnly( o, routine.defaults );
 
   if( o.visited === null || o.visited === undefined )
   o.visited = [];
@@ -6524,7 +6524,7 @@ function optionsForOpenerExport()
 
   }
 
-  let result = _.mapOnly( module, fields );
+  let result = _.mapOnly_( null, module, fields );
 
   // debugger; xxx
   // result.hasFiles = true;
@@ -7910,8 +7910,8 @@ function willfileExtendWillfile( o )
           {
             if( sectionName in config )
             {
-              let screenMap = _.mapBut( willfile[ sectionName ], config[ sectionName ] );
-              let srcMap = _.mapBut( willfile[ sectionName ], screenMap );
+              let screenMap = _.mapBut_( null, willfile[ sectionName ], config[ sectionName ] );
+              let srcMap = _.mapBut_( null, willfile[ sectionName ], screenMap );
               opts.onSection( config[ sectionName ], srcMap );
               willfile[ sectionName ] = screenMap;
             }
@@ -9160,7 +9160,7 @@ function gitStatus( o )
   if( config !== null && config.about && config.about[ 'github.token' ] )
   token = config.about[ 'github.token' ];
 
-  let o2 = _.mapOnly( o, _.git.statusFull.defaults );
+  let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = o.dirPath;
   if( !o2.token )
   o2.token = token;
@@ -9242,13 +9242,13 @@ function gitSync( o )
   .then( () =>
   {
     if( status.remote )
-    return module.gitPull.call( module, _.mapBut( o, { commit : '.', dry : '.' } ) );
+    return module.gitPull.call( module, _.mapBut_( null, o, { commit : '.', dry : '.' } ) );
     return null;
   })
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
+    return module.gitPush.call( module, _.mapBut_( null, o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
     return null;
   })
 
