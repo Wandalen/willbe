@@ -593,7 +593,12 @@ function verbosityGet()
 {
   let will = this;
   let transaction = will.transaction;
+  let logger = will.logger;
+
+  if( transaction )
   return transaction.verbosity;
+
+  return logger.verbosity;
 }
 
 //
@@ -5561,7 +5566,7 @@ let Accessors =
   hooksPath : { get : hooksPathGet, writable : 0 },
   // withSubmodules : {},
 
-  verbosity : { get : verbosityGet, writable : 0  },
+  verbosity : { get : verbosityGet, writable : 0 },
 
 }
 
