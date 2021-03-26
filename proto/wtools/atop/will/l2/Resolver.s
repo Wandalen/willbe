@@ -1120,6 +1120,7 @@ function performBegin()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
+
   Parent.performBegin.apply( it, arguments );
 
   let module = it.baseModule;
