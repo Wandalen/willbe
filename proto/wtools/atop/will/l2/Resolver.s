@@ -174,6 +174,8 @@ function _onDownEnd()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
 
+  debugger;
+
   if( !it.dstWritingDown )
   return;
 
@@ -364,8 +366,6 @@ function _globCriterionFilter()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-
-  _.debugger;
 
   // if( it.down && it.down.selectorIsGlob )
   if( it.down && it.down.selectorType === 'glob' )
@@ -1279,7 +1279,6 @@ _.assert( !!_.resolverAdv.Resolver.Selector );
 let ResolverWillbeSelector =
 ({
   name : 'ResolverWillbeSelector',
-  // parent : _.resolverAdv.Resolver.Selector, /* yyy : should work woithout it */
   prime :
   {
   },
@@ -1293,7 +1292,6 @@ let ResolverWillbeSelector =
   },
   iteration :
   {
-    // currentModule : null,
   },
 });
 
@@ -1307,7 +1305,6 @@ _.assert( _.resolverAdv.Resolver.Iterator.resolveExtraOptions === undefined );
 let ResolverWillbeReplicator =
 ({
   name : 'ResolverWillbeReplicator',
-  // parent : _.resolverAdv.Resolver.Replicator, /* yyy : should work woithout it */
   prime : Prime,
   looker :
   {
@@ -1424,7 +1421,6 @@ function pathOrReflectorResolve_body( o )
   if( resource )
   return resource;
 
-
   let o3 = _.mapExtend( null, o );
   o3.missingAction = 'undefine';
   o3.selector = 'path::' + o.selector;
@@ -1473,8 +1469,6 @@ function filesFromResource_body( o )
   let path = fileProvider.path;
   let resources;
 
-  debugger;
-
   if( o.prefixlessAction === 'pathOrReflector' )
   {
 
@@ -1484,6 +1478,7 @@ function filesFromResource_body( o )
     o2.missingAction = 'undefine';
     o2.defaultResourceKind = 'path';
     resources = module.resolve( o2 );
+
     if( !resources )
     {
       let o2 = _.mapOnly_( null, o, module.resolve.defaults );
@@ -1510,7 +1505,9 @@ function filesFromResource_body( o )
   {
     let o2 = _.mapOnly_( null, o, module.resolve.defaults );
     delete o2.constructor;
+    debugger;
     resources = module.resolve( o2 );
+    debugger;
   }
 
   if( _.arrayIs( resources ) )
