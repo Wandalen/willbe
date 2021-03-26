@@ -1473,6 +1473,8 @@ function filesFromResource_body( o )
   let path = fileProvider.path;
   let resources;
 
+  debugger;
+
   if( o.prefixlessAction === 'pathOrReflector' )
   {
 
