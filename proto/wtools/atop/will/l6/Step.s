@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.Resource;
-let Self = wWillStep;
+const _ = _global_.wTools;
+const Parent = _.will.Resource;
+const Self = wWillStep;
 function wWillStep( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -78,7 +78,7 @@ function init( o )
   {
     if( _.mapIs( o ) )
     {
-      let opts2 = _.mapBut( o, step.constructor.FieldsOfInputGroups );
+      let opts2 = _.mapBut_( null, o, step.constructor.FieldsOfInputGroups );
       _.mapDelete( o, opts2 );
       o.opts = _.mapExtend( o.opts || null, opts2 )
     }
@@ -129,7 +129,7 @@ function form2()
       _.assert( step2.formed >= 2 );
       _.assert( _.objectIs( step2.uniqueOptions ) );
 
-      if( _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) ).length )
+      if( _.mapKeys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) ).length )
       {
         step.inherit.push( step2.name );
       }
@@ -138,7 +138,7 @@ function form2()
       throw _.err
       (
         'Cant deduce ancestors of', step.qualifiedName, ' to inherit them\n',
-        'Several steps have such unique options', _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) )
+        'Several steps have such unique options', _.mapKeys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) )
       );
 
     }
@@ -174,7 +174,7 @@ function form3()
 
   if( step.opts && step.stepRoutine.stepOptions )
   {
-    _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.qualifiedName + ' should not have options' );
+    _.map.sureHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.qualifiedName + ' should not have options' );
   }
 
   step.formed = 3;

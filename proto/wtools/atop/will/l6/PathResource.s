@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.Resource;
-let Self = wWillPathResource;
+const _ = _global_.wTools;
+const Parent = _.will.Resource;
+const Self = wWillPathResource;
 function wWillPathResource( o )
 {
   return _.workpiece.construct( Self, this, arguments );

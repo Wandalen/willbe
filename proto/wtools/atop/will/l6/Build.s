@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.Resource;
-let Self = wWillBuild;
+const _ = _global_.wTools;
+const Parent = _.will.Resource;
+const Self = wWillBuild;
 function wWillBuild( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -132,7 +132,7 @@ function stepsEach( o )
   function inMap( steps )
   {
     _.assert( _.mapIs( steps ) );
-    _.assertMapHasOnly( steps, { concurrent : null } );
+    _.map.assertHasOnly( steps, { concurrent : null } );
     // onEach({ concurrent : steps.concurrent });
     handleEach({ concurrent : steps.concurrent });
     inArray( steps.concurrent );

@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillModuleJunction;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillModuleJunction;
 function wWillModuleJunction( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -1484,7 +1484,7 @@ function submodulesJunctionsFilter( o )
 
   o = _.routineOptions( submodulesJunctionsFilter, arguments );
 
-  let filter = _.mapOnly( o, will.relationFit.defaults );
+  let filter = _.mapOnly_( null, o, will.relationFit.defaults );
 
   junctionLook( junction );
 

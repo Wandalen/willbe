@@ -18,7 +18,6 @@ function onModule( context )
 
   if( context.withPath !== context.junction.localPath )
   {
-    debugger;
     throw _.errBrief
     (
       `Attempt to prepare ${context.junction.localPath}.`
@@ -54,7 +53,7 @@ function onModule( context )
     context.ready.take( arg );
 
     context.start( `git add --all` );
-    context.start( `git add --force '*.will.*'` );
+    context.start( `git add --force '*will.*'` );
     context.start( `git add --force .gitattributes` );
     context.start( `git add --force .gitignore` );
     context.start( `git add --force .github` );

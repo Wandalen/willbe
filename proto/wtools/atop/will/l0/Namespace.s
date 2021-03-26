@@ -45,8 +45,8 @@ function isJunction( object )
 // relations
 // --
 
-let _ = _global_.wTools;
-let Self = _.will = _.will || Object.create( null );
+const _ = _global_.wTools;
+const Self = _.will = _.will || Object.create( null );
 let ModuleVariant = [ '/', '*/object', '*/module', '*/relation', '*/handle' ];
 
 // --

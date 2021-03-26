@@ -194,7 +194,7 @@ eslint.rapidity = -2;
 // declare
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Integration',
@@ -211,7 +211,7 @@ let Self =
 
 //
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 _global_.wTester.test( Self.name );
 

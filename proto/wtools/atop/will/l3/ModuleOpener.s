@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.AbstractModule;
-let Self = wWillModuleOpener;
+const _ = _global_.wTools;
+const Parent = _.will.AbstractModule;
+const Self = wWillModuleOpener;
 function wWillModuleOpener( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -100,7 +100,7 @@ function optionsForModuleExport()
 
   }
 
-  let result = _.mapOnly( opener, Import );
+  let result = _.mapOnly_( null, opener, Import );
 
   result.superRelations = null;
   result.willfilesArray = _.entity.make( result.willfilesArray );
@@ -142,10 +142,10 @@ function copy( o )
     downloadPath : null,
     remotePath : null,
   }
-  let o2 = _.mapOnly( o, read );
+  let o2 = _.mapOnly_( null, o, read );
   _.mapExtend( opener._, o2 );
 
-  o = _.mapBut( o, read );
+  o = _.mapBut_( null, o, read );
   let result = _.Copyable.prototype.copy.apply( opener, [ o ] );
 
   return result;
@@ -986,7 +986,7 @@ function submodulesRelationsFilter( o )
 //
 //   let result = opener.submodulesRelationsOwnFilter( o );
 //   let junction = will.junctionFrom( opener );
-//   let junctions = junction.submodulesJunctionsFilter( _.mapOnly( o, junction.submodulesJunctionsFilter ) );
+//   let junctions = junction.submodulesJunctionsFilter( _.mapOnly_( null, o, junction.submodulesJunctionsFilter ) );
 //
 //   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 //
