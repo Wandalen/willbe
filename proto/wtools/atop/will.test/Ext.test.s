@@ -38041,6 +38041,7 @@ function commandNpmPublish( test )
   a.fileProvider.dirMake( a.abs( '.' ) );
 
   let botUser = 'wtools-bot';
+  let botRepo = 'WillbeNpmPublishTest';
   let botPass = process.env.PRIVATE_WTOOLS_BOT_NPM_PASS;
   let botEmail = process.env.PRIVATE_WTOOLS_BOT_EMAIL;
   if( !_.process.insideTestContainer() || !botPass || !botEmail )
@@ -38361,7 +38362,7 @@ function commandNpmPublish( test )
 
   function repoPrepare()
   {
-    a.shell( `git clone https://github.com/${ botUser }/bModuleForTesting1.git .` );
+    a.shell( `git clone https://github.com/${ botUser }/${ botRepo }.git .` );
     a.shell( 'npm i -g npm-cli-login' );
     a.shell
     ({
