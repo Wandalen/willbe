@@ -360,6 +360,7 @@ function _commandsMake()
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList )                  },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList )       },
     'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree )                  },
+    'modules update' :                  { e : _.routineJoin( will, will.commandModulesUpdate )                },
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList )                },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList )                    },
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList )               },
@@ -1681,6 +1682,66 @@ commandModulesTree.commandProperties =
 
 //
 
+function commandModulesUpdate( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesUpdate, arguments );
+
+  let implyMap = _.mapOnly( e.propertiesMap, commandModulesUpdate.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+
+  cui._propertiesImply( implyMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'update modules',
+    onEach : handleEach,
+    commandRoutine : commandModulesUpdate,
+  });
+
+  function handleEach( it )
+  {
+    let con = _.take( null );
+
+    con.then( () =>
+    {
+      if( e.propertiesMap.to )
+      it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
+
+      let o2 = _.mapOnly( e.propertiesMap, it.opener.repoUpdate.defaults );
+      o2.strict = 0;
+      return it.opener.repoUpdate( o2 );
+    })
+
+    con.then( () =>
+    {
+      let o2 = cui.filterImplied();
+      o2 = _.mapExtend( o2, e.propertiesMap );
+      return it.opener.openedModule.subModulesUpdate( o2 );
+    })
+
+    return con;
+  }
+}
+
+commandModulesUpdate.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesUpdate.hint = 'Update root module and each submodule.';
+commandModulesUpdate.longHint = 'Update root and each submodule or check for available updates for root module and each submodule. Does nothing if all submodules have fixated version.';
+commandModulesUpdate.commandSubjectHint = false;
+commandModulesUpdate.commandProperties =
+{
+  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  to : 'Checkouts root and it submodules to specified version/tag.',
+  ... commandImply.commandProperties,
+}
+
+//
+
 function commandSubmodulesAdd( e )
 {
   let cui = this;
@@ -1890,6 +1951,18 @@ function commandSubmodulesVersionsUpdate( e )
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
 
+   /* Vova:
+     Hotfix. Fixes situations when previous command changed with* fields of the main.
+     Remove after moving FilterFields fields out of the main and passing them as options( where possoble ).
+  */
+  _.mapSupplement( implyMap,
+  {
+    withOut : 1,
+    withInvalid : 1,
+    withValid : 1,
+    withEnabled : 1
+  })
+
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
@@ -1918,7 +1991,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
-  to : 'Checkouts root and each of it submodules to specified version/tag',
+  to : 'Checkouts submodules to specified version/tag.',
   ... commandImply.commandProperties,
 }
 
@@ -5302,6 +5375,7 @@ let Extension =
   commandModulesList,
   commandModulesTopologicalList,
   commandModulesTree,
+  commandModulesUpdate,
 
   commandSubmodulesAdd,
   commandSubmodulesFixate,
