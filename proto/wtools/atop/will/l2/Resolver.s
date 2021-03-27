@@ -1171,8 +1171,8 @@ function optionsToIteration( iterator, o )
   (
     !it.baseModule
     || !it.currentContext
-    || !it.currentContext.moduleForResolve
-    || it.currentContext.moduleForResolve === it.baseModule
+    || !it.currentContext.resolverModule
+    || it.currentContext.resolverModule === it.baseModule
     ,
     `Current context belong to another base module, something wrong!`
   );
@@ -1205,8 +1205,8 @@ function iteratorInitEnd( iterator )
   {
     debugger;
     _.assert( 0, 'not tested' ); /* xxx */
-    if( iterator.currentContext && _.routineIs( iterator.currentContext.moduleForResolveGet ) )
-    iterator.baseModule = iterator.currentContext.moduleForResolveGet();
+    if( iterator.currentContext && _.routineIs( iterator.currentContext.resolverModuleGet ) )
+    iterator.baseModule = iterator.currentContext.resolverModuleGet();
   }
 
   if( iterator.src === null || iterator.src === undefined )
@@ -1532,6 +1532,12 @@ function filesFromResource_body( o )
     }
     else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
     {
+
+      if( _.strIs( resource ) || _.arrayIs( resource ) && o.currentContext && o.currentContext.resolverModule )
+      {
+
+      }
+
       if( o.globOnly )
       if( _.strIs( resource ) )
       _.sure( path.isGlob( resource ), `${resource} is not glob. Only glob allowed` );

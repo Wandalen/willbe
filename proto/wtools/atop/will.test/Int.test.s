@@ -9271,27 +9271,26 @@ function filesFromResource( test )
   //   return null;
   // });
   // xxx
-
-  a.ready.then( () =>
-  {
-    test.case = 'resolve directory from absolute path';
-    let module = opener.openedModule;
-    let selector = a.abs( 'proto/' );
-    _.debugger = true;
-    debugger;
-    let got = module.filesFromResource({ selector, currentContext : module });
-    debugger;
-    _.debugger = false;
-    test.identical( got, a.abs([ './proto' ]) );
-    return null;
-  });
+  //
+  // a.ready.then( () =>
+  // {
+  //   test.case = 'resolve directory from absolute path';
+  //   let module = opener.openedModule;
+  //   let selector = a.abs( 'proto/' );
+  //   _.debugger = true;
+  //   debugger;
+  //   let got = module.filesFromResource({ selector, currentContext : module });
+  //   debugger;
+  //   _.debugger = false;
+  //   test.identical( got, a.abs([ './proto' ]) );
+  //   return null;
+  // });
 
   a.ready.then( () =>
   {
     test.case = 'resolve directory from relative path';
     let module = opener.openedModule;
     let selector = './proto/';
-    _.debugger = true;
     debugger;
     let got = module.filesFromResource({ selector, currentContext : module });
     debugger;

@@ -2678,6 +2678,14 @@ delete defaults.onNode;
 // submodule
 // --
 
+function resolverModuleGet()
+{
+  let module = this;
+  return module;
+}
+
+//
+
 function rootModuleGet()
 {
   let module = this;
@@ -4989,7 +4997,7 @@ function _resolve_head( routine, args )
   {
     _.debugger;
     if( o.currentContext )
-    o.baseModule = o.currentContext.moduleForResolve || module;
+    o.baseModule = o.currentContext.resolverModule || module;
     else
     o.baseModule = module;
   }
@@ -9657,6 +9665,7 @@ let Accessors =
   about : { set : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.will.ParagraphAbout }) },
   rootModule : { get : rootModuleGet, set : rootModuleSet },
   peerModule : { set : peerModuleSet },
+  resolverModule : { get : resolverModuleGet, set : 0 },
 
   submoduleMap : { set : ResourceSetter_functor({ resourceName : 'ModulesRelation', mapName : 'submoduleMap' }) },
   pathResourceMap : { set : ResourceSetter_functor({ resourceName : 'PathResource', mapName : 'pathResourceMap' }) },
@@ -9801,6 +9810,7 @@ let Extension =
 
   // submodule
 
+  resolverModuleGet,
   rootModuleGet,
   rootModuleSet,
   rootModuleSetAct,

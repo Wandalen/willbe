@@ -544,7 +544,7 @@ function moduleSet( src )
 
 //
 
-function moduleForResolveGet()
+function resolverModuleGet()
 {
   let resource = this;
   _.assert( arguments.length === 0 );
@@ -989,7 +989,7 @@ let Accessors =
   longPath : { get : longPathGet },
   path : { set : pathSet },
   module : { combining : 'rewrite' },
-  moduleForResolve : { get : moduleForResolveGet, set : 0, combining : 'rewrite' },
+  resolverModule : { get : resolverModuleGet, set : 0, combining : 'rewrite' },
 }
 
 
@@ -1039,7 +1039,7 @@ let Extension =
   isAvailableGet,
   isAliveGet,
   moduleSet,
-  moduleForResolveGet,
+  resolverModuleGet,
 
   // path
 
