@@ -2883,6 +2883,8 @@ function modulesDownload_body( o )
         () => 'Submodule' + ( junction.opener ? junction.opener.qualifiedName : n ) + ' was not preformed to download it'
       );
 
+      if( junctionIsRoot( junction ) )
+      return junctionLocalMaybe( junction );
       if( !junction.isRemote || !junction.relation )
       return junctionLocalMaybe( junction );
       if( junction.relation && !junction.relation.enabled )
@@ -2931,36 +2933,7 @@ function modulesDownload_body( o )
 
     if( o.mode === 'update' )
     if( o.to )
-    {
-      _.assert( _.strDefined( o.to ) );
-
-      var vcs = will.vcsToolsFor( junction.opener.remotePath );
-      var remoteParsed = vcs.pathParse( junction.opener.remotePath )
-
-      var globalTo = vcs.path.globalFromPreferred( o.to );
-
-      var toParsed = vcs.pathParse( globalTo );
-
-      if( toParsed.tag )
-      {
-        remoteParsed.tag = toParsed.tag;
-        remoteParsed.hash = null;
-      }
-      else if( toParsed.hash )
-      {
-        remoteParsed.tag = null;
-        remoteParsed.hash = toParsed.hash;
-      }
-      else
-      {
-        throw _.err( `Option "to" should be either tag or version. Got:${o.to}` );
-      }
-
-      let remotePathNew = vcs.path.str( remoteParsed );
-
-      junction.opener.remotePathSet( remotePathNew );
-      junction.opener.repo.remotePathChange( remotePathNew );
-    }
+    junction.opener.remotePathChangeVersionTo( o.to );
 
     if( o.dry )
     {
@@ -2998,8 +2971,8 @@ function modulesDownload_body( o )
 
   function junctionIsRoot( junction )
   {
-    if( junction.isRemote )
-    return false;
+    // if( junction.isRemote ) /* Vova: root modules now have a remote path, isRemote can be true for a root module */
+    // return false;
     if( _.longHas( rootJunctions, junction ) )
     return true;
     if( rootJunctions.some( ( rootJunction ) => rootJunction.peer === junction ) )

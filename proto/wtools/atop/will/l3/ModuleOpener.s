@@ -1186,6 +1186,28 @@ function _repoForm()
   else
   {
     opener._.localPath = opener.commonPath;
+
+    if( opener.remotePath === null )
+    {
+      if( opener.isOut && opener.peerModule && opener.peerModule.remotePath )
+      {
+        downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
+        remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
+        isRemote = opener.repoIsRemote();
+      }
+      else if( opener.isMain )
+      {
+        let localPath = fileProvider.path.localFromGlobal( opener.localPath )
+        if( _.git.isRepository({ localPath }) )
+        {
+          downloadPath = opener._.downloadPath = opener._.localPath;
+          let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+          remotePath = opener._.remotePath = remotePathFromLocal;
+          isRemote = opener.repoIsRemote();
+        }
+      }
+    }
+
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
     opener.repo = will.repoFrom
     ({
@@ -1297,11 +1319,11 @@ function _repoDownload( o )
   _.assert( arguments.length === 1 );
   _.assert( opener.formed >= 2 );
   _.assert( !!opener.willfilesPath );
-  _.assert( _.strDefined( opener.aliasName ) );
+  _.assert( !o.strict || _.strDefined( opener.aliasName ) );
   _.assert( _.strDefined( opener.remotePath ) );
   _.assert( _.strDefined( opener.downloadPath ) );
   _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.superRelation );
+  _.assert( !o.strict || !!opener.superRelation );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   return ready
@@ -1948,21 +1970,31 @@ _repoDownload.defaults =
 
 //
 
-function repoDownload()
+function repoDownload( o )
 {
   let opener = this;
   let will = opener.will;
-  return opener._repoDownload({ updating : 0 });
+  o = o || Object.create( null );
+  _.routineOptions( repoDownload, o );
+  return opener._repoDownload( o );
 }
+
+var defaults = repoDownload.defaults = _.mapExtend( null, _repoDownload.defaults );
+defaults.mode = 'download';
 
 //
 
-function repoUpdate()
+function repoUpdate( o )
 {
   let opener = this;
   let will = opener.will;
-  return opener._repoDownload({ updating : 1 });
+  o = o || Object.create( null );
+  _.routineOptions( repoUpdate, o );
+  return opener._repoDownload( o );
 }
+
+var defaults = repoUpdate.defaults = _.mapExtend( null, _repoDownload.defaults );
+defaults.mode = 'update';
 
 // --
 // path
@@ -2185,6 +2217,48 @@ function remotePathEachAdoptAct( o )
 remotePathEachAdoptAct.defaults =
 {
   ... Parent.prototype.remotePathAdopt.defaults,
+}
+
+//
+
+function remotePathChangeVersionTo( to )
+{
+  let opener = this;
+  let will = opener.will;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( to ) );
+  _.sure( _.strBegins( to, '!' ) || _.strBegins( to, '#' ), `Argument "to" should begins with "!" or "#" Got:${to}` )
+
+  var vcs = will.vcsToolsFor( opener.remotePath );
+  // var remoteParsed = vcs.pathParse( opener.remotePath )
+  var remoteParsed = vcs.path.parse({ remotePath : opener.remotePath, full : 1, atomic : 0 })
+
+  var globalTo = vcs.path.globalFromPreferred( to );
+  // var toParsed = vcs.pathParse( globalTo );
+  var toParsed = vcs.path.parse({ remotePath : globalTo, full : 1, atomic : 0 })
+
+  if( toParsed.tag )
+  {
+    remoteParsed.tag = toParsed.tag;
+    remoteParsed.hash = null;
+  }
+  else if( toParsed.hash )
+  {
+    remoteParsed.tag = null;
+    remoteParsed.hash = toParsed.hash;
+  }
+  else
+  {
+    throw _.err( `Argument "to" should be either tag or version. Got:${to}` );
+  }
+
+  let remotePathNew = vcs.path.str( remoteParsed );
+
+  opener.remotePathSet( remotePathNew );
+  opener.repo.remotePathChange( remotePathNew );
+
+  return true;
 }
 
 //
@@ -2726,6 +2800,7 @@ let Extension =
   _localPathPut,
   remotePathPut,
   remotePathEachAdoptAct,
+  remotePathChangeVersionTo,
 
   // name
 
