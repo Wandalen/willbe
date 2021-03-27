@@ -100,6 +100,14 @@ function Froms( objects, will )
 // coercer
 // --
 
+function toModuleForResolver()
+{
+  let self = this;
+  return self.toModule();
+}
+
+//
+
 function toModule()
 {
   let self = this;
@@ -258,6 +266,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

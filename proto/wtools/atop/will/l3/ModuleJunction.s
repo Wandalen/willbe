@@ -1789,6 +1789,14 @@ function assertIntegrityVerify()
 // coercer
 // --
 
+function toModuleForResolver()
+{
+  let junction = this;
+  return junction.module;
+}
+
+//
+
 function toModule()
 {
   let junction = this;
@@ -2089,6 +2097,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

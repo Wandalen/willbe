@@ -9,15 +9,6 @@
  * @module Tools/atop/willbe
  */
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 const _ = _global_.wTools;
 const Parent = null;
 const Self = wWillAbstractModule;

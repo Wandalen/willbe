@@ -28,9 +28,6 @@ function finit()
   let opener = this;
   let will = opener.will;
 
-  // if( opener.id === 122 )
-  // debugger;
-
   _.assert( !opener.isFinited() );
 
   opener.unform();
@@ -2445,6 +2442,14 @@ let isOutSet = accessorSet_functor( 'isOut' );
 // coercer
 // --
 
+function toModuleForResolver()
+{
+  let opener = this;
+  return opener.toModule();
+}
+
+//
+
 function toModule()
 {
   let opener = this;
@@ -2748,6 +2753,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

@@ -174,8 +174,6 @@ function _onDownEnd()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
 
-  debugger;
-
   if( !it.dstWritingDown )
   return;
 
@@ -932,6 +930,10 @@ function _pathResolve( filePath, resource )
   }
 
   if( it.selectorIs( prefixPath ) )
+  {
+    debugger; /* xxx : not tested? */
+  }
+  if( it.selectorIs( prefixPath ) )
   prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
   if( it.selectorIs( result ) )
   result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
@@ -939,6 +941,67 @@ function _pathResolve( filePath, resource )
   result = path.s.join( prefixPath, result );
 
   return result;
+}
+
+//
+
+function _pathResolveAct( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( _pathResolveAct, o );
+
+  if( !o.currentModule && o.currentContext && o.currentContext.toModuleForResolver && o.currentContext.toModuleForResolver() )
+  o.currentModule = o.currentContext.toModuleForResolver();
+  if( !o.resourceName && o.currentContext )
+  o.resourceName = o.currentContext instanceof _.will.Resource ? o.currentContext.name : null;
+
+  let will = o.currentModule.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  let result = o.filePath;
+  if( o.filePath === null || o.filePath === '' )
+  return result;
+
+  if( _.arrayIs( o.filePath ) )
+  o.filePath = _.arrayFlattenOnce( o.filePath );
+
+  _.assert( _.strIs( o.filePath ) || _.strsAreAll( o.filePath ) );
+
+  let prefixPath = '.';
+  if( o.pathResolving === 'in' )
+  {
+    if( o.resourceName !== 'in' )
+    prefixPath = o.currentModule.inPath || '.';
+    else
+    prefixPath = o.currentModule.dirPath;
+  }
+  else if( o.pathResolving === 'out' )
+  {
+    if( o.resourceName !== 'out' )
+    prefixPath = o.currentModule.outPath || '.';
+    else
+    prefixPath = o.currentModule.dirPath;
+  }
+  else _.assert( 0 );
+
+  if( Self.selectorIs( prefixPath ) )
+  prefixPath = o.currentModule.pathResolve({ selector : prefixPath, currentContext : o.currentContext });
+  if( Self.selectorIs( result ) )
+  result = o.currentModule.pathResolve({ selector : result, currentContext : o.currentContext });
+
+  result = path.s.join( prefixPath, result );
+
+  return result;
+}
+
+_pathResolveAct.defaults =
+{
+  filePath : null,
+  currentModule : null,
+  currentContext : null,
+  resourceName : null,
+  pathResolving : null,
 }
 
 //
@@ -1171,8 +1234,8 @@ function optionsToIteration( iterator, o )
   (
     !it.baseModule
     || !it.currentContext
-    || !it.currentContext.resolverModule
-    || it.currentContext.resolverModule === it.baseModule
+    || !it.currentContext.toModuleForResolver
+    || it.currentContext.toModuleForResolver() === it.baseModule
     ,
     `Current context belong to another base module, something wrong!`
   );
@@ -1205,8 +1268,8 @@ function iteratorInitEnd( iterator )
   {
     debugger;
     _.assert( 0, 'not tested' ); /* xxx */
-    if( iterator.currentContext && _.routineIs( iterator.currentContext.resolverModuleGet ) )
-    iterator.baseModule = iterator.currentContext.resolverModuleGet();
+    if( iterator.currentContext && _.routineIs( iterator.currentContext.toModuleForResolver ) )
+    iterator.baseModule = iterator.currentContext.toModuleForResolver();
   }
 
   if( iterator.src === null || iterator.src === undefined )
@@ -1506,9 +1569,7 @@ function filesFromResource_body( o )
   {
     let o2 = _.mapOnly_( null, o, module.resolve.defaults );
     delete o2.constructor;
-    debugger;
     resources = module.resolve( o2 );
-    debugger;
   }
 
   if( _.arrayIs( resources ) )
@@ -1533,9 +1594,16 @@ function filesFromResource_body( o )
     else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
     {
 
-      if( _.strIs( resource ) || _.arrayIs( resource ) && o.currentContext && o.currentContext.resolverModule )
+      if( o.pathResolving )
+      if( _.strIs( resource ) || _.arrayIs( resource ) )
+      if( o.currentContext && o.currentContext.toModuleForResolver && o.currentContext.toModuleForResolver() )
       {
-
+        resource = _.will.resolver._pathResolveAct
+        ({
+          filePath : resource,
+          currentContext : o.currentContext.toModuleForResolver(),
+          pathResolving : o.pathResolving,
+        });
       }
 
       if( o.globOnly )
@@ -1692,6 +1760,8 @@ let NamespaceExtension =
 
   resolve : ResolverWillbe.exec,
   resolveMaybe,
+
+  _pathResolveAct,
 
   resolveRaw,
   pathResolve,

@@ -646,8 +646,6 @@ function openNamedFast( test )
     var got = _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
     test.identical( _.setFrom( got ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
-    _.debugger = 1;
-    debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
@@ -8795,8 +8793,6 @@ function pathsResolveResolvedPath( test )
     test.case = src;
     // var exp = 'some'; /* yyy */
     var exp = a.abs( 'some' );
-    _.debugger = 1;
-    debugger;
     var got = module.pathResolve
     ({
       selector : src,
@@ -8951,8 +8947,6 @@ function pathsResolveFailing( test )
     test.identical( got, expected );
 
     test.case = 'path::entry.*=1: null';
-    _.debugger = 1;
-    debugger;
     var got = opener.openedModule.pathResolve
     ({
       selector : { 'path::entry.*=1' : null },
@@ -9244,56 +9238,49 @@ function filesFromResource( test )
     return opener.open({ all : 1, resourcesFormed : 1 });
   });
 
-  // a.ready.then( () =>
-  // {
-  //   test.case = 'resolve resource - directory does not exist';
-  //   let module = opener.openedModule;
-  //   let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
-  //   test.identical( got, a.abs([ 'out' ]) );
-  //   return null;
-  // });
-  //
-  // a.ready.then( () =>
-  // {
-  //   test.case = 'resolve resource - directory exists';
-  //   let module = opener.openedModule;
-  //   let got = module.filesFromResource({ selector : '{path::proto}', currentContext : module });
-  //   test.identical( got, a.abs([ 'proto' ]) );
-  //   return null;
-  // });
-  //
-  // a.ready.then( () =>
-  // {
-  //   test.case = 'resolve with criterion';
-  //   let module = opener.openedModule;
-  //   let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
-  //   test.identical( got, a.abs([ './out/debug' ]) );
-  //   return null;
-  // });
-  // xxx
-  //
-  // a.ready.then( () =>
-  // {
-  //   test.case = 'resolve directory from absolute path';
-  //   let module = opener.openedModule;
-  //   let selector = a.abs( 'proto/' );
-  //   _.debugger = true;
-  //   debugger;
-  //   let got = module.filesFromResource({ selector, currentContext : module });
-  //   debugger;
-  //   _.debugger = false;
-  //   test.identical( got, a.abs([ './proto' ]) );
-  //   return null;
-  // });
+  a.ready.then( () =>
+  {
+    test.case = 'resolve resource - directory does not exist';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
+    test.identical( got, a.abs([ 'out' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve resource - directory exists';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::proto}', currentContext : module });
+    test.identical( got, a.abs([ 'proto' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve with criterion';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
+    test.identical( got, a.abs([ './out/debug' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve directory from absolute path';
+    let module = opener.openedModule;
+    let selector = a.abs( 'proto/' );
+    let got = module.filesFromResource({ selector, currentContext : module });
+    test.identical( got, a.abs([ './proto' ]) );
+    return null;
+  });
 
   a.ready.then( () =>
   {
     test.case = 'resolve directory from relative path';
     let module = opener.openedModule;
     let selector = './proto/';
-    debugger;
     let got = module.filesFromResource({ selector, currentContext : module });
-    debugger;
     test.identical( got, a.abs([ './proto' ]) );
     return null;
   });
