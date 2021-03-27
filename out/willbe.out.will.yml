@@ -76,6 +76,7 @@ module:
       download:
         criterion:
           predefined: 1
+        path: ../
       repository:
         path: 'git+https:///github.com/Wandalen/willbe.git'
       origins:
@@ -1544,6 +1545,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/f1.txt
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/f2.txt
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/will.yml
+          - ../proto/wtools/atop/will.test/_asset/modulesUpdate
+          - ../proto/wtools/atop/will.test/_asset/modulesUpdate/module
+          - ../proto/wtools/atop/will.test/_asset/modulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.im.will.yml
@@ -1950,6 +1954,10 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepBuild/bad1.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepBuild/bad2.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepBuild/basic.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepModulesUpdate
+          - ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShell
           - ../proto/wtools/atop/will.test/_asset/stepShell/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue
@@ -1982,6 +1990,10 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/proto/Simple.js
+          - ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate
+          - ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate/module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView
           - ../proto/wtools/atop/will.test/_asset/stepView/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView/File.html
@@ -3468,6 +3480,7 @@ module:
       download:
         criterion:
           predefined: 1
+        path: ./
       repository:
         path: 'git+https:///github.com/Wandalen/willbe.git'
       origins:
