@@ -38110,20 +38110,177 @@ function commandNpmPublishFullModuleFromUtility( test )
     test.identical( wasPackageDepKeys.length, 29 );
     let packageDevDepKeys = _.mapKeys( configPackage.devDependencies );
     let wasPackageDevDepKeys = _.mapKeys( configWasPackage.devDependencies );
-    test.true( _.longHasAll( packageDepKeys, wasPackageDevDepKeys ) );
+    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
 
     test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
     test.ge( _.strCount( op.output, '. Opened .' ), 3 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::PublishCommandTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::PublishCommandTest' ), 2 );
+    test.identical( _.strCount( op.output, 'x Nothing to publish in module::PublishCommandTest1' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::PublishCommandTest1' ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::PublishCommandTest at' ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::PublishCommandTest1 at' ), 1 );
     test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::PublishCommandTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::PublishCommandTest' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::PublishCommandTest1' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::PublishCommandTest1' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configPackage.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::PublishCommandTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::PublishCommandTest1` ), 3 );
+    test.identical( _.strCount( op.output, `Creating tag v${ configPackage.version }` ), 1 );
+    test.identical( _.strCount( op.output, `Creating tag latest` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  npmLogout();
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function npmLogin()
+  {
+    a.shell( 'npm i -g npm-cli-login' );
+    a.shell
+    ({
+      execPath : `npm-cli-login -u ${ botUser } -p ${ botPass } -e ${ botEmail } --quotes`,
+      outputPiping : 0,
+      inputMirroring : 0
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function repoPrepare()
+  {
+    a.shell( `git clone https://github.com/${ botUser }/${ botRepo }.git .` );
+    a.shell( `git reset --hard v0.0.0` );
+    a.shell( `git push -u origin --all --force` );
+    a.shell( `git push --tags --force` );
+    return a.ready;
+  }
+
+  /* */
+
+  function setVersionInWasPackageJson()
+  {
+    return a.ready.then( () =>
+    {
+      let moduleName = botRepo.toLowerCase();
+      let filePath = a.abs( 'was.package.json' );
+      let config = a.fileProvider.fileRead({ filePath, encoding : 'json' });
+      let lastVersion = _.npm.versionRemoteLatestRetrive( `npm:///${ moduleName }!latest` );
+      config.version = lastVersion;
+      a.fileProvider.fileWrite({ filePath, data : config, encoding : 'json' });
+      return null;
+    });
+  }
+
+  /* */
+
+  function npmLogout()
+  {
+    a.shell( 'npm logout' );
+  }
+}
+
+//
+
+function commandNpmPublishFullRegularModule( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.fileProvider.dirMake( a.abs( '.' ) );
+
+  let botUser = 'wtools-bot';
+  let botRepo = 'PublishCommandTest2';
+  let botPass = process.env.PRIVATE_WTOOLS_BOT_NPM_PASS;
+  let botEmail = process.env.PRIVATE_WTOOLS_BOT_EMAIL;
+  if( !_.process.insideTestContainer() || !botPass || !botEmail )
+  return test.true( true );
+
+  /* - */
+
+  npmLogin();
+
+  /* */
+
+  repoPrepare();
+  setVersionInWasPackageJson();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'publish from scratch';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart( `.willfile.merge.into.single secondaryPath:'was.package.json'` );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart( `.npm.publish tag:latest` );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    let configPackage = a.fileProvider.configRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let configWasPackage = a.fileProvider.configRead({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
+    test.identical( configPackage.name, configWasPackage.name );
+    test.notIdentical( configPackage.version, configWasPackage.version );
+    test.notIdentical( configPackage.enabled, configWasPackage.enabled );
+    test.notIdentical( configPackage.engine, configWasPackage.engine );
+    test.identical( configPackage.description, configWasPackage.description );
+    test.identical( configPackage.keywords, configWasPackage.keywords );
+    test.identical( configPackage.license, configWasPackage.license );
+    test.identical( configPackage.author, configWasPackage.author );
+    test.identical( configPackage.contributors.length, 2 );
+    test.identical( configWasPackage.contributors, undefined );
+    test.identical( configPackage.bin, configWasPackage.bin );
+    test.notIdentical( configPackage.repository, configWasPackage.repository );
+    test.notIdentical( configPackage.bugs, configWasPackage.bugs );
+    test.identical( configPackage.main, configWasPackage.main );
+    test.identical( configPackage.files, configWasPackage.files );
+    let packageDepKeys = _.mapKeys( configPackage.dependencies );
+    let wasPackageDepKeys = _.mapKeys( configWasPackage.dependencies );
+    test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
+    test.false( 'wgittools' in configWasPackage.dependencies );
+    test.identical( packageDepKeys.length, 4 );
+    test.identical( wasPackageDepKeys.length, 4 );
+    let packageDevDepKeys = _.mapKeys( configPackage.devDependencies );
+    let wasPackageDevDepKeys = _.mapKeys( configWasPackage.devDependencies );
+    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
+
+    test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
+    test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, 'x Nothing to publish in module::PublishCommandTest2' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::PublishCommandTest2' ), 2 );
+    test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
+    test.identical( _.strCount( op.output, '+ Publishing module::PublishCommandTest2 at' ), 1 );
+    test.identical( _.strCount( op.output, '+ writing' ), 2 );
+    test.identical( _.strCount( op.output, 'Exporting module::PublishCommandTest2' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::PublishCommandTest2' ), 1 );
+    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `> git commit -am "version ${ configPackage.version }"` ), 1 );
+    test.identical( _.strCount( op.output, `Pushing module::PublishCommandTest2` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configPackage.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag latest` ), 1 );
 
@@ -39164,6 +39321,7 @@ let Self =
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandNpmPublishFullModuleFromUtility,
+    commandNpmPublishFullRegularModule,
 
     commandsSubmoduleSafety,
     commandSubmodulesUpdateOptionTo
