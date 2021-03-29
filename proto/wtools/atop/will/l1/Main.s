@@ -1660,6 +1660,7 @@ build :
 moduleNew.defaults =
 {
   localPath : null,
+  withPath : null,
   name : null,
   verbosity : 0,
   collision : 'throw', /* 'throw', 'ignore' */

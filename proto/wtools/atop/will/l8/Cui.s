@@ -1215,11 +1215,17 @@ function commandImply( e )
 {
   let cui = this;
 
+  let impliedPrev = cui.implied;
+
   cui.implied = null;
   cui._command_head( commandImply, arguments );
 
   cui.implied = e.propertiesMap;
-  cui._propertiesImplyToMain( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
+  // cui._propertiesImplyToMain( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
+
+  if( impliedPrev )
+  if( impliedPrev.withPath )
+  cui.implied.withParsed = impliedPrev.withPath;
 
 }
 
@@ -1235,6 +1241,7 @@ commandImply.defaults =
   withValid : null,
   withInvalid : null,
   withSubmodules : null,
+  withPath : null
 };
 commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
@@ -2359,6 +2366,8 @@ function commandModuleNew( e )
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
+  will._propertiesImply( e.propertiesMap );
+
   if( e.commandArgument )
   e.propertiesMap.localPath = e.commandArgument;
   if( e.propertiesMap.verbosity === undefined )
@@ -2367,7 +2376,7 @@ function commandModuleNew( e )
   if( will.transaction.withPath )
   {
     if( e.propertiesMap.localPath )
-    e.propertiesMap.localPath = path.join( will.transaction.withPath, e.propertiesMap.localPath );
+    e.propertiesMap.localPath = path.join( path.detrail( will.transaction.withPath ), e.propertiesMap.localPath );
     else
     e.propertiesMap.localPath = will.transaction.withPath;
   }
@@ -2375,11 +2384,13 @@ function commandModuleNew( e )
   return will.moduleNew( e.propertiesMap );
 }
 
+commandModuleNew.defaults = _.mapExtend( null, commandImply.defaults );
 commandModuleNew.hint = 'Create a new module.';
 commandModuleNew.commandSubjectHint = 'Path to module file. Default value is ".will.yml".';
 commandModuleNew.commandProperties =
 {
   localPath : 'Path to module file. Default value is ".will.yml".',
+  withPath : 'A module selector.'
 }
 
 //
@@ -3598,8 +3609,7 @@ function commandWith( e )
   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.commandArgument ) );
 
-  cui._propertiesImply({ withPath })
-
+  cui.implied = _.mapExtend( cui.implied, { withPath } );
 
   return cui.modulesFindWithAt
   ({
@@ -3608,10 +3618,6 @@ function commandWith( e )
   })
   .then( function( it )
   {
-    _.assert( cui.transaction instanceof _.will.Transaction );
-    cui.transaction.finit();
-    cui.transaction = null;
-
     cui.currentOpeners = it.sortedOpeners;
 
     if( !cui.currentOpeners.length )
