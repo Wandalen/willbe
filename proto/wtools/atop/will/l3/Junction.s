@@ -270,8 +270,8 @@
 //   let junction;
 //   // let sys = o.sys;
 //   // let junctionMap = sys.junctionMap;
-//   // let fileProvider = sys.fileProvider;
-//   // let path = fileProvider.path;
+//   // const fileProvider = sys.fileProvider;
+//   // const path = fileProvider.path;
 //   // let logger = sys.logger;
 //   let made = false;
 //   let changed = false;
@@ -1442,8 +1442,8 @@
 //   if( !junction.localPath )
 //   return null;
 //   let sys = junction.sys;
-//   let fileProvider = sys.fileProvider;
-//   let path = fileProvider.path;
+//   const fileProvider = sys.fileProvider;
+//   const path = fileProvider.path;
 //   return path.detrail( path.dirFirst( junction.localPath ) );
 // }
 //

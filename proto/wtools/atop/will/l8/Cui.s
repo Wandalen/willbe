@@ -41,7 +41,7 @@ function exec()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let appArgs = _.process.input({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
@@ -95,7 +95,7 @@ function init( o )
 function _openersCurrentEach( o )
 {
   let will = this.form();
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -169,8 +169,8 @@ function openersFind( o )
 {
   let will = this;
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   o = _.routineOptions( openersFind, arguments );
   _.assert( will.currentOpener === null );
@@ -293,7 +293,7 @@ _command_head.defaults =
 function errEncounter( error )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -342,7 +342,7 @@ function _commandsMake()
 {
   let will = this;
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let appArgs = _.process.input();
 
   _.assert( _.instanceIs( will ) );
@@ -433,6 +433,7 @@ function _commandsMake()
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
+    'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -464,7 +465,7 @@ function _commandsMake()
 function _commandsBegin( command )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -478,7 +479,7 @@ function _commandsBegin( command )
 function _commandsEnd( command )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -2376,7 +2377,7 @@ commandSubmodulesGitSync.commandProperties =
 function commandModuleNew( e )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
@@ -2410,7 +2411,7 @@ function commandModuleNewWith( e )
   let cui = this;
   cui._command_head( commandModuleNewWith, arguments );
 
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -2782,7 +2783,7 @@ function commandDo( e )
 {
   let cui = this;
   cui._command_head( commandDo, arguments );
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -4473,7 +4474,7 @@ function commandWillfileMergeIntoSingle( e )
    * then command will be divided into separate reusable parts
   */
   let cui = this;
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
@@ -4669,22 +4670,69 @@ commandWillfileMergeIntoSingle.defaults =
 {
   verbosity : 3,
   v : 3,
-};
-commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
-commandWillfileMergeIntoSingle.commandSubjectHint = false;
-commandWillfileMergeIntoSingle.defaults =
-{
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
   filterSameSubmodules : 1,
 };
+commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
+commandWillfileMergeIntoSingle.commandSubjectHint = false;
 commandWillfileMergeIntoSingle.commandProperties =
 {
   primaryPath : 'Name of destination willfile. Default is `will.yml`',
   secondaryPath : 'Name of file to extend destination willfile',
   submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1',
   filterSameSubmodules : 'Enables filtering of submodules with the same path but different names. Default is 1',
+};
+
+//
+
+function commandNpmPublish( e )
+{
+  let cui = this;
+  cui._command_head( commandNpmPublish, arguments );
+
+  _.routineOptions( commandNpmPublish, e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'publish',
+    onEach : handleEach,
+    commandRoutine : commandNpmPublish,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.npmModulePublish
+    ({
+      ... e.propertiesMap,
+      commit : e.subject,
+    });
+  }
+}
+
+commandNpmPublish.defaults =
+{
+  commit : null,
+  tag : null,
+
+  force : 0,
+  dry : 0,
+  v : 1,
+  verbosity : 1,
+};
+commandNpmPublish.hint = 'To publish NPM module.';
+commandNpmPublish.commandSubjectHint = 'A commit message for uncommitted changes. Default is ".".';
+commandNpmPublish.commandProperties =
+{
+  commit : 'message',
+  tag : 'tag',
+
+  force : 'forces diff',
+  dry : 'dry run',
+  v : 'verbosity',
+  verbosity : 'verbosity',
 };
 
 //
@@ -5446,6 +5494,7 @@ let Extension =
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   commandWillfileMergeIntoSingle,
+  commandNpmPublish,
   /* aaa2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/

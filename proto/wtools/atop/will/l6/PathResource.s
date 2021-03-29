@@ -37,8 +37,8 @@ function OnInstanceExists( o )
 {
   let module = o.instance.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.routineOptions( OnInstanceExists, arguments );
@@ -141,8 +141,8 @@ function form2()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( resource.formed >= 2 )
@@ -165,8 +165,8 @@ function form3()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( resource.formed >= 3 )
@@ -209,8 +209,8 @@ function exportStructure()
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let o = _.routineOptions( exportStructure, arguments );
 
@@ -269,8 +269,8 @@ function pathsRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   // let Resolver = _.will.resolver;
 
@@ -339,8 +339,8 @@ function _pathSet( src )
   if( resource.criterion.predefined && !resource.writable )
   {
     let will = module.will;
-    let fileProvider = will.fileProvider;
-    let path = fileProvider.path;
+    const fileProvider = will.fileProvider;
+    const path = fileProvider.path;
     src = path.s.join( module.inPath, src );
   }
 

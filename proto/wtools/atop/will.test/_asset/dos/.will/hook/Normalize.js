@@ -8,7 +8,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
@@ -72,7 +72,7 @@ function hardLink( context, dstPath, srcPath )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -114,7 +114,7 @@ function workflowsReplace( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -142,7 +142,7 @@ function integrationTestRename( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -167,7 +167,7 @@ function samplesRename( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -195,7 +195,7 @@ function dwtoolsRename( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -223,7 +223,7 @@ function badgeGithubReplace( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -276,7 +276,7 @@ function badgeStabilityAdd( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -330,7 +330,7 @@ function badgeCircleCiAdd( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -382,7 +382,7 @@ function badgeCircleCiRemove( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -434,7 +434,7 @@ function badgeCircleCiReplace( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -485,7 +485,7 @@ function badgesSwap( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -535,7 +535,7 @@ function readmeModuleNameAdjust( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -607,7 +607,7 @@ function readmeTryOutAdjust( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -668,7 +668,7 @@ function readmeToAddRemove( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -725,7 +725,7 @@ function readmeToAddAdjust( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -787,7 +787,7 @@ function sourcesRemoveOld( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -842,7 +842,7 @@ function sourcesRemoveOld2( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -871,7 +871,7 @@ function sampleFix( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -904,7 +904,7 @@ function sampleTrivial( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -942,7 +942,7 @@ function readmeSampleRename( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;

@@ -4,10 +4,11 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  if( !context.module || context.module.repo.remotePath || !context.module.about.name )
+  // if( !context.module || context.module.repo.remotePath || !context.module.about.name )
+  if( !context.module || !context.module.about.name )
   {
     debugger;
     throw _.errBrief( 'Module should be local, opened and have name' );

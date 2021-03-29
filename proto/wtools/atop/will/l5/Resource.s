@@ -362,8 +362,8 @@ function unform()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -397,8 +397,8 @@ function form()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( resource.formed === 0 )
@@ -425,8 +425,8 @@ function form1()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -544,8 +544,8 @@ function _inheritMultiple( o )
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   /* begin */
@@ -621,8 +621,8 @@ function _inheritSingle( o )
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( _.strIs( o.ancestor ) )
@@ -667,8 +667,8 @@ function form3()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -1176,8 +1176,8 @@ function resolve_body( o )
   let module = resource.module;
   _.assert( !!module );
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   // _.assert( o.currentContext === null || o.currentContext === resource );
@@ -1226,8 +1226,8 @@ function inPathResolve_body( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );
@@ -1300,8 +1300,8 @@ function reflectorResolve_body( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );;
@@ -1331,8 +1331,8 @@ function pathRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathRebase, arguments );
