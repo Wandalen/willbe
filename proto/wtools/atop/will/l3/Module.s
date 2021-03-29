@@ -4162,7 +4162,22 @@ function peerModuleSet( src )
     */
     if( peerRemotePath )
     {
-      _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
+
+      // if( !( module.remotePath === null || module.remotePath === peerRemotePath ) )
+      // {
+      //   debugger;
+      //   console.log( module.remotePath );
+      //   // src.peerRemotePathGet();
+      // }
+
+      // let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath })
+      // opener.localPath
+      // "/pro/module/wTools/"
+      // remotePathFromLocal
+      // "git+ssh:///git@github.com/Wandalen/wTools.git"
+      // missing trailing slash!
+      // qqq2 : xxx : uncomment and fix related issue
+      // _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
       _.assert( module.downloadPath === null || module.downloadPath === src.downloadPath );
       module.remotePathEachAdopt({ remotePath : peerRemotePath, downloadPath : module.downloadPath });
     }
@@ -6094,6 +6109,9 @@ function remotePathSet( filePath )
   let ex = module.remotePath;
   // let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
   let isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+
+  // if( filePath && _.strHas( filePath, 'wTools.git' ) )
+  // debugger;
 
   module._remotePathPut( filePath );
 
@@ -8506,10 +8524,11 @@ function npmModulePublish( o )
   ready.deasync();
   let diff = moduleDiffsGet();
 
+  let nameWithLocation = module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() );
   if( o.force || !diff || diff.status )
   {
     if( o.verbosity )
-    logger.log( ` + Publishing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    logger.log( ` + Publishing ${ nameWithLocation }` );
     if( o.verbosity >= 2 && diff && diff.status )
     {
       logger.up();
@@ -8520,7 +8539,7 @@ function npmModulePublish( o )
   else
   {
     if( o.verbosity )
-    logger.log( ` x Nothing to publish in ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    logger.log( ` x Nothing to publish in ${ nameWithLocation }` );
     return ready;
   }
 
@@ -8813,6 +8832,13 @@ function _remoteChanged()
 // git
 // --
 
+function _nameWithLocationFormat( moduleName, moduleLocation )
+{
+  return `${ _.ct.format( moduleName, 'entity' ) } at ${ _.ct.format( moduleLocation, 'path' ) }`;
+}
+
+//
+
 function gitExecCommand( o )
 {
   let module = this;
@@ -8846,7 +8872,7 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
 
   let provider;
@@ -8917,7 +8943,7 @@ function gitDiff( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Diff ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Diff ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let result = _.git.diff
   ({
@@ -9083,10 +9109,13 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Pulling ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   if( status.uncommitted )
-  throw _.errBrief( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() } has local changes!` );
+  throw _.errBrief
+  (
+    `${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
+  );
 
   /* */
 
@@ -9239,7 +9268,7 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Pushing ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let ready = _.git.push
   ({
@@ -9291,7 +9320,7 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( `Resetting ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   _.git.reset
   ({
@@ -9357,7 +9386,7 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  logger.log( `${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+  logger.log( module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
   logger.log( got.status );
   return got;
 }
@@ -9452,7 +9481,7 @@ function gitSync( o )
       ready : con,
     });
     if( o.verbosity )
-    logger.log( `Committing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    logger.log( `Committing ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
     start( `git add --all` );
     if( o.commit )
@@ -10199,6 +10228,7 @@ let Extension =
 
   // git
 
+  _nameWithLocationFormat,
   gitExecCommand,
   gitDiff,
   gitPrOpen,

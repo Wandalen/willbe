@@ -1170,6 +1170,9 @@ function _repoForm()
   let downloadPath, remotePath;
   let isRemote = opener.repoIsRemote();
 
+  if( opener.id === 1 )
+  debugger;
+
   if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath )
   {
     if( !opener._.localPath )
@@ -1227,6 +1230,9 @@ function _repoForm()
   _.assert( downloadPath === undefined || downloadPath === opener._.downloadPath );
   _.assert( remotePath === undefined || remotePath === opener._.remotePath );
   _.assert( opener.repo instanceof _.will.Repository );
+
+  if( opener.id === 1 )
+  debugger;
 
   if( opener.formed < 2 )
   opener.formed = 2;
