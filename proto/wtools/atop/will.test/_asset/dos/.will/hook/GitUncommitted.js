@@ -15,7 +15,7 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let o2 = _.mapOnly( o, _.git.statusFull.defaults );
+  let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = context.junction.dirPath;
   let status = _.git.statusFull( o2 );
 

@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.Resource;
-let Self = wWillReflector;
+const _ = _global_.wTools;
+const Parent = _.will.Resource;
+const Self = wWillReflector;
 function wWillReflector( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -387,12 +387,12 @@ function form3()
   _.assert
   (
     reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShort( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
   );
   _.assert
   (
     reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShort( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
   );
 
   /* end */
@@ -507,8 +507,8 @@ function _inheritSingle( o )
   _.assert( reflector2.formed === 3 );
 
   let only = _.mapOnlyNulls( reflector );
-  only = _.mapOnly( reflector, reflector.Composes );
-  let extend = _.mapOnly( reflector2, only );
+  only = _.mapOnly_( null, reflector, reflector.Composes );
+  let extend = _.mapOnly_( null, reflector2, only );
 
   delete extend.src;
   delete extend.dst;

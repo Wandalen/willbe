@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillResource;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillResource;
 function wWillResource( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -646,7 +646,7 @@ function _inheritSingle( o )
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly_( null, resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
@@ -779,7 +779,7 @@ function criterionInherit( criterion2 )
 
   criterion1 = resource.criterion = resource.criterion || Object.create( null );
 
-  _.mapSupplement( criterion1, _.mapBut( criterion2, { default : null, predefined : null } ) )
+  _.mapSupplement( criterion1, _.mapBut_( null, criterion2, { default : null, predefined : null } ) )
 
   return criterion1;
 }
@@ -823,7 +823,7 @@ function CriterionVariable( criterionMaps, criterion )
 
   }
 
-  let result = _.mapBut( criterion, all );
+  let result = _.mapBut_( null, criterion, all );
 
   return result;
 }
@@ -1001,7 +1001,7 @@ function exportStructure()
     return;
   }
 
-  let o2 = _.mapOnly( o, resource.cloneData.defaults );
+  let o2 = _.mapOnly_( null, o, resource.cloneData.defaults );
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
@@ -1142,8 +1142,7 @@ function moduleSet( src )
 
 //
 
-
-function moduleForResolveGet()
+function toModuleForResolver()
 {
   let resource = this;
   _.assert( arguments.length === 0 );
@@ -1444,7 +1443,7 @@ let Accessors =
   decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
   inherit : { set : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
   module : {},
-  moduleForResolve : { get : moduleForResolveGet, set : 0 },
+  // resolverModule : { get : toModuleForResolver, set : 0 },
 }
 
 // --
@@ -1509,7 +1508,7 @@ let Extension =
   shortNameArrayGet,
   willfSet,
   moduleSet,
-  moduleForResolveGet,
+  toModuleForResolver,
 
   // resolver
 
