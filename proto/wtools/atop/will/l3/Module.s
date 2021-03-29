@@ -641,9 +641,6 @@ function unform()
   let module = this;
   let will = module.will;
 
-  // if( module.id === 1004 )
-  // debugger;
-
   if( module.formed2 <= 0 ) /**/
   return;
 
@@ -1516,9 +1513,6 @@ function predefinedStepMake( o )
   let module = this;
   let will = module.will;
 
-  // if( o.name === 'files.delete' )
-  // debugger;
-
   if( module.stepMap[ o.name ] )
   return module.stepMap[ o.name ].form1();
 
@@ -1823,8 +1817,6 @@ function reopen()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let junction = will.junctionReform( module );
-  if( junction.openers.length !== 1 )
-  debugger;
   junction.openers.forEach( ( opener2 ) =>
   {
     ready.then( () => opener2.reopen() );
@@ -2397,7 +2389,6 @@ function exportAuto()
   // module.pickedWillfileData = autoWillfileData;
   // module.pickedWillfilesPath = clonePath + module.aliasName;
   // module._willfilesFindPickedFile()
-
 }
 
 //
@@ -2517,8 +2508,6 @@ function exportedMake( o )
 
     if( !module.peerModule )
     {
-      if( o.purging )
-      debugger;
       if( o.purging )
       return _.Consequence.From( module.outModuleMake() ).then( () => makeFromPeer() );
       else
@@ -3185,7 +3174,6 @@ function moduleFixate( o )
 
       if( !o.dry && fixatedPath )
       {
-        debugger;
         superModule.remotePath = fixatedPath;
         superModule._currentRemotePathPut( fixatedPath );
         _.assert( superModule.remotePath === fixatedPath );
@@ -3220,14 +3208,10 @@ function moduleFixate( o )
     if( !o.dry && fixatedPath )
     {
       let opened = submodule.formed >= 3;
-      if( opened )
-      debugger;
       submodule.close();
       submodule.path = fixatedPath; /* Dmytro : I think, options path has proxy or setter that affects field longPath */
       if( submodule.opener )
       submodule.opener.remotePath = fixatedPath;
-      if( opened )
-      debugger;
       if( opened )
       submodule.form();
     }
@@ -3241,7 +3225,6 @@ function moduleFixate( o )
     let grouped = Object.create( null );
     let result = '';
 
-    debugger;
     if( _.mapKeys( report ).length === 0 )
     return;
 
@@ -3375,7 +3358,6 @@ function moduleFixateAct( o )
   function fileReplace( willfilePath )
   {
 
-    debugger;
     try
     {
 
@@ -3383,13 +3365,11 @@ function moduleFixateAct( o )
 
       if( !_.strHas( code, o.originalPath ) )
       {
-        // debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
       if( !_.strHas( code, o.replacer ) )
       {
-        // debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
@@ -3415,7 +3395,6 @@ function moduleFixateAct( o )
     }
     catch( err )
     {
-      debugger;
       let error = _.err( err, '\nFailed to fixated ' + _.color.strFormat( willfilePath, 'path' ) );
       if( o.reportingNegative )
       {
@@ -3741,7 +3720,6 @@ function submodulesRelationsFilter( o )
     return;
     if( !junction2.object )
     return;
-    // debugger;
     _.arrayAppendOnceStrictly( result, junction2.object );
     _.arrayAppendOnceStrictly( resultJunctions, junction2 );
   });
@@ -3881,7 +3859,6 @@ function submodulesAdd( o )
 
     if( _.any( module.submoduleMap, ( relation ) => will.junctionFrom( relation ) === junction ) )
     {
-      debugger;
       return;
     }
 
@@ -3902,13 +3879,11 @@ function submodulesAdd( o )
 
   ready.finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw _.err( err, `\nFaield add new submodules to ${module.nameWithLocationGet()}` );
     return counter;
   });
 
-  debugger;
   return ready;
 }
 
@@ -3976,9 +3951,7 @@ function _subModulesForm()
 
   // console.log( '_subModulesForm', module.absoluteName ); debugger; /* yyy */
 
-  // debugger;
   module._resourcesAllForm( _.will.ModulesRelation, con );
-  // debugger;
 
   con.finally( ( err, arg ) =>
   {
@@ -4063,7 +4036,6 @@ function peerModuleOpen( o )
 
     if( module.isOut && module.rootModule === module )
     {
-      // debugger;
       delete o2.rootModule;
     }
 
@@ -4106,7 +4078,6 @@ function peerModuleOpen( o )
       {
         if( module.isOut && module.rootModule === module )
         {
-          // debugger;
           module.rootModule = peerModule.rootModule;
         }
       }
@@ -4185,7 +4156,6 @@ function peerModuleSet( src )
 
   if( src && src.remotePath )
   {
-    // debugger;
     let peerRemotePath = src.peerRemotePathGet();
     /*
       if peer module is not formed then peerRemotePath is not deducable
@@ -4207,7 +4177,6 @@ function peerModuleSet( src )
     let path = fileProvider.path;
     if( src.peerModule !== null && src.peerModule !== module )
     {
-      debugger;
       throw _.err
       (
         'Several peer modules'
@@ -4942,7 +4911,6 @@ function cleanLog( o )
     o.files = module.cleanWhat( o2 );
   }
 
-  debugger;
   let o3 = _.mapOnly_( null, o, will.cleanLog.defaults );
   return will.cleanLog( o3 );
 }
@@ -4972,8 +4940,6 @@ function clean( o )
 
   let o2 = _.mapOnly_( null, o, module.cleanWhat.defaults );
   o.files = module.cleanWhat( o2 );
-
-  debugger;
 
   let o3 = _.mapOnly_( null, o, will.cleanDelete.defaults );
   will.cleanDelete( o3 );
@@ -5090,7 +5056,6 @@ _.assert( resolve.defaults === resolve.defaults.Looker );
 // let resolveMaybe = _.routine.uniteCloning_( resolve_head, resolve_body );
 // _.routineExtend( resolveMaybe, _.will.resolver.resolveMaybe );
 
-// debugger;
 _.assert( _.will.resolver.resolveMaybe.defaults.missingAction === 'undefine' );
 // _.assert( _.will.resolver.resolveMaybe.body.defaults.missingAction === 'undefine' ); /* xxx : uncomment */
 let resolveMaybe_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.resolveMaybe.defaults } );
@@ -5867,7 +5832,6 @@ function cloneDirPathGet( rootModule )
     let inPath = rootModule.peerInPathGet();
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
-    debugger;
     if( will.verbosity )
     logger.error( ` ! Out willfile of ${rootModule.localPath} does not have path::module.peer.in, but should` );
     return null;
@@ -6629,9 +6593,7 @@ function infoExportPaths( paths )
 
   // paths = module.pathsRelative({ basePath : module.dirPath, filePath : paths, onlyLocal : 1 });
 
-  debugger;
   result += '\n' + _.entity.exportStringNice( paths ) + '';
-  debugger;
 
   result += '\n\n';
 
@@ -6683,7 +6645,6 @@ function infoExportModulesTopological()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  debugger;
   let sorted = will.graphTopSort();
   // let sorted = will.graphTopologicalSort(); /* Dmytro : old routine name */
 
@@ -6843,7 +6804,6 @@ function structureExportOut( o )
   {
     if( !( module2 instanceof _.will.Module ) )
     {
-      debugger;
       let junction = will.junctionFrom( module2 );
       throw _.err
       (
@@ -6896,7 +6856,6 @@ function structureExportForModuleExport( o )
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
   let structure = module2.structureExportOut();
 
-  debugger;
   if( !module2.isUsedManually() )
   debugger;
   if( !module2.isUsedManually() )
@@ -7792,9 +7751,9 @@ function willfileExtendWillfile( o )
     if( !path.isGlob( filePath ) )
     {
       if( fileProvider.isDir( filePath ) )
-      filePath = path.join( filePath, '*.(yml|yaml|json)' );
+      filePath = path.join( filePath, '*.will.(yml|yaml|json)' );
       else
-      filePath = filePath + '*.(yml|yaml|json)';
+      filePath = filePath + '*.will.(yml|yaml|json)';
     }
 
     let filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
@@ -8504,7 +8463,7 @@ function willfileVersionBump( o )
   }
 
   let extensionMap = Object.create( null );
-  extensionMap[ 'about/version' ] = versionArray.join( '.' );
+  version = extensionMap[ 'about/version' ] = versionArray.join( '.' );
 
   let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
 
@@ -8525,7 +8484,203 @@ willfileVersionBump.defaults =
 {
   verbosity : 3,
   versionDelta : 1,
+};
+
+//
+
+function npmModulePublish( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let packagePath = path.join( module.dirPath, 'package.json' );
+
+  _.routineOptions( npmModulePublish, o );
+  _.assert( path.isTrailed( module.localPath ), 'not tested' );
+
+  if( !module.about.enabled )
+  return;
+
+  let ready = moduleSync( o.commit );
+  ready.deasync();
+  let diff = moduleDiffsGet();
+
+  if( o.force || !diff || diff.status )
+  {
+    if( o.verbosity )
+    logger.log( ` + Publishing ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    if( o.verbosity >= 2 && diff && diff.status )
+    {
+      logger.up();
+      logger.log( _.entity.exportStringNice( diff.status ) );
+      logger.down();
+    }
+  }
+  else
+  {
+    if( o.verbosity )
+    logger.log( ` x Nothing to publish in ${ module.qualifiedName } at ${ module._shortestModuleDirPathGet() }` );
+    return ready;
+  }
+
+  if( o.dry )
+  return ready;
+
+  /* */
+
+  let version;
+  ready.then( () =>
+  {
+    version = module.willfileVersionBump( Object.create( null ) );
+    return null;
+  });
+
+  ready.then( () => module.reopen() );
+  ready.then( ( reopened ) => { module = reopened; return null } );
+  ready.then( () => packageJsonGenerate() );
+  ready.then( () => moduleExport() );
+
+  let aboutCache = Object.create( null );
+  ready.then( () => npmFixate() );
+  ready.then( () => _.npm.packageJsonFormat({ filePath : packagePath }) );
+
+  ready.then( () => moduleSync( `-am "version ${ version }"` ) );
+  ready.then( () => module.gitTag({ name : `v${ version }` }) );
+  ready.then( () => module.gitTag({ name : o.tag }) );
+  ready.then( () => module.gitPush( Object.create( null ) ) );
+
+  ready.then( () => npmPublish() );
+
+  return ready;
+
+  /* */
+
+  function moduleSync( commit )
+  {
+    return module.gitSync
+    ({
+      commit,
+      restoringHardLinks : 1,
+      v : 0,
+    });
+  }
+
+  /* */
+
+  function moduleDiffsGet()
+  {
+    let diff;
+    if( !o.force )
+    {
+      try
+      {
+        diff = _.git.diff
+        ({
+          state2 : `!${ o.tag }`,
+          localPath : module.dirPath,
+          sync : 1,
+        });
+      }
+      catch( err )
+      {
+        _.errAttend( err );
+        logger.log( err );
+      }
+    }
+    return diff;
+  }
+
+  /* */
+
+  function packageJsonGenerate()
+  {
+    let currentContext = module.stepMap[ 'willfile.generate' ];
+    module.npmGenerateFromWillfile
+    ({
+      packagePath,
+      currentContext,
+      verbosity : o.verbosity,
+    });
+    return null;
+  }
+
+  /* */
+
+  function moduleExport( op )
+  {
+    let filterProperties = _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } );
+    return module.modulesExport
+    ({
+      ... filterProperties,
+      doneContainer : [],
+      name : '',
+      criterion : {},
+      recursive : 0,
+      kind : 'export',
+    });
+  }
+
+  /* */
+
+  function npmFixate()
+  {
+    return _.npm.fixate
+    ({
+      dry : o.dry,
+      localPath : module.dirPath,
+      configPath : packagePath,
+      tag : o.tag,
+      onDependency,
+      verbosity : o.verbosity - 2,
+    });
+  }
+
+  /* */
+
+  function npmPublish()
+  {
+    return _.npm.publish
+    ({
+      localPath : module.dirPath,
+      tag : o.tag,
+      verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
+    });
+  }
+
+  /* */
+
+  function onDependency( dep )
+  {
+
+    if( dep.version )
+    return;
+
+    let about = aboutCache[ dep.name ];
+    if( !about )
+    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
+    {
+      dep.version = o.tag;
+      return;
+    }
+    if( about && about.version )
+    {
+      dep.version = about.version;
+    }
+  }
 }
+
+npmModulePublish.defaults =
+{
+  commit : '-am "."',
+  tag : '',
+
+  force : 0,
+  dry : 0,
+  v : 1,
+  verbosity : 1,
+};
 
 //
 
@@ -10035,6 +10190,7 @@ let Extension =
   willfileExtendProperty,
 
   willfileVersionBump,
+  npmModulePublish,
 
   // remote
 
