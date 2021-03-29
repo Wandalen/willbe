@@ -125,6 +125,23 @@ let FilterFields =
   ... _.mapBut( ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
 }
 
+//
+
+let IntentionFields =
+{
+  attachedWillfilesFormedOfMain : true,
+  peerModulesFormedOfMain : true,
+  subModulesFormedOfMain : true,
+  resourcesFormedOfMain : null,
+  allOfMain : null,
+
+  attachedWillfilesFormedOfSub : true,
+  peerModulesFormedOfSub : true,
+  subModulesFormedOfSub : true,
+  resourcesFormedOfSub : null,
+  allOfSub : null,
+}
+
 // --
 // inter
 // --
@@ -947,68 +964,68 @@ versionIsUpToDate.defaults =
 
 //
 
-function withSubmodulesGet()
-{
-  let will = this;
+// function withSubmodulesGet()
+// {
+//   let will = this;
 
-  _.assert( arguments.length === 0 );
+//   _.assert( arguments.length === 0 );
 
-  return will._.withSubmodules;
-  // let withSubmodules = will._.withSubmodules;
-  // if( withSubmodules !== null && withSubmodules !== undefined )
-  // {
-  //   return withSubmodules;
-  // }
-  //
-  // if( !will.subModulesFormedOfMain )
-  // return 0;
-  // else if( will.subModulesFormedOfSub )
-  // return 2;
-  // else
-  // return 1;
-}
+//   return will._.withSubmodules;
+//   // let withSubmodules = will._.withSubmodules;
+//   // if( withSubmodules !== null && withSubmodules !== undefined )
+//   // {
+//   //   return withSubmodules;
+//   // }
+//   //
+//   // if( !will.subModulesFormedOfMain )
+//   // return 0;
+//   // else if( will.subModulesFormedOfSub )
+//   // return 2;
+//   // else
+//   // return 1;
+// }
 
 //
 
-function withSubmodulesSet( src )
-{
-  let will = this;
+// function withSubmodulesSet( src )
+// {
+//   let will = this;
 
-  _.assert( arguments.length === 1 );
-  _.assert( _.boolIs( src ) || _.numberIs( src ) || src === null );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.boolIs( src ) || _.numberIs( src ) || src === null );
 
-  if( _.boolIs( src ) )
-  src = src ? 1 : 0;
+//   if( _.boolIs( src ) )
+//   src = src ? 1 : 0;
 
-  // debugger;
+//   // debugger;
 
-  will._.withSubmodules = src;
+//   will._.withSubmodules = src;
 
-  if( src === null )
-  {
-  }
-  else if( src )
-  {
-    will.subModulesFormedOfMain = true;
-    if( src === 2 )
-    {
-      will.subModulesFormedOfSub = true;
-      return 2;
-    }
-    else
-    {
-      will.subModulesFormedOfSub = false;
-      return 1;
-    }
-  }
-  else
-  {
-    will.subModulesFormedOfMain = false;
-    will.subModulesFormedOfSub = false;
-    return 0;
-  }
+//   if( src === null )
+//   {
+//   }
+//   else if( src )
+//   {
+//     will.subModulesFormedOfMain = true;
+//     if( src === 2 )
+//     {
+//       will.subModulesFormedOfSub = true;
+//       return 2;
+//     }
+//     else
+//     {
+//       will.subModulesFormedOfSub = false;
+//       return 1;
+//     }
+//   }
+//   else
+//   {
+//     will.subModulesFormedOfMain = false;
+//     will.subModulesFormedOfSub = false;
+//     return 0;
+//   }
 
-}
+// }
 
 //
 
@@ -5438,17 +5455,17 @@ _.assert( Composes.withEnabledModules === undefined );
 let Aggregates =
 {
 
-  attachedWillfilesFormedOfMain : true,
-  peerModulesFormedOfMain : true,
-  subModulesFormedOfMain : true,
-  resourcesFormedOfMain : null,
-  allOfMain : null,
+  // attachedWillfilesFormedOfMain : true,
+  // peerModulesFormedOfMain : true,
+  // subModulesFormedOfMain : true,
+  // resourcesFormedOfMain : null,
+  // allOfMain : null,
 
-  attachedWillfilesFormedOfSub : true,
-  peerModulesFormedOfSub : true,
-  subModulesFormedOfSub : true,
-  resourcesFormedOfSub : null,
-  allOfSub : null,
+  // attachedWillfilesFormedOfSub : true,
+  // peerModulesFormedOfSub : true,
+  // subModulesFormedOfSub : true,
+  // resourcesFormedOfSub : null,
+  // allOfSub : null,
 
 }
 
@@ -5510,6 +5527,7 @@ let Statics =
   RelationFilterOn,
   RelationFilterOff,
   FilterFields,
+  IntentionFields,
 
   // path
 
@@ -5559,7 +5577,19 @@ let Forbids =
 
   withPath : 'withPath',
 
-  withSubmodules : 'withSubmodules'
+  withSubmodules : 'withSubmodules',
+
+  attachedWillfilesFormedOfMain : 'attachedWillfilesFormedOfMain',
+  peerModulesFormedOfMain : 'peerModulesFormedOfMain',
+  subModulesFormedOfMain : 'subModulesFormedOfMain',
+  resourcesFormedOfMain : 'resourcesFormedOfMain',
+  allOfMain : 'allOfMain',
+
+  attachedWillfilesFormedOfSub : 'attachedWillfilesFormedOfSub',
+  peerModulesFormedOfSub : 'peerModulesFormedOfSub',
+  subModulesFormedOfSub : 'subModulesFormedOfSub',
+  resourcesFormedOfSub : 'resourcesFormedOfSub',
+  allOfSub : 'allOfSub',
 }
 
 let Accessors =

@@ -117,12 +117,58 @@ function verbositySet( src )
 
 //
 
+function withSubmodulesSet( src )
+{
+  let t = this;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolIs( src ) || _.numberIs( src ) || src === null );
+
+  if( _.boolIs( src ) )
+  src = src ? 1 : 0;
+
+  if( t.formed )
+  return t._.withSubmodules;
+
+  if( t._.withSubmodules === src )
+  return t._.withSubmodules;
+
+  t._.withSubmodules = src;
+
+  if( src === null )
+  {
+  }
+  else if( src )
+  {
+    t._.subModulesFormedOfMain = true;
+    if( src === 2 )
+    {
+      t._.subModulesFormedOfSub = true;
+      return 2;
+    }
+    else
+    {
+      t._.subModulesFormedOfSub = false;
+      return 1;
+    }
+  }
+  else
+  {
+    t._.subModulesFormedOfMain = false;
+    t._.subModulesFormedOfSub = false;
+    return 0;
+  }
+
+}
+
+//
+
 function _transactionPropertyGetter_functor( propName )
 {
   return function get()
   {
     let t = this;
-    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) || _.strDefined( t._[ propName ] ) );
+    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) || _.strDefined( t._[ propName ] ) || _.numberIs( t._[ propName ] ) );
     return t._[ propName ];
   }
 }
@@ -153,8 +199,10 @@ let TransactionFields =
   ... _.Will.FilterFields,
 
   withPath : null,
+  withSubmodules : null,
 
-  withSubmodules : null
+
+  ... _.Will.IntentionFields
 }
 
 // --
@@ -197,6 +245,7 @@ let Accessors =
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
   v : { suite : _.accessor.suite.alias({ originalName : 'verbosity' }) },
+  withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
 }
 
 _.each( TransactionFields, ( val, key ) =>
@@ -222,6 +271,7 @@ let Extension =
   formAssociates,
 
   verbositySet,
+  withSubmodulesSet,
 
   // relation
 

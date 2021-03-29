@@ -253,7 +253,7 @@ function _command_head( o )
     e.propertiesMap = propertiesMap;
   }
 
-  if( cui.implied )
+  if( cui.implied && o.usingImpliedMap )
   {
     if( o.routine.defaults )
     _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.defaults ) );
@@ -286,6 +286,7 @@ _command_head.defaults =
   routine : null,
   args : null,
   propertiesMapAsProperty : 0,
+  usingImpliedMap : 1
 }
 
 //
@@ -563,6 +564,12 @@ function _commandListLike( o )
   _.assert( _.objectIs( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
   if( will.transaction === null )
   will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
@@ -671,6 +678,12 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
   if( will.transaction === null )
   will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
@@ -775,6 +788,12 @@ function _commandCleanLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
   if( will.transaction === null )
   will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
@@ -874,6 +893,12 @@ function _commandNewLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
 
   if( will.transaction === null )
   will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
@@ -993,6 +1018,12 @@ function _commandTreeLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
   if( will.transaction === null )
   will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
@@ -1051,15 +1082,22 @@ _commandTreeLike.defaults =
 
 function _commandModulesLike( o )
 {
-  let cui = this;
-  let logger = cui.logger;
+  let will = this;
+  let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  _.assert( cui.transaction === null );
-  cui.transaction = _.will.Transaction({ will : cui, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  // _.assert( will.transaction === null );
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandModulesLike, arguments );
-  _.mapSupplementNulls( o, cui.filterImplied() );
+  _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
 
   _.all
@@ -1074,22 +1112,22 @@ function _commandModulesLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  cui._commandsBegin( o.commandRoutine );
+  will._commandsBegin( o.commandRoutine );
 
-  if( cui.currentOpeners === null && cui.currentOpener === null )
-  ready.then( () => cui.openersFind() )
+  if( will.currentOpeners === null && will.currentOpener === null )
+  ready.then( () => will.openersFind() )
   .then( () => filter() );
 
-  let openers = cui.currentOpeners;
-  cui.currentOpeners = null;
+  let openers = will.currentOpeners;
+  will.currentOpeners = null;
 
   for( let i = 0 ; i < openers.length ; i++ )
   ready.then( () => openersEach( openers[ i ] ) );
 
   return ready.finally( ( err, arg ) =>
   {
-    cui.currentOpeners = openers;
-    cui._commandsEnd( o.commandRoutine );
+    will.currentOpeners = openers;
+    will._commandsEnd( o.commandRoutine );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1101,11 +1139,11 @@ function _commandModulesLike( o )
 
   function filter()
   {
-    if( cui.currentOpeners )
+    if( will.currentOpeners )
     {
-      let openers2 = cui.modulesFilter( cui.currentOpeners, _.mapOnly( o, cui.modulesFilter.defaults ) );
+      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
       if( openers2.length )
-      cui.currentOpeners = openers2;
+      will.currentOpeners = openers2;
     }
     return null;
   }
@@ -1114,7 +1152,7 @@ function _commandModulesLike( o )
 
   function openersEach( opener )
   {
-    let ready2 = cui.modulesFindEachAt
+    let ready2 = will.modulesFindEachAt
     ({
       selector : _.strUnquote( 'submodule::*' ),
       currentOpener : opener,
@@ -1126,23 +1164,23 @@ function _commandModulesLike( o )
       else
       _.arrayRemove( it.sortedOpeners, opener );
 
-      cui.currentOpeners = it.sortedOpeners;
+      will.currentOpeners = it.sortedOpeners;
       return it;
     })
 
     if( o.onModulesBegin )
     ready2.then( () =>
     {
-      o.onModulesBegin.call( cui, cui.currentOpeners, opener );
+      o.onModulesBegin.call( will, will.currentOpeners, opener );
       return null;
     });
 
-    ready2.then( () => cui.openersCurrentEach( forSingle ) )
+    ready2.then( () => will.openersCurrentEach( forSingle ) )
 
     if( o.onModulesEnd )
     ready2.finally( ( err, arg ) =>
     {
-      o.onModulesEnd.call( cui, cui.currentOpeners, opener );
+      o.onModulesEnd.call( will, will.currentOpeners, opener );
 
       if( err )
       throw _.err( err );
@@ -1162,18 +1200,18 @@ function _commandModulesLike( o )
 
     ready3.then( () =>
     {
-      return cui.currentOpenerChange( it.opener );
+      return will.currentOpenerChange( it.opener );
     });
 
     ready3.then( () =>
     {
-      cui.readingEnd();
-      return o.onEach.call( cui, it2 );
+      will.readingEnd();
+      return o.onEach.call( will, it2 );
     });
 
     ready3.finally( ( err, arg ) =>
     {
-      cui.currentOpenerChange( null );
+      will.currentOpenerChange( null );
       if( err )
       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
@@ -3582,7 +3620,13 @@ function commandWith( e )
 {
   let cui = this.form();
   let path = cui.fileProvider.path;
-  cui._command_head( commandWith, arguments );
+
+  cui._command_head
+  ({
+    routine : commandWith,
+    args : arguments,
+    usingImpliedMap : 0
+  });
 
   if( cui.currentOpener )
   {
@@ -3622,6 +3666,8 @@ function commandWith( e )
   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.commandArgument ) );
 
   cui.implied = _.mapExtend( cui.implied, { withPath } );
+  _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, commandWith.defaults ) );
+  cui._propertiesImply( e.propertiesMap );
 
   return cui.modulesFindWithAt
   ({
@@ -3643,13 +3689,19 @@ function commandWith( e )
       );
     }
 
+    _.assert( cui.transaction instanceof _.will.Transaction );
+    cui.transaction.finit();
+    cui.transaction = null;
+
     return it;
   })
 
 }
 
+commandWith.defaults = _.mapExtend( null, commandImply.defaults );
 commandWith.hint = 'Select a module to execute command.';
 commandWith.commandSubjectHint = 'A module selector.';
+commandWith.commandProperties = Object.create( null );
 
 //
 
