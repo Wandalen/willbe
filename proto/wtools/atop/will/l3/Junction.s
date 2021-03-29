@@ -11,9 +11,9 @@
 //
 // //
 //
-// let _ = _global_.wTools;
-// let Parent = null;
-// let Self = wWillJunction;
+// const _ = _global_.wTools;
+// const Parent = null;
+// const Self = wWillJunction;
 // function wWillJunction( o )
 // {
 //   return _.workpiece.construct( Self, this, arguments );
@@ -1085,7 +1085,7 @@
 //
 //   o = _.routineOptions( submodulesJunctionsFilter, arguments );
 //
-//   let filter = _.mapOnly( o, sys.relationFit.defaults );
+//   let filter = _.mapOnly_( null, o, sys.relationFit.defaults );
 //
 //   // if( _global_.debugger === 1 )
 //   // debugger;

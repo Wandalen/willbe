@@ -12,9 +12,9 @@
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillBuildFrame;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillBuildFrame;
 function wWillBuildFrame( o )
 {
   return _.workpiece.construct( Self, this, arguments );

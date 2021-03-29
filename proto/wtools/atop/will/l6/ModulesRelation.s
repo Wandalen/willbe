@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.Resource;
-let Self = wWillModulesRelation;
+const _ = _global_.wTools;
+const Parent = _.will.Resource;
+const Self = wWillModulesRelation;
 function wWillModulesRelation( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -542,17 +542,6 @@ function moduleSet( src )
   return src;
 }
 
-//
-
-function moduleForResolveGet()
-{
-  let resource = this;
-  _.assert( arguments.length === 0 );
-  if( !resource.opener || !resource.opener.openedModule )
-  return null;
-  return resource.opener.openedModule;
-}
-
 // --
 // path
 // --
@@ -711,6 +700,17 @@ pathsRebase.defaults =
 // --
 // coercer
 // --
+
+function toModuleForResolver()
+{
+  let resource = this;
+  _.assert( arguments.length === 0 );
+  if( !resource.opener || !resource.opener.openedModule )
+  return null;
+  return resource.opener.openedModule;
+}
+
+//
 
 function toModule()
 {
@@ -989,7 +989,7 @@ let Accessors =
   longPath : { get : longPathGet },
   path : { set : pathSet },
   module : { combining : 'rewrite' },
-  moduleForResolve : { get : moduleForResolveGet, set : 0, combining : 'rewrite' },
+  // resolverModule : { get : toModuleForResolver, set : 0, combining : 'rewrite' },
 }
 
 
@@ -1039,7 +1039,6 @@ let Extension =
   isAvailableGet,
   isAliveGet,
   moduleSet,
-  moduleForResolveGet,
 
   // path
 
@@ -1052,6 +1051,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

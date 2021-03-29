@@ -13,9 +13,9 @@
 // relations
 // --
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWill;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWill;
 function wWill( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -122,7 +122,7 @@ let FilterFields =
 {
   withEnabled : 1,
   withDisabled : 0,
-  ... _.mapBut( ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
+  ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
 }
 
 // --
@@ -1343,7 +1343,7 @@ function relationFit_body( object, opts )
   // _.assert( object instanceof _.will.ModulesRelation || object instanceof _.will.Module || object instanceof _.will.ModuleJunction );
   // _.assert( object instanceof _.will.ModuleJunction ); /* ttt */
 
-  let result = will.moduleFit.body.call( will, object, _.mapOnly( opts, will.moduleFit.defaults ) );
+  let result = will.moduleFit.body.call( will, object, _.mapOnly_( null, opts, will.moduleFit.defaults ) );
   if( !result )
   return result;
 
@@ -1692,7 +1692,7 @@ function modulesFindEachAt( o )
       throw err;
     }
 
-    let filter = _.mapOnly( o, will.modulesFilter.defaults );
+    let filter = _.mapOnly_( null, o, will.modulesFilter.defaults );
     let openers2 = will.modulesFilter( op.openers, filter );
     if( !o.atLeastOne || openers2.length )
     op.openers = openers2;
@@ -2080,7 +2080,7 @@ function modulesFindWithAt( o )
     }
 
     {
-      let filter = _.mapOnly( o, will.modulesFilter.defaults );
+      let filter = _.mapOnly_( null, o, will.modulesFilter.defaults );
       let openers2 = will.modulesFilter( op.openers, filter );
       if( !o.atLeastOne || openers2.length )
       op.openers = openers2;
@@ -2158,7 +2158,7 @@ function modulesOnlyRoots( modules )
     ... _.Will.RelationFilterOn,
   }
 
-  let nodesGroup = will.graphGroupMake( _.mapOnly( filter, will.graphGroupMake.defaults ) );
+  let nodesGroup = will.graphGroupMake( _.mapOnly_( null, filter, will.graphGroupMake.defaults ) );
 
   /* first make junctions for each module */
 
@@ -2272,7 +2272,7 @@ function modulesEach_body( o )
   _.assertRoutineOptions( modulesEach_body, o );
 
   if( !o.nodesGroup )
-  o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
+  o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
 
   if( !o.ownedObjects )
   o.ownedObjects = [];
@@ -2308,10 +2308,10 @@ function modulesEach_body( o )
 
   /* */
 
-  let filter = _.mapOnly( o, _.Will.prototype.relationFit.defaults );
+  let filter = _.mapOnly_( null, o, _.Will.prototype.relationFit.defaults );
 
   will.assertGraphGroup( o.nodesGroup, o );
-  let o2 = _.mapOnly( o, o.nodesGroup.each.defaults );
+  let o2 = _.mapOnly_( null, o, o.nodesGroup.each.defaults );
   o2.roots = nodes;
   o2.onUp = handleUp;
   o2.onDown = handleDown;
@@ -2489,7 +2489,7 @@ function modulesFor_body( o )
   _.assertRoutineOptions( modulesFor_body, arguments );
 
   if( !o.nodesGroup )
-  o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
+  o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
   o.modules = _.arrayAs( o.modules );
 
   _.assert( _.arrayIs( o.modules ) );
@@ -2548,7 +2548,7 @@ function modulesFor_body( o )
 
   function objectsEach( objects )
   {
-    let o2 = _.mapOnly( o, will.modulesEach.defaults );
+    let o2 = _.mapOnly_( null, o, will.modulesEach.defaults );
     o2.outputFormat = '*/object';
     o2.modules = objects;
     let result = will.modulesEach( o2 );
@@ -2697,7 +2697,7 @@ function modulesDownload_body( o )
   if( !o.doneContainer )
   o.doneContainer = [];
   if( !o.nodesGroup )
-  o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
+  o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
 
   _.assertRoutineOptions( modulesDownload_body, arguments );
   o.modules = _.arrayAs( o.modules );
@@ -2705,7 +2705,7 @@ function modulesDownload_body( o )
   _.assert( will.ObjectsAreAll( o.modules ) );
   _.assert( arguments.length === 1 );
 
-  let filter = _.mapOnly( o, _.Will.prototype.relationsFilter.defaults );
+  let filter = _.mapOnly_( null, o, _.Will.prototype.relationsFilter.defaults );
   filter.withOut = false;
   if( o.withDisabledStem )
   {
@@ -2742,7 +2742,7 @@ function modulesDownload_body( o )
 
     ready.then( () => /* xxx : remove the stage? */
     {
-      let o2 = _.mapOnly( o, will.modulesUpform.defaults );
+      let o2 = _.mapOnly_( null, o, will.modulesUpform.defaults );
       o2.modules = objects;
       o2.recursive = o.recursive;
       o2.all = 0;
@@ -2754,7 +2754,7 @@ function modulesDownload_body( o )
 
     ready.then( ( arg ) =>
     {
-      let o2 = _.mapOnly( o, will.modulesEach.defaults );
+      let o2 = _.mapOnly_( null, o, will.modulesEach.defaults );
       o2.outputFormat = '*/object';
       o2.modules = objects;
       o2.withPeers = 1; /* xxx */
@@ -2883,6 +2883,8 @@ function modulesDownload_body( o )
         () => 'Submodule' + ( junction.opener ? junction.opener.qualifiedName : n ) + ' was not preformed to download it'
       );
 
+      if( junctionIsRoot( junction ) )
+      return junctionLocalMaybe( junction );
       if( !junction.isRemote || !junction.relation )
       return junctionLocalMaybe( junction );
       if( junction.relation && !junction.relation.enabled )
@@ -2931,36 +2933,7 @@ function modulesDownload_body( o )
 
     if( o.mode === 'update' )
     if( o.to )
-    {
-      _.assert( _.strDefined( o.to ) );
-
-      var vcs = will.vcsToolsFor( junction.opener.remotePath );
-      var remoteParsed = vcs.pathParse( junction.opener.remotePath )
-
-      var globalTo = vcs.path.globalFromPreferred( o.to );
-
-      var toParsed = vcs.pathParse( globalTo );
-
-      if( toParsed.tag )
-      {
-        remoteParsed.tag = toParsed.tag;
-        remoteParsed.hash = null;
-      }
-      else if( toParsed.hash )
-      {
-        remoteParsed.tag = null;
-        remoteParsed.hash = toParsed.hash;
-      }
-      else
-      {
-        throw _.err( `Option "to" should be either tag or version. Got:${o.to}` );
-      }
-
-      let remotePathNew = vcs.path.str( remoteParsed );
-
-      junction.opener.remotePathSet( remotePathNew );
-      junction.opener.repo.remotePathChange( remotePathNew );
-    }
+    junction.opener.remotePathChangeVersionTo( o.to );
 
     if( o.dry )
     {
@@ -2981,7 +2954,7 @@ function modulesDownload_body( o )
     }
     else
     {
-      let o2 = _.mapOnly( o, opener._repoDownload.defaults );
+      let o2 = _.mapOnly_( null, o, opener._repoDownload.defaults );
       let r = _.Consequence.From( opener._repoDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
@@ -2998,8 +2971,8 @@ function modulesDownload_body( o )
 
   function junctionIsRoot( junction )
   {
-    if( junction.isRemote )
-    return false;
+    // if( junction.isRemote ) /* Vova: root modules now have a remote path, isRemote can be true for a root module */
+    // return false;
     if( _.longHas( rootJunctions, junction ) )
     return true;
     if( rootJunctions.some( ( rootJunction ) => rootJunction.peer === junction ) )
@@ -3132,7 +3105,7 @@ function modulesUpform( o )
 
   o = _.routineOptions( modulesUpform, arguments ); // debugger;
 
-  let o2 = _.mapOnly( o, will.modulesFor.defaults );
+  let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
   return will.modulesFor( o2 )
   .finally( ( err, arg ) =>
@@ -3146,7 +3119,7 @@ function modulesUpform( o )
 
   function handleEach( module, op )
   {
-    let o3 = _.mapOnly( o, module.upform.defaults );
+    let o3 = _.mapOnly_( null, o, module.upform.defaults );
     return module.upform( o3 );
   }
 
@@ -3180,13 +3153,13 @@ function modulesClean( o )
   if( o.beginTime === null )
   o.beginTime = _.time.now();
 
-  let o2 = _.mapOnly( o, will.modulesFor.defaults );
+  let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
   o2.onEachVisitedObject = handleEach;
 
   return will.modulesFor( o2 )
   .then( ( arg ) =>
   {
-    let o2 = _.mapOnly( o, will.cleanDelete.defaults );
+    let o2 = _.mapOnly_( null, o, will.cleanDelete.defaults );
     o2.files = files;
     return will.cleanDelete( o2 );
   })
@@ -3195,7 +3168,7 @@ function modulesClean( o )
     if( err )
     throw _.err( err, `\nFailed to clean modules` );
 
-    let o2 = _.mapOnly( o, will.cleanLog.defaults );
+    let o2 = _.mapOnly_( null, o, will.cleanLog.defaults );
     o2.files = files;
     will.cleanLog( o2 );
 
@@ -3212,7 +3185,7 @@ function modulesClean( o )
     if( visitedObjectSet.has( module ) )
     return null;
     visitedObjectSet.add( module );
-    let o3 = _.mapOnly( o, module.cleanWhatSingle.defaults );
+    let o3 = _.mapOnly_( null, o, module.cleanWhatSingle.defaults );
     o3.files = files;
     return module.cleanWhatSingle( o3 );
   }
@@ -3260,13 +3233,13 @@ function modulesBuild_body( o )
   o = _.assertRoutineOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
 
-  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly( o, will.recursiveValueDeduceFromBuild.defaults ) ); /* yyy2 */
+  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly_( null, o, will.recursiveValueDeduceFromBuild.defaults ) ); /* yyy2 */
 
   ready.then( () =>
   {
     if( !o.downloading )
     return null;
-    let o2 = _.mapOnly( o, will.modulesDownload.defaults );
+    let o2 = _.mapOnly_( null, o, will.modulesDownload.defaults );
     o2.loggingNoChanges = 0;
     if( o2.recursive === 0 )
     {
@@ -3289,7 +3262,7 @@ function modulesBuild_body( o )
   {
     if( !o.upforming || o.downloading )
     return null;
-    let o2 = _.mapOnly( o, will.modulesUpform.defaults );
+    let o2 = _.mapOnly_( null, o, will.modulesUpform.defaults );
     o2.all = 0;
     if( o2.recursive === 0 )
     {
@@ -3316,7 +3289,7 @@ function modulesBuild_body( o )
 
   ready.then( () =>
   {
-    let o2 = _.mapOnly( o, will.modulesFor.defaults );
+    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.onEachModule = moduleBuild;
     o2.left = 0;
     o2.withOut = 0;
@@ -3339,7 +3312,7 @@ function modulesBuild_body( o )
 
   function moduleBuild( module, op )
   {
-    let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+    let o3 = _.mapOnly_( null, o, module.moduleBuild.defaults );
     o3.isRoot = op.isRoot;
     _.assert( module instanceof _.will.Module );
     if( _.longHas( o.doneContainer, module ) )
@@ -3416,7 +3389,7 @@ function modulesVerify_body( o )
 
   ready.then( () =>
   {
-    let o2 = _.mapOnly( o, will.modulesFor.defaults );
+    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.onEachVisitedObject = moduleVerify;
     debugger;
     return will.modulesFor( o2 );
@@ -3462,7 +3435,7 @@ function modulesVerify_body( o )
     if( object instanceof _.will.ModuleOpener )
     if( object.openedModule )
     object = object.openedModule;
-    let o3 = _.mapOnly( o, object.repoVerify.defaults ); debugger;
+    let o3 = _.mapOnly_( null, o, object.repoVerify.defaults ); debugger;
     _.assert( object instanceof _.will.Module || object instanceof _.will.ModuleOpener );
     return object.repoVerify( o3 ).then( ( verified ) =>
     {
@@ -3591,7 +3564,7 @@ function ObjectsLogInfo( o )
   if( o.logger === null )
   o.logger = _global_.logger;
 
-  let info = cls.ObjectsExportInfo( _.mapOnly( o, cls.ObjectsExportInfo.defaults ) );
+  let info = cls.ObjectsExportInfo( _.mapOnly_( null, o, cls.ObjectsExportInfo.defaults ) );
   o.logger.log( info );
 
 }
@@ -3896,7 +3869,7 @@ function graphGroupMake( o )
 
     // if( _global_.debugger )
     // debugger;
-    let result = object.submodulesRelationsFilter( _.mapOnly( o, object.submodulesRelationsFilter.defaults ) );
+    let result = object.submodulesRelationsFilter( _.mapOnly_( null, o, object.submodulesRelationsFilter.defaults ) );
 
     // result.forEach( ( object ) =>
     // {
@@ -3910,7 +3883,7 @@ function graphGroupMake( o )
     // if( _global_.debugger )
     // debugger;
     // let junction = will.junctionFrom( object );
-    // return junction.submodulesGet( _.mapOnly( o, junction.submodulesGet.defaults ) );
+    // return junction.submodulesGet( _.mapOnly_( null, o, junction.submodulesGet.defaults ) );
     return result;
   }
 
@@ -3967,7 +3940,7 @@ function graphExportTreeInfo( modules, o )
   if( o.onUp === null )
   o.onUp = junctionUp;
 
-  let group = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
+  let group = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
 
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
@@ -3975,7 +3948,7 @@ function graphExportTreeInfo( modules, o )
   if( o.onlyRoots )
   modules = will.modulesOnlyRoots( modules );
 
-  let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
+  let o2 = _.mapOnly_( null, o, group.rootsExportInfoTree.defaults );
   o2.allVariants = 0;
   o2.allSiblings = 0;
 
@@ -4561,7 +4534,7 @@ function willfilesFind( o )
 
 willfilesFind.defaults =
 {
-  ... _.mapBut( WillfilesFind.defaults, [ 'logger', 'fileProvider' ] ),
+  ... _.mapBut_( null, WillfilesFind.defaults, [ 'logger', 'fileProvider' ] ),
   usingCache : 0,
 }
 
