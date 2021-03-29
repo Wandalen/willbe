@@ -11429,6 +11429,54 @@ function repoStatusLocalUncommittedChanges( test )
   return a.ready;
 }
 
+//
+
+function remotePathOfMainGitRepo( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'remotePathOfMain' );
+  let opener;
+
+  a.shell.predefined.sync = 1;
+  a.shell.predefined.deasync = 0;
+  a.shell.predefined.ready = null;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    a.shell( 'git init' )
+    a.shell( 'git remote add origin https://github.com/test/TestRepo.git' )
+
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.identical( opener.remotePath, 'git+https:///github.com/test/TestRepo.git/' );
+    return null;
+  })
+
+  /* */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
+remotePathOfMainGitRepo.description =
+`
+Checks remotePath of the main module as a git repository.
+`
+
 // --
 // define class
 // --
@@ -11535,7 +11583,9 @@ const Proto =
     repoStatusForOutdatedRepo,
     repoStatusForInvalidRepo,
     repoStatusLocalChanges,
-    repoStatusLocalUncommittedChanges
+    repoStatusLocalUncommittedChanges,
+
+    remotePathOfMainGitRepo
 
   }
 
