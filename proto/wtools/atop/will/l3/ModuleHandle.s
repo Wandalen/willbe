@@ -3,9 +3,9 @@
 
 'use strict';
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillModuleHandle;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillModuleHandle;
 function wWillModuleHandle( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -99,6 +99,14 @@ function Froms( objects, will )
 // --
 // coercer
 // --
+
+function toModuleForResolver()
+{
+  let self = this;
+  return self.toModule();
+}
+
+//
 
 function toModule()
 {
@@ -258,6 +266,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

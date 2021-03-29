@@ -3,9 +3,9 @@
 
 'use strict';
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillBuildRun;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillBuildRun;
 function wWillBuildRun( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -47,8 +47,8 @@ function unform()
   let run = this;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -71,8 +71,8 @@ function form()
   let module = run.module;
   let build = run.build;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );

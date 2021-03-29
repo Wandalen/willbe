@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillResource;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillResource;
 function wWillResource( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -362,8 +362,8 @@ function unform()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -397,8 +397,8 @@ function form()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( resource.formed === 0 )
@@ -425,8 +425,8 @@ function form1()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -544,8 +544,8 @@ function _inheritMultiple( o )
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   /* begin */
@@ -621,8 +621,8 @@ function _inheritSingle( o )
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( _.strIs( o.ancestor ) )
@@ -646,7 +646,7 @@ function _inheritSingle( o )
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly_( null, resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
@@ -667,8 +667,8 @@ function form3()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -779,7 +779,7 @@ function criterionInherit( criterion2 )
 
   criterion1 = resource.criterion = resource.criterion || Object.create( null );
 
-  _.mapSupplement( criterion1, _.mapBut( criterion2, { default : null, predefined : null } ) )
+  _.mapSupplement( criterion1, _.mapBut_( null, criterion2, { default : null, predefined : null } ) )
 
   return criterion1;
 }
@@ -823,7 +823,7 @@ function CriterionVariable( criterionMaps, criterion )
 
   }
 
-  let result = _.mapBut( criterion, all );
+  let result = _.mapBut_( null, criterion, all );
 
   return result;
 }
@@ -1001,7 +1001,7 @@ function exportStructure()
     return;
   }
 
-  let o2 = _.mapOnly( o, resource.cloneData.defaults );
+  let o2 = _.mapOnly_( null, o, resource.cloneData.defaults );
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
@@ -1142,8 +1142,7 @@ function moduleSet( src )
 
 //
 
-
-function moduleForResolveGet()
+function toModuleForResolver()
 {
   let resource = this;
   _.assert( arguments.length === 0 );
@@ -1177,8 +1176,8 @@ function resolve_body( o )
   let module = resource.module;
   _.assert( !!module );
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   // _.assert( o.currentContext === null || o.currentContext === resource );
@@ -1227,8 +1226,8 @@ function inPathResolve_body( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );
@@ -1301,8 +1300,8 @@ function reflectorResolve_body( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );;
@@ -1332,8 +1331,8 @@ function pathRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathRebase, arguments );
@@ -1444,7 +1443,7 @@ let Accessors =
   decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
   inherit : { set : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
   module : {},
-  moduleForResolve : { get : moduleForResolveGet, set : 0 },
+  // resolverModule : { get : toModuleForResolver, set : 0 },
 }
 
 // --
@@ -1509,7 +1508,7 @@ let Extension =
   shortNameArrayGet,
   willfSet,
   moduleSet,
-  moduleForResolveGet,
+  toModuleForResolver,
 
   // resolver
 

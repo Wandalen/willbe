@@ -76,6 +76,7 @@ module:
       download:
         criterion:
           predefined: 1
+        path: ../
       repository:
         path: 'git+https:///github.com/Wandalen/willbe.git'
       origins:
@@ -222,10 +223,6 @@ module:
           - ../proto/wtools/atop/will.test/Remake.s
           - ../proto/wtools/atop/will.test/ReposDownload.s
           - ../proto/wtools/atop/will.test/_asset
-          - ../proto/wtools/atop/will.test/_asset/-optionWithSubmodules
-          - >-
-            ../proto/wtools/atop/will.test/_asset/-optionWithSubmodules/l2.will.yml
-          - ../proto/wtools/atop/will.test/_asset/-optionWithSubmodules/will.yml
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal/l1.will.yml
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal/l2.will.yml
@@ -1195,6 +1192,11 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/a.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/b.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/ab/.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/b
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/b/.will.yml
@@ -1202,6 +1204,12 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/module-a.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/module-b.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/ab/module-ab.out.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/out/b
           - >-
@@ -1212,6 +1220,20 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/a
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/a/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File.test.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File1.debug.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File1.release.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File2.debug.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/b/File2.release.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/proto/dir3.test
           - >-
@@ -1523,6 +1545,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/f1.txt
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/f2.txt
           - ../proto/wtools/atop/will.test/_asset/modulesGitSync/super/will.yml
+          - ../proto/wtools/atop/will.test/_asset/modulesUpdate
+          - ../proto/wtools/atop/will.test/_asset/modulesUpdate/module
+          - ../proto/wtools/atop/will.test/_asset/modulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.im.will.yml
@@ -1929,6 +1954,10 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepBuild/bad1.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepBuild/bad2.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepBuild/basic.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepModulesUpdate
+          - ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShell
           - ../proto/wtools/atop/will.test/_asset/stepShell/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue
@@ -1961,6 +1990,10 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesDownload/proto/Simple.js
+          - ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate
+          - ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate/module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView
           - ../proto/wtools/atop/will.test/_asset/stepView/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView/File.html
@@ -1973,6 +2006,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodules/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/submodules/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/submodules-safety
+          - ../proto/wtools/atop/will.test/_asset/submodules-safety/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.im.will.yml
@@ -2057,6 +2092,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken2/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken2/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/submodulesClean
+          - ../proto/wtools/atop/will.test/_asset/submodulesClean/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDelDownload
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDelDownload/.will.yml
@@ -3443,6 +3480,7 @@ module:
       download:
         criterion:
           predefined: 1
+        path: ./
       repository:
         path: 'git+https:///github.com/Wandalen/willbe.git'
       origins:

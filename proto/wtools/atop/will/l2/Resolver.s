@@ -365,8 +365,6 @@ function _globCriterionFilter()
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
 
-  _.debugger;
-
   // if( it.down && it.down.selectorIsGlob )
   if( it.down && it.down.selectorType === 'glob' )
   if( rit.criterion && it.src && it.src.criterionSattisfy )
@@ -391,8 +389,8 @@ function _resourceMapSelect()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let currentModule = it.currentModule || rit.currentModule;
 
   _.assert( rit !== it );
@@ -535,8 +533,8 @@ function сontextPrepare( o )
   _.assert( !!o.baseModule );
   let will = o.baseModule.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.routineOptionsPreservingUndefines( сontextPrepare, arguments );
 
@@ -867,8 +865,8 @@ function _pathResolve( filePath, resource )
   _.assert( rit.currentModule !== undefined );
   let will = rit.baseModule.will;
   let currentModule = it.currentModule || rit.currentModule || rit.baseModule;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let resourceName = resource.name;
   let result = filePath;
 
@@ -932,6 +930,10 @@ function _pathResolve( filePath, resource )
   }
 
   if( it.selectorIs( prefixPath ) )
+  {
+    debugger; /* xxx : not tested? */
+  }
+  if( it.selectorIs( prefixPath ) )
   prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
   if( it.selectorIs( result ) )
   result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
@@ -939,6 +941,67 @@ function _pathResolve( filePath, resource )
   result = path.s.join( prefixPath, result );
 
   return result;
+}
+
+//
+
+function _pathResolveAct( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( _pathResolveAct, o );
+
+  if( !o.currentModule && o.currentContext && o.currentContext.toModuleForResolver && o.currentContext.toModuleForResolver() )
+  o.currentModule = o.currentContext.toModuleForResolver();
+  if( !o.resourceName && o.currentContext )
+  o.resourceName = o.currentContext instanceof _.will.Resource ? o.currentContext.name : null;
+
+  let will = o.currentModule.will;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+
+  let result = o.filePath;
+  if( o.filePath === null || o.filePath === '' )
+  return result;
+
+  if( _.arrayIs( o.filePath ) )
+  o.filePath = _.arrayFlattenOnce( o.filePath );
+
+  _.assert( _.strIs( o.filePath ) || _.strsAreAll( o.filePath ) );
+
+  let prefixPath = '.';
+  if( o.pathResolving === 'in' )
+  {
+    if( o.resourceName !== 'in' )
+    prefixPath = o.currentModule.inPath || '.';
+    else
+    prefixPath = o.currentModule.dirPath;
+  }
+  else if( o.pathResolving === 'out' )
+  {
+    if( o.resourceName !== 'out' )
+    prefixPath = o.currentModule.outPath || '.';
+    else
+    prefixPath = o.currentModule.dirPath;
+  }
+  else _.assert( 0 );
+
+  if( Self.selectorIs( prefixPath ) )
+  prefixPath = o.currentModule.pathResolve({ selector : prefixPath, currentContext : o.currentContext });
+  if( Self.selectorIs( result ) )
+  result = o.currentModule.pathResolve({ selector : result, currentContext : o.currentContext });
+
+  result = path.s.join( prefixPath, result );
+
+  return result;
+}
+
+_pathResolveAct.defaults =
+{
+  filePath : null,
+  currentModule : null,
+  currentContext : null,
+  resourceName : null,
+  pathResolving : null,
 }
 
 //
@@ -1076,16 +1139,16 @@ function errResolvingMake( o )
   }
 
   if( rit.currentContext && rit.currentContext.qualifiedName )
-  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShallow( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   else
-  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 
   // if( rit.currentContext && rit.currentContext.qualifiedName )
-  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShallow( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   // else
-  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 
-  _._errFields( o.err, { ResolvingError : true } );
+  _.error.concealedSet( o.err, { ResolvingError : true } );
   debugger;
 
   return o.err;
@@ -1120,13 +1183,14 @@ function performBegin()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
+
   Parent.performBegin.apply( it, arguments );
 
   let module = it.baseModule;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let currentContext = it.currentContext = it.currentContext || module;
 
   _.assert( it.srcForSelect instanceof _.will.Module );
@@ -1170,8 +1234,8 @@ function optionsToIteration( iterator, o )
   (
     !it.baseModule
     || !it.currentContext
-    || !it.currentContext.moduleForResolve
-    || it.currentContext.moduleForResolve === it.baseModule
+    || !it.currentContext.toModuleForResolver
+    || it.currentContext.toModuleForResolver() === it.baseModule
     ,
     `Current context belong to another base module, something wrong!`
   );
@@ -1204,8 +1268,8 @@ function iteratorInitEnd( iterator )
   {
     debugger;
     _.assert( 0, 'not tested' ); /* xxx */
-    if( iterator.currentContext && _.routineIs( iterator.currentContext.moduleForResolveGet ) )
-    iterator.baseModule = iterator.currentContext.moduleForResolveGet();
+    if( iterator.currentContext && _.routineIs( iterator.currentContext.toModuleForResolver ) )
+    iterator.baseModule = iterator.currentContext.toModuleForResolver();
   }
 
   if( iterator.src === null || iterator.src === undefined )
@@ -1279,7 +1343,6 @@ _.assert( !!_.resolverAdv.Resolver.Selector );
 let ResolverWillbeSelector =
 ({
   name : 'ResolverWillbeSelector',
-  // parent : _.resolverAdv.Resolver.Selector, /* yyy : should work woithout it */
   prime :
   {
   },
@@ -1293,7 +1356,6 @@ let ResolverWillbeSelector =
   },
   iteration :
   {
-    // currentModule : null,
   },
 });
 
@@ -1307,7 +1369,6 @@ _.assert( _.resolverAdv.Resolver.Iterator.resolveExtraOptions === undefined );
 let ResolverWillbeReplicator =
 ({
   name : 'ResolverWillbeReplicator',
-  // parent : _.resolverAdv.Resolver.Replicator, /* yyy : should work woithout it */
   prime : Prime,
   looker :
   {
@@ -1424,7 +1485,6 @@ function pathOrReflectorResolve_body( o )
   if( resource )
   return resource;
 
-
   let o3 = _.mapExtend( null, o );
   o3.missingAction = 'undefine';
   o3.selector = 'path::' + o.selector;
@@ -1469,22 +1529,23 @@ function filesFromResource_body( o )
   let module = o.baseModule;
   let will = module.will;
   let result = [];
-  let fileProvider = will.fileProvider
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider
+  const path = fileProvider.path;
   let resources;
 
   if( o.prefixlessAction === 'pathOrReflector' )
   {
 
-    let o2 = _.mapOnly( o, module.resolve.defaults );
+    let o2 = _.mapOnly_( null, o, module.resolve.defaults );
     delete o2.constructor;
     o2.prefixlessAction = 'default';
     o2.missingAction = 'undefine';
     o2.defaultResourceKind = 'path';
     resources = module.resolve( o2 );
+
     if( !resources )
     {
-      let o2 = _.mapOnly( o, module.resolve.defaults );
+      let o2 = _.mapOnly_( null, o, module.resolve.defaults );
       delete o2.constructor;
       o2.prefixlessAction = 'default';
       o2.missingAction = 'undefine';
@@ -1506,8 +1567,7 @@ function filesFromResource_body( o )
   }
   else
   {
-    let o2 = _.mapOnly( o, module.resolve.defaults );
-    debugger;
+    let o2 = _.mapOnly_( null, o, module.resolve.defaults );
     delete o2.constructor;
     resources = module.resolve( o2 );
   }
@@ -1533,6 +1593,19 @@ function filesFromResource_body( o )
     }
     else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
     {
+
+      if( o.pathResolving )
+      if( _.strIs( resource ) || _.arrayIs( resource ) )
+      if( o.currentContext && o.currentContext.toModuleForResolver && o.currentContext.toModuleForResolver() )
+      {
+        resource = _.will.resolver._pathResolveAct
+        ({
+          filePath : resource,
+          currentContext : o.currentContext.toModuleForResolver(),
+          pathResolving : o.pathResolving,
+        });
+      }
+
       if( o.globOnly )
       if( _.strIs( resource ) )
       _.sure( path.isGlob( resource ), `${resource} is not glob. Only glob allowed` );
@@ -1687,6 +1760,8 @@ let NamespaceExtension =
 
   resolve : ResolverWillbe.exec,
   resolveMaybe,
+
+  _pathResolveAct,
 
   resolveRaw,
   pathResolve,

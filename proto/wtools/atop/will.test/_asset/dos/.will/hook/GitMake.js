@@ -4,19 +4,15 @@ function onGitMake( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  if( !context.module || context.module.repo.remotePath || !context.module.about.name )
-  {
-    debugger;
-    throw _.errBrief( 'Module should be local, opened and have name' );
-  }
+  // if( !context.module || context.module.repo.remotePath || !context.module.about.name )
+  if( !context.module || !context.module.about.name )
+  throw _.errBrief( 'Module should be local, opened and have name' );
 
   let localPath = context.junction.dirPath;
   let remotePath = null;
-
-  debugger;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
@@ -82,6 +78,6 @@ onGitMake.defaults =
   remote : 1,
   verbosity : 2,
   v : null,
-}
+};
 
 module.exports = onGitMake;

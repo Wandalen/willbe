@@ -15,8 +15,8 @@ if( typeof module !== 'undefined' )
 
 }
 
-let _global = _global_;
-let _ = _global_.wTools;
+const _global = _global_;
+const _ = _global_.wTools;
 
 /*
 xxx : should work
@@ -320,6 +320,108 @@ function preCloneRepos( test )
 
 //
 
+function modulesFindEachAt( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let opener, o;
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfSub : 1, });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'select all submodules from module without downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( true );
+    test.true( op.options === o );
+    test.identical( op.openers.length, 1 );
+    test.true( op.openers[ 0 ] === opener );
+    test.identical( op.sortedOpeners.length, 1 );
+    test.true( op.sortedOpeners[ 0 ] === opener );
+    test.identical( op.junctions.length, 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () => opener.openedModule.subModulesDownload() );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'select all submodules from module with downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( op.options === o );
+    test.identical( op.openers.length, 2 );
+    test.true( op.openers[ 0 ] !== opener );
+    test.true( op.openers[ 1 ] !== opener );
+    test.identical( op.openers[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( op.openers[ 1 ].name, 'ModuleForTesting2' );
+    test.identical( op.sortedOpeners.length, 2 );
+    test.true( op.sortedOpeners[ 0 ] !== opener );
+    test.true( op.sortedOpeners[ 1 ] !== opener );
+    test.true( op.openers[ 0 ] === op.sortedOpeners[ 0 ] );
+    test.true( op.openers[ 1 ] === op.sortedOpeners[ 1 ] );
+    test.identical( op.junctions.length, 2 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'select submodule by pattern from module with downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( '*Testing1' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( op.options === o );
+    test.identical( op.openers.length, 1 );
+    test.true( op.openers[ 0 ] !== opener );
+    test.identical( op.openers[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( op.sortedOpeners.length, 1 );
+    test.true( op.sortedOpeners[ 0 ] !== opener );
+    test.identical( op.junctions.length, 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function buildSimple( test )
 {
   let context = this;
@@ -544,8 +646,6 @@ function openNamedFast( test )
     var got = _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
     test.identical( _.setFrom( got ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
-    _.debugger = 1;
-    debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
@@ -5085,6 +5185,83 @@ Submodules are exported willfiles.
 
 //
 
+function moduleResolveWithFThisInSelector( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellUsingCriterionValue' );
+  let opener;
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open({ all : 1, resourcesFormed : 1 });
+  });
+
+  /* - */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve criterion from step resource';
+    let module = opener.openedModule;
+    let resolved = module.resolve
+    ({
+      selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
+      prefixlessAction : 'resolved',
+      currentThis : undefined,
+      currentContext : module.stepMap[ 'print.criterion.value.' ],
+      pathNativizing : 1,
+      arrayFlattening : 0,
+    });
+    test.true( _.longIs( resolved ) );
+    test.true( resolved.length === 1 );
+    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:0\' )"' );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'resolve criterion from step resource';
+    let module = opener.openedModule;
+    let resolved = module.resolve
+    ({
+      selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
+      prefixlessAction : 'resolved',
+      currentThis : undefined,
+      currentContext : module,
+      pathNativizing : 1,
+      arrayFlattening : 0,
+    });
+    test.true( _.longIs( resolved ) );
+    test.true( resolved.length === 1 );
+    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:undefined\' )"' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
+}
+
+/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
+moduleResolveWithFThisInSelector.description =
+`
+Test routine checks that module resolves resources when the selector contains part f::this.
+`;
+
+//
+
 // aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
 function framePerform( test )
 {
@@ -5944,7 +6121,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 21 );
+    test.identical( resolved.length, 22 );
 
     test.case = '*::*a*/qualifiedName';
     var exp =
@@ -5962,6 +6139,7 @@ function superResolve( test )
       'step::willfile.generate',
       'step::git.status',
       'step::git.tag',
+      'step::modules.update',
       'step::submodules.download',
       'step::submodules.update',
       'step::submodules.agree',
@@ -8616,8 +8794,6 @@ function pathsResolveResolvedPath( test )
     test.case = src;
     // var exp = 'some'; /* yyy */
     var exp = a.abs( 'some' );
-    _.debugger = 1;
-    debugger;
     var got = module.pathResolve
     ({
       selector : src,
@@ -8772,8 +8948,6 @@ function pathsResolveFailing( test )
     test.identical( got, expected );
 
     test.case = 'path::entry.*=1: null';
-    _.debugger = 1;
-    debugger;
     var got = opener.openedModule.pathResolve
     ({
       selector : { 'path::entry.*=1' : null },
@@ -11259,7 +11433,7 @@ function repoStatusLocalUncommittedChanges( test )
 // define class
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Tools.Willbe.Int',
@@ -11286,6 +11460,8 @@ let Self =
   {
 
     preCloneRepos,
+
+    modulesFindEachAt,
 
     buildSimple,
     openNamedFast,
@@ -11319,6 +11495,7 @@ let Self =
     buildsResolve,
     moduleResolveSimple,
     moduleResolve,
+    moduleResolveWithFThisInSelector,
 
     framePerform,
 
@@ -11368,7 +11545,7 @@ let Self =
 // export
 // --
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 

@@ -14,8 +14,8 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = _globals_.testing.wTools;
-let fileProvider = _.fileProvider;
-let path = fileProvider.path;
+const fileProvider = _.fileProvider;
+const path = fileProvider.path;
 
 // --
 // test
@@ -168,7 +168,7 @@ eslint.rapidity = -1;
 // declare
 // --
 
-var Self =
+const Proto =
 {
 
   name : 'Integration',
@@ -185,7 +185,7 @@ var Self =
 
 //
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 _global_.wTester.test( Self.name );
 

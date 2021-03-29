@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.will.AbstractModule;
-let Self = wWillModuleOpener;
+const _ = _global_.wTools;
+const Parent = _.will.AbstractModule;
+const Self = wWillModuleOpener;
 function wWillModuleOpener( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -27,9 +27,6 @@ function finit()
 {
   let opener = this;
   let will = opener.will;
-
-  // if( opener.id === 122 )
-  // debugger;
 
   _.assert( !opener.isFinited() );
 
@@ -100,7 +97,7 @@ function optionsForModuleExport()
 
   }
 
-  let result = _.mapOnly( opener, Import );
+  let result = _.mapOnly_( null, opener, Import );
 
   result.superRelations = null;
   result.willfilesArray = _.entity.make( result.willfilesArray );
@@ -142,10 +139,10 @@ function copy( o )
     downloadPath : null,
     remotePath : null,
   }
-  let o2 = _.mapOnly( o, read );
+  let o2 = _.mapOnly_( null, o, read );
   _.mapExtend( opener._, o2 );
 
-  o = _.mapBut( o, read );
+  o = _.mapBut_( null, o, read );
   let result = _.Copyable.prototype.copy.apply( opener, [ o ] );
 
   return result;
@@ -351,8 +348,8 @@ function willfileUnregister( willf )
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.arrayRemoveElementOnceStrictly( willf.openers, opener );
@@ -366,8 +363,8 @@ function willfileRegister( willf )
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -390,8 +387,8 @@ function _willfilesFindAct( o )
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let records;
 
@@ -451,8 +448,8 @@ function _willfilesFind()
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let result = [];
 
@@ -494,8 +491,8 @@ function close()
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let module = opener.openedModule;
 
@@ -995,7 +992,7 @@ function submodulesRelationsFilter( o )
 //
 //   let result = opener.submodulesRelationsOwnFilter( o );
 //   let junction = will.junctionFrom( opener );
-//   let junctions = junction.submodulesJunctionsFilter( _.mapOnly( o, junction.submodulesJunctionsFilter ) );
+//   let junctions = junction.submodulesJunctionsFilter( _.mapOnly_( null, o, junction.submodulesJunctionsFilter ) );
 //
 //   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 //
@@ -1162,8 +1159,8 @@ function _repoForm()
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( opener.formed >= 1 );
@@ -1195,6 +1192,28 @@ function _repoForm()
   else
   {
     opener._.localPath = opener.commonPath;
+
+    if( opener.remotePath === null )
+    {
+      if( opener.isOut && opener.peerModule && opener.peerModule.remotePath )
+      {
+        downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
+        remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
+        isRemote = opener.repoIsRemote();
+      }
+      else if( opener.isMain )
+      {
+        let localPath = fileProvider.path.localFromGlobal( opener.localPath )
+        if( _.git.isRepository({ localPath }) )
+        {
+          downloadPath = opener._.downloadPath = opener._.localPath;
+          let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+          remotePath = opener._.remotePath = remotePathFromLocal;
+          isRemote = opener.repoIsRemote();
+        }
+      }
+    }
+
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
     opener.repo = will.repoFrom
     ({
@@ -1227,8 +1246,8 @@ function _repoFormFormal()
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let willfilesPath = opener.remotePath || opener.willfilesPath;
 
@@ -1286,8 +1305,8 @@ function _repoDownload( o )
 {
   let opener = this;
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let time = _.time.now();
   let downloading = null;
@@ -1306,11 +1325,11 @@ function _repoDownload( o )
   _.assert( arguments.length === 1 );
   _.assert( opener.formed >= 2 );
   _.assert( !!opener.willfilesPath );
-  _.assert( _.strDefined( opener.aliasName ) );
+  _.assert( !o.strict || _.strDefined( opener.aliasName ) );
   _.assert( _.strDefined( opener.remotePath ) );
   _.assert( _.strDefined( opener.downloadPath ) );
   _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.superRelation );
+  _.assert( !o.strict || !!opener.superRelation );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   return ready
@@ -1957,21 +1976,31 @@ _repoDownload.defaults =
 
 //
 
-function repoDownload()
+function repoDownload( o )
 {
   let opener = this;
   let will = opener.will;
-  return opener._repoDownload({ updating : 0 });
+  o = o || Object.create( null );
+  _.routineOptions( repoDownload, o );
+  return opener._repoDownload( o );
 }
+
+var defaults = repoDownload.defaults = _.mapExtend( null, _repoDownload.defaults );
+defaults.mode = 'download';
 
 //
 
-function repoUpdate()
+function repoUpdate( o )
 {
   let opener = this;
   let will = opener.will;
-  return opener._repoDownload({ updating : 1 });
+  o = o || Object.create( null );
+  _.routineOptions( repoUpdate, o );
+  return opener._repoDownload( o );
 }
+
+var defaults = repoUpdate.defaults = _.mapExtend( null, _repoDownload.defaults );
+defaults.mode = 'update';
 
 // --
 // path
@@ -2051,8 +2080,8 @@ function _filePathChanged2( o )
   return o;
 
   let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   o = Parent.prototype._filePathChanged2.call( opener, o );
 
@@ -2194,6 +2223,48 @@ function remotePathEachAdoptAct( o )
 remotePathEachAdoptAct.defaults =
 {
   ... Parent.prototype.remotePathAdopt.defaults,
+}
+
+//
+
+function remotePathChangeVersionTo( to )
+{
+  let opener = this;
+  let will = opener.will;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( to ) );
+  _.sure( _.strBegins( to, '!' ) || _.strBegins( to, '#' ), `Argument "to" should begins with "!" or "#" Got:${to}` )
+
+  var vcs = will.vcsToolsFor( opener.remotePath );
+  // var remoteParsed = vcs.pathParse( opener.remotePath )
+  var remoteParsed = vcs.path.parse({ remotePath : opener.remotePath, full : 1, atomic : 0 })
+
+  var globalTo = vcs.path.globalFromPreferred( to );
+  // var toParsed = vcs.pathParse( globalTo );
+  var toParsed = vcs.path.parse({ remotePath : globalTo, full : 1, atomic : 0 })
+
+  if( toParsed.tag )
+  {
+    remoteParsed.tag = toParsed.tag;
+    remoteParsed.hash = null;
+  }
+  else if( toParsed.hash )
+  {
+    remoteParsed.tag = null;
+    remoteParsed.hash = toParsed.hash;
+  }
+  else
+  {
+    throw _.err( `Argument "to" should be either tag or version. Got:${to}` );
+  }
+
+  let remotePathNew = vcs.path.str( remoteParsed );
+
+  opener.remotePathSet( remotePathNew );
+  opener.repo.remotePathChange( remotePathNew );
+
+  return true;
 }
 
 //
@@ -2453,6 +2524,14 @@ let isOutSet = accessorSet_functor( 'isOut' );
 // --
 // coercer
 // --
+
+function toModuleForResolver()
+{
+  let opener = this;
+  return opener.toModule();
+}
+
+//
 
 function toModule()
 {
@@ -2735,6 +2814,7 @@ let Extension =
   _localPathPut,
   remotePathPut,
   remotePathEachAdoptAct,
+  remotePathChangeVersionTo,
 
   // name
 
@@ -2757,6 +2837,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

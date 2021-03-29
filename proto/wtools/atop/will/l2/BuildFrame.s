@@ -12,9 +12,9 @@
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillBuildFrame;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillBuildFrame;
 function wWillBuildFrame( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -76,8 +76,8 @@ function form()
   let resource = frame.resource;
   let down = frame.down;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );

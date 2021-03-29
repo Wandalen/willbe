@@ -4,8 +4,8 @@
 'use strict';
 
 let Tar, Open;
-let _ = _global_.wTools;
-let Self = Object.create( null );
+const _ = _global_.wTools;
+const Self = Object.create( null );
 
 // --
 // routines
@@ -26,8 +26,8 @@ function stepRoutineDelete( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let time = _.time.now();
@@ -109,8 +109,8 @@ function stepRoutineReflect( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let time = _.time.now();
@@ -194,8 +194,8 @@ function stepRoutineTimelapseBegin( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -221,8 +221,8 @@ function stepRoutineTimelapseEnd( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -248,8 +248,8 @@ function stepRoutineJs( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -304,8 +304,8 @@ function stepRoutineEcho( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -357,8 +357,8 @@ function stepRoutineShell( frame )
   let module = run.module;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let forEachDstReflector, forEachDst;
@@ -444,8 +444,8 @@ function stepRoutineTranspile( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
@@ -558,8 +558,8 @@ function stepRoutineView( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
@@ -891,6 +891,71 @@ stepRoutineGitTag.uniqueOptions =
 
 //
 
+function stepRoutineModulesUpdate( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+  _.assert( _.objectIs( opts ) );
+
+  for( let opt in opts )
+  {
+    opts[ opt ] = module.resolve
+    ({
+      selector : opts[ opt ],
+      prefixlessAction : 'resolved',
+      currentContext : step,
+    });
+  }
+
+  let con = _.take( null );
+
+  con.then( () =>
+  {
+    let opener = module.toOpener();
+    if( opts.to )
+    opener.remotePathChangeVersionTo( opts.to );
+
+    let o2 = _.mapOnly( opts, opener.repoUpdate.defaults );
+    o2.strict = 0;
+    o2.opening = 0;
+    return opener.repoUpdate( o2 );
+  })
+
+  con.then( () =>
+  {
+    let o2 = module.will.filterImplied();
+    o2 = _.mapExtend( o2, opts );
+    return module.subModulesUpdate( o2 );
+  })
+
+  return con;
+}
+
+stepRoutineModulesUpdate.stepOptions =
+{
+  dry : null,
+  loggingNoChanges : null,
+  recursive : null,
+  withStem : null,
+  withDisabledStem : null,
+  to : null
+}
+
+stepRoutineModulesUpdate.uniqueOptions =
+{
+  loggingNoChanges : null,
+  withStem : null,
+  withDisabledStem : null,
+  to : null
+}
+
+//
+
 function stepRoutineSubmodulesDownload( frame )
 {
   let step = this;
@@ -914,15 +979,41 @@ function stepRoutineSubmodulesUpdate( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
+  _.assert( _.objectIs( opts ) );
 
-  return module.subModulesUpdate();
+  for( let opt in opts )
+  {
+    opts[ opt ] = module.resolve
+    ({
+      selector : opts[ opt ],
+      prefixlessAction : 'resolved',
+      currentContext : step,
+    });
+  }
+
+  return module.subModulesUpdate( opts );
 }
 
 stepRoutineSubmodulesUpdate.stepOptions =
 {
+  dry : null,
+  loggingNoChanges : null,
+  recursive : null,
+  withStem : null,
+  withDisabledStem : null,
+  to : null
+}
+
+stepRoutineSubmodulesUpdate.uniqueOptions =
+{
+  loggingNoChanges : null,
+  withStem : null,
+  withDisabledStem : null,
+  to : null
 }
 
 //
@@ -1002,8 +1093,8 @@ function stepRoutineSubmodulesReload( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
@@ -1173,6 +1264,8 @@ let Extension =
   stepRoutineGitStatus,
   stepRoutineGitSync,
   stepRoutineGitTag,
+
+  stepRoutineModulesUpdate,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,

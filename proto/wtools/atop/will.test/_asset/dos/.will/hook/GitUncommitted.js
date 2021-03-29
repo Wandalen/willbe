@@ -4,7 +4,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
   /* read stats to fix for windows to update edit time of hard linked files */
@@ -15,7 +15,7 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let o2 = _.mapOnly( o, _.git.statusFull.defaults );
+  let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = context.junction.dirPath;
   let status = _.git.statusFull( o2 );
 

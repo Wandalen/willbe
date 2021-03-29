@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillModuleJunction;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillModuleJunction;
 function wWillModuleJunction( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -88,8 +88,8 @@ function reform()
 {
   let junction = this;
   let will = junction.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( junction.formed === -1 )
@@ -515,8 +515,8 @@ function mergeMaybe( usingPath )
 {
   let junction = this;
   let will = junction.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let junction2, reset;
 
@@ -740,8 +740,8 @@ function _From( o )
   let junction;
   let will = o.will;
   let junctionMap = will.junctionMap;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let made = false;
   let changed = false;
@@ -1484,7 +1484,7 @@ function submodulesJunctionsFilter( o )
 
   o = _.routineOptions( submodulesJunctionsFilter, arguments );
 
-  let filter = _.mapOnly( o, will.relationFit.defaults );
+  let filter = _.mapOnly_( null, o, will.relationFit.defaults );
 
   junctionLook( junction );
 
@@ -1789,6 +1789,14 @@ function assertIntegrityVerify()
 // coercer
 // --
 
+function toModuleForResolver()
+{
+  let junction = this;
+  return junction.module;
+}
+
+//
+
 function toModule()
 {
   let junction = this;
@@ -1893,8 +1901,8 @@ function dirPathGet()
   if( !junction.localPath )
   return null;
   let will = junction.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   return path.detrail( path.dirFirst( junction.localPath ) );
 }
 
@@ -2089,6 +2097,7 @@ let Extension =
 
   // coercer
 
+  toModuleForResolver,
   toModule,
   toOpener,
   toRelation,

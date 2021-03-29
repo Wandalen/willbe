@@ -11,9 +11,9 @@
 //
 // //
 //
-// let _ = _global_.wTools;
-// let Parent = null;
-// let Self = wWillJunction;
+// const _ = _global_.wTools;
+// const Parent = null;
+// const Self = wWillJunction;
 // function wWillJunction( o )
 // {
 //   return _.workpiece.construct( Self, this, arguments );
@@ -270,8 +270,8 @@
 //   let junction;
 //   // let sys = o.sys;
 //   // let junctionMap = sys.junctionMap;
-//   // let fileProvider = sys.fileProvider;
-//   // let path = fileProvider.path;
+//   // const fileProvider = sys.fileProvider;
+//   // const path = fileProvider.path;
 //   // let logger = sys.logger;
 //   let made = false;
 //   let changed = false;
@@ -1085,7 +1085,7 @@
 //
 //   o = _.routineOptions( submodulesJunctionsFilter, arguments );
 //
-//   let filter = _.mapOnly( o, sys.relationFit.defaults );
+//   let filter = _.mapOnly_( null, o, sys.relationFit.defaults );
 //
 //   // if( _global_.debugger === 1 )
 //   // debugger;
@@ -1442,8 +1442,8 @@
 //   if( !junction.localPath )
 //   return null;
 //   let sys = junction.sys;
-//   let fileProvider = sys.fileProvider;
-//   let path = fileProvider.path;
+//   const fileProvider = sys.fileProvider;
+//   const path = fileProvider.path;
 //   return path.detrail( path.dirFirst( junction.localPath ) );
 // }
 //

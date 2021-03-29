@@ -1,4 +1,4 @@
-let Self =
+const Self =
 {
 
   // 'builder' : [{ softLink : '../../../app/builder', absolute : 0 }],
@@ -60,8 +60,8 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = _globals_.testing.wTools;
-let fileProvider = _.fileProvider;
-let path = fileProvider.path;
+const fileProvider = _.fileProvider;
+const path = fileProvider.path;
 
 // --
 // test
@@ -213,7 +213,7 @@ eslint.rapidity = -1;
 // declare
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Integration',

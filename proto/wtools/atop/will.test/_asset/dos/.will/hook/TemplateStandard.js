@@ -5,7 +5,7 @@ function onModule( context )
   let o = context.request.map;
   _ = context.tools;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
   if( !context.module.about )
@@ -47,7 +47,7 @@ module.exports = onModule;
 
 function onConfigGet( context )
 {
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let result = Object.create( null );
   let name = context.module.about.name;

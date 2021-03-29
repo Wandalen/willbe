@@ -18,9 +18,9 @@
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillParagraphAbout;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillParagraphAbout;
 function wWillParagraphAbout( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -81,8 +81,8 @@ function copy( o )
   else
   {
 
-    let values = _.mapBut( o, about.FieldsOfCopyableGroups );
-    let o2 = _.mapOnly( o, about.FieldsOfCopyableGroups );
+    let values = _.mapBut_( null, o, about.FieldsOfCopyableGroups );
+    let o2 = _.mapOnly_( null, o, about.FieldsOfCopyableGroups );
     _.Copyable.prototype.copy.call( about, o2 );
     _.mapExtend( about.values, values );
 

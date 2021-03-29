@@ -1,0 +1,55 @@
+
+about :
+
+  name : "module-ab"
+  description : "Module for testing"
+  version : "0.0.1"
+
+submodule :
+
+  sub-a : ../out/module-a.out
+  sub-b : ../out/module-b.out
+
+path :
+
+  proto : '../proto'
+  out : '../out/ab'
+  files : '{path::out}/files'
+  temp :
+    - ../out
+    - ../out2
+  export :
+    - 'submodule::sub-a/path::exported.files.proto.export'
+    - 'submodule::sub-b/path::exported.files.proto.export'
+    - '{path::proto}/dir3.test'
+
+reflector :
+
+  files.all :
+    src :
+      recursive : 1
+      filePath :
+        'submodule::sub-a/reflector::exported.files.proto.export' : '{path::files}/a'
+        'submodule::sub-b/reflector::exported.files.proto.export' : '{path::files}/b'
+        '{path::proto}/dir3.test' : '{path::files}/dir3.test'
+
+step :
+
+  export.proto :
+    export : 'path::export'
+    tar : 0
+
+build :
+
+  files :
+    criterion :
+      default : 1
+    steps :
+      - step::files.all
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

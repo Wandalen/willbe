@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = _.Will;
-let Self = wWillCli;
+const _ = _global_.wTools;
+const Parent = _.Will;
+const Self = wWillCli;
 function wWillCli( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -41,7 +41,7 @@ function exec()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let appArgs = _.process.input({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
@@ -95,7 +95,7 @@ function init( o )
 function _openersCurrentEach( o )
 {
   let will = this.form();
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -169,8 +169,8 @@ function openersFind( o )
 {
   let will = this;
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   o = _.routineOptions( openersFind, arguments );
   _.assert( will.currentOpener === null );
@@ -256,14 +256,14 @@ function _command_head( o )
   if( cui.implied && o.usingImpliedMap )
   {
     if( o.routine.defaults )
-    _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.defaults ) );
+    _.mapExtend( e.propertiesMap, _.mapOnly_( null, cui.implied, o.routine.defaults ) );
     else
     _.mapExtend( e.propertiesMap, cui.implied );
   }
 
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShort( e.propertiesMap ) );
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( e.propertiesMap ) );
   if( o.routine.commandProperties )
-  _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
+  _.map.sureHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
 
   if( _.boolLikeFalse( o.routine.commandSubjectHint ) )
   if( e.subject.trim() !== '' )
@@ -294,7 +294,7 @@ _command_head.defaults =
 function errEncounter( error )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -369,7 +369,7 @@ function _commandsMake()
 {
   let will = this;
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let appArgs = _.process.input();
 
   _.assert( _.instanceIs( will ) );
@@ -387,6 +387,7 @@ function _commandsMake()
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList )                  },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList )       },
     'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree )                  },
+    'modules update' :                  { e : _.routineJoin( will, will.commandModulesUpdate )                },
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList )                },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList )                    },
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList )               },
@@ -459,6 +460,7 @@ function _commandsMake()
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
+    'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -490,7 +492,7 @@ function _commandsMake()
 function _commandsBegin( command )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -504,7 +506,7 @@ function _commandsBegin( command )
 function _commandsEnd( command )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -720,7 +722,7 @@ function _commandBuildLike( o )
   {
     if( will.currentOpeners )
     {
-      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
+      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
       if( openers2.length )
       will.currentOpeners = openers2;
     }
@@ -828,7 +830,7 @@ function _commandCleanLike( o )
   {
     _.assert( _.arrayIs( will.currentOpeners ) );
 
-    let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
+    let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
     if( openers2.length )
     will.currentOpeners = openers2;
 
@@ -933,7 +935,7 @@ function _commandNewLike( o )
   o2.localPath = localPath;
   o2.tracing = 0;
 
-  ready.then( () => will.openersFind( _.mapOnly( o2, will.openersFind.defaults ) ) );
+  ready.then( () => will.openersFind( _.mapOnly_( null, o2, will.openersFind.defaults ) ) );
   ready.then( () => will.openersCurrentEach( forSingle ) );
   ready.finally( end );
 
@@ -1141,7 +1143,7 @@ function _commandModulesLike( o )
   {
     if( will.currentOpeners )
     {
-      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
+      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
       if( openers2.length )
       will.currentOpeners = openers2;
     }
@@ -1369,7 +1371,7 @@ commandVersion.commandSubjectHint = false;
 //   let logger = will.logger;
 //
 //   let implyMap = _.strStructureParse( e.commandArgument );
-//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.entity.exportStringShort( implyMap ) );
+//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( implyMap ) );
 //   will._propertiesImply( implyMap );
 //
 //   // logger.log( 'Current version:', will.versionGet() );
@@ -1742,8 +1744,8 @@ function commandModulesTree( e )
   let logger = cui.logger;
   cui._command_head( commandModulesTree, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandModulesTree.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesTree.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
 
   return cui._commandTreeLike
@@ -1772,6 +1774,66 @@ commandModulesTree.commandProperties =
 {
   withLocalPath : 'Print local paths. Default is 0',
   withRemotePath : 'Print remote paths. Default is 0',
+  ... commandImply.commandProperties,
+}
+
+//
+
+function commandModulesUpdate( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesUpdate, arguments );
+
+  let implyMap = _.mapOnly( e.propertiesMap, commandModulesUpdate.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+
+  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
+  implyMap.withSubmodules = 1;
+
+  cui._propertiesImply( implyMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'update modules',
+    onEach : handleEach,
+    commandRoutine : commandModulesUpdate,
+  });
+
+  function handleEach( it )
+  {
+    let con = _.take( null );
+
+    con.then( () =>
+    {
+      if( e.propertiesMap.to )
+      it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
+
+      let o2 = _.mapOnly( e.propertiesMap, it.opener.repoUpdate.defaults );
+      o2.strict = 0;
+      return it.opener.repoUpdate( o2 );
+    })
+
+    con.then( () =>
+    {
+      let o2 = cui.filterImplied();
+      o2 = _.mapExtend( o2, e.propertiesMap );
+      return it.opener.openedModule.subModulesUpdate( o2 );
+    })
+
+    return con;
+  }
+}
+
+commandModulesUpdate.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesUpdate.hint = 'Update root module and each submodule.';
+commandModulesUpdate.longHint = 'Update root and each submodule or check for available updates for root module and each submodule. Does nothing if all submodules have fixated version.';
+commandModulesUpdate.commandSubjectHint = false;
+commandModulesUpdate.commandProperties =
+{
+  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  to : 'Checkouts root and it submodules to specified version/tag.',
   ... commandImply.commandProperties,
 }
 
@@ -1840,8 +1902,8 @@ function commandSubmodulesFixate( e )
   let cui = this;
   cui._command_head( commandSubmodulesFixate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesFixate.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesFixate.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
 
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
@@ -1889,8 +1951,8 @@ function commandSubmodulesUpgrade( e )
   let cui = this;
   cui._command_head( commandSubmodulesUpgrade, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesUpgrade.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesUpgrade.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
 
   e.propertiesMap.upgrading = 1;
@@ -1931,8 +1993,8 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
@@ -1980,11 +2042,23 @@ function commandSubmodulesVersionsUpdate( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsUpdate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
+
+   /* Vova:
+     Hotfix. Fixes situations when previous command changed with* fields of the main.
+     Remove after moving FilterFields fields out of the main and passing them as options( where possoble ).
+  */
+  _.mapSupplement( implyMap,
+  {
+    withOut : 1,
+    withInvalid : 1,
+    withValid : 1,
+    withEnabled : 1
+  })
 
   cui._propertiesImply( implyMap );
 
@@ -2014,7 +2088,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
-  to : 'Checkouts root and each of it submodules to specified version/tag',
+  to : 'Checkouts submodules to specified version/tag.',
   ... commandImply.commandProperties,
 }
 
@@ -2025,8 +2099,8 @@ function commandSubmodulesVersionsVerify( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsVerify, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsVerify.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsVerify.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
@@ -2061,8 +2135,8 @@ function commandSubmodulesVersionsAgree( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsAgree, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsAgree.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsAgree.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
@@ -2130,7 +2204,7 @@ commandSubmodulesShell.commandSubjectHint = 'A command to execute in shell. Comm
 function commandSubmodulesGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut( e.propertiesMap, commandImply.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
@@ -2138,7 +2212,7 @@ function commandSubmodulesGit( e )
   if( profile !== undefined )
   delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
   cui._command_head( commandGit, arguments );
@@ -2401,7 +2475,7 @@ commandSubmodulesGitSync.commandProperties =
 function commandModuleNew( e )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
@@ -2442,7 +2516,7 @@ function commandModuleNewWith( e )
   let cui = this;
   cui._command_head( commandModuleNewWith, arguments );
 
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -2467,7 +2541,7 @@ function commandModuleNewWith( e )
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, cui.hookContextFrom.defaults );
+    let it2 = _.mapOnly_( null, it, cui.hookContextFrom.defaults );
     it2.execPath = path.join( cui.hooksPath, execPath );
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
@@ -2514,7 +2588,7 @@ commandModulesShell.commandSubjectHint =
 function commandModulesGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut( e.propertiesMap, commandImply.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
@@ -2522,7 +2596,7 @@ function commandModulesGit( e )
   if( profile !== undefined )
   delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
   cui._command_head( commandModulesGit, arguments );
@@ -2814,7 +2888,7 @@ function commandDo( e )
 {
   let cui = this;
   cui._command_head( commandDo, arguments );
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -2839,7 +2913,7 @@ function commandDo( e )
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, cui.hookContextFrom.defaults );
+    let it2 = _.mapOnly_( null, it, cui.hookContextFrom.defaults );
     it2.execPath = execPath;
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
@@ -2880,7 +2954,7 @@ function commandHookCall( e )
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, cui.hookContextFrom.defaults );
+    let it2 = _.mapOnly_( null, it, cui.hookContextFrom.defaults );
     it2.execPath = path.join( cui.hooksPath, execPath );
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
@@ -2898,8 +2972,8 @@ function commandHooksList( e )
   let cui = this.form();
   cui._command_head( commandHooksList, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandHooksList.commandProperties );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandHooksList.commandProperties );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
   let logger = cui.logger;
 
@@ -2921,8 +2995,8 @@ function commandClean( e )
   let cui = this;
   cui._command_head( commandClean, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandClean.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandClean.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   _.routineOptions( commandClean, implyMap );
   cui._propertiesImply( implyMap );
 
@@ -2982,8 +3056,8 @@ function commandSubmodulesClean( e )
   let cui = this;
   cui._command_head( commandSubmodulesClean, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesClean.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesClean.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   _.routineOptions( commandSubmodulesClean, implyMap );
   cui._propertiesImply( implyMap );
 
@@ -3054,7 +3128,7 @@ function commandBuild( e )
   {
     return it.opener.openedModule.modulesBuild
     ({
-      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3094,7 +3168,7 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    let filterProperties = _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
       ... filterProperties,
@@ -3134,7 +3208,7 @@ function commandExportPurging( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3171,7 +3245,7 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3192,7 +3266,7 @@ commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 function commandGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut( e.propertiesMap, commandImply.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
   let hardLinkMaybe = commandOptions.hardLinkMaybe;
   if( hardLinkMaybe !== undefined )
   delete commandOptions.hardLinkMaybe;
@@ -3200,7 +3274,7 @@ function commandGit( e )
   if( profile !== undefined )
   delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
   cui._command_head( commandGit, arguments );
@@ -3687,6 +3761,8 @@ function commandWith( e )
         `No module sattisfy criteria.`
         , `\nLooked at ${ _.strQuote( path.resolve( e.commandArgument ) )}`
       );
+      else
+      cui.currentOpeners = null;
     }
 
     _.assert( cui.transaction instanceof _.will.Transaction );
@@ -3903,8 +3979,8 @@ commandEach.commandSubjectHint = 'A module or resource selector.';
 function commandNpmFromWillfile( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut( e.propertiesMap, commandNpmFromWillfile.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandNpmFromWillfile.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   cui._command_head( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
@@ -3962,8 +4038,8 @@ commandNpmFromWillfile.commandProperties =
 function commandWillfileFromNpm( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut( e.propertiesMap, commandWillfileFromNpm.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileFromNpm.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_head( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
@@ -4048,8 +4124,8 @@ commandWillfileFromNpm.commandProperties =
 function commandWillfileGet( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileGet.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileGet.defaults );
+  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileGet.defaults );
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -4145,8 +4221,8 @@ commandWillfileGet.commandProperties =
 function commandWillfileSet( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileSet.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSet.defaults );
+  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileSet.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileSet.defaults );
   cui._command_head( commandWillfileSet, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -4214,8 +4290,8 @@ commandWillfileSet.commandProperties =
 function commandWillfileDel( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileGet.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileDel.defaults );
+  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileDel.defaults );
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -4311,8 +4387,8 @@ commandWillfileDel.commandProperties =
 function commandWillfileExtend( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileExtend.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileExtend.defaults );
+  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileExtend.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileExtend.defaults );
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -4380,8 +4456,8 @@ commandWillfileExtend.commandProperties =
 function commandWillfileSupplement( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileSupplement.defaults );
-  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSupplement.defaults );
+  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileSupplement.defaults );
+  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileSupplement.defaults );
   cui._command_head( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -4528,7 +4604,7 @@ function commandWillfileMergeIntoSingle( e )
    * then command will be divided into separate reusable parts
   */
   let cui = this;
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
@@ -4548,6 +4624,7 @@ function commandWillfileMergeIntoSingle( e )
     let o2 =
     {
       request : `${ willfileName } ${ e.propertiesMap.secondaryPath }`,
+      name : 0,
       onSection : _.mapExtend,
     };
     _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
@@ -4557,13 +4634,16 @@ function commandWillfileMergeIntoSingle( e )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
+  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });;
+  filterAboutNpmFields();
+  filterSubmodulesCriterions();
+  if( e.propertiesMap.filterSameSubmodules )
+  filterSameSubmodules()
   if( e.propertiesMap.submodulesDisabling )
-  {
-    let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });
-    for( let dependency in config.submodule )
-    config.submodule[ dependency ].enabled = 0;
-    fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml' });
-  }
+  submodulesDisable();
+  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml' });
+
+  /* */
 
   renameFiles();
 
@@ -4591,6 +4671,112 @@ function commandWillfileMergeIntoSingle( e )
 
   /* */
 
+  function filterSubmodulesCriterions()
+  {
+    let submodules = config.submodule;
+    for( let name in submodules )
+    {
+      let criterions = submodules[ name ].criterion;
+      if( criterions )
+      if( criterions.debug )
+      if( !_.longHasAny( _.mapKeys( criterions ) ), [ 'development', 'optional' ] )
+      {
+        delete criterions.debug;
+        criterions.development = 1;
+      }
+    }
+  }
+
+  /* */
+
+  function filterAboutNpmFields()
+  {
+    let about = config.about;
+    for( let name in about )
+    {
+      if( !_.strBegins( name, 'npm.' ) )
+      continue;
+
+      if( _.arrayIs( about[ name ] ) )
+      {
+        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
+      }
+      else if( _.aux.is( about[ name ] ) )
+      {
+        let npmMap = about[ name ];
+        let reversedMap = Object.create( null );
+
+        for( let property in npmMap )
+        if( npmMap[ property ] in reversedMap )
+        filterPropertyByName( npmMap, reversedMap, property )
+        else
+        reversedMap[ npmMap[ property ] ] = property;
+      }
+    }
+  }
+
+  /* */
+
+  function filterPropertyByName( srcMap, butMap, property )
+  {
+    if( _.strHas( property, '-' ) )
+    delete srcMap[ property ];
+    else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
+    delete srcMap[ butMap[ srcMap[ property ] ] ];
+    else if( !_.strHasAny( property, [ '.', '-' ] ) )
+    {
+      if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
+      delete srcMap[ butMap[ srcMap[ property ] ] ];
+    }
+  }
+
+  /* */
+
+  function filterSameSubmodules()
+  {
+    let submodules = config.submodule;
+    let regularPaths = new Set();
+    let mergedSubmodules = Object.create( null );
+    for( let name in submodules )
+    {
+      let parsed = _.uri.parse( submodules[ name ].path );
+
+      let parsedModuleName;
+      if( _.longHas( parsed.protocols, 'npm' ) )
+      {
+        parsedModuleName = _.npm.path.parse( submodules[ name ].path ).host;
+      }
+      else if( _.longHas( parsed.protocols, 'git' ) )
+      {
+        parsedModuleName = _.npm.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
+      }
+      else
+      {
+        if( regularPaths.has( submodules[ name ].path ) )
+        continue;
+
+        regularPaths.add( submodules[ name ].path );
+        parsedModuleName = name;
+      }
+
+      if( !( parsedModuleName in mergedSubmodules ) )
+      mergedSubmodules[ parsedModuleName ] = submodules[ name ];
+    }
+    config.submodule = mergedSubmodules;
+  }
+
+  /* */
+
+  function submodulesDisable()
+  {
+    if( !config )
+    config = configRead( dstPath.absolute );
+    for( let dependency in config.submodule )
+    config.submodule[ dependency ].enabled = 0;
+  }
+
+  /* */
+
   function renameFiles()
   {
     let unnamedWillfiles = filesFind( './.*' );
@@ -4614,20 +4800,69 @@ commandWillfileMergeIntoSingle.defaults =
 {
   verbosity : 3,
   v : 3,
-};
-commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
-commandWillfileMergeIntoSingle.commandSubjectHint = false;
-commandWillfileMergeIntoSingle.defaults =
-{
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
+  filterSameSubmodules : 1,
 };
+commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
+commandWillfileMergeIntoSingle.commandSubjectHint = false;
 commandWillfileMergeIntoSingle.commandProperties =
 {
-  primaryPath : 'Name of destination willfile',
+  primaryPath : 'Name of destination willfile. Default is `will.yml`',
   secondaryPath : 'Name of file to extend destination willfile',
-  submodulesDisabling : 'Disables submodules in the destination willfile',
+  submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1',
+  filterSameSubmodules : 'Enables filtering of submodules with the same path but different names. Default is 1',
+};
+
+//
+
+function commandNpmPublish( e )
+{
+  let cui = this;
+  cui._command_head( commandNpmPublish, arguments );
+
+  _.routineOptions( commandNpmPublish, e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'publish',
+    onEach : handleEach,
+    commandRoutine : commandNpmPublish,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.npmModulePublish
+    ({
+      ... e.propertiesMap,
+      commit : e.subject,
+    });
+  }
+}
+
+commandNpmPublish.defaults =
+{
+  commit : null,
+  tag : null,
+
+  force : 0,
+  dry : 0,
+  v : 1,
+  verbosity : 1,
+};
+commandNpmPublish.hint = 'To publish NPM module.';
+commandNpmPublish.commandSubjectHint = 'A commit message for uncommitted changes. Default is ".".';
+commandNpmPublish.commandProperties =
+{
+  commit : 'message',
+  tag : 'tag',
+
+  force : 'forces diff',
+  dry : 'dry run',
+  v : 'verbosity',
+  verbosity : 'verbosity',
 };
 
 //
@@ -4642,7 +4877,7 @@ function commandPackageInstall( e )
 
   cui._command_head( commandPackageInstall, arguments );
 
-  _.assertMapHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
+  _.map.assertHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
 
   let tool  = parsed.protocol;
 
@@ -4811,7 +5046,7 @@ function commandPackageLocalVersions( e )
 
   cui._command_head( commandPackageLocalVersions, arguments );
 
-  _.assertMapHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
+  _.map.assertHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
 
   let tool  = parsed.protocol;
 
@@ -4940,7 +5175,7 @@ function commandPackageRemoteVersions( e )
 
   cui._command_head( commandPackageRemoteVersions, arguments );
 
-  _.assertMapHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
+  _.map.assertHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
 
   let tool  = parsed.protocol;
   parsed.protocol = null;
@@ -5100,7 +5335,7 @@ function commandPackageVersion( e )
 
   cui._command_head( commandPackageVersion, arguments );
 
-  _.assertMapHasOnly( options, commandPackageVersion.commandProperties, `Command does not expect options:` );
+  _.map.assertHasOnly( options, commandPackageVersion.commandProperties, `Command does not expect options:` );
 
   let tool  = parsed.protocol;
 
@@ -5322,6 +5557,7 @@ let Extension =
   commandModulesList,
   commandModulesTopologicalList,
   commandModulesTree,
+  commandModulesUpdate,
 
   commandSubmodulesAdd,
   commandSubmodulesFixate,
@@ -5392,6 +5628,7 @@ let Extension =
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   commandWillfileMergeIntoSingle,
+  commandNpmPublish,
   /* aaa2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
