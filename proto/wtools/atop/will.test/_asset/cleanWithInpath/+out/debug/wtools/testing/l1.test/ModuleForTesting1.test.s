@@ -3,13 +3,12 @@
 
 'use strict';
 
+let _;
 if( typeof module !== 'undefined' )
 {
-  require( '../Basic.s' );
+  _ = require( '../Basic.s' );
   require( 'wTesting' );
 }
-
-let _ = _global_._test_;
 
 // --
 // test

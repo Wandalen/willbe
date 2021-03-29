@@ -3,7 +3,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
+  const fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
   // debugger;
