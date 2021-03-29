@@ -15602,6 +15602,84 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
 
 //
 
+function exportMainIsGitRepository( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportMainIsGitRepository' );
+
+  a.remotePath = a.abs( 'module' );
+  a.appStart.predefined.currentPath = a.abs( 'clone' );
+  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.moduleShellSync = _.process.starter
+  ({
+    currentPath : a.remotePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.init = ( o ) =>
+  {
+    o = o || {}
+
+    a.ready.then( () =>
+    {
+      test.case = _.entity.exportString( o );
+
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      a.moduleShellSync( 'git init' )
+      a.moduleShellSync( 'git add -fA .' )
+      a.moduleShellSync( 'git commit -m initial' )
+      a.shellSync( 'git clone module clone' )
+
+      return null;
+    })
+
+    return a.ready;
+  }
+
+  /* */
+
+  a.init({ case : 'export' })
+  a.appStartNonThrowing( '.export' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.true( _.strHas( op.output, /Exported .*module::exportMainIsGitRepository \/ build::proto\.export.* in/ ) );
+
+    var files = a.find( a.abs( 'clone/out' ) );
+    test.gt( files.length, 2 );
+
+    var files = a.fileProvider.dirRead( a.abs( 'clone/out' ) );
+    test.identical( files, [ 'debug', 'exportMainIsGitRepository.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -40641,6 +40719,7 @@ const Proto =
     exportWithSubmoduleThatHasModuleDirDeleted,
     exportWithoutSubSubModules,
     exportWithSubmoduleWithNotDownloadedSubmodule,
+    exportMainIsGitRepository,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
