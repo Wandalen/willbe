@@ -8521,7 +8521,7 @@ function npmModulePublish( o )
   else
   {
     if( o.verbosity )
-    logger.log( ` x Nothing to publish in ${ nameWithLocation ) }` );
+    logger.log( ` x Nothing to publish in ${ nameWithLocation }` );
     return ready;
   }
 
@@ -8925,7 +8925,7 @@ function gitDiff( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Diff ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() )) }` );
+  logger.log( `Diff ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let result = _.git.diff
   ({
