@@ -106,8 +106,8 @@ function form1()
   let rootModule = relation.module.rootModule;
   let willf = relation.willf;
   let will = rootModule.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -148,8 +148,8 @@ function form3()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let result = relation;
 
@@ -204,8 +204,8 @@ function close()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -228,8 +228,8 @@ function _closeEnd()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -246,8 +246,8 @@ function _openAct( o )
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -299,8 +299,8 @@ function _openEnd()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -329,8 +329,8 @@ function _moduleAdoptEnd()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -469,8 +469,8 @@ function isMandatory()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( !relation.enabled )
@@ -560,8 +560,8 @@ function localPathGet()
   return null; /* yyy */
 
   // let will = module.will;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
+  // const fileProvider = will.fileProvider;
+  // const path = fileProvider.path;
   //
   // if( path.isGlobal( relation.path ) )
   // return null;
@@ -585,8 +585,8 @@ function remotePathGet()
   return null; /* yyy */
 
   // let will = module.will;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
+  // const fileProvider = will.fileProvider;
+  // const path = fileProvider.path;
   //
   // if( !path.isGlobal( relation.path ) )
   // return null;
@@ -619,8 +619,8 @@ function longPathGet()
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   return path.join( module.inPath, relation.path );
 }
 
@@ -641,8 +641,8 @@ function pathSet( src )
   if( relation.opener )
   {
     let will = module.will;
-    let fileProvider = will.fileProvider;
-    let path = fileProvider.path;
+    const fileProvider = will.fileProvider;
+    const path = fileProvider.path;
     relation.opener.willfilesPath = path.join( module.inPath, src );
   }
 
@@ -656,8 +656,8 @@ function pathsRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   // let Resolver = _.will.resolver;
 
@@ -758,8 +758,8 @@ function exportStructure( o )
   let module = relation.module;
   let willf = relation.willf;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let rootModule = module.rootModule;
 
   let result = Parent.prototype.exportStructure.apply( this, arguments );
@@ -813,8 +813,8 @@ function exportString( o )
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let resultMap = Parent.prototype.exportStructure.call( relation );
   let tab = '  ';
@@ -854,8 +854,8 @@ function errorNotFound( err )
   let relation = this;
   let module = relation.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( will.verbosity >= 3 )
@@ -871,7 +871,7 @@ function errorNotFound( err )
 
   err = _.err( err );
 
-  if( will.verbosity >= 2 && !_.errIsBrief( err ) )
+  if( will.verbosity >= 2 && !_.error.isBrief( err ) )
   {
     logger.error( _.errOnce( err ) );
   }

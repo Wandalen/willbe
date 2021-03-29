@@ -39,8 +39,8 @@ function form3()
   let build = this;
   let module = build.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( build.formed === 3 )
@@ -244,8 +244,8 @@ function perform( o )
   let build = this;
   let module = build.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
   let isExport = build.isExport();
   let con = new _.Consequence().take( null );

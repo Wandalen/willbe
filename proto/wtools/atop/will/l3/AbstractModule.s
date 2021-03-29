@@ -243,8 +243,8 @@ function _filePathChanged2( o )
   return o;
 
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   if( o.willfilesPath )
@@ -523,8 +523,8 @@ function willfileUnregister( willf )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.arrayRemoveElementOnceStrictly( module.willfilesArray, willf );
@@ -549,8 +549,8 @@ function willfileRegister( willf )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -588,8 +588,8 @@ function willfileAttach( filePath )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -611,8 +611,8 @@ function _willfilesRelease( willfilesArray )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   willfilesArray = willfilesArray || module.willfilesArray;
@@ -635,8 +635,8 @@ function repoIsRemote( remotePath )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -656,8 +656,8 @@ function repoVerify( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( module.isPreformed() );

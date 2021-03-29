@@ -41,7 +41,7 @@ function exec()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let appArgs = _.process.input({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
@@ -95,7 +95,7 @@ function init( o )
 function _openersCurrentEach( o )
 {
   let will = this.form();
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -169,8 +169,8 @@ function openersFind( o )
 {
   let will = this;
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   o = _.routineOptions( openersFind, arguments );
   _.assert( will.currentOpener === null );
@@ -293,7 +293,7 @@ _command_head.defaults =
 function errEncounter( error )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -342,7 +342,7 @@ function _commandsMake()
 {
   let will = this;
   let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let appArgs = _.process.input();
 
   _.assert( _.instanceIs( will ) );
@@ -464,7 +464,7 @@ function _commandsMake()
 function _commandsBegin( command )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -478,7 +478,7 @@ function _commandsBegin( command )
 function _commandsEnd( command )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -2376,7 +2376,7 @@ commandSubmodulesGitSync.commandProperties =
 function commandModuleNew( e )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
+  const fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
@@ -2410,7 +2410,7 @@ function commandModuleNewWith( e )
   let cui = this;
   cui._command_head( commandModuleNewWith, arguments );
 
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -2782,7 +2782,7 @@ function commandDo( e )
 {
   let cui = this;
   cui._command_head( commandDo, arguments );
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -4473,7 +4473,7 @@ function commandWillfileMergeIntoSingle( e )
    * then command will be divided into separate reusable parts
   */
   let cui = this;
-  let fileProvider = cui.fileProvider;
+  const fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );

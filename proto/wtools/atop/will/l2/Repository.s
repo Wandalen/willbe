@@ -107,8 +107,8 @@ function status( o )
 {
   let repo = this;
   let will = repo.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   let result = Object.create( null );
   let ready = new _.Consequence().take( null );
   let vcs = will.vcsToolsFor( repo.remotePath );
@@ -596,8 +596,8 @@ function repoIsRemote( remotePath )
 {
   let repo = this;
   let will = repo.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
 
@@ -616,8 +616,8 @@ function repoLocalVersion()
 {
   let repo = this;
   let will = repo.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -633,8 +633,8 @@ function repoLatestVersion()
 {
   let repo = this;
   let will = repo.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
