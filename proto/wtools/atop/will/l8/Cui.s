@@ -2366,7 +2366,10 @@ function commandModuleNew( e )
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
-  will._propertiesImply( e.propertiesMap );
+  let implyMap = _.mapOnly( e.propertiesMap, commandModuleNew.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  _.routineOptions( commandModuleNew, implyMap );
+  will._propertiesImply( implyMap );
 
   if( e.commandArgument )
   e.propertiesMap.localPath = e.commandArgument;
@@ -3035,6 +3038,13 @@ function commandExport( e )
   cui._command_head( commandExport, arguments );
   let doneContainer = [];
 
+  let implyMap = _.mapOnly( e.propertiesMap, commandExport.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  _.routineOptions( commandExport, implyMap );
+  cui._propertiesImply( implyMap );
+
+  debugger
+
   return cui._commandBuildLike
   ({
     event : e,
@@ -3059,7 +3069,7 @@ function commandExport( e )
 
 }
 
-commandExport.defaults = Object.create( null );
+commandExport.defaults = _.mapExtend( null, commandImply.defaults );
 commandExport.hint = 'Export selected module with spesified criterion.';
 commandExport.longHint = 'Export selected module with spesified criterion. Save output to output willfile and archive.';
 commandExport.commandSubjectHint = 'A name of export scenario.';
@@ -3069,6 +3079,7 @@ commandExport.commandSubjectHint = 'A name of export scenario.';
 function commandExportPurging( e )
 {
   let cui = this;
+  debugger
   cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
 

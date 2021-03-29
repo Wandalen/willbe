@@ -56,7 +56,7 @@ function unform()
   let logger = will.logger;
   _.assert( logger.verbosity === t.verbosity, 'Verbosity of the main logger was changed' );
   t.formed = 0;
-  logger.verbosity = t._verbosityPrev;
+  // logger.verbosity = t._verbosityPrev;
 }
 
 //
@@ -108,10 +108,11 @@ function verbositySet( src )
   if( t.formed )
   return;
 
-  if( t._verbosityPrev === null )
-  t._verbosityPrev = logger.verbosity;
-  logger.verbosity = src;
   t._.verbosity = src;
+  logger.verbosity = src;
+
+  // if( t._verbosityPrev === null )
+  // t._verbosityPrev = logger.verbosity;
 }
 
 //
@@ -179,7 +180,7 @@ let Associates =
 let Restricts =
 {
   formed : 0,
-  _verbosityPrev : null
+  // _verbosityPrev : null
 }
 
 let Statics =
