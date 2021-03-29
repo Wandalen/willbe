@@ -8609,7 +8609,7 @@ function npmModulePublish( o )
 
   function moduleExport( op )
   {
-    let filterProperties = _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null,  will.RelationFilterOn, { withIn : null, withOut : null } );
     return module.modulesExport
     ({
       ... filterProperties,

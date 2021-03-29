@@ -348,7 +348,7 @@ function _propertiesImply( implyMap )
   if( will.transaction )
   will.transaction.finit();
 
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( implyMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
 }
 
 //
@@ -573,7 +573,7 @@ function _commandListLike( o )
   }
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   will._commandsBegin( o.commandRoutine );
 
@@ -687,7 +687,7 @@ function _commandBuildLike( o )
   }
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -797,7 +797,7 @@ function _commandCleanLike( o )
   }
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -903,7 +903,7 @@ function _commandNewLike( o )
   }
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandNewLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -1027,7 +1027,7 @@ function _commandTreeLike( o )
   }
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   will._commandsBegin( o.commandRoutine );
 
@@ -1096,7 +1096,7 @@ function _commandModulesLike( o )
 
   // _.assert( will.transaction === null );
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly( o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   _.routineOptions( _commandModulesLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -1261,7 +1261,7 @@ function commandImply( e )
   cui._command_head( commandImply, arguments );
 
   cui.implied = e.propertiesMap;
-  // cui._propertiesImplyToMain( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
+  // cui._propertiesImplyToMain( _.mapOnly_( null,  e.propertiesMap, commandImply.defaults ) );
 
   if( impliedPrev && impliedPrev.withPath )
   if( cui.implied.withPath === null || cui.implied.withPath === undefined )
@@ -1784,8 +1784,8 @@ function commandModulesUpdate( e )
   let cui = this;
   cui._command_head( commandModulesUpdate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandModulesUpdate.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandModulesUpdate.defaults );
+  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
@@ -1809,7 +1809,7 @@ function commandModulesUpdate( e )
       if( e.propertiesMap.to )
       it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
 
-      let o2 = _.mapOnly( e.propertiesMap, it.opener.repoUpdate.defaults );
+      let o2 = _.mapOnly_( null,  e.propertiesMap, it.opener.repoUpdate.defaults );
       o2.strict = 0;
       return it.opener.repoUpdate( o2 );
     })
@@ -2479,8 +2479,8 @@ function commandModuleNew( e )
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandModuleNew.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandModuleNew.defaults );
+  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
   _.routineOptions( commandModuleNew, implyMap );
   will._propertiesImply( implyMap );
 
@@ -3151,8 +3151,8 @@ function commandExport( e )
   cui._command_head( commandExport, arguments );
   let doneContainer = [];
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandExport.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandExport.defaults );
+  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
   _.routineOptions( commandExport, implyMap );
   cui._propertiesImply( implyMap );
 
@@ -3740,7 +3740,7 @@ function commandWith( e )
   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.commandArgument ) );
 
   cui.implied = _.mapExtend( cui.implied, { withPath } );
-  _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, commandWith.defaults ) );
+  _.mapExtend( e.propertiesMap, _.mapOnly_( null,  cui.implied, commandWith.defaults ) );
   cui._propertiesImply( e.propertiesMap );
 
   return cui.modulesFindWithAt
