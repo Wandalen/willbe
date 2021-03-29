@@ -1223,9 +1223,9 @@ function commandImply( e )
   cui.implied = e.propertiesMap;
   // cui._propertiesImplyToMain( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
 
-  if( impliedPrev )
-  if( impliedPrev.withPath )
-  cui.implied.withParsed = impliedPrev.withPath;
+  if( impliedPrev && impliedPrev.withPath )
+  if( cui.implied.withPath === null || cui.implied.withPath === undefined )
+  cui.implied.withPath = impliedPrev.withPath;
 
 }
 
@@ -1257,6 +1257,7 @@ commandImply.commandProperties =
   withValid : 'Include valid modules. Default is 1.',
   withInvalid : 'Include invalid modules. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
+  withPath : 'A module selector.',
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
