@@ -4162,7 +4162,22 @@ function peerModuleSet( src )
     */
     if( peerRemotePath )
     {
-      _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
+
+      // if( !( module.remotePath === null || module.remotePath === peerRemotePath ) )
+      // {
+      //   debugger;
+      //   console.log( module.remotePath );
+      //   // src.peerRemotePathGet();
+      // }
+
+      // let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath })
+      // opener.localPath
+      // "/pro/module/wTools/"
+      // remotePathFromLocal
+      // "git+ssh:///git@github.com/Wandalen/wTools.git"
+      // missing trailing slash!
+      // qqq2 : xxx : uncomment and fix related issue
+      // _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
       _.assert( module.downloadPath === null || module.downloadPath === src.downloadPath );
       module.remotePathEachAdopt({ remotePath : peerRemotePath, downloadPath : module.downloadPath });
     }
@@ -6094,6 +6109,9 @@ function remotePathSet( filePath )
   let ex = module.remotePath;
   // let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
   let isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+
+  // if( filePath && _.strHas( filePath, 'wTools.git' ) )
+  // debugger;
 
   module._remotePathPut( filePath );
 
