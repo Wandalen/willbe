@@ -389,7 +389,7 @@ function _resourceMapSelect()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let currentModule = it.currentModule || rit.currentModule;
 
@@ -533,7 +533,7 @@ function сontextPrepare( o )
   _.assert( !!o.baseModule );
   let will = o.baseModule.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.routineOptionsPreservingUndefines( сontextPrepare, arguments );
@@ -865,7 +865,7 @@ function _pathResolve( filePath, resource )
   _.assert( rit.currentModule !== undefined );
   let will = rit.baseModule.will;
   let currentModule = it.currentModule || rit.currentModule || rit.baseModule;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let resourceName = resource.name;
   let result = filePath;
@@ -956,7 +956,7 @@ function _pathResolveAct( o )
   o.resourceName = o.currentContext instanceof _.will.Resource ? o.currentContext.name : null;
 
   let will = o.currentModule.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   let result = o.filePath;
@@ -1189,7 +1189,7 @@ function performBegin()
   let module = it.baseModule;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let currentContext = it.currentContext = it.currentContext || module;
 
@@ -1529,7 +1529,7 @@ function filesFromResource_body( o )
   let module = o.baseModule;
   let will = module.will;
   let result = [];
-  const fileProvider = will.fileProvider
+  let fileProvider = will.fileProvider
   const path = fileProvider.path;
   let resources;
 

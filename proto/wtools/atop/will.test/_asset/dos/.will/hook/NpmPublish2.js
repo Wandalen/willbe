@@ -149,7 +149,7 @@ function onModule( context )
 
     let about = aboutCache[ dep.name ];
     if( !about )
-    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    about = aboutCache[ dep.name ] = _.npm.remoteAbout( dep.name );
     if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
     {
       dep.version = o.tag;

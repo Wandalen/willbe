@@ -239,7 +239,7 @@ function formAssociates()
   will.fileProvider.logger = logger2;
   for( var f in will.fileProvider.providersWithProtocolMap )
   {
-    const fileProvider = will.fileProvider.providersWithProtocolMap[ f ];
+    let fileProvider = will.fileProvider.providersWithProtocolMap[ f ];
     fileProvider.logger = logger2;
   }
 
@@ -509,7 +509,7 @@ function IsModuleAt( filePath )
 function hooksPathGet()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   return will.HooksPathGet( will.environmentPath );
 }
@@ -528,7 +528,7 @@ function environmentPathSet( src )
     return src;
   }
 
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   src = path.canonize( src );
@@ -545,7 +545,7 @@ function environmentPathSet( src )
 function environmentPathFind( dirPath )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   dirPath = path.canonize( dirPath );
@@ -589,7 +589,7 @@ function _verbosityChange()
 function vcsProviderFor( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( !_.mapIs( o ) )
@@ -626,7 +626,7 @@ vcsProviderFor.defaults =
 function vcsToolsFor( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( !_.mapIs( o ) )
@@ -836,7 +836,7 @@ _pathChanged.defaults =
 function versionGet()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -998,7 +998,7 @@ function withSubmodulesSet( src )
 function recursiveValueDeduceFromBuild( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let result = null;
@@ -1221,7 +1221,7 @@ prefer.defaults =
 function moduleAt( willfilesPath )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
@@ -1381,7 +1381,7 @@ let relationFit = _.routine.uniteCloning_( moduleFit_head, relationFit_body );
 function modulesFilter( junctions, o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let result = [];
@@ -1408,7 +1408,7 @@ modulesFilter.defaults = _.mapExtend( null, moduleFit.defaults );
 function relationsFilter( junctions, o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let result = [];
@@ -1437,7 +1437,7 @@ relationsFilter.defaults = _.mapExtend( null, relationFit.defaults );
 function moduleIdUnregister( openedModule )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1457,7 +1457,7 @@ function moduleIdUnregister( openedModule )
 function moduleIdRegister( openedModule )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1477,7 +1477,7 @@ function moduleIdRegister( openedModule )
 function modulePathUnregister( openedModule )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1507,7 +1507,7 @@ function modulePathUnregister( openedModule )
 function modulePathRegister( openedModule )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1533,7 +1533,7 @@ function modulePathRegister( openedModule )
 function moduleNew( o )
 {
   let will = this.form();
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -1619,7 +1619,7 @@ moduleNew.defaults =
 function modulesFindEachAt( o )
 {
   let will = this.form();
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let errs = [];
@@ -1721,7 +1721,7 @@ function modulesFindEachAt( o )
 }
 // {
 //   let will = this.form();
-//   const fileProvider = will.fileProvider;
+//   let fileProvider = will.fileProvider;
 //   let path = will.fileProvider.path;
 //   let logger = will.logger;
 //   let con;
@@ -1944,7 +1944,7 @@ modulesFindEachAt.defaults =
 function modulesFindWithAt( o )
 {
   let will = this.form();
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let con;
@@ -2478,7 +2478,7 @@ function modulesFor_head( routine, args )
 function modulesFor_body( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let visitedJunctionsSet = new Set;
@@ -2682,7 +2682,7 @@ function modulesDownload_head( routine, args )
 function modulesDownload_body( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let time = _.time.now();
@@ -3099,7 +3099,7 @@ let modulesDownload = _.routine.uniteCloning_( modulesDownload_head, modulesDown
 function modulesUpform( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3142,7 +3142,7 @@ delete defaults.onNode;
 function modulesClean( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let files = Object.create( null );
@@ -3225,7 +3225,7 @@ function modulesBuild_head( routine, args )
 function modulesBuild_body( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -3375,7 +3375,7 @@ function modulesVerify_head( routine, args )
 function modulesVerify_body( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -4015,7 +4015,7 @@ function _openerMake_head( routine, args )
 function _openerMake_body( o )
 {
   let will = this.form();
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let madeOpener = null;
@@ -4096,7 +4096,7 @@ defaults.willfilesPath = null;
 function openersAdoptModule( module )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let result = 0;
@@ -4191,7 +4191,7 @@ function openersErrorsRemoveAll()
 function readingReset()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4208,7 +4208,7 @@ function readingReset()
 function readingBegin()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4227,7 +4227,7 @@ function readingBegin()
 function readingEnd()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4244,7 +4244,7 @@ function readingEnd()
 function _willfilesReadBegin()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4260,7 +4260,7 @@ function _willfilesReadBegin()
 function _willfilesReadEnd( module )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4282,7 +4282,7 @@ function _willfilesReadEnd( module )
 function _willfilesReadLog()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4498,7 +4498,7 @@ WillfilesFind.defaults =
 function willfilesFind( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4543,7 +4543,7 @@ willfilesFind.defaults =
 function willfilesSelectPaired( record, records )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let result = [ record ];
@@ -4611,7 +4611,7 @@ function willfileWithFilePath( filePath )
 function willfileFor( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let r = Object.create( null );
@@ -4660,7 +4660,7 @@ willfileFor.defaults =
 function willfileUnregister( willf )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4685,7 +4685,7 @@ function willfileUnregister( willf )
 function willfileRegister( willf )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4712,7 +4712,7 @@ function cleanLog( o )
 {
   let will = this;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptions( cleanLog, arguments );
@@ -4765,7 +4765,7 @@ function cleanDelete( o )
 {
   let will = this;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptions( cleanDelete, arguments );
@@ -4822,7 +4822,7 @@ var defaults = cleanDelete.defaults =
 function hooksReload()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let hooks = will._.hooks = will._.hooks || Object.create( null );
@@ -4864,7 +4864,7 @@ function hooksReload()
 function hooksList()
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4881,7 +4881,7 @@ function hooksList()
 function hookContextNew( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4915,7 +4915,7 @@ function hookContextNew( o )
 function hookContextFrom( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let withPath = path.join( _.path.current(), will.withPath || './' );
@@ -5053,7 +5053,7 @@ hookContextFrom.defaults =
 function hookCall( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -5209,7 +5209,7 @@ hookCall.defaults = _.mapExtend( null, hookContextFrom.defaults );
 function hookFindAt( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -5259,6 +5259,65 @@ function hooksGet()
   will.hooksReload();
 
   return will._.hooks;
+}
+
+// --
+// npm
+// --
+
+/* qqq : for Dmytro : move to npm tools */
+function npmAdd( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routine.options( npmAdd, o );
+
+  if( !o.toLocalPath )
+  o.toLocalPath = path.current();
+
+  let nodeModulesPath = _.npm.pathDownloadFromLocal( o.toLocalPath );
+  if( !o.as )
+  o.as = _.npm.localName({ localPath : path.current() });
+
+  if( path.parse( o.dependencyPath ).protocol === 'hd' )
+  o.dependencyPath = path.join( path.current(), o.dependencyPath );
+
+  _.assert( _.boolLikeFalse( o.editing ), 'not implemented' );
+  _.assert( _.boolLikeTrue( o.downloading ), 'not implemented' );
+  _.assert( _.boolLikeTrue( o.linking ), 'not implemented' );
+  _.assert( path.parse( o.dependencyPath ).protocol === 'hd', 'not implemented' );
+
+  _.sure( fileProvider.fileExists( _.npm.pathLocalFromDownload( nodeModulesPath ) ), `nodeModulesPath:${nodeModulesPath} does not exist` );
+  _.sure( fileProvider.fileExists( o.dependencyPath ), `dependencyPath:${o.dependencyPath} does not exist` );
+  _.sure( _.strDefined( o.as ), '`as` is not specified' )
+
+  let dstPath = path.join( nodeModulesPath, o.as );
+  if( o.verbosity )
+  logger.log( `Linking ${_.ct.format( o.dependencyPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
+  if( !o.dry )
+  fileProvider.softLink
+  ({
+    dstPath : dstPath,
+    srcPath : o.dependencyPath,
+    makingDirectory : 1,
+    rewritingDirs : 1,
+  });
+
+  return true;
+}
+
+npmAdd.defaults =
+{
+  as : null,
+  toLocalPath : null,
+  dependencyPath : null,
+  editing : 1,
+  downloading : 1,
+  linking : 1,
+  dry : 0,
+  verbosity : 1,
 }
 
 // --
@@ -5648,6 +5707,10 @@ let Extension =
   hookCall,
   hookFindAt,
   hooksGet,
+
+  // npm
+
+  npmAdd,
 
   // relation
 

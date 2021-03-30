@@ -54,8 +54,8 @@ function onModule( context )
   // sourcesRemoveOld( context );
   // sourcesRemoveOld2( context );
   // sampleFix( context );
-    sampleTrivial( context );
-    readmeSampleRename( context );
+  // sampleTrivial( context );
+  // readmeSampleRename( context );
 
 }
 

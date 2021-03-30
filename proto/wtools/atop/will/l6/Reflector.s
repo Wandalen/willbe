@@ -38,7 +38,7 @@ function MakeFor_body( o )
   let willf = o.willf;
   let module = o.module;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -99,7 +99,7 @@ function MakeSingle( o )
   let willf = o.resource.willf;
   let module = o.resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -173,7 +173,7 @@ function init( o )
 
   let module = o.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
 
   reflector.src = fileProvider.recordFilter();
   reflector.dst = fileProvider.recordFilter();
@@ -214,7 +214,7 @@ function form1()
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -271,7 +271,7 @@ function form2( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -357,7 +357,7 @@ function form3()
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -409,7 +409,7 @@ function _inheritMultiple( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -472,7 +472,7 @@ function _inheritSingle( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let reflector2 = o.ancestor;
@@ -596,7 +596,7 @@ function _inheritPathMap( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -630,7 +630,7 @@ function _inheritPathMapAct1( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -701,7 +701,7 @@ function _inheritPathMapAct2( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -785,7 +785,7 @@ function _inheritPathMapAct3( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -894,7 +894,7 @@ function _inheritPrefixes( o )
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1092,7 +1092,7 @@ function prefixesRelative( prefixPath )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -1119,7 +1119,7 @@ function prefixesApply( force )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let prefixPath;
 
@@ -1145,7 +1145,7 @@ function prefixesResolve()
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( reflector.src.prefixPath && _.will.resolver.Resolver.selectorIs( reflector.src.prefixPath ) )
@@ -1181,7 +1181,7 @@ function pathRelative( filePath )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   // let srcRelativePath = reflector.src.prefixPath || module.inPath;
   // let dstRelativePath = reflector.dst.prefixPath || module.inPath;
@@ -1209,7 +1209,7 @@ function pathAbsolute( filePath, isSrc )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let srcRelativePath = reflector.src.prefixPath || module.inPath;
   let dstRelativePath = reflector.dst.prefixPath || module.inPath;
@@ -1247,7 +1247,7 @@ function pathsResolve( o )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( reflector.src.isPaired( reflector.dst ) );
@@ -1574,7 +1574,7 @@ function selectorsNormalize( o )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptions( selectorsNormalize, arguments );
@@ -1632,7 +1632,7 @@ function pathsRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   // let Resolver = _.will.resolver;
@@ -1699,7 +1699,7 @@ function optionsForFindExport( o )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -1731,7 +1731,7 @@ function optionsForFindGroupExport( o )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -1768,7 +1768,7 @@ function optionsForReflectExport( o )
   let reflector = this;
   let module = reflector.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -1813,7 +1813,7 @@ function exportStructure()
   let module = reflector.module;
   let willf = reflector.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let o = _.routineOptions( exportStructure, arguments );
 

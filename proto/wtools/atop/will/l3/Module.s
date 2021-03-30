@@ -356,7 +356,7 @@ function outModuleMake( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptionsPreservingUndefines( outModuleMake, arguments );
@@ -1806,7 +1806,7 @@ function reopen()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -1841,7 +1841,7 @@ function close()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1913,7 +1913,7 @@ function willfilesOpen()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1931,7 +1931,7 @@ function _willfilesOpen()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let con = new _.Consequence().take( null );
@@ -2063,7 +2063,7 @@ function willfileUnregister( willf )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -2079,7 +2079,7 @@ function willfileRegister( willf )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -2169,7 +2169,7 @@ function willfilesSave()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -2190,7 +2190,7 @@ function _attachedWillfilesForm()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -2277,7 +2277,7 @@ function _attachedWillfileOpen( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -2324,7 +2324,7 @@ function exportAuto()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let clonePath = module.cloneDirPathGet();
@@ -2403,7 +2403,7 @@ function moduleBuild_body( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let con = new _.Consequence().take( null );
@@ -2650,7 +2650,7 @@ function modulesUpform( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -2827,7 +2827,7 @@ function submodulesAreDownloaded( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -2866,7 +2866,7 @@ function submodulesAllAreDownloaded( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -2894,7 +2894,7 @@ function submodulesAreValid( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -2936,7 +2936,7 @@ function submodulesAllAreValid( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -3013,7 +3013,7 @@ function _subModulesDownload_body( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3104,7 +3104,7 @@ function moduleFixate( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let report = Object.create( null );
@@ -3294,7 +3294,7 @@ function moduleFixateAct( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3432,7 +3432,7 @@ function moduleFixatePathFor( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3525,7 +3525,7 @@ _.assert( defaults.withDisabledModules === 0 );
 // {
 //   let module = this;
 //   let will = module.will;
-//   const fileProvider = will.fileProvider;
+//   let fileProvider = will.fileProvider;
 //   const path = fileProvider.path;
 //   let logger = will.logger;
 //   let totalNumber = _.mapKeys( module.submoduleMap ).length;
@@ -3837,7 +3837,7 @@ function submodulesAdd( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -3898,7 +3898,7 @@ function submodulesReload()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3917,7 +3917,7 @@ function submodulesForm()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3935,7 +3935,7 @@ function _subModulesForm()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -3971,7 +3971,7 @@ function peerModuleOpen( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4100,7 +4100,7 @@ function _peerModulesForm()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4188,7 +4188,7 @@ function peerModuleSet( src )
 
   if( src )
   {
-    const fileProvider = will.fileProvider;
+    let fileProvider = will.fileProvider;
     const path = fileProvider.path;
     if( src.peerModule !== null && src.peerModule !== module )
     {
@@ -4312,7 +4312,7 @@ function resourcesForm()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4330,7 +4330,7 @@ function _resourcesForm()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let con = new _.Consequence().take( null );
@@ -4361,7 +4361,7 @@ function _resourcesFormAct()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4402,7 +4402,7 @@ function _resourcesAllForm( Resource, con )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -4707,7 +4707,7 @@ function cleanWhatSingle( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let exps = module.exportsResolve();
   let filePaths = [];
@@ -4872,7 +4872,7 @@ function cleanWhat( o )
   let module = this;
   let will = module.will;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.routineOptionsPreservingUndefines( cleanWhat, arguments );
@@ -4911,7 +4911,7 @@ function cleanLog( o )
   let module = this;
   let will = module.will;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let time = _.time.now();
 
@@ -4945,7 +4945,7 @@ function clean( o )
   let module = this;
   let will = module.will;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptionsPreservingUndefines( clean, arguments );
@@ -5408,7 +5408,7 @@ function pathsRelative( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( arguments.length === 2 )
@@ -5467,7 +5467,7 @@ function pathsRebase( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   // let Resolver = _.will.resolver;
@@ -5563,7 +5563,7 @@ function _pathChanged( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -5689,7 +5689,7 @@ function _filePathChanged2( o )
   return willfilesPath;
 
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -5795,7 +5795,7 @@ function inPathGet()
   if( !will )
   return null;
 
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = path.s.join( module.dirPath, ( module.pathMap.in || '.' ) );
 
@@ -5815,7 +5815,7 @@ function outPathGet()
   if( !will )
   return null;
 
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   return path.s.join( module.dirPath, ( module.pathMap.in || '.' ), ( module.pathMap.out || '.' ) );
 }
@@ -5882,7 +5882,7 @@ function peerRemotePathGet()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( !module.remotePath )
@@ -5899,7 +5899,7 @@ function peerInPathGet()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   let result = module.pathMap[ 'module.peer.in' ];
@@ -5951,7 +5951,7 @@ function predefinedPathGet_functor( propName, resourceName, absolutize )
     if( absolutize && result )
     {
       let will = module.will;
-      const fileProvider = will.fileProvider;
+      let fileProvider = will.fileProvider;
       const path = fileProvider.path;
       result = path.join( module.inPath, result );
     }
@@ -6042,7 +6042,7 @@ function decoratedPathGet_functor( propName )
     if( result !== null )
     {
       let will = module.will;
-      const fileProvider = will.fileProvider;
+      let fileProvider = will.fileProvider;
       const path = fileProvider.path;
       _.assert( _.strIs( result ) || _.arrayIs( result ) )
       result = path.filter( result, ( p ) => _.color.strFormat( p, 'path' ) );
@@ -6233,7 +6233,7 @@ function originDirNameGet()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let origin = module.originGet();
   let parsed = _.uri.parseConsecutive( origin );
@@ -6254,7 +6254,7 @@ function nameGet()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let name = null;
 
@@ -6284,7 +6284,7 @@ function _nameChanged()
   if( !will )
   return;
 
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let name = null;
 
@@ -6330,7 +6330,7 @@ function _nameRegister( rootModule )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let name = null;
   let c = 0;
@@ -6660,7 +6660,7 @@ function infoExportModulesTopological()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   let sorted = will.graphTopSort();
@@ -6684,7 +6684,7 @@ function exportStructure( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   o.dst = o.dst || Object.create( null );
 
@@ -6761,7 +6761,7 @@ function structureExportOut( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -6865,7 +6865,7 @@ function structureExportForModuleExport( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptionsPreservingUndefines( structureExportForModuleExport, arguments );
@@ -6916,7 +6916,7 @@ function structureExportModules( modules, op )
   let module = this;
   let exportModule = op.exportModule;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   op.dst = op.dst || Object.create( null );
@@ -7003,7 +7003,7 @@ function structureExportConsistency( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = Object.create( null );
 
@@ -7268,7 +7268,7 @@ function npmGenerateFromWillfile( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let opts = _.mapExtend( null, o );
   let verbosity = o.verbosity;
@@ -7331,7 +7331,7 @@ npmGenerateFromWillfile.defaults =
 function _willfileGenerateFromNpm( o )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
 
   /* */
@@ -7538,7 +7538,7 @@ function willfileGenerateFromNpm( o )
 {
   let module = this;
   let will = module.will ? module.will : module;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, o );
@@ -7609,7 +7609,7 @@ function willfileGenerateFromNpm( o )
 function willfileExtendWillfile( o )
 {
   let will = this.will ? this.will : this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let opts = _.routineOptionsPreservingUndefines( willfileExtendWillfile, o );
   let request = opts.request.split( /\s+/ );
@@ -8026,7 +8026,7 @@ willfileExtendWillfile.defaults =
 function _willfileOnPropertyAct( o )
 {
   let will = this.will ? this.will : this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -8451,7 +8451,7 @@ function willfileVersionBump( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.routineOptionsPreservingUndefines( willfileVersionBump, o );
@@ -8562,7 +8562,7 @@ function npmModulePublish( o )
 
   let aboutCache = Object.create( null );
   ready.then( () => npmFixate() );
-  ready.then( () => _.npm.packageJsonFormat({ filePath : packagePath }) );
+  ready.then( () => _.npm.format({ filePath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
   ready.then( () => module.gitTag({ name : `v${ version }` }) );
@@ -8677,7 +8677,7 @@ function npmModulePublish( o )
 
     let about = aboutCache[ dep.name ];
     if( !about )
-    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    about = aboutCache[ dep.name ] = _.npm.remoteAbout( dep.name );
     if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
     {
       dep.version = o.tag;
@@ -8694,10 +8694,9 @@ npmModulePublish.defaults =
 {
   commit : '-am "."',
   tag : '',
-
   force : 0,
   dry : 0,
-  v : 1,
+  v : 1, /* qqq : for Dmytro : bad : ! */
   verbosity : 1,
 };
 
@@ -8773,7 +8772,7 @@ function _remoteChanged()
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -8843,7 +8842,7 @@ function gitExecCommand( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -8978,7 +8977,7 @@ function gitPrOpen( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
 
   _.routineOptionsPreservingUndefines( gitPrOpen, o );
 
@@ -9051,7 +9050,7 @@ function _providerArchiveMake( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
 
   let config = _.censor.configRead({ profileDir : o.profile });
   // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -9082,7 +9081,7 @@ function gitPull( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -9236,7 +9235,7 @@ function gitPush( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -9301,7 +9300,7 @@ function gitReset( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -9352,7 +9351,7 @@ function gitStatus( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -9422,7 +9421,7 @@ function gitSync( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -9510,7 +9509,7 @@ function gitTag( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -9580,7 +9579,7 @@ function shell( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( !_.mapIs( arguments[ 0 ] ) )

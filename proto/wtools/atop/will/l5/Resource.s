@@ -362,7 +362,7 @@ function unform()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -397,7 +397,7 @@ function form()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -425,7 +425,7 @@ function form1()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -544,7 +544,7 @@ function _inheritMultiple( o )
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -621,7 +621,7 @@ function _inheritSingle( o )
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -667,7 +667,7 @@ function form3()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1176,7 +1176,7 @@ function resolve_body( o )
   let module = resource.module;
   _.assert( !!module );
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
@@ -1226,7 +1226,7 @@ function inPathResolve_body( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
@@ -1300,7 +1300,7 @@ function reflectorResolve_body( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
@@ -1331,7 +1331,7 @@ function pathRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   // let Resolver = _.will.resolver;
 

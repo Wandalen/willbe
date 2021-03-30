@@ -39,7 +39,7 @@ function form3()
   let build = this;
   let module = build.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -244,7 +244,7 @@ function perform( o )
   let build = this;
   let module = build.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let isExport = build.isExport();

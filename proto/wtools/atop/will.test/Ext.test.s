@@ -20963,8 +20963,8 @@ function submodulesDownloadNpm( test )
 
   .then( () =>
   {
-    versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
+    versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
@@ -21142,8 +21142,8 @@ function submodulesDownloadUpdateNpm( test )
 
   .then( () =>
   {
-    versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
+    versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
@@ -21202,7 +21202,7 @@ function submodulesDownloadUpdateNpm( test )
     willFile = _.strReplace( willFile, '!0.0.31', '!0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!beta' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.32'
 
     return null;
@@ -22755,8 +22755,8 @@ function versionsAgreeNpm( test )
 
   .then( () =>
   {
-    versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
+    versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
@@ -22815,7 +22815,7 @@ function versionsAgreeNpm( test )
     willFile = _.strReplace( willFile, '!0.0.31', '!0.0.34' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!beta' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
 
     return null;
@@ -22911,7 +22911,7 @@ function versionsAgreeNpm( test )
     willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b!gamma\n' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b!gamma' );
+    versions[ 'ModuleForTesting2b' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
   })

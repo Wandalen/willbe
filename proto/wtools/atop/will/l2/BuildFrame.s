@@ -76,7 +76,7 @@ function form()
   let resource = frame.resource;
   let down = frame.down;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
