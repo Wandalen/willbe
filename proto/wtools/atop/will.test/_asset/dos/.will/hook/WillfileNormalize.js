@@ -8,7 +8,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
@@ -42,7 +42,7 @@ function wasRename( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
@@ -72,7 +72,7 @@ function willfileExtend( context )
 {
   let o = context.request.map;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;

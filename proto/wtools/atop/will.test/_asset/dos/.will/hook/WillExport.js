@@ -5,7 +5,7 @@ function onModule( context )
   let o = context.request.map;
   _ = context.tools;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
   if( !context.module )

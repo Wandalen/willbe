@@ -5,7 +5,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let abs = _.routine.join( path, path.join, [ context.junction.dirPath ] );
   let configPath = abs( 'package.json' );
@@ -207,7 +207,7 @@ module.exports = onModule;
 function isEnabled( context, localPath )
 {
   let _ = context.tools;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );

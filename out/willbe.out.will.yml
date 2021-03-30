@@ -888,6 +888,15 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.release.js
+          - ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository/module
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository/module/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository/module/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository/module/proto/File.js
           - ../proto/wtools/atop/will.test/_asset/exportMinimal
           - ../proto/wtools/atop/will.test/_asset/exportMinimal/will.yml
           - ../proto/wtools/atop/will.test/_asset/exportMinimal/proto
@@ -1833,6 +1842,8 @@ module:
             ../proto/wtools/atop/will.test/_asset/reflectWithOptionsLinking/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/reflectWithOptionsLinking/proto/File.js
+          - ../proto/wtools/atop/will.test/_asset/remotePathOfMain
+          - ../proto/wtools/atop/will.test/_asset/remotePathOfMain/.will.yml
           - ../proto/wtools/atop/will.test/_asset/renormalization
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/.will.yml
