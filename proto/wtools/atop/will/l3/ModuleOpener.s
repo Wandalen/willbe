@@ -1202,6 +1202,7 @@ function _repoForm()
         {
           downloadPath = opener._.downloadPath = opener._.localPath;
           let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+          remotePathFromLocal = _.git.path.trail( remotePathFromLocal );
           remotePath = opener._.remotePath = remotePathFromLocal;
           isRemote = opener.repoIsRemote();
         }

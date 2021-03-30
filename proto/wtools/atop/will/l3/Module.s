@@ -4177,7 +4177,8 @@ function peerModuleSet( src )
       // "git+ssh:///git@github.com/Wandalen/wTools.git"
       // missing trailing slash!
       // qqq2 : xxx : uncomment and fix related issue
-      // _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
+      // aaa : Vova: fixed
+      _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
       _.assert( module.downloadPath === null || module.downloadPath === src.downloadPath );
       module.remotePathEachAdopt({ remotePath : peerRemotePath, downloadPath : module.downloadPath });
     }
