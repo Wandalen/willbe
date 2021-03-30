@@ -1,8 +1,8 @@
 
 submodule :
 
-  ModuleForTesting1 : git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma
-  ModuleForTesting2 : git+hd://../_repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will!gamma
+  ModuleForTesting1 : git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta
+  ModuleForTesting2 : git+hd://../_repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will!delta
 
 path :
 

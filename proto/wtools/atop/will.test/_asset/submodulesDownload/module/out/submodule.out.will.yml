@@ -223,11 +223,11 @@ module:
           - submodule.out.will.yml
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!delta'
         autoExporting: 0
         enabled: 1
     reflector:
@@ -320,11 +320,11 @@ module:
         path: out
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!delta'
         autoExporting: 0
         enabled: 1
     reflector: {}
