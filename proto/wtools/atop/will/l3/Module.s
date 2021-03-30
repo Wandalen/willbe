@@ -8650,7 +8650,7 @@ function npmModulePublish( o )
       localPath : module.dirPath,
       configPath : packagePath,
       tag : o.tag,
-      onDependency,
+      onDep,
       verbosity : o.verbosity - 2,
     });
   }
@@ -8669,7 +8669,7 @@ function npmModulePublish( o )
 
   /* */
 
-  function onDependency( dep )
+  function onDep( dep )
   {
 
     if( dep.version )

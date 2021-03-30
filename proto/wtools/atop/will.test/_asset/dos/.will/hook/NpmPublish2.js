@@ -96,7 +96,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     configPath,
     tag : o.tag,
-    onDependency,
+    onDep,
     verbosity : o.verbosity - 2,
   });
 
@@ -141,7 +141,7 @@ function onModule( context )
     verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
-  function onDependency( dep )
+  function onDep( dep )
   {
 
     if( dep.version )

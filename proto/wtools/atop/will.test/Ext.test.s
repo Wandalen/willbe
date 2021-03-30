@@ -20965,7 +20965,7 @@ function submodulesDownloadNpm( test )
   {
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
-    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
 
@@ -21000,11 +21000,11 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21042,11 +21042,11 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21095,11 +21095,11 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21144,7 +21144,7 @@ function submodulesDownloadUpdateNpm( test )
   {
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
-    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
 
@@ -21179,11 +21179,11 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21234,11 +21234,11 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21276,11 +21276,11 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22757,7 +22757,7 @@ function versionsAgreeNpm( test )
   {
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
-    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
 
@@ -22792,11 +22792,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22846,11 +22846,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22887,11 +22887,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22941,11 +22941,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -39623,7 +39623,7 @@ function commandNpmPublishFullModuleFromUtility( test )
       let moduleName = botRepo.toLowerCase();
       let filePath = a.abs( 'was.package.json' );
       let config = a.fileProvider.fileRead({ filePath, encoding : 'json' });
-      let lastVersion = _.npm.versionRemoteLatestRetrive( `npm:///${ moduleName }!latest` );
+      let lastVersion = _.npm.remoteVersionLatest( `npm:///${ moduleName }!latest` );
       config.version = lastVersion;
       a.fileProvider.fileWrite({ filePath, data : config, encoding : 'json' });
       return null;
@@ -39780,7 +39780,7 @@ function commandNpmPublishFullRegularModule( test )
       let moduleName = botRepo.toLowerCase();
       let filePath = a.abs( 'was.package.json' );
       let config = a.fileProvider.fileRead({ filePath, encoding : 'json' });
-      let lastVersion = _.npm.versionRemoteLatestRetrive( `npm:///${ moduleName }!latest` );
+      let lastVersion = _.npm.remoteVersionLatest( `npm:///${ moduleName }!latest` );
       config.version = lastVersion;
       a.fileProvider.fileWrite({ filePath, data : config, encoding : 'json' });
       return null;

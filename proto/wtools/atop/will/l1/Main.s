@@ -5266,13 +5266,13 @@ function hooksGet()
 // --
 
 /* qqq : for Dmytro : move to npm tools */
-function npmAdd( o )
+function npmDepAdd( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routine.options( npmAdd, o );
+  _.routine.options( npmDepAdd, o );
 
   if( !o.toLocalPath )
   o.toLocalPath = path.current();
@@ -5281,26 +5281,26 @@ function npmAdd( o )
   if( !o.as )
   o.as = _.npm.localName({ localPath : path.current() });
 
-  if( path.parse( o.dependencyPath ).protocol === 'hd' )
-  o.dependencyPath = path.join( path.current(), o.dependencyPath );
+  if( path.parse( o.depPath ).protocol === 'hd' )
+  o.depPath = path.join( path.current(), o.depPath );
 
   _.assert( _.boolLikeFalse( o.editing ), 'not implemented' );
   _.assert( _.boolLikeTrue( o.downloading ), 'not implemented' );
   _.assert( _.boolLikeTrue( o.linking ), 'not implemented' );
-  _.assert( path.parse( o.dependencyPath ).protocol === 'hd', 'not implemented' );
+  _.assert( path.parse( o.depPath ).protocol === 'hd', 'not implemented' );
 
   _.sure( fileProvider.fileExists( _.npm.pathLocalFromDownload( nodeModulesPath ) ), `nodeModulesPath:${nodeModulesPath} does not exist` );
-  _.sure( fileProvider.fileExists( o.dependencyPath ), `dependencyPath:${o.dependencyPath} does not exist` );
+  _.sure( fileProvider.fileExists( o.depPath ), `depPath:${o.depPath} does not exist` );
   _.sure( _.strDefined( o.as ), '`as` is not specified' )
 
   let dstPath = path.join( nodeModulesPath, o.as );
   if( o.verbosity )
-  logger.log( `Linking ${_.ct.format( o.dependencyPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
+  logger.log( `Linking ${_.ct.format( o.depPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
   if( !o.dry )
   fileProvider.softLink
   ({
     dstPath : dstPath,
-    srcPath : o.dependencyPath,
+    srcPath : o.depPath,
     makingDirectory : 1,
     rewritingDirs : 1,
   });
@@ -5308,11 +5308,11 @@ function npmAdd( o )
   return true;
 }
 
-npmAdd.defaults =
+npmDepAdd.defaults =
 {
   as : null,
   toLocalPath : null,
-  dependencyPath : null,
+  depPath : null,
   editing : 1,
   downloading : 1,
   linking : 1,
@@ -5710,7 +5710,7 @@ let Extension =
 
   // npm
 
-  npmAdd,
+  npmDepAdd,
 
   // relation
 

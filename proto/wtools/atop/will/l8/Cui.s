@@ -435,7 +435,7 @@ function _commandsMake()
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
     'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
-    'npm add' :                         { e : _.routineJoin( will, will.commandNpmAdd )                       },
+    'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -4756,30 +4756,30 @@ commandNpmPublish.commandProperties =
 //
 
 /* qqq : for Dmytro : first cover
-will .npm.add . dry:1 editing:0
+will .npm.dep.add . dry:1 editing:0
 */
 
 /* qqq : for Dmytro : write full coverage */
 
-function commandNpmAdd( e )
+function commandNpmDepAdd( e )
 {
   let cui = this;
-  cui._command_head( commandNpmAdd, arguments );
+  cui._command_head( commandNpmDepAdd, arguments );
 
-  _.routineOptions( commandNpmAdd, e.propertiesMap );
+  _.routineOptions( commandNpmDepAdd, e.propertiesMap );
   _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
 
-  e.propertiesMap.dependencyPath = e.subject;
+  e.propertiesMap.depPath = e.subject;
   e.propertiesMap.toLocalPath = e.propertiesMap.to;
   delete e.propertiesMap.to;
 
-  if( e.propertiesMap.dependencyPath === '.' )
-  e.propertiesMap.dependencyPath = 'hd://.'
+  if( e.propertiesMap.depPath === '.' )
+  e.propertiesMap.depPath = 'hd://.'
 
-  return cui.npmAdd( e.propertiesMap );
+  return cui.npmDepAdd( e.propertiesMap );
 }
 
-commandNpmAdd.defaults =
+commandNpmDepAdd.defaults =
 {
   to : null,
   as : null,
@@ -4789,9 +4789,9 @@ commandNpmAdd.defaults =
   dry : 0,
   verbosity : 1,
 };
-commandNpmAdd.hint = 'Add as dependency to NPM.';
-commandNpmAdd.commandSubjectHint = 'Dependency path.';
-commandNpmAdd.commandProperties =
+commandNpmDepAdd.hint = 'Add as dependency to NPM.';
+commandNpmDepAdd.commandSubjectHint = 'Dependency path.';
+commandNpmDepAdd.commandProperties =
 {
   to : 'Path to the directory with directory node_modules. Current path by default.',
   as : 'Add dependency with the alias.',
@@ -5567,7 +5567,7 @@ let Extension =
   // npm
 
   commandNpmPublish,
-  commandNpmAdd,
+  commandNpmDepAdd,
 
   // command package
 

@@ -110,7 +110,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
-    onDependency,
+    onDep,
     verbosity : o.verbosity - 2,
   });
 
@@ -169,7 +169,7 @@ function onModule( context )
     context2.will.hooks.ProtoSync.call( context2 );
   }
 
-  function onDependency( dep )
+  function onDep( dep )
   {
     // console.log( dep );
 
