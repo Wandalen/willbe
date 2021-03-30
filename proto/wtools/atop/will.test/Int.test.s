@@ -12,13 +12,15 @@ if( typeof module !== 'undefined' )
   _.include( 'wFiles' );
 
   require( '../will/include/Mid.s' );
-
 }
 
 const _global = _global_;
 const _ = _global_.wTools;
 
 /*
+
+will.local .npm.dep.add . dry:1 editing:0
+
 xxx : should work
   > will.local .imply withOut:0 .with * .call GitStatus
   not only
