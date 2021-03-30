@@ -2,7 +2,7 @@
 submodule :
 
   ModuleForTesting2 :
-    path : git+https:///github.com/Wandalen/wModuleForTesting2.git/!gamma
+    path : git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
     criterion :
       optional : 1
 

@@ -1,7 +1,7 @@
 
 submodule :
 
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta
 
 path :
 
