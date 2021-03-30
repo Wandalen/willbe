@@ -106,7 +106,7 @@ function hardLink( context, dstPath, srcPath )
   ({
     dstPath : mpath( dstPath ),
     srcPath : ppath( srcPath ),
-    allowingDiscrepancy : 1, /* xxx : make 0 */
+    allowingDiscrepancy : 0, /* xxx : make 0 */
     makingDirectory : 1,
     verbosity : o.verbosity >= 2 ? o.verbosity : 0,
   });
