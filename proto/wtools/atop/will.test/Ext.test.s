@@ -10659,7 +10659,7 @@ function exportNonExportable( test )
 
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'rror' ), 2 );
+    test.identical( _.strCount( op.output, 'rror' ), 3 );
     test.identical( _.strCount( op.output, '====' ), 0 );
 
     test.identical( _.strCount( op.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
