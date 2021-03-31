@@ -15703,15 +15703,13 @@ function importPathLocal( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'export submodule';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
   .then( ( op ) =>
@@ -15724,6 +15722,8 @@ function importPathLocal( test )
       './debug',
       './debug/Integration.test.ss',
       './debug/WithSubmodules.s',
+      './debug/node_modules',
+      './debug/node_modules/wmodulefortesting1',
       './debug/wtools',
       './debug/wtools/testing',
       './debug/wtools/testing/Basic.s',
@@ -15731,7 +15731,7 @@ function importPathLocal( test )
       './debug/wtools/testing/l1/Include.s',
       './debug/wtools/testing/l1/ModuleForTesting1.s',
       './debug/wtools/testing/l1.test',
-      './debug/wtools/testing/l1.test/ModuleForTesting1.test.s'
+      './debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
     ];
     test.contains( files, exp );
     test.identical( op.exitCode, 0 );
