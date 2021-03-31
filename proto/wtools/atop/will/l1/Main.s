@@ -1128,7 +1128,8 @@ function instanceDefaultsApply( o )
   for( let d in will.OpeningDefaults )
   {
     if( o[ d ] === null )
-    o[ d ] = will[ d ];
+    // o[ d ] = will[ d ];
+    o[ d ] = will.transaction[ d ];
   }
 
   return o;
@@ -1142,11 +1143,22 @@ function instanceDefaultsSupplement( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.OpeningDefaults )
+  // for( let d in will.OpeningDefaults )
+  // {
+  //   if( o[ d ] !== null && o[ d ] !== undefined )
+  //   if( will[ d ] === null )
+  //   will[ d ] = o[ d ];
+  // }
+
+  _.assert( 0, 'not tested' );
+
+  let transaction = will.transaction;
+  let transactionOpeningOpts = _.mapOnlyNulls( _.mapOnly_( null, transaction, will.OpeningDefaults ) );
+  if( !_.mapIsEmpty( transactionOpeningOpts ) )
   {
-    if( o[ d ] !== null && o[ d ] !== undefined )
-    if( will[ d ] === null )
-    will[ d ] = o[ d ];
+    _.mapSupplement( transactionOpeningOpts, _.mapOnly_( null, o, will.OpeningDefaults ) );
+    will.transaction = transaction.cloneExtending( transactionOpeningOpts );
+    transaction.finit();
   }
 
   return will;
@@ -1160,11 +1172,15 @@ function instanceDefaultsExtend( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.OpeningDefaults )
-  {
-    if( o[ d ] !== null && o[ d ] !== undefined )
-    will[ d ] = o[ d ];
-  }
+  // for( let d in will.OpeningDefaults )
+  // {
+  //   if( o[ d ] !== null && o[ d ] !== undefined )
+  //   will[ d ] = o[ d ];
+  // }
+
+  let transaction = will.transaction;
+  will.transaction = transaction.cloneExtending( _.mapOnly_( null, o, will.OpeningDefaults ) );
+  transaction.finit();
 
   return will;
 }
@@ -1178,12 +1194,15 @@ function instanceDefaultsReset()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  for( let d in will.OpeningDefaults )
-  {
-    _.assert( FieldsOfTightGroups[ d ] !== undefined );
-    _.assert( _.primitiveIs( FieldsOfTightGroups[ d ] ) );
-    will[ d ] = FieldsOfTightGroups[ d ];
-  }
+  // for( let d in will.OpeningDefaults )
+  // {
+  //   _.assert( FieldsOfTightGroups[ d ] !== undefined );
+  //   _.assert( _.primitiveIs( FieldsOfTightGroups[ d ] ) );
+  //   will[ d ] = FieldsOfTightGroups[ d ];
+  // }
+
+  will.transaction.finit();
+  will.transaction = _.will.Transaction({ isInitial : 1, will })
 
   return will;
 }
