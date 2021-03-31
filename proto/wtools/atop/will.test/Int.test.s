@@ -9497,26 +9497,24 @@ function submodulesLocalResolve( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesLocalRepos' );
-  let opener;
+  let opener, tag;
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
+    let config = a.fileProvider.configRead({ filePath : a.abs( '.im.will.yml' ) });
+    tag = _.git.path.parse({ remotePath : config.submodule.ModuleForTesting1 }).tag;
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
-    a.will.prefer
-    ({
-      allOfSub : 1,
-    });
+    a.will.prefer({ allOfSub : 1 });
 
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.open( 'not downloaded' );
 
@@ -9531,23 +9529,23 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../_repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
 
     test.true( !submodule.opener.repo.hasFiles );
     test.true( !submodule.opener.openedModule );
 
     test.close( 'not downloaded' );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     return opener.openedModule.subModulesDownload();
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.open( 'downloaded' );
 
@@ -9566,7 +9564,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../_repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -9575,7 +9573,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( `../_repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
@@ -9593,12 +9591,12 @@ function submodulesLocalResolve( test )
 
     test.close( 'downloaded' );
     return null;
-  })
+  });
 
   /* */
 
   return a.ready;
-} /* end of function submodulesLocalResolve */
+}
 
 //
 
