@@ -23765,7 +23765,7 @@ function stepModulesUpdate( test )
   return a.ready;
 }
 
-stepModulesUpdate.timeOut = 300000;
+stepModulesUpdate.timeOut = 600000;
 
 //
 
@@ -33139,7 +33139,7 @@ function commandGitPull( test )
 original/f.txt
 copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33147,7 +33147,7 @@ original
 `
 original/f.txt
 copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33188,7 +33188,7 @@ clone
 original/f.txt
 copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33196,7 +33196,7 @@ original
 `
 original/f.txt
 copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33204,7 +33204,7 @@ copy
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33212,72 +33212,10 @@ clone
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
-    return null;
-  });
-
-  /* */
-
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
-  .then( ( op ) =>
-  {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
-
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
-
-    var exp =
-`
-original/f.txt
-copy
-original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
-copy
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
-original
- >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
-original
- >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
     return null;
   });
 
@@ -33402,14 +33340,14 @@ function commandGitPullRestoreHardlinkOnFail( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33421,7 +33359,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
@@ -33434,7 +33372,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
