@@ -9073,42 +9073,33 @@ function modulesTreeDisabledAndCorrupted( test )
 {
   let context = this;
   let a = context.assetFor( test, 'manyFew' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.download' })
-  a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.download' });
+  a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.im.will.yml' ) );
 
     let exp =
-
 `
  +-- module::many
- | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+ | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
  | | +-- module::Testing - path::remote:=npm:///wTesting
  | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
- | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+ | +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
+ | | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
  | | +-- module::Testing - path::remote:=npm:///wTesting
  | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git!gamma
- |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
- |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
+ | +-- module::wModuleForTesting12 - path::remote:=${ config.submodule.ModuleForTesting12.replace( /\/(!\S+)$/, '$1' ) }
+ |   +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
+ |   +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
  |   +-- module::Testing - path::remote:=npm:///wTesting
  |   +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  |
@@ -9119,7 +9110,7 @@ function modulesTreeDisabledAndCorrupted( test )
     test.identical( _.strCount( op.output, '+-- module::' ), 14 );
 
     return null;
-  })
+  });
 
   /* - */
 
