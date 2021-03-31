@@ -1175,7 +1175,7 @@ function _repoForm()
     /*
       xxx qqq :
         make it working for case when remote path is local
-        for example : "git+hd:///module/_repo/Tools?out=out/wTools.out.will#master"
+        for example : "git+hd:///module/-repo/Tools?out=out/wTools.out.will#master"
     */
   }
 
@@ -1202,6 +1202,7 @@ function _repoForm()
         {
           downloadPath = opener._.downloadPath = opener._.localPath;
           let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
+          if( remotePathFromLocal !== null ) /* Dmytro : routine _.git.remotePathFromLocal returns null if no remote path exists */
           remotePathFromLocal = _.git.path.trail( remotePathFromLocal );
           remotePath = opener._.remotePath = remotePathFromLocal;
           isRemote = opener.repoIsRemote();
@@ -1577,7 +1578,8 @@ function _repoDownload( o )
     origin = gitProvider.hasRemote
     ({
       localPath : opener.downloadPath,
-      remotePath : opener.remotePath
+      remotePath : _.strRemoveEnd( opener.remotePath, path.upToken ),
+      // remotePath : opener.remotePath,
     });
 
     return origin;
@@ -2132,7 +2134,6 @@ function remotePathSet( src )
 
   if( opener.__.remotePath === src )
   {
-    debugger;
     _.assert( !opener.openedModule || opener.openedModule.remotePath === src );
     return;
   }
@@ -2256,6 +2257,16 @@ function remotePathChangeVersionTo( to )
   {
     throw _.err( `Argument "to" should be either tag or version. Got:${to}` );
   }
+
+  /*
+     Dmytro : new path namespaces _.git and _.npm parse and change not paths
+     _.[git|npm].path.str( _.[git|npm]path.parse( src ) ) === src
+     but old realization used changed paths
+
+     We need to remove last slash to get untrailed remote path
+     git+https:///github.com/user/repo.git/!tag => git+hd:///local/repo!tag
+  */
+  remoteParsed.longPath = _.strRemoveEnd( remoteParsed.longPath, vcs.path.upToken );
 
   let remotePathNew = vcs.path.str( remoteParsed );
 
