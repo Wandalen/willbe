@@ -84,6 +84,7 @@ function formAssociates( o )
   let t = this;
   _.assert( o.will instanceof _.Will );
   t.will = o.will;
+  t.will.transaction = t;
 }
 
 //
@@ -110,9 +111,6 @@ function verbositySet( src )
 
   t._.verbosity = src;
   logger.verbosity = src;
-
-  // if( t._verbosityPrev === null )
-  // t._verbosityPrev = logger.verbosity;
 }
 
 //

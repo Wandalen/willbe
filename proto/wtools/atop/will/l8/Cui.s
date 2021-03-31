@@ -273,7 +273,7 @@ function _command_head( o )
     + `, but got "${e.subject}"`
   );
 
-  if( o.routine.commandProperties && o.routine.commandProperties.v )
+  // if( o.routine.commandProperties && o.routine.commandProperties.v )
   if( e.propertiesMap.v !== undefined )
   {
     e.propertiesMap.verbosity = e.propertiesMap.v;
@@ -1261,6 +1261,7 @@ function commandImply( e )
   cui._command_head( commandImply, arguments );
 
   cui.implied = e.propertiesMap;
+
   // cui._propertiesImplyToMain( _.mapOnly_( null,  e.propertiesMap, commandImply.defaults ) );
 
   if( impliedPrev && impliedPrev.withPath )
@@ -1385,12 +1386,17 @@ commandVersion.commandSubjectHint = false;
 function commandVersionCheck( e )
 {
   let cui = this;
+
   cui._command_head( commandVersion, arguments );
-  cui._propertiesImply( e.propertiesMap );
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandVersionCheck.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui.versionIsUpToDate( e.propertiesMap );
 }
 
+commandVersionCheck.defaults = _.mapExtend( null, commandImply.defaults );
 commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
 commandVersionCheck.commandSubjectHint = false;
 commandVersionCheck.commandProperties =
@@ -2212,13 +2218,18 @@ function commandSubmodulesGit( e )
   if( profile !== undefined )
   delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
   cui._command_head( commandGit, arguments );
 
-  _.routineOptions( commandSubmodulesGit, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
+  // _.routineOptions( commandSubmodulesGit, e.propertiesMap );
+  // cui._propertiesImply( e.propertiesMap );
+
+  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandSubmodulesGit.defaults );
+  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
+  _.routineOptions( commandSubmodulesGit, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandModulesLike
   ({
@@ -2244,6 +2255,7 @@ function commandSubmodulesGit( e )
 
 commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesGit.defaults.withSubmodules = 1;
+commandSubmodulesGit.defaults.withOut = 0;
 commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.';
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
@@ -2396,9 +2408,15 @@ function commandSubmodulesGitSync( e )
   let provider;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
-  _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
-  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 1 });
+  // _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 1 });
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesGitSync.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  _.routineOptions( commandSubmodulesGitSync, implyMap );
+  cui._propertiesImply( implyMap );
+
 
   return cui._commandModulesLike
   ({
@@ -2451,24 +2469,26 @@ function commandSubmodulesGitSync( e )
   }
 }
 
-commandSubmodulesGitSync.defaults =
+commandSubmodulesGitSync.defaults = _.mapExtend( null, commandImply.defaults,
 {
   dirPath : null,
   dry : 0,
   profile : 'default',
-  v : null,
+  // v : null,
+  v : 1,
   verbosity : 1,
-};
+  withSubmodules : 1
+});
 commandSubmodulesGitSync.hint = 'Syncronize repositories of submodules of current module.';
 commandSubmodulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
-commandSubmodulesGitSync.commandProperties =
+commandSubmodulesGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+});
 
 //
 
@@ -2596,13 +2616,18 @@ function commandModulesGit( e )
   if( profile !== undefined )
   delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
   cui._command_head( commandModulesGit, arguments );
 
-  _.routineOptions( commandModulesGit, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
+  // _.routineOptions( commandModulesGit, e.propertiesMap );
+  // cui._propertiesImply( e.propertiesMap );
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesGit.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  _.routineOptions( commandModulesGit, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandModulesLike
   ({
@@ -2627,6 +2652,7 @@ function commandModulesGit( e )
 }
 
 commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesGit.defaults.withOut = 0;
 commandModulesGit.defaults.withSubmodules = 1;
 commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
@@ -2780,9 +2806,14 @@ function commandModulesGitSync( e )
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
-  _.routineOptions( commandModulesGitSync, e.propertiesMap );
-  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 1 });
+  // _.routineOptions( commandModulesGitSync, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 1 });
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesGitSync.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  _.routineOptions( commandModulesGitSync, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandModulesLike
   ({
@@ -2834,24 +2865,26 @@ function commandModulesGitSync( e )
   }
 }
 
-commandModulesGitSync.defaults =
+commandModulesGitSync.defaults = _.mapExtend( null, commandImply.defaults,
 {
   dirPath : null,
   dry : 0,
   profile : 'default',
-  v : null,
+  // v : null,
+  v : 1,
   verbosity : 1,
-};
+  withSubmodules : 1
+});
 commandModulesGitSync.hint = 'Syncronize repositories of current module and all submodules of the module.';
 commandModulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
-commandModulesGitSync.commandProperties =
+commandModulesGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+});
 
 //
 
@@ -3116,6 +3149,11 @@ function commandBuild( e )
   cui._command_head( commandBuild, arguments );
   let doneContainer = [];
 
+  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandBuild.defaults );
+  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
+  _.routineOptions( commandBuild, implyMap );
+  cui._propertiesImply( implyMap );
+
   return cui._commandBuildLike
   ({
     event : e,
@@ -3139,7 +3177,8 @@ function commandBuild( e )
 
 }
 
-commandBuild.defaults = Object.create( null );
+// commandBuild.defaults = Object.create( null );
+commandBuild.defaults = _.mapExtend( null, commandImply.defaults );
 commandBuild.hint = 'Build current module with spesified criterion.';
 commandBuild.commandSubjectHint = 'A name of build scenario.';
 
@@ -3155,8 +3194,6 @@ function commandExport( e )
   e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
   _.routineOptions( commandExport, implyMap );
   cui._propertiesImply( implyMap );
-
-  debugger
 
   return cui._commandBuildLike
   ({
