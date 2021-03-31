@@ -274,12 +274,24 @@ function _command_head( o )
   );
 
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
-  if( o.routine.commandProperties && o.routine.commandProperties.v )
-  if( e.propertiesMap.v !== undefined )
+  // if( o.routine.commandProperties && o.routine.commandProperties.v )
+  // if( e.propertiesMap.v !== undefined )
+  // {
+  //   e.propertiesMap.verbosity = e.propertiesMap.v;
+  //   delete e.propertiesMap.v;
+  // }
+  /* Dmytro : it is not a solution, it is a temporary improvement */
+  if( o.routine.commandProperties )
+  if( o.routine.commandProperties.v )
   {
+    if( e.propertiesMap.v !== undefined )
     e.propertiesMap.verbosity = e.propertiesMap.v;
-    delete e.propertiesMap.v;
+
+    if( e.propertiesMap.verbosity !== e.propertiesMap.v )
+    e.propertiesMap.v = e.propertiesMap.verbosity;
   }
+
+
 }
 
 _command_head.defaults =
