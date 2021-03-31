@@ -19,7 +19,7 @@ const _ = _global_.wTools;
 
 /*
 
-will.local .npm.dep.add . dry:1 editing:0
+will.local .npm.dep.add . dry:0 editing:0
 
 xxx : should work
   > will.local .imply withOut:0 .with * .call GitStatus
