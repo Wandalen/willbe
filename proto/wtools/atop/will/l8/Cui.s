@@ -1702,8 +1702,8 @@ function commandModulesUpdate( e )
   let cui = this;
   cui._command_head( commandModulesUpdate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandModulesUpdate.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesUpdate.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
@@ -1727,7 +1727,7 @@ function commandModulesUpdate( e )
       if( e.propertiesMap.to )
       it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
 
-      let o2 = _.mapOnly( e.propertiesMap, it.opener.repoUpdate.defaults );
+      let o2 = _.mapOnly_( e.propertiesMap, it.opener.repoUpdate.defaults );
       o2.strict = 0;
       return it.opener.repoUpdate( o2 );
     })
