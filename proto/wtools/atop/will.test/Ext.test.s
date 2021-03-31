@@ -58,7 +58,7 @@ function onSuiteBegin()
   let context = this;
   context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
-  context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
+  context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
@@ -140,17 +140,17 @@ function assetFor( test, name )
     a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     try
     {
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
     catch( err )
     {
       _.errAttend( err );
-      /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
+      /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null )
       .delay( 3000 )
       .deasync();
-      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '-repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
     return null
   }
@@ -167,7 +167,7 @@ function assetFor( test, name )
 function preCloneRepos( test )
 {
   let context = this;
-  let a = context.assetFor( test, '_repo' );
+  let a = context.assetFor( test, '-repo' );
 
   a.ready.then( () =>
   {
@@ -16974,7 +16974,7 @@ function cleanRecursiveMin( test )
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
 
-  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
   a.fileProvider.filesDelete( a.routinePath );
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
@@ -17086,7 +17086,7 @@ function cleanGlobMin( test )
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
 
-  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
   a.fileProvider.filesDelete( a.routinePath );
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
@@ -17210,7 +17210,7 @@ function cleanRecursive( test )
     mode : 'spawn',
     ready : a.ready,
   })
-  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
   a.fileProvider.filesDelete( a.routinePath );
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 

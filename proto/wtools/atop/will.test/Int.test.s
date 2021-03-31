@@ -50,7 +50,7 @@ function onSuiteBegin()
 
   context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
-  context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
+  context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
 
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
@@ -146,17 +146,17 @@ function assetFor( test, name )
     try
     {
       /* Dmytro : all default values for option `sync` is `null`, so each routine checks the option and applies `null`. Last time, the routine `_fileCopyDo` run async copy and throw error */
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
     catch( err )
     {
       _.errAttend( err );
-      /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
+      /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null )
       .delay( 3000 )
       .deasync();
-      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '-repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
   }
 
@@ -222,13 +222,13 @@ function assetFor( test, name )
 //     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 //     try
 //     {
-//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '-repo' ) } });
 //     }
 //     catch( err )
 //     {
 //       _.Consequence().take( null ).delay( 3000 ).deasync();
-//       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
-//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+//       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '-repo' ) ); /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
+//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '-repo' ) } });
 //     }
 //   }
 //
@@ -309,7 +309,7 @@ function assetFor( test, name )
 function preCloneRepos( test )
 {
   let context = this;
-  let a = context.assetFor( test, '_repo' );
+  let a = context.assetFor( test, '-repo' );
 
   a.ready.then( () =>
   {
@@ -9330,7 +9330,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
     test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.true( !submodule.opener.repo.hasFiles );
@@ -9527,7 +9527,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../_repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
 
     test.true( !submodule.opener.repo.hasFiles );
     test.true( !submodule.opener.openedModule );
@@ -9562,7 +9562,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../_repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -9571,7 +9571,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( `../_repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';

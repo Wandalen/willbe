@@ -1175,7 +1175,7 @@ function _repoForm()
     /*
       xxx qqq :
         make it working for case when remote path is local
-        for example : "git+hd:///module/_repo/Tools?out=out/wTools.out.will#master"
+        for example : "git+hd:///module/-repo/Tools?out=out/wTools.out.will#master"
     */
   }
 
@@ -1570,6 +1570,7 @@ function _repoDownload( o )
   function remoteIsValidReform()
   {
 
+    debugger;
     if( origin !== null )
     return origin;
 

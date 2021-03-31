@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : .module
-  remote : 'git+hd://../_repo/ModuleForTesting12'
+  remote : 'git+hd://../-repo/ModuleForTesting12'
   download : '.module/ModuleForTesting12'
   export : '{path::download}/proto/**'
   temp : out
