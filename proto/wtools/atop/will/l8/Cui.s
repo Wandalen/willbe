@@ -274,12 +274,24 @@ function _command_head( o )
   );
 
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
-  if( o.routine.commandProperties && o.routine.commandProperties.v )
-  if( e.propertiesMap.v !== undefined )
+  // if( o.routine.commandProperties && o.routine.commandProperties.v )
+  // if( e.propertiesMap.v !== undefined )
+  // {
+  //   e.propertiesMap.verbosity = e.propertiesMap.v;
+  //   delete e.propertiesMap.v;
+  // }
+  /* Dmytro : it is not a solution, it is a temporary improvement */
+  if( o.routine.commandProperties )
+  if( o.routine.commandProperties.v )
   {
+    if( e.propertiesMap.v !== undefined )
     e.propertiesMap.verbosity = e.propertiesMap.v;
-    delete e.propertiesMap.v;
+
+    if( e.propertiesMap.verbosity !== e.propertiesMap.v )
+    e.propertiesMap.v = e.propertiesMap.verbosity;
   }
+
+
 }
 
 _command_head.defaults =
@@ -1690,8 +1702,8 @@ function commandModulesUpdate( e )
   let cui = this;
   cui._command_head( commandModulesUpdate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandModulesUpdate.defaults );
-  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesUpdate.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
@@ -1715,7 +1727,7 @@ function commandModulesUpdate( e )
       if( e.propertiesMap.to )
       it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
 
-      let o2 = _.mapOnly( e.propertiesMap, it.opener.repoUpdate.defaults );
+      let o2 = _.mapOnly_( null, e.propertiesMap, it.opener.repoUpdate.defaults );
       o2.strict = 0;
       return it.opener.repoUpdate( o2 );
     })
