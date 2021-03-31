@@ -165,7 +165,7 @@ function form()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -207,7 +207,7 @@ function preform()
 
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -237,7 +237,7 @@ function _registerForm()
 
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -282,7 +282,7 @@ function _inPathsForm()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -344,7 +344,7 @@ function _read()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -449,7 +449,7 @@ function _open()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let inconsistent = 0;
@@ -624,7 +624,7 @@ function reopen( o )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -669,7 +669,7 @@ function _readLog( reading, failed )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let read;
@@ -728,7 +728,7 @@ function _importToModule()
   let willf = this;
   let openedModule = willf.openedModule;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let structure = willf.structure;
@@ -805,7 +805,7 @@ function _resourcesImport_head( routine, args )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -825,7 +825,7 @@ function _resourcesImport_body( o )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let openedModule = willf.openedModule;
@@ -872,7 +872,7 @@ function peerWillfilesPathGet()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let r;
 
@@ -976,7 +976,7 @@ function hashDescriptorOfFile( filePath )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -1010,7 +1010,7 @@ function hashDescriptorFor( filePath )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   if( filePath instanceof Self )
@@ -1138,7 +1138,7 @@ function isConsistentWith( willf2, opening )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -1308,7 +1308,7 @@ function _attachedModulesOpenWillfiles()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let structure = willf.structure;
@@ -1363,7 +1363,7 @@ function structureOf( object )
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
@@ -1392,7 +1392,7 @@ function commonPathGet()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let willfilesPath = willf.filePath ? willf.filePath : willf.dirPath;
 
@@ -1407,7 +1407,7 @@ function exists()
 {
   let willf = this;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 

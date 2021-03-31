@@ -5,7 +5,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let configPath = path.join( context.junction.dirPath, 'package.json' );
 
@@ -96,7 +96,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     configPath,
     tag : o.tag,
-    onDependency,
+    onDep,
     verbosity : o.verbosity - 2,
   });
 
@@ -141,7 +141,7 @@ function onModule( context )
     verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
-  function onDependency( dep )
+  function onDep( dep )
   {
 
     if( dep.version )
@@ -149,7 +149,7 @@ function onModule( context )
 
     let about = aboutCache[ dep.name ];
     if( !about )
-    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    about = aboutCache[ dep.name ] = _.npm.remoteAbout( dep.name );
     if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
     {
       dep.version = o.tag;

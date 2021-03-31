@@ -4,7 +4,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let willfPath = _.arrayAs( context.opener.willfilesPath );
 
@@ -26,7 +26,7 @@ module.exports = onModule;
 
 function pathTmpRelace( context, willfPath )
 {
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let logger = context.logger;
@@ -61,7 +61,7 @@ function pathTmpRelace( context, willfPath )
 //
 
 let logger = context.logger;
-const fileProvider = context.will.fileProvider;
+let fileProvider = context.will.fileProvider;
 let path = context.will.fileProvider.path;Replace( context, willfPath )
 {
   let o = context.request.map;
@@ -121,7 +121,7 @@ function pathExportAdd( context, willfPath )
   return;
 
   fileProvider.fileWrite( willfPath, write );
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 }
 
@@ -147,7 +147,7 @@ function pathExportUse( context, willfPath )
 
   if( o.dry )
   return;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   fileProvider.fileWrite( willfPath, write );
 }
@@ -187,7 +187,7 @@ ${line.head} - ${remotesPath[ 1 ]}`
   if( o.verbosity >= 2 )
   logger.log( write );
 
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   return;
 

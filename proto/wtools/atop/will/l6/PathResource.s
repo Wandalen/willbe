@@ -37,7 +37,7 @@ function OnInstanceExists( o )
 {
   let module = o.instance.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -141,7 +141,7 @@ function form2()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -165,7 +165,7 @@ function form3()
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -209,7 +209,7 @@ function exportStructure()
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let o = _.routineOptions( exportStructure, arguments );
@@ -269,7 +269,7 @@ function pathsRebase( o )
   let resource = this;
   let module = resource.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   // let Resolver = _.will.resolver;
@@ -339,7 +339,7 @@ function _pathSet( src )
   if( resource.criterion.predefined && !resource.writable )
   {
     let will = module.will;
-    const fileProvider = will.fileProvider;
+    let fileProvider = will.fileProvider;
     const path = fileProvider.path;
     src = path.s.join( module.inPath, src );
   }

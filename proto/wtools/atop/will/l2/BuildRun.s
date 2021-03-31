@@ -47,7 +47,7 @@ function unform()
   let run = this;
   let module = run.module;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -71,7 +71,7 @@ function form()
   let module = run.module;
   let build = run.build;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 

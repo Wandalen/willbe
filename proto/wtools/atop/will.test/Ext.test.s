@@ -12,7 +12,6 @@ if( typeof module !== 'undefined' )
   _.include( 'wFiles' );
 
   require( '../will/include/Top.s' );
-
 }
 
 /* Desirable :
@@ -59,7 +58,7 @@ function onSuiteBegin()
   let context = this;
   context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
-  context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
+  context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
@@ -141,17 +140,17 @@ function assetFor( test, name )
     a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     try
     {
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
     catch( err )
     {
       _.errAttend( err );
-      /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
+      /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null )
       .delay( 3000 )
       .deasync();
-      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '-repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
     return null
   }
@@ -168,7 +167,7 @@ function assetFor( test, name )
 function preCloneRepos( test )
 {
   let context = this;
-  let a = context.assetFor( test, '_repo' );
+  let a = context.assetFor( test, '-repo' );
 
   a.ready.then( () =>
   {
@@ -10495,7 +10494,7 @@ function buildDetached( test )
     test.true( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
     test.true( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
     test.true( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
-    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#4b5db5437558300dc791acfd2b5304923063fcc6/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#85db26267c91f794efeb85ae5ade77a33cc3c645/ ) );
     test.true( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -15618,6 +15617,84 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
 
 //
 
+function exportMainIsGitRepository( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportMainIsGitRepository' );
+
+  a.remotePath = a.abs( 'module' );
+  a.appStart.predefined.currentPath = a.abs( 'clone' );
+  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.moduleShellSync = _.process.starter
+  ({
+    currentPath : a.remotePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.init = ( o ) =>
+  {
+    o = o || {}
+
+    a.ready.then( () =>
+    {
+      test.case = _.entity.exportString( o );
+
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      a.moduleShellSync( 'git init' )
+      a.moduleShellSync( 'git add -fA .' )
+      a.moduleShellSync( 'git commit -m initial' )
+      a.shellSync( 'git clone module clone' )
+
+      return null;
+    })
+
+    return a.ready;
+  }
+
+  /* */
+
+  a.init({ case : 'export' })
+  a.appStartNonThrowing( '.export' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.true( _.strHas( op.output, /Exported .*module::exportMainIsGitRepository \/ build::proto\.export.* in/ ) );
+
+    var files = a.find( a.abs( 'clone/out' ) );
+    test.gt( files.length, 2 );
+
+    var files = a.fileProvider.dirRead( a.abs( 'clone/out' ) );
+    test.identical( files, [ 'debug', 'exportMainIsGitRepository.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -16913,7 +16990,7 @@ function cleanRecursiveMin( test )
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
 
-  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
   a.fileProvider.filesDelete( a.routinePath );
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
@@ -17032,7 +17109,7 @@ function cleanGlobMin( test )
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
 
-  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
   a.fileProvider.filesDelete( a.routinePath );
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
@@ -17163,7 +17240,7 @@ function cleanRecursive( test )
     mode : 'spawn',
     ready : a.ready,
   })
-  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
   a.fileProvider.filesDelete( a.routinePath );
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
@@ -19271,7 +19348,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( op.exitCode, 0 );
     // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
-    // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*3fb273a84b322ee36691670ee4724bae53a87e9f.*/ ) );
+    // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*cd27a51294bc00bcbc2212f9d9ac5b4a82529990.*/ ) );
     // test.true( _.strHas( op.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.true( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodulesDetached will be downloaded' ) );
     var files = a.find( a.abs( '.module' ) );
@@ -20993,9 +21070,9 @@ function submodulesDownloadNpm( test )
 
   .then( () =>
   {
-    versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
-    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
+    versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
 
@@ -21030,11 +21107,11 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21072,11 +21149,11 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21125,11 +21202,11 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21172,9 +21249,9 @@ function submodulesDownloadUpdateNpm( test )
 
   .then( () =>
   {
-    versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
-    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
+    versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
 
@@ -21209,11 +21286,11 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21232,7 +21309,7 @@ function submodulesDownloadUpdateNpm( test )
     willFile = _.strReplace( willFile, '!0.0.31', '!0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!beta' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.32'
 
     return null;
@@ -21264,11 +21341,11 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -21306,11 +21383,11 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22189,9 +22266,9 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 4418bd34a5fc1a89c6bd992cc17651875ee89583 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 58881174e8edbd7c54761296694e0b48a4997e65 in' ) );
     test.true( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version 5825b2537e6dcc1c2ca14fe4cedb8d9917bf17c8 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version a15e971510b340106f1b9872bf7b939452c267eb in' ) );
     test.true( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -22223,7 +22300,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.abs( '.im.will.yml' ) );
-    read = _.strReplace( read, '#4418bd34a5fc1a89c6bd992cc17651875ee89583', '!master' )
+    read = _.strReplace( read, '#58881174e8edbd7c54761296694e0b48a4997e65', '!master' )
     a.fileProvider.fileWrite( a.abs( '.im.will.yml' ), read );
     return null;
   })
@@ -22785,9 +22862,9 @@ function versionsAgreeNpm( test )
 
   .then( () =>
   {
-    versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
-    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
+    versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
 
@@ -22822,11 +22899,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22845,7 +22922,7 @@ function versionsAgreeNpm( test )
     willFile = _.strReplace( willFile, '!0.0.31', '!0.0.34' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!beta' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
 
     return null;
@@ -22876,11 +22953,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22917,11 +22994,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -22941,7 +23018,7 @@ function versionsAgreeNpm( test )
     willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b!gamma\n' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b!gamma' );
+    versions[ 'ModuleForTesting2b' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
   })
@@ -22971,11 +23048,11 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
     test.identical( version, versions[ 'ModuleForTesting12ab' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
@@ -26062,7 +26139,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -26081,7 +26158,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -26115,7 +26192,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -26134,7 +26211,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -26170,7 +26247,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -26189,7 +26266,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -26225,7 +26302,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -26244,7 +26321,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
@@ -26296,7 +26373,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -26315,7 +26392,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -26356,7 +26433,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -26375,7 +26452,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -26526,7 +26603,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -26545,7 +26622,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -26586,7 +26663,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#4b5db5437558300dc791acfd2b5304923063fcc6.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#85db26267c91f794efeb85ae5ade77a33cc3c645.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -26605,7 +26682,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a46a195fbefa0e7454e5a75c7263023e5e483d6b.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#1e0b8cc041bb0f3aa105b2577947c2884694b4df.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
@@ -29766,8 +29843,6 @@ function commandModulesUpdate( test )
         return null;
       })
     }
-
-
 
     return a.ready;
   }
@@ -39653,7 +39728,7 @@ function commandNpmPublishFullModuleFromUtility( test )
       let moduleName = botRepo.toLowerCase();
       let filePath = a.abs( 'was.package.json' );
       let config = a.fileProvider.fileRead({ filePath, encoding : 'json' });
-      let lastVersion = _.npm.versionRemoteLatestRetrive( `npm:///${ moduleName }!latest` );
+      let lastVersion = _.npm.remoteVersionLatest( `npm:///${ moduleName }!latest` );
       config.version = lastVersion;
       a.fileProvider.fileWrite({ filePath, data : config, encoding : 'json' });
       return null;
@@ -39810,7 +39885,7 @@ function commandNpmPublishFullRegularModule( test )
       let moduleName = botRepo.toLowerCase();
       let filePath = a.abs( 'was.package.json' );
       let config = a.fileProvider.fileRead({ filePath, encoding : 'json' });
-      let lastVersion = _.npm.versionRemoteLatestRetrive( `npm:///${ moduleName }!latest` );
+      let lastVersion = _.npm.remoteVersionLatest( `npm:///${ moduleName }!latest` );
       config.version = lastVersion;
       a.fileProvider.fileWrite({ filePath, data : config, encoding : 'json' });
       return null;
@@ -40701,6 +40776,7 @@ const Proto =
     exportWithSubmoduleThatHasModuleDirDeleted,
     exportWithoutSubSubModules,
     exportWithSubmoduleWithNotDownloadedSubmodule,
+    exportMainIsGitRepository,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */

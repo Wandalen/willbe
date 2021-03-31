@@ -243,7 +243,7 @@ function _filePathChanged2( o )
   return o;
 
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -523,7 +523,7 @@ function willfileUnregister( willf )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -549,7 +549,7 @@ function willfileRegister( willf )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -588,7 +588,7 @@ function willfileAttach( filePath )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -611,7 +611,7 @@ function _willfilesRelease( willfilesArray )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -635,7 +635,7 @@ function repoIsRemote( remotePath )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   _.assert( !!module.willfilesPath || !!module.dirPath );
@@ -656,7 +656,7 @@ function repoVerify( o )
 {
   let module = this;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 

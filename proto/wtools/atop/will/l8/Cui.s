@@ -41,7 +41,7 @@ function exec()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let appArgs = _.process.input({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
@@ -95,7 +95,7 @@ function init( o )
 function _openersCurrentEach( o )
 {
   let will = this.form();
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
@@ -169,7 +169,7 @@ function openersFind( o )
 {
   let will = this;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
   o = _.routineOptions( openersFind, arguments );
@@ -274,11 +274,25 @@ function _command_head( o )
   );
 
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
-  if( e.propertiesMap.v !== undefined )
+  /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
+  // if( o.routine.commandProperties && o.routine.commandProperties.v )
+  // if( e.propertiesMap.v !== undefined )
+  // {
+  //   e.propertiesMap.verbosity = e.propertiesMap.v;
+  //   delete e.propertiesMap.v;
+  // }
+  /* Dmytro : it is not a solution, it is a temporary improvement */
+  if( o.routine.commandProperties )
+  if( o.routine.commandProperties.v )
   {
+    if( e.propertiesMap.v !== undefined )
     e.propertiesMap.verbosity = e.propertiesMap.v;
-    // delete e.propertiesMap.v;
+
+    if( e.propertiesMap.verbosity !== e.propertiesMap.v )
+    e.propertiesMap.v = e.propertiesMap.verbosity;
   }
+
+
 }
 
 _command_head.defaults =
@@ -294,7 +308,7 @@ _command_head.defaults =
 function errEncounter( error )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -369,7 +383,7 @@ function _commandsMake()
 {
   let will = this;
   let logger = will.logger;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let appArgs = _.process.input();
 
   _.assert( _.instanceIs( will ) );
@@ -461,6 +475,7 @@ function _commandsMake()
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
     'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
+    'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -492,7 +507,7 @@ function _commandsMake()
 function _commandsBegin( command )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -506,7 +521,7 @@ function _commandsBegin( command )
 function _commandsEnd( command )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
@@ -1790,8 +1805,8 @@ function commandModulesUpdate( e )
   let cui = this;
   cui._command_head( commandModulesUpdate, arguments );
 
-  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandModulesUpdate.defaults );
-  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesUpdate.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
 
   if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
   implyMap.withSubmodules = 1;
@@ -1815,7 +1830,7 @@ function commandModulesUpdate( e )
       if( e.propertiesMap.to )
       it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
 
-      let o2 = _.mapOnly_( null,  e.propertiesMap, it.opener.repoUpdate.defaults );
+      let o2 = _.mapOnly_( null, e.propertiesMap, it.opener.repoUpdate.defaults );
       o2.strict = 0;
       return it.opener.repoUpdate( o2 );
     })
@@ -2495,7 +2510,7 @@ commandSubmodulesGitSync.commandProperties = _.mapExtend( null, commandImply.com
 function commandModuleNew( e )
 {
   let will = this;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
@@ -4852,7 +4867,23 @@ commandWillfileMergeIntoSingle.commandProperties =
   filterSameSubmodules : 'Enables filtering of submodules with the same path but different names. Default is 1',
 };
 
-//
+// --
+// npm
+// --
+
+/* aaa2 :
+will .willfile.extend dst/ src1 dir/src2 src/
+will .willfile.extend dst src1 dir/src2 src/
+will .willfile.extend dst 'src1/**' dir/src2 src/
+
+will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
+
+algorithm similar to mapExtendAppending
+
+if anon then will.yml
+else then name.will.yml
+
+*/
 
 function commandNpmPublish( e )
 {
@@ -4889,18 +4920,69 @@ commandNpmPublish.defaults =
   v : 1,
   verbosity : 1,
 };
-commandNpmPublish.hint = 'To publish NPM module.';
+commandNpmPublish.hint = 'Publish in NPM.';
 commandNpmPublish.commandSubjectHint = 'A commit message for uncommitted changes. Default is ".".';
 commandNpmPublish.commandProperties =
 {
-  commit : 'message',
+  commit : 'message', /* qqq : for Dmytro : bad : bad name */
   tag : 'tag',
-
   force : 'forces diff',
   dry : 'dry run',
   v : 'verbosity',
   verbosity : 'verbosity',
 };
+/* qqq : for Dmytro : bad : break of pattern */
+
+//
+
+/* qqq : for Dmytro : first cover
+will .npm.dep.add . dry:1 editing:0
+*/
+
+/* qqq : for Dmytro : write full coverage */
+
+function commandNpmDepAdd( e )
+{
+  let cui = this;
+  cui._command_head( commandNpmDepAdd, arguments );
+
+  _.routineOptions( commandNpmDepAdd, e.propertiesMap );
+  _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
+
+  e.propertiesMap.depPath = e.subject;
+  e.propertiesMap.localPath = e.propertiesMap.to;
+  delete e.propertiesMap.to;
+
+  if( e.propertiesMap.depPath === '.' )
+  e.propertiesMap.depPath = 'hd://.'
+
+  return cui.npmDepAdd( e.propertiesMap );
+}
+
+commandNpmDepAdd.defaults =
+{
+  to : null,
+  as : null,
+  editing : 1,
+  downloading : 1,
+  linking : 1,
+  dry : 0,
+  verbosity : 1,
+};
+commandNpmDepAdd.hint = 'Add as dependency to NPM.';
+commandNpmDepAdd.commandSubjectHint = 'Dependency path.';
+commandNpmDepAdd.commandProperties =
+{
+  to : 'Path to the directory with directory node_modules. Current path by default.',
+  as : 'Add dependency with the alias.',
+  editing : 'Editing package.json file. Default is true.',
+  downloading : 'Downloading files. Default is true.',
+  linking : 'Softlink instead of copying. Default is true.',
+  dry : 'Dry run.',
+  v : 'Verbosity.',
+  verbosity : 'Verbosity.',
+};
+/* qqq : for Dmytro : implement and cover each property */
 
 //
 
@@ -5665,20 +5747,11 @@ let Extension =
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   commandWillfileMergeIntoSingle,
+
+  // npm
+
   commandNpmPublish,
-  /* aaa2 :
-  will .willfile.extend dst/ src1 dir/src2 src/
-  will .willfile.extend dst src1 dir/src2 src/
-  will .willfile.extend dst 'src1/**' dir/src2 src/
-
-  will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
-
-  algorithm similar to mapExtendAppending
-
-  if anon then will.yml
-  else then name.will.yml
-
-  */
+  commandNpmDepAdd,
 
   // command package
 

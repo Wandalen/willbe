@@ -5,7 +5,7 @@ function onModule( context )
   let o = context.request.map;
   let _ = context.tools;
   let logger = context.logger;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let abs = _.routine.join( path, path.join, [ context.junction.dirPath ] );
   let configPath = abs( 'package.json' );
@@ -110,7 +110,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
-    onDependency,
+    onDep,
     verbosity : o.verbosity - 2,
   });
 
@@ -169,7 +169,7 @@ function onModule( context )
     context2.will.hooks.ProtoSync.call( context2 );
   }
 
-  function onDependency( dep )
+  function onDep( dep )
   {
     // console.log( dep );
 
@@ -178,7 +178,7 @@ function onModule( context )
 
     let about = aboutCache[ dep.name ];
     if( !about )
-    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    about = aboutCache[ dep.name ] = _.npm.remoteAbout( dep.name );
     if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
     {
       dep.version = o.tag;
@@ -207,7 +207,7 @@ module.exports = onModule;
 function isEnabled( context, localPath )
 {
   let _ = context.tools;
-  const fileProvider = context.will.fileProvider;
+  let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );

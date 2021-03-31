@@ -4,7 +4,7 @@ _.include( 'wProcess' );
 _.include( 'wFiles' );
 
 let assetsOriginalPath = _.path.join( __dirname, '_asset' );
-let repoDirPath = _.path.join( assetsOriginalPath, '_repo' );
+let repoDirPath = _.path.join( assetsOriginalPath, '-repo' );
 let ready = new _.Consequence().take( null );
 let start = _.process.starter
 ({
@@ -38,16 +38,16 @@ function reposRedownload()
   // clone( 'ModuleForTesting12', '6f81448163920ac9b982d6071c54a3fd1f3ea150' ); // Proto
   // clone( 'ModuleForTesting12ab', '1b9ff0d20b7dd17398aa4283945c70279c2962ab' ); // UriBasic
 
-  /* Dmytro : the latest alpha versions */
+  /* Dmytro : the latest delta versions */
 
-  clone( 'ModuleForTesting1', '4418bd34a5fc1a89c6bd992cc17651875ee89583' ); // Tools
-  clone( 'ModuleForTesting1a', 'e271b20eed4228405f360f5fed1813f39e7ce359' ); // Color
-  clone( 'ModuleForTesting1b', '5748533cb8a60b14c54254c51e99612cdbbf25cf' );
-  clone( 'ModuleForTesting2', '3fb273a84b322ee36691670ee4724bae53a87e9f' );
-  clone( 'ModuleForTesting2a', '4b5db5437558300dc791acfd2b5304923063fcc6' ); // PathBasic
-  clone( 'ModuleForTesting2b', 'ee23617c6135eaac3a2fbc0caa8eb6e82e8c8afd' ); // Procedure
-  clone( 'ModuleForTesting12', 'a46a195fbefa0e7454e5a75c7263023e5e483d6b' ); // Proto
-  clone( 'ModuleForTesting12ab', '5825b2537e6dcc1c2ca14fe4cedb8d9917bf17c8' ); // UriBasic
+  clone( 'ModuleForTesting1', '58881174e8edbd7c54761296694e0b48a4997e65' ); // Tools
+  clone( 'ModuleForTesting1a', '44e40eef6a64196afcf1f9b51fcb8f8be71ded1d' ); // Color
+  clone( 'ModuleForTesting1b', '0c04fe663066afc03767e23c71d921978595fddf' );
+  clone( 'ModuleForTesting2', 'cd27a51294bc00bcbc2212f9d9ac5b4a82529990' );
+  clone( 'ModuleForTesting2a', '85db26267c91f794efeb85ae5ade77a33cc3c645' ); // PathBasic
+  clone( 'ModuleForTesting2b', '9eb65ca0d7f41ba9d9562c6d8a1c5f27653f9ff0' ); // Procedure
+  clone( 'ModuleForTesting12', '1e0b8cc041bb0f3aa105b2577947c2884694b4df' ); // Proto
+  clone( 'ModuleForTesting12ab', 'a15e971510b340106f1b9872bf7b939452c267eb' ); // UriBasic
 
   return ready;
 }

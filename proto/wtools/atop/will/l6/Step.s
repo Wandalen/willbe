@@ -29,7 +29,7 @@ function MakeFor_body( o )
   let willf = o.willf;
   let module = o.module;
   let will = willf.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -158,7 +158,7 @@ function form3()
   let module = step.module;
   let willf = step.willf;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
 
@@ -191,7 +191,7 @@ function framePerform( frame )
   let module = run.module;
   let build = run.build;
   let will = module.will;
-  const fileProvider = will.fileProvider;
+  let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
   let hub = will.fileProvider;
