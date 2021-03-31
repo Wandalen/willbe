@@ -1727,7 +1727,7 @@ function commandModulesUpdate( e )
       if( e.propertiesMap.to )
       it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
 
-      let o2 = _.mapOnly_( e.propertiesMap, it.opener.repoUpdate.defaults );
+      let o2 = _.mapOnly_( null, e.propertiesMap, it.opener.repoUpdate.defaults );
       o2.strict = 0;
       return it.opener.repoUpdate( o2 );
     })

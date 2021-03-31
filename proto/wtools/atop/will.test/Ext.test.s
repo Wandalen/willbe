@@ -410,119 +410,119 @@ function transpile( test )
 
   /* - */
 
-  // a.ready
-  // .then( () =>
-  // {
-  //   test.case = '.build debug'
-  //   a.fileProvider.filesDelete( a.abs( 'out' ) );
-  //   return null;
-  // })
-  // a.appStart({ execPath : '.build debug' })
-  // .then( ( op ) =>
-  // {
-  //   test.identical( op.exitCode, 0 );
-  //   var files = a.find( a.abs( 'out' ) );
-  //   var exp =
-  //   [
-  //     '.',
-  //     './debug',
-  //     './debug/dir1',
-  //     './debug/dir1/Text.txt',
-  //     './debug/dir2',
-  //     './debug/dir2/File.js',
-  //     './debug/dir2/File.test.js',
-  //     './debug/dir2/File1.debug.js',
-  //     './debug/dir2/File2.debug.js',
-  //     './debug/dir3.test',
-  //     './debug/dir3.test/File.js',
-  //     './debug/dir3.test/File.test.js'
-  //   ];
-  //   test.identical( files, exp );
-  //   a.fileProvider.isTerminal( a.abs( 'out/debug/dir3.test/File.js' ) );
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // a.ready
-  // .then( () =>
-  // {
-  //   test.case = '.build compiled.debug'
-  //   a.fileProvider.filesDelete( a.abs( 'out' ) );
-  //   return null;
-  // })
-  // a.appStart({ execPath : '.build compiled.debug' })
-  // .then( ( op ) =>
-  // {
-  //
-  //   test.identical( op.exitCode, 0 );
-  //   var files = a.find( a.abs( 'out' ) );
-  //   var exp =
-  //   [
-  //     '.',
-  //     './compiled.debug',
-  //     './compiled.debug/Main.s',
-  //     './tests.compiled.debug',
-  //     './tests.compiled.debug/Tests.s'
-  //   ];
-  //   test.identical( files, exp );
-  //   a.fileProvider.isTerminal( a.abs( 'out/compiled.debug/Main.s' ) );
-  //   a.fileProvider.isTerminal( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
-  //
-  //   var read = a.fileProvider.fileRead( a.abs( 'out/compiled.debug/Main.s' ) );
-  //   test.true( !_.strHas( read, 'dir2/-Ecluded.js' ) );
-  //   test.true( _.strHas( read, 'dir2/File.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File.test.js' ) );
-  //   test.true( _.strHas( read, 'dir2/File1.debug.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File1.release.js' ) );
-  //   test.true( _.strHas( read, 'dir2/File2.debug.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
-  //
-  //   var read = a.fileProvider.fileRead( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
-  //   test.true( !_.strHas( read, 'dir2/-Ecluded.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File.js' ) );
-  //   test.true( _.strHas( read, 'dir2/File.test.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File1.debug.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File1.release.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File2.debug.js' ) );
-  //   test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
-  //
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // a.ready
-  // .then( () =>
-  // {
-  //   test.case = '.build raw.release'
-  //   a.fileProvider.filesDelete( a.abs( 'out' ) );
-  //   return null;
-  // })
-  // a.appStart({ execPath : '.build raw.release' })
-  // .then( ( op ) =>
-  // {
-  //   test.identical( op.exitCode, 0 );
-  //   var files = a.find( a.abs( 'out' ) );
-  //   var exp =
-  //   [
-  //     '.',
-  //     './raw.release',
-  //     './raw.release/dir1',
-  //     './raw.release/dir1/Text.txt',
-  //     './raw.release/dir2',
-  //     './raw.release/dir2/File.js',
-  //     './raw.release/dir2/File.test.js',
-  //     './raw.release/dir2/File1.release.js',
-  //     './raw.release/dir2/File2.release.js',
-  //     './raw.release/dir3.test',
-  //     './raw.release/dir3.test/File.js',
-  //     './raw.release/dir3.test/File.test.js'
-  //   ];
-  //   test.identical( files, exp );
-  //   a.fileProvider.isTerminal( a.abs( 'out/raw.release/dir3.test/File.test.js' ) );
-  //   return null;
-  // })
+  a.ready
+  .then( () =>
+  {
+    test.case = '.build debug'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+  a.appStart({ execPath : '.build debug' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( 'out' ) );
+    var exp =
+    [
+      '.',
+      './debug',
+      './debug/dir1',
+      './debug/dir1/Text.txt',
+      './debug/dir2',
+      './debug/dir2/File.js',
+      './debug/dir2/File.test.js',
+      './debug/dir2/File1.debug.js',
+      './debug/dir2/File2.debug.js',
+      './debug/dir3.test',
+      './debug/dir3.test/File.js',
+      './debug/dir3.test/File.test.js'
+    ];
+    test.identical( files, exp );
+    a.fileProvider.isTerminal( a.abs( 'out/debug/dir3.test/File.js' ) );
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.build compiled.debug'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+  a.appStart({ execPath : '.build compiled.debug' })
+  .then( ( op ) =>
+  {
+
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( 'out' ) );
+    var exp =
+    [
+      '.',
+      './compiled.debug',
+      './compiled.debug/Main.s',
+      './tests.compiled.debug',
+      './tests.compiled.debug/Tests.s'
+    ];
+    test.identical( files, exp );
+    a.fileProvider.isTerminal( a.abs( 'out/compiled.debug/Main.s' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
+
+    var read = a.fileProvider.fileRead( a.abs( 'out/compiled.debug/Main.s' ) );
+    test.true( !_.strHas( read, 'dir2/-Ecluded.js' ) );
+    test.true( _.strHas( read, 'dir2/File.js' ) );
+    test.true( !_.strHas( read, 'dir2/File.test.js' ) );
+    test.true( _.strHas( read, 'dir2/File1.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.release.js' ) );
+    test.true( _.strHas( read, 'dir2/File2.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
+
+    var read = a.fileProvider.fileRead( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
+    test.true( !_.strHas( read, 'dir2/-Ecluded.js' ) );
+    test.true( !_.strHas( read, 'dir2/File.js' ) );
+    test.true( _.strHas( read, 'dir2/File.test.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File1.release.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.debug.js' ) );
+    test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.build raw.release'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+  a.appStart({ execPath : '.build raw.release' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( 'out' ) );
+    var exp =
+    [
+      '.',
+      './raw.release',
+      './raw.release/dir1',
+      './raw.release/dir1/Text.txt',
+      './raw.release/dir2',
+      './raw.release/dir2/File.js',
+      './raw.release/dir2/File.test.js',
+      './raw.release/dir2/File1.release.js',
+      './raw.release/dir2/File2.release.js',
+      './raw.release/dir3.test',
+      './raw.release/dir3.test/File.js',
+      './raw.release/dir3.test/File.test.js'
+    ];
+    test.identical( files, exp );
+    a.fileProvider.isTerminal( a.abs( 'out/raw.release/dir3.test/File.test.js' ) );
+    return null;
+  })
 
   /* - */
 
@@ -29813,8 +29813,6 @@ function commandModulesUpdate( test )
         return null;
       })
     }
-
-
 
     return a.ready;
   }

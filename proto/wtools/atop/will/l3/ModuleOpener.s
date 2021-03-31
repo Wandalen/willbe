@@ -1570,7 +1570,6 @@ function _repoDownload( o )
   function remoteIsValidReform()
   {
 
-    debugger;
     if( origin !== null )
     return origin;
 
@@ -1579,7 +1578,8 @@ function _repoDownload( o )
     origin = gitProvider.hasRemote
     ({
       localPath : opener.downloadPath,
-      remotePath : opener.remotePath
+      remotePath : _.strRemoveEnd( opener.remotePath, path.upToken ),
+      // remotePath : opener.remotePath,
     });
 
     return origin;
@@ -2134,7 +2134,6 @@ function remotePathSet( src )
 
   if( opener.__.remotePath === src )
   {
-    debugger;
     _.assert( !opener.openedModule || opener.openedModule.remotePath === src );
     return;
   }
@@ -2258,6 +2257,16 @@ function remotePathChangeVersionTo( to )
   {
     throw _.err( `Argument "to" should be either tag or version. Got:${to}` );
   }
+
+  /*
+     Dmytro : new path namespaces _.git and _.npm parse and change not paths
+     _.[git|npm].path.str( _.[git|npm]path.parse( src ) ) === src
+     but old realization used changed paths
+
+     We need to remove last slash to get untrailed remote path
+     git+https:///github.com/user/repo.git/!tag => git+hd:///local/repo!tag
+  */
+  remoteParsed.longPath = _.strRemoveEnd( remoteParsed.longPath, vcs.path.upToken );
 
   let remotePathNew = vcs.path.str( remoteParsed );
 
