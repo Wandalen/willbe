@@ -9073,42 +9073,33 @@ function modulesTreeDisabledAndCorrupted( test )
 {
   let context = this;
   let a = context.assetFor( test, 'manyFew' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.download' })
-  a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.download' });
+  a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.im.will.yml' ) );
 
     let exp =
-
 `
  +-- module::many
- | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+ | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
  | | +-- module::Testing - path::remote:=npm:///wTesting
  | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
- | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+ | +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
+ | | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
  | | +-- module::Testing - path::remote:=npm:///wTesting
  | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git!gamma
- |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
- |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
+ | +-- module::wModuleForTesting12 - path::remote:=${ config.submodule.ModuleForTesting12.replace( /\/(!\S+)$/, '$1' ) }
+ |   +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
+ |   +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
  |   +-- module::Testing - path::remote:=npm:///wTesting
  |   +-- module::eslint - path::remote:=npm:///eslint#7.1.0
  |
@@ -9119,7 +9110,7 @@ function modulesTreeDisabledAndCorrupted( test )
     test.identical( _.strCount( op.output, '+-- module::' ), 14 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -10668,7 +10659,7 @@ function exportNonExportable( test )
 
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'rror' ), 2 );
+    test.identical( _.strCount( op.output, 'rror' ), 3 );
     test.identical( _.strCount( op.output, '====' ), 0 );
 
     test.identical( _.strCount( op.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
@@ -14116,6 +14107,7 @@ function exportWithRemoteSubmodules( test )
       './.module/ModuleForTesting1b/doc',
       './.module/ModuleForTesting1b/out',
       './.module/ModuleForTesting1b/proto',
+      './.module/ModuleForTesting1b/proto/node_modules',
       './.module/ModuleForTesting1b/proto/wtools',
       './.module/ModuleForTesting1b/proto/wtools/testing',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3',
@@ -14132,6 +14124,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/doc',
       './group1/.module/ModuleForTesting1/out',
       './group1/.module/ModuleForTesting1/proto',
+      './group1/.module/ModuleForTesting1/proto/node_modules',
       './group1/.module/ModuleForTesting1/proto/wtools',
       './group1/.module/ModuleForTesting1/proto/wtools/testing',
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1',
@@ -14145,6 +14138,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting12/doc',
       './group1/.module/ModuleForTesting12/out',
       './group1/.module/ModuleForTesting12/proto',
+      './group1/.module/ModuleForTesting12/proto/node_modules',
       './group1/.module/ModuleForTesting12/proto/wtools',
       './group1/.module/ModuleForTesting12/proto/wtools/testing',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3',
@@ -14159,6 +14153,7 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/doc',
       './group1/.module/ModuleForTesting1b/out',
       './group1/.module/ModuleForTesting1b/proto',
+      './group1/.module/ModuleForTesting1b/proto/node_modules',
       './group1/.module/ModuleForTesting1b/proto/wtools',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3',
@@ -14175,6 +14170,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/doc',
       './group1/group10/.module/ModuleForTesting1b/out',
       './group1/group10/.module/ModuleForTesting1b/proto',
+      './group1/group10/.module/ModuleForTesting1b/proto/node_modules',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3',
@@ -14189,6 +14185,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting2a/doc',
       './group1/group10/.module/ModuleForTesting2a/out',
       './group1/group10/.module/ModuleForTesting2a/proto',
+      './group1/group10/.module/ModuleForTesting2a/proto/node_modules',
       './group1/group10/.module/ModuleForTesting2a/proto/wtools',
       './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing',
       './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3',
@@ -14198,6 +14195,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting2a/sample/trivial',
       './group1/group10/out',
       './group1/group10/out/debug',
+      './group1/group10/out/debug/node_modules',
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
       './group1/group10/out/debug/wtools/testing/l3',
@@ -14206,6 +14204,7 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/out/debug/wtools/testing/l3.test',
       './group1/out',
       './group1/out/debug',
+      './group1/out/debug/node_modules',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/l1',
@@ -14224,6 +14223,7 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/doc',
       './group2/.module/ModuleForTesting12ab/out',
       './group2/.module/ModuleForTesting12ab/proto',
+      './group2/.module/ModuleForTesting12ab/proto/node_modules',
       './group2/.module/ModuleForTesting12ab/proto/wtools',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4',
@@ -14233,6 +14233,7 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/sample/trivial',
       './group2/out',
       './group2/out/debug',
+      './group2/out/debug/node_modules',
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
       './group2/out/debug/wtools/testing/l3',
@@ -14244,6 +14245,7 @@ function exportWithRemoteSubmodules( test )
       './group2/out/debug/wtools/testing/l4.test',
       './out',
       './out/debug',
+      './out/debug/node_modules',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/l1',
@@ -14255,7 +14257,7 @@ function exportWithRemoteSubmodules( test )
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
-      './out/debug/wtools/testing/l4.test'
+      './out/debug/wtools/testing/l4.test',
     ];
     var files = a.findDirs( a.routinePath );
     test.identical( files, exp );
@@ -15710,15 +15712,13 @@ function importPathLocal( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'export submodule';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
   .then( ( op ) =>
@@ -15731,6 +15731,8 @@ function importPathLocal( test )
       './debug',
       './debug/Integration.test.ss',
       './debug/WithSubmodules.s',
+      './debug/node_modules',
+      './debug/node_modules/wmodulefortesting1',
       './debug/wtools',
       './debug/wtools/testing',
       './debug/wtools/testing/Basic.s',
@@ -15738,7 +15740,7 @@ function importPathLocal( test )
       './debug/wtools/testing/l1/Include.s',
       './debug/wtools/testing/l1/ModuleForTesting1.s',
       './debug/wtools/testing/l1.test',
-      './debug/wtools/testing/l1.test/ModuleForTesting1.test.s'
+      './debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
     ];
     test.contains( files, exp );
     test.identical( op.exitCode, 0 );
@@ -17115,19 +17117,17 @@ function cleanGlobMin( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export first'
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with z .export' )
+  a.appStart( '.with ** .clean' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with z .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -17191,17 +17191,16 @@ function cleanGlobMin( test )
       './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s'
+      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  a.appStart( '.with "**" .clean' )
-
-  .then( ( op ) =>
+  a.appStart( '.with "**" .clean' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -17212,12 +17211,12 @@ function cleanGlobMin( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function cleanGlobMin */
+}
 
 cleanGlobMin.rapidity = -1;
 
@@ -23782,7 +23781,7 @@ function stepModulesUpdate( test )
   return a.ready;
 }
 
-stepModulesUpdate.timeOut = 300000;
+stepModulesUpdate.timeOut = 600000;
 
 //
 
@@ -33156,7 +33155,7 @@ function commandGitPull( test )
 original/f.txt
 copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33164,7 +33163,7 @@ original
 `
 original/f.txt
 copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33205,7 +33204,7 @@ clone
 original/f.txt
 copy
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33213,7 +33212,7 @@ original
 `
 original/f.txt
 copy
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33221,7 +33220,7 @@ copy
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33229,72 +33228,10 @@ clone
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
-    return null;
-  });
-
-  /* */
-
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
-  .then( ( op ) =>
-  {
-    test.description = 'conflict';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
-
-    test.true( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
-
-    var exp =
-`
-original/f.txt
-copy
-original
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
-copy
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
-original
- >>>>>>>
-`
-    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
- <<<<<<< HEAD
-clone
-=======
-copy
-original
- >>>>>>>
-`
-    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
-    test.equivalent( orignalRead2, exp );
     return null;
   });
 
@@ -33419,14 +33356,14 @@ function commandGitPullRestoreHardlinkOnFail( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -33438,7 +33375,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
@@ -33451,7 +33388,7 @@ clone
 =======
 original
  >>>>>>>
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );

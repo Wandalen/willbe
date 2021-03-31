@@ -4582,9 +4582,6 @@ function resourceAllocate_body( o )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.resourceName ) );
 
-  // if( o.resourceName === "exported.dir.proto.export" )
-  // debugger;
-  //
   // if( o.generating )
   // {
   //   let map = module.resourceMapForKind( o.resourceKind );
@@ -4720,8 +4717,6 @@ function cleanWhatSingle( o )
   o.files[ '/' ] = o.files[ '/' ] || [];
 
   // logger.log( 'cleanWhatSingle', module.commonPath );
-  // if( _.strHas( module.commonPath, 'group10' ) )
-  // debugger;
 
   /* submodules */
 
@@ -5799,9 +5794,6 @@ function inPathGet()
   let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let result = path.s.join( module.dirPath, ( module.pathMap.in || '.' ) );
-
-  // if( result && _.strHas( result, '//' ) )
-  // debugger;
 
   return result;
 }

@@ -565,7 +565,6 @@ function find( o )
       if( !opener.error )
       if( !opener.willfilesArray.length )
       {
-        debugger;
         opener.error = _.err( 'Found no will file at ' + _.strQuote( opener.dirPath ) );
       }
 
@@ -574,7 +573,6 @@ function find( o )
       if( opener.willfilesArray.length )
       if( opener.willfilesArray[ 0 ].openedModule )
       {
-        debugger;
         openedModule = opener.willfilesArray[ 0 ].openedModule;
       }
 
@@ -1273,14 +1271,13 @@ function _repoFormFormal()
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener._.remotePath = willfilesPath;
-  opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName );
+  opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName + fileProvider.path.upToken ); /* xxx : qqq : for Dmytro : investigate and find better way to solve problem with opener.downloadPath and module.downloadPath difference */
+  // opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName ); /* Dmytro : aliasName is alias to directory with default willfiles */
 
   let willfilesPath2 = path.resolve( cloneDirPath, opener.aliasName, parsed.localVcsPath );
   opener._.localPath = _.Will.CommonPathFor( willfilesPath2 );
   opener._filePathChanged2({ willfilesPath : willfilesPath2 });
 
-  if( opener.peerModule )
-  debugger;
   if( opener.peerModule && opener.peerModule.remotePath === null )
   {
     debugger;
