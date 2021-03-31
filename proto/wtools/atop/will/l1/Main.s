@@ -5265,7 +5265,7 @@ function hooksGet()
 // npm
 // --
 
-/* qqq : for Dmytro : move to npm tools */
+/* qqq : for Dmytro : move to npm tools. leave wrap here */
 function npmDepAdd( o )
 {
   let will = this;
@@ -5274,10 +5274,10 @@ function npmDepAdd( o )
 
   _.routine.options( npmDepAdd, o );
 
-  if( !o.toLocalPath )
-  o.toLocalPath = path.current();
+  if( !o.localPath )
+  o.localPath = path.current();
 
-  let nodeModulesPath = _.npm.pathDownloadFromLocal( o.toLocalPath );
+  let nodeModulesPath = _.npm.pathDownloadFromLocal( o.localPath );
   if( !o.as )
   o.as = _.npm.localName({ localPath : path.current() });
 
@@ -5311,7 +5311,7 @@ function npmDepAdd( o )
 npmDepAdd.defaults =
 {
   as : null,
-  toLocalPath : null,
+  localPath : null,
   depPath : null,
   editing : 1,
   downloading : 1,

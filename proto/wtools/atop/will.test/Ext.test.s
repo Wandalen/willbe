@@ -12,7 +12,6 @@ if( typeof module !== 'undefined' )
   _.include( 'wFiles' );
 
   require( '../will/include/Top.s' );
-
 }
 
 /* Desirable :

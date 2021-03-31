@@ -4770,7 +4770,7 @@ function commandNpmDepAdd( e )
   _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
 
   e.propertiesMap.depPath = e.subject;
-  e.propertiesMap.toLocalPath = e.propertiesMap.to;
+  e.propertiesMap.localPath = e.propertiesMap.to;
   delete e.propertiesMap.to;
 
   if( e.propertiesMap.depPath === '.' )

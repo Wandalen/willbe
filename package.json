@@ -1,6 +1,6 @@
 {
   "name": "willbe",
-  "version": "0.5.356",
+  "version": "0.5.358",
   "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors": [
@@ -22,7 +22,8 @@
   "files": [
     "proto/wtools/atop/will",
     "proto/wtools/Tools.s",
-    "out"
+    "out",
+    "proto/node_modules"
   ],
   "bin": {
     "will.singleproc": "proto/wtools/atop/will/entry/Exec",
