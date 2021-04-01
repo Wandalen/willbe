@@ -1262,8 +1262,8 @@ function _repoFormFormal()
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener._.remotePath = willfilesPath;
-  opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName + fileProvider.path.upToken ); /* xxx : qqq : for Dmytro : investigate and find better way to solve problem with opener.downloadPath and module.downloadPath difference */
-  // opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName ); /* Dmytro : aliasName is alias to directory with default willfiles */
+  // opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName + fileProvider.path.upToken ); /* xxx : qqq : for Dmytro : investigate and find better way to solve problem with opener.downloadPath and module.downloadPath difference */
+  opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName );
 
   let willfilesPath2 = path.resolve( cloneDirPath, opener.aliasName, parsed.localVcsPath );
   opener._.localPath = _.Will.CommonPathFor( willfilesPath2 );
