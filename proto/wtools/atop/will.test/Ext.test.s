@@ -10598,6 +10598,66 @@ function exportSingle( test )
 
 //
 
+function exportWithExistedGitRepository( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.export';
+    return null;
+  });
+
+  a.shell( 'git init' );
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Exporting module::ExportWithDefaultPaths' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, 'Exported module::ExportWithDefaultPaths / build::export' ) );
+
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) );
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download, { criterion : { predefined : 1 }, path : '..' } );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'reexport';
+    return null;
+  });
+
+  a.appStart( '.export' )
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Exporting module::ExportWithDefaultPaths' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, 'Exported module::ExportWithDefaultPaths / build::export' ) );
+
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download, { criterion : { predefined : 1 }, path : '..' } );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function exportItself( test )
 {
   let context = this;

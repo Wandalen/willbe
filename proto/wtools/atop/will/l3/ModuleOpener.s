@@ -1217,7 +1217,7 @@ function _repoForm()
       }
 
       if( downloadPath )
-      _.assert( downloadPath === fileProvider.path.detrail( downloadPath ), opener.name, opener.id );
+      _.assert( !fileProvider.path.isTrailed( downloadPath ), `Download path of the ${opener.absoluteName} shouldn't have trailing slash.` );
     }
 
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
