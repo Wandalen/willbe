@@ -1207,7 +1207,7 @@ function _repoForm()
         let localPath = fileProvider.path.localFromGlobal( opener.localPath )
         if( _.git.isRepository({ localPath }) )
         {
-          downloadPath = opener._.downloadPath = opener._.localPath;
+          downloadPath = opener._.downloadPath = fileProvider.path.detrail( opener._.localPath );
           let remotePathFromLocal = _.git.remotePathFromLocal({ localPath : opener.localPath });
           if( remotePathFromLocal !== null ) /* Dmytro : routine _.git.remotePathFromLocal returns null if no remote path exists */
           remotePathFromLocal = _.git.path.trail( remotePathFromLocal );
@@ -1215,6 +1215,9 @@ function _repoForm()
           isRemote = opener.repoIsRemote();
         }
       }
+
+      if( downloadPath )
+      _.assert( downloadPath === fileProvider.path.detrail( downloadPath ), opener.name, opener.id );
     }
 
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )

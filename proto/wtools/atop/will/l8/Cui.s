@@ -2242,16 +2242,15 @@ function commandSubmodulesGit( e )
   if( profile !== undefined )
   delete commandOptions.profile;
 
-  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
-  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_head( commandGit, arguments );
+  {
+    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  }
+  cui._command_head( commandSubmodulesGit, arguments );
 
-  // _.routineOptions( commandSubmodulesGit, e.propertiesMap );
-  // cui._propertiesImply( e.propertiesMap );
-
-  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandSubmodulesGit.defaults );
-  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesGit.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   _.routineOptions( commandSubmodulesGit, implyMap );
   cui._propertiesImply( implyMap );
 
@@ -2855,7 +2854,6 @@ function commandModulesGitSync( e )
   // cui._propertiesImply({ withSubmodules : 1 });
 
   let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesGitSync.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
   _.routineOptions( commandModulesGitSync, implyMap );
   cui._propertiesImply( implyMap );
 
@@ -2896,7 +2894,7 @@ function commandModulesGitSync( e )
     return it.opener.openedModule.gitSync
     ({
       commit : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults ),
       restoringHardLinks : 0,
     });
   }
