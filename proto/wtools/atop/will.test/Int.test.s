@@ -2121,6 +2121,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( () =>
   {
     let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform();
@@ -2132,8 +2133,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download.criterion, { predefined : 1 } );
-    test.identical( path.download.path, undefined );
+    test.identical( path.download, undefined );
 
     opener.finit();
     return null;
@@ -2153,6 +2153,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( () =>
   {
     let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform();
@@ -2164,8 +2165,41 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download.criterion, { predefined : 1 } );
-    test.identical( path.download.path, undefined );
+    test.identical( path.download, undefined );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'change downloadPath in runtime';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
+    module.downloadPath = '../';
+    test.identical( module.pathResourceMap.download.path, '../' );
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download, undefined );
 
     opener.finit();
     return null;
