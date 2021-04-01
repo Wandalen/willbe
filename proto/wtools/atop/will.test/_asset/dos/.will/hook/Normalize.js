@@ -31,7 +31,7 @@ function onModule( context )
 
   // workflowsReplace( context );
   // gitIgnorePatch( context );
-  gitIgnoreReplace( context );
+  // gitIgnoreReplace( context );
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
   // fileProvider.filesDelete({ filePath : abs( '**/.DS_Store' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
@@ -57,7 +57,7 @@ function onModule( context )
   // readmeToAddAdjust( context );
   // readmeSampleRename( context );
 
-  // sourceNodeModulesEntryAdd( context );
+  sourceNodeModulesEntryAdd( context );
   // sourcesRemoveOld( context );
   // sourcesRemoveOld2( context );
   // sampleFix( context );
@@ -1035,7 +1035,6 @@ function sourceNodeModulesEntryAdd( context )
   if( !fileProvider.fileExists( entryPath ) )
   {
     console.error( `Entry path ${entryPath} of ${configPath} does not exists` );
-    // throw _.err( `Entry path ${entryPath} of ${configPath} does not exists` );
     return;
   }
 
@@ -1049,7 +1048,7 @@ function sourceNodeModulesEntryAdd( context )
   if( o.dry )
   return;
 
-  let code = `require( '${relativeEntryPath}' );`;
+  let code = `module.exports = require( '${relativeEntryPath}' );`;
   fileProvider.fileWrite( includePath, code );
 
 }
