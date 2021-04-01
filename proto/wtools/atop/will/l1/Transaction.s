@@ -56,7 +56,6 @@ function unform()
   let logger = will.logger;
   _.assert( logger.verbosity === t.verbosity, 'Verbosity of the main logger was changed' );
   t.formed = 0;
-  // logger.verbosity = t._verbosityPrev;
 }
 
 //
@@ -83,8 +82,17 @@ function formAssociates( o )
 {
   let t = this;
   _.assert( o.will instanceof _.Will );
+
   t.will = o.will;
   t.will.transaction = t;
+
+  // if( o.logger )
+  // t.logger = o.logger;
+  // else
+  // t.logger = new _.Logger({ output : t.will.logger, name : 'transaction' });
+
+  // _.assert( t.logger instanceof _.Logger );
+  // _.assert( t.logger.output === t.will.logger );
 }
 
 //
@@ -94,7 +102,8 @@ function verbosityGet()
   let t = this;
   let will = t.will;
   let logger = will.logger;
-  _.assert( t.formed === 0 || logger.verbosity === t._.verbosity, 'Verbosity of the main logger was changed outside of the transaction' );
+  // let logger = t.logger;
+  _.assert( t.formed === 0 || logger.verbosity === t._.verbosity, 'Verbosity of the transaction logger was changed outside of the transaction' );
   return t._.verbosity;
 }
 
@@ -105,6 +114,7 @@ function verbositySet( src )
   let t = this;
   let will = t.will;
   let logger = will.logger;
+  // let logger = t.logger;
 
   if( t.formed )
   return;
@@ -188,7 +198,6 @@ function _transactionPropertySetter_functor( propName )
 
 let TransactionFields =
 {
-  v : 3,
   verbosity : 3,
   verboseStaging : 0,
 
@@ -220,7 +229,8 @@ let Aggregates =
 
 let Associates =
 {
-  will : null
+  will : null,
+  // logger : null
 }
 
 let Restricts =
@@ -242,7 +252,6 @@ let Accessors =
 {
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
-  v : { suite : _.accessor.suite.alias({ originalName : 'verbosity' }) },
   withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
 }
 
