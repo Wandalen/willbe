@@ -2103,7 +2103,7 @@ function moduleClone( test )
 function exportModuleAndCheckDefaultPathsSimple( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'exportMinimal' );
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
   let opener;
   a.reflect();
 
@@ -2129,14 +2129,13 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'check export file';
-    let config = a.fileProvider.configRead( a.abs( 'out/ExportMinimal.out.will.yml' ) )
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
-    let path = config.module[ 'ExportMinimal.out' ].path;
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
     test.identical( path.download.criterion, { predefined : 1 } );
     test.identical( path.download.path, undefined );
 
     opener.finit();
-    a.will.readingEnd();
     return null;
   });
 
@@ -2162,14 +2161,13 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'check reexported file';
-    let config = a.fileProvider.configRead( a.abs( 'out/ExportMinimal.out.will.yml' ) )
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
-    let path = config.module[ 'ExportMinimal.out' ].path;
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
     test.identical( path.download.criterion, { predefined : 1 } );
     test.identical( path.download.path, undefined );
 
     opener.finit();
-    a.will.readingEnd();
     return null;
   });
 
