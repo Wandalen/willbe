@@ -13967,18 +13967,16 @@ function exportWithRemoteSubmodulesMinRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
-  a.appStart( '.with "**" .clean' )
-  a.appStart( '.with "**" .export' )
+  a.appStart( '.with "**" .clean' );
+  a.appStart( '.with "**" .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -14000,6 +13998,9 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/Integration.test.ss',
+      './group1/out/debug/node_modules',
+      './group1/out/debug/node_modules/wmodulefortesting1',
+      './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/Basic.s',
@@ -14018,6 +14019,10 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/Integration.test.ss',
+      './out/debug/node_modules',
+      './out/debug/node_modules/wmodulefortesting1',
+      './out/debug/node_modules/wmodulefortesting1a',
+      './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/Basic.s',
@@ -14038,12 +14043,12 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-    ]
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
