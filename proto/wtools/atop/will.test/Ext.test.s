@@ -15552,11 +15552,11 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   {
     test.case = '.export';
     return null;
-  })
+  });
 
-  a.appStart( '.export' )
+  a.appStart( '.export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Exported module::l1 / build::export with 3 file(s)' ), 1 );
@@ -15590,6 +15590,8 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
       './.module/ModuleForTesting12/proto/Integration.test.ss',
+      './.module/ModuleForTesting12/proto/node_modules',
+      './.module/ModuleForTesting12/proto/node_modules/wmodulefortesting12',
       './.module/ModuleForTesting12/proto/wtools',
       './.module/ModuleForTesting12/proto/wtools/testing',
       './.module/ModuleForTesting12/proto/wtools/testing/Basic.s',
@@ -15601,7 +15603,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
       './.module/ModuleForTesting12/sample/trivial',
-      './.module/ModuleForTesting12/sample/trivial/Sample.s'
+      './.module/ModuleForTesting12/sample/trivial/Sample.s',
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
