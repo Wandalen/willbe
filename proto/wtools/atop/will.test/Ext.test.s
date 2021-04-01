@@ -7035,7 +7035,7 @@ hookGitSyncConflict.description =
 
 //
 
-function hookGitSyncRestoreHardLinksWithConfigPath( test )
+function hookGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
@@ -34753,7 +34753,7 @@ original
 
 //
 
-function commandGitSyncRestoreHardLinksWithConfigPath( test )
+function commandGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
@@ -40651,7 +40651,7 @@ const Proto =
     hookGitPush,
     hookGitReset,
     hookGitSyncConflict,
-    hookGitSyncRestoreHardLinksWithConfigPath,
+    hookGitSyncRestoreHardLinksWithShared,
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
@@ -40889,7 +40889,7 @@ const Proto =
     commandGitStatusWithPR,
     commandGitSync,
     commandGitSyncRestoringHardlinks,
-    commandGitSyncRestoreHardLinksWithConfigPath,
+    commandGitSyncRestoreHardLinksWithShared,
     commandGitTag,
 
     commandNpmFromWillfile,

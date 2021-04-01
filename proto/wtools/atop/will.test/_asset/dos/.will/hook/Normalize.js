@@ -1020,6 +1020,11 @@ function sourceNodeModulesEntryAdd( context )
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
+  if( !context.module )
+  return;
+  if( context.module.about.native )
+  return
+
   let protoPath = path.join( inPath, 'proto' );
   let configPath = path.join( inPath, 'was.package.json' );
   let name = _.npm.localName({ configPath });
