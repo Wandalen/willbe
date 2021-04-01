@@ -31623,7 +31623,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     a.fileProvider.fileAppend( a.abs( 'super/f2.txt' ), 'super\n' );
     return null;
-  })
+  });
 
   /* */
 
@@ -31633,7 +31633,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
     return null;
-  })
+  });
 
   a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
@@ -31659,14 +31659,14 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -31674,21 +31674,19 @@ original/f2.txt
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
 super
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   a.ready.finally( () =>
   {
