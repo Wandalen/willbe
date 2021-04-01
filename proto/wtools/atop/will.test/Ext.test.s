@@ -23448,7 +23448,7 @@ function stepSubmodulesUpdate( test )
   return a.ready;
 }
 
-stepSubmodulesUpdate.timeOut = 300000;
+stepSubmodulesUpdate.timeOut = 600000;
 
 //
 
@@ -24617,7 +24617,7 @@ copy
 }
 
 stepGitCheckHardLinkRestoring.rapidity = -1;
-stepGitCheckHardLinkRestoring.timeOut = 300000;
+stepGitCheckHardLinkRestoring.timeOut = 600000;
 
 //
 
@@ -25519,7 +25519,7 @@ File.txt
 }
 
 stepGitReset.rapidity = -1;
-stepGitReset.timeOut = 120000;
+stepGitReset.timeOut = 300000;
 
 //
 
@@ -33296,7 +33296,7 @@ clone
 }
 
 commandGitPull.rapidity = -1;
-commandGitPull.timeOut = 300000;
+commandGitPull.timeOut = 600000;
 
 //
 
