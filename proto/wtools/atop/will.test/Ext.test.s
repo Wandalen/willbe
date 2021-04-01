@@ -16996,19 +16996,17 @@ function cleanRecursiveMin( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export first'
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with z .export' )
+  a.appStart( '.with ** .clean' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with z .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -17028,6 +17026,9 @@ function cleanRecursiveMin( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/Integration.test.ss',
+      './group1/out/debug/node_modules',
+      './group1/out/debug/node_modules/wmodulefortesting1',
+      './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/Basic.s',
@@ -17046,6 +17047,10 @@ function cleanRecursiveMin( test )
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/Integration.test.ss',
+      './out/debug/node_modules',
+      './out/debug/node_modules/wmodulefortesting1',
+      './out/debug/node_modules/wmodulefortesting1a',
+      './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/Basic.s',
@@ -17065,17 +17070,16 @@ function cleanRecursiveMin( test )
       './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s'
+      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-
-  .then( ( op ) =>
+  a.appStart( '.with z .clean recursive:2' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -17086,12 +17090,12 @@ function cleanRecursiveMin( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function cleanRecursiveMin */
+}
 
 cleanRecursiveMin.rapidity = -1;
 
