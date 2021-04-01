@@ -446,8 +446,11 @@ function _commandsMake()
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
+
     'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
+    'npm install' :                     { e : _.routineJoin( will, will.commandNpmInstall )                   },
+
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -4785,9 +4788,6 @@ function commandNpmDepAdd( e )
   e.propertiesMap.localPath = e.propertiesMap.to;
   delete e.propertiesMap.to;
 
-  if( e.propertiesMap.depPath === '.' )
-  e.propertiesMap.depPath = 'hd://.'
-
   return cui.npmDepAdd( e.propertiesMap );
 }
 
@@ -4815,6 +4815,81 @@ commandNpmDepAdd.commandProperties =
   verbosity : 'Verbosity.',
 };
 /* qqq : for Dmytro : implement and cover each property */
+
+//
+
+function commandNpmInstall( e )
+{
+  let cui = this;
+  let logger = cui.logger;
+  let fileProvider = cui.fileProvider;
+  let path = fileProvider.path;
+  let ready = _.take( null );
+
+  cui._command_head( commandNpmInstall, arguments );
+
+  let o = e.propertiesMap;
+  delete o.v;
+
+  _.routineOptions( commandNpmInstall, o );
+  _.sure( !e.subject );
+
+  o.logger = new _.Logger({ output : logger });
+  o.logger.verbosity = o.verbosity;
+  delete o.verbosity;
+  o.localPath = path.resolve( o.to || '.' );
+  delete o.to;
+
+  return _.npm.install( o );
+
+  // fileProvider.filesDelete( path.join( o.to, 'node_modules' ) );
+  // fileProvider.filesDelete( path.join( o.to, 'node_modules' ) );
+  //
+  // let o2 =
+  // {
+  //   execPath : 'npm install',
+  //   inputMirroring : 0,
+  //   throwingExitCode : 0,
+  //   mode : 'shell',
+  //   ready,
+  // }
+  //
+  // _.process.start( o2 );
+  //
+  // ready.then( () =>
+  // {
+  //
+  //   if( e.linkingSelf )
+  //   cui.npmDepAdd
+  //   ({
+  //     localPath : null,
+  //     depPath : 'hd://.',
+  //     verbosity : e.propertiesMap.verbosity,
+  //     dry : e.propertiesMap.dry,
+  //   });
+  //
+  // });
+
+}
+
+commandNpmInstall.defaults =
+{
+  to : null,
+  locked : null,
+  linkingSelf : 1,
+  dry : 0,
+  verbosity : 1,
+};
+commandNpmInstall.hint = 'Add as dependency to NPM.';
+commandNpmInstall.commandProperties =
+{
+  to : 'Path to directory with package.json file. Default is current directory.',
+  linkingSelf : 'Softlink itself. Default is true.',
+  locked : 'Use package-lock.json instead of package.json. By default use lock files if the file exists otherwise use package.json.',
+  dry : 'Dry run.',
+  v : 'Verbosity.',
+  verbosity : 'Verbosity.',
+};
 
 //
 
@@ -5580,6 +5655,7 @@ let Extension =
 
   commandNpmPublish,
   commandNpmDepAdd,
+  commandNpmInstall,
 
   // command package
 
