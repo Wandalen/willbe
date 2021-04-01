@@ -958,7 +958,8 @@ function predefinedForm()
     name : 'download',
     path : null,
     writable : 1,
-    exportable : 1,
+    exportable : 0,
+    // exportable : 1, /* Dmytro : affects main modules exports with Git repository */
     importableFromIn : 1,
     importableFromOut : 1,
   })
