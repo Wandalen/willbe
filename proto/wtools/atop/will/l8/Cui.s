@@ -2727,6 +2727,7 @@ function commandModulesGitDiff( e )
 commandModulesGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
 commandModulesGitDiff.hint = 'Get diffs of root module and submodules repositories.';
 commandModulesGitDiff.commandSubjectHint = false;
+commandModulesGitDiff.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandModulesGitDiff.commandProperties = commandImply.commandProperties;
 
 //
@@ -3349,17 +3350,24 @@ commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 function commandGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  if( hardLinkMaybe !== undefined )
-  delete commandOptions.hardLinkMaybe;
-  let profile = commandOptions.profile;
-  if( profile !== undefined )
-  delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
+  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  // if( hardLinkMaybe !== undefined )
+  // delete commandOptions.hardLinkMaybe;
+  // let profile = commandOptions.profile;
+  // if( profile !== undefined )
+  // delete commandOptions.profile;
+
+  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  debugger
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
-  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  {
+    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  }
+
   cui._command_head( commandGit, arguments );
 
   _.routineOptions( commandGit, e.propertiesMap );
@@ -3380,17 +3388,21 @@ function commandGit( e )
       dirPath : it.junction.dirPath,
       command : e.subject,
       verbosity : cui.verbosity,
-      hardLinkMaybe,
+      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
+      profile : e.propertiesMap.profile
     });
   }
 }
 
 commandGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandGit.defaults.hardLinkMaybe = 0;
+commandGit.defaults.profile = 'default';
 commandGit.defaults.withSubmodules = 0;
 commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
-commandGit.commandProperties = commandImply.commandProperties;
-commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 0.';
 commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
@@ -3424,7 +3436,8 @@ commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitDiff.defaults.withSubmodules = 0;
 commandGitDiff.hint = 'Get diffs in module repository.';
 commandGitDiff.commandSubjectHint = false;
-commandGitDiff.commandProperties = commandImply.commandProperties;
+commandGitDiff.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitDiff.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 
 //
 
@@ -3487,9 +3500,9 @@ function commandGitPull( e )
 {
   let cui = this;
   cui._command_head( commandGitPull, arguments );
-  let profile = e.propertiesMap.profile;
-  if( 'profile' in e.propertiesMap )
-  delete e.propertiesMap.profile;
+  // let profile = e.propertiesMap.profile;
+  // if( 'profile' in e.propertiesMap )
+  // delete e.propertiesMap.profile;
 
   _.routineOptions( commandGitPull, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -3508,16 +3521,18 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.verbosity,
-      profile,
+      profile : e.propertiesMap.profile,
     });
   }
 }
 
 commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPull.defaults.withSubmodules = 0;
+commandGitPull.defaults.profile = 'default';
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
-commandGitPull.commandProperties = commandImply.commandProperties;
+commandGitPull.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitPull.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
