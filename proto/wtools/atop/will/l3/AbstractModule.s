@@ -557,7 +557,6 @@ function willfileRegister( willf )
 
   if( _.arrayIs( willf ) )
   {
-    debugger;
     willf.forEach( ( willf ) => module.willfileRegister( willf ) );
     return;
   }
