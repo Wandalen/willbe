@@ -282,15 +282,15 @@ function _command_head( o )
   //   delete e.propertiesMap.v;
   // }
   /* Dmytro : it is not a solution, it is a temporary improvement */
-  if( o.routine.commandProperties )
-  if( o.routine.commandProperties.v )
-  {
-    if( e.propertiesMap.v !== undefined )
-    e.propertiesMap.verbosity = e.propertiesMap.v;
+  // if( o.routine.commandProperties )
+  // if( o.routine.commandProperties.v )
+  // {
+  //   if( e.propertiesMap.v !== undefined )
+  //   e.propertiesMap.verbosity = e.propertiesMap.v;
 
-    if( e.propertiesMap.verbosity !== e.propertiesMap.v )
-    e.propertiesMap.v = e.propertiesMap.verbosity;
-  }
+  //   if( e.propertiesMap.verbosity !== e.propertiesMap.v )
+  //   e.propertiesMap.v = e.propertiesMap.verbosity;
+  // }
 
 
 }
@@ -1287,7 +1287,7 @@ function commandImply( e )
 
 commandImply.defaults =
 {
-  v : 3,
+  // v : 3,
   verbosity : 3,
   beeping : null,
   withOut : null,
@@ -1301,9 +1301,13 @@ commandImply.defaults =
 };
 commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
+commandImply.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandImply.commandProperties =
 {
-  v : 'Set verbosity. Default is 3.',
+  // v : 'Set verbosity. Default is 3.',
   verbosity : 'Set verbosity. Default is 3.',
   beeping : 'Make noise when it\'s done. Default is 0.',
   withOut : 'Include out modules. Default is 1.',
@@ -1451,17 +1455,22 @@ function commandVersionBump( e )
 commandVersionBump.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandVersionBump.hint = 'Increase version in willfile on specified delta.';
 commandVersionBump.longHint = 'Increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.\n';
 commandVersionBump.commandSubjectHint = 'A string in format "x.x.x" that declares delta for each version.';
+commandVersionBump.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandVersionBump.commandProperties =
 {
   versionDelta : 'A string in format "x.x.x" that defines delta for version.',
   verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  // v : 'Set verbosity. Default is 3.',
 };
+
 
 //
 
@@ -2347,11 +2356,15 @@ commandSubmodulesGitPrOpen.defaults =
   dstBranch : null,
   title : null,
   body : null,
-  v : null,
+  // v : null,
   verbosity : null,
 };
 commandSubmodulesGitPrOpen.hint = 'Open pull requests from current modules and its submodules.';
 commandSubmodulesGitPrOpen.commandSubjectHint = 'A title for PR';
+commandSubmodulesGitPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandSubmodulesGitPrOpen.commandProperties =
 {
   token : 'An individual authorization token. By default reads from user config file.',
@@ -2359,7 +2372,7 @@ commandSubmodulesGitPrOpen.commandProperties =
   dstBranch : 'A destination branch. Default is "master".',
   title : 'Option that rewrite title in provided argument.',
   body : 'Body message.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
 
@@ -2398,11 +2411,15 @@ commandSubmodulesGitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
 };
 commandSubmodulesGitStatus.hint = 'Check the status of the submodules repositories.';
 commandSubmodulesGitStatus.commandSubjectHint = false;
+commandSubmodulesGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandSubmodulesGitStatus.commandProperties =
 {
   local : 'Check local commits. Default value is 1.',
@@ -2410,7 +2427,7 @@ commandSubmodulesGitStatus.commandProperties =
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
 
@@ -2490,17 +2507,21 @@ commandSubmodulesGitSync.defaults = _.mapExtend( null, commandImply.defaults,
   dry : 0,
   profile : 'default',
   // v : null,
-  v : 1,
+  // v : 1,
   verbosity : 1,
   withSubmodules : 1
 });
 commandSubmodulesGitSync.hint = 'Syncronize repositories of submodules of current module.';
 commandSubmodulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
+commandSubmodulesGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandSubmodulesGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
 });
@@ -2745,11 +2766,15 @@ commandModulesGitPrOpen.defaults =
   dstBranch : null,
   title : null,
   body : null,
-  v : null,
+  // v : null,
   verbosity : null,
 };
 commandModulesGitPrOpen.hint = 'Open pull requests from current module and its submodules.';
 commandModulesGitPrOpen.commandSubjectHint = 'A title for PR';
+commandModulesGitPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandModulesGitPrOpen.commandProperties =
 {
   token : 'An individual authorization token. By default reads from user config file.',
@@ -2757,7 +2782,7 @@ commandModulesGitPrOpen.commandProperties =
   dstBranch : 'A destination branch. Default is "master".',
   title : 'Option that rewrite title in provided argument.',
   body : 'Body message.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
 
@@ -2796,11 +2821,15 @@ commandModulesGitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
 };
 commandModulesGitStatus.hint = 'Check the status of the module and submodules repositories.';
 commandModulesGitStatus.commandSubjectHint = false;
+commandModulesGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandModulesGitStatus.commandProperties =
 {
   local : 'Check local commits. Default value is 1.',
@@ -2808,7 +2837,7 @@ commandModulesGitStatus.commandProperties =
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
 
@@ -2886,17 +2915,21 @@ commandModulesGitSync.defaults = _.mapExtend( null, commandImply.defaults,
   dry : 0,
   profile : 'default',
   // v : null,
-  v : 1,
+  // v : 1,
   verbosity : 1,
   withSubmodules : 1
 });
 commandModulesGitSync.hint = 'Syncronize repositories of current module and all submodules of the module.';
 commandModulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
+commandModulesGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandModulesGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
 });
@@ -3430,11 +3463,15 @@ commandGitPrOpen.defaults =
   dstBranch : null,
   title : null,
   body : null,
-  v : null,
+  // v : null,
   verbosity : null,
 };
 commandGitPrOpen.hint = 'Open pull request from current modules.';
 commandGitPrOpen.commandSubjectHint = 'A title for PR';
+commandGitPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandGitPrOpen.commandProperties =
 {
   token : 'An individual authorization token. By default reads from user config file.',
@@ -3442,7 +3479,7 @@ commandGitPrOpen.commandProperties =
   dstBranch : 'A destination branch. Default is "master".',
   title : 'Option that rewrite title in provided argument.',
   body : 'Body message.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
 
@@ -3554,11 +3591,15 @@ commandGitReset.defaults =
   removingIgnored : 0,
   removingSubrepositories : 0,
   dry : 0,
-  v : null,
+  // v : null,
   verbosity : 2,
 };
 commandGitReset.hint = 'Reset local changes in repository of the module.';
 commandGitReset.commandSubjectHint = false;
+commandGitReset.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandGitReset.commandProperties =
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
@@ -3566,7 +3607,7 @@ commandGitReset.commandProperties =
   removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
   removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
   dry : 'Dry run without resetting. Default is dry:0.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
 
@@ -3605,11 +3646,15 @@ commandGitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
 };
 commandGitStatus.hint = 'Check the status of the repository.';
 commandGitStatus.commandSubjectHint = false;
+commandGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandGitStatus.commandProperties =
 {
   local : 'Check local commits. Default value is 1.',
@@ -3617,7 +3662,7 @@ commandGitStatus.commandProperties =
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
 
@@ -3655,16 +3700,20 @@ commandGitSync.defaults =
   dirPath : null,
   dry : 0,
   profile : 'default',
-  v : null,
+  // v : null,
   verbosity : 1,
 };
 commandGitSync.hint = 'Syncronize local and remote repositories.';
 commandGitSync.commandSubjectHint = 'A commit message. Default value is "."';
+commandGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandGitSync.commandProperties =
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
 };
@@ -3703,18 +3752,22 @@ commandGitTag.defaults =
   description : '',
   dry : 0,
   light : 0,
-  v : null,
+  // v : null,
   verbosity : 1,
 };
 commandGitTag.hint = 'Add tag for current commit.';
 commandGitTag.commandSubjectHint = false;
+commandGitTag.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandGitTag.commandProperties =
 {
   name : 'Tag name. Default is name:".".',
   description : 'Description of annotated tag. Default is description:"".',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
 
@@ -4255,17 +4308,21 @@ function commandWillfileGet( e )
 commandWillfileGet.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileGet.hint = 'Get value of separate properties of source willfile.';
 commandWillfileGet.longHint = 'Get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".\n';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
+commandWillfileGet.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileGet.commandProperties =
 {
   'verbosity' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.get path/to/not/existed:1 verbosity:4" - enable output for not existed property.',
-  'v' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  + '\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
+  // 'v' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  // + '\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
 };
 
 //
@@ -4321,20 +4378,24 @@ function commandWillfileSet( e )
 commandWillfileSet.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   structureParse : 0,
 };
 commandWillfileSet.hint = 'Set separate properties in destination willfile.';
 commandWillfileSet.longHint = 'Set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".\n';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileSet.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileSet.commandProperties =
 {
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.set path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.set about/author/name:author verbosity:4" - enable output if option "author" has string value.',
-  'v' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  + '\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
+  // 'v' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  // + '\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
 };
 
 //
@@ -4421,17 +4482,21 @@ function commandWillfileDel( e )
 commandWillfileDel.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileDel.hint = 'Delete separate properties in destination willfile.';
 commandWillfileDel.longHint = 'Delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml".\n';
 commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
+commandWillfileDel.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileDel.commandProperties =
 {
   'verbosity' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.del about/author verbosity:4" - enable output.',
-  'v' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  + '\n\t"will .willfile.del about/author v:4" - enable output.',
+  // 'v' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  // + '\n\t"will .willfile.del about/author v:4" - enable output.',
 };
 
 //
@@ -4489,18 +4554,22 @@ function commandWillfileExtend( e )
 commandWillfileExtend.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   structureParse : 0,
 };
 commandWillfileExtend.hint = 'Extend separate properties of destination willfile.';
 commandWillfileExtend.longHint = 'Extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileExtend.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileExtend.commandProperties =
 {
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
+  // 'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -4555,18 +4624,22 @@ function commandWillfileSupplement( e )
 commandWillfileSupplement.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   structureParse : 0,
 };
 commandWillfileSupplement.hint = 'Extend separate not existed properties of destination willfile.';
 commandWillfileSupplement.longHint = 'Extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one property.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile property "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileSupplement.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileSupplement.commandProperties =
 {
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
+  // 'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -4588,11 +4661,15 @@ function commandWillfileExtendWillfile( e )
 commandWillfileExtendWillfile.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileExtendWillfile.hint = 'Extend willfile by data from source configuration files.';
 commandWillfileExtendWillfile.longHint = 'Extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
 commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileExtendWillfile.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileExtendWillfile.commandProperties =
 {
   'about' : 'Enables extension of section "about". Default value is 1.',
@@ -4617,7 +4694,7 @@ commandWillfileExtendWillfile.commandProperties =
   'format' : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
   'submodulesDisabling' : 'Disables new submodules from source files. Default value is 0.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
+  // 'v' : 'Set verbosity. Default is 3.',
 }
 
 //
@@ -4639,11 +4716,12 @@ function commandWillfileSupplementWillfile( e )
 commandWillfileSupplementWillfile.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileSupplementWillfile.hint = 'Supplement willfile by data from source configuration files.';
 commandWillfileSupplementWillfile.longHint = 'Supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileSupplementWillfile.commandPropertiesAliases = _.mapExtend( null, commandWillfileExtendWillfile.commandPropertiesAliases );
 commandWillfileSupplementWillfile.commandProperties = _.mapExtend( null, commandWillfileExtendWillfile.commandProperties );
 
 //
@@ -4851,7 +4929,7 @@ function commandWillfileMergeIntoSingle( e )
 commandWillfileMergeIntoSingle.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
@@ -4859,8 +4937,13 @@ commandWillfileMergeIntoSingle.defaults =
 };
 commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
 commandWillfileMergeIntoSingle.commandSubjectHint = false;
+commandWillfileMergeIntoSingle.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileMergeIntoSingle.commandProperties =
 {
+  verbosity : 'Set verbosity. Default is 3.',
   primaryPath : 'Name of destination willfile. Default is `will.yml`',
   secondaryPath : 'Name of file to extend destination willfile',
   submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1',
@@ -4917,18 +5000,22 @@ commandNpmPublish.defaults =
 
   force : 0,
   dry : 0,
-  v : 1,
+  // v : 1,
   verbosity : 1,
 };
 commandNpmPublish.hint = 'Publish in NPM.';
 commandNpmPublish.commandSubjectHint = 'A commit message for uncommitted changes. Default is ".".';
+commandNpmPublish.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandNpmPublish.commandProperties =
 {
   commit : 'message', /* qqq : for Dmytro : bad : bad name */
   tag : 'tag',
   force : 'forces diff',
   dry : 'dry run',
-  v : 'verbosity',
+  // v : 'verbosity',
   verbosity : 'verbosity',
 };
 /* qqq : for Dmytro : bad : break of pattern */
@@ -4971,6 +5058,10 @@ commandNpmDepAdd.defaults =
 };
 commandNpmDepAdd.hint = 'Add as dependency to NPM.';
 commandNpmDepAdd.commandSubjectHint = 'Dependency path.';
+commandNpmDepAdd.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandNpmDepAdd.commandProperties =
 {
   to : 'Path to the directory with directory node_modules. Current path by default.',
@@ -4979,7 +5070,7 @@ commandNpmDepAdd.commandProperties =
   downloading : 'Downloading files. Default is true.',
   linking : 'Softlink instead of copying. Default is true.',
   dry : 'Dry run.',
-  v : 'Verbosity.',
+  // v : 'Verbosity.',
   verbosity : 'Verbosity.',
 };
 /* qqq : for Dmytro : implement and cover each property */
