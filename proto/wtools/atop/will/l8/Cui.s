@@ -3567,7 +3567,8 @@ commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPush.defaults.withSubmodules = 0;
 commandGitPush.hint = 'Push commits and tags to remote repository.';
 commandGitPush.commandSubjectHint = false;
-commandGitPush.commandProperties = commandImply.commandProperties;
+commandGitPush.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitPush.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 
 //
 
