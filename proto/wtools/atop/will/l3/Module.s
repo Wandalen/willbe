@@ -960,7 +960,8 @@ function predefinedForm()
     writable : 1,
     exportable : 1, /* Dmytro : affects main modules exports with Git repository Vova: should be enabled, found another way to fix the download path problem*/
     importableFromIn : 1,
-    importableFromOut : 1,
+    importableFromOut : 0,
+    importableFromPeer : 1
   })
 
   path

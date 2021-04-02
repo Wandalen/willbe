@@ -2290,6 +2290,93 @@ function exportGitModuleAndCheckDefaultPathsSimple( test )
 
 //
 
+function reexportGitModule( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  let opener;
+  a.reflect();
+
+  a.shell( 'git init' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check export file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    path.download.path = path.download.path + '/';
+
+    a.fileProvider.fileWrite
+    ({
+      filePath : a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ),
+      data : config,
+      encoding : 'yaml'
+    });
+
+    opener.finit();
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'export';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check export file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 /*
 test
   - following exports preserves followed export
@@ -2348,6 +2435,7 @@ function exportSeveralExports( test )
     test.true( opener.isFinited() );
 
     test.description = 'should be only 1 error, because 1 attempt to open corrupted outwillfile, 2 times in the list, because for different openers';
+    debugger
     test.identical( _.longOnce( _.select( a.will.openersErrorsArray, '*/err' ) ).length, 2 );
     a.will.openersErrorsRemoveAll();
     test.identical( a.will.openersErrorsArray.length, 0 );
@@ -11712,6 +11800,7 @@ const Proto =
 
     exportModuleAndCheckDefaultPathsSimple,
     exportGitModuleAndCheckDefaultPathsSimple,
+    reexportGitModule,
     exportSeveralExports,
     exportSuper,
     exportSuperIn,

@@ -229,7 +229,17 @@ function MakeSingle( o )
     if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
     if( importing && isOut )
     {
+      if( !instance.importableFromPeer )
       return;
+
+      let peerModule = o.resource.module.peerModule;
+      if( peerModule )
+      {
+        let resource = peerModule.resourceGet( instance.KindName, instance.name );
+        if( resource.path === null )
+        return;
+        o.resource = resource;
+      }
     }
 
     if( instance && rewriting )
@@ -1382,6 +1392,7 @@ let Aggregates =
   exportable : 1,
   importableFromIn : 1,
   importableFromOut : 1,
+  importableFromPeer : 0,
   // generated : 0,
   phantom : 0,
 }
