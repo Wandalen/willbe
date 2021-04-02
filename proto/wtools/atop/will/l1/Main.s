@@ -5361,16 +5361,18 @@ function npmDepAdd( o )
   let will = this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger
 
   _.routine.options( npmDepAdd, o );
 
   if( !o.localPath )
   o.localPath = path.current();
 
-  let nodeModulesPath = _.npm.pathDownloadFromLocal( o.localPath );
   if( !o.as )
   o.as = _.npm.localName({ localPath : path.current() });
 
+  if( o.depPath === '.' )
+  o.depPath = 'hd://.'
   if( path.parse( o.depPath ).protocol === 'hd' )
   o.depPath = path.join( path.current(), o.depPath );
 
@@ -5379,23 +5381,31 @@ function npmDepAdd( o )
   _.assert( _.boolLikeTrue( o.linking ), 'not implemented' );
   _.assert( path.parse( o.depPath ).protocol === 'hd', 'not implemented' );
 
-  _.sure( fileProvider.fileExists( _.npm.pathLocalFromDownload( nodeModulesPath ) ), `nodeModulesPath:${nodeModulesPath} does not exist` );
-  _.sure( fileProvider.fileExists( o.depPath ), `depPath:${o.depPath} does not exist` );
-  _.sure( _.strDefined( o.as ), '`as` is not specified' )
+  o.logger = new _.Logger({ output : logger });
+  o.logger.verbosity = o.verbosity;
+  delete o.verbosity;
 
-  let dstPath = path.join( nodeModulesPath, o.as );
-  if( o.verbosity )
-  logger.log( `Linking ${_.ct.format( o.depPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
-  if( !o.dry )
-  fileProvider.softLink
-  ({
-    dstPath : dstPath,
-    srcPath : o.depPath,
-    makingDirectory : 1,
-    rewritingDirs : 1,
-  });
+  return _.npm.depAdd( o );
 
-  return true;
+  // let nodeModulesPath = _.npm.pathDownloadFromLocal( o.localPath );
+  //
+  // _.sure( fileProvider.fileExists( _.npm.pathLocalFromDownload( nodeModulesPath ) ), `nodeModulesPath:${nodeModulesPath} does not exist` );
+  // _.sure( fileProvider.fileExists( o.depPath ), `depPath:${o.depPath} does not exist` );
+  // _.sure( _.strDefined( o.as ), '`as` is not specified' )
+  //
+  // let dstPath = path.join( nodeModulesPath, o.as );
+  // if( o.verbosity )
+  // logger.log( `Linking ${_.ct.format( o.depPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
+  // if( !o.dry )
+  // fileProvider.softLink
+  // ({
+  //   dstPath : dstPath,
+  //   srcPath : o.depPath,
+  //   makingDirectory : 1,
+  //   rewritingDirs : 1,
+  // });
+  //
+  // return true;
 }
 
 npmDepAdd.defaults =

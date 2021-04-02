@@ -7035,7 +7035,7 @@ hookGitSyncConflict.description =
 
 //
 
-function hookGitSyncRestoreHardLinksWithConfigPath( test )
+function hookGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
@@ -14027,18 +14027,16 @@ function exportWithRemoteSubmodulesMinRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
-  a.appStart( '.with "**" .clean' )
-  a.appStart( '.with "**" .export' )
+  a.appStart( '.with "**" .clean' );
+  a.appStart( '.with "**" .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -14105,12 +14103,12 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-    ]
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -15614,11 +15612,11 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   {
     test.case = '.export';
     return null;
-  })
+  });
 
-  a.appStart( '.export' )
+  a.appStart( '.export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Exported module::l1 / build::export with 3 file(s)' ), 1 );
@@ -15665,7 +15663,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
       './.module/ModuleForTesting12/sample/trivial',
-      './.module/ModuleForTesting12/sample/trivial/Sample.s'
+      './.module/ModuleForTesting12/sample/trivial/Sample.s',
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
@@ -17058,19 +17056,17 @@ function cleanRecursiveMin( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export first'
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with z .export' )
+  a.appStart( '.with ** .clean' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with z .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -17134,17 +17130,16 @@ function cleanRecursiveMin( test )
       './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s'
+      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-
-  .then( ( op ) =>
+  a.appStart( '.with z .clean recursive:2' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -17155,12 +17150,12 @@ function cleanRecursiveMin( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function cleanRecursiveMin */
+}
 
 cleanRecursiveMin.rapidity = -1;
 
@@ -23524,7 +23519,7 @@ function stepSubmodulesUpdate( test )
   return a.ready;
 }
 
-stepSubmodulesUpdate.timeOut = 300000;
+stepSubmodulesUpdate.timeOut = 600000;
 
 //
 
@@ -24693,7 +24688,7 @@ copy
 }
 
 stepGitCheckHardLinkRestoring.rapidity = -1;
-stepGitCheckHardLinkRestoring.timeOut = 300000;
+stepGitCheckHardLinkRestoring.timeOut = 600000;
 
 //
 
@@ -25595,7 +25590,7 @@ File.txt
 }
 
 stepGitReset.rapidity = -1;
-stepGitReset.timeOut = 120000;
+stepGitReset.timeOut = 300000;
 
 //
 
@@ -31688,7 +31683,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     a.fileProvider.fileAppend( a.abs( 'super/f2.txt' ), 'super\n' );
     return null;
-  })
+  });
 
   /* */
 
@@ -31698,7 +31693,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
     return null;
-  })
+  });
 
   a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
@@ -31724,14 +31719,14 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -31739,21 +31734,19 @@ original/f2.txt
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
 super
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   a.ready.finally( () =>
   {
@@ -33372,7 +33365,7 @@ clone
 }
 
 commandGitPull.rapidity = -1;
-commandGitPull.timeOut = 300000;
+commandGitPull.timeOut = 600000;
 
 //
 
@@ -34760,7 +34753,7 @@ original
 
 //
 
-function commandGitSyncRestoreHardLinksWithConfigPath( test )
+function commandGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
@@ -40688,7 +40681,7 @@ const Proto =
     hookGitPush,
     hookGitReset,
     hookGitSyncConflict,
-    hookGitSyncRestoreHardLinksWithConfigPath,
+    hookGitSyncRestoreHardLinksWithShared,
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
@@ -40728,6 +40721,7 @@ const Proto =
     // export
 
     exportSingle,
+    exportWithExistedGitRepository,
     exportItself,
     exportNonExportable,
     exportPurging, /* yyy */
@@ -40925,7 +40919,7 @@ const Proto =
     commandGitStatusWithPR,
     commandGitSync,
     commandGitSyncRestoringHardlinks,
-    commandGitSyncRestoreHardLinksWithConfigPath,
+    commandGitSyncRestoreHardLinksWithShared,
     commandGitTag,
 
     commandNpmFromWillfile,
