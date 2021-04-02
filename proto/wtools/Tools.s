@@ -21,11 +21,11 @@ if( typeof module !== 'undefined' )
     require( toolsPath );
   }
 
-  _global_.wTools.module.predeclare
-  ({
-    alias : [ 'wTools', 'wtools' ],
-    entryPath : __filename,
-  });
+  // _global_.wTools.module.predeclare
+  // ({
+  //   alias : [ 'wTools', 'wtools' ],
+  //   entryPath : __filename,
+  // });
 
   module[ 'exports' ] = _global_.wTools;
 }
