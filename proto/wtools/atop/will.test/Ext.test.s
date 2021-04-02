@@ -28778,10 +28778,12 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
 
     return null;
   });
@@ -28835,7 +28837,8 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 0 );
@@ -28849,7 +28852,8 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+another new line' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
 
     return null;
   });
@@ -28903,7 +28907,8 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
@@ -28917,7 +28922,8 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
 
     return null;
   });
@@ -28971,7 +28977,8 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
@@ -28982,7 +28989,8 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+new line' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
@@ -30474,10 +30482,13 @@ function commandModulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
 
     return null;
   });
@@ -30529,9 +30540,11 @@ function commandModulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -30543,7 +30556,8 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
 
     return null;
   });
@@ -30595,9 +30609,11 @@ function commandModulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -30609,7 +30625,8 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
 
     return null;
   });
@@ -30661,9 +30678,11 @@ function commandModulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 2 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 2 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -30672,7 +30691,8 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '+new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
@@ -40552,6 +40572,36 @@ Checks if command tag:
  - Checkouts selected submodules to specific tag
 `
 
+//
+
+function willFilterFieldsOverwrite( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
+  a.reflect();
+
+  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  return a.ready;
+}
+
+willFilterFieldsOverwrite.rapidity = 1;
+willFilterFieldsOverwrite.description =
+
+`
+Filter fields overwrite problem:
+Command can modify filter fields of main( will ). It can break behavior of other commands that may be executed in the sequence.
+This test runs two commands with different filtering options in the sequence to check if problem is fixed.
+`
+
 // --
 // declare
 // --
@@ -40918,7 +40968,9 @@ const Proto =
     commandNpmPublishFullRegularModule,
 
     commandsSubmoduleSafety,
-    commandSubmodulesUpdateOptionTo
+    commandSubmodulesUpdateOptionTo,
+
+    willFilterFieldsOverwrite
 
   }
 

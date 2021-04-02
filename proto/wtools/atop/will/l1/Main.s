@@ -125,6 +125,23 @@ let FilterFields =
   ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
 }
 
+//
+
+let IntentionFields =
+{
+  attachedWillfilesFormedOfMain : true,
+  peerModulesFormedOfMain : true,
+  subModulesFormedOfMain : true,
+  resourcesFormedOfMain : null,
+  allOfMain : null,
+
+  attachedWillfilesFormedOfSub : true,
+  peerModulesFormedOfSub : true,
+  subModulesFormedOfSub : true,
+  resourcesFormedOfSub : null,
+  allOfSub : null,
+}
+
 // --
 // inter
 // --
@@ -147,7 +164,7 @@ function init( o )
   let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
 
   will._.hooks = null
-  will._.withSubmodules = null;
+  // will._.withSubmodules = null;
 
   _.workpiece.initFields( will );
   Object.preventExtensions( will );
@@ -156,6 +173,9 @@ function init( o )
 
   if( o )
   will.copy( o );
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ isInitial : 1, /*verbosity : will.logger.verbosity,*/ will })
 
 }
 
@@ -189,8 +209,8 @@ function form()
 
   if( !will.environmentPath )
   will.environmentPath = will.environmentPathFind( will.fileProvider.path.current() );
-  if( !will.withPath )
-  will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
+  // if( !will.withPath )
+  // will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !will.formed );
@@ -586,6 +606,20 @@ function _verbosityChange()
 
 //
 
+function verbosityGet()
+{
+  let will = this;
+  let transaction = will.transaction;
+  let logger = will.logger;
+
+  if( transaction )
+  return transaction.verbosity;
+
+  return logger.verbosity;
+}
+
+//
+
 function vcsProviderFor( o )
 {
   let will = this;
@@ -930,68 +964,68 @@ versionIsUpToDate.defaults =
 
 //
 
-function withSubmodulesGet()
-{
-  let will = this;
+// function withSubmodulesGet()
+// {
+//   let will = this;
 
-  _.assert( arguments.length === 0 );
+//   _.assert( arguments.length === 0 );
 
-  return will._.withSubmodules;
-  // let withSubmodules = will._.withSubmodules;
-  // if( withSubmodules !== null && withSubmodules !== undefined )
-  // {
-  //   return withSubmodules;
-  // }
-  //
-  // if( !will.subModulesFormedOfMain )
-  // return 0;
-  // else if( will.subModulesFormedOfSub )
-  // return 2;
-  // else
-  // return 1;
-}
+//   return will._.withSubmodules;
+//   // let withSubmodules = will._.withSubmodules;
+//   // if( withSubmodules !== null && withSubmodules !== undefined )
+//   // {
+//   //   return withSubmodules;
+//   // }
+//   //
+//   // if( !will.subModulesFormedOfMain )
+//   // return 0;
+//   // else if( will.subModulesFormedOfSub )
+//   // return 2;
+//   // else
+//   // return 1;
+// }
 
 //
 
-function withSubmodulesSet( src )
-{
-  let will = this;
+// function withSubmodulesSet( src )
+// {
+//   let will = this;
 
-  _.assert( arguments.length === 1 );
-  _.assert( _.boolIs( src ) || _.numberIs( src ) || src === null );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.boolIs( src ) || _.numberIs( src ) || src === null );
 
-  if( _.boolIs( src ) )
-  src = src ? 1 : 0;
+//   if( _.boolIs( src ) )
+//   src = src ? 1 : 0;
 
-  // debugger;
+//   // debugger;
 
-  will._.withSubmodules = src;
+//   will._.withSubmodules = src;
 
-  if( src === null )
-  {
-  }
-  else if( src )
-  {
-    will.subModulesFormedOfMain = true;
-    if( src === 2 )
-    {
-      will.subModulesFormedOfSub = true;
-      return 2;
-    }
-    else
-    {
-      will.subModulesFormedOfSub = false;
-      return 1;
-    }
-  }
-  else
-  {
-    will.subModulesFormedOfMain = false;
-    will.subModulesFormedOfSub = false;
-    return 0;
-  }
+//   if( src === null )
+//   {
+//   }
+//   else if( src )
+//   {
+//     will.subModulesFormedOfMain = true;
+//     if( src === 2 )
+//     {
+//       will.subModulesFormedOfSub = true;
+//       return 2;
+//     }
+//     else
+//     {
+//       will.subModulesFormedOfSub = false;
+//       return 1;
+//     }
+//   }
+//   else
+//   {
+//     will.subModulesFormedOfMain = false;
+//     will.subModulesFormedOfSub = false;
+//     return 0;
+//   }
 
-}
+// }
 
 //
 
@@ -1005,8 +1039,8 @@ function recursiveValueDeduceFromBuild( o )
 
   _.routineOptions( recursiveValueDeduceFromBuild, arguments );
 
-  if( will.withSubmodules !== null )
-  return will.withSubmodules;
+  if( will.transaction.withSubmodules !== null )
+  return will.transaction.withSubmodules;
 
   o.modules = _.arrayAs( o.modules );
 
@@ -1055,20 +1089,29 @@ function filterDefaults( o )
 {
   let will = this.form();
 
-  if( o.withEnabledSubmodules === null && will.withEnabled !== undefined && will.withEnabled !== null )
-  o.withEnabledSubmodules = will.withEnabled;
-  if( o.withDisabledSubmodules === null && will.withDisabled !== undefined && will.withDisabled !== null )
-  o.withDisabledSubmodules = will.withDisabled;
+  _.assert( will.transaction instanceof _.will.Transaction );
 
-  if( o.withEnabledModules === null && will.withEnabled !== undefined && will.withEnabled !== null )
-  o.withEnabledModules = will.withEnabled;
-  if( o.withDisabledModules === null && will.withDisabled !== undefined && will.withDisabled !== null )
-  o.withDisabledModules = will.withDisabled;
+  if( o.withEnabledSubmodules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  o.withEnabledSubmodules = will.transaction.withEnabled;
+  if( o.withDisabledSubmodules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  o.withDisabledSubmodules = will.transaction.withDisabled;
+
+  if( o.withEnabledModules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  o.withEnabledModules = will.transaction.withEnabled;
+  if( o.withDisabledModules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  o.withDisabledModules = will.transaction.withDisabled;
 
   for( let n in _.Will.RelationFilterDefaults )
   {
-    if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
-    o[ n ] = will[ n ];
+    // if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
+    // o[ n ] = will[ n ];
+    if( o[ n ] === null )
+    {
+      if( will.transaction[ n ] !== undefined && will.transaction[ n ] !== null )
+      o[ n ] = will.transaction[ n ];
+      else if( will[ n ] !== undefined && will[ n ] !== null )
+      o[ n ] = will[ n ];
+    }
   }
 
   return o;
@@ -1085,7 +1128,8 @@ function instanceDefaultsApply( o )
   for( let d in will.OpeningDefaults )
   {
     if( o[ d ] === null )
-    o[ d ] = will[ d ];
+    // o[ d ] = will[ d ];
+    o[ d ] = will.transaction[ d ];
   }
 
   return o;
@@ -1099,11 +1143,22 @@ function instanceDefaultsSupplement( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.OpeningDefaults )
+  // for( let d in will.OpeningDefaults )
+  // {
+  //   if( o[ d ] !== null && o[ d ] !== undefined )
+  //   if( will[ d ] === null )
+  //   will[ d ] = o[ d ];
+  // }
+
+  _.assert( 0, 'not tested' );
+
+  let transaction = will.transaction;
+  let transactionOpeningOpts = _.mapOnlyNulls( _.mapOnly_( null, transaction, will.OpeningDefaults ) );
+  if( !_.mapIsEmpty( transactionOpeningOpts ) )
   {
-    if( o[ d ] !== null && o[ d ] !== undefined )
-    if( will[ d ] === null )
-    will[ d ] = o[ d ];
+    _.mapSupplement( transactionOpeningOpts, _.mapOnly_( null, o, will.OpeningDefaults ) );
+    will.transaction = transaction.cloneExtending( transactionOpeningOpts );
+    transaction.finit();
   }
 
   return will;
@@ -1117,11 +1172,15 @@ function instanceDefaultsExtend( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.OpeningDefaults )
-  {
-    if( o[ d ] !== null && o[ d ] !== undefined )
-    will[ d ] = o[ d ];
-  }
+  // for( let d in will.OpeningDefaults )
+  // {
+  //   if( o[ d ] !== null && o[ d ] !== undefined )
+  //   will[ d ] = o[ d ];
+  // }
+
+  let transaction = will.transaction;
+  will.transaction = transaction.cloneExtending( _.mapOnly_( null, o, will.OpeningDefaults ) );
+  transaction.finit();
 
   return will;
 }
@@ -1135,12 +1194,15 @@ function instanceDefaultsReset()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  for( let d in will.OpeningDefaults )
-  {
-    _.assert( FieldsOfTightGroups[ d ] !== undefined );
-    _.assert( _.primitiveIs( FieldsOfTightGroups[ d ] ) );
-    will[ d ] = FieldsOfTightGroups[ d ];
-  }
+  // for( let d in will.OpeningDefaults )
+  // {
+  //   _.assert( FieldsOfTightGroups[ d ] !== undefined );
+  //   _.assert( _.primitiveIs( FieldsOfTightGroups[ d ] ) );
+  //   will[ d ] = FieldsOfTightGroups[ d ];
+  // }
+
+  will.transaction.finit();
+  will.transaction = _.will.Transaction({ isInitial : 1, will })
 
   return will;
 }
@@ -1233,13 +1295,37 @@ function moduleAt( willfilesPath )
 
 //
 
+// function filterImplied()
+// {
+//   let will = this;
+//   let result = Object.create( null );
+
+//   result.withDisabledModules = will.transaction.withDisabled;
+//   result.withEnabledModules = will.transaction.withEnabled;
+
+//   for( let f in will.FilterFields )
+//   {
+//     if( f === 'withDisabled' )
+//     continue;
+//     if( f === 'withEnabled' )
+//     continue;
+//     result[ f ] = will[ f ];
+//   }
+
+//   return result;
+// }
+
 function filterImplied()
 {
   let will = this;
   let result = Object.create( null );
 
-  result.withDisabledModules = will.withDisabled;
-  result.withEnabledModules = will.withEnabled;
+  let transaction = will.transaction;
+
+  _.assert( transaction instanceof _.will.Transaction );
+
+  result.withDisabledModules = will.transaction.withDisabled;
+  result.withEnabledModules = will.transaction.withEnabled;
 
   for( let f in will.FilterFields )
   {
@@ -1247,7 +1333,8 @@ function filterImplied()
     continue;
     if( f === 'withEnabled' )
     continue;
-    result[ f ] = will[ f ];
+    _.assert( _.definedIs( transaction[ f ] ) )
+    result[ f ] = transaction[ f ];
   }
 
   return result;
@@ -1609,6 +1696,7 @@ build :
 moduleNew.defaults =
 {
   localPath : null,
+  withPath : null,
   name : null,
   verbosity : 0,
   collision : 'throw', /* 'throw', 'ignore' */
@@ -2023,10 +2111,10 @@ function modulesFindWithAt( o )
     });
 
     context.opener.find();
-    // if( _.boolLike( will.withSubmodules ) && context.opener.openedModule )
+    // if( _.boolLike( will.transaction.withSubmodules ) && context.opener.openedModule )
     // {
     //   debugger;
-    //   context.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubmodules );
+    //   context.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.transaction.withSubmodules );
     // }
     context.opener.open();
 
@@ -4918,7 +5006,8 @@ function hookContextFrom( o )
   let fileProvider = will.fileProvider;
   const path = fileProvider.path;
   let logger = will.logger;
-  let withPath = path.join( _.path.current(), will.withPath || './' );
+  // let withPath = path.join( _.path.current(), will.withPath || './' );
+  let withPath = path.join( _.path.current(), will.transaction.withPath || './' );
 
   o = will.resourceWrap( o );
 
@@ -5075,7 +5164,8 @@ function hookCall( o )
   if( o.module && o.withPath )
   o.withPath = path.s.join( o.module.inPath, o.withPath );
   else
-  o.withPath = path.s.join( o.will.withPath, o.withPath );
+  // o.withPath = path.s.join( o.will.withPath, o.withPath );
+  o.withPath = path.s.join( o.will.transaction.withPath, o.withPath );
 
   /* */
 
@@ -5401,21 +5491,23 @@ let OpeningDefaults =
   resourcesFormedOfSub : null,
   allOfSub : null,
 
-  verbosity : null,
+  // verbosity : null,
 
 }
 
 let Composes =
 {
 
-  verbosity : 3,
-  verboseStaging : 0,
+  // verbosity : 3,
+  // verboseStaging : 0,
 
   environmentPath : null,
-  withPath : null,
+  // withPath : null,
   // withSubmodules : null,
 
-  ... FilterFields,
+  // ... FilterFields,
+
+  transaction : null
 
 }
 
@@ -5424,17 +5516,17 @@ _.assert( Composes.withEnabledModules === undefined );
 let Aggregates =
 {
 
-  attachedWillfilesFormedOfMain : true,
-  peerModulesFormedOfMain : true,
-  subModulesFormedOfMain : true,
-  resourcesFormedOfMain : null,
-  allOfMain : null,
+  // attachedWillfilesFormedOfMain : true,
+  // peerModulesFormedOfMain : true,
+  // subModulesFormedOfMain : true,
+  // resourcesFormedOfMain : null,
+  // allOfMain : null,
 
-  attachedWillfilesFormedOfSub : true,
-  peerModulesFormedOfSub : true,
-  subModulesFormedOfSub : true,
-  resourcesFormedOfSub : null,
-  allOfSub : null,
+  // attachedWillfilesFormedOfSub : true,
+  // peerModulesFormedOfSub : true,
+  // subModulesFormedOfSub : true,
+  // resourcesFormedOfSub : null,
+  // allOfSub : null,
 
 }
 
@@ -5474,7 +5566,7 @@ let Restricts =
 
 let Medials =
 {
-  withSubmodules : null,
+  // withSubmodules : null,
 }
 
 let Statics =
@@ -5496,6 +5588,7 @@ let Statics =
   RelationFilterOn,
   RelationFilterOff,
   FilterFields,
+  IntentionFields,
 
   // path
 
@@ -5533,6 +5626,31 @@ let Forbids =
   graphGroup : 'graphGroup',
   graphSystem : 'graphSystem',
   filesGraph : 'filesGraph',
+
+  withEnabled : 'withEnabled',
+  withDisabled : 'withDisabled',
+  withOut : 'withOut',
+  withIn : 'withIn',
+  withValid : 'withValid',
+  withInvalid : 'withInvalid',
+  withKnown : 'withKnown',
+  withUnknown : 'withUnknown',
+
+  withPath : 'withPath',
+
+  withSubmodules : 'withSubmodules',
+
+  attachedWillfilesFormedOfMain : 'attachedWillfilesFormedOfMain',
+  peerModulesFormedOfMain : 'peerModulesFormedOfMain',
+  subModulesFormedOfMain : 'subModulesFormedOfMain',
+  resourcesFormedOfMain : 'resourcesFormedOfMain',
+  allOfMain : 'allOfMain',
+
+  attachedWillfilesFormedOfSub : 'attachedWillfilesFormedOfSub',
+  peerModulesFormedOfSub : 'peerModulesFormedOfSub',
+  subModulesFormedOfSub : 'subModulesFormedOfSub',
+  resourcesFormedOfSub : 'resourcesFormedOfSub',
+  allOfSub : 'allOfSub',
 }
 
 let Accessors =
@@ -5542,7 +5660,10 @@ let Accessors =
   hooks : { get : hooksGet, writable : 0 },
   environmentPath : { set : environmentPathSet },
   hooksPath : { get : hooksPathGet, writable : 0 },
-  withSubmodules : {},
+  // withSubmodules : {},
+
+  verbosity : { get : verbosityGet, writable : 0 },
+  verboseStaging : { suite : _.accessor.suite.alias({ container : 'transaction', originalName : 'verboseStaging' }) },
 
 }
 
@@ -5585,6 +5706,7 @@ let Extension =
   // etc
 
   _verbosityChange,
+  verbosityGet,
 
   vcsProviderFor,
   vcsToolsFor,
@@ -5596,8 +5718,8 @@ let Extension =
   versionGet,
   versionIsUpToDate,
 
-  withSubmodulesGet,
-  withSubmodulesSet,
+  // withSubmodulesGet,
+  // withSubmodulesSet,
   recursiveValueDeduceFromBuild,
 
   // defaults

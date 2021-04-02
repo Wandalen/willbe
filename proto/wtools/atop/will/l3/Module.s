@@ -4014,12 +4014,12 @@ function peerModuleOpen( o )
       return null;
     }
 
-    if( module.isOut && !will.withIn )
+    if( module.isOut && !will.transaction.withIn )
     {
       return null;
     }
 
-    if( !module.isOut && !will.withOut )
+    if( !module.isOut && !will.transaction.withOut )
     {
       return null;
     }
@@ -8621,7 +8621,7 @@ function npmModulePublish( o )
 
   function moduleExport( op )
   {
-    let filterProperties = _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null,  will.RelationFilterOn, { withIn : null, withOut : null } );
     return module.modulesExport
     ({
       ... filterProperties,

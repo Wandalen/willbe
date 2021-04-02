@@ -22,7 +22,8 @@ function onModule( context )
   let basePath = _.arrayAs( context.junction.dirPath );
   if( config && config.path && config.path.hlink )
   _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.hlink ) );
-  basePath = path.s.join( context.will.withPath, basePath );
+  // basePath = path.s.join( context.will.withPath, basePath );
+  basePath = path.s.join( context.will.transaction.withPath, basePath );
   _.assert( _.all( fileProvider2.statsResolvedRead( basePath ) ) );
 
   /* mask */

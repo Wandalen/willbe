@@ -780,14 +780,23 @@ function open( o )
 
     opener.optionsFormingForward( o );
 
+    // if( o.attachedWillfilesFormed === null )
+    // o.attachedWillfilesFormed = isMain ? will.attachedWillfilesFormedOfMain : will.attachedWillfilesFormedOfSub;
+    // if( o.peerModulesFormed === null )
+    // o.peerModulesFormed = isMain ? will.peerModulesFormedOfMain : will.peerModulesFormedOfSub;
+    // if( o.subModulesFormed === null )
+    // o.subModulesFormed = isMain ? will.subModulesFormedOfMain : will.subModulesFormedOfSub;
+    // if( o.resourcesFormed === null )
+    // o.resourcesFormed = isMain ? will.resourcesFormedOfMain : will.resourcesFormedOfSub;
+
     if( o.attachedWillfilesFormed === null )
-    o.attachedWillfilesFormed = isMain ? will.attachedWillfilesFormedOfMain : will.attachedWillfilesFormedOfSub;
+    o.attachedWillfilesFormed = isMain ? will.transaction.attachedWillfilesFormedOfMain : will.transaction.attachedWillfilesFormedOfSub;
     if( o.peerModulesFormed === null )
-    o.peerModulesFormed = isMain ? will.peerModulesFormedOfMain : will.peerModulesFormedOfSub;
+    o.peerModulesFormed = isMain ? will.transaction.peerModulesFormedOfMain : will.transaction.peerModulesFormedOfSub;
     if( o.subModulesFormed === null )
-    o.subModulesFormed = isMain ? will.subModulesFormedOfMain : will.subModulesFormedOfSub;
+    o.subModulesFormed = isMain ? will.transaction.subModulesFormedOfMain : will.transaction.subModulesFormedOfSub;
     if( o.resourcesFormed === null )
-    o.resourcesFormed = isMain ? will.resourcesFormedOfMain : will.resourcesFormedOfSub;
+    o.resourcesFormed = isMain ? will.transaction.resourcesFormedOfMain : will.transaction.resourcesFormedOfSub;
 
     o.attachedWillfilesFormed = !!o.attachedWillfilesFormed;
     o.peerModulesFormed = !!o.peerModulesFormed;

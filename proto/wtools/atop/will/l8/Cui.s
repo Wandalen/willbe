@@ -253,7 +253,7 @@ function _command_head( o )
     e.propertiesMap = propertiesMap;
   }
 
-  if( cui.implied )
+  if( cui.implied && o.usingImpliedMap )
   {
     if( o.routine.defaults )
     _.mapExtend( e.propertiesMap, _.mapOnly_( null, cui.implied, o.routine.defaults ) );
@@ -273,6 +273,7 @@ function _command_head( o )
     + `, but got "${e.subject}"`
   );
 
+  // if( o.routine.commandProperties && o.routine.commandProperties.v )
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
   // if( e.propertiesMap.v !== undefined )
@@ -281,15 +282,15 @@ function _command_head( o )
   //   delete e.propertiesMap.v;
   // }
   /* Dmytro : it is not a solution, it is a temporary improvement */
-  if( o.routine.commandProperties )
-  if( o.routine.commandProperties.v )
-  {
-    if( e.propertiesMap.v !== undefined )
-    e.propertiesMap.verbosity = e.propertiesMap.v;
+  // if( o.routine.commandProperties )
+  // if( o.routine.commandProperties.v )
+  // {
+  //   if( e.propertiesMap.v !== undefined )
+  //   e.propertiesMap.verbosity = e.propertiesMap.v;
 
-    if( e.propertiesMap.verbosity !== e.propertiesMap.v )
-    e.propertiesMap.v = e.propertiesMap.verbosity;
-  }
+  //   if( e.propertiesMap.verbosity !== e.propertiesMap.v )
+  //   e.propertiesMap.v = e.propertiesMap.verbosity;
+  // }
 
 
 }
@@ -299,6 +300,7 @@ _command_head.defaults =
   routine : null,
   args : null,
   propertiesMapAsProperty : 0,
+  usingImpliedMap : 1
 }
 
 //
@@ -317,7 +319,7 @@ function errEncounter( error )
 
 //
 
-function _propertiesImply( implyMap )
+function _propertiesImplyToMain( implyMap )
 {
   let will = this;
 
@@ -325,17 +327,17 @@ function _propertiesImply( implyMap )
 
   let namesMap =
   {
-    v : 'verbosity',
-    verbosity : 'verbosity',
-    beeping : 'beeping',
+    // v : 'verbosity',
+    // verbosity : 'verbosity',
+    // beeping : 'beeping',
 
-    withOut : 'withOut',
-    withIn : 'withIn',
-    withEnabled : 'withEnabled',
-    withDisabled : 'withDisabled',
-    withValid : 'withValid',
-    withInvalid : 'withInvalid',
-    withSubmodules : 'withSubmodules',
+    // withOut : 'withOut',
+    // withIn : 'withIn',
+    // withEnabled : 'withEnabled',
+    // withDisabled : 'withDisabled',
+    // withValid : 'withValid',
+    // withInvalid : 'withInvalid',
+    // withSubmodules : 'withSubmodules',
   };
 
   _.process.inputReadTo
@@ -343,8 +345,34 @@ function _propertiesImply( implyMap )
     dst : will,
     propertiesMap : implyMap,
     namesMap,
+    only : 0
   });
+}
 
+//
+
+function _propertiesImply( implyMap )
+{
+  let will = this;
+
+  // will._propertiesImplyToMain( implyMap );
+
+  _.assert( will.transaction === null || will.transaction && will.transaction.isInitial );
+
+  if( will.transaction )
+  will.transaction.finit();
+
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
+}
+
+//
+
+function beepingGet()
+{
+  let will = this;
+  let transaction = will.transaction;
+  _.assert( transaction instanceof _.will.Transaction );
+  return transaction.beeping;
 }
 
 // --
@@ -500,6 +528,13 @@ function _commandsEnd( command )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
+  _.assert( will.transaction instanceof _.will.Transaction );
+
+  let beeping = will.transaction.beeping;
+
+  will.transaction.finit();
+  will.transaction = null;
+
   if( will.topCommand !== command )
   return false;
 
@@ -515,8 +550,7 @@ function _commandsEnd( command )
     if( will.currentOpeners )
     will.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
     will.currentOpeners = null;
-
-    if( will.beeping )
+    if( beeping )
     _.diagnosticBeep();
     _.procedure.terminationBegin();
 
@@ -525,7 +559,7 @@ function _commandsEnd( command )
   {
     will.errEncounter( err );
     will.currentOpenerChange( null );
-    if( will.beeping )
+    if( beeping )
     _.diagnosticBeep();
     _.process.exit( -1 );
   }
@@ -549,6 +583,15 @@ function _commandListLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
   _.assert( o.resourceKind !== undefined );
+
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
   will._commandsBegin( o.commandRoutine );
 
@@ -655,6 +698,15 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
@@ -756,6 +808,15 @@ function _commandCleanLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
@@ -853,6 +914,15 @@ function _commandNewLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+
   _.routineOptions( _commandNewLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
 
@@ -878,7 +948,7 @@ function _commandNewLike( o )
   if( will.currentOpeners !== null || will.currentOpener !== null )
   throw _.errBrief( 'Cant call command new for module which already exists!' );
 
-  let localPath = will.moduleNew({ collision : 'ignore', localPath : will.withPath });
+  let localPath = will.moduleNew({ collision : 'ignore', localPath : will.transaction.withPath });
   let o2 = _.mapExtend( null, o );
   o2.localPath = localPath;
   o2.tracing = 0;
@@ -904,7 +974,7 @@ function _commandNewLike( o )
     ready2.then( () =>
     {
       will.readingEnd();
-      _.assert( it2.opener.localPath === will.withPath );
+      _.assert( it2.opener.localPath === will.transaction.withPath );
       return o.onEach.call( will, it2 );
     });
 
@@ -968,6 +1038,15 @@ function _commandTreeLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+
   will._commandsBegin( o.commandRoutine );
 
   _.assert( will.currentOpener === null );
@@ -1023,12 +1102,22 @@ _commandTreeLike.defaults =
 
 function _commandModulesLike( o )
 {
-  let cui = this;
-  let logger = cui.logger;
+  let will = this;
+  let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  // _.assert( will.transaction === null );
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+
   _.routineOptions( _commandModulesLike, arguments );
-  _.mapSupplementNulls( o, cui.filterImplied() );
+  _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
 
   _.all
@@ -1043,22 +1132,22 @@ function _commandModulesLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  cui._commandsBegin( o.commandRoutine );
+  will._commandsBegin( o.commandRoutine );
 
-  if( cui.currentOpeners === null && cui.currentOpener === null )
-  ready.then( () => cui.openersFind() )
+  if( will.currentOpeners === null && will.currentOpener === null )
+  ready.then( () => will.openersFind() )
   .then( () => filter() );
 
-  let openers = cui.currentOpeners;
-  cui.currentOpeners = null;
+  let openers = will.currentOpeners;
+  will.currentOpeners = null;
 
   for( let i = 0 ; i < openers.length ; i++ )
   ready.then( () => openersEach( openers[ i ] ) );
 
   return ready.finally( ( err, arg ) =>
   {
-    cui.currentOpeners = openers;
-    cui._commandsEnd( o.commandRoutine );
+    will.currentOpeners = openers;
+    will._commandsEnd( o.commandRoutine );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1070,11 +1159,11 @@ function _commandModulesLike( o )
 
   function filter()
   {
-    if( cui.currentOpeners )
+    if( will.currentOpeners )
     {
-      let openers2 = cui.modulesFilter( cui.currentOpeners, _.mapOnly_( null, o, cui.modulesFilter.defaults ) );
+      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
       if( openers2.length )
-      cui.currentOpeners = openers2;
+      will.currentOpeners = openers2;
     }
     return null;
   }
@@ -1083,7 +1172,7 @@ function _commandModulesLike( o )
 
   function openersEach( opener )
   {
-    let ready2 = cui.modulesFindEachAt
+    let ready2 = will.modulesFindEachAt
     ({
       selector : _.strUnquote( 'submodule::*' ),
       currentOpener : opener,
@@ -1095,23 +1184,23 @@ function _commandModulesLike( o )
       else
       _.arrayRemove( it.sortedOpeners, opener );
 
-      cui.currentOpeners = it.sortedOpeners;
+      will.currentOpeners = it.sortedOpeners;
       return it;
     })
 
     if( o.onModulesBegin )
     ready2.then( () =>
     {
-      o.onModulesBegin.call( cui, cui.currentOpeners, opener );
+      o.onModulesBegin.call( will, will.currentOpeners, opener );
       return null;
     });
 
-    ready2.then( () => cui.openersCurrentEach( forSingle ) )
+    ready2.then( () => will.openersCurrentEach( forSingle ) )
 
     if( o.onModulesEnd )
     ready2.finally( ( err, arg ) =>
     {
-      o.onModulesEnd.call( cui, cui.currentOpeners, opener );
+      o.onModulesEnd.call( will, will.currentOpeners, opener );
 
       if( err )
       throw _.err( err );
@@ -1131,18 +1220,18 @@ function _commandModulesLike( o )
 
     ready3.then( () =>
     {
-      return cui.currentOpenerChange( it.opener );
+      return will.currentOpenerChange( it.opener );
     });
 
     ready3.then( () =>
     {
-      cui.readingEnd();
-      return o.onEach.call( cui, it2 );
+      will.readingEnd();
+      return o.onEach.call( will, it2 );
     });
 
     ready3.finally( ( err, arg ) =>
     {
-      cui.currentOpenerChange( null );
+      will.currentOpenerChange( null );
       if( err )
       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
@@ -1184,17 +1273,24 @@ function commandImply( e )
 {
   let cui = this;
 
+  let impliedPrev = cui.implied;
+
   cui.implied = null;
   cui._command_head( commandImply, arguments );
 
   cui.implied = e.propertiesMap;
-  cui._propertiesImply( _.mapOnly_( null, e.propertiesMap, commandImply.defaults ) );
+
+  // cui._propertiesImplyToMain( _.mapOnly_( null,  e.propertiesMap, commandImply.defaults ) );
+
+  if( impliedPrev && impliedPrev.withPath )
+  if( cui.implied.withPath === null || cui.implied.withPath === undefined )
+  cui.implied.withPath = impliedPrev.withPath;
 
 }
 
 commandImply.defaults =
 {
-  v : 3,
+  // v : 3,
   verbosity : 3,
   beeping : null,
   withOut : null,
@@ -1204,12 +1300,17 @@ commandImply.defaults =
   withValid : null,
   withInvalid : null,
   withSubmodules : null,
+  withPath : null
 };
 commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
+commandImply.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandImply.commandProperties =
 {
-  v : 'Set verbosity. Default is 3.',
+  // v : 'Set verbosity. Default is 3.',
   verbosity : 'Set verbosity. Default is 3.',
   beeping : 'Make noise when it\'s done. Default is 0.',
   withOut : 'Include out modules. Default is 1.',
@@ -1219,6 +1320,7 @@ commandImply.commandProperties =
   withValid : 'Include valid modules. Default is 1.',
   withInvalid : 'Include invalid modules. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
+  withPath : 'A module selector.',
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
@@ -1306,14 +1408,21 @@ commandVersion.commandSubjectHint = false;
 function commandVersionCheck( e )
 {
   let cui = this;
+
   cui._command_head( commandVersion, arguments );
-  cui._propertiesImply( e.propertiesMap );
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandVersionCheck.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui.versionIsUpToDate( e.propertiesMap );
 }
 
+commandVersionCheck.defaults = _.mapExtend( null, commandImply.defaults );
+commandVersionCheck.defaults.throwing = 1;
 commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
 commandVersionCheck.commandSubjectHint = false;
+commandVersionCheck.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1.',
@@ -1351,17 +1460,22 @@ function commandVersionBump( e )
 commandVersionBump.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandVersionBump.hint = 'Increase version in willfile on specified delta.';
 commandVersionBump.longHint = 'Increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.\n';
 commandVersionBump.commandSubjectHint = 'A string in format "x.x.x" that declares delta for each version.';
+commandVersionBump.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandVersionBump.commandProperties =
 {
   versionDelta : 'A string in format "x.x.x" that defines delta for version.',
   verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  // v : 'Set verbosity. Default is 3.',
 };
+
 
 //
 
@@ -1691,6 +1805,7 @@ function commandModulesTree( e )
 commandModulesTree.defaults = commandImply.defaults;
 commandModulesTree.hint = 'List all found modules as a tree.';
 commandModulesTree.commandSubjectHint = 'A selector for path names. Could be a glob.';
+commandModulesTree.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandModulesTree.commandProperties =
 {
   withLocalPath : 'Print local paths. Default is 0',
@@ -1750,6 +1865,7 @@ commandModulesUpdate.defaults = _.mapExtend( null, commandImply.defaults );
 commandModulesUpdate.hint = 'Update root module and each submodule.';
 commandModulesUpdate.longHint = 'Update root and each submodule or check for available updates for root module and each submodule. Does nothing if all submodules have fixated version.';
 commandModulesUpdate.commandSubjectHint = false;
+commandModulesUpdate.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandModulesUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
@@ -1857,6 +1973,7 @@ commandSubmodulesFixate.defaults = commandImply.defaults;
 commandSubmodulesFixate.hint = 'Fixate remote submodules.';
 commandSubmodulesFixate.longHint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
 commandSubmodulesFixate.commandSubjectHint = false;
+commandSubmodulesFixate.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
@@ -1899,6 +2016,7 @@ commandSubmodulesUpgrade.defaults = commandImply.defaults;
 commandSubmodulesUpgrade.hint = 'Upgrade remote submodules.';
 commandSubmodulesUpgrade.longHint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
 commandSubmodulesUpgrade.commandSubjectHint = false;
+commandSubmodulesUpgrade.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesUpgrade.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
@@ -1949,6 +2067,7 @@ commandSubmodulesVersionsDownload.defaults = _.mapExtend( null, commandImply.def
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
 commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
+commandSubmodulesVersionsDownload.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesVersionsDownload.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
@@ -1973,13 +2092,13 @@ function commandSubmodulesVersionsUpdate( e )
      Hotfix. Fixes situations when previous command changed with* fields of the main.
      Remove after moving FilterFields fields out of the main and passing them as options( where possoble ).
   */
-  _.mapSupplement( implyMap,
-  {
-    withOut : 1,
-    withInvalid : 1,
-    withValid : 1,
-    withEnabled : 1
-  })
+  // _.mapSupplement( implyMap,
+  // {
+  //   withOut : 1,
+  //   withInvalid : 1,
+  //   withValid : 1,
+  //   withEnabled : 1
+  // })
 
   cui._propertiesImply( implyMap );
 
@@ -2005,6 +2124,7 @@ commandSubmodulesVersionsUpdate.defaults = _.mapExtend( null, commandImply.defau
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
+commandSubmodulesVersionsUpdate.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
@@ -2043,6 +2163,7 @@ function commandSubmodulesVersionsVerify( e )
 commandSubmodulesVersionsVerify.defaults = commandImply.defaults;
 commandSubmodulesVersionsVerify.hint = 'Check whether each submodule is on branch which is specified in willfile.';
 commandSubmodulesVersionsVerify.commandSubjectHint = false;
+commandSubmodulesVersionsVerify.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesVersionsVerify.commandProperties =
 {
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
@@ -2081,6 +2202,7 @@ commandSubmodulesVersionsAgree.defaults = commandImply.defaults;
 commandSubmodulesVersionsAgree.hint = 'Update each submodule.';
 commandSubmodulesVersionsAgree.longHint = 'Update each submodule or check for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
 commandSubmodulesVersionsAgree.commandSubjectHint = false;
+commandSubmodulesVersionsAgree.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesVersionsAgree.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
@@ -2094,6 +2216,8 @@ function commandSubmodulesShell( e )
 {
   let cui = this;
   cui._command_head( commandSubmodulesShell, arguments );
+
+  debugger
 
   return cui._commandModulesLike
   ({
@@ -2123,18 +2247,34 @@ commandSubmodulesShell.commandSubjectHint = 'A command to execute in shell. Comm
 function commandSubmodulesGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  if( hardLinkMaybe !== undefined )
-  delete commandOptions.hardLinkMaybe;
-  let profile = commandOptions.profile;
-  if( profile !== undefined )
-  delete commandOptions.profile;
+  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
+  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  // if( hardLinkMaybe !== undefined )
+  // delete commandOptions.hardLinkMaybe;
+  // let profile = commandOptions.profile;
+  // if( profile !== undefined )
+  // delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  // if( _.mapKeys( commandOptions ).length >= 1 )
+  // {
+  //   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  //   e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  // }
+  // cui._command_head( commandSubmodulesGit, arguments );
+
+  // let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesGit.defaults );
+  // e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  // _.routineOptions( commandSubmodulesGit, implyMap );
+  // cui._propertiesImply( implyMap );
+
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
-  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  cui._command_head( commandGit, arguments );
+  {
+    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  }
+
+  cui._command_head( commandSubmodulesGit, arguments );
 
   _.routineOptions( commandSubmodulesGit, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -2155,17 +2295,21 @@ function commandSubmodulesGit( e )
       dirPath : it.junction.dirPath,
       command : e.subject,
       verbosity : cui.verbosity,
-      hardLinkMaybe,
-      profile,
+      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
+      profile : e.propertiesMap.profile,
     });
   }
 }
 
 commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesGit.defaults.withSubmodules = 1;
+commandSubmodulesGit.defaults.withOut = 0;
+commandSubmodulesGit.defaults.hardLinkMaybe = 0;
+commandSubmodulesGit.defaults.profile = 'default';
 commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.';
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
-commandSubmodulesGit.commandProperties = commandImply.commandProperties;
+commandSubmodulesGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandSubmodulesGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
 commandSubmodulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
@@ -2176,8 +2320,10 @@ function commandSubmodulesGitDiff( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitDiff, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  _.routineOptions( commandSubmodulesGitDiff, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandModulesLike
   ({
@@ -2199,8 +2345,10 @@ function commandSubmodulesGitDiff( e )
 }
 
 commandSubmodulesGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesGitDiff.defaults.withSubmodules = 1;
 commandSubmodulesGitDiff.hint = 'Get diffs of submodules repositories.';
 commandSubmodulesGitDiff.commandSubjectHint = false;
+commandSubmodulesGitDiff.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesGitDiff.commandProperties = commandImply.commandProperties;
 
 //
@@ -2210,8 +2358,11 @@ function commandSubmodulesGitPrOpen( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitPrOpen, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  _.routineOptions( commandSubmodulesGitPrOpen, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandModulesLike
   ({
@@ -2227,33 +2378,39 @@ function commandSubmodulesGitPrOpen( e )
     return it.opener.openedModule.gitPrOpen
     ({
       title : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults )
     });
   }
 }
 
-commandSubmodulesGitPrOpen.defaults =
+commandSubmodulesGitPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
   body : null,
-  v : null,
+  // v : null,
   verbosity : null,
-};
+  withSubmodules : 1
+});
 commandSubmodulesGitPrOpen.hint = 'Open pull requests from current modules and its submodules.';
 commandSubmodulesGitPrOpen.commandSubjectHint = 'A title for PR';
-commandSubmodulesGitPrOpen.commandProperties =
+commandSubmodulesGitPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandSubmodulesGitPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
   title : 'Option that rewrite title in provided argument.',
   body : 'Body message.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
-};
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+});
 
 //
 
@@ -2262,8 +2419,11 @@ function commandSubmodulesGitStatus( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitStatus, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  _.routineOptions( commandSubmodulesGitStatus, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandModulesLike
   ({
@@ -2278,33 +2438,39 @@ function commandSubmodulesGitStatus( e )
   {
     return it.opener.openedModule.gitStatus
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitStatus.defaults )
     });
   }
 }
 
-commandSubmodulesGitStatus.defaults =
+commandSubmodulesGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
 {
   local : 1,
   uncommittedIgnored : 0,
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
-};
+  withSubmodules : 1
+});
 commandSubmodulesGitStatus.hint = 'Check the status of the submodules repositories.';
 commandSubmodulesGitStatus.commandSubjectHint = false;
-commandSubmodulesGitStatus.commandProperties =
+commandSubmodulesGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandSubmodulesGitStatus.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   local : 'Check local commits. Default value is 1.',
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-};
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+});
 
 //
 
@@ -2315,9 +2481,13 @@ function commandSubmodulesGitSync( e )
   let provider;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
+  // _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 1 });
+
   _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 1 });
+  cui._propertiesImply( e.propertiesMap );
+
 
   return cui._commandModulesLike
   ({
@@ -2357,7 +2527,7 @@ function commandSubmodulesGitSync( e )
     return it.opener.openedModule.gitSync
     ({
       commit : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults ),
       restoringHardLinks : 0,
     });
   }
@@ -2370,24 +2540,30 @@ function commandSubmodulesGitSync( e )
   }
 }
 
-commandSubmodulesGitSync.defaults =
+commandSubmodulesGitSync.defaults = _.mapExtend( null, commandImply.defaults,
 {
   dirPath : null,
   dry : 0,
   profile : 'default',
-  v : null,
+  // v : null,
+  // v : 1,
   verbosity : 1,
-};
+  withSubmodules : 1
+});
 commandSubmodulesGitSync.hint = 'Syncronize repositories of submodules of current module.';
 commandSubmodulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
-commandSubmodulesGitSync.commandProperties =
+commandSubmodulesGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandSubmodulesGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+});
 
 //
 
@@ -2398,28 +2574,41 @@ function commandModuleNew( e )
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
+  // let implyMap = _.mapOnly_( null,  e.propertiesMap, commandModuleNew.defaults );
+  // e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
+  // _.routineOptions( commandModuleNew, implyMap );
+  // will._propertiesImply( implyMap );
+
+  _.routineOptions( commandModuleNew, e.propertiesMap );
+  will._propertiesImply( e.propertiesMap );
+
   if( e.commandArgument )
   e.propertiesMap.localPath = e.commandArgument;
-  if( e.propertiesMap.verbosity === undefined )
-  e.propertiesMap.verbosity = 1;
+  // if( e.propertiesMap.verbosity === undefined )
+  // e.propertiesMap.verbosity = 1;
 
-  if( will.withPath )
+  if( will.transaction.withPath )
   {
     if( e.propertiesMap.localPath )
-    e.propertiesMap.localPath = path.join( will.withPath, e.propertiesMap.localPath );
+    e.propertiesMap.localPath = path.join( path.detrail( will.transaction.withPath ), e.propertiesMap.localPath );
     else
-    e.propertiesMap.localPath = will.withPath;
+    e.propertiesMap.localPath = will.transaction.withPath;
   }
 
-  return will.moduleNew( e.propertiesMap );
+  return will.moduleNew( _.mapOnly_( null, e.propertiesMap, will.moduleNew.defaults ) );
 }
 
+commandModuleNew.defaults = _.mapExtend( null, commandImply.defaults );
+commandModuleNew.defaults.verbosity = 1;
 commandModuleNew.hint = 'Create a new module.';
 commandModuleNew.commandSubjectHint = 'Path to module file. Default value is ".will.yml".';
-commandModuleNew.commandProperties =
+commandModuleNew.commandPropertiesAliases = commandImply.commandPropertiesAliases;
+commandModuleNew.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   localPath : 'Path to module file. Default value is ".will.yml".',
-}
+  withPath : 'A module selector.',
+  verbosity : 'Set verbosity. Default is 1.'
+})
 
 //
 
@@ -2500,17 +2689,21 @@ commandModulesShell.commandSubjectHint =
 function commandModulesGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  if( hardLinkMaybe !== undefined )
-  delete commandOptions.hardLinkMaybe;
-  let profile = commandOptions.profile;
-  if( profile !== undefined )
-  delete commandOptions.profile;
+  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
+  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  // if( hardLinkMaybe !== undefined )
+  // delete commandOptions.hardLinkMaybe;
+  // let profile = commandOptions.profile;
+  // if( profile !== undefined )
+  // delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
-  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  {
+    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  }
+
   cui._command_head( commandModulesGit, arguments );
 
   _.routineOptions( commandModulesGit, e.propertiesMap );
@@ -2532,18 +2725,22 @@ function commandModulesGit( e )
       dirPath : it.junction.dirPath,
       command : e.subject,
       verbosity : cui.verbosity,
-      hardLinkMaybe,
-      profile,
+      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
+      profile : e.propertiesMap.profile,
     });
   }
 }
 
 commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesGit.defaults.withOut = 0;
 commandModulesGit.defaults.withSubmodules = 1;
+commandModulesGit.defaults.hardLinkMaybe = 0;
+commandModulesGit.defaults.profile = 'default';
 commandModulesGit.hint = 'Run custom Git command on module and its submodules.';
 commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
-commandModulesGit.commandProperties = commandImply.commandProperties;
-commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandModulesGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandModulesGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 0.';
 commandModulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
@@ -2553,8 +2750,11 @@ function commandModulesGitDiff( e )
   let cui = this;
   cui._command_head( commandModulesGitDiff, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  _.routineOptions( commandModulesGitDiff, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandModulesLike
   ({
@@ -2576,8 +2776,10 @@ function commandModulesGitDiff( e )
 }
 
 commandModulesGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesGitDiff.defaults.withSubmodules = 1;
 commandModulesGitDiff.hint = 'Get diffs of root module and submodules repositories.';
 commandModulesGitDiff.commandSubjectHint = false;
+commandModulesGitDiff.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandModulesGitDiff.commandProperties = commandImply.commandProperties;
 
 //
@@ -2587,8 +2789,11 @@ function commandModulesGitPrOpen( e )
   let cui = this;
   cui._command_head( commandModulesGitPrOpen, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  _.routineOptions( commandModulesGitPrOpen, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandModulesLike
   ({
@@ -2604,33 +2809,39 @@ function commandModulesGitPrOpen( e )
     return it.opener.openedModule.gitPrOpen
     ({
       title : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults )
     });
   }
 }
 
-commandModulesGitPrOpen.defaults =
+commandModulesGitPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
   body : null,
-  v : null,
+  // v : null,
   verbosity : null,
-};
+  withSubmodules : 1
+});
 commandModulesGitPrOpen.hint = 'Open pull requests from current module and its submodules.';
 commandModulesGitPrOpen.commandSubjectHint = 'A title for PR';
-commandModulesGitPrOpen.commandProperties =
+commandModulesGitPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandModulesGitPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
   title : 'Option that rewrite title in provided argument.',
   body : 'Body message.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
-};
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+});
 
 //
 
@@ -2639,8 +2850,11 @@ function commandModulesGitStatus( e )
   let cui = this;
   cui._command_head( commandModulesGitStatus, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 1  } ) );
+
+  _.routineOptions( commandModulesGitStatus, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandModulesLike
   ({
@@ -2655,33 +2869,39 @@ function commandModulesGitStatus( e )
   {
     return it.opener.openedModule.gitStatus
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitStatus.defaults )
     });
   }
 }
 
-commandModulesGitStatus.defaults =
+commandModulesGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
 {
   local : 1,
   uncommittedIgnored : 0,
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
-};
+  withSubmodules : 1
+});
 commandModulesGitStatus.hint = 'Check the status of the module and submodules repositories.';
 commandModulesGitStatus.commandSubjectHint = false;
-commandModulesGitStatus.commandProperties =
+commandModulesGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandModulesGitStatus.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   local : 'Check local commits. Default value is 1.',
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-};
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+});
 
 //
 
@@ -2692,9 +2912,13 @@ function commandModulesGitSync( e )
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
-  _.routineOptions( commandModulesGitSync, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 1 });
+  // _.routineOptions( commandModulesGitSync, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 1 });
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesGitSync.defaults );
+  _.routineOptions( commandModulesGitSync, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandModulesLike
   ({
@@ -2733,7 +2957,7 @@ function commandModulesGitSync( e )
     return it.opener.openedModule.gitSync
     ({
       commit : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults ),
       restoringHardLinks : 0,
     });
   }
@@ -2746,24 +2970,30 @@ function commandModulesGitSync( e )
   }
 }
 
-commandModulesGitSync.defaults =
+commandModulesGitSync.defaults = _.mapExtend( null, commandImply.defaults,
 {
   dirPath : null,
   dry : 0,
   profile : 'default',
-  v : null,
+  // v : null,
+  // v : 1,
   verbosity : 1,
-};
+  withSubmodules : 1
+});
 commandModulesGitSync.hint = 'Syncronize repositories of current module and all submodules of the module.';
 commandModulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
-commandModulesGitSync.commandProperties =
+commandModulesGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandModulesGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+});
 
 //
 
@@ -2884,9 +3114,13 @@ function commandHooksList( e )
   let cui = this.form();
   cui._command_head( commandHooksList, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandHooksList.commandProperties );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
+  // let implyMap = _.mapOnly_( null, e.propertiesMap, commandHooksList.commandProperties );
+  // e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  // cui._propertiesImply( implyMap );
+
+  _.routineOptions( commandHooksList, e.propertiesMap )
+  cui._propertiesImply( e.propertiesMap );
+
   let logger = cui.logger;
 
   cui.hooksReload();
@@ -2896,8 +3130,10 @@ function commandHooksList( e )
   logger.down();
 }
 
+commandHooksList.defaults = _.mapExtend( null, commandImply.defaults );
 commandHooksList.hint = 'List available hooks.';
 commandHooksList.commandSubjectHint = false;
+commandHooksList.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandHooksList.commandProperties = commandImply.commandProperties;
 
 //
@@ -2949,6 +3185,7 @@ commandClean.defaults.withOut = 1;
 commandClean.hint = 'Clean current module.';
 commandClean.longHint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
 commandClean.commandSubjectHint = false;
+commandClean.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandClean.commandProperties =
 {
   dry : 'Dry run without deleting. Default is dry:0.',
@@ -3011,6 +3248,7 @@ commandSubmodulesClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesClean.defaults.withSubmodules = 0;
 commandSubmodulesClean.hint = 'Delete all downloaded submodules.';
 commandSubmodulesClean.commandSubjectHint = false;
+commandSubmodulesClean.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesClean.commandProperties =
 {
   dry : 'Dry run without deleting. Default is dry:0.',
@@ -3027,6 +3265,11 @@ function commandBuild( e )
   let cui = this;
   cui._command_head( commandBuild, arguments );
   let doneContainer = [];
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandBuild.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  _.routineOptions( commandBuild, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
   ({
@@ -3051,7 +3294,8 @@ function commandBuild( e )
 
 }
 
-commandBuild.defaults = Object.create( null );
+// commandBuild.defaults = Object.create( null );
+commandBuild.defaults = _.mapExtend( null, commandImply.defaults );
 commandBuild.hint = 'Build current module with spesified criterion.';
 commandBuild.commandSubjectHint = 'A name of build scenario.';
 
@@ -3062,6 +3306,11 @@ function commandExport( e )
   let cui = this;
   cui._command_head( commandExport, arguments );
   let doneContainer = [];
+
+  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandExport.defaults );
+  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
+  _.routineOptions( commandExport, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
   ({
@@ -3087,7 +3336,7 @@ function commandExport( e )
 
 }
 
-commandExport.defaults = Object.create( null );
+commandExport.defaults = _.mapExtend( null, commandImply.defaults );
 commandExport.hint = 'Export selected module with spesified criterion.';
 commandExport.longHint = 'Export selected module with spesified criterion. Save output to output willfile and archive.';
 commandExport.commandSubjectHint = 'A name of export scenario.';
@@ -3097,8 +3346,14 @@ commandExport.commandSubjectHint = 'A name of export scenario.';
 function commandExportPurging( e )
 {
   let cui = this;
+  debugger
   cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandExportPurging.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  _.routineOptions( commandExportPurging, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
   ({
@@ -3124,7 +3379,8 @@ function commandExportPurging( e )
 
 }
 
-commandExportPurging.defaults = Object.create( null );
+// commandExportPurging.defaults = Object.create( null );
+commandExportPurging.defaults = _.mapExtend( null, commandImply.defaults );
 commandExportPurging.hint = 'Export selected the module with spesified criterion purging output willfile first.';
 commandExportPurging.longHint = 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.';
 commandExportPurging.commandSubjectHint = 'A name of export scenario.';
@@ -3136,6 +3392,11 @@ function commandExportRecursive( e )
   let cui = this;
   cui._command_head( commandExportRecursive, arguments );
   let doneContainer = [];
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandExportRecursive.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  _.routineOptions( commandExportRecursive, implyMap );
+  cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
   ({
@@ -3160,7 +3421,8 @@ function commandExportRecursive( e )
 
 }
 
-commandExportRecursive.defaults = Object.create( null );
+// commandExportRecursive.defaults = Object.create( null );
+commandExportRecursive.defaults = _.mapExtend( null, commandImply.defaults );
 commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules.';
 commandExportRecursive.longHint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
@@ -3170,17 +3432,24 @@ commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 function commandGit( e )
 {
   let cui = this;
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  if( hardLinkMaybe !== undefined )
-  delete commandOptions.hardLinkMaybe;
-  let profile = commandOptions.profile;
-  if( profile !== undefined )
-  delete commandOptions.profile;
 
-  e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
+  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  // if( hardLinkMaybe !== undefined )
+  // delete commandOptions.hardLinkMaybe;
+  // let profile = commandOptions.profile;
+  // if( profile !== undefined )
+  // delete commandOptions.profile;
+
+  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
-  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  {
+    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  }
+
   cui._command_head( commandGit, arguments );
 
   _.routineOptions( commandGit, e.propertiesMap );
@@ -3201,17 +3470,21 @@ function commandGit( e )
       dirPath : it.junction.dirPath,
       command : e.subject,
       verbosity : cui.verbosity,
-      hardLinkMaybe,
+      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
+      profile : e.propertiesMap.profile
     });
   }
 }
 
 commandGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandGit.defaults.hardLinkMaybe = 0;
+commandGit.defaults.profile = 'default';
 commandGit.defaults.withSubmodules = 0;
 commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
-commandGit.commandProperties = commandImply.commandProperties;
-commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+commandGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 0.';
 commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
@@ -3245,7 +3518,8 @@ commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitDiff.defaults.withSubmodules = 0;
 commandGitDiff.hint = 'Get diffs in module repository.';
 commandGitDiff.commandSubjectHint = false;
-commandGitDiff.commandProperties = commandImply.commandProperties;
+commandGitDiff.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitDiff.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 
 //
 
@@ -3254,8 +3528,11 @@ function commandGitPrOpen( e )
   let cui = this;
   cui._command_head( commandGitPrOpen, arguments );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+
+  _.routineOptions( commandGitPrOpen, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -3270,33 +3547,38 @@ function commandGitPrOpen( e )
     return it.opener.openedModule.gitPrOpen
     ({
       title : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults ),
     });
   }
 }
 
-commandGitPrOpen.defaults =
+commandGitPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
   body : null,
-  v : null,
+  // v : null,
   verbosity : null,
-};
+  withSubmodules : 1
+});
 commandGitPrOpen.hint = 'Open pull request from current modules.';
 commandGitPrOpen.commandSubjectHint = 'A title for PR';
-commandGitPrOpen.commandProperties =
+commandGitPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
   title : 'Option that rewrite title in provided argument.',
   body : 'Body message.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
-};
+});
 
 //
 
@@ -3304,9 +3586,9 @@ function commandGitPull( e )
 {
   let cui = this;
   cui._command_head( commandGitPull, arguments );
-  let profile = e.propertiesMap.profile;
-  if( 'profile' in e.propertiesMap )
-  delete e.propertiesMap.profile;
+  // let profile = e.propertiesMap.profile;
+  // if( 'profile' in e.propertiesMap )
+  // delete e.propertiesMap.profile;
 
   _.routineOptions( commandGitPull, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
@@ -3325,16 +3607,18 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.verbosity,
-      profile,
+      profile : e.propertiesMap.profile,
     });
   }
 }
 
 commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPull.defaults.withSubmodules = 0;
+commandGitPull.defaults.profile = 'default';
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
-commandGitPull.commandProperties = commandImply.commandProperties;
+commandGitPull.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitPull.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
 
 //
@@ -3369,7 +3653,8 @@ commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPush.defaults.withSubmodules = 0;
 commandGitPush.hint = 'Push commits and tags to remote repository.';
 commandGitPush.commandSubjectHint = false;
-commandGitPush.commandProperties = commandImply.commandProperties;
+commandGitPush.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitPush.commandProperties = _.mapExtend( null, commandImply.commandProperties );
 
 //
 
@@ -3379,8 +3664,9 @@ function commandGitReset( e )
   cui._command_head( commandGitReset, arguments );
 
   _.routineOptions( commandGitReset, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -3394,33 +3680,38 @@ function commandGitReset( e )
   {
     return it.opener.openedModule.gitReset
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitReset.defaults )
     });
   }
 }
 
-commandGitReset.defaults =
+commandGitReset.defaults = _.mapExtend( null, commandImply.defaults,
 {
   dirPath : '.',
   removingUntracked : 0,
   removingIgnored : 0,
   removingSubrepositories : 0,
   dry : 0,
-  v : null,
+  // v : null,
   verbosity : 2,
-};
+  withSubmodules : 0
+});
 commandGitReset.hint = 'Reset local changes in repository of the module.';
 commandGitReset.commandSubjectHint = false;
-commandGitReset.commandProperties =
+commandGitReset.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitReset.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
   removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
   removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
   dry : 'Dry run without resetting. Default is dry:0.',
-  v : 'Set verbosity. Default is 2.',
+  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
-};
+});
 
 //
 
@@ -3430,8 +3721,9 @@ function commandGitStatus( e )
   cui._command_head( commandGitStatus, arguments );
 
   _.routineOptions( commandGitStatus, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -3445,33 +3737,38 @@ function commandGitStatus( e )
   {
     return it.opener.openedModule.gitStatus
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitStatus.defaults )
     });
   }
 }
 
-commandGitStatus.defaults =
+commandGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
 {
   local : 1,
   uncommittedIgnored : 0,
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
-};
+  withSubmodules : 0
+});
 commandGitStatus.hint = 'Check the status of the repository.';
 commandGitStatus.commandSubjectHint = false;
-commandGitStatus.commandProperties =
+commandGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitStatus.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   local : 'Check local commits. Default value is 1.',
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-};
+});
 
 //
 
@@ -3481,8 +3778,9 @@ function commandGitSync( e )
   cui._command_head( commandGitSync, arguments );
 
   _.routineOptions( commandGitSync, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -3497,29 +3795,34 @@ function commandGitSync( e )
     return it.opener.openedModule.gitSync
     ({
       commit : e.subject,
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults )
     });
   }
 }
 
-commandGitSync.defaults =
+commandGitSync.defaults = _.mapExtend( null, commandImply.defaults,
 {
   dirPath : null,
   dry : 0,
   profile : 'default',
-  v : null,
+  // v : null,
   verbosity : 1,
-};
+  withSubmodules : 0
+});
 commandGitSync.hint = 'Syncronize local and remote repositories.';
 commandGitSync.commandSubjectHint = 'A commit message. Default value is "."';
-commandGitSync.commandProperties =
+commandGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+});
 
 //
 
@@ -3529,8 +3832,9 @@ function commandGitTag( e )
   cui._command_head( commandGitTag, arguments );
 
   _.routineOptions( commandGitTag, e.propertiesMap );
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -3544,31 +3848,36 @@ function commandGitTag( e )
   {
     return it.opener.openedModule.gitTag
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitTag.defaults )
     });
   }
 }
 
-commandGitTag.defaults =
+commandGitTag.defaults = _.mapExtend( null, commandImply.defaults,
 {
   name : '.',
   description : '',
   dry : 0,
   light : 0,
-  v : null,
+  // v : null,
   verbosity : 1,
-};
+  withSubmodules : 0
+});
 commandGitTag.hint = 'Add tag for current commit.';
 commandGitTag.commandSubjectHint = false;
-commandGitTag.commandProperties =
+commandGitTag.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitTag.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   name : 'Tag name. Default is name:".".',
   description : 'Description of annotated tag. Default is description:"".',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
-  v : 'Set verbosity. Default is 1.',
+  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-};
+});
 
 //
 
@@ -3598,7 +3907,13 @@ function commandWith( e )
 {
   let cui = this.form();
   let path = cui.fileProvider.path;
-  cui._command_head( commandWith, arguments );
+
+  cui._command_head
+  ({
+    routine : commandWith,
+    args : arguments,
+    usingImpliedMap : 0
+  });
 
   if( cui.currentOpener )
   {
@@ -3634,7 +3949,12 @@ function commandWith( e )
     }
   }
 
-  cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
+  // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
+  let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.commandArgument ) );
+
+  cui.implied = _.mapExtend( cui.implied, { withPath } );
+  _.mapExtend( e.propertiesMap, _.mapOnly_( null,  cui.implied, commandWith.defaults ) );
+  cui._propertiesImply( e.propertiesMap );
 
   return cui.modulesFindWithAt
   ({
@@ -3658,13 +3978,19 @@ function commandWith( e )
       cui.currentOpeners = null;
     }
 
+    _.assert( cui.transaction instanceof _.will.Transaction );
+    cui.transaction.finit();
+    cui.transaction = null;
+
     return it;
   })
 
 }
 
+commandWith.defaults = _.mapExtend( null, commandImply.defaults );
 commandWith.hint = 'Select a module to execute command.';
 commandWith.commandSubjectHint = 'A module selector.';
+commandWith.commandProperties = Object.create( null );
 
 //
 
@@ -3871,8 +4197,9 @@ function commandNpmFromWillfile( e )
   cui._command_head( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
   e.propertiesMap.packagePath = e.subject;
@@ -3893,7 +4220,7 @@ function commandNpmFromWillfile( e )
 
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
       currentContext,
       verbosity : 2,
     });
@@ -3901,16 +4228,18 @@ function commandNpmFromWillfile( e )
 
 }
 
-commandNpmFromWillfile.defaults =
+commandNpmFromWillfile.defaults = _.mapExtend( null, commandImply.defaults,
 {
   packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
-};
+  withSubmodules : 0,
+});
 commandNpmFromWillfile.hint = 'Generate JSON file from willfile(s) of current module.';
 commandNpmFromWillfile.longHint = 'Generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.\n';
 commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
-commandNpmFromWillfile.commandProperties =
+commandNpmFromWillfile.commandPropertiesAliases = commandImply.commandPropertiesAliases;
+commandNpmFromWillfile.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   'packagePath' : 'Path to generated JSON file. Default is "{path::out}/package.json".'
   + '\n\t"will .npm.from.willfile packagePath:debug/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "debug".',
@@ -3918,7 +4247,7 @@ commandNpmFromWillfile.commandProperties =
   + '\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
   'filesPath' : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
   + '\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
-};
+});
 
 //
 
@@ -3930,8 +4259,10 @@ function commandWillfileFromNpm( e )
   cui._command_head( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
-  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+
+  cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
   e.propertiesMap.willfilePath = e.subject;
@@ -3983,28 +4314,30 @@ function commandWillfileFromNpm( e )
     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
       currentContext,
       verbosity : 3,
     });
   }
 }
 
-commandWillfileFromNpm.defaults =
+commandWillfileFromNpm.defaults =  _.mapExtend( null, commandImply.defaults,
 {
   packagePath : null,
   willfilePath : null,
-};
+  withSubmodules : 0,
+});
 commandWillfileFromNpm.hint = 'Generate willfile from JSON file.';
 commandWillfileFromNpm.longHint = 'Generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".\n';
 commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
-commandWillfileFromNpm.commandProperties =
+commandWillfileFromNpm.commandPropertiesAliases = commandImply.commandPropertiesAliases;
+commandWillfileFromNpm.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   'packagePath' : 'Path to source json file. Default is "./package.json".'
   + '\n\t"will .willfile.from.npm packagePath:old.package.json" - generate willfile "will.yml" from JSON file "old.package.json".',
   'willfilePath' : 'Path to generated willfile. Default is "./.will.yml".'
   + '\n\t"will .willfile.from.npm willfilePath:Named" - generate willfile "Named.will.yml" from file "package.json".',
-};
+});
 
 //
 
@@ -4090,17 +4423,21 @@ function commandWillfileGet( e )
 commandWillfileGet.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileGet.hint = 'Get value of separate properties of source willfile.';
 commandWillfileGet.longHint = 'Get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".\n';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
+commandWillfileGet.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileGet.commandProperties =
 {
   'verbosity' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.get path/to/not/existed:1 verbosity:4" - enable output for not existed property.',
-  'v' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  + '\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
+  // 'v' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  // + '\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
 };
 
 //
@@ -4156,20 +4493,24 @@ function commandWillfileSet( e )
 commandWillfileSet.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   structureParse : 0,
 };
 commandWillfileSet.hint = 'Set separate properties in destination willfile.';
 commandWillfileSet.longHint = 'Set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".\n';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileSet.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileSet.commandProperties =
 {
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.set path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.set about/author/name:author verbosity:4" - enable output if option "author" has string value.',
-  'v' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  + '\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
+  // 'v' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  // + '\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
 };
 
 //
@@ -4256,17 +4597,21 @@ function commandWillfileDel( e )
 commandWillfileDel.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileDel.hint = 'Delete separate properties in destination willfile.';
 commandWillfileDel.longHint = 'Delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml".\n';
 commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
+commandWillfileDel.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileDel.commandProperties =
 {
   'verbosity' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.del about/author verbosity:4" - enable output.',
-  'v' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  + '\n\t"will .willfile.del about/author v:4" - enable output.',
+  // 'v' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
+  // + '\n\t"will .willfile.del about/author v:4" - enable output.',
 };
 
 //
@@ -4324,18 +4669,22 @@ function commandWillfileExtend( e )
 commandWillfileExtend.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   structureParse : 0,
 };
 commandWillfileExtend.hint = 'Extend separate properties of destination willfile.';
 commandWillfileExtend.longHint = 'Extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileExtend.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileExtend.commandProperties =
 {
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
+  // 'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -4390,18 +4739,22 @@ function commandWillfileSupplement( e )
 commandWillfileSupplement.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   structureParse : 0,
 };
 commandWillfileSupplement.hint = 'Extend separate not existed properties of destination willfile.';
 commandWillfileSupplement.longHint = 'Extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one property.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile property "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.\n';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileSupplement.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileSupplement.commandProperties =
 {
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
+  // 'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -4423,11 +4776,15 @@ function commandWillfileExtendWillfile( e )
 commandWillfileExtendWillfile.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileExtendWillfile.hint = 'Extend willfile by data from source configuration files.';
 commandWillfileExtendWillfile.longHint = 'Extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
 commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileExtendWillfile.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileExtendWillfile.commandProperties =
 {
   'about' : 'Enables extension of section "about". Default value is 1.',
@@ -4452,7 +4809,7 @@ commandWillfileExtendWillfile.commandProperties =
   'format' : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
   'submodulesDisabling' : 'Disables new submodules from source files. Default value is 0.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
+  // 'v' : 'Set verbosity. Default is 3.',
 }
 
 //
@@ -4474,11 +4831,12 @@ function commandWillfileSupplementWillfile( e )
 commandWillfileSupplementWillfile.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 commandWillfileSupplementWillfile.hint = 'Supplement willfile by data from source configuration files.';
 commandWillfileSupplementWillfile.longHint = 'Supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileSupplementWillfile.commandPropertiesAliases = _.mapExtend( null, commandWillfileExtendWillfile.commandPropertiesAliases );
 commandWillfileSupplementWillfile.commandProperties = _.mapExtend( null, commandWillfileExtendWillfile.commandProperties );
 
 //
@@ -4686,7 +5044,7 @@ function commandWillfileMergeIntoSingle( e )
 commandWillfileMergeIntoSingle.defaults =
 {
   verbosity : 3,
-  v : 3,
+  // v : 3,
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
@@ -4694,8 +5052,13 @@ commandWillfileMergeIntoSingle.defaults =
 };
 commandWillfileMergeIntoSingle.hint = 'Merge unnamed export and import willfiles into single file.';
 commandWillfileMergeIntoSingle.commandSubjectHint = false;
+commandWillfileMergeIntoSingle.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandWillfileMergeIntoSingle.commandProperties =
 {
+  verbosity : 'Set verbosity. Default is 3.',
   primaryPath : 'Name of destination willfile. Default is `will.yml`',
   secondaryPath : 'Name of file to extend destination willfile',
   submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1',
@@ -4752,18 +5115,22 @@ commandNpmPublish.defaults =
 
   force : 0,
   dry : 0,
-  v : 1,
+  // v : 1,
   verbosity : 1,
 };
 commandNpmPublish.hint = 'Publish in NPM.';
 commandNpmPublish.commandSubjectHint = 'A commit message for uncommitted changes. Default is ".".';
+commandNpmPublish.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandNpmPublish.commandProperties =
 {
   commit : 'message', /* qqq : for Dmytro : bad : bad name */
   tag : 'tag',
   force : 'forces diff',
   dry : 'dry run',
-  v : 'verbosity',
+  // v : 'verbosity',
   verbosity : 'verbosity',
 };
 /* qqq : for Dmytro : bad : break of pattern */
@@ -4803,6 +5170,10 @@ commandNpmDepAdd.defaults =
 };
 commandNpmDepAdd.hint = 'Add as dependency to NPM.';
 commandNpmDepAdd.commandSubjectHint = 'Dependency path.';
+commandNpmDepAdd.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandNpmDepAdd.commandProperties =
 {
   to : 'Path to the directory with directory node_modules. Current path by default.',
@@ -4811,7 +5182,7 @@ commandNpmDepAdd.commandProperties =
   downloading : 'Downloading files. Default is true.',
   linking : 'Softlink instead of copying. Default is true.',
   dry : 'Dry run.',
-  v : 'Verbosity.',
+  // v : 'Verbosity.',
   verbosity : 'Verbosity.',
 };
 /* qqq : for Dmytro : implement and cover each property */
@@ -4881,13 +5252,17 @@ commandNpmInstall.defaults =
   verbosity : 1,
 };
 commandNpmInstall.hint = 'Add as dependency to NPM.';
+commandNpmInstall.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandNpmInstall.commandProperties =
 {
   to : 'Path to directory with package.json file. Default is current directory.',
   linkingSelf : 'Softlink itself. Default is true.',
   locked : 'Use package-lock.json instead of package.json. By default use lock files if the file exists otherwise use package.json.',
   dry : 'Dry run.',
-  v : 'Verbosity.',
+  // v : 'Verbosity.',
   verbosity : 'Verbosity.',
 };
 
@@ -5485,7 +5860,7 @@ let currentOpenerSymbol = Symbol.for( 'currentOpener' );
 
 let Composes =
 {
-  beeping : 0,
+  // beeping : 0,
 }
 
 let Aggregates =
@@ -5517,6 +5892,7 @@ let Forbids =
 let Accessors =
 {
   currentOpener : { writable : 0 },
+  beeping : { get : beepingGet, writable : 0 }
 }
 
 // --
@@ -5543,7 +5919,10 @@ let Extension =
 
   _command_head,
   errEncounter,
+  _propertiesImplyToMain,
   _propertiesImply,
+
+  beepingGet,
 
   // meta command
 
