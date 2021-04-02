@@ -1419,8 +1419,10 @@ function commandVersionCheck( e )
 }
 
 commandVersionCheck.defaults = _.mapExtend( null, commandImply.defaults );
+commandVersionCheck.defaults.throwing = 1;
 commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
 commandVersionCheck.commandSubjectHint = false;
+commandVersionCheck.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1.',
