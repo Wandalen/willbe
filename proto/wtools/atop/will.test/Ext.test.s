@@ -10598,6 +10598,66 @@ function exportSingle( test )
 
 //
 
+function exportWithExistedGitRepository( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.export';
+    return null;
+  });
+
+  a.shell( 'git init' );
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Exporting module::ExportWithDefaultPaths' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, 'Exported module::ExportWithDefaultPaths / build::export' ) );
+
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) );
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download, { criterion : { predefined : 1 }, path : '..' } );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'reexport';
+    return null;
+  });
+
+  a.appStart( '.export' )
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Exporting module::ExportWithDefaultPaths' ) );
+    test.true( _.strHas( op.output, '+ Write out willfile' ) );
+    test.true( _.strHas( op.output, 'Exported module::ExportWithDefaultPaths / build::export' ) );
+
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download, { criterion : { predefined : 1 }, path : '..' } );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function exportItself( test )
 {
   let context = this;
@@ -13967,18 +14027,16 @@ function exportWithRemoteSubmodulesMinRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export'
     return null;
-  })
+  });
 
-  a.appStart( '.with "**" .clean' )
-  a.appStart( '.with "**" .export' )
+  a.appStart( '.with "**" .clean' );
+  a.appStart( '.with "**" .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -14000,6 +14058,9 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/Integration.test.ss',
+      './group1/out/debug/node_modules',
+      './group1/out/debug/node_modules/wmodulefortesting1',
+      './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/Basic.s',
@@ -14018,6 +14079,10 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/Integration.test.ss',
+      './out/debug/node_modules',
+      './out/debug/node_modules/wmodulefortesting1',
+      './out/debug/node_modules/wmodulefortesting1a',
+      './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/Basic.s',
@@ -14038,12 +14103,12 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-    ]
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -15547,11 +15612,11 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   {
     test.case = '.export';
     return null;
-  })
+  });
 
-  a.appStart( '.export' )
+  a.appStart( '.export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Exported module::l1 / build::export with 3 file(s)' ), 1 );
@@ -15585,6 +15650,8 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
       './.module/ModuleForTesting12/proto/Integration.test.ss',
+      './.module/ModuleForTesting12/proto/node_modules',
+      './.module/ModuleForTesting12/proto/node_modules/wmodulefortesting12',
       './.module/ModuleForTesting12/proto/wtools',
       './.module/ModuleForTesting12/proto/wtools/testing',
       './.module/ModuleForTesting12/proto/wtools/testing/Basic.s',
@@ -15596,7 +15663,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
       './.module/ModuleForTesting12/sample/trivial',
-      './.module/ModuleForTesting12/sample/trivial/Sample.s'
+      './.module/ModuleForTesting12/sample/trivial/Sample.s',
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
@@ -16989,19 +17056,17 @@ function cleanRecursiveMin( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export first'
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with z .export' )
+  a.appStart( '.with ** .clean' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with z .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -17021,6 +17086,9 @@ function cleanRecursiveMin( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/Integration.test.ss',
+      './group1/out/debug/node_modules',
+      './group1/out/debug/node_modules/wmodulefortesting1',
+      './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/Basic.s',
@@ -17039,6 +17107,10 @@ function cleanRecursiveMin( test )
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/Integration.test.ss',
+      './out/debug/node_modules',
+      './out/debug/node_modules/wmodulefortesting1',
+      './out/debug/node_modules/wmodulefortesting1a',
+      './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/Basic.s',
@@ -17058,17 +17130,16 @@ function cleanRecursiveMin( test )
       './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s'
+      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-
-  .then( ( op ) =>
+  a.appStart( '.with z .clean recursive:2' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -17079,12 +17150,12 @@ function cleanRecursiveMin( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function cleanRecursiveMin */
+}
 
 cleanRecursiveMin.rapidity = -1;
 
@@ -23448,7 +23519,7 @@ function stepSubmodulesUpdate( test )
   return a.ready;
 }
 
-stepSubmodulesUpdate.timeOut = 300000;
+stepSubmodulesUpdate.timeOut = 600000;
 
 //
 
@@ -24617,7 +24688,7 @@ copy
 }
 
 stepGitCheckHardLinkRestoring.rapidity = -1;
-stepGitCheckHardLinkRestoring.timeOut = 300000;
+stepGitCheckHardLinkRestoring.timeOut = 600000;
 
 //
 
@@ -25519,7 +25590,7 @@ File.txt
 }
 
 stepGitReset.rapidity = -1;
-stepGitReset.timeOut = 120000;
+stepGitReset.timeOut = 300000;
 
 //
 
@@ -31612,7 +31683,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     a.fileProvider.fileAppend( a.abs( 'super/f2.txt' ), 'super\n' );
     return null;
-  })
+  });
 
   /* */
 
@@ -31622,7 +31693,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
     return null;
-  })
+  });
 
   a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
@@ -31648,14 +31719,14 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -31663,21 +31734,19 @@ original/f2.txt
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
-    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f2.txt
 super
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
-    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   a.ready.finally( () =>
   {
@@ -33296,7 +33365,7 @@ clone
 }
 
 commandGitPull.rapidity = -1;
-commandGitPull.timeOut = 300000;
+commandGitPull.timeOut = 600000;
 
 //
 
@@ -40622,6 +40691,7 @@ const Proto =
     // export
 
     exportSingle,
+    exportWithExistedGitRepository,
     exportItself,
     exportNonExportable,
     exportPurging, /* yyy */
