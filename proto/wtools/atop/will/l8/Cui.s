@@ -4195,8 +4195,9 @@ function commandNpmFromWillfile( e )
   cui._command_head( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
-  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
   e.propertiesMap.packagePath = e.subject;
@@ -4217,7 +4218,7 @@ function commandNpmFromWillfile( e )
 
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
       currentContext,
       verbosity : 2,
     });
@@ -4225,16 +4226,18 @@ function commandNpmFromWillfile( e )
 
 }
 
-commandNpmFromWillfile.defaults =
+commandNpmFromWillfile.defaults = _.mapExtend( null, commandImply.defaults,
 {
   packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
-};
+  withSubmodules : 0,
+});
 commandNpmFromWillfile.hint = 'Generate JSON file from willfile(s) of current module.';
 commandNpmFromWillfile.longHint = 'Generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.\n';
 commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
-commandNpmFromWillfile.commandProperties =
+commandNpmFromWillfile.commandPropertiesAliases = commandImply.commandPropertiesAliases;
+commandNpmFromWillfile.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   'packagePath' : 'Path to generated JSON file. Default is "{path::out}/package.json".'
   + '\n\t"will .npm.from.willfile packagePath:debug/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "debug".',
@@ -4242,7 +4245,7 @@ commandNpmFromWillfile.commandProperties =
   + '\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
   'filesPath' : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
   + '\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
-};
+});
 
 //
 
@@ -4254,8 +4257,10 @@ function commandWillfileFromNpm( e )
   cui._command_head( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
-  if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  cui._propertiesImply({ withSubmodules : 0 });
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+
+  cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
   e.propertiesMap.willfilePath = e.subject;
@@ -4307,28 +4312,30 @@ function commandWillfileFromNpm( e )
     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      ... e.propertiesMap,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
       currentContext,
       verbosity : 3,
     });
   }
 }
 
-commandWillfileFromNpm.defaults =
+commandWillfileFromNpm.defaults =  _.mapExtend( null, commandImply.defaults,
 {
   packagePath : null,
   willfilePath : null,
-};
+  withSubmodules : 0,
+});
 commandWillfileFromNpm.hint = 'Generate willfile from JSON file.';
 commandWillfileFromNpm.longHint = 'Generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".\n';
 commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
-commandWillfileFromNpm.commandProperties =
+commandWillfileFromNpm.commandPropertiesAliases = commandImply.commandPropertiesAliases;
+commandWillfileFromNpm.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   'packagePath' : 'Path to source json file. Default is "./package.json".'
   + '\n\t"will .willfile.from.npm packagePath:old.package.json" - generate willfile "will.yml" from JSON file "old.package.json".',
   'willfilePath' : 'Path to generated willfile. Default is "./.will.yml".'
   + '\n\t"will .willfile.from.npm willfilePath:Named" - generate willfile "Named.will.yml" from file "package.json".',
-};
+});
 
 //
 
@@ -5243,13 +5250,17 @@ commandNpmInstall.defaults =
   verbosity : 1,
 };
 commandNpmInstall.hint = 'Add as dependency to NPM.';
+commandNpmInstall.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
 commandNpmInstall.commandProperties =
 {
   to : 'Path to directory with package.json file. Default is current directory.',
   linkingSelf : 'Softlink itself. Default is true.',
   locked : 'Use package-lock.json instead of package.json. By default use lock files if the file exists otherwise use package.json.',
   dry : 'Dry run.',
-  v : 'Verbosity.',
+  // v : 'Verbosity.',
   verbosity : 'Verbosity.',
 };
 
