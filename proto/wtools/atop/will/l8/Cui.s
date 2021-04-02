@@ -1971,6 +1971,7 @@ commandSubmodulesFixate.defaults = commandImply.defaults;
 commandSubmodulesFixate.hint = 'Fixate remote submodules.';
 commandSubmodulesFixate.longHint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
 commandSubmodulesFixate.commandSubjectHint = false;
+commandSubmodulesFixate.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
@@ -2013,6 +2014,7 @@ commandSubmodulesUpgrade.defaults = commandImply.defaults;
 commandSubmodulesUpgrade.hint = 'Upgrade remote submodules.';
 commandSubmodulesUpgrade.longHint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
 commandSubmodulesUpgrade.commandSubjectHint = false;
+commandSubmodulesUpgrade.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesUpgrade.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
@@ -2063,6 +2065,7 @@ commandSubmodulesVersionsDownload.defaults = _.mapExtend( null, commandImply.def
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
 commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
+commandSubmodulesVersionsDownload.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesVersionsDownload.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
@@ -2087,13 +2090,13 @@ function commandSubmodulesVersionsUpdate( e )
      Hotfix. Fixes situations when previous command changed with* fields of the main.
      Remove after moving FilterFields fields out of the main and passing them as options( where possoble ).
   */
-  _.mapSupplement( implyMap,
-  {
-    withOut : 1,
-    withInvalid : 1,
-    withValid : 1,
-    withEnabled : 1
-  })
+  // _.mapSupplement( implyMap,
+  // {
+  //   withOut : 1,
+  //   withInvalid : 1,
+  //   withValid : 1,
+  //   withEnabled : 1
+  // })
 
   cui._propertiesImply( implyMap );
 
@@ -2119,6 +2122,7 @@ commandSubmodulesVersionsUpdate.defaults = _.mapExtend( null, commandImply.defau
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
+commandSubmodulesVersionsUpdate.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
@@ -3184,6 +3188,7 @@ commandSubmodulesClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesClean.defaults.withSubmodules = 0;
 commandSubmodulesClean.hint = 'Delete all downloaded submodules.';
 commandSubmodulesClean.commandSubjectHint = false;
+commandSubmodulesClean.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandSubmodulesClean.commandProperties =
 {
   dry : 'Dry run without deleting. Default is dry:0.',
