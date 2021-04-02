@@ -192,6 +192,7 @@ module:
           - ../proto/wtools/atop/will/l0/Namespace.s
           - ../proto/wtools/atop/will/l1
           - ../proto/wtools/atop/will/l1/Main.s
+          - ../proto/wtools/atop/will/l1/Transaction.s
           - ../proto/wtools/atop/will/l2
           - ../proto/wtools/atop/will/l2/About.s
           - ../proto/wtools/atop/will/l2/BuildFrame.s
@@ -2668,6 +2669,9 @@ module:
             ../proto/wtools/atop/will.test/_asset/willfileFromNpm/PathRepository.json
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Submodule.json
           - ../proto/wtools/atop/will.test/_asset/willfileFromNpm/Version.json
+          - ../proto/wtools/atop/will.test/_asset/willFilterFieldsOverwrite
+          - >-
+            ../proto/wtools/atop/will.test/_asset/willFilterFieldsOverwrite/.will.yml
     submodule:
       wTools:
         path: 'npm:///wTools'
