@@ -2178,6 +2178,118 @@ function exportModuleAndCheckDefaultPathsSimple( test )
 
 //
 
+function exportGitModuleAndCheckDefaultPathsSimple( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  let opener;
+  a.reflect();
+
+  a.shell( 'git init' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check export file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'reexport';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'open';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.downloadPath, a.abs( '.' ) );
+    test.false( a.fileProvider.path.isTrailed( module.downloadPath ) );
+    let pathMap = module.resourceMapForKind( 'path' );
+    test.identical( pathMap.download.path, a.abs( '.' ) );
+
+    let junction = module.toJunction();
+    test.identical( junction.openers.length, 1 );
+    test.identical( junction.openers[ 0 ], opener );
+
+    test.identical( opener.isMain, true );
+    test.identical( opener.downloadPath, a.abs( '.' ) )
+
+    opener.finit();
+
+    return null;
+
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 /*
 test
   - following exports preserves followed export
@@ -11599,6 +11711,7 @@ const Proto =
     moduleClone,
 
     exportModuleAndCheckDefaultPathsSimple,
+    exportGitModuleAndCheckDefaultPathsSimple,
     exportSeveralExports,
     exportSuper,
     exportSuperIn,
