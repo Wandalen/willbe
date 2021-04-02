@@ -1803,6 +1803,7 @@ function commandModulesTree( e )
 commandModulesTree.defaults = commandImply.defaults;
 commandModulesTree.hint = 'List all found modules as a tree.';
 commandModulesTree.commandSubjectHint = 'A selector for path names. Could be a glob.';
+commandModulesTree.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandModulesTree.commandProperties =
 {
   withLocalPath : 'Print local paths. Default is 0',
@@ -1862,6 +1863,7 @@ commandModulesUpdate.defaults = _.mapExtend( null, commandImply.defaults );
 commandModulesUpdate.hint = 'Update root module and each submodule.';
 commandModulesUpdate.longHint = 'Update root and each submodule or check for available updates for root module and each submodule. Does nothing if all submodules have fixated version.';
 commandModulesUpdate.commandSubjectHint = false;
+commandModulesUpdate.commandPropertiesAliases = commandImply.commandPropertiesAliases;
 commandModulesUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
