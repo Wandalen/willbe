@@ -2,7 +2,7 @@ name : Experiment
 
 on :
   push :
-    branches : [ filterfields ]
+    branches : [ master ]
 
 jobs :
 
