@@ -1101,6 +1101,14 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportWhole/module/proto/dir
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWhole/module/proto/dir/File2.s
+          - ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/.ex.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/proto/file.txt
           - ../proto/wtools/atop/will.test/_asset/exportWithReflector
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithReflector/.ex.will.yml
@@ -3493,7 +3501,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ./
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/willbe.git'
       origins:
