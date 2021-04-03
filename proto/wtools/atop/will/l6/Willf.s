@@ -300,9 +300,6 @@ function _inPathsForm()
     willf.filePath = path.join( willf.dirPath, _.Will.PrefixPathForRole( willf.role, willf.isOut ) );
   }
 
-  // if( willf.id === 96 )
-  // debugger;
-
   if( _.arrayIs( willf.filePath ) )
   {
     formFor( willf.filePath[ 0 ] );
@@ -326,7 +323,7 @@ function _inPathsForm()
     willf.dirPath = path.detrail( path.dir( filePath ) );
 
     if( willf.isOut === null )
-    willf.isOut = _.Will.PathIsOut( filePath );
+    willf.isOut = _.will.filePathIsOut( filePath );
     // willf.isOut = _.strHas( filePath, /\.out\.\w+\.\w+$/ );
 
     if( willf.storagePath === null )
@@ -369,7 +366,6 @@ function _read()
     if( !willf.structure )
     if( !willf.exists() )
     {
-      // debugger;
       throw _.errBrief( `Found no willfile at ${willf.filePath}` );
     }
 
@@ -391,14 +387,6 @@ function _read()
         verbosity : 0,
       });
 
-      // willf.data = fileProvider.configRead
-      // ({
-      //   filePath : willf.filePath,
-      //   // verbosity : will.verbosity-2,
-      //   verbosity : 0,
-      //   found : willf._found,
-      // });
-
     }
 
     willf.formed = 3;
@@ -415,14 +403,12 @@ function _read()
     );
     _.assert( willf.dirPath === path.detrail( path.dir( _.arrayAs( willf.filePath )[ 0 ] ) ) );
 
-    // if( will.verbosity >= 3 )
     willf._readLog( 1, 0 );
 
   }
   catch( err )
   {
     let error = _.err( err, `\nFailed to read willfile ${willf.filePath}` );
-    // err = _.err( _.errBrief( err ), `\nFailed to read willfile ${willf.filePath}` );
 
     willf.error = willf.error || error;
 
@@ -571,7 +557,6 @@ function _open()
 
     if( !willf.isConsistent() )
     {
-      debugger;
       willf.isConsistent();
       inconsistent = 1;
       let peerWillfilesPath = willf.peerWillfilesPathGet();

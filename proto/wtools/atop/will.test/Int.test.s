@@ -2129,7 +2129,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'check export file';
-    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
     test.identical( path.download.criterion, { predefined : 1 } );
@@ -2161,7 +2161,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'check reexported file';
-    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
     test.identical( path.download.criterion, { predefined : 1 } );
@@ -2209,7 +2209,7 @@ function exportGitModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'check export file';
-    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
     test.identical( path.download.criterion, { predefined : 1 } );
@@ -2241,7 +2241,7 @@ function exportGitModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'check reexported file';
-    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
     test.identical( path.download.criterion, { predefined : 1 } );
@@ -2328,7 +2328,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2390,7 +2390,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2448,7 +2448,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2505,7 +2505,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2640,7 +2640,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2734,7 +2734,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2799,7 +2799,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3063,7 +3063,7 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3160,7 +3160,7 @@ function exportSuperIn( test )
     test.identical( files, exp );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3222,7 +3222,7 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3339,7 +3339,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/path.out.will' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/path.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3378,7 +3378,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/reflector.out.will' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/reflector.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3566,7 +3566,7 @@ function exportOutdated( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3627,7 +3627,7 @@ function exportOutdated( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3714,7 +3714,7 @@ function exportRecursive( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/ab/module-ab.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/ab/module-ab.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'module-ab.out', '../../a', '../module-a.out', '../../b', '../module-b.out', '../../ab/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3825,7 +3825,7 @@ function exportDotless( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3834,7 +3834,7 @@ function exportDotless( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3938,7 +3938,7 @@ function exportDotlessSingle( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3947,7 +3947,7 @@ function exportDotlessSingle( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4042,7 +4042,7 @@ function exportStepOpts( test )
     test.identical( got.opts, exp );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/module-a.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/module-a.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'module-a.out', '../a' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4200,7 +4200,7 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4209,7 +4209,7 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/submodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4314,7 +4314,7 @@ function exportSteps( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4326,7 +4326,7 @@ function exportSteps( test )
     test.identical( _.setFrom( steps ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/submodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4441,7 +4441,7 @@ function exportCourrputedOutfileUnknownSection( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4540,7 +4540,7 @@ function exportCourruptedOutfileSyntax( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4672,7 +4672,7 @@ function exportCourruptedSubmodulesDisabled( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4808,7 +4808,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.true( err === undefined );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4970,7 +4970,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.true( err === undefined );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -9497,7 +9497,7 @@ function submodulesRemoteResolve( test )
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-    config = a.fileProvider.configRead({ filePath : a.abs( '.im.will.yml' ) });
+    config = a.fileProvider.fileReadUnknown({ filePath : a.abs( '.im.will.yml' ) });
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
     a.will.prefer({ allOfSub : 1 });
@@ -9693,7 +9693,7 @@ function submodulesLocalResolve( test )
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-    let config = a.fileProvider.configRead({ filePath : a.abs( '.im.will.yml' ) });
+    let config = a.fileProvider.fileReadUnknown({ filePath : a.abs( '.im.will.yml' ) });
     tag = _.git.path.parse({ remotePath : config.submodule.ModuleForTesting1 }).tag;
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
@@ -10060,7 +10060,7 @@ function moduleIsNotValid( test )
     opener.close();
 
     let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
-    let outWillFile = a.fileProvider.configRead( outWillFilePath );
+    let outWillFile = a.fileProvider.fileReadUnknown( outWillFilePath );
     outWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
 
@@ -11775,7 +11775,7 @@ const Proto =
     repoStatusLocalChanges,
     repoStatusLocalUncommittedChanges,
 
-    remotePathOfMainGitRepo
+    remotePathOfMainGitRepo,
 
   }
 

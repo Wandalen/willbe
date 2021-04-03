@@ -90,7 +90,7 @@ function onModule( context )
 
   context.start( 'will.local .export' );
 
-  _.npm.fixate
+  _.npm.fileFixate
   ({
     dry : o.dry,
     localPath : context.junction.dirPath,

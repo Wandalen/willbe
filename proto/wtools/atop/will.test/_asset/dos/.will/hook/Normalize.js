@@ -10,7 +10,7 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -50,6 +50,8 @@ function onModule( context )
 
   // npmDepRemoveSelf( context );
   // npmDepAddFileNodeModulesEntry( context );
+  // npmEntryPathAdjust( context );
+  // willProtoEntryPathFromNpm( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
@@ -81,7 +83,7 @@ function hardLink( context, dstPath, srcPath )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   if( !config )
@@ -123,7 +125,7 @@ function workflowsReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !fileProvider.fileExists( abs( '.github/workflows/Test.yml' ) ) )
@@ -151,7 +153,7 @@ function gitIgnorePatch( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !fileProvider.isTerminal( abs( '.gitignore' ) ) )
@@ -185,7 +187,7 @@ function gitIgnoreReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !fileProvider.fileExists( abs( '.gitignore' ) ) )
@@ -209,7 +211,7 @@ function integrationTestRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -234,7 +236,7 @@ function samplesRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -262,7 +264,7 @@ function dwtoolsRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -290,7 +292,7 @@ function badgeGithubReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -343,7 +345,7 @@ function badgeStabilityAdd( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -397,7 +399,7 @@ function badgeCircleCiAdd( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -449,7 +451,7 @@ function badgeCircleCiRemove( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -501,7 +503,7 @@ function badgeCircleCiReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -552,7 +554,7 @@ function badgesSwap( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -602,11 +604,11 @@ function npmDepRemoveSelf( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
-  let configPath = path.join( inPath, 'was.package.json' );
-  let name = _.npm.localName({ configPath });
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
   if( !name )
   return;
 
@@ -629,15 +631,15 @@ function npmDepAddFileNodeModulesEntry( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
-  let protoPath = path.join( inPath, 'proto' );
+  let protoPath = abs( 'proto' );
   if( !protoPath )
   return;
 
-  let configPath = path.join( inPath, 'was.package.json' );
-  let name = _.npm.localName({ configPath });
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
   if( !name )
   return;
 
@@ -650,7 +652,7 @@ function npmDepAddFileNodeModulesEntry( context )
 
   let relativeIncludeDirPath = path.relative( inPath, path.dir( includePath ) );
 
-  let files = _.npm.localFilePath({ configPath });
+  let files = _.npm.fileReadFilePath({ configPath });
 
   if( !files && !files.length )
   return;
@@ -658,13 +660,89 @@ function npmDepAddFileNodeModulesEntry( context )
   if( o.dry )
   return;
 
-  _.npm.filePathAdd
+  _.npm.fileAddfilePath
   ({
     configPath,
     filePath : relativeIncludeDirPath,
     dry : o.dry,
     verbosity : o.verbosity - 1,
   });
+
+}
+
+//
+
+function npmEntryPathAdjust( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
+  if( !name )
+  return;
+
+  let protoPath = abs( 'proto' );
+  let includePath = path.join( protoPath, 'node_modules', name );
+
+  _.npm.fileWriteField
+  ({
+    key : 'main',
+    val : includePath,
+    configPath,
+    dry : o.dry,
+    verbosity : o.verbosity - 1,
+  });
+
+}
+
+//
+
+function willProtoEntryPathFromNpm( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
+  if( !name )
+  return;
+
+  let entryPath = _.npm.fileReadEntryPath({ configPath });
+  if( !entryPath )
+  return;
+  entryPath = abs( entryPath );
+
+  let protoPath = abs( 'proto' );
+  let includePath = path.join( protoPath, 'node_modules', name );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'path',
+    resourceName : 'npm.proto.entry',
+    withExport : 0,
+    val : [ entryPath, includePath ],
+  });
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  console.log( `protoEntryPath : ${protoEntryPath}` );
 
 }
 
@@ -677,7 +755,7 @@ function readmeModuleNameAdjust( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -749,7 +827,7 @@ function readmeTryOutAdjust( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -810,7 +888,7 @@ function readmeToAddRemove( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -867,7 +945,7 @@ function readmeToAddAdjust( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -929,7 +1007,7 @@ function readmeSampleRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -962,7 +1040,7 @@ function sourcesRemoveOld( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -1017,25 +1095,32 @@ function sourceNodeModulesEntryAdd( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return;
+  debugger;
   if( context.module.about.native )
   return
 
-  let protoPath = path.join( inPath, 'proto' );
-  let configPath = path.join( inPath, 'was.package.json' );
-  let name = _.npm.localName({ configPath });
+  let protoPath = abs( 'proto' );
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
   if( !name )
   return;
 
-  let entryPath = _.npm.localEntryPath({ configPath });
-  if( !entryPath )
+  let name2 = context.module.about.name;
+  if( !name2 )
   return;
 
-  entryPath = path.join( inPath, entryPath );
+  if( _.longHas( [ 'wTools', 'wTesting' ], name2 ) )
+  return;
+
+  let entryPath = _.npm.fileReadEntryPath({ configPath });
+  if( !entryPath )
+  return;
+  entryPath = abs( entryPath );
 
   if( !fileProvider.fileExists( entryPath ) )
   {
@@ -1053,7 +1138,17 @@ function sourceNodeModulesEntryAdd( context )
   if( o.dry )
   return;
 
-  let code = `module.exports = require( '${relativeEntryPath}' );`;
+  let code =
+`
+module.exports = require( '${relativeEntryPath}' );
+const _ = _global_.wTools;
+_.module.predeclare
+({
+  alias : [ '${name2}', '${name2.toLowerCase()}' ],
+  entryPath : __filename,
+});
+`;
+
   fileProvider.fileWrite( includePath, code );
 
 }
@@ -1067,7 +1162,7 @@ function sourcesRemoveOld2( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -1096,7 +1191,7 @@ function sampleFix( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -1129,7 +1224,7 @@ function sampleTrivial( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )

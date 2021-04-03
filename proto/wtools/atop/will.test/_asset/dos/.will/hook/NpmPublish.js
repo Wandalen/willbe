@@ -86,7 +86,7 @@ function onModule( context )
   fileProvider.filesDelete( abs( 'node_modules' ) );
   fileProvider.filesDelete( abs( 'package-lock.json' ) );
 
-  let bumped = _.npm.bump
+  let bumped = _.npm.fileBump
   ({
     dry : o.dry,
     configPath : wasСonfigPath,
@@ -104,7 +104,7 @@ function onModule( context )
     activeСonfigPath = configPath;
   }
 
-  _.npm.fixate
+  _.npm.fileFixate
   ({
     dry : o.dry,
     localPath : context.junction.dirPath,
@@ -114,13 +114,13 @@ function onModule( context )
     verbosity : o.verbosity - 2,
   });
 
-  /* adjust styles */
-  {
-    context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
-    let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
-    read += '\n';
-    fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
-  }
+  // /* adjust styles */
+  // {
+  //   context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
+  //   let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
+  //   read += '\n';
+  //   fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
+  // }
 
   {
     let context2 = context.will.hookContextNew( context );
@@ -211,7 +211,7 @@ function isEnabled( context, localPath )
   let path = context.will.fileProvider.path;
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );
-  let config = fileProvider.configRead( localPath );
+  let config = fileProvider.fileReadUnknown( localPath );
   if( !config.name )
   return false;
   if( config.enabled !== undefined && !config.enabled )

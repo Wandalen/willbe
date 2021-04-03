@@ -436,7 +436,7 @@ function reform()
     else if( junction.peer && junction.peer.object && _.boolLike( junction.peer.object.isOut ) )
     junction.isOut = !junction.peer.object.isOut;
     else
-    junction.isOut = _.Will.PathIsOut( junction.localPath || junction.remotePath );
+    junction.isOut = _.will.filePathIsOut( junction.localPath || junction.remotePath );
   }
 
   /* */

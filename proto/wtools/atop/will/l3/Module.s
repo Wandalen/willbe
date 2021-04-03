@@ -8555,7 +8555,7 @@ function npmModulePublish( o )
 
   let aboutCache = Object.create( null );
   ready.then( () => npmFixate() );
-  ready.then( () => _.npm.format({ filePath : packagePath }) );
+  ready.then( () => _.npm.fileFormat({ filePath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
   ready.then( () => module.gitTag({ name : `v${ version }` }) );
@@ -8637,7 +8637,7 @@ function npmModulePublish( o )
 
   function npmFixate()
   {
-    return _.npm.fixate
+    return _.npm.fileFixate
     ({
       dry : o.dry,
       localPath : module.dirPath,

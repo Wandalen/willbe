@@ -152,7 +152,7 @@ function ownedBy( object )
   let module = this;
 
   if( _.arrayIs( object ) )
-  return _.any( object, ( object ) => module.ownedBy( object ) );
+  return !!_.any( object, ( object ) => module.ownedBy( object ) );
 
   _.assert( !!object );
 
@@ -577,7 +577,7 @@ function willfileRegister( willf )
   let willfilesPath = _.arrayFlatten( _.select( module.willfilesArray, '*/filePath' ) );
   module.willfilesPath = willfilesPath;
 
-  module.isOut = _.any( module.willfilesArray, ( wfile ) => wfile.isOut );
+  module.isOut = !!_.any( module.willfilesArray, ( wfile ) => wfile.isOut );
 
 }
 
