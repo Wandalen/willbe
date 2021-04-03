@@ -90,7 +90,7 @@ function onModule( context )
   ({
     dry : o.dry,
     configPath : wasСonfigPath,
-    verbosity : o.verbosity - 4,
+    logger : o.verbosity - 4,
   });
 
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
@@ -111,7 +111,7 @@ function onModule( context )
     configPath : activeСonfigPath,
     tag : o.tag,
     onDep,
-    verbosity : o.verbosity - 2,
+    logger : o.verbosity - 2,
   });
 
   // /* adjust styles */
@@ -160,7 +160,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     tag : o.tag,
     ready : context.ready,
-    verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
+    logger : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
   {

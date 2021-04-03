@@ -50,7 +50,7 @@ function onModule( context )
 
   // npmDepRemoveSelf( context );
   // npmDepAddFileNodeModulesEntry( context );
-  // npmEntryPathAdjust( context );
+  npmEntryPathAdjust( context );
   // willProtoEntryPathFromNpm( context );
 
   // readmeModuleNameAdjust( context );
@@ -59,7 +59,7 @@ function onModule( context )
   // readmeToAddAdjust( context );
   // readmeSampleRename( context );
 
-  sourceNodeModulesEntryAdd( context );
+  // sourceNodeModulesEntryAdd( context );
   // sourcesRemoveOld( context );
   // sourcesRemoveOld2( context );
   // sampleFix( context );
@@ -696,10 +696,10 @@ function npmEntryPathAdjust( context )
   _.npm.fileWriteField
   ({
     key : 'main',
-    val : includePath,
+    val : path.relative( inPath, includePath ),
     configPath,
     dry : o.dry,
-    verbosity : o.verbosity - 1,
+    logger : o.verbosity - 1,
   });
 
 }
@@ -1100,8 +1100,7 @@ function sourceNodeModulesEntryAdd( context )
 
   if( !context.module )
   return;
-  debugger;
-  if( context.module.about.native )
+  if( context.module.about.values.native )
   return
 
   let protoPath = abs( 'proto' );
