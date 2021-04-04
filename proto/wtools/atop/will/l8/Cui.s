@@ -5222,7 +5222,7 @@ commandNpmInstall.defaults =
   locked : null,
   linkingSelf : 1,
   dry : 0,
-  verbosity : 1,
+  verbosity : 2,
 };
 commandNpmInstall.hint = 'Add as dependency to NPM.';
 commandNpmInstall.commandPropertiesAliases =
