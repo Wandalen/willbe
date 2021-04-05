@@ -252,7 +252,7 @@ function preform()
   will._willfilesReadBegin();
 
   if( opener.isOut === null && opener.willfilesPath )
-  opener.isOut = will.PathIsOut( opener.willfilesPath );
+  opener.isOut = _.will.filePathIsOut( opener.willfilesPath );
 
   /* */
 
@@ -2522,16 +2522,18 @@ function accessorSet_functor( propName )
 {
   let symbol = Symbol.for( propName );
 
-  return function accessorSet( filePath )
+  return function accessorSet( val )
   {
     let opener = this;
     let openedModule = opener.openedModule;
 
-    opener[ symbol ] = filePath;
-    if( openedModule )
-    openedModule[ propName ] = filePath;
+    _.assert( _.boolIs( val ) || val === null );
 
-    return filePath;
+    opener[ symbol ] = val;
+    if( openedModule )
+    openedModule[ propName ] = val;
+
+    return val;
   }
 
 }

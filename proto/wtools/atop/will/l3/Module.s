@@ -8556,7 +8556,7 @@ function npmModulePublish( o )
 
   let aboutCache = Object.create( null );
   ready.then( () => npmFixate() );
-  ready.then( () => _.npm.format({ filePath : packagePath }) );
+  ready.then( () => _.npm.fileFormat({ filePath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
   ready.then( () => module.gitTag({ name : `v${ version }` }) );
@@ -8638,7 +8638,7 @@ function npmModulePublish( o )
 
   function npmFixate()
   {
-    return _.npm.fixate
+    return _.npm.fileFixate
     ({
       dry : o.dry,
       localPath : module.dirPath,
@@ -8657,7 +8657,8 @@ function npmModulePublish( o )
     ({
       localPath : module.dirPath,
       tag : o.tag,
-      verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
+      logger : o.verbosity === 2 ? 2 : o.verbosity - 1,
+      // verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
     });
   }
 
@@ -8787,7 +8788,7 @@ function _remoteChanged()
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
     // let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
-    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, verbosity : 1 });
+    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, logger : 1 });
     if( result.version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );

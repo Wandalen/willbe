@@ -86,11 +86,11 @@ function onModule( context )
   fileProvider.filesDelete( abs( 'node_modules' ) );
   fileProvider.filesDelete( abs( 'package-lock.json' ) );
 
-  let bumped = _.npm.bump
+  let bumped = _.npm.fileBump
   ({
     dry : o.dry,
     configPath : wasСonfigPath,
-    verbosity : o.verbosity - 4,
+    logger : o.verbosity - 4,
   });
 
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
@@ -104,23 +104,23 @@ function onModule( context )
     activeСonfigPath = configPath;
   }
 
-  _.npm.fixate
+  _.npm.fileFixate
   ({
     dry : o.dry,
     localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
     onDep,
-    verbosity : o.verbosity - 2,
+    logger : o.verbosity - 2,
   });
 
-  /* adjust styles */
-  {
-    context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
-    let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
-    read += '\n';
-    fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
-  }
+  // /* adjust styles */
+  // {
+  //   context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
+  //   let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
+  //   read += '\n';
+  //   fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
+  // }
 
   {
     let context2 = context.will.hookContextNew( context );
@@ -160,7 +160,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     tag : o.tag,
     ready : context.ready,
-    verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
+    logger : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
   {
@@ -211,7 +211,7 @@ function isEnabled( context, localPath )
   let path = context.will.fileProvider.path;
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );
-  let config = fileProvider.configRead( localPath );
+  let config = fileProvider.fileReadUnknown( localPath );
   if( !config.name )
   return false;
   if( config.enabled !== undefined && !config.enabled )

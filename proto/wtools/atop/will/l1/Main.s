@@ -281,14 +281,14 @@ function WillPathGet()
   return _.path.join( __dirname, '../entry/Exec' );
 }
 
+// //
 //
-
-function PathIsOut( filePath )
-{
-  if( _.arrayIs( filePath ) )
-  filePath = filePath[ 0 ];
-  return _.strHas( filePath, /\.out(\.\w+)?(\.\w+)?$/ );
-}
+// function PathIsOut( filePath )
+// {
+//   if( _.arrayIs( filePath ) )
+//   filePath = filePath[ 0 ];
+//   return _.strHas( filePath, /\.out(\.\w+)?(\.\w+)?$/ );
+// }
 
 //
 
@@ -4394,14 +4394,14 @@ function _willfilesReadLog()
 
 //
 
-function WillfilePathIs( filePath )
-{
-  let fname = _.path.fullName( filePath );
-  let r = /\.will\.\w+/;
-  if( _.strHas( fname, r ) )
-  return true;
-  return false;
-}
+// function WillfilePathIs( filePath )
+// {
+//   let fname = _.path.fullName( filePath );
+//   let r = /\.will\.\w+/;
+//   if( _.strHas( fname, r ) )
+//   return true;
+//   return false;
+// }
 
 //
 
@@ -4555,12 +4555,12 @@ function WillfilesFind( o )
     let files2 = [];
     files.forEach( ( file ) =>
     {
-      if( _.Will.PathIsOut( file.absolute ) )
+      if( _.will.filePathIsOut( file.absolute ) )
       files2.push( file );
     });
     files.forEach( ( file ) =>
     {
-      if( !_.Will.PathIsOut( file.absolute ) )
+      if( !_.will.filePathIsOut( file.absolute ) )
       files2.push( file );
     });
 
@@ -5369,7 +5369,7 @@ function npmDepAdd( o )
   o.localPath = path.current();
 
   if( !o.as )
-  o.as = _.npm.localName({ localPath : path.current() });
+  o.as = _.npm.fileReadName({ localPath : path.current() });
 
   if( o.depPath === '.' )
   o.depPath = 'hd://.'
@@ -5452,17 +5452,17 @@ let ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', right
 
 });
 
-let ResourceKinds =
-[
-  'submodule',
-  'step',
-  'path',
-  'reflector',
-  'build',
-  'about',
-  'execution',
-  'exported',
-];
+// let ResourceKind =
+// [
+//   'submodule',
+//   'step',
+//   'path',
+//   'reflector',
+//   'build',
+//   'about',
+//   'execution',
+//   'exported',
+// ];
 
 let KnownHookExts =
 [
@@ -5575,7 +5575,7 @@ let Statics =
   ResourceCounter : 0,
   ResourceKindToClassName,
   ResourceKindToMapName,
-  ResourceKinds,
+  // ResourceKind,
   KnownHookExts,
   OpeningDefaults,
   UpformingDefaults,
@@ -5600,8 +5600,8 @@ let Statics =
   ObjectsExportInfo,
   ObjectsLogInfo,
   WillPathGet,
-  WillfilePathIs,
-  PathIsOut,
+  // WillfilePathIs,
+  // PathIsOut,
   DirPathFromFilePaths,
   PrefixPathForRole,
   PrefixPathForRoleMaybe,
@@ -5685,7 +5685,7 @@ let Extension =
   // path
 
   WillPathGet,
-  PathIsOut,
+  // PathIsOut,
   DirPathFromFilePaths,
   PrefixPathForRole,
   PrefixPathForRoleMaybe,
@@ -5814,7 +5814,7 @@ let Extension =
   _willfilesReadEnd,
   _willfilesReadLog,
 
-  WillfilePathIs,
+  // WillfilePathIs,
   WillfilesFind,
   willfilesFind,
   willfilesSelectPaired,

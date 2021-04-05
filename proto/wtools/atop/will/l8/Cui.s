@@ -478,6 +478,7 @@ function _commandsMake()
     'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
     'npm install' :                     { e : _.routineJoin( will, will.commandNpmInstall )                   },
+    'npm clean' :                       { e : _.routineJoin( will, will.commandNpmClean )                    },
 
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
@@ -4841,6 +4842,7 @@ commandWillfileSupplementWillfile.commandProperties = _.mapExtend( null, command
 
 //
 
+/* qqq : for Dmytro : mess! */
 function commandWillfileMergeIntoSingle( e )
 {
   /*
@@ -5015,7 +5017,7 @@ function commandWillfileMergeIntoSingle( e )
   function submodulesDisable()
   {
     if( !config )
-    config = configRead( dstPath.absolute );
+    config = configRead( dstPath.absolute ); /* qqq : for Dmytro : ?? */
     for( let dependency in config.submodule )
     config.submodule[ dependency ].enabled = 0;
   }
@@ -5212,35 +5214,6 @@ function commandNpmInstall( e )
   delete o.to;
 
   return _.npm.install( o );
-
-  // fileProvider.filesDelete( path.join( o.to, 'node_modules' ) );
-  // fileProvider.filesDelete( path.join( o.to, 'node_modules' ) );
-  //
-  // let o2 =
-  // {
-  //   execPath : 'npm install',
-  //   inputMirroring : 0,
-  //   throwingExitCode : 0,
-  //   mode : 'shell',
-  //   ready,
-  // }
-  //
-  // _.process.start( o2 );
-  //
-  // ready.then( () =>
-  // {
-  //
-  //   if( e.linkingSelf )
-  //   cui.npmDepAdd
-  //   ({
-  //     localPath : null,
-  //     depPath : 'hd://.',
-  //     verbosity : e.propertiesMap.verbosity,
-  //     dry : e.propertiesMap.dry,
-  //   });
-  //
-  // });
-
 }
 
 commandNpmInstall.defaults =
@@ -5249,7 +5222,7 @@ commandNpmInstall.defaults =
   locked : null,
   linkingSelf : 1,
   dry : 0,
-  verbosity : 1,
+  verbosity : 2,
 };
 commandNpmInstall.hint = 'Add as dependency to NPM.';
 commandNpmInstall.commandPropertiesAliases =
@@ -5262,7 +5235,51 @@ commandNpmInstall.commandProperties =
   linkingSelf : 'Softlink itself. Default is true.',
   locked : 'Use package-lock.json instead of package.json. By default use lock files if the file exists otherwise use package.json.',
   dry : 'Dry run.',
-  // v : 'Verbosity.',
+  verbosity : 'Verbosity.',
+};
+
+//
+
+function commandNpmClean( e )
+{
+  let cui = this;
+  let logger = cui.logger;
+  let fileProvider = cui.fileProvider;
+  let path = fileProvider.path;
+  let ready = _.take( null );
+
+  cui._command_head( commandNpmClean, arguments );
+
+  let o = e.propertiesMap;
+  delete o.v;
+
+  _.routineOptions( commandNpmClean, o );
+  _.sure( !e.subject );
+
+  o.logger = new _.Logger({ output : logger });
+  o.logger.verbosity = o.verbosity;
+  delete o.verbosity;
+  o.localPath = path.resolve( o.to || '.' );
+  delete o.to;
+
+  return _.npm.clean( o );
+}
+
+commandNpmClean.defaults =
+{
+  to : null,
+  dry : 0,
+  verbosity : 1,
+};
+commandNpmClean.hint = 'NPM clean.';
+commandNpmClean.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandNpmClean.commandProperties =
+{
+  to : 'Path to directory with package.json file. Default is current directory.',
+  dry : 'Dry run.',
   verbosity : 'Verbosity.',
 };
 
@@ -6035,6 +6052,7 @@ let Extension =
   commandNpmPublish,
   commandNpmDepAdd,
   commandNpmInstall,
+  commandNpmClean,
 
   // command package
 

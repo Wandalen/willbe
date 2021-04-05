@@ -389,7 +389,7 @@ function ownedBy( object )
   let relation = this;
 
   if( _.arrayIs( object ) )
-  return _.any( object, ( object ) => relation.ownedBy( object ) );
+  return !!_.any( object, ( object ) => relation.ownedBy( object ) );
 
   return object.own( relation );
 }
