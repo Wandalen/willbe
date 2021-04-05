@@ -52,7 +52,7 @@ function onGitMake( context )
       token,
       local : o.local,
       remote : o.remote,
-      verbosity : o.verbosity - 1,
+      logger : o.verbosity - 1,
       dry : o.dry,
     });
 
