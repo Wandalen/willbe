@@ -238,8 +238,7 @@ function MakeSingle( o )
         let resource = peerModule.resourceGet( instance.KindName, instance.name );
         if( resource.path === null )
         return;
-        // o.resource = resource; //xxx : Vova: investigate why doesn't work anymore
-        o.resource = _.mapOnly_( null, resource, resource.Self.FieldsOfCopyableGroups );
+        o.resource = resource.cloneData()
         o.resource.module = module;
       }
     }
