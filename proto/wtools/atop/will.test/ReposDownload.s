@@ -5,7 +5,7 @@ _.include( 'wFiles' );
 
 let assetsOriginalPath = _.path.join( __dirname, '_asset' );
 let repoDirPath = _.path.join( assetsOriginalPath, '-repo' );
-let ready = new _.Consequence().take( null );
+let ready = _.take( null );
 let start = _.process.starter
 ({
   currentPath : repoDirPath,

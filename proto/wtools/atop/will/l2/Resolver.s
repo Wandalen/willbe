@@ -390,7 +390,7 @@ function _resourceMapSelect()
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let currentModule = it.currentModule || rit.currentModule;
 
   _.assert( rit !== it );
@@ -534,7 +534,7 @@ function сontextPrepare( o )
   let will = o.baseModule.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   _.routineOptionsPreservingUndefines( сontextPrepare, arguments );
 
@@ -866,7 +866,7 @@ function _pathResolve( filePath, resource )
   let will = rit.baseModule.will;
   let currentModule = it.currentModule || rit.currentModule || rit.baseModule;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let resourceName = resource.name;
   let result = filePath;
 
@@ -957,7 +957,7 @@ function _pathResolveAct( o )
 
   let will = o.currentModule.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   let result = o.filePath;
   if( o.filePath === null || o.filePath === '' )
@@ -1190,7 +1190,7 @@ function performBegin()
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let currentContext = it.currentContext = it.currentContext || module;
 
   _.assert( it.srcForSelect instanceof _.will.Module );
@@ -1530,7 +1530,7 @@ function filesFromResource_body( o )
   let will = module.will;
   let result = [];
   let fileProvider = will.fileProvider
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let resources;
 
   if( o.prefixlessAction === 'pathOrReflector' )

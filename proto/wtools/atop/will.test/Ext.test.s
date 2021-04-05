@@ -146,7 +146,7 @@ function assetFor( test, name )
     {
       _.errAttend( err );
       /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
-      _.Consequence().take( null )
+      _.take( null )
       .delay( 3000 )
       .deasync();
       a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '-repo' ) );
@@ -19497,7 +19497,7 @@ function submodulesDownloadSwitchBranch( test )
   {
     test.case = 'setup repo';
 
-    let con = new _.Consequence().take( null );
+    let con = _.take( null );
     a.fileProvider.dirMake( a.abs( 'experiment' ) );
 
     let start = _.process.starter
@@ -19711,7 +19711,7 @@ submodulesDownloadUpdateWithSubmodulesDefault.timeOut = 300000;
 //   // let rel = context.rel_functor( routinePath );
 //   // let submodulesPath = _.path.join( routinePath, '.module' );
 //   //
-//   // let ready = new _.Consequence().take( null );
+//   // let ready = _.take( null );
 //   //
 //   // let start = _.process.starter
 //   // ({
@@ -22604,7 +22604,7 @@ function subModulesUpdateSwitchBranch( test )
     {
       test.case = 'setup repo';
 
-      let con = new _.Consequence().take( null );
+      let con = _.take( null );
       a.reflect();
 
       a.fileProvider.dirMake( a.abs( 'experiment' ) );
@@ -40777,7 +40777,7 @@ const Proto =
     exportDiffDownloadPathsRegular,
     exportHierarchyRemote,
     exportWithDisabled,
-    exportOutResourceWithoutGeneratedCriterion,
+    exportOutResourceWithoutGeneratedCriterion, /* xxx : qqq : for Dmytro : investigate */
     exportImplicit,
     /* xxx : implement same test for hierarchyRemote and irregular */
     /* xxx : implement clean tests */
@@ -40981,5 +40981,7 @@ const Proto =
 const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
+
+/* qqq : for Dmytro : remove -assets. disuss before removing! */
 
 })();

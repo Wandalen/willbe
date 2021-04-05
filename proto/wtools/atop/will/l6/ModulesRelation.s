@@ -107,7 +107,7 @@ function form1()
   let willf = relation.willf;
   let will = rootModule.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -149,7 +149,7 @@ function form3()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = relation;
 
@@ -205,7 +205,7 @@ function close()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -229,7 +229,7 @@ function _closeEnd()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -247,7 +247,7 @@ function _openAct( o )
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -300,7 +300,7 @@ function _openEnd()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -330,7 +330,7 @@ function _moduleAdoptEnd()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
@@ -470,7 +470,7 @@ function isMandatory()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   if( !relation.enabled )
@@ -561,7 +561,7 @@ function localPathGet()
 
   // let will = module.will;
   // let fileProvider = will.fileProvider;
-  // const path = fileProvider.path;
+  // let path = fileProvider.path;
   //
   // if( path.isGlobal( relation.path ) )
   // return null;
@@ -586,7 +586,7 @@ function remotePathGet()
 
   // let will = module.will;
   // let fileProvider = will.fileProvider;
-  // const path = fileProvider.path;
+  // let path = fileProvider.path;
   //
   // if( !path.isGlobal( relation.path ) )
   // return null;
@@ -620,7 +620,7 @@ function longPathGet()
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   return path.join( module.inPath, relation.path );
 }
 
@@ -642,7 +642,7 @@ function pathSet( src )
   {
     let will = module.will;
     let fileProvider = will.fileProvider;
-    const path = fileProvider.path;
+    let path = fileProvider.path;
     relation.opener.willfilesPath = path.join( module.inPath, src );
   }
 
@@ -657,7 +657,7 @@ function pathsRebase( o )
   let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   // let Resolver = _.will.resolver;
 
@@ -759,7 +759,7 @@ function exportStructure( o )
   let willf = relation.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let rootModule = module.rootModule;
 
   let result = Parent.prototype.exportStructure.apply( this, arguments );
@@ -814,7 +814,7 @@ function exportString( o )
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let resultMap = Parent.prototype.exportStructure.call( relation );
   let tab = '  ';
@@ -855,7 +855,7 @@ function errorNotFound( err )
   let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   if( will.verbosity >= 3 )

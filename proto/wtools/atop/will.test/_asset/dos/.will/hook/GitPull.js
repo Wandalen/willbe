@@ -49,9 +49,9 @@ function onModule( context )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
   provider.archive.fileMapAutosaving = 1;
   if( o.verbosity )
-  provider.archive.verbosity = 2;
+  provider.archive.logger.verbosity = 2;
   else
-  provider.archive.verbosity = 0;
+  provider.archive.logger.verbosity = 0;
   provider.archive.allowingMissed = 1;
   provider.archive.allowingCycled = 1;
   provider.archive.restoreLinksBegin();

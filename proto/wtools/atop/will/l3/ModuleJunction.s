@@ -89,7 +89,7 @@ function reform()
   let junction = this;
   let will = junction.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   if( junction.formed === -1 )
@@ -516,7 +516,7 @@ function mergeMaybe( usingPath )
   let junction = this;
   let will = junction.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let junction2, reset;
 
@@ -741,7 +741,7 @@ function _From( o )
   let will = o.will;
   let junctionMap = will.junctionMap;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let made = false;
   let changed = false;
@@ -1902,7 +1902,7 @@ function dirPathGet()
   return null;
   let will = junction.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   return path.detrail( path.dirFirst( junction.localPath ) );
 }
 

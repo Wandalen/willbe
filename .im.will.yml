@@ -167,8 +167,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - /pro/module/willbe/proto/wtools/atop/will/entry/Include.s
-    - /pro/module/willbe/proto/node_modules/willbe
+    - proto/wtools/atop/will/entry/Include.s
+    - proto/node_modules/willbe
 reflector:
   reflect.proto:
     inherit: predefined.*

@@ -40,7 +40,7 @@ function form3()
   let module = build.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   if( build.formed === 3 )
@@ -164,7 +164,7 @@ function framePerform( frame )
   // let module = frame.module;
   let will = module.will;
   let logger = will.logger;
-  let con = new _.Consequence().take( null );
+  let con = _.take( null );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -245,10 +245,10 @@ function perform( o )
   let module = build.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let isExport = build.isExport();
-  let con = new _.Consequence().take( null );
+  let con = _.take( null );
   let time = _.time.now();
 
   will.readingEnd();

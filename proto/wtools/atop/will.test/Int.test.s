@@ -90,7 +90,7 @@ function assetFor( test, name )
   // a.rel = context.rel_functor( a.routinePath );
   // a.fileProvider = _.fileProvider;
   // a.path = _.fileProvider.path;
-  // a.ready = _.Consequence().take( null );
+  // a.ready = _.take( null );
 
   a.will = new _.Will;
 
@@ -152,7 +152,7 @@ function assetFor( test, name )
     {
       _.errAttend( err );
       /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
-      _.Consequence().take( null )
+      _.take( null )
       .delay( 3000 )
       .deasync();
       a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '-repo' ) );
@@ -214,7 +214,7 @@ function assetFor( test, name )
 //   a.will = new _.Will;
 //   a.fileProvider = _.fileProvider;
 //   a.path = _.fileProvider.path;
-//   a.ready = _.Consequence().take( null );
+//   a.ready = _.take( null );
 //
 //   a.reflect = function reflect()
 //   {
@@ -226,7 +226,7 @@ function assetFor( test, name )
 //     }
 //     catch( err )
 //     {
-//       _.Consequence().take( null ).delay( 3000 ).deasync();
+//       _.take( null ).delay( 3000 ).deasync();
 //       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '-repo' ) ); /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
 //       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '-repo' ) } });
 //     }
