@@ -2,7 +2,7 @@
 submodule :
 
   ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master
-  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/#85db26267c91f794efeb85ae5ade77a33cc3c645
+  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/#fc6285084b7b0110d6dd56ac808fef673c4fb6d4
   # ModuleForTesting1a : npm:///wModuleForTesting1a/out/wModuleForTesting1a.out.will#0.3.121
   ModuleForTesting2b : out/ModuleForTesting2b.informal.out
   ModuleForTesting12 : out/ModuleForTesting12.informal.out
