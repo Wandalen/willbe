@@ -4988,7 +4988,6 @@ function _resolve_head( routine, args )
 
   if( !o.baseModule )
   {
-    _.debugger;
     if( o.currentContext )
     o.baseModule = o.currentContext.toModuleForResolver ? o.currentContext.toModuleForResolver() || module : module;
     else

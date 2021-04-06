@@ -5396,7 +5396,6 @@ function moduleResolveWithFunctionThisInSelector( test )
   {
     test.case = 'currentThis is not specified';
     let module = opener.openedModule;
-    debugger;
     let resolved = module.resolve
     ({
       selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
@@ -5405,54 +5404,10 @@ function moduleResolveWithFunctionThisInSelector( test )
       pathNativizing : 1,
       arrayFlattening : 0,
     });
-    debugger;
-    test.true( _.longIs( resolved ) );
-    test.true( resolved.length === 1 );
-    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:0\' )"' );
+    test.true( _.strIs( resolved ) );
+    test.identical( resolved, 'node -e "console.log( \'debug:0\' )"' );
     return null;
   });
-
-  // /* - xxx */
-  //
-  // a.ready.then( ( arg ) =>
-  // {
-  //   test.case = 'resolve criterion from step resource';
-  //   let module = opener.openedModule;
-  //   let resolved = module.resolve
-  //   ({
-  //     selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
-  //     prefixlessAction : 'resolved',
-  //     currentThis : undefined,
-  //     currentContext : module.stepMap[ 'print.criterion.value.' ],
-  //     pathNativizing : 1,
-  //     arrayFlattening : 0,
-  //   });
-  //   test.true( _.longIs( resolved ) );
-  //   test.true( resolved.length === 1 );
-  //   test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:0\' )"' );
-  //   return null;
-  // });
-  //
-  // /* */
-  //
-  // a.ready.then( ( arg ) =>
-  // {
-  //   test.case = 'resolve criterion from step resource';
-  //   let module = opener.openedModule;
-  //   let resolved = module.resolve
-  //   ({
-  //     selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
-  //     prefixlessAction : 'resolved',
-  //     currentThis : undefined,
-  //     currentContext : module,
-  //     pathNativizing : 1,
-  //     arrayFlattening : 0,
-  //   });
-  //   test.true( _.longIs( resolved ) );
-  //   test.true( resolved.length === 1 );
-  //   test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:undefined\' )"' );
-  //   return null;
-  // });
 
   /* - */
 
@@ -5476,7 +5431,6 @@ Test routine checks that module resolves resources when the selector contains pa
 
 //
 
-// aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
 function framePerform( test )
 {
   let context = this;

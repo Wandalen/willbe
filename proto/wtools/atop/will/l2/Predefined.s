@@ -404,7 +404,7 @@ function stepRoutineShell( frame )
   ({
     execPath : opts.shell,
     currentPath : opts.currentPath,
-    currentThis : forEachDst,
+    currentThis : forEachDst !== undefined ? forEachDst : null,
     currentContext : step,
     verbosity,
   })
@@ -1286,12 +1286,6 @@ let Extension =
 
 _.mapExtend( Self, Extension );
 _.will[ 'Predefined' ] = Self;
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : 'Predefined',
-//   value : Self,
-// });
 
 //
 

@@ -248,7 +248,7 @@ function fileRenameTools( context )
   if( !context.module )
   return;
 
-  let toolsPath = abs( 'proto/wtools/Tools.s' );
+  let toolsPath = abs( 'proto/node_modules/Tools' );
   let toolsPath2 = abs( 'proto/node_modules/Tools' );
 
   if( !fileProvider.fileExists( toolsPath ) )
@@ -782,7 +782,7 @@ function npmFilesDeleteTools( context )
 
   filesPath = _.filter_( filesPath, ( filePath ) =>
   {
-    if( abs( filePath ) !== abs( 'proto/wtools/Tools.s' ) )
+    if( abs( filePath ) !== abs( 'proto/node_modules/Tools' ) )
     return filePath;
     return;
   });
@@ -899,7 +899,7 @@ function willProtoEntryPathAdjustTools( context )
 
   protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
   {
-    if( abs( entryPath ) !== abs( 'proto/wtools/Tools.s' ) )
+    if( abs( entryPath ) !== abs( 'proto/node_modules/Tools' ) )
     return entryPath;
     return 'proto/node_modules/Tools';
   });
@@ -938,7 +938,7 @@ function willDisableIfEmpty( context )
 
   let any = _.any( ( entryPath ) =>
   {
-    if( abs( entryPath ) === abs( 'proto/wtools/Tools.s' ) )
+    if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
     return true;
   });
 

@@ -541,8 +541,11 @@ function сontextPrepare( o )
   if( !o.currentThis )
   {
     if( !o.force )
-    return o.currentThis;
-    debugger;
+    {
+      _.assert( o.currentThis !== undefined );
+      return o.currentThis;
+    }
+    _.assert( o.currentContext !== undefined );
     o.currentThis = o.currentContext;
   }
 
@@ -572,6 +575,7 @@ function сontextPrepare( o )
   }
   else _.assert( 0 );
 
+  _.assert( o.currentThis !== undefined );
   return o.currentThis;
 }
 
@@ -1089,6 +1093,8 @@ function _functionThisUp()
   let will = rit.baseModule.will;
   let currentThis = rit.currentThis;
 
+  _.assert( currentThis !== undefined );
+
   if( currentThis === null )
   currentThis = it.сontextPrepare
   ({
@@ -1099,8 +1105,10 @@ function _functionThisUp()
   });
 
   it.isFunction = it.selector;
-  it.src = [ currentThis ]; /* zzz : write result of selection to dst, never to src? */
-  it.selector = 0;
+  // it.src = [ currentThis ];
+  // it.selector = 0;
+  it.src = currentThis;
+  it.selector = '.';
   it.selectorType = null;
   it.iterable = null;
   it.iterationSelectorChanged();
@@ -1200,6 +1208,7 @@ function performBegin()
     currentThis : it.currentThis,
     currentContext : it.currentContext,
     baseModule : it.baseModule,
+    force : 0,
   });
   _.assert( !_.property.own( it, 'currentThis' ) );
 
@@ -1225,10 +1234,22 @@ function optionsToIteration( iterator, o )
 {
   let it = Parent.optionsToIteration.call( this, iterator, o );
 
+  if( !Config.debug )
+  return it;
+
   _.assert( arguments.length === 2 );
   _.assert( !!Self.Selector );
   _.assert( it.Selector === Self.Selector );
   _.assert( it.Looker.Selector === Self.Selector );
+  _.assert( it.currentThis !== undefined );
+  _.assert( it.currentContext !== undefined );
+  _.assert( it.criterion !== undefined );
+  _.assert( _.boolLike( it.pathNativizing ) );
+  _.assert( _.boolLike( it.pathUnwrapping ) );
+  _.assert( _.boolLike( it.strictCriterion ) );
+  _.assert( _.boolLike( it.currentExcluding ) );
+  _.assert( it.hasPath !== undefined );
+  _.assert( it.hasPath !== undefined );
 
   _.assert
   (
@@ -1239,7 +1260,6 @@ function optionsToIteration( iterator, o )
     ,
     `Current context belong to another base module, something wrong!`
   );
-
 
   return it;
 }

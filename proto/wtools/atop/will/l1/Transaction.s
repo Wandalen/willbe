@@ -6,7 +6,7 @@
 //
 
 let _ = _global_.wTools;
-let Parent = null;
+const Parent = null;
 let Self = wWillTransaction;
 function wWillTransaction( o )
 {
