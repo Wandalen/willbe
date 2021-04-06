@@ -1,5 +1,5 @@
 
-let _ = require( 'wTools' );
+const _ = require( 'wTools' );
 let Ts = require( '..' );
 let ts = new _.trs.System({ logger }).form();
 

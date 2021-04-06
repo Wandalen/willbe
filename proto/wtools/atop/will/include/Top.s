@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( './Mid.s' );
+  const _ = require( './Mid.s' );
 
   _.include( 'wStateStorage' );
   _.include( 'wStateSession' );

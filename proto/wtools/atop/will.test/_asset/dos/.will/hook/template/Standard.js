@@ -53,7 +53,7 @@ module[ 'exports' ] = _global_.wTools;
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( 'wTools' );
+  const _ = require( 'wTools' );
   _.include( 'wTesting' );
 }
 
@@ -617,7 +617,7 @@ build :
 
   'Sample.s' : //
 `
-let _ = require( '{:package/lowName:}' );
+const _ = require( '{:package/lowName:}' );
 
 /**/
 
