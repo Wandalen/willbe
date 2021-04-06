@@ -9366,7 +9366,7 @@ function gitSync( o )
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : o.dirPath + '**', safe : 0 });
 
-  let status = _.git.statusFull({ insidePath : o.dirPath });
+  let status = _.git.statusFull({ insidePath : o.dirPath, prs : 0 });
 
   if( o.dry )
   return null;

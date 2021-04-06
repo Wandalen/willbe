@@ -19,9 +19,6 @@ function onModule( context )
   if( !context.junction.module )
   return;
 
-  if( !context.junction.module.about.enabled )
-  return;
-
   if( !o.tag )
   throw _.errBrief( 'Expects option {-tag-}' );
 

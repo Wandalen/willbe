@@ -575,11 +575,11 @@ build :
   "description" : "___",
   "author" : "{:about/full.name:} <{:about/email:}>",
   "license" : "MIT",
-  "main" : "proto/wtools/Tools.s",
+  "main" : "proto/node_modules/Tools",
   "files" :
   [
     "proto/wtools/___",
-    "proto/wtools/Tools.s"
+    "proto/node_modules/Tools"
   ],
   "scripts" :
   {

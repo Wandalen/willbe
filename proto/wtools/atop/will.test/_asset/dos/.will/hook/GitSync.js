@@ -16,6 +16,7 @@ function onModule( context )
   let status = _.git.statusFull
   ({
     insidePath : context.junction.dirPath,
+    prs : 0,
   });
 
   if( status.uncommitted )

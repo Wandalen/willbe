@@ -17,8 +17,8 @@ function onModule( context )
   return;
   if( !context.module.about.name )
   return;
-  if( !context.module.about.enabled )
-  return;
+  // if( !context.module.about.enabled )
+  // return;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
@@ -30,12 +30,14 @@ function onModule( context )
   // hardLink( context, '.circleci/config.yml', 'hlink/.circleci/config.yml' );
 
   // workflowsReplace( context );
+  // workflowsDelete( context );
   // gitIgnorePatch( context );
   // gitIgnoreReplace( context );
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
   // fileProvider.filesDelete({ filePath : abs( '**/.DS_Store' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
   // fileProvider.filesDelete({ filePath : abs( 'appveyor.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
+  // fileRenameTools( context );
 
   // integrationTestRename( context );
   // samplesRename( context );
@@ -51,8 +53,11 @@ function onModule( context )
   // npmDepRemoveSelf( context );
   // npmDepAddFileNodeModulesEntry( context );
   // npmEntryPathAdjust( context );
+  // npmFilesDeleteTools( context );
   // willProtoEntryPathFromNpm( context );
-  willProtoEntryPathRelativize( context );
+  // willProtoEntryPathRelativize( context );
+  // willProtoEntryPathAdjustTools( context );
+  willDisableIfEmpty( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
@@ -66,6 +71,7 @@ function onModule( context )
   // sampleFix( context );
   // sampleTrivial( context );
 
+  // context.start( 'censor.local .hlink' );
 }
 
 onModule.defaults =
@@ -147,6 +153,30 @@ function workflowsReplace( context )
 
 //
 
+function workflowsDelete( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !fileProvider.fileExists( abs( '.github/workflows/Publish.yml' ) ) )
+  return;
+
+  logger.log( `Deleting workflows ${abs( '.github/workflows/Publish.yml' )}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.fileDelete( abs( '.github/workflows/Publish.yml' ) );
+
+}
+
+//
+
 function gitIgnorePatch( context )
 {
   let o = context.request.map;
@@ -200,6 +230,31 @@ function gitIgnoreReplace( context )
   logger.log( `Replacing gitignore of ${context.junction.nameWithLocationGet()}` );
 
   hardLink( context, '.gitignore', 'hlink/.gitignore' );
+
+}
+
+//
+
+function fileRenameTools( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let toolsPath = abs( 'proto/wtools/Tools.s' );
+  let toolsPath2 = abs( 'proto/node_modules/Tools' );
+
+  if( !fileProvider.fileExists( toolsPath ) )
+  return;
+
+  fileProvider.fileRename( toolsPath2, toolsPath );
 
 }
 
@@ -707,6 +762,44 @@ function npmEntryPathAdjust( context )
 
 //
 
+function npmFilesDeleteTools( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let configPath = abs( 'was.package.json' );
+  let filesPath = _.npm.fileReadField({ configPath, key : 'files' });
+  if( !filesPath )
+  return;
+
+  filesPath = _.filter_( filesPath, ( filePath ) =>
+  {
+    if( abs( filePath ) !== abs( 'proto/wtools/Tools.s' ) )
+    return filePath;
+    return;
+  });
+
+  _.npm.fileWriteField
+  ({
+    key : 'files',
+    val : filesPath,
+    configPath,
+    dry : o.dry,
+    logger : o.verbosity - 1,
+  });
+
+}
+
+//
+
 function willProtoEntryPathFromNpm( context )
 {
   let o = context.request.map;
@@ -782,6 +875,92 @@ function willProtoEntryPathRelativize( context )
     withExport : 0,
     val : protoEntryPath,
   });
+
+}
+
+//
+
+function willProtoEntryPathAdjustTools( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  if( !protoEntryPath )
+  return;
+
+  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  {
+    if( abs( entryPath ) !== abs( 'proto/wtools/Tools.s' ) )
+    return entryPath;
+    return 'proto/node_modules/Tools';
+  });
+
+  console.log( `${protoEntryPath}` );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'path',
+    resourceName : 'npm.proto.entry',
+    withExport : 0,
+    val : protoEntryPath,
+  });
+
+}
+
+//
+
+function willDisableIfEmpty( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  if( !protoEntryPath )
+  return;
+
+  let any = _.any( ( entryPath ) =>
+  {
+    if( abs( entryPath ) === abs( 'proto/wtools/Tools.s' ) )
+    return true;
+  });
+
+  if( !any )
+  return;
+
+  console.log( `Disabling ${context.junction.nameWithLocationGet()}` );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'about',
+    resourceName : 'enabled',
+    val : 0,
+  });
+
+  // // willDisableIfEmpty( context );
+  //
+  //   npm.proto.entry:
+  //   - proto/node_modules/Tools
+  //   - proto/node_modules/wimagewriterdds
+  //
 
 }
 

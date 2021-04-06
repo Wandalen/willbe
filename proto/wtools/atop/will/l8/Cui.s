@@ -85,7 +85,7 @@ function init( o )
 {
   let will = this;
 
-  will[ currentOpenerSymbol ] = null;
+  // will[ currentOpenerSymbol ] = null;
 
   return Parent.prototype.init.apply( will, arguments );
 }
@@ -100,32 +100,31 @@ function _openersCurrentEach( o )
   let logger = will.logger;
   let ready = _.take( null );
 
-  _.assert( will.currentOpener === null || will.currentOpeners === null );
+  // _.assert( will.currentOpener === null || will.currentOpeners === null );
   _.routineOptions( _openersCurrentEach, arguments );
 
-  if( will.currentOpener )
+  // if( will.currentOpener )
+  // {
+  //
+  //   _.assert( will.currentOpeners === null );
+  //   _.assert( will.currentOpener instanceof _.will.ModuleOpener );
+  //
+  //   let opener = will.currentOpener;
+  //   let it = itFrom( opener );
+  //   ready.then( () => o.onEach.call( will, it ) );
+  //
+  // }
+  // else
   {
 
-    _.assert( will.currentOpeners === null );
-    _.assert( will.currentOpener instanceof _.will.ModuleOpener );
-
-    let opener = will.currentOpener;
-    let it = itFrom( opener );
-    ready.then( () => o.onEach.call( will, it ) );
-
-  }
-  else
-  {
-
-    _.assert( will.currentOpener === null );
+    // _.assert( will.currentOpener === null );
     _.assert( _.arrayIs( will.currentOpeners ) );
 
-    // will.currentOpeners.forEach( ( opener ) =>
     for( let i = 0 ; i < will.currentOpeners.length ; i++ )
     {
       let it = itFrom( will.currentOpeners[ i ] );
       ready.then( () => o.onEach.call( will, it ) );
-    };
+    }
 
   }
 
@@ -173,7 +172,7 @@ function openersFind( o )
   let path = fileProvider.path;
 
   o = _.routineOptions( openersFind, arguments );
-  _.assert( will.currentOpener === null );
+  // _.assert( will.currentOpener === null );
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
@@ -210,23 +209,23 @@ openersFind.defaults =
 
 }
 
+// //
 //
-
-function currentOpenerChange( src )
-{
-  let will = this;
-
-  _.assert( src === null || src instanceof _.will.ModuleOpener );
-  _.assert( arguments.length === 1 );
-
-  if( src && will[ currentOpenerSymbol ] === src )
-  return src;
-
-  will[ currentOpenerSymbol ] = src;
-  will.currentOpenerPath = null;
-
-  return src;
-}
+// function currentOpenerChange( src )
+// {
+//   let will = this;
+//
+//   _.assert( src === null || src instanceof _.will.ModuleOpener );
+//   _.assert( arguments.length === 1 );
+//
+//   if( src && will[ currentOpenerSymbol ] === src )
+//   return src;
+//
+//   will[ currentOpenerSymbol ] = src;
+//   // will.currentOpenerPath = null;
+//
+//   return src;
+// }
 
 // --
 // etc
@@ -532,7 +531,6 @@ function _commandsBegin( o )
   if( will.transaction === null )
   will.transaction = _.will.Transaction.Make( o.properties, will );
   // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // xxx
 
 }
 
@@ -556,7 +554,6 @@ function _commandsEnd( command )
 
   let beeping = will.transaction.beeping;
 
-  debugger;
   will.transaction.finit();
   will.transaction = null;
 
@@ -568,9 +565,9 @@ function _commandsEnd( command )
 
     will.topCommand = null;
 
-    if( will.currentOpener )
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
+    // if( will.currentOpener )
+    // will.currentOpener.finit();
+    // will.currentOpenerChange( null );
 
     if( will.currentOpeners )
     will.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
@@ -583,7 +580,8 @@ function _commandsEnd( command )
   catch( err )
   {
     will.errEncounter( err );
-    will.currentOpenerChange( null );
+    will.currentOpeners = null;
+    // will.currentOpenerChange( null );
     if( beeping )
     _.diagnosticBeep();
     _.process.exit( -1 );
@@ -620,7 +618,8 @@ function _commandListLike( o )
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null && will.currentOpener === null )
+  // if( will.currentOpeners === null && will.currentOpener === null )
+  if( will.currentOpeners === null )
   ready.then( () => will.openersFind() );
 
   ready
@@ -748,7 +747,8 @@ function _commandBuildLike( o )
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null && will.currentOpener === null )
+  // if( will.currentOpeners === null && will.currentOpener === null )
+  if( will.currentOpeners === null )
   ready.then( () => will.openersFind() );
 
   ready
@@ -781,7 +781,9 @@ function _commandBuildLike( o )
 
     ready2.then( () =>
     {
-      return will.currentOpenerChange( it.opener );
+      will.mainOpener = it.opener;
+      return null;
+      // return will.currentOpenerChange( it.opener );
     });
 
     ready2.then( () =>
@@ -792,7 +794,7 @@ function _commandBuildLike( o )
 
     ready2.finally( ( err, arg ) =>
     {
-      will.currentOpenerChange( null );
+      // will.currentOpenerChange( null );
       if( err )
       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
@@ -857,7 +859,8 @@ function _commandCleanLike( o )
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null && will.currentOpener === null )
+  // if( will.currentOpeners === null && will.currentOpener === null )
+  if( will.currentOpeners === null )
   ready.then( () => will.openersFind() );
 
   ready
@@ -970,7 +973,8 @@ function _commandNewLike( o )
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners !== null || will.currentOpener !== null )
+  // if( will.currentOpeners !== null || will.currentOpener !== null )
+  if( will.currentOpeners !== null )
   throw _.errBrief( 'Cant call command new for module which already exists!' );
 
   let localPath = will.moduleNew({ collision : 'ignore', localPath : will.transaction.withPath });
@@ -993,7 +997,9 @@ function _commandNewLike( o )
 
     ready2.then( () =>
     {
-      return will.currentOpenerChange( it.opener );
+      will.mainOpener = it.opener;
+      return null;
+      // return will.currentOpenerChange( it.opener );
     });
 
     ready2.then( () =>
@@ -1005,7 +1011,7 @@ function _commandNewLike( o )
 
     ready2.finally( ( err, arg ) =>
     {
-      will.currentOpenerChange( null );
+      // will.currentOpenerChange( null );
       if( err )
       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
@@ -1074,7 +1080,7 @@ function _commandTreeLike( o )
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  _.assert( will.currentOpener === null );
+  // _.assert( will.currentOpener === null );
   if( will.currentOpeners === null )
   ready.then( () => will.openersFind() );
 
@@ -1158,7 +1164,8 @@ function _commandModulesLike( o )
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null && will.currentOpener === null )
+  // if( will.currentOpeners === null && will.currentOpener === null )
+  if( will.currentOpeners === null )
   ready.then( () => will.openersFind() )
   .then( () => filter() );
 
@@ -1244,7 +1251,9 @@ function _commandModulesLike( o )
 
     ready3.then( () =>
     {
-      return will.currentOpenerChange( it.opener );
+      will.mainOpener = it.opener;
+      return null;
+      // return will.currentOpenerChange( it.opener );
     });
 
     ready3.then( () =>
@@ -1255,7 +1264,7 @@ function _commandModulesLike( o )
 
     ready3.finally( ( err, arg ) =>
     {
-      will.currentOpenerChange( null );
+      // will.currentOpenerChange( null );
       if( err )
       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
@@ -1294,7 +1303,6 @@ function _commandModuleOrientedLike( o )
     ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
-  _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
@@ -1309,11 +1317,14 @@ function _commandModuleOrientedLike( o )
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null && will.currentOpener === null )
+  // if( will.currentOpeners === null && will.currentOpener === null )
+  if( will.currentOpeners === null )
   ready.then( () => will.openersFind() )
 
+  // let openers = will.currentOpeners || will.currentOpener;
   let openers = will.currentOpeners;
-  will.currentOpeners = null; /* xxx : qqq for Vova : move to transation? */
+  // will.currentOpeners = null;
+  // will.currentOpener = null;
 
   openersEach( openers );
 
@@ -1333,11 +1344,9 @@ function _commandModuleOrientedLike( o )
   function openersEach( openers )
   {
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-
-    will.modulesFor( o2 );
     o2.modules = openers;
+    will.modulesFor( o2 );
 
-    // o2.onEachModule = handleEachNodule;
     return will.modulesFor( o2 )
     .finally( ( err, arg ) =>
     {
@@ -1345,16 +1354,7 @@ function _commandModuleOrientedLike( o )
       throw _.err( err, `\nFailed to upform modules` );
       return arg;
     });
-
   }
-
-  // /* */
-  //
-  // function handleEach( module, op )
-  // {
-  //   let o3 = _.mapOnly_( null, o, module.upform.defaults );
-  //   return module.upform( o3 );
-  // }
 
 }
 
@@ -1448,7 +1448,6 @@ commandImply.commandProperties =
 //   let ca = e.ca;
 //   let logger = will.logger;
 //   let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
-//   /* qqq xxx : apply to other top modules */
 //   _.assert( !!isolated );
 //
 //   let request = _.will.resolver.Resolver.strRequestParse( isolated.commandArgument );
@@ -1502,22 +1501,6 @@ function commandVersion( e )
 
 commandVersion.hint = 'Get information about version.';
 commandVersion.commandSubjectHint = false;
-
-// function commandVersion( e ) /* xxx qqq : move to NpmTools */
-// {
-//   let will = this;
-//   let ca = e.ca;
-//   let logger = will.logger;
-//
-//   let implyMap = _.strStructureParse( e.commandArgument );
-//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( implyMap ) );
-//   will._propertiesImply( implyMap );
-//
-//   // logger.log( 'Current version:', will.versionGet() );
-// }
-// // commandVersion.commandProperties = commandImply.commandProperties;
-//
-// commandVersion.hint = 'Get information about version.';
 
 //
 
@@ -1878,7 +1861,7 @@ function commandModulesTopologicalList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger; // xxx
+    let logger = cui.logger;
     logger.log( module.openedModule.infoExportModulesTopological( resources ) );
   }
 
@@ -2349,7 +2332,8 @@ function commandSubmodulesShell( e )
     return it.opener.openedModule.shell
     ({
       execPath : e.commandArgument,
-      currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : it.opener.openedModule.dirPath,
+      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
     });
   }
 
@@ -2733,7 +2717,7 @@ function commandModuleNewWith( e )
   let cui = this;
   cui._command_head( commandModuleNewWith, arguments );
 
-  const fileProvider = cui.fileProvider;
+  let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -2790,7 +2774,8 @@ function commandModulesShell( e )
     return it.opener.openedModule.shell
     ({
       execPath : e.commandArgument,
-      currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : it.opener.openedModule.dirPath,
+      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
     });
   }
 
@@ -3131,7 +3116,8 @@ function commandShell( e )
     return it.opener.openedModule.shell
     ({
       execPath : e.commandArgument,
-      currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : it.opener.openedModule.dirPath,
+      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
     });
   }
 
@@ -3146,7 +3132,7 @@ function commandDo( e )
 {
   let cui = this;
   cui._command_head( commandDo, arguments );
-  const fileProvider = cui.fileProvider;
+  let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let logger = cui.logger;
   let time = _.time.now();
@@ -3267,7 +3253,7 @@ function commandClean( e )
   e.propertiesMap.dry = !!e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !e.propertiesMap.dry;
-  e.propertiesMap.fast = 0; /* xxx */
+  e.propertiesMap.fast = 0; /* xxx : implement */
 
   return cui._commandCleanLike
   ({
@@ -3329,7 +3315,7 @@ function commandSubmodulesClean( e )
   e.propertiesMap.dry = !!e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !e.propertiesMap.dry;
-  e.propertiesMap.fast = 0; /* xxx */
+  e.propertiesMap.fast = 0; /* xxx : implement */
 
   return cui._commandCleanLike
   ({
@@ -4031,11 +4017,15 @@ function commandWith( e )
     usingImpliedMap : 0
   });
 
-  if( cui.currentOpener )
-  {
-    cui.currentOpener.finit();
-    cui.currentOpenerChange( null );
-  }
+  // if( cui.currentOpener )
+  // {
+  //   cui.currentOpener.finit();
+  //   cui.currentOpenerChange( null );
+  // }
+
+  if( cui.currentOpeners )
+  cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+  cui.currentOpeners = null;
 
   _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' );
   _.assert( arguments.length === 1 );
@@ -4116,11 +4106,15 @@ function commandEach( e )
   let cui = this.form();
   let path = cui.fileProvider.path;
 
-  if( cui.currentOpener )
-  {
-    cui.currentOpener.finit();
-    cui.currentOpenerChange( null );
-  }
+  if( cui.currentOpeners )
+  cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+  cui.currentOpeners = null;
+
+  // if( cui.currentOpener )
+  // {
+  //   cui.currentOpener.finit();
+  //   cui.currentOpenerChange( null );
+  // }
 
   _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' )
   _.assert( arguments.length === 1 );
@@ -4185,10 +4179,13 @@ function commandEach( e )
   function handleError()
   {
 
-    if( cui.currentOpener )
-    cui.currentOpener.finit();
-    cui.currentOpenerChange( null );
-    cui.mainOpener = null;
+    if( cui.currentOpeners )
+    cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+    cui.currentOpeners = null;
+    // if( cui.currentOpener )
+    // cui.currentOpener.finit();
+    // cui.currentOpenerChange( null );
+    cui.mainOpener = null; /* xxx2 */
   }
 
 }
@@ -4859,7 +4856,7 @@ function commandWillfileMergeIntoSingle( e )
    * then command will be divided into separate reusable parts
   */
   let cui = this;
-  const fileProvider = cui.fileProvider;
+  let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
   let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
@@ -5300,8 +5297,6 @@ function commandProcedurePrototypeList( e )
   let cui = this;
   cui._command_head( commandProcedurePrototypeList, arguments );
 
-  debugger
-
   return cui._commandModuleOrientedLike
   ({
     event : e,
@@ -5309,12 +5304,11 @@ function commandProcedurePrototypeList( e )
     onEachModule : handleEachModule,
     commandRoutine : commandProcedurePrototypeList,
     recursive : 0,
-    withSubmodules : 0,
   });
 
   function handleEachModule( module, op )
   {
-    debugger;
+    debugger; xxx
     return module.procedurePrototypeList();
   }
 
@@ -5914,7 +5908,7 @@ commandPackageVersion.commandSubjectHint = 'A name of package.';
 // relations
 // --
 
-let currentOpenerSymbol = Symbol.for( 'currentOpener' );
+// let currentOpenerSymbol = Symbol.for( 'currentOpener' );
 
 let Composes =
 {
@@ -5928,7 +5922,7 @@ let Aggregates =
 let Associates =
 {
   currentOpeners : null,
-  currentOpenerPath : null,
+  // currentOpenerPath : null,
 }
 
 let Restricts =
@@ -5945,6 +5939,7 @@ let Statics =
 let Forbids =
 {
   currentPath : 'currentPath',
+  currentOpenerPath : 'currentOpenerPath',
 }
 
 let Accessors =
@@ -5971,7 +5966,7 @@ let Extension =
   _openersCurrentEach,
   openersCurrentEach,
   openersFind,
-  currentOpenerChange,
+  // currentOpenerChange,
 
   // etc
 
