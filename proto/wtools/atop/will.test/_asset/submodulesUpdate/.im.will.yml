@@ -1,9 +1,9 @@
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/#58881174e8edbd7c54761296694e0b48a4997e65
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/#3de7741c7ba475b912411b35ee3cf2ab44a0a901
   ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/!master
-  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/#a15e971510b340106f1b9872bf7b939452c267eb
+  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/#f0d93ce60671b622a2daa57ea32017afc5af08e1
 
 path :
 

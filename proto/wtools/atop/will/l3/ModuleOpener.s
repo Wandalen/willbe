@@ -349,7 +349,7 @@ function willfileUnregister( willf )
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.arrayRemoveElementOnceStrictly( willf.openers, opener );
@@ -364,7 +364,7 @@ function willfileRegister( willf )
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -388,7 +388,7 @@ function _willfilesFindAct( o )
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let records;
 
@@ -449,7 +449,7 @@ function _willfilesFind()
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = [];
 
@@ -492,7 +492,7 @@ function close()
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let module = opener.openedModule;
 
@@ -1158,7 +1158,7 @@ function _repoForm()
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( opener.formed >= 1 );
@@ -1256,7 +1256,7 @@ function _repoFormFormal()
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let willfilesPath = opener.remotePath || opener.willfilesPath;
 
@@ -1314,7 +1314,7 @@ function _repoDownload( o )
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let time = _.time.now();
   let downloading = null;
@@ -1325,7 +1325,7 @@ function _repoDownload( o )
   let reopened = [];
   let dirStatusMap = Object.create( null );
   let status;
-  let ready = _.Consequence().take( null );
+  let ready = _.take( null );
   let reflected = Object.create( null );
   let vcsTool = null;
 
@@ -1727,7 +1727,7 @@ function _repoDownload( o )
 
   function modulesCopy()
   {
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
     let junction = will.junctionFrom( opener );
 
     junction.openers.forEach( ( opener2 ) =>
@@ -1788,7 +1788,7 @@ function _repoDownload( o )
 
   function modulesReopen( same )
   {
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
     let junction = will.junctionFrom( opener );
     _.assert( !junction.isFinited() );
 
@@ -1910,7 +1910,7 @@ build :
     if( dirStatusMap[ opener2.downloadPath ] )
     return new _.Consequence().take( dirStatusMap[ opener2.downloadPath ] );
 
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
 
     ready.then( ( arg ) =>
     {
@@ -2090,7 +2090,7 @@ function _filePathChanged2( o )
 
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   o = Parent.prototype._filePathChanged2.call( opener, o );
 

@@ -27,7 +27,7 @@ function stepRoutineDelete( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let time = _.time.now();
@@ -110,7 +110,7 @@ function stepRoutineReflect( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let time = _.time.now();
@@ -195,7 +195,7 @@ function stepRoutineTimelapseBegin( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -222,7 +222,7 @@ function stepRoutineTimelapseEnd( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -249,7 +249,7 @@ function stepRoutineJs( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -305,7 +305,7 @@ function stepRoutineEcho( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
 
@@ -358,7 +358,7 @@ function stepRoutineShell( frame )
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let forEachDstReflector, forEachDst;
@@ -445,7 +445,7 @@ function stepRoutineTranspile( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
@@ -559,7 +559,7 @@ function stepRoutineView( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
@@ -1094,7 +1094,7 @@ function stepRoutineSubmodulesReload( frame )
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );

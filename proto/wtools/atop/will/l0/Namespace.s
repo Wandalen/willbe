@@ -353,6 +353,46 @@ let fileWriteResource = _.routine.unite( fileResource_head, fileWriteResource_bo
 let fileWritePath = _.routine.uniteCloning( fileResource_head, fileWriteResource_body );
 fileWritePath.defaults.resourceKind = 'path';
 
+//
+
+function environmentPathFind( o )
+{
+
+  if( _.strIs( o ) )
+  o = { dirPath : o }
+
+  _.routineOptions( environmentPathFind, o );
+  _.assert( arguments.length === 1 );
+
+  let fileProvider = o.fileProvider || _.fileProvider;
+  let path = fileProvider.path;
+
+  o.dirPath = path.canonize( o.dirPath );
+
+  if( check( o.dirPath ) )
+  return o.dirPath;
+
+  let paths = path.traceToRoot( o.dirPath );
+  for( var i = paths.length - 1; i >= 0; i-- )
+  if( check( paths[ i ] ) )
+  return paths[ i ];
+
+  return o.dirPath;
+
+  function check( dirPath )
+  {
+    if( !fileProvider.isDir( path.join( dirPath, '.will' ) ) )
+    return false
+    return true;
+  }
+}
+
+environmentPathFind.defaults =
+{
+  dirPath : null,
+  fileProvider : null,
+}
+
 // --
 // relations
 // --
@@ -391,6 +431,8 @@ let Extension =
   fileReadPath, /* qqq : for Dmytro : light coverage */
   fileWriteResource, /* qqq : for Dmytro : cover */
   fileWritePath, /* qqq : for Dmytro : light coverage */
+
+  environmentPathFind,
 
   //
 

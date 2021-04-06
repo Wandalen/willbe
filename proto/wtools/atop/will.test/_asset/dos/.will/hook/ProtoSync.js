@@ -32,12 +32,28 @@ function onModule( context )
   if( o.verbosity )
   verbosity = o.verbosity >= 2 ? 5 : 1;
 
+  /* */
+
+  let excludeAny =
+  [
+    /\.git$/,
+    /\.svn$/,
+    /\.hg$/,
+    /\.tmp($|\/)/,
+    /\.DS_Store$/,
+    /(^|\/)-/,
+  ]
+
+  let maskAll = _.RegexpObject( excludeAny, 'excludeAny' );
+
+  /* */
+
   let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
   if( fileProvider.fileExists( moduleProtoPath ) )
   {
     return fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleProtoPath ] : protoPath } },
+      filter : { filePath : { [ moduleProtoPath ] : protoPath }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
@@ -51,7 +67,7 @@ function onModule( context )
   {
     return fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'step' ) } },
+      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'step' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,

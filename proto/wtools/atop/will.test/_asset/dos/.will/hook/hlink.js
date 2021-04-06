@@ -53,11 +53,11 @@ function onModule( context )
   /* run */
 
   if( o.verbosity < 2 )
-  fileProvider2.archive.verbosity = 0;
+  fileProvider2.archive.logger.verbosity = 0;
   else if( o.verbosity === 2 )
-  fileProvider2.archive.verbosity = 2;
+  fileProvider2.archive.logger.verbosity = 2;
   else
-  fileProvider2.archive.verbosity = o.verbosity - 1;
+  fileProvider2.archive.logger.verbosity = o.verbosity - 1;
   fileProvider2.archive.allowingMissed = 0;
   fileProvider2.archive.allowingCycled = 0;
 

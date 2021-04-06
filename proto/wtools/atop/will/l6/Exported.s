@@ -331,10 +331,10 @@ function _performRecursive()
   if( !exported.recursive )
   return null;
 
-  return new _.Consequence().take( null )
+  return _.take( null )
   .then( () =>
   {
-    let con = new _.Consequence().take( null );
+    let con = _.take( null );
 
     let modules = outModule.modulesEach
     ({
@@ -902,7 +902,7 @@ function perform( frame )
   let exported = this;
   let inModule = exported.inModule;
   let will = inModule.will;
-  let con = new _.Consequence().take( null );
+  let con = _.take( null );
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );

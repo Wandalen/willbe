@@ -48,7 +48,7 @@ function unform()
   let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -72,7 +72,7 @@ function form()
   let build = run.build;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );

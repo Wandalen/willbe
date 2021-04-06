@@ -49,6 +49,13 @@ function init( o )
 
 //
 
+function Make( properties, will )
+{
+  return new _.will.Transaction({ will, ... _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) });
+}
+
+//
+
 function unform()
 {
   let t = this;
@@ -104,6 +111,7 @@ function verbosityGet()
   let logger = will.logger;
   // let logger = t.logger;
   _.assert( t.formed === 0 || logger.verbosity === t._.verbosity, 'Verbosity of the transaction logger was changed outside of the transaction' );
+  /* qqq : for Vova : logger should always exists */
   return t._.verbosity;
 }
 
@@ -219,29 +227,27 @@ let TransactionFields =
 let Composes =
 {
   ... TransactionFields,
-
-  isInitial : 0
 }
 
 let Aggregates =
 {
+  isInitial : 0,
 }
 
 let Associates =
 {
-  will : null,
-  // logger : null
+  will : null, /* qqq : for Vova : remove */
 }
 
 let Restricts =
 {
   formed : 0,
-  // _verbosityPrev : null
 }
 
 let Statics =
 {
-  TransactionFields
+  Make,
+  TransactionFields,
 }
 
 let Forbids =
@@ -272,6 +278,7 @@ let Extension =
 
   finit,
   init,
+  Make,
 
   unform,
   form,
@@ -307,14 +314,6 @@ _.Copyable.mixin( Self );
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
-
 _.will[ Self.shortName ] = Self;
-
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
 
 })();

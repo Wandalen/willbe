@@ -175,7 +175,7 @@ function init( o )
   will.copy( o );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ isInitial : 1, /*verbosity : will.logger.verbosity,*/ will })
+  will.transaction = _.will.Transaction({ isInitial : 1, /*verbosity : will.logger.verbosity,*/ will }); /* qqq : for Vova : ? */
 
 }
 
@@ -530,7 +530,7 @@ function hooksPathGet()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   return will.HooksPathGet( will.environmentPath );
 }
 
@@ -549,7 +549,7 @@ function environmentPathSet( src )
   }
 
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   src = path.canonize( src );
 
@@ -566,26 +566,26 @@ function environmentPathFind( dirPath )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-
-  dirPath = path.canonize( dirPath );
-
-  if( check( dirPath ) )
-  return dirPath;
-
-  let paths = path.traceToRoot( dirPath );
-  for( var i = paths.length - 1; i >= 0; i-- )
-  if( check( paths[ i ] ) )
-  return paths[ i ];
-
-  return dirPath;
-
-  function check( dirPath )
-  {
-    if( !fileProvider.isDir( path.join( dirPath, '.will' ) ) )
-    return false
-    return true;
-  }
+  let path = fileProvider.path;
+  return _.will.environmentPathFind({ fileProvider, dirPath });
+  // dirPath = path.canonize( dirPath );
+  //
+  // if( check( dirPath ) )
+  // return dirPath;
+  //
+  // let paths = path.traceToRoot( dirPath );
+  // for( var i = paths.length - 1; i >= 0; i-- )
+  // if( check( paths[ i ] ) )
+  // return paths[ i ];
+  //
+  // return dirPath;
+  //
+  // function check( dirPath )
+  // {
+  //   if( !fileProvider.isDir( path.join( dirPath, '.will' ) ) )
+  //   return false
+  //   return true;
+  // }
 }
 
 // --
@@ -624,7 +624,7 @@ function vcsProviderFor( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   if( !_.mapIs( o ) )
   o = { filePath : o }
@@ -661,7 +661,7 @@ function vcsToolsFor( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   if( !_.mapIs( o ) )
   o = { filePath : o }
@@ -871,7 +871,7 @@ function versionGet()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -1033,7 +1033,7 @@ function recursiveValueDeduceFromBuild( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = null;
 
@@ -1284,7 +1284,7 @@ function moduleAt( willfilesPath )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
 
@@ -1319,17 +1319,16 @@ function filterImplied()
 {
   let will = this;
   let result = Object.create( null );
-
   let transaction = will.transaction;
 
   _.assert( transaction instanceof _.will.Transaction );
 
-  result.withDisabledModules = will.transaction.withDisabled;
+  result.withDisabledModules = will.transaction.withDisabled; /* qqq : for Vova : ? */
   result.withEnabledModules = will.transaction.withEnabled;
 
   for( let f in will.FilterFields )
   {
-    if( f === 'withDisabled' )
+    if( f === 'withDisabled' ) /* qqq : for Vova : ? */
     continue;
     if( f === 'withEnabled' )
     continue;
@@ -1469,7 +1468,7 @@ function modulesFilter( junctions, o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = [];
 
@@ -1496,7 +1495,7 @@ function relationsFilter( junctions, o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = [];
 
@@ -1525,7 +1524,7 @@ function moduleIdUnregister( openedModule )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -1545,7 +1544,7 @@ function moduleIdRegister( openedModule )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( openedModule instanceof _.will.Module );
@@ -1565,7 +1564,7 @@ function modulePathUnregister( openedModule )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -1595,7 +1594,7 @@ function modulePathRegister( openedModule )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   openedModule._registeredPath = openedModule.commonPath;
@@ -1889,7 +1888,7 @@ function modulesFindEachAt( o )
 //   else
 //   {
 //
-//     con = new _.Consequence().take( null );
+//     con = _.take( null );
 //
 //     if( !path.isGlob( o.selector ) )
 //     {
@@ -2046,7 +2045,7 @@ function modulesFindWithAt( o )
   /* */
 
   will.readingBegin();
-  con = new _.Consequence().take( null );
+  con = _.take( null );
 
   let op = Object.create( null );
   op.options = o;
@@ -2567,7 +2566,7 @@ function modulesFor_body( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let visitedJunctionsSet = new Set;
   let visitedModulesSet = new Set;
@@ -2600,13 +2599,13 @@ function modulesFor_body( o )
 
   function act( objects )
   {
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
 
     ready.then( () =>
     {
       if( !o.onEachVisitedObject && !o.onEachModule )
       return null;
-      let ready = new _.Consequence().take( null );
+      let ready = _.take( null );
       objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
       return ready;
     });
@@ -2615,7 +2614,7 @@ function modulesFor_body( o )
     {
       if( !o.onEachJunction )
       return null;
-      let ready = new _.Consequence().take( null );
+      let ready = _.take( null );
       let junctions = _.longOnce( will.junctionsFrom( objects ) );
       junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
       return ready;
@@ -2648,7 +2647,7 @@ function modulesFor_body( o )
   function objectAction( object )
   {
     _.assert( will.ObjectIs( object ) );
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
     let junction = object.toJunction();
     let isRoot = _.longHas( rootJunctions, junction );
 
@@ -2705,7 +2704,7 @@ function modulesFor_body( o )
     _.assert( junction instanceof _.will.ModuleJunction );
     if( visitedJunctionsSet.has( junction ) )
     return null;
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
     visitedJunctionsSet.add( junction );
     let isRoot = _.longHas( rootJunctions, junction ); debugger;
 
@@ -2771,7 +2770,7 @@ function modulesDownload_body( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let time = _.time.now();
   let downloadedLengthWas = 0;
@@ -2824,7 +2823,7 @@ function modulesDownload_body( o )
 
   function objectsUpformAndDownload( objects )
   {
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
 
     ready.then( () => renormalize() );
 
@@ -2925,7 +2924,7 @@ function modulesDownload_body( o )
 
   function objectsDownload( objects )
   {
-    let ready2 = new _.Consequence().take( null );
+    let ready2 = _.take( null );
 
     _.assert( _.arrayIs( objects ) );
     // let junctions = _.longOnce( will.junctionsFrom( objects ) );
@@ -3133,7 +3132,7 @@ function modulesDownload_body( o )
 
   function renormalize()
   {
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
     rootJunctions.forEach( ( junction ) =>
     {
       ready.then( () =>
@@ -3188,10 +3187,10 @@ function modulesUpform( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
-  o = _.routineOptions( modulesUpform, arguments ); // debugger;
+  o = _.routineOptions( modulesUpform, arguments );
 
   let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
@@ -3207,7 +3206,7 @@ function modulesUpform( o )
 
   function handleEach( module, op )
   {
-    let o3 = _.mapOnly_( null, o, module.upform.defaults );
+    let o3 = _.mapOnly_( null, o, module.upform.defaults ); /* xxx : not optimal */
     return module.upform( o3 );
   }
 
@@ -3231,7 +3230,7 @@ function modulesClean( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let files = Object.create( null );
   let visitedObjectSet = new Set;
@@ -3314,9 +3313,9 @@ function modulesBuild_body( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   o = _.assertRoutineOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
@@ -3464,9 +3463,9 @@ function modulesVerify_body( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
   let verifiedNumber = 0;
   let totalNumber = 0;
   let time = _.time.now();
@@ -4185,7 +4184,7 @@ function openersAdoptModule( module )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = 0;
   let commonPath = module.commonPath;
@@ -4280,7 +4279,7 @@ function readingReset()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -4297,7 +4296,7 @@ function readingBegin()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -4316,7 +4315,7 @@ function readingEnd()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -4333,7 +4332,7 @@ function _willfilesReadBegin()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -4349,7 +4348,7 @@ function _willfilesReadEnd( module )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
@@ -4371,7 +4370,7 @@ function _willfilesReadLog()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -4419,7 +4418,7 @@ function WillfilesFind( o )
   o.logger = _global_.logger;
 
   const fileProvider = o.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = o.logger;
 
   if( o.commonPath === '.' )
@@ -4587,7 +4586,7 @@ function willfilesFind( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   will.readingBegin();
@@ -4632,7 +4631,7 @@ function willfilesSelectPaired( record, records )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let result = [ record ];
   let commonPathMap = Object.create( null );
@@ -4700,7 +4699,7 @@ function willfileFor( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let r = Object.create( null );
 
@@ -4749,7 +4748,7 @@ function willfileUnregister( willf )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.arrayRemoveOnceStrictly( will.willfileWithCommonPathMap[ willf.commonPath ], willf );
@@ -4774,7 +4773,7 @@ function willfileRegister( willf )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   _.arrayAppendOnceStrictly( will.willfilesArray, willf );
@@ -4801,7 +4800,7 @@ function cleanLog( o )
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   o = _.routineOptions( cleanLog, arguments );
 
@@ -4854,7 +4853,7 @@ function cleanDelete( o )
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   o = _.routineOptions( cleanDelete, arguments );
 
@@ -4911,7 +4910,7 @@ function hooksReload()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   let hooks = will._.hooks = will._.hooks || Object.create( null );
 
@@ -4953,7 +4952,7 @@ function hooksList()
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   for( let h in will.hooks )
@@ -4970,7 +4969,7 @@ function hookContextNew( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   /* xxx : use recursive clone here */
@@ -5004,7 +5003,7 @@ function hookContextFrom( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
   // let withPath = path.join( _.path.current(), will.withPath || './' );
   let withPath = path.join( _.path.current(), will.transaction.withPath || './' );
@@ -5037,7 +5036,7 @@ function hookContextFrom( o )
   if( !o.fileProvider )
   o.fileProvider = fileProvider;
   if( !o.ready )
-  o.ready = new _.Consequence().take( null );
+  o.ready = _.take( null );
   if( !o.withPath )
   o.withPath = withPath;
   if( !o.logger )
@@ -5143,7 +5142,7 @@ function hookCall( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   o = _.routineOptions( hookCall, arguments );
@@ -5204,7 +5203,7 @@ function hookCall( o )
 
   function jsCall()
   {
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
 
     ready
     .then( () =>
@@ -5300,7 +5299,7 @@ function hookFindAt( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   let logger = will.logger;
 
   if( !_.mapIs( o ) )

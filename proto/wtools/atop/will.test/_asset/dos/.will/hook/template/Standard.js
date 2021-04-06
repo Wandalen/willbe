@@ -70,7 +70,7 @@ const path = fileProvider.path;
 function samples( test )
 {
   let context = this;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   let sampleDir = path.join( __dirname, '../sample' );
 
@@ -156,7 +156,7 @@ function eslint( test )
   let eslint = process.platform === 'win32' ? 'node_modules/eslint/bin/eslint' : 'node_modules/.bin/eslint';
   eslint = path.join( rootPath, eslint );
   let sampleDir = path.join( rootPath, 'sample' );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   if( _.process.insideTestContainer() && process.platform !== 'linux' )
   return test.true( true );

@@ -98,7 +98,7 @@ function _openersCurrentEach( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.assert( will.currentOpener === null || will.currentOpeners === null );
   _.routineOptions( _openersCurrentEach, arguments );
@@ -170,7 +170,7 @@ function openersFind( o )
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   o = _.routineOptions( openersFind, arguments );
   _.assert( will.currentOpener === null );
@@ -245,13 +245,14 @@ function _command_head( o )
 
   let e = o.args[ 0 ];
 
-  if( o.propertiesMapAsProperty )
-  {
-    let propertiesMap = Object.create( null );
-    if( e.propertiesMap )
-    propertiesMap[ o.propertiesMapAsProperty ] = e.propertiesMap;
-    e.propertiesMap = propertiesMap;
-  }
+  // yyy
+  // if( o.propertiesMapAsProperty )
+  // {
+  //   let propertiesMap = Object.create( null );
+  //   if( e.propertiesMap )
+  //   propertiesMap[ o.propertiesMapAsProperty ] = e.propertiesMap;
+  //   e.propertiesMap = propertiesMap;
+  // }
 
   if( cui.implied && o.usingImpliedMap )
   {
@@ -292,14 +293,13 @@ function _command_head( o )
   //   e.propertiesMap.v = e.propertiesMap.verbosity;
   // }
 
-
 }
 
 _command_head.defaults =
 {
   routine : null,
   args : null,
-  propertiesMapAsProperty : 0,
+  // propertiesMapAsProperty : 0,
   usingImpliedMap : 1
 }
 
@@ -362,7 +362,8 @@ function _propertiesImply( implyMap )
   if( will.transaction )
   will.transaction.finit();
 
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
+  will.transaction = _.will.Transaction.Make( implyMap, will );
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
 }
 
 //
@@ -478,7 +479,9 @@ function _commandsMake()
     'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
     'npm install' :                     { e : _.routineJoin( will, will.commandNpmInstall )                   },
-    'npm clean' :                       { e : _.routineJoin( will, will.commandNpmClean )                    },
+    'npm clean' :                       { e : _.routineJoin( will, will.commandNpmClean )                     },
+
+    'procedure prototype list' :        { e : _.routineJoin( will, will.commandProcedurePrototypeList )       },
 
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
@@ -497,9 +500,7 @@ function _commandsMake()
   })
 
   _.assert( ca.logger === will.logger );
-  _.assert( ca.verbosity === will.verbosity );
-
-  //will._commandsConfigAdd( ca );
+  _.assert( ca.logger.verbosity === will.verbosity );
 
   ca.form();
 
@@ -508,16 +509,37 @@ function _commandsMake()
 
 //
 
-function _commandsBegin( command )
+function _commandsBegin( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  if( will.topCommand === null )
-  will.topCommand = command;
+  _.routineOptions( _commandsBegin, o );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.aux.is( o.properties ) );
 
+  if( will.topCommand === null )
+  will.topCommand = o.commandRoutine;
+
+  if( will.transaction && will.transaction.isInitial )
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
+
+  if( will.transaction === null )
+  will.transaction = _.will.Transaction.Make( o.properties, will );
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  // xxx
+
+}
+
+_commandsBegin.defaults =
+{
+  commandRoutine : null,
+  properties : null,
 }
 
 //
@@ -530,9 +552,11 @@ function _commandsEnd( command )
   let logger = will.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
+  _.assert( _.routineIs( command ) );
 
   let beeping = will.transaction.beeping;
 
+  debugger;
   will.transaction.finit();
   will.transaction = null;
 
@@ -574,7 +598,7 @@ function _commandListLike( o )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
   let e = o.event;
 
   _.assert( arguments.length === 1 );
@@ -585,16 +609,16 @@ function _commandListLike( o )
   _.assert( _.objectIs( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
-  if( will.transaction && will.transaction.isInitial )
-  {
-    will.transaction.finit();
-    will.transaction = null;
-  }
-
-  if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-
-  will._commandsBegin( o.commandRoutine );
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  //
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  // will._commandsBegin( o.commandRoutine );
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
@@ -602,7 +626,7 @@ function _commandListLike( o )
   ready
   .then( () => will.openersCurrentEach( function( it )
   {
-    let ready2 = new _.Consequence().take( null );
+    let ready2 = _.take( null );
 
     // ready2.then( () => it.opener.openedModule.modulesUpform({ recursive : 2, all : 0, subModulesFormed : 1 }) ) /* yyy */
     ready2.then( () => it.opener.openedModule.modulesUpform({ recursive : 2, all : 0 }) )
@@ -697,16 +721,7 @@ function _commandBuildLike( o )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  if( will.transaction && will.transaction.isInitial )
-  {
-    will.transaction.finit();
-    will.transaction = null;
-  }
-
-  if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  let ready = _.take( null );
 
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -722,7 +737,16 @@ function _commandBuildLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  will._commandsBegin( o.commandRoutine );
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  //
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  // will._commandsBegin( o.commandRoutine );
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
@@ -752,7 +776,7 @@ function _commandBuildLike( o )
 
   function forSingle( it )
   {
-    let ready2 = new _.Consequence().take( null );
+    let ready2 = _.take( null );
     let it2 = _.mapExtend( null, o, it );
 
     ready2.then( () =>
@@ -807,16 +831,7 @@ function _commandCleanLike( o )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  if( will.transaction && will.transaction.isInitial )
-  {
-    will.transaction.finit();
-    will.transaction = null;
-  }
-
-  if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  let ready = _.take( null );
 
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -831,7 +846,16 @@ function _commandCleanLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  will._commandsBegin( o.commandRoutine );
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  //
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  // will._commandsBegin( o.commandRoutine );
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
@@ -860,7 +884,7 @@ function _commandCleanLike( o )
 
   function forAll()
   {
-    let ready2 = new _.Consequence().take( null );
+    let ready2 = _.take( null );
     let it2 = _.mapExtend( null, o );
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -913,16 +937,7 @@ function _commandNewLike( o )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  if( will.transaction && will.transaction.isInitial )
-  {
-    will.transaction.finit();
-    will.transaction = null;
-  }
-
-  if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  let ready = _.take( null );
 
   _.routineOptions( _commandNewLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -944,7 +959,16 @@ function _commandNewLike( o )
   // withInvalid : 0,
   // withDisabledModules : 0,
 
-  will._commandsBegin( o.commandRoutine );
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  //
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  // will._commandsBegin( o.commandRoutine );
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   if( will.currentOpeners !== null || will.currentOpener !== null )
   throw _.errBrief( 'Cant call command new for module which already exists!' );
@@ -964,7 +988,7 @@ function _commandNewLike( o )
 
   function forSingle( it )
   {
-    let ready2 = new _.Consequence().take( null );
+    let ready2 = _.take( null );
     let it2 = _.mapExtend( null, o, it );
 
     ready2.then( () =>
@@ -1031,7 +1055,7 @@ function _commandTreeLike( o )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.routineOptions( _commandTreeLike, arguments );
   _.assert( _.routineIs( o.commandRoutine ) );
@@ -1039,16 +1063,16 @@ function _commandTreeLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  if( will.transaction && will.transaction.isInitial )
-  {
-    will.transaction.finit();
-    will.transaction = null;
-  }
-
-  if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-
-  will._commandsBegin( o.commandRoutine );
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  //
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) }); /* qqq : for Vova : too much details outside the class */
+  // will._commandsBegin( o.commandRoutine );
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   _.assert( will.currentOpener === null );
   if( will.currentOpeners === null )
@@ -1056,7 +1080,7 @@ function _commandTreeLike( o )
 
   ready.then( () =>
   {
-    let ready2 = new _.Consequence().take( null );
+    let ready2 = _.take( null );
 
     will.currentOpeners.forEach( ( opener ) => ready2.then( () =>
     {
@@ -1105,17 +1129,7 @@ function _commandModulesLike( o )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  if( will.transaction && will.transaction.isInitial )
-  {
-    will.transaction.finit();
-    will.transaction = null;
-  }
-
-  // _.assert( will.transaction === null );
-  if( will.transaction === null )
-  will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  let ready = _.take( null );
 
   _.routineOptions( _commandModulesLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
@@ -1133,7 +1147,16 @@ function _commandModulesLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  will._commandsBegin( o.commandRoutine );
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  // // _.assert( will.transaction === null );
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  // will._commandsBegin( o.commandRoutine );
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() )
@@ -1216,7 +1239,7 @@ function _commandModulesLike( o )
 
   function forSingle( it )
   {
-    let ready3 = new _.Consequence().take( null );
+    let ready3 = _.take( null );
     let it2 = _.mapExtend( null, o, it );
 
     ready3.then( () =>
@@ -1243,6 +1266,7 @@ function _commandModulesLike( o )
 
 }
 
+/* qqq : for Dmytro : bad : discuss modulesFor */
 var defaults = _commandModulesLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
 defaults.event = null;
 defaults.onEach = null;
@@ -1250,7 +1274,98 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withRoot = 1;
+defaults.withRoot = 1; /* qqq : for Dmytro : ?? */
+
+//
+
+function _commandModuleOrientedLike( o )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = _.take( null );
+
+  _.routineOptions( _commandModuleOrientedLike, arguments );
+  _.mapSupplementNulls( o, will.filterImplied() );
+  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+
+  _.all
+  (
+    _.Will.ModuleFilterNulls,
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
+  );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onEach ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  // if( will.transaction && will.transaction.isInitial )
+  // {
+  //   will.transaction.finit();
+  //   will.transaction = null;
+  // }
+  //
+  // if( will.transaction === null )
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
+
+  if( will.currentOpeners === null && will.currentOpener === null )
+  ready.then( () => will.openersFind() )
+
+  let openers = will.currentOpeners;
+  will.currentOpeners = null; /* xxx : qqq for Vova : move to transation? */
+
+  openersEach( openers );
+
+  return ready.finally( ( err, arg ) =>
+  {
+    will.currentOpeners = openers;
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    logger.error( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  })
+
+  /* */
+
+  function openersEach( openers )
+  {
+    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+
+    will.modulesFor( o2 );
+    o2.modules = openers;
+
+    // o2.onEachModule = handleEachNodule;
+    return will.modulesFor( o2 )
+    .finally( ( err, arg ) =>
+    {
+      if( err )
+      throw _.err( err, `\nFailed to upform modules` );
+      return arg;
+    });
+
+  }
+
+  // /* */
+  //
+  // function handleEach( module, op )
+  // {
+  //   let o3 = _.mapOnly_( null, o, module.upform.defaults );
+  //   return module.upform( o3 );
+  // }
+
+}
+
+/* qqq : for Dmytro : bad : discuss modulesFor */
+var defaults = _commandModuleOrientedLike.defaults =
+{
+  ... Parent.prototype.modulesFor.defaults,
+  event : null,
+  commandRoutine : null,
+  name : null,
+}
 
 // --
 // command
@@ -3980,8 +4095,9 @@ function commandWith( e )
     }
 
     _.assert( cui.transaction instanceof _.will.Transaction );
-    cui.transaction.finit();
-    cui.transaction = null;
+    // qqq : for Vova : why was it here?
+    // cui.transaction.finit();
+    // cui.transaction = null;
 
     return it;
   })
@@ -4075,114 +4191,6 @@ function commandEach( e )
     cui.mainOpener = null;
   }
 
-  // con.finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   cui.errEncounter( err );
-  //   cui._commandsEnd( commandEach );
-  //   if( err )
-  //   throw _.err( err );
-  //   return arg;
-  // });
-  //
-  // return con;
-  //
-  // /* */
-  //
-  // function handleBegin( it )
-  // {
-  //
-  //   _.assert( cui.currentOpener === null );
-  //   _.assert( cui.currentOpenerPath === null );
-  //   // _.assert( cui.mainModule === null );
-  //   // _.assert( cui.mainOpener === null ); // yyy
-  //
-  //   if( cui.mainOpener )
-  //   cui.mainOpener.isMain = false;
-  //   cui.currentOpenerChange( it.currentOpener );
-  //   cui.currentOpenerPath = it.currentOpenerPath || null;
-  //   it.currentOpener.isMain = true;
-  //   _.assert( cui.mainOpener === it.currentOpener );
-  //   _.assert( cui.currentOpener === it.currentOpener );
-  //   // cui.mainOpener = it.currentOpener;
-  //   // cui.mainModule = it.currentOpener.openedModule;
-  //   // cui.mainOpener === it.currentOpener; // yyy
-  //
-  //   if( cui.verbosity > 1 )
-  //   {
-  //     logger.log( '' );
-  //     logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
-  //     if( cui.currentOpenerPath )
-  //     logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( cui.currentOpenerPath, 'path' ) );
-  //   }
-  //
-  //   return null;
-  // }
-  //
-  // /* */
-  //
-  // function handleEnd( it )
-  // {
-  //
-  //   logger.up();
-  //   levelUp = 1;
-  //
-  //   let r = ca.commandPerform
-  //   ({
-  //     command : e.parsedCommands[ commandIndex + 1 ].command,
-  //   });
-  //
-  //   _.assert( r !== undefined );
-  //
-  //   r = _.Consequence.From( r );
-  //
-  //   return r.finally( ( err, arg ) =>
-  //   {
-  //     logger.down();
-  //     levelUp = 0;
-  //
-  //     _.assert( cui.currentOpener === it.currentOpener || cui.currentOpener === null );
-  //     // _.assert( cui.currentOpener === it.currentOpener ); // xxx
-  //     // _.assert( cui.mainModule === cui.currentOpener.openedModule );
-  //     _.assert( cui.mainOpener === it.currentOpener );
-  //     cui.currentOpenerChange( null );
-  //     it.currentOpener.isMain = false;
-  //     if( !it.currentOpener.isUsed() )
-  //     it.currentOpener.finit();
-  //     _.assert( cui.mainOpener === null );
-  //     _.assert( cui.currentOpener === null );
-  //     _.assert( cui.currentOpenerPath === null );
-  //     // cui.mainModule = null;
-  //     // cui.mainOpener = null; // yyy
-  //
-  //     if( err )
-  //     logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
-  //     if( err )
-  //     throw _.err( err );
-  //     return arg;
-  //   });
-  //
-  // }
-  //
-  // /* */
-  //
-  // function handleError( err )
-  // {
-  //
-  //   if( cui.currentOpener )
-  //   cui.currentOpener.finit();
-  //   cui.currentOpenerChange( null );
-  //   // cui.mainModule = null;
-  //   cui.mainOpener = null;
-  //
-  //   if( levelUp )
-  //   {
-  //     levelUp = 0;
-  //     logger.down();
-  //   }
-  //
-  // }
-
 }
 
 commandEach.hint = 'Iterate each module in a directory.';
@@ -4268,7 +4276,7 @@ function commandWillfileFromNpm( e )
   if( e.subject )
   e.propertiesMap.willfilePath = e.subject;
 
-  let con = new _.Consequence().take( null );
+  let con = _.take( null );
   if( !cui.currentOpeners )
   {
     con = cui.modulesFindWithAt
@@ -5283,7 +5291,40 @@ commandNpmClean.commandProperties =
   verbosity : 'Verbosity.',
 };
 
-//
+// --
+// procedure
+// --
+
+function commandProcedurePrototypeList( e )
+{
+  let cui = this;
+  cui._command_head( commandProcedurePrototypeList, arguments );
+
+  debugger
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'procedure prototype list',
+    onEachModule : handleEachModule,
+    commandRoutine : commandProcedurePrototypeList,
+    recursive : 0,
+    withSubmodules : 0,
+  });
+
+  function handleEachModule( module, op )
+  {
+    debugger;
+    return module.procedurePrototypeList();
+  }
+
+}
+
+commandProcedurePrototypeList.hint = 'List prototypes of procedures of the module.';
+
+// --
+// package
+// --
 
 function commandPackageInstall( e )
 {
@@ -5456,7 +5497,7 @@ commandPackageInstall.commandProperties =
 function commandPackageLocalVersions( e )
 {
   let cui = this;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
@@ -5585,7 +5626,7 @@ function commandPackageRemoteVersions( e )
 {
   let cui = this;
   let logger = cui.logger;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
@@ -5745,7 +5786,7 @@ commandPackageRemoteVersions.commandProperties =
 function commandPackageVersion( e )
 {
   let cui = this;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
@@ -5952,7 +5993,8 @@ let Extension =
   _commandCleanLike,
   _commandNewLike,
   _commandTreeLike,
-  _commandModulesLike,
+  _commandModulesLike, /* qqq : for Dmytro : remove */
+  _commandModuleOrientedLike,
 
   // command
 
@@ -6053,6 +6095,10 @@ let Extension =
   commandNpmDepAdd,
   commandNpmInstall,
   commandNpmClean,
+
+  // procedure
+
+  commandProcedurePrototypeList,
 
   // command package
 

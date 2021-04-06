@@ -5,7 +5,7 @@ _.include( 'wFiles' );
 
 let assetsOriginalPath = _.path.join( __dirname, '_asset' );
 let repoDirPath = _.path.join( assetsOriginalPath, '-repo' );
-let ready = new _.Consequence().take( null );
+let ready = _.take( null );
 let start = _.process.starter
 ({
   currentPath : repoDirPath,
@@ -27,7 +27,7 @@ function reposRedownload()
     return null;
   });
 
-  /* Dmytro : the latest gamma versions */
+  /* the latest gamma versions */
 
   // clone( 'ModuleForTesting1', '32608d8cf3f87365218427c645c3b55949a7208d' ); // Tools
   // clone( 'ModuleForTesting1a', '47dc1d2608de27aaac4299a7932abcde9de0ae85' ); // Color
@@ -38,16 +38,18 @@ function reposRedownload()
   // clone( 'ModuleForTesting12', '6f81448163920ac9b982d6071c54a3fd1f3ea150' ); // Proto
   // clone( 'ModuleForTesting12ab', '1b9ff0d20b7dd17398aa4283945c70279c2962ab' ); // UriBasic
 
-  /* Dmytro : the latest delta versions */
+  /* the latest delta versions */
 
-  clone( 'ModuleForTesting1', '58881174e8edbd7c54761296694e0b48a4997e65' ); // Tools
-  clone( 'ModuleForTesting1a', '44e40eef6a64196afcf1f9b51fcb8f8be71ded1d' ); // Color
-  clone( 'ModuleForTesting1b', '0c04fe663066afc03767e23c71d921978595fddf' );
-  clone( 'ModuleForTesting2', 'cd27a51294bc00bcbc2212f9d9ac5b4a82529990' );
-  clone( 'ModuleForTesting2a', '85db26267c91f794efeb85ae5ade77a33cc3c645' ); // PathBasic
-  clone( 'ModuleForTesting2b', '9eb65ca0d7f41ba9d9562c6d8a1c5f27653f9ff0' ); // Procedure
-  clone( 'ModuleForTesting12', '1e0b8cc041bb0f3aa105b2577947c2884694b4df' ); // Proto
-  clone( 'ModuleForTesting12ab', 'a15e971510b340106f1b9872bf7b939452c267eb' ); // UriBasic
+  clone( 'ModuleForTesting1', '3de7741c7ba475b912411b35ee3cf2ab44a0a901' ); // Tools
+  clone( 'ModuleForTesting1a', '8eeb3e89518c6a9d060fdf7bdee37baaaa9a451b' ); // Color
+  clone( 'ModuleForTesting1b', '026233546add0b70b734e68a317f57e32abf437b' );
+  clone( 'ModuleForTesting2', '42441628a94c3ebf98093e158fe02ec2cba53761' );
+  clone( 'ModuleForTesting2a', 'fc6285084b7b0110d6dd56ac808fef673c4fb6d4' ); // PathBasic
+  clone( 'ModuleForTesting2b', '352570f723ba34ca3b7996cd83a5242be29d687c' ); // Procedure
+  clone( 'ModuleForTesting12', 'bc3ec4133f3fc6bc296c0488f52f06eb6f26a1e8' ); // Proto
+  clone( 'ModuleForTesting12ab', 'f0d93ce60671b622a2daa57ea32017afc5af08e1' ); // UriBasic
+
+  /* qqq : for Dmytro : extend Remake. discuss */
 
   return ready;
 }

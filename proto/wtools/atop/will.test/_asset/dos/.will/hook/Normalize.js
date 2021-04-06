@@ -50,8 +50,9 @@ function onModule( context )
 
   // npmDepRemoveSelf( context );
   // npmDepAddFileNodeModulesEntry( context );
-  npmEntryPathAdjust( context );
+  // npmEntryPathAdjust( context );
   // willProtoEntryPathFromNpm( context );
+  willProtoEntryPathRelativize( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
@@ -743,6 +744,44 @@ function willProtoEntryPathFromNpm( context )
 
   let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
   console.log( `protoEntryPath : ${protoEntryPath}` );
+
+}
+
+//
+
+function willProtoEntryPathRelativize( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+
+  if( !protoEntryPath )
+  return;
+
+  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  {
+    return path.isAbsolute( entryPath ) ? path.relative( inPath, entryPath ) : entryPath
+  });
+
+  console.log( `${protoEntryPath}` );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'path',
+    resourceName : 'npm.proto.entry',
+    withExport : 0,
+    val : protoEntryPath,
+  });
 
 }
 
