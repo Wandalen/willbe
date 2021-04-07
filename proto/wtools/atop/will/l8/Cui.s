@@ -1416,7 +1416,8 @@ commandImply.defaults =
   withValid : null,
   withInvalid : null,
   withSubmodules : null,
-  withPath : null
+  withPath : null,
+  willFileAdapting : null
 };
 commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
@@ -1440,6 +1441,7 @@ commandImply.commandProperties =
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
+  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
 };
 
 // function commandImply( e )

@@ -40602,6 +40602,62 @@ Command can modify filter fields of main( will ). It can break behavior of other
 This test runs two commands with different filtering options in the sequence to check if problem is fixed.
 `
 
+//
+
+function oldImportFileAdapt( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'oldImportFileAdapt' );
+  a.reflect();
+
+  /* */
+
+  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Failed to download submodules' ) );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, null );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.imply willFileAdapting:1 .submodules.download' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 )
+
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    let expectedModules =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1a',
+      'ModuleForTesting1b',
+      'ModuleForTesting2'
+    ]
+    test.identical( modules, expectedModules );
+
+    _.each( expectedModules, ( moduleName ) =>
+    {
+      test.true( _.git.isRepository({ localPath : a.abs( `.module/${moduleName}` ) }) );
+    })
+
+    return null;
+  });
+
+  return a.ready;
+}
+
+oldImportFileAdapt.rapidity = 1;
+oldImportFileAdapt.description =
+`
+  Checks if old format of import file is converted to new format if feature is enabled via option.
+`
+
 // --
 // declare
 // --
@@ -40970,7 +41026,9 @@ const Proto =
     commandsSubmoduleSafety,
     commandSubmodulesUpdateOptionTo,
 
-    willFilterFieldsOverwrite
+    willFilterFieldsOverwrite,
+
+    oldImportFileAdapt
 
   }
 

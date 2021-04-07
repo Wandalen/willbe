@@ -514,6 +514,9 @@ function _open()
 
     willf.formed = 4;
 
+    if( will.transaction.willFileAdapting )
+    willf._adapt();
+
     if( willf.structure.format !== undefined && willf.structure.format !== willf.FormatVersion )
     throw _.errBrief
     (
@@ -848,6 +851,74 @@ _resourcesImport_body.defaults =
 }
 
 let _resourcesImport = _.routine.uniteCloning_( _resourcesImport_head, _resourcesImport_body );
+
+//
+
+function _adapt()
+{
+  let willf = this;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let structure = willf.structure;
+
+  if( willf.isOut || willf.role === 'export' )
+  return;
+
+  if( structure.format === willf.FormatVersion )
+  return;
+
+  /* submodule */
+
+  if( structure.submodule )
+  _.each( structure.submodule, ( val, key ) =>
+  {
+    let path = null;
+    let objectIs = _.objectIs( val );
+
+    if( objectIs )
+    path = val.path;
+    else
+    path = val;
+
+    if( !fileProvider.path.isGlobal( path ) )
+    return;
+    let vcs = will.vcsToolsFor( path );
+    if( !vcs )
+    return;
+
+    let parsed = vcs.path.parse( path );
+    let isOldFormat = parsed.hash && !parsed.isFixated;
+    if( !isOldFormat )
+    return;
+
+    parsed.tag = parsed.hash;
+    delete parsed.hash;
+
+    if( parsed.localVcsPath && vcs.path.name( parsed.localVcsPath ) )
+    {
+      let ext = vcs.path.ext( parsed.localVcsPath );
+
+      if( !ext )
+      parsed.localVcsPath = vcs.path.changeExt( parsed.localVcsPath, 'out.will.yml' )
+
+      if( parsed.query )
+      parsed.query = `${parsed.query}&out=${parsed.localVcsPath}`
+      else
+      parsed.query = `out=${parsed.localVcsPath}`;
+
+      delete parsed.localVcsPath;
+    }
+
+    path = vcs.path.str( parsed );
+
+    if( objectIs )
+    val.path = path;
+    else
+    structure.submodule[ key ] = path;
+  })
+
+}
 
 // --
 // peer
@@ -1749,6 +1820,7 @@ let Extension =
   _readLog,
   _importToModule,
   _resourcesImport,
+  _adapt,
 
   // peer
 

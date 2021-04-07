@@ -217,7 +217,9 @@ let TransactionFields =
   withSubmodules : null,
 
 
-  ... _.Will.IntentionFields
+  ... _.Will.IntentionFields,
+
+  willFileAdapting : 0
 }
 
 // --
