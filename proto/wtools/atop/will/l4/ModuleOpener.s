@@ -2887,21 +2887,6 @@ _.classDeclare
   extend : Extension,
 });
 
-// Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
-
 _.will[ Self.shortName ] = Self;
-
-/* xxx : refactor tree of files */
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
-
-//
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
 
 })();

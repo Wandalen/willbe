@@ -64,7 +64,7 @@ function onModule( context )
   {
     fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'step' ) }, maskAll },
+      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'common/step' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
@@ -78,7 +78,7 @@ function onModule( context )
   {
     fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'hlink/.github/workflows' ) }, maskAll },
+      filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'common/.github/workflows' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,

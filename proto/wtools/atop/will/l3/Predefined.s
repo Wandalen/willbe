@@ -1282,14 +1282,7 @@ let Extension =
   stepRoutineWillfileVersionBump,
 }
 
-//
-
 _.mapExtend( Self, Extension );
 _.will[ 'Predefined' ] = Self;
-
-//
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
 
 })()

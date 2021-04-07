@@ -1556,18 +1556,6 @@ _.classDeclare
   withClass : 1,
 });
 
-//
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
-
 _.will[ Self.shortName ] = Self;
-
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
 
 })();

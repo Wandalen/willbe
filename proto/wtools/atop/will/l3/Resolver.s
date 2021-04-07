@@ -1793,7 +1793,5 @@ let NamespaceExtension =
 }
 
 _.mapExtend( _.will.resolver, NamespaceExtension );
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = Self;
 
 })();

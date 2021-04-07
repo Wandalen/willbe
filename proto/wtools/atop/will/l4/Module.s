@@ -10229,8 +10229,6 @@ _.classDeclare
   extend : Extension,
 });
 
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
 _.will[ Self.shortName ] = Self;
 
 })();

@@ -1064,19 +1064,6 @@ _.classDeclare
 });
 
 _.Copyable.mixin( Self );
-
-//
-
-if( typeof inModule !== 'undefined' && inModule !== null )
-module[ 'exports' ] = _global_.wTools;
-
 _.will[ Self.shortName ] = Self;
-
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
 
 })();

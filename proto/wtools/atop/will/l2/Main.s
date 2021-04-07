@@ -5655,12 +5655,7 @@ _.classDeclare
 });
 
 _.Copyable.mixin( Self );
-_.Verbal.mixin( Self );
-
-//
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = Self;
+_.Verbal.mixin( Self ); /* xxx : qqq : for Vova : remove the mixin */
 wTools[ Self.shortName ] = Self;
 
 })();
