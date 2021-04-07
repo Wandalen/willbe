@@ -3949,7 +3949,6 @@ function reflectWithOptionDstRewriting( test )
   })
 
   a.appStartNonThrowing({ execPath : '.clean' })
-
   a.appStartNonThrowing({ execPath : '.build variant1' })
   .then( ( op ) =>
   {
@@ -3957,10 +3956,10 @@ function reflectWithOptionDstRewriting( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
-    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
-    a.fileProvider.fileDelete( a.abs( 'proto/File.js') )
-    a.fileProvider.fileWrite( a.abs( 'proto/File.js'), 'console.log( "File2.js" )' )
+    a.fileProvider.fileDelete( a.abs( 'proto/File.js' ) )
+    a.fileProvider.fileWrite( a.abs( 'proto/File.js' ), 'console.log( "File2.js" )' )
     var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
 
@@ -3979,8 +3978,8 @@ function reflectWithOptionDstRewriting( test )
     return null;
   })
 
-  /* xxx for Vova : adjust styles */
-  //
+  /* xxx for Vova : adjust styles aaa: adjusted */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -4006,7 +4005,7 @@ function reflectWithOptionDstRewriting( test )
   .then( () =>
   {
     test.case = 'unlink out file and try to restore';
-    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
     a.fileProvider.fileDelete( a.abs( 'out/debug/File.js' ) )
     a.fileProvider.fileWrite( a.abs( 'out/debug/File.js' ), 'console.log( "Unlinked.js" )' )
@@ -4031,7 +4030,7 @@ function reflectWithOptionDstRewriting( test )
     test.identical( op.exitCode, 0 );
 
     var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
-    var read = a.fileProvider.fileRead( a.abs( 'proto/File.js') );
+    var read = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
     test.identical( read, `console.log( '123' );` )
     var read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
     test.identical( read, `console.log( '123' );` )
@@ -39964,7 +39963,7 @@ function commandsSubmoduleSafety( test )
   let outputMap = Object.create( null );
   routineForCasesRegister();
 
-  /* */
+  /* - */
 
   run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
   run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
@@ -39981,7 +39980,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 })
   run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 })
 
-  /* */
+  /* - */
 
   run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
@@ -39998,7 +39997,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'update', case : 'different/origin', downloaded : 1, error : 1 })
   run({ command : 'update', case : 'different/branch', downloaded : 1, error : 0 })
 
-  /* */
+  /* - */
 
   run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
   run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
@@ -40015,7 +40014,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'versions.verify', case : 'different/origin', downloaded : 1, error : 1 })
   run({ command : 'versions.verify', case : 'different/branch', downloaded : 1, error : 1 })
 
-  /* */
+  /* - */
 
   run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
@@ -40032,7 +40031,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
 
-  /* */
+  /* - */
 
   run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
@@ -40049,7 +40048,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
   run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
 
-  /* */
+  /* - */
 
   run({ command : 'versions.agree', case : 'missing/tag', downloaded : 1, error : 1, deleted : 0 })
   run({ command : 'versions.agree', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
@@ -40066,7 +40065,7 @@ function commandsSubmoduleSafety( test )
   run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, redownloaded : 1 })
   run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 })
 
-  /* */
+  /* - */
 
   function run( env )
   {
@@ -40193,7 +40192,7 @@ function commandsSubmoduleSafety( test )
     })
   }
 
-  /* */
+  /* - */
 
   function routineForCasesRegister()
   {
@@ -40364,7 +40363,7 @@ function commandsSubmoduleSafety( test )
     })
   }
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -40435,7 +40434,7 @@ function commandSubmodulesUpdateOptionTo( test )
     return a.ready;
   }
 
-  /* */
+  /* - */
 
   a.init()
   a.appStart( '.submodules.update to:!dev1' )
@@ -40454,7 +40453,7 @@ function commandSubmodulesUpdateOptionTo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.init()
   .then( () =>
@@ -40482,7 +40481,7 @@ function commandSubmodulesUpdateOptionTo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.init()
   .then( () =>
@@ -40507,7 +40506,7 @@ function commandSubmodulesUpdateOptionTo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.init()
   .then( () =>
@@ -40532,7 +40531,7 @@ function commandSubmodulesUpdateOptionTo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.init()
   .then( () =>
@@ -40558,7 +40557,7 @@ function commandSubmodulesUpdateOptionTo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -40580,6 +40579,8 @@ function willFilterFieldsOverwrite( test )
   let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
   a.reflect();
 
+  /* - */
+
   a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
   .then( ( op ) =>
   {
@@ -40589,6 +40590,8 @@ function willFilterFieldsOverwrite( test )
     test.identical( modules, [ 'ModuleForTesting3' ] );
     return null;
   });
+
+  /* - */
 
   return a.ready;
 }
@@ -40610,7 +40613,7 @@ function oldImportFileAdapt( test )
   let a = context.assetFor( test, 'oldImportFileAdapt' );
   a.reflect();
 
-  /* */
+  /* - */
 
   a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' )
   .then( ( op ) =>
@@ -40622,7 +40625,7 @@ function oldImportFileAdapt( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   a.appStart( '.imply willFileAdapting:1 .submodules.download' )
   .then( ( op ) =>
@@ -40648,6 +40651,8 @@ function oldImportFileAdapt( test )
 
     return null;
   });
+
+  /* - */
 
   return a.ready;
 }

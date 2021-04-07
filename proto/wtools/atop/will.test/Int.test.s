@@ -2219,7 +2219,7 @@ function exportGitModuleAndCheckDefaultPathsSimple( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -2303,7 +2303,7 @@ function reexportGitModule( test )
 
   a.ready.then( () =>
   {
-    test.case = 'export';
+    test.case = 'export main module as a git repository twice';
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     a.will.prefer({ allOfMain : 0, allOfSub : 0 });
     a.will.readingBegin();
@@ -2320,7 +2320,6 @@ function reexportGitModule( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = 'check export file';
     let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
@@ -2342,7 +2341,6 @@ function reexportGitModule( test )
 
   a.ready.then( () =>
   {
-    test.case = 'export';
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     a.will.prefer({ allOfMain : 0, allOfSub : 0 });
     a.will.readingBegin();
@@ -2359,7 +2357,6 @@ function reexportGitModule( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = 'check export file';
     let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
@@ -2370,7 +2367,7 @@ function reexportGitModule( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -11693,6 +11690,8 @@ function remotePathOfMainGitRepo( test )
   a.shell.predefined.deasync = 0;
   a.shell.predefined.ready = null;
 
+  /* - */
+
   a.ready
   .then( () =>
   {
@@ -11704,7 +11703,7 @@ function remotePathOfMainGitRepo( test )
     return opener.open();
   })
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -11712,7 +11711,7 @@ function remotePathOfMainGitRepo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -11720,6 +11719,8 @@ function remotePathOfMainGitRepo( test )
     opener.close();
     return null;
   })
+
+  /* - */
 
   return a.ready;
 }
