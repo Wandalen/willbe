@@ -452,14 +452,16 @@ function _commandsMake()
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
     'git diff' :                        { e : _.routineJoin( will, will.commandGitDiff )                      },
-    'git pr open' :                     { e : _.routineJoin( will, will.commandGitPrOpen )                    },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus )                    },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync )                      },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag )                       },
-    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks )       },
+    'git hook preserving hardlinks' :   { e : _.routineJoin( will, will.commandGitHookPreservingHardLinks )   },
+
+    'pr open' :                         { e : _.routineJoin( will, will.commandPrOpen )                       },
+    'pr list' :                         { e : _.routineJoin( will, will.commandPrList )                       },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith )                         },
     'each' :                            { e : _.routineJoin( will, will.commandEach )                         },
@@ -1076,7 +1078,7 @@ function _commandTreeLike( o )
   // }
   //
   // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) }); /* qqq : for Vova : too much details outside the class */
+  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
   // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1396,8 +1398,6 @@ function commandImply( e )
 
   cui.implied = e.propertiesMap;
 
-  // cui._propertiesImplyToMain( _.mapOnly_( null,  e.propertiesMap, commandImply.defaults ) );
-
   if( impliedPrev && impliedPrev.withPath )
   if( cui.implied.withPath === null || cui.implied.withPath === undefined )
   cui.implied.withPath = impliedPrev.withPath;
@@ -1406,7 +1406,6 @@ function commandImply( e )
 
 commandImply.defaults =
 {
-  // v : 3,
   verbosity : 3,
   beeping : null,
   withOut : null,
@@ -1426,7 +1425,6 @@ commandImply.commandPropertiesAliases =
 }
 commandImply.commandProperties =
 {
-  // v : 'Set verbosity. Default is 3.',
   verbosity : 'Set verbosity. Default is 3.',
   beeping : 'Make noise when it\'s done. Default is 0.',
   withOut : 'Include out modules. Default is 1.',
@@ -3625,65 +3623,6 @@ commandGitDiff.commandProperties = _.mapExtend( null, commandImply.commandProper
 
 //
 
-function commandGitPrOpen( e )
-{
-  let cui = this;
-  cui._command_head( commandGitPrOpen, arguments );
-
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
-
-  _.routineOptions( commandGitPrOpen, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git pr open',
-    onEach : handleEach,
-    commandRoutine : commandGitPrOpen,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitPrOpen
-    ({
-      title : e.subject,
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults ),
-    });
-  }
-}
-
-commandGitPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  token : null,
-  srcBranch : null,
-  dstBranch : null,
-  title : null,
-  body : null,
-  // v : null,
-  verbosity : null,
-  withSubmodules : 1
-});
-commandGitPrOpen.hint = 'Open pull request from current modules.';
-commandGitPrOpen.commandSubjectHint = 'A title for PR';
-commandGitPrOpen.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandGitPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  token : 'An individual authorization token. By default reads from user config file.',
-  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
-  dstBranch : 'A destination branch. Default is "master".',
-  title : 'Option that rewrite title in provided argument.',
-  body : 'Body message.',
-  // v : 'Set verbosity. Default is 2.',
-  verbosity : 'Set verbosity. Default is 2.',
-});
-
-//
-
 function commandGitPull( e )
 {
   let cui = this;
@@ -3983,7 +3922,7 @@ commandGitTag.commandProperties = _.mapExtend( null, commandImply.commandPropert
 
 //
 
-function commandGitPreservingHardLinks( e )
+function commandGitHookPreservingHardLinks( e )
 {
   let cui = this;
   cui._propertiesImply( e.propertiesMap );
@@ -3996,8 +3935,103 @@ function commandGitPreservingHardLinks( e )
   _.git.hookPreservingHardLinksUnregister();
 }
 
-commandGitPreservingHardLinks.hint = 'Switch on preserving hardlinks.';
-commandGitPreservingHardLinks.commandSubjectHint = 'Any subject to enable preserving hardliks.';
+commandGitHookPreservingHardLinks.hint = 'Switch on preserving hardlinks.';
+commandGitHookPreservingHardLinks.commandSubjectHint = 'Any subject to enable preserving hardliks.';
+
+//
+
+function commandPrOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandPrOpen, arguments );
+
+  _.routineOptions( commandPrOpen, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git pr open',
+    onEach : handleEach,
+    commandRoutine : commandPrOpen,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPrOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults ),
+    });
+  }
+}
+
+commandPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  title : null,
+  body : null,
+  verbosity : null,
+  withSubmodules : 1
+});
+commandPrOpen.hint = 'Open pull request from current modules.';
+commandPrOpen.commandSubjectHint = 'A title for PR';
+commandPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
+
+//
+
+function commandPrList( e )
+{
+  let cui = this;
+  cui._command_head( commandProcedurePrototypeList, arguments );
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'pr list',
+    onEachModule : handleEachModule,
+    commandRoutine : commandPrList,
+    recursive : 0,
+  });
+
+  function handleEachModule( module, op )
+  {
+    debugger; xxx
+    return module.prList();
+  }
+
+}
+
+commandPrList.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  token : null,
+  verbosity : null,
+})
+commandPrList.hint = 'Open pull request from current modules.';
+commandPrList.commandSubjectHint = 'A title for PR';
+commandPrList.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandPrList.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
 
 // --
 // command iterator
@@ -6055,14 +6089,16 @@ let Extension =
 
   commandGit,
   commandGitDiff,
-  commandGitPrOpen,
   commandGitPull,
   commandGitPush,
   commandGitReset,
   commandGitStatus,
   commandGitSync,
   commandGitTag,
-  commandGitPreservingHardLinks,
+  commandGitHookPreservingHardLinks,
+
+  commandPrOpen, /* qqq : cover */
+  commandPrList,
 
   // command iterator
 
