@@ -56,7 +56,7 @@ function finit()
   let module = this;
   let will = module.will;
   let rootModule = module.rootModule;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
@@ -160,7 +160,7 @@ function init( o )
   module.precopy1( o );
 
   let will = o.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   _.assert( !!will );
 
   module.stager = new _.Stager
@@ -1811,7 +1811,7 @@ function reopen()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
   let name = module.absoluteName;
   let commonPath = module.commonPath;
@@ -1846,7 +1846,7 @@ function close()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( !module.isFinited() );
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -1918,7 +1918,7 @@ function willfilesOpen()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -1936,7 +1936,7 @@ function _willfilesOpen()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let con = _.take( null );
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -2024,7 +2024,7 @@ function _willfilesOpenEnd()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( module.stager.isValid() )
   {
@@ -2040,7 +2040,7 @@ function _willfilesReadBegin()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   will._willfilesReadBegin();
 
@@ -2053,7 +2053,7 @@ function _willfilesReadEnd()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   will._willfilesReadEnd( module );
 
@@ -2068,7 +2068,7 @@ function willfileUnregister( willf )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( willf.openedModule === module || willf.openedModule === null );
   willf.openedModule = null;
@@ -2084,7 +2084,7 @@ function willfileRegister( willf )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -2174,7 +2174,7 @@ function willfilesSave()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( !module.isOut );
   _.assert( module.willfilesArray.length === 1, 'not implemented' );
@@ -2195,7 +2195,7 @@ function _attachedWillfilesForm()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module );
@@ -2282,7 +2282,7 @@ function _attachedWillfileOpen( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptionsPreservingUndefines( _attachedWillfileOpen, arguments );
 
@@ -2329,7 +2329,7 @@ function exportAuto()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let clonePath = module.cloneDirPathGet();
 
   _.assert( 'not implemented' );
@@ -2408,7 +2408,7 @@ function moduleBuild_body( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let con = _.take( null );
 
   let builds = module._buildsResolve
@@ -2582,7 +2582,7 @@ function modulesEach_body( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   let o2 = _.mapExtend( null, o );
   o2.modules = [ module ];
@@ -2655,7 +2655,7 @@ function modulesUpform( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptionsPreservingUndefines( modulesUpform, arguments );
 
@@ -2967,7 +2967,7 @@ function submodulesClean()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -3018,7 +3018,7 @@ function _subModulesDownload_body( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o.modules = module;
 
@@ -3067,7 +3067,7 @@ function submodulesFixate( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -3109,7 +3109,7 @@ function moduleFixate( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let report = Object.create( null );
   let resolved = Object.create( null );
 
@@ -3300,7 +3300,7 @@ function moduleFixateAct( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( !_.mapIs( o ) )
   o = { submodule : o }
@@ -3439,7 +3439,7 @@ function moduleFixatePathFor( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
@@ -3482,7 +3482,7 @@ function submodulesVerify( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( submodulesVerify, o );
 
@@ -3532,7 +3532,7 @@ _.assert( defaults.withDisabledModules === 0 );
 //   let will = module.will;
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
-//   let logger = will.logger;
+//   let logger = will.transaction.logger;
 //   let totalNumber = _.mapKeys( module.submoduleMap ).length;
 //   let verifiedNumber = 0;
 //   let time = _.time.now();
@@ -3844,7 +3844,7 @@ function submodulesAdd( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
   let counter = 0;
 
@@ -3905,7 +3905,7 @@ function submodulesReload()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   return module.ready
   .then( function( arg )
@@ -3924,7 +3924,7 @@ function submodulesForm()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -3942,7 +3942,7 @@ function _subModulesForm()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module );
@@ -3978,7 +3978,7 @@ function peerModuleOpen( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptionsPreservingUndefines( peerModuleOpen, arguments );
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -4107,7 +4107,7 @@ function _peerModulesForm()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will.formed );
@@ -4320,7 +4320,7 @@ function resourcesForm()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
@@ -4338,7 +4338,7 @@ function _resourcesForm()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let con = _.take( null );
 
   if( module.submodulesAllAreDownloaded() && module.submodulesAllAreValid() )
@@ -4370,7 +4370,7 @@ function _resourcesFormAct()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module );
@@ -4411,7 +4411,7 @@ function _resourcesAllForm( Resource, con )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( _.constructorIs( Resource ) );
   _.assert( arguments.length === 2 );
@@ -4873,7 +4873,7 @@ function cleanWhat( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -4912,7 +4912,7 @@ function cleanLog( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let time = _.time.now();
@@ -4946,7 +4946,7 @@ function clean( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -5453,7 +5453,7 @@ function pathsRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptionsPreservingUndefines( pathsRebase, arguments );
@@ -5549,7 +5549,7 @@ function _pathChanged( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( o.val !== undefined );
   _.routineOptionsPreservingUndefines( _pathChanged, arguments );
@@ -5675,7 +5675,7 @@ function _filePathChanged2( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
@@ -7522,7 +7522,7 @@ function willfileGenerateFromNpm( o )
   let will = module.will ? module.will : module;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, o );
   let verbosity = o.verbosity;
 
@@ -8010,7 +8010,7 @@ function _willfileOnPropertyAct( o )
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
@@ -8120,7 +8120,7 @@ _willfileOnPropertyAct.defaults =
 function willfileGetProperty( o )
 {
   let will = this.will ? this.will : this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( willfileGetProperty, o );
 
@@ -8280,7 +8280,7 @@ willfileSetProperty.defaults =
 function willfileDeleteProperty( o )
 {
   let will = this.will ? this.will : this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( willfileDeleteProperty, o );
 
@@ -8757,7 +8757,7 @@ function _remoteChanged()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
   _.assert( module.commonPath === module.localPath );
@@ -8827,7 +8827,7 @@ function gitExecCommand( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitExecCommand, o );
 
@@ -8908,7 +8908,7 @@ function gitDiff( o )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitDiff, o );
 
@@ -9066,7 +9066,7 @@ function gitPull( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitPull, o );
 
@@ -9152,7 +9152,7 @@ function gitPush( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitPush, o );
 
@@ -9217,7 +9217,7 @@ function gitReset( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitReset, o );
 
@@ -9268,7 +9268,7 @@ function gitStatus( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitStatus, o );
 
@@ -9338,7 +9338,7 @@ function gitSync( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitSync, o );
 
@@ -9426,7 +9426,7 @@ function gitTag( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptionsPreservingUndefines( gitTag, o );
 
@@ -9613,7 +9613,7 @@ function errTooMany( builds, what )
 {
   let module = this;
   let will = module.will;
-  // let logger = will.logger;
+  // let logger = will.transaction.logger;
   let logger = will.transaction.logger;
   let prefix = '';
   let err;

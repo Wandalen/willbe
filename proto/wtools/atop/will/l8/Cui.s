@@ -40,7 +40,7 @@ function exec()
   _.assert( _.instanceIs( will ) );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let fileProvider = will.fileProvider;
   let appArgs = _.process.input({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
@@ -97,7 +97,7 @@ function _openersCurrentEach( o )
   let will = this.form();
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   // _.assert( will.currentOpener === null || will.currentOpeners === null );
@@ -167,7 +167,7 @@ function openersCurrentEach( onEach )
 function openersFind( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -309,7 +309,7 @@ function errEncounter( error )
   let will = this;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.process.exitCode( -1 );
   logger.log( _.errOnce( error ) );
@@ -383,7 +383,7 @@ function beepingGet()
 function _commandsMake()
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let fileProvider = will.fileProvider;
   let appArgs = _.process.input();
 
@@ -516,7 +516,7 @@ function _commandsBegin( o )
   let will = this;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let transaction = will.transaction;
 
   _.routineOptions( _commandsBegin, o );
@@ -552,7 +552,7 @@ function _commandsEnd( command )
   let will = this;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
   _.assert( _.routineIs( command ) );
@@ -600,7 +600,7 @@ function _commandsEnd( command )
 function _commandListLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
   let e = o.event;
 
@@ -724,7 +724,7 @@ _commandListLike.defaults =
 function _commandBuildLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandBuildLike, arguments );
@@ -837,7 +837,7 @@ defaults.subModulesFormed = 1;
 function _commandCleanLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandCleanLike, arguments );
@@ -944,7 +944,7 @@ defaults.name = null;
 function _commandNewLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandNewLike, arguments );
@@ -1065,7 +1065,7 @@ defaults.name = null;
 function _commandTreeLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandTreeLike, arguments );
@@ -1139,7 +1139,7 @@ _commandTreeLike.defaults =
 function _commandModulesLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandModulesLike, arguments );
@@ -1295,7 +1295,7 @@ defaults.withRoot = 1; /* qqq : for Dmytro : ?? */
 function _commandModuleOrientedLike( o )
 {
   let will = this;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandModuleOrientedLike, arguments );
@@ -1597,7 +1597,7 @@ function commandResourcesList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
 
     if( !e.request.subject && !_.mapKeys( e.request.map ).length )
     {
@@ -1633,7 +1633,7 @@ function commandPathsList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( module.openedModule.infoExportPaths( resources ) );
   }
 
@@ -1660,7 +1660,7 @@ function commandSubmodulesList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
@@ -1687,7 +1687,7 @@ function commandReflectorsList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
@@ -1714,7 +1714,7 @@ function commandStepsList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
@@ -1741,7 +1741,7 @@ function commandBuildsList( e )
 
   function act( module )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     let request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.buildsResolve
     ({
@@ -1775,7 +1775,7 @@ function commandExportsList( e )
 
   function act( module )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     let request = _.will.resolver.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.exportsResolve
     ({
@@ -1809,7 +1809,7 @@ function commandAboutList( e )
 
   function act( module )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( _.color.strFormat( 'About', 'highlighted' ) );
     logger.log( module.openedModule.about.exportString() );
   }
@@ -1837,7 +1837,7 @@ function commandModulesList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
@@ -1864,7 +1864,7 @@ function commandModulesTopologicalList( e )
 
   function act( module, resources )
   {
-    let logger = cui.logger;
+    let logger = cui.transaction.logger;
     logger.log( module.openedModule.infoExportModulesTopological( resources ) );
   }
 
@@ -1878,7 +1878,7 @@ commandModulesTopologicalList.commandSubjectHint = false;
 function commandModulesTree( e )
 {
   let cui = this;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   cui._command_head( commandModulesTree, arguments );
 
   let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesTree.defaults );
@@ -2583,7 +2583,7 @@ commandSubmodulesGitStatus.commandProperties = _.mapExtend( null, commandImply.c
 function commandSubmodulesGitSync( e )
 {
   let cui = this;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let provider;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
@@ -2725,7 +2725,7 @@ function commandModuleNewWith( e )
 
   let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let time = _.time.now();
   let execPath = e.commandArgument;
 
@@ -3018,7 +3018,7 @@ commandModulesGitStatus.commandProperties = _.mapExtend( null, commandImply.comm
 function commandModulesGitSync( e )
 {
   let cui = this;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
@@ -3143,7 +3143,7 @@ function commandDo( e )
   cui._command_head( commandDo, arguments );
   let fileProvider = cui.fileProvider;
   let path = cui.fileProvider.path;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let time = _.time.now();
   let execPath = e.commandArgument;
 
@@ -3186,7 +3186,7 @@ function commandHookCall( e )
   cui._command_head( commandDo, arguments );
 
   let path = cui.fileProvider.path;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let time = _.time.now();
   let execPath = e.commandArgument;
 
@@ -3234,7 +3234,7 @@ function commandHooksList( e )
   _.routineOptions( commandHooksList, e.propertiesMap )
   cui._propertiesImply( e.propertiesMap );
 
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
 
   cui.hooksReload();
   logger.log( 'Found hooks' );
@@ -5252,7 +5252,7 @@ commandNpmDepAdd.commandProperties =
 function commandNpmInstall( e )
 {
   let cui = this;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let fileProvider = cui.fileProvider;
   let path = fileProvider.path;
   let ready = _.take( null );
@@ -5302,7 +5302,7 @@ commandNpmInstall.commandProperties =
 function commandNpmClean( e )
 {
   let cui = this;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let fileProvider = cui.fileProvider;
   let path = fileProvider.path;
   let ready = _.take( null );
@@ -5674,7 +5674,7 @@ commandPackageLocalVersions.commandSubjectHint = 'A name of package.';
 function commandPackageRemoteVersions( e )
 {
   let cui = this;
-  let logger = cui.logger;
+  let logger = cui.transaction.logger;
   let ready = _.take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );

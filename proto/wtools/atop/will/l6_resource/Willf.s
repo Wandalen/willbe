@@ -167,7 +167,7 @@ function form()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
@@ -209,7 +209,7 @@ function preform()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   // if( willf.id === 259 )
   // debugger;
@@ -239,7 +239,7 @@ function _registerForm()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( willf.formed === 0 );
@@ -284,7 +284,7 @@ function _inPathsForm()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( willf.formed > 1 )
   return;
@@ -343,7 +343,7 @@ function _read()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( willf.formed > 2 )
   return true;
@@ -438,7 +438,7 @@ function _open()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let inconsistent = 0;
 
   // if( willf.id === 259 )
@@ -616,7 +616,7 @@ function reopen( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptions( reopen, arguments );
 
@@ -661,7 +661,7 @@ function _readLog( reading, failed )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let read;
 
   let verbosity = 3;
@@ -721,7 +721,7 @@ function _importToModule()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let structure = willf.structure;
 
   _.assert( willf.formed === 4 );
@@ -798,7 +798,7 @@ function _resourcesImport_head( routine, args )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   let o = args[ 0 ]
   if( args.length > 1 )
@@ -818,7 +818,7 @@ function _resourcesImport_body( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let openedModule = willf.openedModule;
   let dirPath = openedModule.dirPath;
   let willfilesPath = openedModule.willfilesPath;
@@ -977,7 +977,7 @@ function hashDescriptorOfFile( filePath )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -1200,7 +1200,7 @@ function isConsistent( opening )
 {
   let willf = this;
   let will = willf.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let result;
 
   _.assert( _.boolLike( willf.isOut ) );
@@ -1310,7 +1310,7 @@ function _attachedModulesOpenWillfiles()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let structure = willf.structure;
 
   _.assert( _.mapIs( structure ) );
@@ -1409,7 +1409,7 @@ function exists()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( willf.formed >= 2 );
@@ -1578,7 +1578,7 @@ function save( o )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptions( save, arguments );
 

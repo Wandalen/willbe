@@ -41,7 +41,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( build.formed === 3 )
   return build;
@@ -163,7 +163,7 @@ function framePerform( frame )
   let module = run.module;
   // let module = frame.module;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let con = _.take( null );
 
   _.assert( arguments.length === 1 );
@@ -246,7 +246,7 @@ function perform( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  // let logger = will.logger;
+  // let logger = will.transaction.logger;
   let logger = will.transaction.logger;
   let isExport = build.isExport();
   let con = _.take( null );

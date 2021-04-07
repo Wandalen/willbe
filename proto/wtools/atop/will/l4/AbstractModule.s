@@ -245,7 +245,7 @@ function _filePathChanged2( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( o.willfilesPath )
   o.willfilesPath = path.s.normalizeTolerant( o.willfilesPath );
@@ -525,7 +525,7 @@ function willfileUnregister( willf )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.arrayRemoveElementOnceStrictly( module.willfilesArray, willf );
 
@@ -551,7 +551,7 @@ function willfileRegister( willf )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -589,7 +589,7 @@ function willfileAttach( filePath )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( filePath ) );
@@ -612,7 +612,7 @@ function _willfilesRelease( willfilesArray )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   willfilesArray = willfilesArray || module.willfilesArray;
   willfilesArray = willfilesArray.slice();
@@ -657,7 +657,7 @@ function repoVerify( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( module.isPreformed() );
   _.assert( arguments.length === 1 );

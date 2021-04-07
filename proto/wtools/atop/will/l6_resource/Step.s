@@ -31,7 +31,7 @@ function MakeFor_body( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -160,7 +160,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( step.formed >= 3 )
   return step;
@@ -193,7 +193,7 @@ function framePerform( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let hub = will.fileProvider;
 
   let result = _.Consequence.Try( () =>

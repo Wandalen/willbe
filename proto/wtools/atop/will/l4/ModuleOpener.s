@@ -350,7 +350,7 @@ function willfileUnregister( willf )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.arrayRemoveElementOnceStrictly( willf.openers, opener );
 
@@ -365,7 +365,7 @@ function willfileRegister( willf )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -389,7 +389,7 @@ function _willfilesFindAct( o )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let records;
 
   o = _.routineOptions( _willfilesFindAct, arguments );
@@ -450,7 +450,7 @@ function _willfilesFind()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let result = [];
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -493,7 +493,7 @@ function close()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let module = opener.openedModule;
 
   _.assert( !opener.isFinited() );
@@ -1159,7 +1159,7 @@ function _repoForm()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( opener.formed >= 1 );
   _.assert( opener.formed <= 2 );
@@ -1257,7 +1257,7 @@ function _repoFormFormal()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let willfilesPath = opener.remotePath || opener.willfilesPath;
 
   _.assert( _.strDefined( opener.aliasName ) );
@@ -1315,7 +1315,7 @@ function _repoDownload( o )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let time = _.time.now();
   let downloading = null;
   let origin = null;
