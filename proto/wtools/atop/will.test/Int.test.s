@@ -2432,7 +2432,6 @@ function exportSeveralExports( test )
     test.true( opener.isFinited() );
 
     test.description = 'should be only 1 error, because 1 attempt to open corrupted outwillfile, 2 times in the list, because for different openers';
-    debugger
     test.identical( _.longOnce( _.select( a.will.openersErrorsArray, '*/err' ) ).length, 2 );
     a.will.openersErrorsRemoveAll();
     test.identical( a.will.openersErrorsArray.length, 0 );
