@@ -1202,7 +1202,7 @@ function instanceDefaultsReset()
   // }
 
   will.transaction.finit();
-  will.transaction = _.will.Transaction({ isInitial : 1, will })
+  will.transaction = _.will.Transaction({ isInitial : 1, targetLogger : will.logger })
 
   return will;
 }

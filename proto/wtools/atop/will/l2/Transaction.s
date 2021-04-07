@@ -35,15 +35,21 @@ function init( o )
   let t = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.targetLogger instanceof _.Logger );
 
-  let logger = t.logger = new _.Logger({ output : o.targetLogger, name : 'transaction' });
+  if( o.logger )
+  {
+    _.assert( o.logger instanceof _.Logger );
+    t.logger = o.logger;
+  }
+  else
+  {
+    _.assert( o.targetLogger instanceof _.Logger );
+    t.logger = _.Logger({ output : o.targetLogger, name : 'transaction' });
+    _.assert( t.logger.output === o.targetLogger );
+  }
 
   _.workpiece.initFields( t );
   Object.preventExtensions( t );
-
-  _.assert( logger === t.logger );
-  _.assert( logger.output === o.targetLogger );
 
   if( o )
   t.copy( o )
