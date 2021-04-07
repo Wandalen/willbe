@@ -4167,7 +4167,8 @@ function _willfilesReadLog()
 
   will.willfilesReadEndTime = will.willfilesReadEndTime || _.time.now();
 
-  if( will.verbosity >= 2 )
+  // if( will.verbosity >= 2 )
+  if( will.transaction.verbosity >= 2 )
   {
     let total = 0;
     will.willfilesArray.forEach( ( willf ) =>
@@ -4617,7 +4618,8 @@ function cleanLog( o )
     spentTime : o.spentTime,
   });
 
-  if( will.verbosity >= 2 )
+  // if( will.verbosity >= 2 )
+  if( will.transaction.verbosity >= 2 )
   logger.log( textualReport );
 
   return textualReport;

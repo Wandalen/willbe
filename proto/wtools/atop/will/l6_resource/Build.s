@@ -246,7 +246,8 @@ function perform( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  // let logger = will.logger;
+  let logger = will.transaction.logger;
   let isExport = build.isExport();
   let con = _.take( null );
   let time = _.time.now();

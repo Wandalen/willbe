@@ -795,7 +795,8 @@ function _performArchive()
   }
 
   let zip = Tar.create( o2, [ '.' ] );
-  if( will.verbosity >= 3 )
+  // if( will.verbosity >= 3 )
+  if( will.transaction.verbosity >= 3 )
   logger.log( ' + ' + 'Write out archive ' + hd.path.moveTextualReport( archiveFilePath, exportedDirPath ) );
 
   return null;
@@ -834,7 +835,8 @@ function _performWriteOutFile()
 
   /* */
 
-  if( will.verbosity >= 3 )
+  // if( will.verbosity >= 3 )
+  if( will.transaction.verbosity >= 3 )
   logger.log( ' + ' + 'Write out willfile ' + _.color.strFormat( outFilePath, 'path' ) );
 
   return null;

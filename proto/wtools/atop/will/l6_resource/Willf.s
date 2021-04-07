@@ -415,7 +415,8 @@ function _read()
     if( err )
     willf._readLog( 1, 1 );
 
-    if( will.verbosity >= 5 )
+    // if( will.verbosity >= 5 )
+    if( will.transaction.verbosity >= 5 )
     {
       logger.up( 2 );
       logger.error( _.errOnce( error ) );
@@ -592,7 +593,8 @@ function _open()
     willf.error = willf.error || error;
     willf._readLog( 0, inconsistent ? 2 : 1 );
 
-    if( will.verbosity >= 5 )
+    // if( will.verbosity >= 5 )
+    if( will.transaction.verbosity >= 5 )
     {
       logger.up( 2 );
       logger.error( _.errOnce( error ) );
@@ -665,7 +667,8 @@ function _readLog( reading, failed )
   let verbosity = 3;
   if( reading )
   verbosity = 5;
-  if( will.verbosity < verbosity )
+  // if( will.verbosity < verbosity )
+  if( will.transaction.verbosity < verbosity )
   return;
 
   let low = reading ? 'read' : 'open';
@@ -983,7 +986,8 @@ function hashDescriptorOfFile( filePath )
 
   _.assert( _.strIs( filePath ) );
 
-  if( will.verbosity >= 7 )
+  // if( will.verbosity >= 7 )
+  if( will.transaction.verbosity >= 7 )
   logger.log( ` . Hash ${filePath}` );
 
   let stat = fileProvider.statRead( filePath );
@@ -1583,7 +1587,8 @@ function save( o )
 
   _.assert( _.strIs( willf.filePath ) );
 
-  if( will.verbosity >= 2 )
+  // if( will.verbosity >= 2 )
+  if( will.transaction.verbosity >= 2 )
   logger.log( `Saving ${_.color.strFormat( willf.filePath, 'path' )}` );
 
   debugger;

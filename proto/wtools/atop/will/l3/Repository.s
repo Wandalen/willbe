@@ -469,7 +469,8 @@ function status( o )
     ({
       remotePath : repo.remotePath,
       localPath : repo.downloadPath,
-      logger : will.verbosity - 3,
+      // logger : will.verbosity - 3,
+      logger : will.transaction.verbosity - 3,
     });
 
     return _.Consequence.From( result )

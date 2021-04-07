@@ -858,7 +858,8 @@ function errorNotFound( err )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( will.verbosity >= 3 )
+  // if( will.verbosity >= 3 )
+  if( will.transaction.verbosity >= 3 )
   if( !relation.module.rootModule || relation.module.rootModule === relation.module )
   logger.error
   (
@@ -871,13 +872,16 @@ function errorNotFound( err )
 
   err = _.err( err );
 
-  if( will.verbosity >= 2 && !_.error.isBrief( err ) )
+  // if( will.verbosity >= 2 && !_.error.isBrief( err ) )
+  if( will.transaction.verbosity >= 2 && !_.error.isBrief( err ) )
   {
     logger.error( _.errOnce( err ) );
   }
-  else if( will.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
+  // else if( will.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
+  else if( will.transaction.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
   {
-    if( will.verbosity < 5 )
+    // if( will.verbosity < 5 )
+    if( will.transaction.verbosity < 5 )
     err = _.errBrief( err );
     logger.error( _.errOnce( err ) );
   }

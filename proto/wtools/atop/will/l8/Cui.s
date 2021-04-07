@@ -2021,7 +2021,8 @@ function commandSubmodulesAdd( e )
     {
       if( err )
       throw _.err( err, `\nFaield to add submodules from ${filePath}` );
-      if( cui.verbosity >= 2 )
+      // if( cui.verbosity >= 2 )
+      if( cui.transaction.verbosity >= 2 )
       logger.log( `Added ${added} submodules to ${module.nameWithLocationGet()}` )
       return added;
     })
@@ -2397,7 +2398,8 @@ function commandSubmodulesGit( e )
     ({
       dirPath : it.junction.dirPath,
       command : e.subject,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
       profile : e.propertiesMap.profile,
     });
@@ -2442,7 +2444,8 @@ function commandSubmodulesGitDiff( e )
     return it.opener.openedModule.gitDiff
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
     });
   }
 }
@@ -2738,7 +2741,8 @@ function commandModuleNewWith( e )
   })
   .then( ( arg ) =>
   {
-    if( cui.verbosity >= 2 )
+    // if( cui.verbosity >= 2 )
+    if( cui.transaction.verbosity >= 2 )
     logger.log( `Done ${_.color.strFormat( 'hook::' + e.commandArgument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
@@ -2828,7 +2832,8 @@ function commandModulesGit( e )
     ({
       dirPath : it.junction.dirPath,
       command : e.subject,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
       profile : e.propertiesMap.profile,
     });
@@ -2874,7 +2879,8 @@ function commandModulesGitDiff( e )
     return it.opener.openedModule.gitDiff
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
     });
   }
 }
@@ -3153,7 +3159,8 @@ function commandDo( e )
   })
   .then( ( arg ) =>
   {
-    if( cui.verbosity >= 2 )
+    // if( cui.verbosity >= 2 )
+    if( cui.transaction.verbosity >= 2 )
     logger.log( `Done ${_.color.strFormat( e.commandArgument, 'code' )} in ${_.time.spent( time )}` );
     return arg;
   });
@@ -3194,7 +3201,8 @@ function commandHookCall( e )
   })
   .then( ( arg ) =>
   {
-    if( cui.verbosity >= 2 )
+    // if( cui.verbosity >= 2 )
+    if( cui.transaction.verbosity >= 2 )
     logger.log( `Done ${_.color.strFormat( 'hook::' + e.commandArgument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
@@ -3370,6 +3378,8 @@ function commandBuild( e )
   let cui = this;
   cui._command_head( commandBuild, arguments );
   let doneContainer = [];
+
+  debugger
 
   let implyMap = _.mapOnly_( null, e.propertiesMap, commandBuild.defaults );
   e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
@@ -3574,7 +3584,8 @@ function commandGit( e )
     ({
       dirPath : it.junction.dirPath,
       command : e.subject,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
       profile : e.propertiesMap.profile
     });
@@ -3614,7 +3625,8 @@ function commandGitDiff( e )
     return it.opener.openedModule.gitDiff
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
     });
   }
 }
@@ -3652,7 +3664,8 @@ function commandGitPull( e )
     return it.opener.openedModule.gitPull
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
       profile : e.propertiesMap.profile,
     });
   }
@@ -3690,7 +3703,8 @@ function commandGitPush( e )
     return it.opener.openedModule.gitPush
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      // verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
     });
   }
 }
@@ -5251,7 +5265,8 @@ function commandNpmInstall( e )
   _.routineOptions( commandNpmInstall, o );
   _.sure( !e.subject );
 
-  o.logger = new _.Logger({ output : logger });
+  // o.logger = new _.Logger({ output : logger });
+  o.logger = new _.Logger({ output : cui.transaction.logger });
   o.logger.verbosity = o.verbosity;
   delete o.verbosity;
   o.localPath = path.resolve( o.to || '.' );
@@ -5300,7 +5315,8 @@ function commandNpmClean( e )
   _.routineOptions( commandNpmClean, o );
   _.sure( !e.subject );
 
-  o.logger = new _.Logger({ output : logger });
+  // o.logger = new _.Logger({ output : logger });
+  o.logger = new _.Logger({ output : cui.transaction.logger });
   o.logger.verbosity = o.verbosity;
   delete o.verbosity;
   o.localPath = path.resolve( o.to || '.' );

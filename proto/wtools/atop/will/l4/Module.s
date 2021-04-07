@@ -166,7 +166,8 @@ function init( o )
   module.stager = new _.Stager
   ({
     object :            module,
-    verbosity :         Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
+    // verbosity :         Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
+    verbosity :         Math.max( Math.min( will.transaction.verbosity, will.transaction.verboseStaging ), will.transaction.verbosity - 6 ),
     stageNames :        [ 'preformed',        'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'finalFormed' ],
     consequences :      [ 'preformReady',     'openedReady',        'attachedWillfilesFormReady',   'peerModulesFormReady',     'subModulesFormReady',              'resourcesFormReady',       'ready' ],
     onPerform :         [ '_preform',         '_willfilesOpen',     '_attachedWillfilesForm',       '_peerModulesForm',         '_subModulesForm',                  '_resourcesForm',           null ],
@@ -560,7 +561,8 @@ function outModuleOpen( o )
       if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
       if( !_.strHas( err.originalMessage, 'Out-willfile is inconsistent with its in-willfiles' ) )
       requireVerbosity = 3;
-      if( requireVerbosity <= will.verbosity )
+      // if( requireVerbosity <= will.verbosity )
+      if( requireVerbosity <= will.transaction.verbosity )
       {
         if( !_.error.isLogged( err ) )
         {
@@ -3131,7 +3133,8 @@ function moduleFixate( o )
 
   /* */
 
-  if( will.verbosity >= 2 )
+  // if( will.verbosity >= 2 )
+  if( will.transaction.verbosity >= 2 )
   log();
 
   /* */
@@ -3409,7 +3412,8 @@ function moduleFixateAct( o )
       }
       // if( !o.dry )
       // throw error;
-      if( will.verbosity >= 3 )
+      // if( will.verbosity >= 3 )
+      if( will.transaction.verbosity >= 3 )
       logger.log( _.errOnce( _.errBrief( error ) ) );
       // _.errLogOnce( _.errBrief( error ) );
       // if( will.verbosity >= 2 )
@@ -4350,7 +4354,8 @@ function _resourcesForm()
   }
   else
   {
-    if( will.verbosity === 2 ) /* xxx : throw error instead? */
+    // if( will.verbosity === 2 )
+    if( will.transaction.verbosity === 2 ) /* xxx : throw error instead? */
     logger.error( ' ! One or several submodules of ' + module.decoratedQualifiedName + ' were not downloaded!'  );
   }
 
@@ -5823,7 +5828,8 @@ function cloneDirPathGet( rootModule )
     let inPath = rootModule.peerInPathGet();
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
-    if( will.verbosity )
+    // if( will.verbosity )
+    if( will.transaction.verbosity )
     logger.error( ` ! Out willfile of ${rootModule.localPath} does not have path::module.peer.in, but should` );
     return null;
   }
@@ -9584,7 +9590,8 @@ function shell( o )
   ({
     execPath,
     currentPath : o.currentPath,
-    verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
+    // verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
+    verbosity : o.verbosity !== null ? o.verbosity : will.transaction.verbosity - 1,
     ready,
   });
 
@@ -9606,7 +9613,8 @@ function errTooMany( builds, what )
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
+  // let logger = will.logger;
+  let logger = will.transaction.logger;
   let prefix = '';
   let err;
 

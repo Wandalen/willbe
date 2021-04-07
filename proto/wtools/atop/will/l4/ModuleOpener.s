@@ -1683,7 +1683,8 @@ function _repoDownload( o )
     let o2 =
     {
       reflectMap : { [ opener.remotePath ] : opener.downloadPath },
-      verbosity : will.verbosity - 5,
+      // verbosity : will.verbosity - 5,
+      verbosity : will.transaction.verbosity - 5,
       extra :
       {
         fetching : 0
@@ -1781,7 +1782,8 @@ function _repoDownload( o )
         ` Please commit changes or delete it manually.`
       );
       reflected[ opener2.downloadPath ] = true;
-      if( will.verbosity >= 3 )
+      // if( will.verbosity >= 3 )
+      if( will.transaction.verbosity >= 3 )
       logger.log( ` + Reflected ${path.moveTextualReport( opener2.downloadPath, opener.downloadPath )}` );
       let filter = { filePath : { [ opener.downloadPath ] : opener2.downloadPath } }
       return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linking : 'hardLink' });
@@ -1943,7 +1945,8 @@ build :
   function log()
   {
     let module = opener.openedModule ? opener.openedModule : opener;
-    if( will.verbosity >= 3 && downloading )
+    // if( will.verbosity >= 3 && downloading )
+    if( will.transaction.verbosity >= 3 && downloading )
     {
       if( o.dry )
       {

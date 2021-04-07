@@ -233,14 +233,18 @@ function verbosityWithDelta( delta )
 {
   let step = this;
   let will = step.module.will;
-  let verbosity = step.verbosity !== null ? step.verbosity : ( will.verbosity + delta );
+  // let verbosity = step.verbosity !== null ? step.verbosity : ( will.verbosity + delta );
+  let verbosity = step.verbosity !== null ? step.verbosity : ( will.transaction.verbosity + delta );
 
-  if( will.verbosity < -delta )
+  // if( will.verbosity < -delta )
+  if( will.transaction.verbosity < -delta )
   verbosity = 0;
   if( verbosity > 0 )
-  if( will.verbosity <= -delta )
+  // if( will.verbosity <= -delta )
+  if( will.transaction.verbosity <= -delta )
   verbosity = 1;
-  if( will.verbosity >= 9 )
+  // if( will.verbosity >= 9 )
+  if( will.transaction.verbosity >= 9 )
   verbosity = 9;
 
   if( verbosity < 0 )
