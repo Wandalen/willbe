@@ -4981,7 +4981,6 @@ function _resolve_head( routine, args )
   o = { selector : o }
 
   _.assert( _.aux.is( o ) );
-  // _.routineOptionsPreservingUndefines( routine, o );
   _.map.assertHasOnly( o, routine.defaults );
 
   if( o.visited === null || o.visited === undefined )
@@ -5008,27 +5007,11 @@ function resolve_head( routine, args )
 {
   let module = this;
   let o = module._resolve_head.call( module, routine, args );
-
-  // let o = args[ 0 ];
-  //
-  // if( !_.mapIs( o ) )
-  // o = { selector : o }
-  //
-  // _.assert( _.aux.is( o ) );
-  // _.routineOptionsPreservingUndefines( routine, o );
-  //
-  // if( o.visited === null )
-  // o.visited = [];
-  //
-  // o.baseModule = module;
-
   let it = _.will.resolver.resolve.head.call( _.will.resolver, routine, [ o ] );
 
   _.assert( _.looker.iteratorIs( o ) );
   _.assert( _.looker.iterationIs( it ) );
   _.assert( arguments.length === 2 );
-  // _.assert( args.length === 1 );
-  // _.assert( _.arrayIs( o.visited ) );
 
   return it;
 }
@@ -9493,8 +9476,37 @@ gitTag.defaults =
   description : '',
   dry : 0,
   light : 0,
-  // v : null,
+  // v : null, /* qqq : for Dmytro : bad! */
   verbosity : 1,
+}
+/* qqq : for Dmytro : for Vova : remove options v aaa:removed */
+
+//
+
+function prList( o )
+{
+  let module = this;
+
+  _.routineOptions( prList, o );
+
+  return _.repo.prsGet
+  ({
+    remotePath : o.remotePath,
+    throwing : o.throwing,
+    sync : 0,
+    token : o.token,
+  }).then( ( op ) =>
+  {
+
+  });
+
+}
+
+prList.defaults =
+{
+  dry : 0,
+  verbosity : 1,
+  throwing : 1,
 }
 
 // --
@@ -10185,6 +10197,8 @@ let Extension =
   gitSync,
   gitTag,
 
+  prList,
+
   //
 
   procedurePrototypeList,
@@ -10217,16 +10231,6 @@ _.classDeclare
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
-
-/* aaa2 : move each class under namespace _.will */ /* Dmytro : moved. Main class `Will` is saved */
-
-_.will[ Self.shortName ] = Self; /* aaa : uncomment */ /* Dmytro : done */
-
-// _.staticDeclare /* aaa : comment out */ /* Dmytro : done */
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
+_.will[ Self.shortName ] = Self;
 
 })();

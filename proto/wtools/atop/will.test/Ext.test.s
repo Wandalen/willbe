@@ -19695,7 +19695,6 @@ function submodulesDownloadUpdateWithSubmodulesDefault( test )
 submodulesDownloadUpdateWithSubmodulesDefault.rapidity = 1;
 submodulesDownloadUpdateWithSubmodulesDefault.timeOut = 300000;
 
-
 // //
 //
 // function submodulesDownloadRecursive( test )
@@ -29048,7 +29047,7 @@ function commandSubmodulesGitPrOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
@@ -29065,7 +29064,7 @@ function commandSubmodulesGitPrOpen( test )
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -29081,7 +29080,7 @@ function commandSubmodulesGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.git.pr.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.git.pr "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
@@ -30748,7 +30747,7 @@ function commandModulesGitPrOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -30765,7 +30764,7 @@ function commandModulesGitPrOpen( test )
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -30781,7 +30780,7 @@ function commandModulesGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.git.pr.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.git.pr "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
@@ -32914,7 +32913,7 @@ function commandGitPrOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -32929,7 +32928,7 @@ function commandGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new token:$GIT_TOKEN' )
+  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:new token:$GIT_TOKEN' )
   .then( ( op ) =>
   {
     test.case = 'token from environment variables, wrong data, throwing';
@@ -32944,7 +32943,7 @@ function commandGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, wrong data, throwing';
@@ -32959,7 +32958,7 @@ function commandGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:"user:new" dstBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:"user:new" dstBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
@@ -33013,7 +33012,7 @@ function commandGitPrOpenRemote( test )
   /* */
 
   prepareFirstBranch();
-  a.appStart( '.with original/GitPrOpen .git.pr.open "New PR" srcBranch:new' )
+  a.appStart( '.with original/GitPrOpen .git.pr "New PR" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'opened pull request, only title and srcBranch';
@@ -33026,7 +33025,7 @@ function commandGitPrOpenRemote( test )
   /* */
 
   prepareSecondBranch();
-  a.appStart( '.with original/GitPrOpen .git.pr.open "new2" srcBranch:new2 dstBranch:master body:description' )
+  a.appStart( '.with original/GitPrOpen .git.pr "new2" srcBranch:new2 dstBranch:master body:description' )
   .then( ( op ) =>
   {
     test.case = 'opened pull request, body and dstBranch';
@@ -34381,7 +34380,7 @@ function commandGitStatusWithPR( test )
     });
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new' });
-    a.appStart( '.with original/GitPrOpen .git.pr.open "New PR" srcBranch:new' )
+    a.appStart( '.with original/GitPrOpen .git.pr "New PR" srcBranch:new' )
     return a.ready;
   }
 }
@@ -40901,7 +40900,7 @@ const Proto =
     submodulesDownloadWithSubmodulesDefault,
     submodulesDownloadUpdateWithSubmodulesDefault,
 
-    // submodulesDownloadRecursive, /* xxx */
+    // submodulesDownloadRecursive, /* qqq : for Dmytro : uncomment, normalize and fix */
     submodulesDownloadThrowing,
     submodulesDownloadInvalidUrl,
     submodulesDownloadStepAndCommand,

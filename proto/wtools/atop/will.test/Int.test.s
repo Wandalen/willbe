@@ -80,18 +80,6 @@ function assetFor( test, name )
 
   let a = test.assetFor( name );
 
-  // a.test = test;
-  // a.name = name;
-  // a.originalAssetPath = _.path.join( context.assetsOriginalPath, name );
-  // a.originalAbs = context.abs_functor( a.originalAssetPath );
-  // a.originalRel = context.rel_functor( a.originalAssetPath );
-  // a.routinePath = _.path.join( context.suiteTempPath, test.name );
-  // a.abs = context.abs_functor( a.routinePath );
-  // a.rel = context.rel_functor( a.routinePath );
-  // a.fileProvider = _.fileProvider;
-  // a.path = _.fileProvider.path;
-  // a.ready = _.take( null );
-
   a.will = new _.Will;
 
   a.find = a.fileProvider.filesFinder
@@ -160,147 +148,10 @@ function assetFor( test, name )
     }
   }
 
-  // a.shell = _.process.starter
-  // ({
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
-  //
-  // a.appStart = _.process.starter
-  // ({
-  //   execPath : context.appJsPath,
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'fork',
-  // })
-  //
-  // a.appStartNonThrowing = _.process.starter
-  // ({
-  //   execPath : context.appJsPath,
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : a.ready,
-  //   mode : 'fork',
-  // })
-
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
 
   return a;
 }
-
-// function assetFor( test, name )
-// {
-//   let context = this;
-//   let a = Object.create( null );
-//
-//   if( !name )
-//   name = test.name;
-//
-//   a.test = test;
-//   a.name = name;
-//   a.originalAssetPath = _.path.join( context.assetsOriginalPath, name );
-//   a.originalAbs = context.abs_functor( a.originalAssetPath );
-//   a.originalRel = context.rel_functor( a.originalAssetPath );
-//   a.routinePath = _.path.join( context.suiteTempPath, test.name );
-//   a.abs = context.abs_functor( a.routinePath );
-//   a.rel = context.rel_functor( a.routinePath );
-//   a.will = new _.Will;
-//   a.fileProvider = _.fileProvider;
-//   a.path = _.fileProvider.path;
-//   a.ready = _.take( null );
-//
-//   a.reflect = function reflect()
-//   {
-//     _.fileProvider.filesDelete( a.routinePath );
-//     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-//     try
-//     {
-//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '-repo' ) } });
-//     }
-//     catch( err )
-//     {
-//       _.take( null ).delay( 3000 ).deasync();
-//       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '-repo' ) ); /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
-//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '-repo' ) } });
-//     }
-//   }
-//
-//   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
-//
-//   return a;
-// }
-//
-// //
-//
-// function abs_functor( routinePath )
-// {
-//   _.assert( _.strIs( routinePath ) );
-//   _.assert( arguments.length === 1 );
-//   return function abs( filePath )
-//   {
-//     if( arguments.length === 1 && filePath === null )
-//     return filePath;
-//
-//     let args = _.longSlice( arguments );
-//     args.unshift( routinePath );
-//
-//     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
-//     {
-//       return _.filter_( null, filePath, ( filePath ) => abs( filePath, ... args.slice( 2, args.length ) ) );
-//     }
-//
-//     return _.uri.s.join.apply( _.uri.s, args );
-//   }
-// }
-//
-// //
-//
-// function rel_functor( routinePath )
-// {
-//   _.assert( _.strIs( routinePath ) );
-//   _.assert( arguments.length === 1 );
-//   return function rel( filePath )
-//   {
-//     _.assert( arguments.length === 1 );
-//     if( filePath === null )
-//     return filePath;
-//     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
-//     {
-//       return _.filter_( null, filePath, ( filePath ) => rel( filePath ) );
-//     }
-//     if( _.uri.isRelative( filePath ) && !_.uri.isRelative( routinePath ) )
-//     return filePath;
-//     return _.uri.s.relative.apply( _.uri.s, [ routinePath, filePath ] );
-//   }
-// }
-
-// //
-//
-// function ReplaceSetsAreIdentical()
-// {
-//   _.include( 'wIntrospector' );
-//
-//   let file = _.introspector.thisFile().refine();
-//
-//   logger.log( file.productExportInfo() );
-//
-//   file.product.nodes.map( null, ( node ) =>
-//   {
-//     let found = file.nodeSearch( node, 'setsAreIdentical' );
-//     if( _.mapKeys( found ).length )
-//   });
-//
-//   file.arrange();
-// }
-//
-// // ReplaceSetsAreIdentical();
 
 // --
 // tests
@@ -11749,11 +11600,7 @@ const Proto =
     assetsOriginalPath : null,
     appJsPath : null,
     repoDirPath : null,
-    // find : null,
-    // findAll : null,
     assetFor,
-    // abs_functor,
-    // rel_functor
   },
 
   tests :
