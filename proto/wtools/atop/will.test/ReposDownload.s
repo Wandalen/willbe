@@ -1,5 +1,5 @@
 
-let _ = require( '../../../wtools/Tools.s' );
+const _ = require( '../../../node_modules/Tools' );
 _.include( 'wProcess' );
 _.include( 'wFiles' );
 
@@ -40,14 +40,14 @@ function reposRedownload()
 
   /* the latest delta versions */
 
-  clone( 'ModuleForTesting1', '3de7741c7ba475b912411b35ee3cf2ab44a0a901' ); // Tools
-  clone( 'ModuleForTesting1a', '8eeb3e89518c6a9d060fdf7bdee37baaaa9a451b' ); // Color
-  clone( 'ModuleForTesting1b', '026233546add0b70b734e68a317f57e32abf437b' );
-  clone( 'ModuleForTesting2', '42441628a94c3ebf98093e158fe02ec2cba53761' );
-  clone( 'ModuleForTesting2a', 'fc6285084b7b0110d6dd56ac808fef673c4fb6d4' ); // PathBasic
-  clone( 'ModuleForTesting2b', '352570f723ba34ca3b7996cd83a5242be29d687c' ); // Procedure
-  clone( 'ModuleForTesting12', 'bc3ec4133f3fc6bc296c0488f52f06eb6f26a1e8' ); // Proto
-  clone( 'ModuleForTesting12ab', 'f0d93ce60671b622a2daa57ea32017afc5af08e1' ); // UriBasic
+  clone( 'ModuleForTesting1', 'aed6304a687c22eb25a3af3c194000e7af4ac3f4' ); // Tools
+  clone( 'ModuleForTesting1a', 'bdb0e6065a94e415095b6b085489ca8b41ba5bc9' ); // Color
+  clone( 'ModuleForTesting1b', 'abf6b7f0f6c974829c6d1f35cd096cb34d22f58b' );
+  clone( 'ModuleForTesting2', '0a9ac9ecbfbab54af8f99c61a9dd938659b065a1' );
+  clone( 'ModuleForTesting2a', 'fb7c095a0fdbd6766b0d840ad914b5887c1500e7' ); // PathBasic
+  clone( 'ModuleForTesting2b', '275a6d0d3f443525d1b542ad0d87a389c7adb339' ); // Procedure
+  clone( 'ModuleForTesting12', '2da1d0de20bd23f6f32c11bda090569edd90da55' ); // Proto
+  clone( 'ModuleForTesting12ab', 'a19813c715fa9ef8bb6a7c89adfa170e0e185971' ); // UriBasic
 
   /* qqq : for Dmytro : extend Remake. discuss */
 

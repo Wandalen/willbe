@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../wtools/Tools.s' );
+  const _ = require( '../../../node_modules/Tools' );
 
   _.include( 'wTesting' );
   _.include( 'wProcess' );
@@ -5465,7 +5465,7 @@ Submodules are exported willfiles.
 
 //
 
-function moduleResolveWithFThisInSelector( test )
+function moduleResolveWithFunctionThisInSelector( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepShellUsingCriterionValue' );
@@ -5482,41 +5482,18 @@ function moduleResolveWithFThisInSelector( test )
 
   a.ready.then( ( arg ) =>
   {
-    test.case = 'resolve criterion from step resource';
+    test.case = 'currentThis is not specified';
     let module = opener.openedModule;
     let resolved = module.resolve
     ({
       selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
       prefixlessAction : 'resolved',
-      currentThis : undefined,
       currentContext : module.stepMap[ 'print.criterion.value.' ],
       pathNativizing : 1,
       arrayFlattening : 0,
     });
-    test.true( _.longIs( resolved ) );
-    test.true( resolved.length === 1 );
-    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:0\' )"' );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( ( arg ) =>
-  {
-    test.case = 'resolve criterion from step resource';
-    let module = opener.openedModule;
-    let resolved = module.resolve
-    ({
-      selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
-      prefixlessAction : 'resolved',
-      currentThis : undefined,
-      currentContext : module,
-      pathNativizing : 1,
-      arrayFlattening : 0,
-    });
-    test.true( _.longIs( resolved ) );
-    test.true( resolved.length === 1 );
-    test.identical( resolved[ 0 ], 'node -e "console.log( \'debug:undefined\' )"' );
+    test.true( _.strIs( resolved ) );
+    test.identical( resolved, 'node -e "console.log( \'debug:0\' )"' );
     return null;
   });
 
@@ -5535,14 +5512,13 @@ function moduleResolveWithFThisInSelector( test )
 }
 
 /* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
-moduleResolveWithFThisInSelector.description =
+moduleResolveWithFunctionThisInSelector.description =
 `
 Test routine checks that module resolves resources when the selector contains part f::this.
 `;
 
 //
 
-// aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
 function framePerform( test )
 {
   let context = this;
@@ -11822,7 +11798,7 @@ const Proto =
     buildsResolve,
     moduleResolveSimple,
     moduleResolve,
-    moduleResolveWithFThisInSelector,
+    moduleResolveWithFunctionThisInSelector,
 
     framePerform,
 

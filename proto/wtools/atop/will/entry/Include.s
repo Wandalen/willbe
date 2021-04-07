@@ -11,7 +11,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../include/Top.s' );
+  const _ = require( '../include/Top.s' );
   module[ 'exports' ] = _global_.wTools;
 
   if( !module.parent )

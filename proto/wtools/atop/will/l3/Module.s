@@ -4989,7 +4989,6 @@ function _resolve_head( routine, args )
 
   if( !o.baseModule )
   {
-    _.debugger;
     if( o.currentContext )
     o.baseModule = o.currentContext.toModuleForResolver ? o.currentContext.toModuleForResolver() || module : module;
     else
@@ -9367,7 +9366,7 @@ function gitSync( o )
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : o.dirPath + '**', safe : 0 });
 
-  let status = _.git.statusFull({ insidePath : o.dirPath });
+  let status = _.git.statusFull({ insidePath : o.dirPath, prs : 0 });
 
   if( o.dry )
   return null;

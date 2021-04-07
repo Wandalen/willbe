@@ -6,9 +6,6 @@ function onModule( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  // debugger;
-  // console.log( 'xxx : proto sync' );
-
   if( o.v !== null && o.v !== undefined ) o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
@@ -51,7 +48,7 @@ function onModule( context )
   let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
   if( fileProvider.fileExists( moduleProtoPath ) )
   {
-    return fileProvider.filesReflect
+    fileProvider.filesReflect
     ({
       filter : { filePath : { [ moduleProtoPath ] : protoPath }, maskAll },
       dstRewritingOnlyPreserving : 1,
@@ -65,9 +62,23 @@ function onModule( context )
   let moduleStepPath = path.join( context.junction.dirPath, 'step' );
   if( fileProvider.fileExists( moduleStepPath ) )
   {
-    return fileProvider.filesReflect
+    fileProvider.filesReflect
     ({
       filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'step' ) }, maskAll },
+      dstRewritingOnlyPreserving : 1,
+      breakingSrcHardLink : 1,
+      breakingDstHardLink : 0,
+      linking : 'hardLink',
+      verbosity
+    });
+  }
+
+  let moduleWorkflowsPath = path.join( context.junction.dirPath, '.github/workflows' );
+  if( fileProvider.fileExists( moduleWorkflowsPath ) )
+  {
+    fileProvider.filesReflect
+    ({
+      filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'hlink/.github/workflows' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
