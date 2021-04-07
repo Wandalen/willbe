@@ -2048,7 +2048,6 @@ function modulesOnlyRoots( modules )
     nodesGroup,
   }
 
-  // _global_.debugger = 1;
   let objects = will.modulesEach( o2 );
 
   objects = will.objectsAllVariants( objects );
@@ -2075,7 +2074,6 @@ function modulesOnlyRoots( modules )
     nodesGroup,
   }
 
-  // _global_.debugger = true;
   // debugger;
   // let sourcesHasObjects = will.modulesEach( o3 );
   // debugger;
@@ -2177,7 +2175,7 @@ function modulesEach_body( o )
     nodes = nodes2;
   }
 
-  nodes = _.each( nodes, ( node ) =>
+  _.each( nodes, ( node ) =>
   {
     _.assert( will.ObjectIs( node ) );
   });
@@ -2193,7 +2191,9 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
 
+  // _.debugger;
   o.result = o.nodesGroup.each( o2 );
+  // _.debugger;
   o.result = _.longOnce( o.result.map( ( junction ) => outputFrom( junction ) ) );
 
   if( o.descriptive )
@@ -2205,9 +2205,6 @@ function modulesEach_body( o )
 
   function objectAppend( object )
   {
-
-    if( _global_.debugger )
-    debugger;
 
     _.assert( !!object );
     _.assert
@@ -2248,8 +2245,6 @@ function modulesEach_body( o )
     {
       junction.objects.forEach( ( object ) =>
       {
-        if( _global_.debugger )
-        debugger;
         if( object.ownedBy( o.ownedObjects ) )
         objectAppend( object );
       });
@@ -2392,6 +2387,7 @@ function modulesFor_body( o )
 
     ready.then( () =>
     {
+      // _.debugger;
       if( !o.onEachVisitedObject && !o.onEachModule )
       return null;
       let ready = _.take( null );
@@ -2716,16 +2712,8 @@ function modulesDownload_body( o )
     let ready2 = _.take( null );
 
     _.assert( _.arrayIs( objects ) );
-    // let junctions = _.longOnce( will.junctionsFrom( objects ) );
-    // debugger;
     let handles = _.longOnce_( null, will.handlesFrom( objects ), ( handle ) => handle.object );
-    // debugger;
 
-    // debugger;
-    // if( _global_.debugger )
-    // debugger;
-
-    // junctions.forEach( ( junction ) => /* xxx : make it parallel */
     handles.forEach( ( handle ) => /* xxx : make it parallel */
     {
       let junction = handle.junction;
@@ -3719,17 +3707,6 @@ function graphGroupMake( o )
   {
     _.assert( will.ObjectIs( object ) );
 
-    // if( _global_.debugger )
-    // if( object.qualifiedName === 'opener::a' )
-    // debugger;
-    // if( _global_.debugger )
-    // if( object.absoluteName === 'opener::a0' )
-    // debugger;
-
-    // if( _global_.debugger )
-    // if( will.junctionFrom( object ).id === 51 )
-    // debugger;
-
     /*
     "junction:: : #1448
       path::local : hd:///atop/will.test/_asset/hierarchyHdBug/.module/PathTools
@@ -3743,23 +3720,8 @@ function graphGroupMake( o )
       module::z / module::wPathTools / relation::wPathTools #920 #1049
     */
 
-    // if( _global_.debugger )
-    // debugger;
     let result = object.submodulesRelationsFilter( _.mapOnly_( null, o, object.submodulesRelationsFilter.defaults ) );
 
-    // result.forEach( ( object ) =>
-    // {
-    //   if( _global_.debugger )
-    //   if( _.strHas( object.absoluteName, 'module::a / relation::Tools' ) )
-    //   debugger;
-    // });
-
-    // if( _global_.debugger )
-    // will.objectsLogInfo( result );
-    // if( _global_.debugger )
-    // debugger;
-    // let junction = will.junctionFrom( object );
-    // return junction.submodulesGet( _.mapOnly_( null, o, junction.submodulesGet.defaults ) );
     return result;
   }
 

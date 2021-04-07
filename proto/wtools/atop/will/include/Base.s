@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  const _ = require( '../../../../node_modules/Tools' );
+  const _ = require( 'Tools' );
 
   _.include( 'wSelector' );
   _.include( 'wResolver' );
