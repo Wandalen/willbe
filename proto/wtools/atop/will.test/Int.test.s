@@ -2070,7 +2070,7 @@ function exportGitModuleAndCheckDefaultPathsSimple( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -2132,6 +2132,90 @@ function exportGitModuleAndCheckDefaultPathsSimple( test )
 
     return null;
 
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reexportGitModule( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  let opener;
+  a.reflect();
+
+  a.shell( 'git init' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export main module as a git repository twice';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    path.download.path = path.download.path + '/';
+
+    a.fileProvider.fileWrite
+    ({
+      filePath : a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ),
+      data : config,
+      encoding : 'yaml'
+    });
+
+    opener.finit();
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
   });
 
   /* - */
@@ -11456,6 +11540,8 @@ function remotePathOfMainGitRepo( test )
   a.shell.predefined.deasync = 0;
   a.shell.predefined.ready = null;
 
+  /* - */
+
   a.ready
   .then( () =>
   {
@@ -11467,7 +11553,7 @@ function remotePathOfMainGitRepo( test )
     return opener.open();
   })
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -11475,7 +11561,7 @@ function remotePathOfMainGitRepo( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -11483,6 +11569,8 @@ function remotePathOfMainGitRepo( test )
     opener.close();
     return null;
   })
+
+  /* - */
 
   return a.ready;
 }
@@ -11535,6 +11623,7 @@ const Proto =
 
     exportModuleAndCheckDefaultPathsSimple,
     exportGitModuleAndCheckDefaultPathsSimple,
+    reexportGitModule,
     exportSeveralExports,
     exportSuper,
     exportSuperIn,

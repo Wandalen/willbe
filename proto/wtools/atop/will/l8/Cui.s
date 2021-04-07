@@ -353,12 +353,13 @@ function _propertiesImplyToMain( implyMap )
 function _propertiesImply( implyMap )
 {
   let will = this;
+  let transaction = will.transaction;
 
   // will._propertiesImplyToMain( implyMap );
 
-  _.assert( will.transaction === null || will.transaction && will.transaction.isInitial );
+  _.assert( transaction === null || transaction && ( transaction.isInitial || transaction.isFinited() ), 'Transaction object was not removed by previous command.' );
 
-  if( will.transaction )
+  if( transaction && transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
   will.transaction.finit();
 
   will.transaction = _.will.Transaction.Make( implyMap, will );
@@ -516,6 +517,7 @@ function _commandsBegin( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
+  let transaction = will.transaction;
 
   _.routineOptions( _commandsBegin, o );
   _.assert( _.routineIs( o.commandRoutine ) );
@@ -524,13 +526,14 @@ function _commandsBegin( o )
   if( will.topCommand === null )
   will.topCommand = o.commandRoutine;
 
-  if( will.transaction && will.transaction.isInitial )
+  if( /* transaction && */ transaction.isInitial )
   {
     will.transaction.finit();
-    will.transaction = null;
+    // will.transaction = null;
   }
 
-  if( will.transaction === null )
+  // if( will.transaction === null )
+  if( will.transaction.isFinited() )/* Vova: Creates transaction if it was not made by a command */
   will.transaction = _.will.Transaction.Make( o.properties, will );
   // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
@@ -557,7 +560,7 @@ function _commandsEnd( command )
   let beeping = will.transaction.beeping;
 
   will.transaction.finit();
-  will.transaction = null;
+  // will.transaction = null;
 
   if( will.topCommand !== command )
   return false;
@@ -1415,7 +1418,8 @@ commandImply.defaults =
   withValid : null,
   withInvalid : null,
   withSubmodules : null,
-  withPath : null
+  withPath : null,
+  willFileAdapting : null
 };
 commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
@@ -1438,6 +1442,7 @@ commandImply.commandProperties =
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
+  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
 };
 
 // function commandImply( e )
@@ -4120,7 +4125,7 @@ function commandWith( e )
 
     _.assert( cui.transaction instanceof _.will.Transaction );
     // qqq : for Vova : why was it here?
-    // cui.transaction.finit();
+    cui.transaction.finit();
     // cui.transaction = null;
 
     return it;
