@@ -362,7 +362,7 @@ function _propertiesImply( implyMap )
   if( transaction && transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
   will.transaction.finit();
 
-  will.transaction = _.will.Transaction.Make( implyMap, will );
+  will.transaction = _.will.Transaction.Make( implyMap, will.logger );
   // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
 }
 
@@ -534,7 +534,7 @@ function _commandsBegin( o )
 
   // if( will.transaction === null )
   if( will.transaction.isFinited() )/* Vova: Creates transaction if it was not made by a command */
-  will.transaction = _.will.Transaction.Make( o.properties, will );
+  will.transaction = _.will.Transaction.Make( o.properties, will.logger );
   // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
 
 }

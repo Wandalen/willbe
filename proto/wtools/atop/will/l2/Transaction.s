@@ -35,11 +35,15 @@ function init( o )
   let t = this;
 
   _.assert( arguments.length === 1 );
+  _.assert( o.targetLogger instanceof _.Logger );
 
-  t.formAssociates( o );
+  let logger = t.logger = new _.Logger({ output : o.targetLogger, name : 'transaction' });
 
   _.workpiece.initFields( t );
   Object.preventExtensions( t );
+
+  _.assert( logger === t.logger );
+  _.assert( logger.output === o.targetLogger );
 
   if( o )
   t.copy( o )
@@ -49,9 +53,9 @@ function init( o )
 
 //
 
-function Make( properties, will )
+function Make( properties, targetLogger )
 {
-  return new _.will.Transaction({ will, ... _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) });
+  return new _.will.Transaction({ targetLogger, ... _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) });
 }
 
 //
@@ -59,8 +63,7 @@ function Make( properties, will )
 function unform()
 {
   let t = this;
-  let will = t.will;
-  let logger = will.logger;
+  let logger = t.logger;
   _.assert( logger.verbosity === t.verbosity, 'Verbosity of the main logger was changed' );
   t.formed = 0;
 }
@@ -85,32 +88,11 @@ function form()
 
 //
 
-function formAssociates( o )
-{
-  let t = this;
-  _.assert( o.will instanceof _.Will );
-
-  t.will = o.will;
-  t.will.transaction = t;
-
-  // if( o.logger )
-  // t.logger = o.logger;
-  // else
-  // t.logger = new _.Logger({ output : t.will.logger, name : 'transaction' });
-
-  // _.assert( t.logger instanceof _.Logger );
-  // _.assert( t.logger.output === t.will.logger );
-}
-
-//
-
 function verbosityGet()
 {
   let t = this;
-  let will = t.will;
-  let logger = will.logger;
-  // let logger = t.logger;
-  _.assert( t.formed === 0 || logger.verbosity === t._.verbosity, 'Verbosity of the transaction logger was changed outside of the transaction' );
+  let logger = t.logger;
+  _.assert( logger.verbosity === t._.verbosity, 'Verbosity of the transaction logger was changed outside of the transaction' );
   /* qqq : for Vova : logger should always exists */
   return t._.verbosity;
 }
@@ -120,9 +102,7 @@ function verbosityGet()
 function verbositySet( src )
 {
   let t = this;
-  let will = t.will;
-  let logger = will.logger;
-  // let logger = t.logger;
+  let logger = t.logger;
 
   if( t.formed )
   return;
@@ -238,12 +218,18 @@ let Aggregates =
 
 let Associates =
 {
-  will : null, /* qqq : for Vova : remove */
+  // will : null, /* qqq : for Vova : remove */
+  logger : null
 }
 
 let Restricts =
 {
   formed : 0,
+}
+
+let Medials =
+{
+  targetLogger : null
 }
 
 let Statics =
@@ -284,7 +270,6 @@ let Extension =
 
   unform,
   form,
-  formAssociates,
 
   verbositySet,
   withSubmodulesSet,
@@ -295,6 +280,7 @@ let Extension =
   Aggregates,
   Associates,
   Restricts,
+  Medials,
   Statics,
   Forbids,
   Accessors,

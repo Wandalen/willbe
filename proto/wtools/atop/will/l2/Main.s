@@ -175,7 +175,7 @@ function init( o )
   will.copy( o );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ isInitial : 1, /*verbosity : will.logger.verbosity,*/ will }); /* qqq : for Vova : ? */
+  will.transaction = _.will.Transaction({ isInitial : 1, /*verbosity : will.logger.verbosity, will */ targetLogger : will.logger }); /* qqq : for Vova : ? */
 
 }
 
@@ -606,17 +606,17 @@ function _verbosityChange()
 
 //
 
-function verbosityGet()
-{
-  let will = this;
-  let transaction = will.transaction;
-  let logger = will.logger;
+// function verbosityGet()
+// {
+//   let will = this;
+//   let transaction = will.transaction;
+//   let logger = will.logger;
 
-  if( transaction )
-  return transaction.verbosity;
+//   if( transaction )
+//   return transaction.verbosity;
 
-  return logger.verbosity;
-}
+//   return logger.verbosity;
+// }
 
 //
 
@@ -5286,7 +5286,7 @@ let OpeningDefaults =
 let Composes =
 {
 
-  // verbosity : 3,
+  verbosity : 3,
   // verboseStaging : 0,
 
   environmentPath : null,
@@ -5450,7 +5450,7 @@ let Accessors =
   hooksPath : { get : hooksPathGet, writable : 0 },
   // withSubmodules : {},
 
-  verbosity : { get : verbosityGet, writable : 0 },
+  // verbosity : { get : verbosityGet, writable : 0 },
   verboseStaging : { suite : _.accessor.suite.alias({ container : 'transaction', originalName : 'verboseStaging' }) },
 
 }
@@ -5494,7 +5494,7 @@ let Extension =
   // etc
 
   _verbosityChange,
-  verbosityGet,
+  // verbosityGet,
 
   vcsProviderFor,
   // vcsToolsFor,
