@@ -8123,7 +8123,7 @@ _willfileOnPropertyAct.defaults =
   structureParse : 0,
   writing : 1,
   verbosity : 3,
-  v : 3,
+  // v : 3,
 };
 
 //
@@ -8193,7 +8193,7 @@ willfileGetProperty.defaults =
   structureParse : 0,
   writing : 0,
   verbosity : 3,
-  v : 3,
+  // v : 3,
 }
 
 //
@@ -8283,7 +8283,7 @@ willfileSetProperty.defaults =
   structureParse : 0,
   writing : 1,
   verbosity : 3,
-  v : 3,
+  // v : 3,
 }
 
 //
@@ -8360,7 +8360,7 @@ willfileDeleteProperty.defaults =
   structureParse : 0,
   writing : 1,
   verbosity : 3,
-  v : 3,
+  // v : 3,
 }
 
 //
@@ -8435,7 +8435,7 @@ willfileExtendProperty.defaults =
   structureParse : 0,
   writing : 1,
   verbosity : 3,
-  v : 3,
+  // v : 3,
 }
 
 //
@@ -8574,7 +8574,7 @@ function npmModulePublish( o )
     ({
       commit,
       restoringHardLinks : 1,
-      v : 0,
+      verbosity : 0,
     });
   }
 
@@ -8690,7 +8690,7 @@ npmModulePublish.defaults =
   tag : '',
   force : 0,
   dry : 0,
-  v : 1, /* qqq : for Dmytro : bad : ! */
+  // v : 1, /* qqq : for Dmytro : bad : ! */
   verbosity : 1,
 };
 
@@ -8909,7 +8909,7 @@ gitExecCommand.defaults =
   dirPath : null,
   profile : 'default',
   hardLinkMaybe : 0,
-  v : null,
+  // v : null,
   verbosity : 2,
 };
 
@@ -8961,7 +8961,7 @@ function gitDiff( o )
 gitDiff.defaults =
 {
   dirPath : null,
-  v : null,
+  // v : null,
   verbosity : 2,
 };
 
@@ -9150,7 +9150,7 @@ gitPull.defaults =
 {
   profile : 'default',
   dirPath : null,
-  v : null,
+  // v : null,
   verbosity : 2,
   restoringHardLinks : 1,
 };
@@ -9216,7 +9216,7 @@ function gitPush( o )
 gitPush.defaults =
 {
   dirPath : null,
-  v : null,
+  // v : null,
   verbosity : 2,
 }
 
@@ -9267,7 +9267,7 @@ gitReset.defaults =
   removingIgnored : 0,
   removingSubrepositories : 0,
   dry : null,
-  v : null,
+  // v : null,
   verbosity : 2,
 }
 
@@ -9323,7 +9323,7 @@ gitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  v : null,
+  // v : null,
   verbosity : 1,
   uncommitted : null,
   uncommittedUntracked : null,
@@ -9425,7 +9425,7 @@ gitSync.defaults =
   dirPath : null,
   restoringHardLinks : 1,
   dry : 0,
-  v : null,
+  // v : null,
   verbosity : 1,
 }
 
@@ -9493,7 +9493,7 @@ gitTag.defaults =
   description : '',
   dry : 0,
   light : 0,
-  v : null,
+  // v : null,
   verbosity : 1,
 }
 
