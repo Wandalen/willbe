@@ -2797,6 +2797,8 @@ module:
             ../proto/wtools/atop/will.test/_asset/npmFromWillfile/Version.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/proto
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/proto/File.s
+          - ../proto/wtools/atop/will.test/_asset/oldImportFileAdapt
+          - ../proto/wtools/atop/will.test/_asset/oldImportFileAdapt/.will.yml
           - ../proto/wtools/atop/will.test/_asset/open
           - ../proto/wtools/atop/will.test/_asset/open/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/open/.im.will.yml
