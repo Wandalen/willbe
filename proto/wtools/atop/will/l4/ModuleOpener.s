@@ -1432,7 +1432,9 @@ function _repoDownload( o )
       create will module for npm module after download
     */
 
-    vcsTool = will.vcsToolsFor( opener.repo.remotePath );
+    // vcsTool = will.vcsToolsFor( opener.repo.remotePath );
+    vcsTool = _.repo.vcsFor( opener.repo.remotePath );
+
     if( downloading && !o.dry && vcsTool === _.npm )
     moduleNpmCreate();
 
@@ -1690,7 +1692,9 @@ function _repoDownload( o )
 
     if( o.mode === 'update' )
     {
-      let vscTools = will.vcsToolsFor( opener.remotePath );
+      // let vscTools = will.vcsToolsFor( opener.remotePath );
+      let vscTools = _.repo.vcsFor( opener.remotePath );
+
       _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
       o2.extra.fetchingTags = 1;
@@ -2244,7 +2248,9 @@ function remotePathChangeVersionTo( to )
   _.assert( _.strDefined( to ) );
   _.sure( _.strBegins( to, '!' ) || _.strBegins( to, '#' ), `Argument "to" should begins with "!" or "#" Got:${to}` )
 
-  var vcs = will.vcsToolsFor( opener.remotePath );
+  // var vcs = will.vcsToolsFor( opener.remotePath );
+  let vcs = _.repo.vcsFor( opener.remotePath );
+
   // var remoteParsed = vcs.pathParse( opener.remotePath )
   var remoteParsed = vcs.path.parse({ remotePath : opener.remotePath, full : 1, atomic : 0 })
 

@@ -657,42 +657,42 @@ vcsProviderFor.defaults =
 
 //
 
-function vcsToolsFor( o )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+// function vcsToolsFor( o )
+// {
+//   let will = this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
 
-  if( !_.mapIs( o ) )
-  o = { filePath : o }
+//   if( !_.mapIs( o ) )
+//   o = { filePath : o }
 
-  _.assert( arguments.length === 1 );
-  _.routineOptions( vcsToolsFor, o );
-  _.assert( !!will.formed );
+//   _.assert( arguments.length === 1 );
+//   _.routineOptions( vcsToolsFor, o );
+//   _.assert( !!will.formed );
 
-  if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
-  return null;
+//   if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
+//   return null;
 
-  if( !o.filePath )
-  return null;
+//   if( !o.filePath )
+//   return null;
 
-  _.assert( _.strIs( o.filePath ) );
-  _.assert( path.isGlobal( o.filePath ) );
+//   _.assert( _.strIs( o.filePath ) );
+//   _.assert( path.isGlobal( o.filePath ) );
 
-  let parsed = path.parseFull( o.filePath );
+//   let parsed = path.parseFull( o.filePath );
 
-  if( _.longHasAny( parsed.protocols, _.git.protocols ) )
-  return _.git;
-  if( _.longHasAny( parsed.protocols, _.npm.protocols ) )
-  return _.npm;
+//   if( _.longHasAny( parsed.protocols, _.git.protocols ) )
+//   return _.git;
+//   if( _.longHasAny( parsed.protocols, _.npm.protocols ) )
+//   return _.npm;
 
-  return null;
-}
+//   return null;
+// }
 
-vcsToolsFor.defaults =
-{
-  filePath : null,
-}
+// vcsToolsFor.defaults =
+// {
+//   filePath : null,
+// }
 
 //
 
@@ -5497,7 +5497,7 @@ let Extension =
   verbosityGet,
 
   vcsProviderFor,
-  vcsToolsFor,
+  // vcsToolsFor,
   repoFrom,
 
   resourceWrap,
