@@ -87,6 +87,20 @@ function onModule( context )
     });
   }
 
+  let circleciPath = path.join( context.junction.dirPath, '.circleci' );
+  if( fileProvider.fileExists( circleciPath ) )
+  {
+    fileProvider.filesReflect
+    ({
+      filter : { filePath : { [ circleciPath ] : path.join( protoPath, 'common/.circleci' ) }, maskAll },
+      dstRewritingOnlyPreserving : 1,
+      breakingSrcHardLink : 1,
+      breakingDstHardLink : 0,
+      linking : 'hardLink',
+      verbosity
+    });
+  }
+
 }
 
 var defaults = ( onModule.defaults = Object.create( null ) );
