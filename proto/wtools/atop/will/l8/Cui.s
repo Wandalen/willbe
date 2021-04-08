@@ -5084,6 +5084,10 @@ function commandPrList( e )
   _.routineOptions( commandPrList, e.propertiesMap );
 
   _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
+  let o2 = e.propertiesMap;
+  o2.logger = o2.verbosity;
+  delete o2.verbosity;
+  _.mapOnly_( o2, o2, _.will.Module.prototype.prList.defaults );
 
   return cui._commandModuleOrientedLike
   ({
@@ -5096,11 +5100,7 @@ function commandPrList( e )
 
   function handleEachModule( module, op )
   {
-    let o2 = e.propertiesMap;
-    o2.logger = o2.verbosity;
-    delete o2.verbosity;
-    _.mapOnly_( o2, o2, module.prList.defaults );
-    return module.prList( o2 );
+    return module.prList( _.mapExtend( null, o2 ) );
   }
 
 }
