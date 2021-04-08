@@ -2422,9 +2422,7 @@ function modulesFor_body( o )
     let o2 = _.mapOnly_( null, o, will.modulesEach.defaults );
     o2.outputFormat = '*/object';
     o2.modules = objects;
-    debugger;
     let result = will.modulesEach( o2 );
-    debugger;
     return result;
   }
 

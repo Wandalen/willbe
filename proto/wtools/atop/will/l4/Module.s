@@ -9548,7 +9548,14 @@ function prList( o )
   {
     if( o.logger && o.logger.verbosity )
     if( op.result )
-    op.result.forEach( ( pr ) => o.logger.log( `${pr.description.head} ${_.ct.format( 'from', 'secondary' )} ${pr.user.name}` ) );
+    op.result.forEach( ( pr ) =>
+    {
+      let colon = _.ct.format( ':', 'secondary' );
+      let from = _.ct.format( 'from', 'secondary' );
+      let to = _.ct.format( 'to', 'secondary' );
+      let info = `PR#${pr.id} ${colon} ${pr.description.head} ${from} ${pr.user.name} ${to} ${pr.to.tag}`;
+      o.logger.log( info )
+    });
     // op.result.forEach( ( pr ) => o.logger.log( `${pr.title} ${_.ct.format( 'from', 'secondary' )} ${pr.head.user.login}` ) );
     // o.logger.log( `ABC${_.ct.format( 'ABC', 'secondary' )}ABC` )
     return op;
