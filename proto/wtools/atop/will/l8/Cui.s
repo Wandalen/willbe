@@ -524,7 +524,7 @@ function _commandsBegin( o )
   if( will.topCommand === null )
   will.topCommand = o.commandRoutine;
 
-  _.assert( will.transaction instanceof _.Will.Transaction )
+  _.assert( will.transaction instanceof _.will.Transaction )
 
 }
 
