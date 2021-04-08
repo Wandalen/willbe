@@ -13,6 +13,15 @@ function onModule( context )
   let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
+  /* xxx :
+    - disable empty modules
+    - split workflow publish?
+    - adjust :
+        npm.proto.entry:
+          - proto/wtools/amid/bufferFromFile/Main.ss
+          - proto/node_modules/bufferfromfile
+  */
+
   if( !context.module )
   return;
   if( !context.module.about.name )

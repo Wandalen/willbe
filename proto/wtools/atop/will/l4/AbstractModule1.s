@@ -96,10 +96,10 @@ function decoratedAbsoluteNameGet()
 function nameWithLocationGet()
 {
   let module = this;
-  let name = _.color.strFormat( module.qualifiedName + '#' + module.id, 'entity' );
+  let name = _.ct.format( module.qualifiedName + '#' + module.id, 'entity' );
   if( module.localPath )
   {
-    let localPath = _.color.strFormat( module.localPath, 'path' );
+    let localPath = _.ct.format( module.localPath, 'path' );
     let result = `${name} at ${localPath}`;
     return result;
   }
