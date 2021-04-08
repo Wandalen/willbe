@@ -15640,7 +15640,6 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/.circleci/config.yml',
       './.module/ModuleForTesting12/.github',
       './.module/ModuleForTesting12/.github/workflows',
-      './.module/ModuleForTesting12/.github/workflows/Publish.yml',
       './.module/ModuleForTesting12/.github/workflows/PullRequest.yml',
       './.module/ModuleForTesting12/.github/workflows/Push.yml',
       './.module/ModuleForTesting12/doc',
