@@ -151,13 +151,13 @@ optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
 // name
 // --
 
-function nameWithLocationGet( moduleName, moduleLocation )
-{
-  let module = this;
-  moduleName = moduleName || module.qualifiedName;
-  moduleLocation = moduleLocation || module._shortestModuleDirPathGet();
-  return module._NameWithLocationFormat( moduleName, moduleLocation );
-}
+// function nameWithLocationGet( moduleName, moduleLocation )
+// {
+//   let module = this;
+//   moduleName = moduleName || module.qualifiedName;
+//   moduleLocation = moduleLocation || module._shortestModuleDirPathGet();
+//   return module._NameWithLocationFormat( moduleName, moduleLocation );
+// }
 
 //
 
@@ -850,7 +850,7 @@ let Accessors =
 {
 
   fileName : { writable : 0 },
-  nameWithLocation : { writable : 0 },
+  // nameWithLocation : { writable : 0 },
 
   willfilesArray : { set : willfileArraySet },
   willfileWithRoleMap : { writable : 0 },
@@ -879,7 +879,7 @@ let Extension =
 
   // name
 
-  nameWithLocationGet,
+  // nameWithLocationGet,
   _NameWithLocationFormat,
 
   // path

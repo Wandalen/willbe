@@ -41,13 +41,11 @@ function onModule( context )
   // context.start( `git add --force .github` );
   // if( fileProvider.fileExists( abs( '.circleci' ) ) )
   // context.start( `git add --force .circleci` );
-
-  if( fileProvider.fileExists( abs( '.github' ) ) )
-  context.start( `git add --force .github` );
+  // if( fileProvider.fileExists( abs( '.github' ) ) )
+  // context.start( `git add --force .github` );
 
   context.start( `git add --all` );
   context.start( `git commit ${context.request.subject}` );
-  // context.start( `git commit ${context.request.original}` );
 
 }
 
