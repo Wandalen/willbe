@@ -353,17 +353,16 @@ function errEncounter( error )
 function _propertiesImply( implyMap )
 {
   let will = this;
-  let transaction = will.transaction;
 
-  // will._propertiesImplyToMain( implyMap );
+  if( will.transaction && will.transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
+  {
+    will.transaction.finit();
+    will.transaction = null;
+  }
 
-  _.assert( transaction === null || transaction && ( transaction.isInitial || transaction.isFinited() ), 'Transaction object was not removed by previous command.' );
-
-  if( transaction && transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
-  will.transaction.finit();
+  _.assert( will.transaction === null, 'Transaction object was not removed by previous command.' );
 
   will.transaction = _.will.Transaction.Make( implyMap, will.logger );
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
 }
 
 //
@@ -517,7 +516,6 @@ function _commandsBegin( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.transaction.logger;
-  let transaction = will.transaction;
 
   _.routineOptions( _commandsBegin, o );
   _.assert( _.routineIs( o.commandRoutine ) );
@@ -526,16 +524,7 @@ function _commandsBegin( o )
   if( will.topCommand === null )
   will.topCommand = o.commandRoutine;
 
-  if( /* transaction && */ transaction.isInitial )
-  {
-    will.transaction.finit();
-    // will.transaction = null;
-  }
-
-  // if( will.transaction === null )
-  if( will.transaction.isFinited() )/* Vova: Creates transaction if it was not made by a command */
-  will.transaction = _.will.Transaction.Make( o.properties, will.logger );
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
+  _.assert( will.transaction instanceof _.Will.Transaction )
 
 }
 
@@ -560,7 +549,7 @@ function _commandsEnd( command )
   let beeping = will.transaction.beeping;
 
   will.transaction.finit();
-  // will.transaction = null;
+  will.transaction = null;
 
   if( will.topCommand !== command )
   return false;
@@ -612,15 +601,6 @@ function _commandListLike( o )
   _.assert( _.objectIs( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  //
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   // if( will.currentOpeners === null && will.currentOpener === null )
@@ -741,15 +721,6 @@ function _commandBuildLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  //
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   // if( will.currentOpeners === null && will.currentOpener === null )
@@ -853,15 +824,6 @@ function _commandCleanLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  //
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   // if( will.currentOpeners === null && will.currentOpener === null )
@@ -967,15 +929,6 @@ function _commandNewLike( o )
   // withInvalid : 0,
   // withDisabledModules : 0,
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  //
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   // if( will.currentOpeners !== null || will.currentOpener !== null )
@@ -1074,15 +1027,6 @@ function _commandTreeLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  //
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   // _.assert( will.currentOpener === null );
@@ -1158,15 +1102,6 @@ function _commandModulesLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  // // _.assert( will.transaction === null );
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-  // will._commandsBegin( o.commandRoutine );
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
   // if( will.currentOpeners === null && will.currentOpener === null )
@@ -3627,9 +3562,9 @@ function commandWith( e )
     }
 
     _.assert( cui.transaction instanceof _.will.Transaction );
-    // qqq : for Vova : why was it here?
+    // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
     cui.transaction.finit();
-    // cui.transaction = null;
+    cui.transaction = null;
 
     return it;
   })
