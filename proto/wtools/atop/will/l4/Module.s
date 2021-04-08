@@ -8825,10 +8825,20 @@ function _remoteChanged()
 // git
 // --
 
-function _nameWithLocationFormat( moduleName, moduleLocation )
-{
-  return `${ _.ct.format( moduleName, 'entity' ) } at ${ _.ct.format( moduleLocation, 'path' ) }`;
-}
+// function nameWithLocationGet( moduleName, moduleLocation )
+// {
+//   let module = this;
+//   moduleName = moduleName || module.qualifiedName;
+//   moduleLocation = moduleLocation || module._shortestModuleDirPathGet();
+//   return module._NameWithLocationFormat( moduleName, moduleLocation );
+// }
+//
+// //
+//
+// function _NameWithLocationFormat( moduleName, moduleLocation )
+// {
+//   return `${ _.ct.format( moduleName, 'entity' ) } at ${ _.ct.format( moduleLocation, 'path' ) }`;
+// }
 
 //
 
@@ -8865,7 +8875,7 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
 
   let provider;
@@ -8936,7 +8946,7 @@ function gitDiff( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Diff ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `Diff ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let result = _.git.diff
   ({
@@ -9102,12 +9112,12 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `Pulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   if( status.uncommitted )
   throw _.errBrief
   (
-    `${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
+    `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
   );
 
   /* */
@@ -9193,7 +9203,7 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `Pushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let ready = _.git.push
   ({
@@ -9245,7 +9255,7 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `Resetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   _.git.reset
   ({
@@ -9313,7 +9323,7 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  logger.log( module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
+  logger.log( module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
   logger.log( got.status );
   return got;
 }
@@ -9408,7 +9418,7 @@ function gitSync( o )
       ready : con,
     });
     if( o.verbosity )
-    logger.log( `Committing ${ module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.log( `Committing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
     start( `git add --all` );
     if( o.commit )
@@ -9510,7 +9520,7 @@ function prList( o )
   let path = fileProvider.path;
   let logger = will.logger; /* xxx : qqq : use transaction */
 
-  o.logger = _.logger.relative( logger, o.logger ); /* xxx : adjust logger.relative. write basic test */
+  o.logger = _.logger.absolute( logger, o.logger ); /* xxx : adjust logger.relative. write basic test */
 
   _.routineOptions( prList, o );
 
@@ -9549,11 +9559,26 @@ function prList( o )
   {
     if( o.logger && o.logger.verbosity )
     if( op.result )
-    op.result.forEach( ( pr ) =>
     {
-      let info = _.repo.prExportString( pr, { verbosity : o.logger.verbosity } );
-      o.logger.log( info );
-    });
+      console.log( `o.logger.verbosity : ${o.logger.verbosity}` );
+      let info = _.repo.prsExportString( op.result, { verbosity : o.logger.verbosity } );
+      if( o.logger.verbosity === 1 )
+      {
+        o.logger.log( `${module.nameWithLocation} ${info}` );
+      }
+      else
+      {
+        if( info.length )
+        o.logger.log( `${module.nameWithLocation}\n  ${_.strLinesIndentation( info, '  ' )}` );
+        else if( o.logger.verbosity > 2 )
+        o.logger.log( `${module.nameWithLocation}` );
+      }
+    }
+    // op.result.forEach( ( pr ) =>
+    // {
+    //   let info = _.repo.prExportString( pr, { verbosity : o.logger.verbosity } );
+    //   o.logger.log( info );
+    // });
     return op;
   });
 
@@ -10247,7 +10272,6 @@ let Extension =
 
   // git
 
-  _nameWithLocationFormat,
   gitExecCommand,
   gitDiff,
   gitPrOpen,

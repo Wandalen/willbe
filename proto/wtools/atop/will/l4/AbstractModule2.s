@@ -148,6 +148,25 @@ function optionsFormingForward( o )
 optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
 
 // --
+// name
+// --
+
+function nameWithLocationGet( moduleName, moduleLocation )
+{
+  let module = this;
+  moduleName = moduleName || module.qualifiedName;
+  moduleLocation = moduleLocation || module._shortestModuleDirPathGet();
+  return module._NameWithLocationFormat( moduleName, moduleLocation );
+}
+
+//
+
+function _NameWithLocationFormat( moduleName, moduleLocation )
+{
+  return `${ _.ct.format( moduleName, 'entity' ) } at ${ _.ct.format( moduleLocation, 'path' ) }`;
+}
+
+// --
 // path
 // --
 
@@ -785,6 +804,9 @@ let Restricts =
 
 let Statics =
 {
+
+  _NameWithLocationFormat,
+
 }
 
 let Forbids =
@@ -828,6 +850,7 @@ let Accessors =
 {
 
   fileName : { writable : 0 },
+  nameWithLocation : { writable : 0 },
 
   willfilesArray : { set : willfileArraySet },
   willfileWithRoleMap : { writable : 0 },
@@ -853,6 +876,11 @@ let Extension =
   // etc
 
   optionsFormingForward,
+
+  // name
+
+  nameWithLocationGet,
+  _NameWithLocationFormat,
 
   // path
 

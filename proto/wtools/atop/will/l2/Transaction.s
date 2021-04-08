@@ -66,6 +66,16 @@ function Make( properties, targetLogger )
 
 //
 
+function extend( properties )
+{
+  let t = this;
+  _.assert( arguments.length === 1 );
+  _.mapExtend( t, _.mapBut_( _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ), [ 'verbosity' ] ) );
+  return t;
+}
+
+//
+
 function unform()
 {
   let t = this;
@@ -273,6 +283,7 @@ let Extension =
   finit,
   init,
   Make,
+  extend,
 
   unform,
   form,
