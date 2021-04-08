@@ -9528,8 +9528,6 @@ function prList( o )
   {
     if( module.pathMap.repository )
     o.remotePath = module.pathMap.repository;
-    // else
-    // o.remotePath = _.git.remotePathFromLocal( module.dirPath );
   }
 
   if( !o.remotePath )
@@ -9550,7 +9548,9 @@ function prList( o )
   {
     if( o.logger && o.logger.verbosity )
     if( op.result )
-    op.result.forEach( ( pr ) => o.logger.log( `${pr.title} from ${pr.head.user.login}` ) );
+    op.result.forEach( ( pr ) => o.logger.log( `${pr.description.head} ${_.ct.format( 'from', 'secondary' )} ${pr.user.name}` ) );
+    // op.result.forEach( ( pr ) => o.logger.log( `${pr.title} ${_.ct.format( 'from', 'secondary' )} ${pr.head.user.login}` ) );
+    // o.logger.log( `ABC${_.ct.format( 'ABC', 'secondary' )}ABC` )
     return op;
   });
 
