@@ -20,22 +20,25 @@ if( typeof module !== 'undefined' )
   require( '../l3/Predefined.s' );
   require( '../l3/Repository.s' );
   require( '../l3/Resolver.s' );
+  require( '../l3/Willf.s' );
 
-  require( '../l4/AbstractModule.s' );
+  require( '../l4/AbstractJunction.s' );
+  require( '../l4/AbstractModule1.s' );
+  require( '../l4/AbstractModule2.s' );
   require( '../l4/Module.s' );
   require( '../l4/ModuleHandle.s' );
-  require( '../l4/ModuleOpener.s' );
   require( '../l4/ModuleJunction.s' );
+  require( '../l4/ModuleOpener.s' );
 
   require( '../l5/Resource.s' );
 
   require( '../l6_resource/Build.s' );
   require( '../l6_resource/Exported.s' );
-  require( '../l6_resource/Willf.s' );
   require( '../l6_resource/PathResource.s' );
   require( '../l6_resource/Reflector.s' );
   require( '../l6_resource/Step.s' );
   require( '../l6_resource/ModulesRelation.s' );
+  // require( '../l6_resource/Willf.s' );
 
   module[ 'exports' ] = _global_.wTools;
 }

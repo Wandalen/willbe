@@ -318,35 +318,35 @@ function errEncounter( error )
 
 //
 
-function _propertiesImplyToMain( implyMap )
-{
-  let will = this;
-
-  _.assert( arguments.length === 1, 'Expects options map {-implyMap-}' );
-
-  let namesMap =
-  {
-    // v : 'verbosity',
-    // verbosity : 'verbosity',
-    // beeping : 'beeping',
-
-    // withOut : 'withOut',
-    // withIn : 'withIn',
-    // withEnabled : 'withEnabled',
-    // withDisabled : 'withDisabled',
-    // withValid : 'withValid',
-    // withInvalid : 'withInvalid',
-    // withSubmodules : 'withSubmodules',
-  };
-
-  _.process.inputReadTo
-  ({
-    dst : will,
-    propertiesMap : implyMap,
-    namesMap,
-    only : 0
-  });
-}
+// function _propertiesImplyToMain( implyMap )
+// {
+//   let will = this;
+//
+//   _.assert( arguments.length === 1, 'Expects options map {-implyMap-}' );
+//
+//   let namesMap =
+//   {
+//     // v : 'verbosity',
+//     // verbosity : 'verbosity',
+//     // beeping : 'beeping',
+//
+//     // withOut : 'withOut',
+//     // withIn : 'withIn',
+//     // withEnabled : 'withEnabled',
+//     // withDisabled : 'withDisabled',
+//     // withValid : 'withValid',
+//     // withInvalid : 'withInvalid',
+//     // withSubmodules : 'withSubmodules',
+//   };
+//
+//   _.process.inputReadTo
+//   ({
+//     dst : will,
+//     propertiesMap : implyMap,
+//     namesMap,
+//     only : 0
+//   });
+// }
 
 //
 
@@ -451,19 +451,6 @@ function _commandsMake()
     'modules git status' :              { e : _.routineJoin( will, will.commandModulesGitStatus )             },
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
-    'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
-    'git diff' :                        { e : _.routineJoin( will, will.commandGitDiff )                      },
-    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
-    'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
-    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
-    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus )                    },
-    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync )                      },
-    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag )                       },
-    'git hook preserving hardlinks' :   { e : _.routineJoin( will, will.commandGitHookPreservingHardLinks )   },
-
-    'pr open' :                         { e : _.routineJoin( will, will.commandPrOpen )                       },
-    'pr list' :                         { e : _.routineJoin( will, will.commandPrList )                       },
-
     'with' :                            { e : _.routineJoin( will, will.commandWith )                         },
     'each' :                            { e : _.routineJoin( will, will.commandEach )                         },
 
@@ -477,6 +464,19 @@ function _commandsMake()
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
+
+    'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
+    'git diff' :                        { e : _.routineJoin( will, will.commandGitDiff )                      },
+    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
+    'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
+    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
+    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus )                    },
+    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync )                      },
+    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag )                       },
+    'git hook preserving hardlinks' :   { e : _.routineJoin( will, will.commandGitHookPreservingHardLinks )   },
+
+    'pr open' :                         { e : _.routineJoin( will, will.commandPrOpen )                       },
+    'pr list' :                         { e : _.routineJoin( will, will.commandPrList )                       },
 
     'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
     'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
@@ -1311,55 +1311,52 @@ function _commandModuleOrientedLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-  // if( will.transaction && will.transaction.isInitial )
-  // {
-  //   will.transaction.finit();
-  //   will.transaction = null;
-  // }
-  //
-  // if( will.transaction === null )
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  o.event.propertiesMap, _.will.Transaction.TransactionFields ) });
-
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  // if( will.currentOpeners === null && will.currentOpener === null )
   if( will.currentOpeners === null )
   ready.then( () => will.openersFind() )
 
-  // let openers = will.currentOpeners || will.currentOpener;
   let openers = will.currentOpeners;
-  // will.currentOpeners = null;
-  // will.currentOpener = null;
 
-  openersEach( openers );
-
-  return ready.finally( ( err, arg ) =>
+  let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+  o2.modules = openers;
+  return will.modulesFor( o2 )
+  .finally( ( err, arg ) =>
   {
-    will.currentOpeners = openers;
     will._commandsEnd( o.commandRoutine );
     if( err )
-    logger.error( _.errOnce( err ) );
-    if( err )
-    throw err;
+    throw _.err( err, `\nFailed to ${o.name}` );
     return arg;
-  })
+  });
 
-  /* */
-
-  function openersEach( openers )
-  {
-    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-    o2.modules = openers;
-    will.modulesFor( o2 );
-
-    return will.modulesFor( o2 )
-    .finally( ( err, arg ) =>
-    {
-      if( err )
-      throw _.err( err, `\nFailed to upform modules` );
-      return arg;
-    });
-  }
+  // openersEach( openers );
+  //
+  // return ready.finally( ( err, arg ) =>
+  // {
+  //   will.currentOpeners = openers;
+  //   will._commandsEnd( o.commandRoutine );
+  //   if( err )
+  //   logger.error( _.errOnce( err ) );
+  //   if( err )
+  //   throw err;
+  //   return arg;
+  // })
+  //
+  // /* */
+  //
+  // function openersEach( openers )
+  // {
+  //   let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+  //   o2.modules = openers;
+  //   return will.modulesFor( o2 )
+  //   .finally( ( err, arg ) =>
+  //   {
+  //     will._commandsEnd( o.commandRoutine );
+  //     if( err )
+  //     throw _.err( err, `\nFailed to ${o.name}` );
+  //     return arg;
+  //   });
+  // }
 
 }
 
@@ -1367,6 +1364,8 @@ function _commandModuleOrientedLike( o )
 var defaults = _commandModuleOrientedLike.defaults =
 {
   ... Parent.prototype.modulesFor.defaults,
+  withPeers : 0,
+  withStem : 1,
   event : null,
   commandRoutine : null,
   name : null,
@@ -3542,516 +3541,6 @@ commandExportRecursive.hint = 'Export selected the module with spesified criteri
 commandExportRecursive.longHint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
-//
-
-function commandGit( e )
-{
-  let cui = this;
-
-  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  // if( hardLinkMaybe !== undefined )
-  // delete commandOptions.hardLinkMaybe;
-  // let profile = commandOptions.profile;
-  // if( profile !== undefined )
-  // delete commandOptions.profile;
-
-  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
-
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
-  if( _.mapKeys( commandOptions ).length >= 1 )
-  {
-    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
-  }
-
-  cui._command_head( commandGit, arguments );
-
-  _.routineOptions( commandGit, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git',
-    onEach : handleEach,
-    commandRoutine : commandGit,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitExecCommand
-    ({
-      dirPath : it.junction.dirPath,
-      command : e.subject,
-      // verbosity : cui.verbosity,
-      verbosity : cui.transaction.verbosity,
-      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
-      profile : e.propertiesMap.profile
-    });
-  }
-}
-
-commandGit.defaults = _.mapExtend( null, commandImply.defaults );
-commandGit.defaults.hardLinkMaybe = 0;
-commandGit.defaults.profile = 'default';
-commandGit.defaults.withSubmodules = 0;
-commandGit.hint = 'Run custom Git command in repository of module.';
-commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
-commandGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
-commandGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
-commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 0.';
-commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
-
-//
-
-function commandGitDiff( e )
-{
-  let cui = this;
-  cui._command_head( commandGitDiff, arguments );
-  _.routineOptions( commandGitDiff, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git diff',
-    onEach : handleEach,
-    commandRoutine : commandGitDiff,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitDiff
-    ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
-      verbosity : cui.transaction.verbosity,
-    });
-  }
-}
-
-commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
-commandGitDiff.defaults.withSubmodules = 0;
-commandGitDiff.hint = 'Get diffs in module repository.';
-commandGitDiff.commandSubjectHint = false;
-commandGitDiff.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
-commandGitDiff.commandProperties = _.mapExtend( null, commandImply.commandProperties );
-
-//
-
-function commandGitPull( e )
-{
-  let cui = this;
-  cui._command_head( commandGitPull, arguments );
-  // let profile = e.propertiesMap.profile;
-  // if( 'profile' in e.propertiesMap )
-  // delete e.propertiesMap.profile;
-
-  _.routineOptions( commandGitPull, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git pull',
-    onEach : handleEach,
-    commandRoutine : commandGitPull,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitPull
-    ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
-      verbosity : cui.transaction.verbosity,
-      profile : e.propertiesMap.profile,
-    });
-  }
-}
-
-commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
-commandGitPull.defaults.withSubmodules = 0;
-commandGitPull.defaults.profile = 'default';
-commandGitPull.hint = 'Pull changes from remote repository.';
-commandGitPull.commandSubjectHint = false;
-commandGitPull.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
-commandGitPull.commandProperties = _.mapExtend( null, commandImply.commandProperties );
-commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
-
-//
-
-function commandGitPush( e )
-{
-  let cui = this;
-  cui._command_head( commandGitPush, arguments );
-
-  _.routineOptions( commandGitPush, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git push',
-    onEach : handleEach,
-    commandRoutine : commandGitPush,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitPush
-    ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
-      verbosity : cui.transaction.verbosity,
-    });
-  }
-}
-
-commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
-commandGitPush.defaults.withSubmodules = 0;
-commandGitPush.hint = 'Push commits and tags to remote repository.';
-commandGitPush.commandSubjectHint = false;
-commandGitPush.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
-commandGitPush.commandProperties = _.mapExtend( null, commandImply.commandProperties );
-
-//
-
-function commandGitReset( e )
-{
-  let cui = this;
-  cui._command_head( commandGitReset, arguments );
-
-  _.routineOptions( commandGitReset, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git reset',
-    onEach : handleEach,
-    commandRoutine : commandGitReset,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitReset
-    ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitReset.defaults )
-    });
-  }
-}
-
-commandGitReset.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  dirPath : '.',
-  removingUntracked : 0,
-  removingIgnored : 0,
-  removingSubrepositories : 0,
-  dry : 0,
-  // v : null,
-  verbosity : 2,
-  withSubmodules : 0
-});
-commandGitReset.hint = 'Reset local changes in repository of the module.';
-commandGitReset.commandSubjectHint = false;
-commandGitReset.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandGitReset.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
-  removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
-  removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
-  removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
-  dry : 'Dry run without resetting. Default is dry:0.',
-  // v : 'Set verbosity. Default is 2.',
-  verbosity : 'Set verbosity. Default is 2.',
-});
-
-//
-
-function commandGitStatus( e )
-{
-  let cui = this;
-  cui._command_head( commandGitStatus, arguments );
-
-  _.routineOptions( commandGitStatus, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git status',
-    onEach : handleEach,
-    commandRoutine : commandGitStatus,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitStatus.defaults )
-    });
-  }
-}
-
-commandGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  local : 1,
-  uncommittedIgnored : 0,
-  remote : 1,
-  remoteBranches : 0,
-  prs : 1,
-  // v : null,
-  verbosity : 1,
-  withSubmodules : 0
-});
-commandGitStatus.hint = 'Check the status of the repository.';
-commandGitStatus.commandSubjectHint = false;
-commandGitStatus.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandGitStatus.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  local : 'Check local commits. Default value is 1.',
-  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
-  remote : 'Check remote unmerged commits. Default value is 1.',
-  remoteBranches : 'Check remote branches. Default value is 0.',
-  prs : 'Check pull requests. Default is prs:1.',
-  // v : 'Set verbosity. Default is 1.',
-  verbosity : 'Set verbosity. Default is 1.',
-});
-
-//
-
-function commandGitSync( e )
-{
-  let cui = this;
-  cui._command_head( commandGitSync, arguments );
-
-  _.routineOptions( commandGitSync, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git sync',
-    onEach : handleEach,
-    commandRoutine : commandGitSync,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults )
-    });
-  }
-}
-
-commandGitSync.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  dirPath : null,
-  dry : 0,
-  profile : 'default',
-  // v : null,
-  verbosity : 1,
-  withSubmodules : 0
-});
-commandGitSync.hint = 'Syncronize local and remote repositories.';
-commandGitSync.commandSubjectHint = 'A commit message. Default value is "."';
-commandGitSync.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
-  dry : 'Dry run without syncronizing. Default is dry:0.',
-  // v : 'Set verbosity. Default is 1.',
-  verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".',
-});
-
-//
-
-function commandGitTag( e )
-{
-  let cui = this;
-  cui._command_head( commandGitTag, arguments );
-
-  _.routineOptions( commandGitTag, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git tag',
-    onEach : handleEach,
-    commandRoutine : commandGitTag,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitTag
-    ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitTag.defaults )
-    });
-  }
-}
-
-commandGitTag.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  name : '.',
-  description : '',
-  dry : 0,
-  light : 0,
-  // v : null,
-  verbosity : 1,
-  withSubmodules : 0
-});
-commandGitTag.hint = 'Add tag for current commit.';
-commandGitTag.commandSubjectHint = false;
-commandGitTag.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandGitTag.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  name : 'Tag name. Default is name:".".',
-  description : 'Description of annotated tag. Default is description:"".',
-  dry : 'Dry run without tagging. Default is dry:0.',
-  light : 'Enables lightweight tags. Default is light:0.',
-  // v : 'Set verbosity. Default is 1.',
-  verbosity : 'Set verbosity. Default is 1.',
-});
-
-//
-
-function commandGitHookPreservingHardLinks( e )
-{
-  let cui = this;
-  cui._propertiesImply( e.propertiesMap );
-
-  let enable = _.numberFrom( e.commandArgument );
-
-  if( enable )
-  _.git.hookPreservingHardLinksRegister();
-  else
-  _.git.hookPreservingHardLinksUnregister();
-}
-
-commandGitHookPreservingHardLinks.hint = 'Switch on preserving hardlinks.';
-commandGitHookPreservingHardLinks.commandSubjectHint = 'Any subject to enable preserving hardliks.';
-
-//
-
-function commandPrOpen( e )
-{
-  let cui = this;
-  cui._command_head( commandPrOpen, arguments );
-
-  _.routineOptions( commandPrOpen, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
-  return cui._commandBuildLike
-  ({
-    event : e,
-    name : 'git pr open',
-    onEach : handleEach,
-    commandRoutine : commandPrOpen,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.gitPrOpen
-    ({
-      title : e.subject,
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults ),
-    });
-  }
-}
-
-commandPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  token : null,
-  srcBranch : null,
-  dstBranch : null,
-  title : null,
-  body : null,
-  verbosity : null,
-  withSubmodules : 1
-});
-commandPrOpen.hint = 'Open pull request from current modules.';
-commandPrOpen.commandSubjectHint = 'A title for PR';
-commandPrOpen.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  token : 'An individual authorization token. By default reads from user config file.',
-  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
-  dstBranch : 'A destination branch. Default is "master".',
-  title : 'Option that rewrite title in provided argument.',
-  body : 'Body message.',
-  verbosity : 'Set verbosity. Default is 2.',
-});
-
-//
-
-function commandPrList( e )
-{
-  let cui = this;
-  cui._command_head( commandProcedurePrototypeList, arguments );
-
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'pr list',
-    onEachModule : handleEachModule,
-    commandRoutine : commandPrList,
-    recursive : 0,
-  });
-
-  function handleEachModule( module, op )
-  {
-    debugger; xxx
-    return module.prList();
-  }
-
-}
-
-commandPrList.defaults = _.mapExtend( null, commandImply.defaults,
-{
-  token : null,
-  verbosity : null,
-})
-commandPrList.hint = 'Open pull request from current modules.';
-commandPrList.commandSubjectHint = 'A title for PR';
-commandPrList.commandPropertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-commandPrList.commandProperties = _.mapExtend( null, commandImply.commandProperties,
-{
-  token : 'An individual authorization token. By default reads from user config file.',
-  verbosity : 'Set verbosity. Default is 2.',
-});
-
 // --
 // command iterator
 // --
@@ -5126,6 +4615,528 @@ commandWillfileMergeIntoSingle.commandProperties =
 };
 
 // --
+// git
+// --
+
+function commandGit( e )
+{
+  let cui = this;
+
+  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
+  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  // if( hardLinkMaybe !== undefined )
+  // delete commandOptions.hardLinkMaybe;
+  // let profile = commandOptions.profile;
+  // if( profile !== undefined )
+  // delete commandOptions.profile;
+
+  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
+
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
+  if( _.mapKeys( commandOptions ).length >= 1 )
+  {
+    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  }
+
+  cui._command_head( commandGit, arguments );
+
+  _.routineOptions( commandGit, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git',
+    onEach : handleEach,
+    commandRoutine : commandGit,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitExecCommand
+    ({
+      dirPath : it.junction.dirPath,
+      command : e.subject,
+      verbosity : cui.verbosity,
+      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
+      profile : e.propertiesMap.profile
+    });
+  }
+}
+
+commandGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandGit.defaults.hardLinkMaybe = 0;
+commandGit.defaults.profile = 'default';
+commandGit.defaults.withSubmodules = 0;
+commandGit.hint = 'Run custom Git command in repository of module.';
+commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
+commandGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 0.';
+commandGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
+
+//
+
+function commandGitDiff( e )
+{
+  let cui = this;
+  cui._command_head( commandGitDiff, arguments );
+  _.routineOptions( commandGitDiff, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git diff',
+    onEach : handleEach,
+    commandRoutine : commandGitDiff,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitDiff
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitDiff.defaults.withSubmodules = 0;
+commandGitDiff.hint = 'Get diffs in module repository.';
+commandGitDiff.commandSubjectHint = false;
+commandGitDiff.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitDiff.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+
+//
+
+function commandGitPull( e )
+{
+  let cui = this;
+  cui._command_head( commandGitPull, arguments );
+  // let profile = e.propertiesMap.profile;
+  // if( 'profile' in e.propertiesMap )
+  // delete e.propertiesMap.profile;
+
+  _.routineOptions( commandGitPull, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git pull',
+    onEach : handleEach,
+    commandRoutine : commandGitPull,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPull
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+      profile : e.propertiesMap.profile,
+    });
+  }
+}
+
+commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitPull.defaults.withSubmodules = 0;
+commandGitPull.defaults.profile = 'default';
+commandGitPull.hint = 'Pull changes from remote repository.';
+commandGitPull.commandSubjectHint = false;
+commandGitPull.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitPull.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+commandGitPull.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
+
+//
+
+function commandGitPush( e )
+{
+  let cui = this;
+  cui._command_head( commandGitPush, arguments );
+
+  _.routineOptions( commandGitPush, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git push',
+    onEach : handleEach,
+    commandRoutine : commandGitPush,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPush
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : cui.verbosity,
+    });
+  }
+}
+
+commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitPush.defaults.withSubmodules = 0;
+commandGitPush.hint = 'Push commits and tags to remote repository.';
+commandGitPush.commandSubjectHint = false;
+commandGitPush.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
+commandGitPush.commandProperties = _.mapExtend( null, commandImply.commandProperties );
+
+//
+
+function commandGitReset( e )
+{
+  let cui = this;
+  cui._command_head( commandGitReset, arguments );
+
+  _.routineOptions( commandGitReset, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git reset',
+    onEach : handleEach,
+    commandRoutine : commandGitReset,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitReset
+    ({
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitReset.defaults )
+    });
+  }
+}
+
+commandGitReset.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  dirPath : '.',
+  removingUntracked : 0,
+  removingIgnored : 0,
+  removingSubrepositories : 0,
+  dry : 0,
+  // v : null,
+  verbosity : 2,
+  withSubmodules : 0
+});
+commandGitReset.hint = 'Reset local changes in repository of the module.';
+commandGitReset.commandSubjectHint = false;
+commandGitReset.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitReset.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
+  removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
+  removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
+  dry : 'Dry run without resetting. Default is dry:0.',
+  // v : 'Set verbosity. Default is 2.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
+
+//
+
+function commandGitStatus( e )
+{
+  let cui = this;
+  cui._command_head( commandGitStatus, arguments );
+
+  _.routineOptions( commandGitStatus, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git status',
+    onEach : handleEach,
+    commandRoutine : commandGitStatus,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitStatus
+    ({
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitStatus.defaults )
+    });
+  }
+}
+
+commandGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+  // v : null,
+  verbosity : 1,
+  withSubmodules : 0
+});
+commandGitStatus.hint = 'Check the status of the repository.';
+commandGitStatus.commandSubjectHint = false;
+commandGitStatus.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitStatus.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  local : 'Check local commits. Default value is 1.',
+  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+  remote : 'Check remote unmerged commits. Default value is 1.',
+  remoteBranches : 'Check remote branches. Default value is 0.',
+  prs : 'Check pull requests. Default is prs:1.',
+  // v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+});
+
+//
+
+function commandGitSync( e )
+{
+  let cui = this;
+  cui._command_head( commandGitSync, arguments );
+
+  _.routineOptions( commandGitSync, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git sync',
+    onEach : handleEach,
+    commandRoutine : commandGitSync,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults )
+    });
+  }
+}
+
+commandGitSync.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  dirPath : null,
+  dry : 0,
+  profile : 'default',
+  // v : null,
+  verbosity : 1,
+  withSubmodules : 0
+});
+commandGitSync.hint = 'Syncronize local and remote repositories.';
+commandGitSync.commandSubjectHint = 'A commit message. Default value is "."';
+commandGitSync.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitSync.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  dry : 'Dry run without syncronizing. Default is dry:0.',
+  // v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".',
+});
+
+//
+
+function commandGitTag( e )
+{
+  let cui = this;
+  cui._command_head( commandGitTag, arguments );
+
+  _.routineOptions( commandGitTag, e.propertiesMap );
+  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+  // cui._propertiesImply({ withSubmodules : 0 });
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git tag',
+    onEach : handleEach,
+    commandRoutine : commandGitTag,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitTag
+    ({
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitTag.defaults )
+    });
+  }
+}
+
+commandGitTag.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  name : '.',
+  description : '',
+  dry : 0,
+  light : 0,
+  // v : null,
+  verbosity : 1,
+  withSubmodules : 0
+});
+commandGitTag.hint = 'Add tag for current commit.';
+commandGitTag.commandSubjectHint = false;
+commandGitTag.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandGitTag.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  name : 'Tag name. Default is name:".".',
+  description : 'Description of annotated tag. Default is description:"".',
+  dry : 'Dry run without tagging. Default is dry:0.',
+  light : 'Enables lightweight tags. Default is light:0.',
+  // v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+});
+
+//
+
+function commandGitHookPreservingHardLinks( e )
+{
+  let cui = this;
+  cui._propertiesImply( e.propertiesMap );
+
+  let enable = _.numberFrom( e.commandArgument );
+
+  if( enable )
+  _.git.hookPreservingHardLinksRegister();
+  else
+  _.git.hookPreservingHardLinksUnregister();
+}
+
+commandGitHookPreservingHardLinks.hint = 'Switch on preserving hardlinks.';
+commandGitHookPreservingHardLinks.commandSubjectHint = 'Any subject to enable preserving hardliks.';
+
+//
+
+function commandPrOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandPrOpen, arguments );
+
+  _.routineOptions( commandPrOpen, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git pr open',
+    onEach : handleEach,
+    commandRoutine : commandPrOpen,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPrOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults ),
+    });
+  }
+}
+
+commandPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  title : null,
+  body : null,
+  verbosity : null,
+  withSubmodules : 1
+});
+commandPrOpen.hint = 'Open pull request from current modules.';
+commandPrOpen.commandSubjectHint = 'A title for PR';
+commandPrOpen.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
+
+//
+
+function commandPrList( e )
+{
+  let cui = this;
+  cui._command_head( commandPrList, arguments );
+
+  let implyMap = _.mapOnly_( null, e.propertiesMap, commandPrList.defaults );
+  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
+  _.routineOptions( commandPrList, e.propertiesMap );
+
+  _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'pr list',
+    onEachModule : handleEachModule,
+    commandRoutine : commandPrList,
+    recursive : 0,
+  });
+
+  function handleEachModule( module, op )
+  {
+    let o2 = e.propertiesMap;
+    o2.logger = o2.verbosity;
+    delete o2.verbosity;
+    _.mapOnly_( o2, o2, module.prList.defaults );
+    return module.prList( o2 );
+  }
+
+}
+
+commandPrList.defaults = _.mapExtend( null, commandImply.defaults,
+{
+  token : null,
+  withOpened : 1,
+  withClosed : 0,
+  verbosity : 2,
+})
+commandPrList.hint = 'Open pull request from current modules.';
+commandPrList.commandSubjectHint = 'A title for PR';
+commandPrList.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandPrList.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  withOpened : 'List closed PR-s. By default it is true.',
+  withClosed : 'List closed PR-s. By default it is false.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
+
+// --
 // npm
 // --
 
@@ -6027,7 +6038,7 @@ let Extension =
 
   _command_head,
   errEncounter,
-  _propertiesImplyToMain,
+  // _propertiesImplyToMain,
   _propertiesImply,
 
   beepingGet,
@@ -6106,21 +6117,6 @@ let Extension =
   commandExportPurging,
   commandExportRecursive,
 
-  // command git
-
-  commandGit,
-  commandGitDiff,
-  commandGitPull,
-  commandGitPush,
-  commandGitReset,
-  commandGitStatus,
-  commandGitSync,
-  commandGitTag,
-  commandGitHookPreservingHardLinks,
-
-  commandPrOpen, /* qqq : cover */
-  commandPrList,
-
   // command iterator
 
   commandWith,
@@ -6140,6 +6136,21 @@ let Extension =
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   commandWillfileMergeIntoSingle,
+
+  // command git
+
+  commandGit,
+  commandGitDiff,
+  commandGitPull,
+  commandGitPush,
+  commandGitReset,
+  commandGitStatus,
+  commandGitSync,
+  commandGitTag,
+  commandGitHookPreservingHardLinks,
+
+  commandPrOpen, /* qqq : cover */
+  commandPrList,
 
   // npm
 

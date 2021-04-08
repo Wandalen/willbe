@@ -34,6 +34,7 @@ function init( o )
   if( o )
   self.copy( o );
   self.form();
+  debugger;
   return self;
 }
 

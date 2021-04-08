@@ -206,9 +206,11 @@ module:
           - ../proto/wtools/atop/will/l3/Predefined.s
           - ../proto/wtools/atop/will/l3/Repository.s
           - ../proto/wtools/atop/will/l3/Resolver.s
+          - ../proto/wtools/atop/will/l3/Willf.s
           - ../proto/wtools/atop/will/l4
-          - ../proto/wtools/atop/will/l4/AbstractModule.s
-          - ../proto/wtools/atop/will/l4/Junction.s
+          - ../proto/wtools/atop/will/l4/AbstractJunction.s
+          - ../proto/wtools/atop/will/l4/AbstractModule1.s
+          - ../proto/wtools/atop/will/l4/AbstractModule2.s
           - ../proto/wtools/atop/will/l4/Module.s
           - ../proto/wtools/atop/will/l4/ModuleHandle.s
           - ../proto/wtools/atop/will/l4/ModuleJunction.s
@@ -222,7 +224,6 @@ module:
           - ../proto/wtools/atop/will/l6_resource/PathResource.s
           - ../proto/wtools/atop/will/l6_resource/Reflector.s
           - ../proto/wtools/atop/will/l6_resource/Step.s
-          - ../proto/wtools/atop/will/l6_resource/Willf.s
           - ../proto/wtools/atop/will/l8
           - ../proto/wtools/atop/will/l8/Cui.s
           - ../proto/wtools/atop/will.test

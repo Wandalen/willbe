@@ -26,8 +26,8 @@ function onModule( context )
 
   // hardLink( context, '.eslintrc.yml', '.eslintrc.yml' );
   // hardLink( context, 'proto/Integration.test.s', 'Integration.test.s' );
-  // hardLink( context, '.github/workflows/Test.yml', 'hlink/.github/workflows/Test.yml' );
-  // hardLink( context, '.circleci/config.yml', 'hlink/.circleci/config.yml' );
+  // hardLink( context, '.github/workflows/Test.yml', 'common/.github/workflows/Test.yml' );
+  // hardLink( context, '.circleci/config.yml', 'common/.circleci/config.yml' );
 
   // workflowsReplace( context );
   // workflowsDelete( context );
@@ -143,9 +143,9 @@ function workflowsReplace( context )
 
   logger.log( `Replacing workflows of ${context.junction.nameWithLocationGet()}` );
 
-  hardLink( context, '.github/workflows/Publish.yml', 'hlink/.github/workflows/Publish.yml' );
-  hardLink( context, '.github/workflows/PullRequest.yml', 'hlink/.github/workflows/PullRequest.yml' );
-  hardLink( context, '.github/workflows/Push.yml', 'hlink/.github/workflows/Push.yml' );
+  hardLink( context, '.github/workflows/Publish.yml', 'common/.github/workflows/Publish.yml' );
+  hardLink( context, '.github/workflows/PullRequest.yml', 'common/.github/workflows/PullRequest.yml' );
+  hardLink( context, '.github/workflows/Push.yml', 'common/.github/workflows/Push.yml' );
 
   fileProvider.fileDelete( abs( '.github/workflows/Test.yml' ) );
 

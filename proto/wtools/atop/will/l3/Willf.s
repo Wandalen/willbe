@@ -3,13 +3,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
 /**
  * @classdesc Class wWillfile provides interface for work with willfiles. Interface is a collection of routines to open, read, get data, set data and save willfiles.
  * @class wWillfile
@@ -18,8 +11,8 @@
 
 //
 
-const _ = _global_.wTools;
 let Crypto;
+const _ = _global_.wTools;
 const Parent = null;
 const Self = wWillfile;
 function wWillfile( o )
@@ -1367,7 +1360,7 @@ function structureOf( object )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( object instanceof _.will.AbstractModule || object instanceof _.will.Willfile );
+  _.assert( object instanceof _.will.AbstractModule2 || object instanceof _.will.Willfile );
 
   let commonPath = object.commonPath;
 

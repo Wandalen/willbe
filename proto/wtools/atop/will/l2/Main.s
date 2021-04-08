@@ -526,6 +526,26 @@ function IsModuleAt( filePath )
 
 //
 
+function pathIsRemote( remotePath )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1, 'Expects no arguments' );
+  _.assert( _.strIs( remotePath ) );
+
+  // if( remotePath === undefined )
+  // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+  let remoteProvider = fileProvider.providerForPath( remotePath );
+
+  _.assert( !!remoteProvider );
+
+  return !!remoteProvider.isVcs;
+}
+
+//
+
 function hooksPathGet()
 {
   let will = this;
@@ -568,24 +588,6 @@ function environmentPathFind( dirPath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   return _.will.environmentPathFind({ fileProvider, dirPath });
-  // dirPath = path.canonize( dirPath );
-  //
-  // if( check( dirPath ) )
-  // return dirPath;
-  //
-  // let paths = path.traceToRoot( dirPath );
-  // for( var i = paths.length - 1; i >= 0; i-- )
-  // if( check( paths[ i ] ) )
-  // return paths[ i ];
-  //
-  // return dirPath;
-  //
-  // function check( dirPath )
-  // {
-  //   if( !fileProvider.isDir( path.join( dirPath, '.will' ) ) )
-  //   return false
-  //   return true;
-  // }
 }
 
 // --
@@ -1364,7 +1366,7 @@ function moduleFit_body( object, opts )
   module = junction.module;
 
   _.assert( arguments.length === 2 );
-  _.assert( junction instanceof _.will.ModuleJunction )
+  _.assert( junction instanceof _.will.ModuleJunction );
 
   if( !opts.withKnown && junction.object )
   return false;
@@ -1761,9 +1763,6 @@ function modulesFindEachAt( o )
       _.assert( it.currentModule instanceof _.will.Module );
       _.assert( it.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
       _.arrayAppendOnce( op.openers, it.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
-      // _.assert( it.replicateIteration.currentModule instanceof _.will.Module ); /* yyy */
-      // _.assert( it.replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
-      // _.arrayAppendOnce( op.openers, it.replicateIteration.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
       return it;
     })
 
@@ -2048,7 +2047,6 @@ function modulesOnlyRoots( modules )
     nodesGroup,
   }
 
-  // _global_.debugger = 1;
   let objects = will.modulesEach( o2 );
 
   objects = will.objectsAllVariants( objects );
@@ -2075,7 +2073,6 @@ function modulesOnlyRoots( modules )
     nodesGroup,
   }
 
-  // _global_.debugger = true;
   // debugger;
   // let sourcesHasObjects = will.modulesEach( o3 );
   // debugger;
@@ -2177,7 +2174,7 @@ function modulesEach_body( o )
     nodes = nodes2;
   }
 
-  nodes = _.each( nodes, ( node ) =>
+  _.each( nodes, ( node ) =>
   {
     _.assert( will.ObjectIs( node ) );
   });
@@ -2193,7 +2190,9 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
 
+  // _.debugger;
   o.result = o.nodesGroup.each( o2 );
+  // _.debugger;
   o.result = _.longOnce( o.result.map( ( junction ) => outputFrom( junction ) ) );
 
   if( o.descriptive )
@@ -2205,9 +2204,6 @@ function modulesEach_body( o )
 
   function objectAppend( object )
   {
-
-    if( _global_.debugger )
-    debugger;
 
     _.assert( !!object );
     _.assert
@@ -2248,8 +2244,6 @@ function modulesEach_body( o )
     {
       junction.objects.forEach( ( object ) =>
       {
-        if( _global_.debugger )
-        debugger;
         if( object.ownedBy( o.ownedObjects ) )
         objectAppend( object );
       });
@@ -2392,6 +2386,7 @@ function modulesFor_body( o )
 
     ready.then( () =>
     {
+      // _.debugger;
       if( !o.onEachVisitedObject && !o.onEachModule )
       return null;
       let ready = _.take( null );
@@ -2427,7 +2422,9 @@ function modulesFor_body( o )
     let o2 = _.mapOnly_( null, o, will.modulesEach.defaults );
     o2.outputFormat = '*/object';
     o2.modules = objects;
+    debugger;
     let result = will.modulesEach( o2 );
+    debugger;
     return result;
   }
 
@@ -2499,7 +2496,7 @@ function modulesFor_body( o )
 
     if( o.onEachJunction )
     {
-      let o3 = _.mapExtend( null, o );
+      let o3 = _.mapExtend( null, o ); /* xxx : object inherit? */
       o3.junction = junction;
       o3.isRoot = isRoot;
       ready.then( () => o.onEachJunction( junction, o3 ) );
@@ -2520,6 +2517,7 @@ var defaults = modulesFor_body.defaults = _.mapExtend
 
 defaults.recursive = 1;
 defaults.withPeers = 1;
+defaults.withStem = 1; /* yyy */
 defaults.left = 1;
 defaults.nodesGroup = null;
 defaults.modules = null;
@@ -2716,16 +2714,8 @@ function modulesDownload_body( o )
     let ready2 = _.take( null );
 
     _.assert( _.arrayIs( objects ) );
-    // let junctions = _.longOnce( will.junctionsFrom( objects ) );
-    // debugger;
     let handles = _.longOnce_( null, will.handlesFrom( objects ), ( handle ) => handle.object );
-    // debugger;
 
-    // debugger;
-    // if( _global_.debugger )
-    // debugger;
-
-    // junctions.forEach( ( junction ) => /* xxx : make it parallel */
     handles.forEach( ( handle ) => /* xxx : make it parallel */
     {
       let junction = handle.junction;
@@ -3109,7 +3099,7 @@ function modulesBuild_body( o )
   o = _.assertRoutineOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
 
-  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly_( null, o, will.recursiveValueDeduceFromBuild.defaults ) ); /* yyy2 */
+  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly_( null, o, will.recursiveValueDeduceFromBuild.defaults ) );
 
   ready.then( () =>
   {
@@ -3719,17 +3709,6 @@ function graphGroupMake( o )
   {
     _.assert( will.ObjectIs( object ) );
 
-    // if( _global_.debugger )
-    // if( object.qualifiedName === 'opener::a' )
-    // debugger;
-    // if( _global_.debugger )
-    // if( object.absoluteName === 'opener::a0' )
-    // debugger;
-
-    // if( _global_.debugger )
-    // if( will.junctionFrom( object ).id === 51 )
-    // debugger;
-
     /*
     "junction:: : #1448
       path::local : hd:///atop/will.test/_asset/hierarchyHdBug/.module/PathTools
@@ -3743,23 +3722,8 @@ function graphGroupMake( o )
       module::z / module::wPathTools / relation::wPathTools #920 #1049
     */
 
-    // if( _global_.debugger )
-    // debugger;
     let result = object.submodulesRelationsFilter( _.mapOnly_( null, o, object.submodulesRelationsFilter.defaults ) );
 
-    // result.forEach( ( object ) =>
-    // {
-    //   if( _global_.debugger )
-    //   if( _.strHas( object.absoluteName, 'module::a / relation::Tools' ) )
-    //   debugger;
-    // });
-
-    // if( _global_.debugger )
-    // will.objectsLogInfo( result );
-    // if( _global_.debugger )
-    // debugger;
-    // let junction = will.junctionFrom( object );
-    // return junction.submodulesGet( _.mapOnly_( null, o, junction.submodulesGet.defaults ) );
     return result;
   }
 
@@ -5054,8 +5018,6 @@ function hookCall( o )
         o.request.map.verbosity = o.request.map.v;
         delete o.request.map.v;
       }
-      // if( o.request.map.verbosity === undefined ) /* yyy */
-      // o.request.map.verbosity = 1;
     }
   }
 
@@ -5489,6 +5451,7 @@ let Extension =
   HooksPathGet,
   IsModuleAt,
 
+  pathIsRemote,
   hooksPathGet,
   environmentPathSet,
   environmentPathFind,

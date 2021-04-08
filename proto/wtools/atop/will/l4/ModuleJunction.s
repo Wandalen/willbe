@@ -19,6 +19,8 @@ function wWillModuleJunction( o )
 
 Self.shortName = 'ModuleJunction';
 
+/* zzz : multiple inheritance should be here from AbstractModule1 an AbstractJunction */
+
 // --
 // inter
 // --
@@ -1882,6 +1884,15 @@ function nameWithLocationGet()
   return result;
 }
 
+//
+
+function qualifiedNameGet()
+{
+  let junction = this;
+  let name = junction.name;
+  return `junction::( ${name} )`;
+}
+
 // --
 // accessor
 // --
@@ -2038,10 +2049,15 @@ let Forbids =
 
 let Accessors =
 {
+
   dirPath : { get : dirPathGet, writable : 0 },
   enabled : { get : enabledGet, writable : 0 },
   isRemote : { get : isRemoteGet, writable : 0 },
   objects : { get : objectsGet, writable : 0 },
+
+  qualifiedName : { get : qualifiedNameGet, writable : 0 },
+  __ : { get : _.accessor.getter.withSymbol, writable : 0, strict : 0 },
+
 }
 
 // --
@@ -2107,6 +2123,7 @@ let Extension =
 
   exportString,
   nameWithLocationGet,
+  qualifiedNameGet,
 
   // accessor
 
