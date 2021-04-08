@@ -1213,12 +1213,12 @@ function performBegin()
   _.assert( !_.property.own( it, 'currentThis' ) );
 
   _.assert( it.iterationProper( it ) );
-  if( !( it.currentContext instanceof _.will.AbstractModule ) )
+  if( !( it.currentContext instanceof _.will.AbstractModule2 ) )
   if( it.iterator.criterion === null && it.currentContext && it.currentContext.criterion )
   it.iterator.criterion = it.currentContext.criterion;
 
   _.assert( it.criterion === null || _.mapIs( it.criterion ) );
-  _.assert( it.baseModule instanceof _.will.AbstractModule );
+  _.assert( it.baseModule instanceof _.will.AbstractModule2 );
   _.assert( !_.property.own( it, 'criterion' ) );
   _.assert( it.OriginalLooker === ResolverWillbe );
   _.assert( _.prototype.has( it.Looker, ResolverWillbe ) );

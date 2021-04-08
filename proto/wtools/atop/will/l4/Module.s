@@ -38,7 +38,7 @@
 */
 
 const _ = _global_.wTools;
-const Parent = _.will.AbstractModule;
+const Parent = _.will.AbstractModule2;
 const Self = wWillModule;
 function wWillModule( o )
 {
@@ -46,6 +46,8 @@ function wWillModule( o )
 }
 
 Self.shortName = 'Module';
+
+_.assert( _.routineIs( Parent ) );
 
 // --
 // inter
@@ -1551,6 +1553,68 @@ function predefinedReflectorMake( o )
 }
 
 // --
+// coercer
+// --
+
+function toModuleForResolver()
+{
+  let module = this;
+  return module;
+}
+
+//
+
+function toModule()
+{
+  let module = this;
+  let will = module.will;
+
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  return module;
+}
+
+//
+
+function toOpener()
+{
+  let module = this;
+  let will = module.will;
+
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  for( let u = 0 ; u < module.userArray.length ; u++ )
+  {
+    let opener = module.userArray[ u ];
+    if( opener instanceof _.will.ModuleOpener )
+    return opener;
+  }
+
+  return null;
+}
+
+//
+
+function toRelation()
+{
+  let module = this;
+  let will = module.will;
+
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  return module.superRelations[ 0 ] || null;
+}
+
+//
+
+function toJunction()
+{
+  let module = this;
+  let will = module.will;
+  return will.junctionFrom( module );
+}
+
+// --
 // relator
 // --
 
@@ -1722,6 +1786,14 @@ function isValid()
 
 //
 
+function errorGet()
+{
+  let module = this;
+  return module.stager.errorGet();
+}
+
+//
+
 function isConsistent( o )
 {
   let module = this;
@@ -1788,6 +1860,7 @@ function isAliveGet()
 {
   let module = this;
   return module.formed2 >= 1;
+  /* qqq : for Dmytro : ? */
   // return module.stager.stageStateBegun( 'preformed' );
 }
 
@@ -5656,7 +5729,7 @@ function _filePathChanged1( o )
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.mapExtend( null, Parent.prototype._filePathChanged1.defaults );
 
 //
 
@@ -5721,7 +5794,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.mapExtend( null, Parent.prototype._filePathChanged2.defaults );
 
 //
 
@@ -6421,68 +6494,6 @@ function shortNameArrayGet()
   let result = rootModule.shortNameArrayGet();
   result.push( module.name );
   return result;
-}
-
-// --
-// coercer
-// --
-
-function toModuleForResolver()
-{
-  let module = this;
-  return module;
-}
-
-//
-
-function toModule()
-{
-  let module = this;
-  let will = module.will;
-
-  module.assertIsValidIntegrity(); /* zzz : temp */
-
-  return module;
-}
-
-//
-
-function toOpener()
-{
-  let module = this;
-  let will = module.will;
-
-  module.assertIsValidIntegrity(); /* zzz : temp */
-
-  for( let u = 0 ; u < module.userArray.length ; u++ )
-  {
-    let opener = module.userArray[ u ];
-    if( opener instanceof _.will.ModuleOpener )
-    return opener;
-  }
-
-  return null;
-}
-
-//
-
-function toRelation()
-{
-  let module = this;
-  let will = module.will;
-
-  module.assertIsValidIntegrity(); /* zzz : temp */
-
-  return module.superRelations[ 0 ] || null;
-}
-
-//
-
-function toJunction()
-{
-  let module = this;
-  let will = module.will;
-  return will.junctionFrom( module );
 }
 
 // --
@@ -8961,12 +8972,12 @@ function gitPrOpen( o )
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
 
+  /* xxx : standartize */
   if( !o.token )
   {
     let config = fileProvider.configUserRead( _.censor.storageConfigPath );
     if( !config )
     config = fileProvider.configUserRead();
-
     if( config !== null && config.about && config.about[ 'github.token' ] )
     o.token = config.about[ 'github.token' ];
   }
@@ -9279,15 +9290,17 @@ function gitStatus( o )
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : module.dirPath + '**', safe : 0 });
 
-  let config = fileProvider.configUserRead();
-  let token = null;
-  if( config !== null && config.about && config.about[ 'github.token' ] )
-  token = config.about[ 'github.token' ];
-
   let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = o.dirPath;
+  /* xxx : standartize */
   if( !o2.token )
-  o2.token = token;
+  {
+    let config = fileProvider.configUserRead();
+    let token = null;
+    if( config !== null && config.about && config.about[ 'github.token' ] )
+    token = config.about[ 'github.token' ];
+    o2.token = token;
+  }
 
   let got = _.git.statusFull( o2 );
 
@@ -9486,26 +9499,65 @@ gitTag.defaults =
 function prList( o )
 {
   let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger; /* xxx : qqq : use transaction */
+
+  o.logger = _.logger.relative( logger, o.logger ); /* xxx : adjust logger.relative. write basic test */
 
   _.routineOptions( prList, o );
 
+  /* xxx : standartize */
+  if( !o.token )
+  {
+    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    if( !config )
+    config = fileProvider.configUserRead();
+    if( config !== null && config.about && config.about[ 'github.token' ] )
+    o.token = config.about[ 'github.token' ];
+  }
+
+  if( !o.remotePath )
+  {
+    if( module.pathMap.repository )
+    o.remotePath = module.pathMap.repository;
+    // else
+    // o.remotePath = _.git.remotePathFromLocal( module.dirPath );
+  }
+
+  if( !o.remotePath )
+  {
+    if( !o.throwing )
+    return _.take( null );
+    throw _.err( `Module ${module.qualifiedName} is not remote` );
+  }
+
   return _.repo.prsGet
   ({
-    remotePath : o.remotePath,
-    throwing : o.throwing,
-    sync : 0,
+    remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
     token : o.token,
+    throwing : o.throwing,
+    logger : o.logger,
+    sync : 0,
   }).then( ( op ) =>
   {
-
+    if( o.logger && o.logger.verbosity )
+    if( op.result )
+    op.result.forEach( ( pr ) => o.logger.log( `${pr.title} from ${pr.head.user.login}` ) );
+    return op;
   });
 
 }
 
 prList.defaults =
 {
+  remotePath : null,
+  token : null,
+  withOpened : 1,
+  withClosed : 0,
   dry : 0,
-  verbosity : 1,
+  logger : 1,
   throwing : 1,
 }
 
@@ -9831,7 +9883,6 @@ let Accessors =
   about : { set : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.will.ParagraphAbout }) },
   rootModule : { get : rootModuleGet, set : rootModuleSet },
   peerModule : { set : peerModuleSet },
-  // resolverModule : { get : toModuleForResolver, set : 0 },
 
   submoduleMap : { set : ResourceSetter_functor({ resourceName : 'ModulesRelation', mapName : 'submoduleMap' }) },
   pathResourceMap : { set : ResourceSetter_functor({ resourceName : 'PathResource', mapName : 'pathResourceMap' }) },
@@ -9842,7 +9893,7 @@ let Accessors =
   superRelations : { set : superRelationsSet },
 
   name : { get : nameGet, writable : 0 },
-  absoluteName : { get : absoluteNameGet, writable : 0 }, /* xxx : deprecate option readOnly */
+  absoluteName : { get : absoluteNameGet, writable : 0 },
   aliasNames : { get : aliasNamesGet, writable : 0 },
 
   willfilesPath : { get : willfilesPathGet, set : willfilesPathSet },
@@ -9852,7 +9903,7 @@ let Accessors =
   downloadPath : { get : downloadPathGet, set : downloadPathSet },
   remotePath : { get : remotePathGet, set : remotePathSet },
   dirPath : { get : dirPathGet, writable : 0 },
-  commonPath : { get : commonPathGet, writable : 0 },
+  commonPath : { get : commonPathGet, writable : 0 }, /* xxx : deprecate commonPath */
   currentRemotePath : { get : currentRemotePathGet, writable : 0 },
   willPath : { get : willPathGet, writable : 0 },
   originalWillfilesPath : { get : originalWillfilesPathGet, writable : 0 },
@@ -9915,6 +9966,14 @@ let Extension =
   predefinedPathMake,
   predefinedStepMake,
   predefinedReflectorMake,
+
+  // coercer
+
+  toModuleForResolver,
+  toModule,
+  toOpener,
+  toRelation,
+  toJunction,
 
   // relator
 
@@ -10137,14 +10196,6 @@ let Extension =
   absoluteNameGet,
   shortNameArrayGet,
 
-  // coercer
-
-  toModuleForResolver,
-  toModule,
-  toOpener,
-  toRelation,
-  toJunction,
-
   // exporter
 
   optionsForOpenerExport,
@@ -10193,7 +10244,7 @@ let Extension =
   gitPush,
   gitReset,
   gitStatus,
-  _providerArchiveMake,
+  _providerArchiveMake, /* xxx : move */
   gitSync,
   gitTag,
 

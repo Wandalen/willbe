@@ -2,6 +2,7 @@
 const _ = require( '../../../node_modules/Tools' );
 _.include( 'wProcess' );
 _.include( 'wFiles' );
+_.include( 'wGitTools' );
 
 let assetsOriginalPath = _.path.join( __dirname, '_asset' );
 let repoDirPath = _.path.join( assetsOriginalPath, '-repo' );
@@ -60,7 +61,9 @@ function clone( name, version )
 {
 
   if( !_.fileProvider.isDir( _.path.join( repoDirPath, name ) ) )
-  start( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
-  start({ execPath : 'git checkout ' + version, currentPath : _.path.join( repoDirPath, name ) });
+  start( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name ); /* qqq : for Dmytro : use routine _.git.* */
+  start({ execPath : 'git checkout ' + version, currentPath : _.path.join( repoDirPath, name ) }); /* qqq : for Dmytro : use routine _.git.* */
+  _.git.reset({ localPath : _.path.join( repoDirPath, name ) });
+  /* qqq : for Dmytro : implement and cover _.path.joiner */
 
 }

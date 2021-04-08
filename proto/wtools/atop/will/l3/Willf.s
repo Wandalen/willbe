@@ -1416,7 +1416,7 @@ function structureOf( object )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( object instanceof _.will.AbstractModule || object instanceof _.will.Willfile );
+  _.assert( object instanceof _.will.AbstractModule2 || object instanceof _.will.Willfile );
 
   let commonPath = object.commonPath;
 

@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-const Parent = _.will.AbstractModule;
+const Parent = _.will.AbstractModule2;
 const Self = wWillModuleOpener;
 function wWillModuleOpener( o )
 {
@@ -18,6 +18,8 @@ function wWillModuleOpener( o )
 }
 
 Self.shortName = 'ModuleOpener';
+
+_.assert( _.routineIs( Parent ) );
 
 // --
 // inter
@@ -1166,7 +1168,8 @@ function _repoForm()
   _.assert( opener.openedModule === null );
 
   let downloadPath, remotePath;
-  let isRemote = opener.repoIsRemote();
+  let isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
+  // let isRemote = opener.repoIsRemote();
 
   // if( opener.id === 1 )
   // debugger;
@@ -1177,7 +1180,8 @@ function _repoForm()
     opener._.localPath = opener.commonPath;
     downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
     remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet();
-    isRemote = opener.repoIsRemote();
+    // isRemote = opener.repoIsRemote();
+    isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
     _.assert( isRemote === true );
     /*
       xxx qqq :
@@ -1200,7 +1204,8 @@ function _repoForm()
       {
         downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
         remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet()
-        isRemote = opener.repoIsRemote();
+        // isRemote = opener.repoIsRemote();
+        isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
       }
       else if( opener.isMain )
       {
@@ -1212,7 +1217,8 @@ function _repoForm()
           if( remotePathFromLocal !== null ) /* Dmytro : routine _.git.remotePathFromLocal returns null if no remote path exists */
           remotePathFromLocal = _.git.path.trail( remotePathFromLocal );
           remotePath = opener._.remotePath = remotePathFromLocal;
-          isRemote = opener.repoIsRemote();
+          // isRemote = opener.repoIsRemote();
+          isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
         }
       }
 
@@ -2077,7 +2083,7 @@ function _filePathChanged1( o )
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.mapExtend( null, Parent.prototype._filePathChanged1.defaults );
 
 //
 
@@ -2119,7 +2125,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.mapExtend( null, Parent.prototype._filePathChanged2.defaults );
 
 //
 
@@ -2418,6 +2424,14 @@ function shortNameArrayGet()
 // --
 // other accessor
 // --
+
+function errorGet()
+{
+  let opener = this;
+  return opener[ errorSymbol ];
+}
+
+//
 
 function errorSet( err )
 {
@@ -2732,7 +2746,7 @@ let Accessors =
   openedModule : {},
   peerModule : {},
 
-  error : { set : errorSet },
+  error : { set : errorSet, get : errorGet, },
 
 }
 
@@ -2846,6 +2860,7 @@ let Extension =
 
   // other accessor
 
+  errorGet,
   errorSet,
 
   isAliveGet,

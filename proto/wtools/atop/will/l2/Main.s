@@ -526,6 +526,26 @@ function IsModuleAt( filePath )
 
 //
 
+function pathIsRemote( remotePath )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1, 'Expects no arguments' );
+  _.assert( _.strIs( remotePath ) );
+
+  // if( remotePath === undefined )
+  // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+  let remoteProvider = fileProvider.providerForPath( remotePath );
+
+  _.assert( !!remoteProvider );
+
+  return !!remoteProvider.isVcs;
+}
+
+//
+
 function hooksPathGet()
 {
   let will = this;
@@ -568,24 +588,6 @@ function environmentPathFind( dirPath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   return _.will.environmentPathFind({ fileProvider, dirPath });
-  // dirPath = path.canonize( dirPath );
-  //
-  // if( check( dirPath ) )
-  // return dirPath;
-  //
-  // let paths = path.traceToRoot( dirPath );
-  // for( var i = paths.length - 1; i >= 0; i-- )
-  // if( check( paths[ i ] ) )
-  // return paths[ i ];
-  //
-  // return dirPath;
-  //
-  // function check( dirPath )
-  // {
-  //   if( !fileProvider.isDir( path.join( dirPath, '.will' ) ) )
-  //   return false
-  //   return true;
-  // }
 }
 
 // --
@@ -1364,7 +1366,7 @@ function moduleFit_body( object, opts )
   module = junction.module;
 
   _.assert( arguments.length === 2 );
-  _.assert( junction instanceof _.will.ModuleJunction )
+  _.assert( junction instanceof _.will.ModuleJunction );
 
   if( !opts.withKnown && junction.object )
   return false;
@@ -1761,9 +1763,6 @@ function modulesFindEachAt( o )
       _.assert( it.currentModule instanceof _.will.Module );
       _.assert( it.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
       _.arrayAppendOnce( op.openers, it.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
-      // _.assert( it.replicateIteration.currentModule instanceof _.will.Module ); /* yyy */
-      // _.assert( it.replicateIteration.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
-      // _.arrayAppendOnce( op.openers, it.replicateIteration.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
       return it;
     })
 
@@ -2423,7 +2422,9 @@ function modulesFor_body( o )
     let o2 = _.mapOnly_( null, o, will.modulesEach.defaults );
     o2.outputFormat = '*/object';
     o2.modules = objects;
+    debugger;
     let result = will.modulesEach( o2 );
+    debugger;
     return result;
   }
 
@@ -2495,7 +2496,7 @@ function modulesFor_body( o )
 
     if( o.onEachJunction )
     {
-      let o3 = _.mapExtend( null, o );
+      let o3 = _.mapExtend( null, o ); /* xxx : object inherit? */
       o3.junction = junction;
       o3.isRoot = isRoot;
       ready.then( () => o.onEachJunction( junction, o3 ) );
@@ -2516,6 +2517,7 @@ var defaults = modulesFor_body.defaults = _.mapExtend
 
 defaults.recursive = 1;
 defaults.withPeers = 1;
+defaults.withStem = 1; /* yyy */
 defaults.left = 1;
 defaults.nodesGroup = null;
 defaults.modules = null;
@@ -3097,7 +3099,7 @@ function modulesBuild_body( o )
   o = _.assertRoutineOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
 
-  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly_( null, o, will.recursiveValueDeduceFromBuild.defaults ) ); /* yyy2 */
+  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly_( null, o, will.recursiveValueDeduceFromBuild.defaults ) );
 
   ready.then( () =>
   {
@@ -5014,8 +5016,6 @@ function hookCall( o )
         o.request.map.verbosity = o.request.map.v;
         delete o.request.map.v;
       }
-      // if( o.request.map.verbosity === undefined ) /* yyy */
-      // o.request.map.verbosity = 1;
     }
   }
 
@@ -5449,6 +5449,7 @@ let Extension =
   HooksPathGet,
   IsModuleAt,
 
+  pathIsRemote,
   hooksPathGet,
   environmentPathSet,
   environmentPathFind,

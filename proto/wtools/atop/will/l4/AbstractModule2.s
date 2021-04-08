@@ -1,4 +1,4 @@
-( function _AbstractModule_s_()
+( function _AbstractModule2_s_()
 {
 
 'use strict';
@@ -10,14 +10,16 @@
  */
 
 const _ = _global_.wTools;
-const Parent = null;
-const Self = wWillAbstractModule;
-function wWillAbstractModule( o )
+const Parent = _.will.AbstractModule1;
+const Self = wWillAbstractModule2;
+function wWillAbstractModule2( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
 
-Self.shortName = 'AbstractModule';
+Self.shortName = 'AbstractModule2';
+
+_.assert( _.routineIs( Parent ) );
 
 // --
 // inter
@@ -42,8 +44,6 @@ function init()
   module[ commonPathSymbol ] = null;
   module[ willPathSymbol ] = _.path.join( __dirname, '../Exec' );
 
-  // module.statusInvalidate({ all : 1 });
-
   _.workpiece.initFields( module );
   Object.preventExtensions( module );
   _.Will.ResourceCounter += 1;
@@ -51,7 +51,7 @@ function init()
 }
 
 // --
-// etc
+// relator
 // --
 
 function isUsedManually()
@@ -118,7 +118,9 @@ function isUsedManually()
 
 }
 
-//
+// --
+// etc
+// --
 
 function optionsFormingForward( o )
 {
@@ -144,20 +146,6 @@ function optionsFormingForward( o )
 }
 
 optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
-
-//
-
-function ownedBy( object )
-{
-  let module = this;
-
-  if( _.arrayIs( object ) )
-  return !!_.any( object, ( object ) => module.ownedBy( object ) );
-
-  _.assert( !!object );
-
-  return object.own( module );
-}
 
 // --
 // path
@@ -443,54 +431,6 @@ function remotePathEachAdoptCurrent()
 }
 
 // --
-// name
-// --
-
-function qualifiedNameGet()
-{
-  let module = this;
-  let name = module.name;
-  return 'module' + '::' + name;
-}
-
-//
-
-function decoratedQualifiedNameGet()
-{
-  let module = this;
-  let result = module.qualifiedName;
-  return _.color.strFormat( result, 'entity' );
-}
-
-//
-
-function decoratedAbsoluteNameGet()
-{
-  let module = this;
-  let result = module.absoluteName;
-  return _.color.strFormat( result, 'entity' );
-}
-
-//
-
-function nameWithLocationGet()
-{
-  let module = this;
-  let name = _.color.strFormat( module.qualifiedName + '#' + module.id, 'entity' );
-  if( module.localPath )
-  {
-    let localPath = _.color.strFormat( module.localPath, 'path' );
-    let result = `${name} at ${localPath}`;
-    return result;
-  }
-  else
-  {
-    let result = `${name}`;
-    return result;
-  }
-}
-
-// --
 // willfile
 // --
 
@@ -628,29 +568,30 @@ function _willfilesRelease( willfilesArray )
 
 }
 
+// //
+//
+// function repoIsRemote( remotePath )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( !!module.willfilesPath || !!module.dirPath );
+//   _.assert( arguments.length === 0, 'Expects no arguments' );
+//
+//   if( remotePath === undefined )
+//   remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+//   let remoteProvider = fileProvider.providerForPath( remotePath );
+//
+//   _.assert( !!remoteProvider );
+//
+//   return !!remoteProvider.isVcs;
+// }
+
 //
 
-function repoIsRemote( remotePath )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( !!module.willfilesPath || !!module.dirPath );
-  _.assert( arguments.length === 0, 'Expects no arguments' );
-
-  if( remotePath === undefined )
-  remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
-  let remoteProvider = fileProvider.providerForPath( remotePath );
-
-  _.assert( !!remoteProvider );
-
-  return !!remoteProvider.isVcs;
-}
-
-//
-
+/* qqq : for Vova : refactor, discusss first */
 function repoVerify( o )
 {
   let module = this;
@@ -661,7 +602,6 @@ function repoVerify( o )
 
   _.assert( module.isPreformed() );
   _.assert( arguments.length === 1 );
-
   _.routineOptions( repoVerify, o );
 
   let ready = _.take( null );
@@ -690,17 +630,23 @@ function repoVerify( o )
     //   () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
     // );
 
+    // _.assert
+    // (
+    //   !!module && ( module instanceof _.will.Module ) ? module.formed2 : module.formed,
+    //   () => 'Submodule', ( module ? module.qualifiedName : '' ), 'was not preformed to verify'
+    // );
+
     _.assert
     (
-      !!module && ( module instanceof _.will.Module ) ? module.formed2 : module.formed,
-      () => 'Submodule', ( module ? module.qualifiedName : '' ), 'was not preformed to verify'
+      !!module && module.isPreformed(),
+      () => '! Submodule', ( module ? module.qualifiedName : '' ), 'was not preformed'
     );
 
     /* isValid */
 
     if( o.isValid )
     if( !module.isValid() )
-    throw _.err( opener.error, '\n! Submodule', ( module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
+    throw _.err( module.errorGet(), '\n! Submodule', ( module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
 
     /* is remote / enabled */
 
@@ -770,7 +716,6 @@ function repoVerify( o )
     }
 
     return true;
-
   }
 
   /* */
@@ -787,7 +732,7 @@ function repoVerify( o )
 
 }
 
-var defaults  = repoVerify.defaults = Object.create( null );
+var defaults = repoVerify.defaults = Object.create( null );
 
 defaults.throwing = 1;
 defaults.asMap = 0;
@@ -882,15 +827,10 @@ let Forbids =
 let Accessors =
 {
 
-  qualifiedName : { get : qualifiedNameGet, combining : 'rewrite', writable : 0 },
   fileName : { writable : 0 },
-  decoratedQualifiedName : { get : decoratedQualifiedNameGet, combining : 'rewrite', writable : 0 },
-  decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
 
   willfilesArray : { set : willfileArraySet },
   willfileWithRoleMap : { writable : 0 },
-
-  __ : { get : _.accessor.getter.withSymbol, writable : 0, strict : 0 },
 
 }
 
@@ -906,11 +846,13 @@ let Extension =
   finit,
   init,
 
-  // etc
+  // relator
 
   isUsedManually,
+
+  // etc
+
   optionsFormingForward,
-  ownedBy,
 
   // path
 
@@ -925,13 +867,6 @@ let Extension =
   remotePathEachAdopt,
   remotePathEachAdoptCurrent,
 
-  // name
-
-  qualifiedNameGet,
-  decoratedQualifiedNameGet,
-  decoratedAbsoluteNameGet,
-  nameWithLocationGet,
-
   // willfile
 
   willfileArraySet,
@@ -943,7 +878,7 @@ let Extension =
 
   // repo
 
-  repoIsRemote,
+  // repoIsRemote,
   repoVerify,
 
   // relation
@@ -966,7 +901,6 @@ _.classDeclare
   extend : Extension,
 });
 
-_.Copyable.mixin( Self );
 _.will[ Self.shortName ] = Self;
 
 })();

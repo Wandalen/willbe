@@ -590,25 +590,25 @@ function _statusGetter_functor( propName )
   }
 }
 
+// //
 //
-
-function repoIsRemote( remotePath )
-{
-  let repo = this;
-  let will = repo.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( arguments.length === 1 );
-
-  if( remotePath === undefined )
-  remotePath = repo.remotePath ? repo.remotePath : repo.downloadPath;
-  let remoteProvider = will.vcsProviderFor( remotePath );
-
-  _.assert( !!remoteProvider );
-
-  return !!remoteProvider.isVcs;
-}
+// function repoIsRemote( remotePath )
+// {
+//   let repo = this;
+//   let will = repo.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( arguments.length === 1 );
+//
+//   if( remotePath === undefined )
+//   remotePath = repo.remotePath ? repo.remotePath : repo.downloadPath;
+//   let remoteProvider = will.vcsProviderFor( remotePath );
+//
+//   _.assert( !!remoteProvider );
+//
+//   return !!remoteProvider.isVcs;
+// }
 
 //
 
@@ -847,7 +847,7 @@ let Extension =
   statusInvalidate,
   status,
 
-  repoIsRemote,
+  // repoIsRemote,
   repoLocalVersion,
   repoLatestVersion,
 

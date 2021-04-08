@@ -22,11 +22,13 @@ if( typeof module !== 'undefined' )
   require( '../l3/Resolver.s' );
   require( '../l3/Willf.s' );
 
-  require( '../l4/AbstractModule.s' );
+  require( '../l4/AbstractJunction.s' );
+  require( '../l4/AbstractModule1.s' );
+  require( '../l4/AbstractModule2.s' );
   require( '../l4/Module.s' );
   require( '../l4/ModuleHandle.s' );
-  require( '../l4/ModuleOpener.s' );
   require( '../l4/ModuleJunction.s' );
+  require( '../l4/ModuleOpener.s' );
 
   require( '../l5/Resource.s' );
 

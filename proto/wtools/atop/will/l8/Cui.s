@@ -1318,33 +1318,45 @@ function _commandModuleOrientedLike( o )
 
   let openers = will.currentOpeners;
 
-  openersEach( openers );
-
-  return ready.finally( ( err, arg ) =>
+  let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+  o2.modules = openers;
+  return will.modulesFor( o2 )
+  .finally( ( err, arg ) =>
   {
-    will.currentOpeners = openers;
     will._commandsEnd( o.commandRoutine );
     if( err )
-    logger.error( _.errOnce( err ) );
-    if( err )
-    throw err;
+    throw _.err( err, `\nFailed to ${o.name}` );
     return arg;
-  })
+  });
 
-  /* */
-
-  function openersEach( openers )
-  {
-    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-    o2.modules = openers;
-    return will.modulesFor( o2 )
-    .finally( ( err, arg ) =>
-    {
-      if( err )
-      throw _.err( err, `\nFailed to ${o.name}` );
-      return arg;
-    });
-  }
+  // openersEach( openers );
+  //
+  // return ready.finally( ( err, arg ) =>
+  // {
+  //   will.currentOpeners = openers;
+  //   will._commandsEnd( o.commandRoutine );
+  //   if( err )
+  //   logger.error( _.errOnce( err ) );
+  //   if( err )
+  //   throw err;
+  //   return arg;
+  // })
+  //
+  // /* */
+  //
+  // function openersEach( openers )
+  // {
+  //   let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+  //   o2.modules = openers;
+  //   return will.modulesFor( o2 )
+  //   .finally( ( err, arg ) =>
+  //   {
+  //     will._commandsEnd( o.commandRoutine );
+  //     if( err )
+  //     throw _.err( err, `\nFailed to ${o.name}` );
+  //     return arg;
+  //   });
+  // }
 
 }
 
@@ -5085,7 +5097,6 @@ function commandPrList( e )
   function handleEachModule( module, op )
   {
     let o2 = e.propertiesMap;
-    debugger;
     o2.logger = o2.verbosity;
     delete o2.verbosity;
     _.mapOnly_( o2, o2, module.prList.defaults );
@@ -5097,6 +5108,8 @@ function commandPrList( e )
 commandPrList.defaults = _.mapExtend( null, commandImply.defaults,
 {
   token : null,
+  withOpened : 1,
+  withClosed : 0,
   verbosity : 2,
 })
 commandPrList.hint = 'Open pull request from current modules.';
@@ -5108,6 +5121,8 @@ commandPrList.commandPropertiesAliases =
 commandPrList.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   token : 'An individual authorization token. By default reads from user config file.',
+  withOpened : 'List closed PR-s. By default it is true.',
+  withClosed : 'List closed PR-s. By default it is false.',
   verbosity : 'Set verbosity. Default is 2.',
 });
 
