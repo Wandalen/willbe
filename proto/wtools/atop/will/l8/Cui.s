@@ -84,6 +84,7 @@ function exec()
 function init( o )
 {
   let will = this;
+  will.will = will;
 
   // will[ currentOpenerSymbol ] = null;
 
@@ -350,28 +351,69 @@ function errEncounter( error )
 
 //
 
+/* qqq : delete */
 function _propertiesImply( implyMap )
 {
-  let will = this;
-  let transaction = will.transaction;
+  let cui = this;
+  let transaction = cui.transaction;
 
-  // will._propertiesImplyToMain( implyMap );
+  // cui._propertiesImplyToMain( implyMap );
 
   _.assert( transaction === null || transaction && ( transaction.isInitial || transaction.isFinited() ), 'Transaction object was not removed by previous command.' );
 
-  if( transaction && transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
-  will.transaction.finit();
+  if( transaction && transaction.isInitial ) /* Vova : temporary, until transaction object cui be moved out from main */
+  cui.transaction.finit();
 
-  will.transaction = _.will.Transaction.Make( implyMap, will );
-  // will.transaction = _.will.Transaction({ will, ... _.mapOnly_( null,  implyMap, _.will.Transaction.TransactionFields ) });
+  cui.transaction = _.will.Transaction.Make( implyMap, cui );
+}
+
+//
+
+function _transactionBegin( command, propertiesMap )
+{
+  let cui = this;
+  let transaction = cui.transaction;
+
+  _.assert
+  (
+    transaction === null || ( transaction && transaction.isInitial && !transaction.isFinited() ),
+    'Problem with transaction.'
+  );
+
+  if( transaction && transaction.isInitial )
+  {
+    cui.transaction.finit();
+    cui.transaction = null;
+  }
+
+  let implyMap = _.mapOnly_( null, propertiesMap, cui.commandImply.defaults );
+  cui.transaction = _.will.Transaction.Make( implyMap, cui.will );
+
+  return cui.transaction;
+}
+
+//
+
+function _transactionExtend( command, propertiesMap )
+{
+  let cui = this;
+  let transaction = cui.transaction;
+
+  if( transaction && transaction.isInitial )
+  return cui._transactionBegin( command, propertiesMap );
+
+  let implyMap = _.mapOnly_( null, propertiesMap, cui.commandImply.defaults );
+  cui.transaction.extend( implyMap );
+
+  return cui.transaction;
 }
 
 //
 
 function beepingGet()
 {
-  let will = this;
-  let transaction = will.transaction;
+  let cui = this;
+  let transaction = cui.transaction;
   _.assert( transaction instanceof _.will.Transaction );
   return transaction.beeping;
 }
@@ -382,113 +424,113 @@ function beepingGet()
 
 function _commandsMake()
 {
-  let will = this;
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
+  let cui = this;
+  let logger = cui.logger;
+  let fileProvider = cui.fileProvider;
   let appArgs = _.process.input();
 
-  _.assert( _.instanceIs( will ) );
+  _.assert( _.instanceIs( cui ) );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let commands =
   {
 
-    'help' :                            { e : _.routineJoin( will, will.commandHelp )                         },
-    'imply' :                           { e : _.routineJoin( will, will.commandImply )                        },
-    'version' :                         { e : _.routineJoin( will, will.commandVersion )                      },
-    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck )                 },
-    'version bump' :                    { e : _.routineJoin( will, will.commandVersionBump )                  },
+    'help' :                            { e : _.routineJoin( cui, cui.commandHelp )                         },
+    'imply' :                           { e : _.routineJoin( cui, cui.commandImply )                        },
+    'version' :                         { e : _.routineJoin( cui, cui.commandVersion )                      },
+    'version check' :                   { e : _.routineJoin( cui, cui.commandVersionCheck )                 },
+    'version bump' :                    { e : _.routineJoin( cui, cui.commandVersionBump )                  },
 
-    'modules list' :                    { e : _.routineJoin( will, will.commandModulesList )                  },
-    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList )       },
-    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree )                  },
-    'modules update' :                  { e : _.routineJoin( will, will.commandModulesUpdate )                },
-    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList )                },
-    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList )                    },
-    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList )               },
-    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList )               },
-    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList )                    },
-    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList )                   },
-    'exports list' :                    { e : _.routineJoin( will, will.commandExportsList )                  },
-    'about list' :                      { e : _.routineJoin( will, will.commandAboutList )                    },
-    'about' :                           { e : _.routineJoin( will, will.commandAboutList )                    },
+    'modules list' :                    { e : _.routineJoin( cui, cui.commandModulesList )                  },
+    'modules topological list' :        { e : _.routineJoin( cui, cui.commandModulesTopologicalList )       },
+    'modules tree' :                    { e : _.routineJoin( cui, cui.commandModulesTree )                  },
+    'modules update' :                  { e : _.routineJoin( cui, cui.commandModulesUpdate )                },
+    'resources list' :                  { e : _.routineJoin( cui, cui.commandResourcesList )                },
+    'paths list' :                      { e : _.routineJoin( cui, cui.commandPathsList )                    },
+    'submodules list' :                 { e : _.routineJoin( cui, cui.commandSubmodulesList )               },
+    'reflectors list' :                 { e : _.routineJoin( cui, cui.commandReflectorsList )               },
+    'steps list' :                      { e : _.routineJoin( cui, cui.commandStepsList )                    },
+    'builds list' :                     { e : _.routineJoin( cui, cui.commandBuildsList )                   },
+    'exports list' :                    { e : _.routineJoin( cui, cui.commandExportsList )                  },
+    'about list' :                      { e : _.routineJoin( cui, cui.commandAboutList )                    },
+    'about' :                           { e : _.routineJoin( cui, cui.commandAboutList )                    },
 
-    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean )              },
-    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd )                },
-    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate )             },
-    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade )            },
+    'submodules clean' :                { e : _.routineJoin( cui, cui.commandSubmodulesClean )              },
+    'submodules add' :                  { e : _.routineJoin( cui, cui.commandSubmodulesAdd )                },
+    'submodules fixate' :               { e : _.routineJoin( cui, cui.commandSubmodulesFixate )             },
+    'submodules upgrade' :              { e : _.routineJoin( cui, cui.commandSubmodulesUpgrade )            },
 
-    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload )   },
-    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate )     },
-    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload )   },
-    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate )     },
-    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify )     },
-    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
-    'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
-    'submodules git' :                  { e : _.routineJoin( will, will.commandSubmodulesGit )                },
-    'submodules git diff' :             { e : _.routineJoin( will, will.commandSubmodulesGitDiff )            },
-    'submodules git pr open' :          { e : _.routineJoin( will, will.commandSubmodulesGitPrOpen )          },
-    'submodules git status' :           { e : _.routineJoin( will, will.commandSubmodulesGitStatus )          },
-    'submodules git sync' :             { e : _.routineJoin( will, will.commandSubmodulesGitSync )            },
+    'submodules download' :             { e : _.routineJoin( cui, cui.commandSubmodulesVersionsDownload )   },
+    'submodules update' :               { e : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate )     },
+    'submodules versions download' :    { e : _.routineJoin( cui, cui.commandSubmodulesVersionsDownload )   },
+    'submodules versions update' :      { e : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate )     },
+    'submodules versions verify' :      { e : _.routineJoin( cui, cui.commandSubmodulesVersionsVerify )     },
+    'submodules versions agree' :       { e : _.routineJoin( cui, cui.commandSubmodulesVersionsAgree )      },
+    'submodules shell' :                { e : _.routineJoin( cui, cui.commandSubmodulesShell )              },
+    'submodules git' :                  { e : _.routineJoin( cui, cui.commandSubmodulesGit )                },
+    'submodules git diff' :             { e : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
+    'submodules git pr open' :          { e : _.routineJoin( cui, cui.commandSubmodulesGitPrOpen )          },
+    'submodules git status' :           { e : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
+    'submodules git sync' :             { e : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
-    'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
-    'do' :                              { e : _.routineJoin( will, will.commandDo )                           },
-    'call' :                            { e : _.routineJoin( will, will.commandHookCall )                     },
-    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall )                     },
-    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList )                    },
-    'clean' :                           { e : _.routineJoin( will, will.commandClean )                        },
-    'build' :                           { e : _.routineJoin( will, will.commandBuild )                        },
-    'export' :                          { e : _.routineJoin( will, will.commandExport )                       },
-    'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging )                },
-    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive )              },
+    'shell' :                           { e : _.routineJoin( cui, cui.commandShell )                        },
+    'do' :                              { e : _.routineJoin( cui, cui.commandDo )                           },
+    'call' :                            { e : _.routineJoin( cui, cui.commandHookCall )                     },
+    'hook call' :                       { e : _.routineJoin( cui, cui.commandHookCall )                     },
+    'hooks list' :                      { e : _.routineJoin( cui, cui.commandHooksList )                    },
+    'clean' :                           { e : _.routineJoin( cui, cui.commandClean )                        },
+    'build' :                           { e : _.routineJoin( cui, cui.commandBuild )                        },
+    'export' :                          { e : _.routineJoin( cui, cui.commandExport )                       },
+    'export purging' :                  { e : _.routineJoin( cui, cui.commandExportPurging )                },
+    'export recursive' :                { e : _.routineJoin( cui, cui.commandExportRecursive )              },
 
-    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
-    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
-    'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
-    'modules git' :                     { e : _.routineJoin( will, will.commandModulesGit )                   },
-    'modules git diff' :                { e : _.routineJoin( will, will.commandModulesGitDiff )               },
-    'modules git pr open' :             { e : _.routineJoin( will, will.commandModulesGitPrOpen )             },
-    'modules git status' :              { e : _.routineJoin( will, will.commandModulesGitStatus )             },
-    'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
+    'module new' :                      { e : _.routineJoin( cui, cui.commandModuleNew )                    },
+    'module new with' :                 { e : _.routineJoin( cui, cui.commandModuleNewWith )                },
+    'modules shell' :                   { e : _.routineJoin( cui, cui.commandModulesShell )                 },
+    'modules git' :                     { e : _.routineJoin( cui, cui.commandModulesGit )                   },
+    'modules git diff' :                { e : _.routineJoin( cui, cui.commandModulesGitDiff )               },
+    'modules git pr open' :             { e : _.routineJoin( cui, cui.commandModulesGitPrOpen )             },
+    'modules git status' :              { e : _.routineJoin( cui, cui.commandModulesGitStatus )             },
+    'modules git sync' :                { e : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
-    'with' :                            { e : _.routineJoin( will, will.commandWith )                         },
-    'each' :                            { e : _.routineJoin( will, will.commandEach )                         },
+    'with' :                            { e : _.routineJoin( cui, cui.commandWith )                         },
+    'each' :                            { e : _.routineJoin( cui, cui.commandEach )                         },
 
-    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
-    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
-    'willfile get' :                    { e : _.routineJoin( will, will.commandWillfileGet )                  },
-    'willfile set' :                    { e : _.routineJoin( will, will.commandWillfileSet )                  },
-    'willfile del' :                    { e : _.routineJoin( will, will.commandWillfileDel )                  },
-    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
-    'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
-    'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
-    'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
-    'willfile merge into single' :      { e : _.routineJoin( will, will.commandWillfileMergeIntoSingle )      },
+    'npm from willfile' :               { e : _.routineJoin( cui, cui.commandNpmFromWillfile )              },
+    'willfile from npm' :               { e : _.routineJoin( cui, cui.commandWillfileFromNpm )              },
+    'willfile get' :                    { e : _.routineJoin( cui, cui.commandWillfileGet )                  },
+    'willfile set' :                    { e : _.routineJoin( cui, cui.commandWillfileSet )                  },
+    'willfile del' :                    { e : _.routineJoin( cui, cui.commandWillfileDel )                  },
+    'willfile extend' :                 { e : _.routineJoin( cui, cui.commandWillfileExtend )               },
+    'willfile supplement' :             { e : _.routineJoin( cui, cui.commandWillfileSupplement )           },
+    'willfile extend willfile' :        { e : _.routineJoin( cui, cui.commandWillfileExtendWillfile )       },
+    'willfile supplement willfile' :    { e : _.routineJoin( cui, cui.commandWillfileSupplementWillfile )   },
+    'willfile merge into single' :      { e : _.routineJoin( cui, cui.commandWillfileMergeIntoSingle )      },
 
-    'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
-    'git diff' :                        { e : _.routineJoin( will, will.commandGitDiff )                      },
-    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
-    'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
-    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
-    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus )                    },
-    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync )                      },
-    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag )                       },
-    'git hook preserving hardlinks' :   { e : _.routineJoin( will, will.commandGitHookPreservingHardLinks )   },
+    'git' :                             { e : _.routineJoin( cui, cui.commandGit )                          },
+    'git diff' :                        { e : _.routineJoin( cui, cui.commandGitDiff )                      },
+    'git pull' :                        { e : _.routineJoin( cui, cui.commandGitPull )                      },
+    'git push' :                        { e : _.routineJoin( cui, cui.commandGitPush )                      },
+    'git reset' :                       { e : _.routineJoin( cui, cui.commandGitReset )                     },
+    'git status' :                      { e : _.routineJoin( cui, cui.commandGitStatus )                    },
+    'git sync' :                        { e : _.routineJoin( cui, cui.commandGitSync )                      },
+    'git tag' :                         { e : _.routineJoin( cui, cui.commandGitTag )                       },
+    'git hook preserving hardlinks' :   { e : _.routineJoin( cui, cui.commandGitHookPreservingHardLinks )   },
 
-    'pr open' :                         { e : _.routineJoin( will, will.commandPrOpen )                       },
-    'pr list' :                         { e : _.routineJoin( will, will.commandPrList )                       },
+    'pr open' :                         { e : _.routineJoin( cui, cui.commandPrOpen )                       },
+    'pr list' :                         { e : _.routineJoin( cui, cui.commandPrList )                       },
 
-    'npm publish' :                     { e : _.routineJoin( will, will.commandNpmPublish )                   },
-    'npm dep add' :                     { e : _.routineJoin( will, will.commandNpmDepAdd )                    },
-    'npm install' :                     { e : _.routineJoin( will, will.commandNpmInstall )                   },
-    'npm clean' :                       { e : _.routineJoin( will, will.commandNpmClean )                     },
+    'npm publish' :                     { e : _.routineJoin( cui, cui.commandNpmPublish )                   },
+    'npm dep add' :                     { e : _.routineJoin( cui, cui.commandNpmDepAdd )                    },
+    'npm install' :                     { e : _.routineJoin( cui, cui.commandNpmInstall )                   },
+    'npm clean' :                       { e : _.routineJoin( cui, cui.commandNpmClean )                     },
 
-    'procedure prototype list' :        { e : _.routineJoin( will, will.commandProcedurePrototypeList )       },
+    'procedure prototype list' :        { e : _.routineJoin( cui, cui.commandProcedurePrototypeList )       },
 
-    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
-    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
-    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
-    'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion )               },
+    'package install' :                 { e : _.routineJoin( cui, cui.commandPackageInstall )               },
+    'package local versions' :          { e : _.routineJoin( cui, cui.commandPackageLocalVersions )         },
+    'package remote versions' :         { e : _.routineJoin( cui, cui.commandPackageRemoteVersions )        },
+    'package version' :                 { e : _.routineJoin( cui, cui.commandPackageVersion )               },
 
   }
 
@@ -497,12 +539,12 @@ function _commandsMake()
     basePath : fileProvider.path.current(),
     commands,
     commandPrefix : 'node ',
-    logger : will.logger,
+    logger : cui.logger,
     commandsImplicitDelimiting : 1,
   })
 
-  _.assert( ca.logger === will.logger );
-  _.assert( ca.logger.verbosity === will.verbosity );
+  _.assert( ca.logger === cui.logger );
+  _.assert( ca.logger.verbosity === cui.verbosity );
 
   ca.form();
 
@@ -5078,9 +5120,11 @@ function commandPrList( e )
   let cui = this;
   cui._command_head( commandPrList, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandPrList.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
+  // debugger;
+  // let implyMap = _.mapOnly_( null, e.propertiesMap, commandPrList.defaults );
+  // e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
+  // cui._propertiesImply( implyMap );
+  cui._transactionExtend( commandPrList, e.propertiesMap );
   _.routineOptions( commandPrList, e.propertiesMap );
 
   _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
@@ -5088,6 +5132,7 @@ function commandPrList( e )
   o2.logger = o2.verbosity;
   delete o2.verbosity;
   _.mapOnly_( o2, o2, _.will.Module.prototype.prList.defaults );
+  debugger;
 
   return cui._commandModuleOrientedLike
   ({
@@ -5105,7 +5150,7 @@ function commandPrList( e )
 
 }
 
-commandPrList.defaults = _.mapExtend( null, commandImply.defaults,
+commandPrList.defaults = _.mapExtend( null,
 {
   token : null,
   withOpened : 1,
@@ -5118,7 +5163,7 @@ commandPrList.commandPropertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-commandPrList.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+commandPrList.commandProperties = _.mapExtend( null,
 {
   token : 'An individual authorization token. By default reads from user config file.',
   withOpened : 'List closed PR-s. By default it is true.',
@@ -5982,6 +6027,7 @@ let Associates =
 let Restricts =
 {
   topCommand : null,
+  will : null,
   implied : _.define.own( {} ),
 }
 
@@ -6028,6 +6074,8 @@ let Extension =
   errEncounter,
   // _propertiesImplyToMain,
   _propertiesImply,
+  _transactionBegin,
+  _transactionExtend,
 
   beepingGet,
 
