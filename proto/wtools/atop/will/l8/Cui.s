@@ -548,11 +548,12 @@ function _commandsEnd( command )
 
   let beeping = will.transaction.beeping;
 
-  will.transaction.finit();
-  will.transaction = null;
-
   if( will.topCommand !== command )
-  return false;
+  {
+    will.transaction.finit();
+    will.transaction = null;
+    return false;
+  }
 
   try
   {
@@ -566,6 +567,8 @@ function _commandsEnd( command )
     if( will.currentOpeners )
     will.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
     will.currentOpeners = null;
+    will.transaction.finit();
+    will.transaction = null;
     if( beeping )
     _.diagnosticBeep();
     _.procedure.terminationBegin();
