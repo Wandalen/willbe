@@ -14958,6 +14958,7 @@ function exportOutResourceWithoutGeneratedCriterion( test )
       'entry.out.raw.debug.release',
       'entry.out.compiled.debug.debug',
       'entry.out.compiled.debug.release',
+      'npm.proto.entry',
       'exported.dir.proto.export',
       'exported.files.proto.export',
     ];

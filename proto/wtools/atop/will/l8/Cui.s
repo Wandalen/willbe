@@ -359,15 +359,15 @@ function _propertiesImply( implyMap )
 
   // cui._propertiesImplyToMain( implyMap );
 
-  if( will.transaction && will.transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
+  if( cui.transaction && cui.transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
   {
-    will.transaction.finit();
-    will.transaction = null;
+    cui.transaction.finit();
+    cui.transaction = null;
   }
 
-  _.assert( will.transaction === null, 'Transaction object was not removed by previous command.' );
+  _.assert( cui.transaction === null, 'Transaction object was not removed by previous command.' );
 
-  will.transaction = _.will.Transaction.Make( implyMap, will.logger );
+  cui.transaction = _.will.Transaction.Make( implyMap, cui.logger );
 }
 
 //
