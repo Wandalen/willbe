@@ -390,6 +390,8 @@ function _propertiesImply( implyMap )
   let cui = this;
   let transaction = cui.transaction;
 
+  _.assert( 0, 'delete' );
+
   // cui._propertiesImplyToMain( implyMap );
 
   if( cui.transaction && cui.transaction.isInitial ) /* Vova : temporary, until transaction object will be moved out from main */
@@ -1895,12 +1897,7 @@ commandModulesTopologicalList.commandSubjectHint = false;
 function commandModulesTree( e )
 {
   let cui = this;
-  let logger = cui.transaction.logger;
   cui._command_head( commandModulesTree, arguments );
-
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesTree.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
 
   return cui._commandTreeLike
   ({
@@ -1912,16 +1909,21 @@ function commandModulesTree( e )
 
   function handleAll( it )
   {
+    let logger = cui.transaction.logger;
     let modules = it.modules;
     /* filtering was done earlier */
-    e.propertiesMap.onlyRoots = 0;
-    logger.log( cui.graphExportTreeInfo( modules, e.propertiesMap ) );
+    e.optionsMap.onlyRoots = 0;
+    logger.log( cui.graphExportTreeInfo( modules, e.optionsMap ) );
     return null;
   }
 
 }
 
-commandModulesTree.defaults = commandImply.defaults;
+commandModulesTree.defaults =
+{
+  withLocalPath : 0,
+  withRemotePath : 0
+};
 commandModulesTree.hint = 'List all found modules as a tree.';
 commandModulesTree.commandSubjectHint = 'A selector for path names. Could be a glob.';
 commandModulesTree.commandPropertiesAliases = commandImply.commandPropertiesAliases;
@@ -1939,14 +1941,6 @@ function commandModulesUpdate( e )
   let cui = this;
   cui._command_head( commandModulesUpdate, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandModulesUpdate.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-
-  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
-  implyMap.withSubmodules = 1;
-
-  cui._propertiesImply( implyMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -1961,10 +1955,10 @@ function commandModulesUpdate( e )
 
     con.then( () =>
     {
-      if( e.propertiesMap.to )
-      it.opener.remotePathChangeVersionTo( e.propertiesMap.to );
+      if( e.optionsMap.to )
+      it.opener.remotePathChangeVersionTo( e.optionsMap.to );
 
-      let o2 = _.mapOnly_( null, e.propertiesMap, it.opener.repoUpdate.defaults );
+      let o2 = _.mapOnly_( null, e.optionsMap, it.opener.repoUpdate.defaults );
       o2.strict = 0;
       return it.opener.repoUpdate( o2 );
     })
@@ -1972,7 +1966,7 @@ function commandModulesUpdate( e )
     con.then( () =>
     {
       let o2 = cui.filterImplied();
-      o2 = _.mapExtend( o2, e.propertiesMap );
+      o2 = _.mapExtend( o2, e.optionsMap );
       return it.opener.openedModule.subModulesUpdate( o2 );
     })
 
@@ -1980,7 +1974,14 @@ function commandModulesUpdate( e )
   }
 }
 
-commandModulesUpdate.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesUpdate.defaults =
+{
+  withSubmodules : 1,
+
+  dry : null,
+  recursive : null,
+  to : null,
+}
 commandModulesUpdate.hint = 'Update root module and each submodule.';
 commandModulesUpdate.longHint = 'Update root and each submodule or check for available updates for root module and each submodule. Does nothing if all submodules have fixated version.';
 commandModulesUpdate.commandSubjectHint = false;
@@ -2059,13 +2060,9 @@ function commandSubmodulesFixate( e )
   let cui = this;
   cui._command_head( commandSubmodulesFixate, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesFixate.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
-
-  e.propertiesMap.reportingNegative = e.propertiesMap.negative;
-  e.propertiesMap.upgrading = 0;
-  delete e.propertiesMap.negative;
+  e.optionsMap.reportingNegative = e.optionsMap.negative;
+  e.optionsMap.upgrading = 0;
+  delete e.optionsMap.negative;
 
   return cui._commandBuildLike
   ({
@@ -2084,12 +2081,17 @@ function commandSubmodulesFixate( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
+    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.optionsMap ) );
   }
 
 }
 
-commandSubmodulesFixate.defaults = commandImply.defaults;
+commandSubmodulesFixate.defaults =
+{
+  dry : null,
+  negative : null,
+  recursive : null
+}
 commandSubmodulesFixate.hint = 'Fixate remote submodules.';
 commandSubmodulesFixate.longHint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
 commandSubmodulesFixate.commandSubjectHint = false;
@@ -2109,13 +2111,9 @@ function commandSubmodulesUpgrade( e )
   let cui = this;
   cui._command_head( commandSubmodulesUpgrade, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesUpgrade.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
-
-  e.propertiesMap.upgrading = 1;
-  e.propertiesMap.reportingNegative = e.propertiesMap.negative;
-  delete e.propertiesMap.negative;
+  e.optionsMap.upgrading = 1;
+  e.optionsMap.reportingNegative = e.optionsMap.negative;
+  delete e.optionsMap.negative;
 
   return cui._commandBuildLike
   ({
@@ -2127,12 +2125,17 @@ function commandSubmodulesUpgrade( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
+    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.optionsMap ) );
   }
 
 }
 
-commandSubmodulesUpgrade.defaults = commandImply.defaults;
+commandSubmodulesUpgrade.defaults =
+{
+  dry : null,
+  negative : null,
+  recursive : null
+}
 commandSubmodulesUpgrade.hint = 'Upgrade remote submodules.';
 commandSubmodulesUpgrade.longHint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
 commandSubmodulesUpgrade.commandSubjectHint = false;
@@ -2200,26 +2203,6 @@ function commandSubmodulesVersionsUpdate( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsUpdate, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-
-  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
-  implyMap.withSubmodules = 1;
-
-   /* Vova:
-     Hotfix. Fixes situations when previous command changed with* fields of the main.
-     Remove after moving FilterFields fields out of the main and passing them as options( where possoble ).
-  */
-  // _.mapSupplement( implyMap,
-  // {
-  //   withOut : 1,
-  //   withInvalid : 1,
-  //   withValid : 1,
-  //   withEnabled : 1
-  // })
-
-  cui._propertiesImply( implyMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -2231,14 +2214,21 @@ function commandSubmodulesVersionsUpdate( e )
   function handleEach( it )
   {
     let o2 = cui.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap );
+    o2 = _.mapExtend( o2, e.optionsMap );
 
     return it.opener.openedModule.subModulesUpdate( o2 );
   }
 
 }
 
-commandSubmodulesVersionsUpdate.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesVersionsUpdate.defaults =
+{
+  withSubmodules : 1,
+
+  dry : null,
+  recursive : null,
+  to : null,
+}
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
 commandSubmodulesVersionsUpdate.longHint = 'Update each submodule or check for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
@@ -2258,10 +2248,6 @@ function commandSubmodulesVersionsVerify( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsVerify, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsVerify.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -2273,12 +2259,15 @@ function commandSubmodulesVersionsVerify( e )
   function handleEach( it )
   {
     let o2 = cui.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap );
+    o2 = _.mapExtend( o2, e.optionsMap );
     return it.opener.openedModule.submodulesVerify( o2 );
   }
 }
 
-commandSubmodulesVersionsVerify.defaults = commandImply.defaults;
+commandSubmodulesVersionsVerify.defaults =
+{
+  recursive : null
+}
 commandSubmodulesVersionsVerify.hint = 'Check whether each submodule is on branch which is specified in willfile.';
 commandSubmodulesVersionsVerify.commandSubjectHint = false;
 commandSubmodulesVersionsVerify.commandPropertiesAliases = commandImply.commandPropertiesAliases;
@@ -2295,10 +2284,6 @@ function commandSubmodulesVersionsAgree( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsAgree, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsAgree.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -2310,13 +2295,17 @@ function commandSubmodulesVersionsAgree( e )
   function handleEach( it )
   {
     let o2 = cui.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap );
+    o2 = _.mapExtend( o2, e.optionsMap );
     return it.opener.openedModule.subModulesAgree( o2 );
   }
 
 }
 
-commandSubmodulesVersionsAgree.defaults = commandImply.defaults;
+commandSubmodulesVersionsAgree.defaults =
+{
+  dry : null,
+  recursive : null
+}
 commandSubmodulesVersionsAgree.hint = 'Update each submodule.';
 commandSubmodulesVersionsAgree.longHint = 'Update each submodule or check for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
 commandSubmodulesVersionsAgree.commandSubjectHint = false;
@@ -2364,25 +2353,6 @@ commandSubmodulesShell.commandSubjectHint = 'A command to execute in shell. Comm
 function commandSubmodulesGit( e )
 {
   let cui = this;
-  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  // if( hardLinkMaybe !== undefined )
-  // delete commandOptions.hardLinkMaybe;
-  // let profile = commandOptions.profile;
-  // if( profile !== undefined )
-  // delete commandOptions.profile;
-
-  // if( _.mapKeys( commandOptions ).length >= 1 )
-  // {
-  //   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-  //   e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
-  // }
-  // cui._command_head( commandSubmodulesGit, arguments );
-
-  // let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesGit.defaults );
-  // e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  // _.routineOptions( commandSubmodulesGit, implyMap );
-  // cui._propertiesImply( implyMap );
 
   let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
@@ -2416,17 +2386,21 @@ function commandSubmodulesGit( e )
   }
 }
 
-commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
-commandSubmodulesGit.defaults.withSubmodules = 1;
-commandSubmodulesGit.defaults.withOut = 0;
-commandSubmodulesGit.defaults.hardLinkMaybe = 0;
-commandSubmodulesGit.defaults.profile = 'default';
+commandSubmodulesGit.defaults =
+{
+  withSubmodules : 1,
+  withOut : 0,
+  hardLinkMaybe : 0,
+  profile : 'default'
+}
 commandSubmodulesGit.hint = 'Run custom Git command on submodules of the module.';
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
-commandSubmodulesGit.commandProperties = _.mapExtend( null, commandImply.commandProperties );
-commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
-commandSubmodulesGit.commandProperties.profile = 'A name of profile to get path for hardlinking. Default is "default".';
+commandSubmodulesGit.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+{
+  hardLinkMaybe : 'Disables saving of hardlinks. Default value is 1.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".'
+});
 
 //
 
