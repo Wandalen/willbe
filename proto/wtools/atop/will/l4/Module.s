@@ -8462,7 +8462,7 @@ function willfileVersionBump( o )
   else if( _.numberIs( o.versionDelta ) )
   deltaArray = _.arrayAs( o.versionDelta );
   else
-  _.assert( 0, 'Not known how to handle delta.' );
+  _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
 
   _.assert( versionArray.length >= deltaArray.length, 'Not known how to change version.' );
 

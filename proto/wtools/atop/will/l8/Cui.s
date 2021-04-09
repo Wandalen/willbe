@@ -292,7 +292,7 @@ function _command_head( o )
 
   e.optionsMap = _.mapExtend( null, e.propertiesMap );
 
-  e.implyMap = _.mapExtend( null, e.optionsMap );
+  e.implyMap = _.mapOnly_( null, e.optionsMap, _.will.Transaction.TransactionFields );
 
   if( cui.implied )
   _.mapSupplementNulls( e.implyMap, cui.implied );
@@ -300,7 +300,7 @@ function _command_head( o )
   if( o.routine.defaults )
   {
     _.routineOptions( o.routine, e.optionsMap );
-    _.mapSupplementNulls( e.implyMap, o.routine.defaults );
+    _.mapSupplementNulls( e.implyMap, _.mapOnly_( null, o.routine.defaults, _.will.Transaction.TransactionFields ) );
   }
 
   _.mapSupplementNulls( e.implyMap, _.will.Transaction.TransactionFields );
@@ -1552,8 +1552,9 @@ commandVersionCheck.commandProperties =
 function commandVersionBump( e )
 {
   let cui = this;
-  let properties = e.propertiesMap;
+
   cui._command_head( commandVersionBump, arguments );
+  let properties = e.optionsMap;
 
 
   if( e.subject )
@@ -1579,7 +1580,7 @@ function commandVersionBump( e )
 commandVersionBump.defaults =
 {
   verbosity : 3,
-  // v : 3,
+  versionDelta : 1
 };
 commandVersionBump.hint = 'Increase version in willfile on specified delta.';
 commandVersionBump.longHint = 'Increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.\n';
@@ -1592,7 +1593,6 @@ commandVersionBump.commandProperties =
 {
   versionDelta : 'A string in format "x.x.x" that defines delta for version.',
   verbosity : 'Set verbosity. Default is 3.',
-  // v : 'Set verbosity. Default is 3.',
 };
 
 
