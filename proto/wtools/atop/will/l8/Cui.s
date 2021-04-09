@@ -303,8 +303,6 @@ function _command_head( o )
     _.mapSupplementNulls( e.implyMap, _.mapOnly_( null, o.routine.defaults, _.will.Transaction.TransactionFields ) );
   }
 
-  _.mapSupplementNulls( e.implyMap, _.will.Transaction.TransactionFields );
-
   cui._transactionExtend( o.routine, e.implyMap );
 
   e.optionsMap = _.mapBut_( null, e.optionsMap, e.implyMap );
@@ -1437,7 +1435,8 @@ commandImply.defaults =
   withInvalid : null,
   withSubmodules : null,
   withPath : null,
-  willFileAdapting : null
+  willFileAdapting : null,
+  profile : null
 };
 commandImply.hint = 'Change state or imply value of a variable.';
 commandImply.commandSubjectHint = false;
@@ -1460,7 +1459,8 @@ commandImply.commandProperties =
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
-  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
+  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.',
+  profile : 'A name of profile to get path for hardlinking. Default is "default".'
 };
 
 // function commandImply( e )
@@ -2335,8 +2335,6 @@ function commandSubmodulesShell( e )
   let cui = this;
   cui._command_head( commandSubmodulesShell, arguments );
 
-  debugger
-
   return cui._commandModulesLike
   ({
     event : e,
@@ -2395,9 +2393,6 @@ function commandSubmodulesGit( e )
 
   cui._command_head( commandSubmodulesGit, arguments );
 
-  _.routineOptions( commandSubmodulesGit, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
   return cui._commandModulesLike
   ({
     event : e,
@@ -2415,8 +2410,8 @@ function commandSubmodulesGit( e )
       command : e.subject,
       // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
-      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
-      profile : e.propertiesMap.profile,
+      hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+      profile : cui.transaction.profile,
     });
   }
 }
@@ -3329,15 +3324,10 @@ function commandSubmodulesClean( e )
   let cui = this;
   cui._command_head( commandSubmodulesClean, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesClean.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  _.routineOptions( commandSubmodulesClean, implyMap );
-  cui._propertiesImply( implyMap );
-
-  e.propertiesMap.dry = !!e.propertiesMap.dry;
-  if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-  e.propertiesMap.fast = !e.propertiesMap.dry;
-  e.propertiesMap.fast = 0; /* xxx : implement */
+  e.optionsMap.dry = !!e.optionsMap.dry;
+  if( e.optionsMap.fast === undefined || e.optionsMap.fast === null )
+  e.optionsMap.fast = !e.optionsMap.dry;
+  e.optionsMap.fast = 0; /* xxx : implement */
 
   return cui._commandCleanLike
   ({
@@ -3353,7 +3343,7 @@ function commandSubmodulesClean( e )
 
     // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
-    o2 = _.mapExtend( o2, e.propertiesMap );
+    o2 = _.mapExtend( o2, e.optionsMap );
     o2.modules = it.openers;
     _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
@@ -3368,7 +3358,13 @@ function commandSubmodulesClean( e )
 
 }
 
-commandSubmodulesClean.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesClean.defaults =
+{
+  dry : null,
+  recursive : null,
+  fast : null,
+  force : null,
+}
 commandSubmodulesClean.defaults.withSubmodules = 0;
 commandSubmodulesClean.hint = 'Delete all downloaded submodules.';
 commandSubmodulesClean.commandSubjectHint = false;
@@ -3633,7 +3629,7 @@ function commandWith( e )
 
 }
 
-commandWith.defaults = _.mapExtend( null, commandImply.defaults );
+// commandWith.defaults = _.mapExtend( null, commandImply.defaults );
 commandWith.hint = 'Select a module to execute command.';
 commandWith.commandSubjectHint = 'A module selector.';
 commandWith.commandProperties = Object.create( null );

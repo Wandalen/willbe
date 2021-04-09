@@ -125,6 +125,9 @@ function verbositySet( src )
   if( t.formed )
   return;
 
+  if( src === null )
+  src = _.will.Transaction.TransactionFields.verbosity;
+
   t._.verbosity = src;
   logger.verbosity = src;
 }
@@ -196,6 +199,10 @@ function _transactionPropertySetter_functor( propName )
     let t = this;
     if( t.formed )
     return;
+
+    if( src === null )
+    src = _.will.Transaction.TransactionFields[ propName ];
+
     t._[ propName ] = src;
   }
 }
@@ -217,7 +224,9 @@ let TransactionFields =
 
   ... _.Will.IntentionFields,
 
-  willFileAdapting : 0
+  willFileAdapting : 0,
+
+  profile : 'default'
 }
 
 // --
@@ -265,6 +274,7 @@ let Accessors =
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
   withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
+  profile : { get : _transactionPropertyGetter_functor( 'profile' ), set : _transactionPropertySetter_functor( 'profile' ) },
 }
 
 _.each( TransactionFields, ( val, key ) =>
