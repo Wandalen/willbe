@@ -3189,6 +3189,7 @@ function commandClean( e )
     // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.mapExtend( o2, e.optionsMap );
+    delete o2.withSubmodules;
     o2.modules = it.openers;
     _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
