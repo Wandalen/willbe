@@ -3790,7 +3790,7 @@ function commandWillfileGet( e )
     {
       request : e.subject,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileGetProperty.call( cui, o );
   }
@@ -3814,7 +3814,7 @@ function commandWillfileGet( e )
     ({
       request,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     });
   }
 
@@ -3850,7 +3850,6 @@ function commandWillfileGet( e )
 commandWillfileGet.defaults =
 {
   verbosity : 3,
-  // v : 3,
 };
 commandWillfileGet.hint = 'Get value of separate properties of source willfile.';
 commandWillfileGet.longHint = 'Get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".\n';
@@ -3863,8 +3862,6 @@ commandWillfileGet.commandProperties =
 {
   'verbosity' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.get path/to/not/existed:1 verbosity:4" - enable output for not existed property.',
-  // 'v' : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  // + '\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
 };
 
 //
@@ -3886,7 +3883,7 @@ function commandWillfileSet( e )
     {
       request : e.subject,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileSetProperty.call( cui, o );
   }
@@ -3912,7 +3909,7 @@ function commandWillfileSet( e )
     ({
       request,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     });
   }
 }
@@ -3920,7 +3917,6 @@ function commandWillfileSet( e )
 commandWillfileSet.defaults =
 {
   verbosity : 3,
-  // v : 3,
   structureParse : 0,
 };
 commandWillfileSet.hint = 'Set separate properties in destination willfile.';
@@ -3936,8 +3932,6 @@ commandWillfileSet.commandProperties =
   + '\n\t"will .willfile.set path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.set about/author/name:author verbosity:4" - enable output if option "author" has string value.',
-  // 'v' : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  // + '\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
 };
 
 //
@@ -3964,7 +3958,7 @@ function commandWillfileDel( e )
     {
       request : e.subject,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileDeleteProperty.call( cui, o );
   }
@@ -3988,7 +3982,7 @@ function commandWillfileDel( e )
     ({
       request,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     });
   }
 
@@ -4024,7 +4018,6 @@ function commandWillfileDel( e )
 commandWillfileDel.defaults =
 {
   verbosity : 3,
-  // v : 3,
 };
 commandWillfileDel.hint = 'Delete separate properties in destination willfile.';
 commandWillfileDel.longHint = 'Delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml".\n';
@@ -4037,8 +4030,6 @@ commandWillfileDel.commandProperties =
 {
   'verbosity' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
   + '\n\t"will .willfile.del about/author verbosity:4" - enable output.',
-  // 'v' : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.'
-  // + '\n\t"will .willfile.del about/author v:4" - enable output.',
 };
 
 //
@@ -4061,7 +4052,7 @@ function commandWillfileExtend( e )
       request : e.subject,
       onProperty : _.mapExtend,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
   }
@@ -4088,7 +4079,7 @@ function commandWillfileExtend( e )
       request,
       onProperty : _.mapExtend,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     });
   }
 }
@@ -4096,7 +4087,6 @@ function commandWillfileExtend( e )
 commandWillfileExtend.defaults =
 {
   verbosity : 3,
-  // v : 3,
   structureParse : 0,
 };
 commandWillfileExtend.hint = 'Extend separate properties of destination willfile.';
@@ -4111,7 +4101,6 @@ commandWillfileExtend.commandProperties =
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  // 'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -4133,7 +4122,7 @@ function commandWillfileSupplement( e )
       request : e.subject,
       onProperty : _.mapSupplement,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
   }
@@ -4158,7 +4147,7 @@ function commandWillfileSupplement( e )
       request,
       onProperty : _.mapSupplement,
       willfilePropertiesMap,
-      ... e.propertiesMap,
+      ... e.optionsMap,
     });
   }
 }
@@ -4166,7 +4155,6 @@ function commandWillfileSupplement( e )
 commandWillfileSupplement.defaults =
 {
   verbosity : 3,
-  // v : 3,
   structureParse : 0,
 };
 commandWillfileSupplement.hint = 'Extend separate not existed properties of destination willfile.';
@@ -4181,7 +4169,6 @@ commandWillfileSupplement.commandProperties =
   'structureParse' : 'Enable parsing of property value. Experimental feature. Default is 0.'
   + '\n\t"will .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  // 'v' : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -4195,7 +4182,7 @@ function commandWillfileExtendWillfile( e )
   {
     request : e.subject,
     onSection : _.mapExtend,
-    ... e.propertiesMap,
+    ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 }
@@ -4203,7 +4190,6 @@ function commandWillfileExtendWillfile( e )
 commandWillfileExtendWillfile.defaults =
 {
   verbosity : 3,
-  // v : 3,
 };
 commandWillfileExtendWillfile.hint = 'Extend willfile by data from source configuration files.';
 commandWillfileExtendWillfile.longHint = 'Extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
@@ -4236,7 +4222,6 @@ commandWillfileExtendWillfile.commandProperties =
   'format' : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
   'submodulesDisabling' : 'Disables new submodules from source files. Default value is 0.',
   'verbosity' : 'Set verbosity. Default is 3.',
-  // 'v' : 'Set verbosity. Default is 3.',
 }
 
 //
@@ -4250,7 +4235,7 @@ function commandWillfileSupplementWillfile( e )
   {
     request : e.subject,
     onSection : _.mapSupplement,
-    ... e.propertiesMap,
+    ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 }
@@ -4258,7 +4243,6 @@ function commandWillfileSupplementWillfile( e )
 commandWillfileSupplementWillfile.defaults =
 {
   verbosity : 3,
-  // v : 3,
 };
 commandWillfileSupplementWillfile.hint = 'Supplement willfile by data from source configuration files.';
 commandWillfileSupplementWillfile.longHint = 'Supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".\n';
@@ -4281,9 +4265,9 @@ function commandWillfileMergeIntoSingle( e )
   let path = cui.fileProvider.path;
   let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
-  _.routineOptions( commandWillfileMergeIntoSingle, e.propertiesMap );
+  // _.routineOptions( commandWillfileMergeIntoSingle, e.propertiesMap );
 
-  let willfileName = e.propertiesMap.primaryPath || 'CommandWillfileMergeIntoSingle';
+  let willfileName = e.optionsMap.primaryPath || 'CommandWillfileMergeIntoSingle';
 
   let o =
   {
@@ -4292,11 +4276,11 @@ function commandWillfileMergeIntoSingle( e )
   };
   _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 
-  if( e.propertiesMap.secondaryPath )
+  if( e.optionsMap.secondaryPath )
   {
     let o2 =
     {
-      request : `${ willfileName } ${ e.propertiesMap.secondaryPath }`,
+      request : `${ willfileName } ${ e.optionsMap.secondaryPath }`,
       name : 0,
       onSection : _.mapExtend,
     };
@@ -4312,9 +4296,9 @@ function commandWillfileMergeIntoSingle( e )
   let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
   filterAboutNpmFields();
   filterSubmodulesCriterions();
-  if( e.propertiesMap.filterSameSubmodules )
+  if( e.optionsMap.filterSameSubmodules )
   filterSameSubmodules()
-  if( e.propertiesMap.submodulesDisabling )
+  if( e.optionsMap.submodulesDisabling )
   submodulesDisable();
   fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger });
 
@@ -4462,7 +4446,7 @@ function commandWillfileMergeIntoSingle( e )
       fileProvider.fileRename( newName, oldName );
     }
 
-    if( !e.propertiesMap.primaryPath )
+    if( !e.optionsMap.primaryPath )
     {
       let oldName = dstPath.absolute;
       let newName = path.join( dstPath.dir, 'will.yml' );
@@ -4474,7 +4458,6 @@ function commandWillfileMergeIntoSingle( e )
 commandWillfileMergeIntoSingle.defaults =
 {
   verbosity : 3,
-  // v : 3,
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
@@ -4503,16 +4486,6 @@ function commandGit( e )
 {
   let cui = this;
 
-  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandImply.defaults );
-  // let hardLinkMaybe = commandOptions.hardLinkMaybe;
-  // if( hardLinkMaybe !== undefined )
-  // delete commandOptions.hardLinkMaybe;
-  // let profile = commandOptions.profile;
-  // if( profile !== undefined )
-  // delete commandOptions.profile;
-
-  // e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandImply.defaults );
-
   let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
@@ -4521,9 +4494,6 @@ function commandGit( e )
   }
 
   cui._command_head( commandGit, arguments );
-
-  _.routineOptions( commandGit, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4539,17 +4509,19 @@ function commandGit( e )
     ({
       dirPath : it.junction.dirPath,
       command : e.subject,
-      verbosity : cui.verbosity,
-      hardLinkMaybe : e.propertiesMap.hardLinkMaybe,
-      profile : e.propertiesMap.profile
+      verbosity : cui.transaction.verbosity,
+      hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+      profile : cui.transaction.profile
     });
   }
 }
 
-commandGit.defaults = _.mapExtend( null, commandImply.defaults );
-commandGit.defaults.hardLinkMaybe = 0;
-commandGit.defaults.profile = 'default';
-commandGit.defaults.withSubmodules = 0;
+commandGit.defaults =
+{
+  hardLinkMaybe : 0,
+  profile : 'default',
+  withSubmodules : 0
+}
 commandGit.hint = 'Run custom Git command in repository of module.';
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
@@ -4563,8 +4535,6 @@ function commandGitDiff( e )
 {
   let cui = this;
   cui._command_head( commandGitDiff, arguments );
-  _.routineOptions( commandGitDiff, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4579,13 +4549,15 @@ function commandGitDiff( e )
     return it.opener.openedModule.gitDiff
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
     });
   }
 }
 
-commandGitDiff.defaults = _.mapExtend( null, commandImply.defaults );
-commandGitDiff.defaults.withSubmodules = 0;
+commandGitDiff.defaults =
+{
+  withSubmodules : 0
+}
 commandGitDiff.hint = 'Get diffs in module repository.';
 commandGitDiff.commandSubjectHint = false;
 commandGitDiff.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
@@ -4601,9 +4573,6 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  _.routineOptions( commandGitPull, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -4617,15 +4586,17 @@ function commandGitPull( e )
     return it.opener.openedModule.gitPull
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
-      profile : e.propertiesMap.profile,
+      verbosity : cui.transaction.verbosity,
+      profile : cui.transaction.profile,
     });
   }
 }
 
-commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
-commandGitPull.defaults.withSubmodules = 0;
-commandGitPull.defaults.profile = 'default';
+commandGitPull.defaults =
+{
+  withSubmodules : 0,
+  profile : 'default'
+}
 commandGitPull.hint = 'Pull changes from remote repository.';
 commandGitPull.commandSubjectHint = false;
 commandGitPull.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
@@ -4638,9 +4609,6 @@ function commandGitPush( e )
 {
   let cui = this;
   cui._command_head( commandGitPush, arguments );
-
-  _.routineOptions( commandGitPush, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4655,13 +4623,15 @@ function commandGitPush( e )
     return it.opener.openedModule.gitPush
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.verbosity,
+      verbosity : cui.transaction.verbosity,
     });
   }
 }
 
-commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
-commandGitPush.defaults.withSubmodules = 0;
+commandGitPush.defaults =
+{
+  withSubmodules : 0
+}
 commandGitPush.hint = 'Push commits and tags to remote repository.';
 commandGitPush.commandSubjectHint = false;
 commandGitPush.commandPropertiesAliases = _.mapExtend( null, commandImply.commandPropertiesAliases );
@@ -4673,11 +4643,6 @@ function commandGitReset( e )
 {
   let cui = this;
   cui._command_head( commandGitReset, arguments );
-
-  _.routineOptions( commandGitReset, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4691,7 +4656,7 @@ function commandGitReset( e )
   {
     return it.opener.openedModule.gitReset
     ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitReset.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
     });
   }
 }
@@ -4703,7 +4668,6 @@ commandGitReset.defaults = _.mapExtend( null, commandImply.defaults,
   removingIgnored : 0,
   removingSubrepositories : 0,
   dry : 0,
-  // v : null,
   verbosity : 2,
   withSubmodules : 0
 });
@@ -4720,7 +4684,6 @@ commandGitReset.commandProperties = _.mapExtend( null, commandImply.commandPrope
   removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
   removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
   dry : 'Dry run without resetting. Default is dry:0.',
-  // v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 });
 
@@ -4730,11 +4693,6 @@ function commandGitStatus( e )
 {
   let cui = this;
   cui._command_head( commandGitStatus, arguments );
-
-  _.routineOptions( commandGitStatus, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4748,7 +4706,7 @@ function commandGitStatus( e )
   {
     return it.opener.openedModule.gitStatus
     ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitStatus.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
     });
   }
 }
@@ -4760,7 +4718,6 @@ commandGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  // v : null,
   verbosity : 1,
   withSubmodules : 0
 });
@@ -4777,7 +4734,6 @@ commandGitStatus.commandProperties = _.mapExtend( null, commandImply.commandProp
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
-  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 });
 
@@ -4787,11 +4743,6 @@ function commandGitSync( e )
 {
   let cui = this;
   cui._command_head( commandGitSync, arguments );
-
-  _.routineOptions( commandGitSync, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4806,7 +4757,7 @@ function commandGitSync( e )
     return it.opener.openedModule.gitSync
     ({
       commit : e.subject,
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitSync.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
     });
   }
 }
@@ -4816,7 +4767,6 @@ commandGitSync.defaults = _.mapExtend( null, commandImply.defaults,
   dirPath : null,
   dry : 0,
   profile : 'default',
-  // v : null,
   verbosity : 1,
   withSubmodules : 0
 });
@@ -4830,7 +4780,6 @@ commandGitSync.commandProperties = _.mapExtend( null, commandImply.commandProper
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
-  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
 });
@@ -4841,11 +4790,6 @@ function commandGitTag( e )
 {
   let cui = this;
   cui._command_head( commandGitTag, arguments );
-
-  _.routineOptions( commandGitTag, e.propertiesMap );
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
   ({
@@ -4859,7 +4803,7 @@ function commandGitTag( e )
   {
     return it.opener.openedModule.gitTag
     ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitTag.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
     });
   }
 }
@@ -4870,7 +4814,6 @@ commandGitTag.defaults = _.mapExtend( null, commandImply.defaults,
   description : '',
   dry : 0,
   light : 0,
-  // v : null,
   verbosity : 1,
   withSubmodules : 0
 });
@@ -4886,7 +4829,6 @@ commandGitTag.commandProperties = _.mapExtend( null, commandImply.commandPropert
   description : 'Description of annotated tag. Default is description:"".',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
-  // v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 });
 
@@ -4895,7 +4837,7 @@ commandGitTag.commandProperties = _.mapExtend( null, commandImply.commandPropert
 function commandGitHookPreservingHardLinks( e )
 {
   let cui = this;
-  cui._propertiesImply( e.propertiesMap );
+  cui._command_head( commandGitHookPreservingHardLinks, arguments );
 
   let enable = _.numberFrom( e.commandArgument );
 
@@ -4915,9 +4857,6 @@ function commandPrOpen( e )
   let cui = this;
   cui._command_head( commandPrOpen, arguments );
 
-  _.routineOptions( commandPrOpen, e.propertiesMap );
-  cui._propertiesImply( e.propertiesMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -4931,21 +4870,21 @@ function commandPrOpen( e )
     return it.opener.openedModule.gitPrOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.gitPrOpen.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults ),
     });
   }
 }
 
-commandPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
+commandPrOpen.defaults =
 {
   token : null,
   srcBranch : null,
-  dstBranch : null,
+  dstBranch : 'master',
   title : null,
   body : null,
-  verbosity : null,
+  verbosity : 2,
   withSubmodules : 1
-});
+};
 commandPrOpen.hint = 'Open pull request from current modules.';
 commandPrOpen.commandSubjectHint = 'A title for PR';
 commandPrOpen.commandPropertiesAliases =
@@ -4969,15 +4908,8 @@ function commandPrList( e )
   let cui = this;
   cui._command_head( commandPrList, arguments );
 
-  // debugger;
-  // let implyMap = _.mapOnly_( null, e.propertiesMap, commandPrList.defaults );
-  // e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  // cui._propertiesImply( implyMap );
-  cui._transactionExtend( commandPrList, e.propertiesMap );
-  _.routineOptions( commandPrList, e.propertiesMap );
-
-  _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
-  let o2 = e.propertiesMap;
+  _.assert( _.numberDefined( e.optionsMap.verbosity ) );
+  let o2 = e.optionsMap;
   o2.logger = o2.verbosity;
   delete o2.verbosity;
   _.mapOnly_( o2, o2, _.will.Module.prototype.prList.defaults );
@@ -5043,8 +4975,6 @@ function commandNpmPublish( e )
   let cui = this;
   cui._command_head( commandNpmPublish, arguments );
 
-  _.routineOptions( commandNpmPublish, e.propertiesMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -5057,7 +4987,7 @@ function commandNpmPublish( e )
   {
     return it.opener.openedModule.npmModulePublish
     ({
-      ... e.propertiesMap,
+      ... e.optionsMap,
       commit : e.subject,
     });
   }
@@ -5070,7 +5000,6 @@ commandNpmPublish.defaults =
 
   force : 0,
   dry : 0,
-  // v : 1,
   verbosity : 1,
 };
 commandNpmPublish.hint = 'Publish in NPM.';
@@ -5085,7 +5014,6 @@ commandNpmPublish.commandProperties =
   tag : 'tag',
   force : 'forces diff',
   dry : 'dry run',
-  // v : 'verbosity',
   verbosity : 'verbosity',
 };
 /* qqq : for Dmytro : bad : break of pattern */
@@ -5103,14 +5031,13 @@ function commandNpmDepAdd( e )
   let cui = this;
   cui._command_head( commandNpmDepAdd, arguments );
 
-  _.routineOptions( commandNpmDepAdd, e.propertiesMap );
   _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
 
-  e.propertiesMap.depPath = e.subject;
-  e.propertiesMap.localPath = e.propertiesMap.to;
-  delete e.propertiesMap.to;
+  e.optionsMap.depPath = e.subject;
+  e.optionsMap.localPath = e.optionsMap.to;
+  delete e.optionsMap.to;
 
-  return cui.npmDepAdd( e.propertiesMap );
+  return cui.npmDepAdd( e.optionsMap );
 }
 
 commandNpmDepAdd.defaults =
@@ -5137,7 +5064,6 @@ commandNpmDepAdd.commandProperties =
   downloading : 'Downloading files. Default is true.',
   linking : 'Softlink instead of copying. Default is true.',
   dry : 'Dry run.',
-  // v : 'Verbosity.',
   verbosity : 'Verbosity.',
 };
 /* qqq : for Dmytro : implement and cover each property */
@@ -5154,7 +5080,7 @@ function commandNpmInstall( e )
 
   cui._command_head( commandNpmInstall, arguments );
 
-  let o = e.propertiesMap;
+  let o = e.optionsMap;
   delete o.v;
 
   _.routineOptions( commandNpmInstall, o );
@@ -5204,7 +5130,7 @@ function commandNpmClean( e )
 
   cui._command_head( commandNpmClean, arguments );
 
-  let o = e.propertiesMap;
+  let o = e.optionsMap;
   delete o.v;
 
   _.routineOptions( commandNpmClean, o );
@@ -5276,9 +5202,11 @@ function commandPackageInstall( e )
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+  /*let options = */e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
   cui._command_head( commandPackageInstall, arguments );
+
+  let options = e.optionsMap;
 
   _.map.assertHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
 
@@ -5445,9 +5373,11 @@ function commandPackageLocalVersions( e )
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+  /* let options = */e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
   cui._command_head( commandPackageLocalVersions, arguments );
+
+  let options = e.optionsMap;
 
   _.map.assertHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
 
@@ -5574,9 +5504,11 @@ function commandPackageRemoteVersions( e )
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+  /*let options = */e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
   cui._command_head( commandPackageRemoteVersions, arguments );
+
+  let options = e.optionsMap;
 
   _.map.assertHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
 
@@ -5734,9 +5666,11 @@ function commandPackageVersion( e )
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+  /*let options = */e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
 
   cui._command_head( commandPackageVersion, arguments );
+
+  let options = e.optionsMap;
 
   _.map.assertHasOnly( options, commandPackageVersion.commandProperties, `Command does not expect options:` );
 
