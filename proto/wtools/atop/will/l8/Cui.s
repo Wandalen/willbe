@@ -1978,8 +1978,8 @@ commandModulesUpdate.defaults =
 {
   withSubmodules : 1,
 
-  dry : null,
-  recursive : null,
+  dry : 0,
+  recursive : 1,
   to : null,
 }
 commandModulesUpdate.hint = 'Update root module and each submodule.';
@@ -2088,8 +2088,8 @@ function commandSubmodulesFixate( e )
 
 commandSubmodulesFixate.defaults =
 {
-  dry : null,
-  negative : null,
+  dry : 0,
+  negative : 0,
   recursive : null
 }
 commandSubmodulesFixate.hint = 'Fixate remote submodules.';
@@ -2132,8 +2132,8 @@ function commandSubmodulesUpgrade( e )
 
 commandSubmodulesUpgrade.defaults =
 {
-  dry : null,
-  negative : null,
+  dry : 0,
+  negative : 0,
   recursive : null
 }
 commandSubmodulesUpgrade.hint = 'Upgrade remote submodules.';
@@ -2181,8 +2181,8 @@ function commandSubmodulesVersionsDownload( e )
 commandSubmodulesVersionsDownload.defaults =
 {
   withSubmodules : 1,
-  dry : null,
-  recursive : null
+  dry : 0,
+  recursive : 1
 }
 commandSubmodulesVersionsDownload.defaults.withSubmodules = 1;
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
@@ -2225,8 +2225,8 @@ commandSubmodulesVersionsUpdate.defaults =
 {
   withSubmodules : 1,
 
-  dry : null,
-  recursive : null,
+  dry : 0,
+  recursive : 1,
   to : null,
 }
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule.';
@@ -2303,8 +2303,8 @@ function commandSubmodulesVersionsAgree( e )
 
 commandSubmodulesVersionsAgree.defaults =
 {
-  dry : null,
-  recursive : null
+  dry : 0,
+  recursive : 1
 }
 commandSubmodulesVersionsAgree.hint = 'Update each submodule.';
 commandSubmodulesVersionsAgree.longHint = 'Update each submodule or check for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
@@ -3196,12 +3196,12 @@ commandClean.defaults =
 {
   withSubmodules : 0,
   withOut : 0,
-  dry : null,
-  cleaningSubmodules : null,
-  cleaningOut : null,
-  cleaningTemp : null,
-  recursive : null,
-  fast : null
+  dry : 0,
+  cleaningSubmodules : 1,
+  cleaningOut : 1,
+  cleaningTemp : 1,
+  recursive : 0,
+  fast : 0
 }
 commandClean.hint = 'Clean current module.';
 commandClean.longHint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
@@ -3262,10 +3262,10 @@ function commandSubmodulesClean( e )
 
 commandSubmodulesClean.defaults =
 {
-  dry : null,
-  recursive : null,
-  fast : null,
-  force : null,
+  dry : 0,
+  recursive : 0,
+  fast : 0,
+  force : 0,
 }
 commandSubmodulesClean.defaults.withSubmodules = 0;
 commandSubmodulesClean.hint = 'Delete all downloaded submodules.';
@@ -3359,11 +3359,6 @@ function commandExportPurging( e )
   cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandExportPurging.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  _.routineOptions( commandExportPurging, implyMap );
-  cui._propertiesImply( implyMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -3388,8 +3383,6 @@ function commandExportPurging( e )
 
 }
 
-// commandExportPurging.defaults = Object.create( null );
-commandExportPurging.defaults = _.mapExtend( null, commandImply.defaults );
 commandExportPurging.hint = 'Export selected the module with spesified criterion purging output willfile first.';
 commandExportPurging.longHint = 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.';
 commandExportPurging.commandSubjectHint = 'A name of export scenario.';
@@ -3401,11 +3394,6 @@ function commandExportRecursive( e )
   let cui = this;
   cui._command_head( commandExportRecursive, arguments );
   let doneContainer = [];
-
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandExportRecursive.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  _.routineOptions( commandExportRecursive, implyMap );
-  cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
   ({
@@ -3430,8 +3418,6 @@ function commandExportRecursive( e )
 
 }
 
-// commandExportRecursive.defaults = Object.create( null );
-commandExportRecursive.defaults = _.mapExtend( null, commandImply.defaults );
 commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules.';
 commandExportRecursive.longHint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
@@ -3636,14 +3622,14 @@ function commandNpmFromWillfile( e )
   let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   cui._command_head( commandNpmFromWillfile, arguments );
-  _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
+  // _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
   // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   // cui._propertiesImply({ withSubmodules : 0 });
-  cui._propertiesImply( e.propertiesMap );
+  // cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
-  e.propertiesMap.packagePath = e.subject;
+  e.optionsMap.packagePath = e.subject;
 
   return cui._commandBuildLike
   ({
@@ -3661,7 +3647,7 @@ function commandNpmFromWillfile( e )
 
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
       currentContext,
       verbosity : 2,
     });
@@ -3669,13 +3655,13 @@ function commandNpmFromWillfile( e )
 
 }
 
-commandNpmFromWillfile.defaults = _.mapExtend( null, commandImply.defaults,
+commandNpmFromWillfile.defaults =
 {
   packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
   withSubmodules : 0,
-});
+};
 commandNpmFromWillfile.hint = 'Generate JSON file from willfile(s) of current module.';
 commandNpmFromWillfile.longHint = 'Generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.\n';
 commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
@@ -3698,15 +3684,15 @@ function commandWillfileFromNpm( e )
   let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_head( commandWillfileFromNpm, arguments );
-  _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
+  // _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
   // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
   // cui._propertiesImply({ withSubmodules : 0 });
 
-  cui._propertiesImply( e.propertiesMap );
+  // cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
-  e.propertiesMap.willfilePath = e.subject;
+  e.optionsMap.willfilePath = e.subject;
 
   let con = _.take( null );
   if( !cui.currentOpeners )
@@ -3733,7 +3719,7 @@ function commandWillfileFromNpm( e )
     {
       let o =
       {
-        ... e.propertiesMap,
+        ... e.optionsMap,
         verbosity : 3,
       };
       return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
@@ -3755,7 +3741,7 @@ function commandWillfileFromNpm( e )
     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
       currentContext,
       verbosity : 3,
     });
