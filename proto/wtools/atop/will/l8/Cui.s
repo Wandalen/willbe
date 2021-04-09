@@ -1531,15 +1531,13 @@ function commandVersionCheck( e )
 
   cui._command_head( commandVersion, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandVersionCheck.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  cui._propertiesImply( implyMap );
-
-  return cui.versionIsUpToDate( e.propertiesMap );
+  return cui.versionIsUpToDate( e.optionsMap );
 }
 
-commandVersionCheck.defaults = _.mapExtend( null, commandImply.defaults );
-commandVersionCheck.defaults.throwing = 1;
+commandVersionCheck.defaults =
+{
+  throwing : 1
+}
 commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
 commandVersionCheck.commandSubjectHint = false;
 commandVersionCheck.commandPropertiesAliases = commandImply.commandPropertiesAliases;
@@ -3428,11 +3426,6 @@ function commandExport( e )
   cui._command_head( commandExport, arguments );
   let doneContainer = [];
 
-  let implyMap = _.mapOnly_( null,  e.propertiesMap, commandExport.defaults );
-  e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
-  _.routineOptions( commandExport, implyMap );
-  cui._propertiesImply( implyMap );
-
   return cui._commandBuildLike
   ({
     event : e,
@@ -3457,7 +3450,6 @@ function commandExport( e )
 
 }
 
-commandExport.defaults = _.mapExtend( null, commandImply.defaults );
 commandExport.hint = 'Export selected module with spesified criterion.';
 commandExport.longHint = 'Export selected module with spesified criterion. Save output to output willfile and archive.';
 commandExport.commandSubjectHint = 'A name of export scenario.';
