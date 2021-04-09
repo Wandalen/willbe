@@ -50,6 +50,111 @@ Self.shortName = 'Module';
 _.assert( _.routineIs( Parent ) );
 
 // --
+// meta
+// --
+
+function _repoRequest_functor( fo )
+{
+
+  _.routine.options( _repoRequest_functor, fo );
+  _.assert( _.aux.is( fo.defaults ) || fo.defaults === null );
+  _.assert( _.routineIs( fo.requestRoutine ) );
+  _.assert( _.routineIs( fo.exportStringRoutine ) );
+
+  request_body.defaults =
+  {
+    remotePath : null,
+    token : null,
+    withOpened : 1,
+    withClosed : 0,
+    dry : 0,
+    logger : 1,
+    throwing : 1,
+    ... fo.defaults || Object.create( null ),
+  }
+
+  const requestRoutine = fo.requestRoutine;
+  const exportStringRoutine = fo.exportStringRoutine;
+  const request = _.routine.unite( null, request_body );
+  return request;
+
+  function request_body( o )
+  {
+    let module = this;
+    let will = module.will;
+    let fileProvider = will.fileProvider;
+    let path = fileProvider.path;
+    let logger = will.logger; /* xxx : qqq : use transaction */
+
+    o.logger = _.logger.absoluteMaybe( logger, o.logger ); /* xxx : adjust logger.relativeMaybe. write basic test */
+
+    _.map.assertHasAll( o, request.defaults );
+
+    /* xxx : standartize */
+    if( o.token === null )
+    {
+      let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+      if( !config )
+      config = fileProvider.configUserRead();
+      if( config !== null && config.about && config.about[ 'github.token' ] )
+      o.token = config.about[ 'github.token' ];
+    }
+
+    if( o.remotePath === null )
+    {
+      if( module.pathMap.repository )
+      o.remotePath = module.pathMap.repository;
+
+      if( !o.remotePath )
+      {
+        if( !o.throwing )
+        return _.take( null );
+        throw _.err( `Module ${module.qualifiedName} is not remote` );
+      }
+
+    }
+
+    return requestRoutine
+    ({
+      remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
+      token : o.token,
+      throwing : o.throwing,
+      logger : o.logger,
+      sync : 0,
+    }).then( ( op ) =>
+    {
+      if( o.logger && o.logger.verbosity )
+      if( op.result )
+      {
+        let info = exportStringRoutine( op.result, { verbosity : o.logger.verbosity } );
+        if( o.logger.verbosity === 1 )
+        {
+          if( info.length )
+          o.logger.log( `${module.nameWithLocation} ${info}` );
+        }
+        else
+        {
+          if( info.length )
+          o.logger.log( `${module.nameWithLocation} ${info}` );
+          else if( o.logger.verbosity > 2 )
+          o.logger.log( `${module.nameWithLocation}` );
+        }
+      }
+      return op;
+    });
+
+  }
+
+}
+
+_repoRequest_functor.defaults =
+{
+  defaults : null,
+  requestRoutine : null,
+  exportStringRoutine : null,
+}
+
+// --
 // inter
 // --
 
@@ -9008,7 +9113,7 @@ function gitPrOpen( o )
   let ready = _.take( null );
   ready.then( () =>
   {
-    return _.git.prOpen
+    return _.git.pullOpen
     ({
       token : o.token,
       remotePath : o.remotePath,
@@ -9506,108 +9611,173 @@ gitTag.defaults =
 
 //
 
-function prList( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger; /* xxx : qqq : use transaction */
+// function repoPullList( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger; /* xxx : qqq : use transaction */
+//
+//   o.logger = _.logger.absoluteMaybe( logger, o.logger ); /* xxx : adjust logger.relativeMaybe. write basic test */
+//
+//   _.routineOptions( repoPullList, o );
+//
+//   /* xxx : standartize */
+//   if( !o.token )
+//   {
+//     let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+//     if( !config )
+//     config = fileProvider.configUserRead();
+//     if( config !== null && config.about && config.about[ 'github.token' ] )
+//     o.token = config.about[ 'github.token' ];
+//   }
+//
+//   if( !o.remotePath )
+//   {
+//     if( module.pathMap.repository )
+//     o.remotePath = module.pathMap.repository;
+//   }
+//
+//   if( !o.remotePath )
+//   {
+//     if( !o.throwing )
+//     return _.take( null );
+//     throw _.err( `Module ${module.qualifiedName} is not remote` );
+//   }
+//
+//   return _.repo.pullList
+//   ({
+//     remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
+//     token : o.token,
+//     throwing : o.throwing,
+//     logger : o.logger,
+//     sync : 0,
+//   }).then( ( op ) =>
+//   {
+//     if( o.logger && o.logger.verbosity )
+//     if( op.result )
+//     {
+//       let info = _.repo.pullCollectionExportString( op.result, { verbosity : o.logger.verbosity } );
+//       if( o.logger.verbosity === 1 )
+//       {
+//         if( info.length )
+//         o.logger.log( `${module.nameWithLocation} ${info}` );
+//       }
+//       else
+//       {
+//         if( info.length )
+//         o.logger.log( `${module.nameWithLocation} ${info}` );
+//         else if( o.logger.verbosity > 2 )
+//         o.logger.log( `${module.nameWithLocation}` );
+//       }
+//     }
+//     return op;
+//   });
+//
+// }
+//
+// repoPullList.defaults =
+// {
+//   remotePath : null,
+//   token : null,
+//   withOpened : 1,
+//   withClosed : 0,
+//   dry : 0,
+//   logger : 1,
+//   throwing : 1,
+// }
 
-  o.logger = _.logger.absolute( logger, o.logger ); /* xxx : adjust logger.relative. write basic test */
+let repoPullList = _repoRequest_functor
+({
+  requestRoutine : _.routine.join( _.repo, _.repo.pullList ),
+  exportStringRoutine : _.routine.join( _.repo, _.repo.pullCollectionExportString ),
+});
 
-  _.routineOptions( prList, o );
+//
 
-  /* xxx : standartize */
-  if( !o.token )
-  {
-    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    if( !config )
-    config = fileProvider.configUserRead();
-    if( config !== null && config.about && config.about[ 'github.token' ] )
-    o.token = config.about[ 'github.token' ];
-  }
+// function repoProgramList( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger; /* xxx : qqq : use transaction */
+//
+//   o.logger = _.logger.absoluteMaybe( logger, o.logger ); /* xxx : adjust logger.relativeMaybe. write basic test */
+//
+//   _.routineOptions( repoProgramList, o );
+//
+//   /* xxx : standartize */
+//   if( !o.token )
+//   {
+//     let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+//     if( !config )
+//     config = fileProvider.configUserRead();
+//     if( config !== null && config.about && config.about[ 'github.token' ] )
+//     o.token = config.about[ 'github.token' ];
+//   }
+//
+//   if( !o.remotePath )
+//   {
+//     if( module.pathMap.repository )
+//     o.remotePath = module.pathMap.repository;
+//   }
+//
+//   if( !o.remotePath )
+//   {
+//     if( !o.throwing )
+//     return _.take( null );
+//     throw _.err( `Module ${module.qualifiedName} is not remote` );
+//   }
+//
+//   return _.repo.programList
+//   ({
+//     remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
+//     token : o.token,
+//     throwing : o.throwing,
+//     logger : o.logger,
+//     sync : 0,
+//   }).then( ( op ) =>
+//   {
+//     if( o.logger && o.logger.verbosity )
+//     if( op.result )
+//     {
+//       let info = _.repo.programCollectionExportString( op.result, { verbosity : o.logger.verbosity } );
+//       if( o.logger.verbosity === 1 )
+//       {
+//         if( info.length )
+//         o.logger.log( `${module.nameWithLocation} ${info}` );
+//       }
+//       else
+//       {
+//         if( info.length )
+//         o.logger.log( `${module.nameWithLocation} ${info}` );
+//         else if( o.logger.verbosity > 2 )
+//         o.logger.log( `${module.nameWithLocation}` );
+//       }
+//     }
+//     return op;
+//   });
+//
+// }
+//
+// repoProgramList.defaults =
+// {
+//   remotePath : null,
+//   token : null,
+//   withOpened : 1,
+//   withClosed : 0,
+//   dry : 0,
+//   logger : 1,
+//   throwing : 1,
+// }
 
-  debugger;
-  if( !o.remotePath )
-  {
-    if( module.pathMap.repository )
-    o.remotePath = module.pathMap.repository;
-  }
-
-  if( !o.remotePath )
-  {
-    if( !o.throwing )
-    return _.take( null );
-    throw _.err( `Module ${module.qualifiedName} is not remote` );
-  }
-
-  return _.repo.prsGet
-  ({
-    remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
-    token : o.token,
-    throwing : o.throwing,
-    logger : o.logger,
-    sync : 0,
-  }).then( ( op ) =>
-  {
-    if( o.logger && o.logger.verbosity )
-    if( op.result )
-    {
-      console.log( `o.logger.verbosity : ${o.logger.verbosity}` );
-      let info = _.repo.prsExportString( op.result, { verbosity : o.logger.verbosity } );
-      if( o.logger.verbosity === 1 )
-      {
-        o.logger.log( `${module.nameWithLocation} ${info}` );
-      }
-      else
-      {
-        if( info.length )
-        o.logger.log( `${module.nameWithLocation}\n  ${_.strLinesIndentation( info, '  ' )}` );
-        else if( o.logger.verbosity > 2 )
-        o.logger.log( `${module.nameWithLocation}` );
-      }
-    }
-    // op.result.forEach( ( pr ) =>
-    // {
-    //   let info = _.repo.prExportString( pr, { verbosity : o.logger.verbosity } );
-    //   o.logger.log( info );
-    // });
-    return op;
-  });
-
-}
-
-prList.defaults =
-{
-  remotePath : null,
-  token : null,
-  withOpened : 1,
-  withClosed : 0,
-  dry : 0,
-  logger : 1,
-  throwing : 1,
-}
-
-// --
-// procedure
-// --
-
-function procedurePrototypeList( o )
-{
-
-  _.routine.options( procedurePrototypeList, o );
-  _.assert( arguments.length === 1 );
-
-  debugger;
-
-  _.ci.procedurePrototypeList();
-
-}
-
-procedurePrototypeList.defaults =
-{
-}
+let repoProgramList = _repoRequest_functor
+({
+  requestRoutine : _.routine.join( _.repo, _.repo.programList ),
+  exportStringRoutine : _.routine.join( _.repo, _.repo.programCollectionExportString ),
+});
 
 // --
 // etc
@@ -9740,7 +9910,7 @@ function assertIsValidIntegrity()
     (
       _.longHas( module.userArray, relation.opener )
       , `${module.nameWithLocationGet()} does not have reference on its`
-      + `\n${relation.opener.nameWithLocationGet}`
+      + `\n${relation.opener.nameWithLocationGet()}`
     );
   });
 
@@ -10275,11 +10445,8 @@ let Extension =
   gitSync,
   gitTag,
 
-  prList,
-
-  //
-
-  procedurePrototypeList,
+  repoPullList,
+  repoProgramList,
 
   // etc
 

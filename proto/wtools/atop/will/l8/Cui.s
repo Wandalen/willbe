@@ -517,15 +517,15 @@ function _commandsMake()
     'git tag' :                         { e : _.routineJoin( cui, cui.commandGitTag )                       },
     'git hook preserving hardlinks' :   { e : _.routineJoin( cui, cui.commandGitHookPreservingHardLinks )   },
 
-    'pr open' :                         { e : _.routineJoin( cui, cui.commandPrOpen )                       },
-    'pr list' :                         { e : _.routineJoin( cui, cui.commandPrList )                       },
+    'repo pull open' :                  { e : _.routineJoin( cui, cui.commandRepoPullOpen )                 },
+    'repo pull list' :                  { e : _.routineJoin( cui, cui.commandRepoPullList )                 },
+    'repo program list' :               { e : _.routineJoin( cui, cui.commandRepoProgramList )              },
+    'repo program process list' :       { e : _.routineJoin( cui, cui.commandRepoProgramProcessList )       },
 
     'npm publish' :                     { e : _.routineJoin( cui, cui.commandNpmPublish )                   },
     'npm dep add' :                     { e : _.routineJoin( cui, cui.commandNpmDepAdd )                    },
     'npm install' :                     { e : _.routineJoin( cui, cui.commandNpmInstall )                   },
     'npm clean' :                       { e : _.routineJoin( cui, cui.commandNpmClean )                     },
-
-    'procedure prototype list' :        { e : _.routineJoin( cui, cui.commandProcedurePrototypeList )       },
 
     'package install' :                 { e : _.routineJoin( cui, cui.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( cui, cui.commandPackageLocalVersions )         },
@@ -1350,7 +1350,7 @@ function _commandModuleOrientedLike( o )
     ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
-  _.assert( _.strIs( o.name ) );
+  _.assert( _.strIs( o.name ) ); debugger;
   _.assert( _.objectIs( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -1370,35 +1370,6 @@ function _commandModuleOrientedLike( o )
     throw _.err( err, `\nFailed to ${o.name}` );
     return arg;
   });
-
-  // openersEach( openers );
-  //
-  // return ready.finally( ( err, arg ) =>
-  // {
-  //   will.currentOpeners = openers;
-  //   will._commandsEnd( o.commandRoutine );
-  //   if( err )
-  //   logger.error( _.errOnce( err ) );
-  //   if( err )
-  //   throw err;
-  //   return arg;
-  // })
-  //
-  // /* */
-  //
-  // function openersEach( openers )
-  // {
-  //   let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-  //   o2.modules = openers;
-  //   return will.modulesFor( o2 )
-  //   .finally( ( err, arg ) =>
-  //   {
-  //     will._commandsEnd( o.commandRoutine );
-  //     if( err )
-  //     throw _.err( err, `\nFailed to ${o.name}` );
-  //     return arg;
-  //   });
-  // }
 
 }
 
@@ -5061,12 +5032,12 @@ commandGitHookPreservingHardLinks.commandSubjectHint = 'Any subject to enable pr
 
 //
 
-function commandPrOpen( e )
+function commandRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandPrOpen, arguments );
+  cui._command_head( commandRepoPullOpen, arguments );
 
-  _.routineOptions( commandPrOpen, e.propertiesMap );
+  _.routineOptions( commandRepoPullOpen, e.propertiesMap );
   cui._propertiesImply( e.propertiesMap );
 
   return cui._commandBuildLike
@@ -5074,7 +5045,7 @@ function commandPrOpen( e )
     event : e,
     name : 'git pr open',
     onEach : handleEach,
-    commandRoutine : commandPrOpen,
+    commandRoutine : commandRepoPullOpen,
   });
 
   function handleEach( it )
@@ -5087,7 +5058,7 @@ function commandPrOpen( e )
   }
 }
 
-commandPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
+commandRepoPullOpen.defaults = _.mapExtend( null, commandImply.defaults,
 {
   token : null,
   srcBranch : null,
@@ -5097,13 +5068,13 @@ commandPrOpen.defaults = _.mapExtend( null, commandImply.defaults,
   verbosity : null,
   withSubmodules : 1
 });
-commandPrOpen.hint = 'Open pull request from current modules.';
-commandPrOpen.commandSubjectHint = 'A title for PR';
-commandPrOpen.commandPropertiesAliases =
+commandRepoPullOpen.hint = 'Open pull request from current modules.';
+commandRepoPullOpen.commandSubjectHint = 'A title for PR';
+commandRepoPullOpen.commandPropertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-commandPrOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
+commandRepoPullOpen.commandProperties = _.mapExtend( null, commandImply.commandProperties,
 {
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
@@ -5115,59 +5086,152 @@ commandPrOpen.commandProperties = _.mapExtend( null, commandImply.commandPropert
 
 //
 
-function commandPrList( e )
+function commandRepoPullList( e )
 {
   let cui = this;
-  cui._command_head( commandPrList, arguments );
 
-  // debugger;
-  // let implyMap = _.mapOnly_( null, e.propertiesMap, commandPrList.defaults );
-  // e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  // cui._propertiesImply( implyMap );
-  cui._transactionExtend( commandPrList, e.propertiesMap );
-  _.routineOptions( commandPrList, e.propertiesMap );
+  cui._command_head( commandRepoPullList, arguments );
+  cui._transactionExtend( commandRepoPullList, e.propertiesMap );
+  _.routineOptions( commandRepoPullList, e.propertiesMap );
 
   _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
   let o2 = e.propertiesMap;
   o2.logger = o2.verbosity;
   delete o2.verbosity;
-  _.mapOnly_( o2, o2, _.will.Module.prototype.prList.defaults );
-  debugger;
+  _.mapOnly_( o2, o2, _.will.Module.prototype.repoPullList.defaults );
 
   return cui._commandModuleOrientedLike
   ({
     event : e,
-    name : 'pr list',
+    name : 'repo pull list',
     onEachModule : handleEachModule,
-    commandRoutine : commandPrList,
+    commandRoutine : commandRepoPullList,
     recursive : 0,
   });
 
   function handleEachModule( module, op )
   {
-    return module.prList( _.mapExtend( null, o2 ) );
+    return module.repoPullList( _.mapExtend( null, o2 ) );
   }
 
 }
 
-commandPrList.defaults = _.mapExtend( null,
+commandRepoPullList.defaults = _.mapExtend( null,
 {
   token : null,
   withOpened : 1,
   withClosed : 0,
   verbosity : 2,
 })
-commandPrList.hint = 'Open pull request from current modules.';
-commandPrList.commandSubjectHint = 'A title for PR';
-commandPrList.commandPropertiesAliases =
+commandRepoPullList.hint = 'Open pull request from current modules.';
+commandRepoPullList.commandSubjectHint = 'A title for PR';
+commandRepoPullList.commandPropertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-commandPrList.commandProperties = _.mapExtend( null,
+commandRepoPullList.commandProperties = _.mapExtend( null,
 {
   token : 'An individual authorization token. By default reads from user config file.',
   withOpened : 'List closed PR-s. By default it is true.',
   withClosed : 'List closed PR-s. By default it is false.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
+
+//
+
+function commandRepoProgramList( e )
+{
+  let cui = this;
+
+  cui._command_head( commandRepoProgramList, arguments );
+  cui._transactionExtend( commandRepoProgramList, e.propertiesMap );
+  _.routineOptions( commandRepoProgramList, e.propertiesMap );
+
+  _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
+  let o2 = e.propertiesMap;
+  o2.logger = o2.verbosity;
+  delete o2.verbosity;
+  _.mapOnly_( o2, o2, _.will.Module.prototype.repoPullList.defaults );
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'repo program list',
+    onEachModule : handleEachModule,
+    commandRoutine : commandRepoProgramList,
+    recursive : 0,
+  });
+
+  function handleEachModule( module, op )
+  {
+    return module.repoProgramList( _.mapExtend( null, o2 ) );
+  }
+
+}
+
+commandRepoProgramList.defaults = _.mapExtend( null,
+{
+  token : null,
+  verbosity : 2,
+})
+commandRepoProgramList.hint = 'List prototypes of procedures of the module.';
+commandRepoProgramList.commandSubjectHint = 'A title for PR';
+commandRepoProgramList.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandRepoProgramList.commandProperties = _.mapExtend( null,
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  verbosity : 'Set verbosity. Default is 2.',
+});
+
+//
+
+function commandRepoProgramProcessList( e )
+{
+  let cui = this;
+
+  cui._command_head( commandRepoProgramProcessList, arguments );
+  cui._transactionExtend( commandRepoProgramProcessList, e.propertiesMap );
+  _.routineOptions( commandRepoProgramProcessList, e.propertiesMap );
+
+  _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
+  let o2 = e.propertiesMap;
+  o2.logger = o2.verbosity;
+  delete o2.verbosity;
+  _.mapOnly_( o2, o2, _.will.Module.prototype.repoPullList.defaults );
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'repo program process list', /* xxx : remove */
+    onEachModule : handleEachModule,
+    commandRoutine : commandRepoProgramProcessList,
+    recursive : 0,
+  });
+
+  function handleEachModule( module, op )
+  {
+    return module.repoProgramProcessList( _.mapExtend( null, o2 ) );
+  }
+
+}
+
+commandRepoProgramProcessList.defaults = _.mapExtend( null,
+{
+  token : null,
+  verbosity : 2,
+})
+commandRepoProgramProcessList.hint = 'List prototypes of procedures of the module.';
+commandRepoProgramProcessList.commandSubjectHint = 'A title for PR';
+commandRepoProgramProcessList.commandPropertiesAliases =
+{
+  verbosity : [ 'v' ]
+}
+commandRepoProgramProcessList.commandProperties = _.mapExtend( null,
+{
+  token : 'An individual authorization token. By default reads from user config file.',
   verbosity : 'Set verbosity. Default is 2.',
 });
 
@@ -5386,34 +5450,6 @@ commandNpmClean.commandProperties =
   dry : 'Dry run.',
   verbosity : 'Verbosity.',
 };
-
-// --
-// procedure
-// --
-
-function commandProcedurePrototypeList( e )
-{
-  let cui = this;
-  cui._command_head( commandProcedurePrototypeList, arguments );
-
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'procedure prototype list',
-    onEachModule : handleEachModule,
-    commandRoutine : commandProcedurePrototypeList,
-    recursive : 0,
-  });
-
-  function handleEachModule( module, op )
-  {
-    debugger; xxx
-    return module.procedurePrototypeList();
-  }
-
-}
-
-commandProcedurePrototypeList.hint = 'List prototypes of procedures of the module.';
 
 // --
 // package
@@ -6185,8 +6221,10 @@ let Extension =
   commandGitTag,
   commandGitHookPreservingHardLinks,
 
-  commandPrOpen, /* qqq : cover */
-  commandPrList,
+  commandRepoPullOpen, /* qqq : cover */
+  commandRepoPullList,
+  commandRepoProgramList,
+  commandRepoProgramProcessList,
 
   // npm
 
@@ -6194,10 +6232,6 @@ let Extension =
   commandNpmDepAdd,
   commandNpmInstall,
   commandNpmClean,
-
-  // procedure
-
-  commandProcedurePrototypeList,
 
   // command package
 

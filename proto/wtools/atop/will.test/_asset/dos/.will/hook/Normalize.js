@@ -20,6 +20,7 @@ function onModule( context )
         npm.proto.entry:
           - proto/wtools/amid/bufferFromFile/Main.ss
           - proto/node_modules/bufferfromfile
+    - remove branches from github workflows
   */
 
   if( !context.module )
