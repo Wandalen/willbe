@@ -2154,14 +2154,6 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-
-  if( implyMap.withSubmodules === undefined || implyMap.withSubmodules === null )
-  implyMap.withSubmodules = 1;
-
-  cui._propertiesImply( implyMap );
-
   return cui._commandCleanLike
   ({
     event : e,
@@ -2174,7 +2166,7 @@ function commandSubmodulesVersionsDownload( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    let o2 = _.mapExtend( null, e.propertiesMap );
+    let o2 = _.mapExtend( null, e.optionsMap );
     o2.modules = it.openers;
     _.routineOptions( cui.modulesDownload, o2 );
     if( o2.recursive === 2 )
@@ -2185,7 +2177,13 @@ function commandSubmodulesVersionsDownload( e )
 
 }
 
-commandSubmodulesVersionsDownload.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesVersionsDownload.defaults =
+{
+  withSubmodules : 1,
+  dry : null,
+  recursive : null
+}
+commandSubmodulesVersionsDownload.defaults.withSubmodules = 1;
 commandSubmodulesVersionsDownload.hint = 'Download each submodule.';
 commandSubmodulesVersionsDownload.longHint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
