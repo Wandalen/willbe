@@ -290,22 +290,27 @@ function _command_head( o )
     - Command without defaults reuses transaction object and should handle properties by itself
   */
 
+
   e.optionsMap = _.mapExtend( null, e.propertiesMap );
+
+  if( cui.implied )
+  _.mapSupplementNulls( e.optionsMap, cui.implied );
+
+  if( o.routine.defaults )
+  _.mapSupplementNulls( e.optionsMap, _.mapOnly_( null, o.routine.defaults, _.will.Transaction.TransactionFields ) );
 
   e.implyMap = _.mapOnly_( null, e.optionsMap, _.will.Transaction.TransactionFields );
 
-  if( cui.implied )
-  _.mapSupplementNulls( e.implyMap, cui.implied );
-
-  if( o.routine.defaults )
-  {
-    _.routineOptions( o.routine, e.optionsMap );
-    _.mapSupplementNulls( e.implyMap, _.mapOnly_( null, o.routine.defaults, _.will.Transaction.TransactionFields ) );
-  }
-
   cui._transactionExtend( o.routine, e.implyMap );
 
-  e.optionsMap = _.mapBut_( null, e.optionsMap, e.implyMap );
+  let copiedToTransaction = e.implyMap;
+  if( o.routine.defaults )
+  copiedToTransaction = _.mapBut_( e.implyMap, o.routine.defaults );
+
+  e.optionsMap = _.mapBut_( null, e.optionsMap, copiedToTransaction );
+
+  if( o.routine.defaults )
+  _.routineOptions( o.routine, e.optionsMap );
 
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
@@ -1967,6 +1972,7 @@ function commandModulesUpdate( e )
     {
       let o2 = cui.filterImplied();
       o2 = _.mapExtend( o2, e.optionsMap );
+      delete o2.withSubmodules;
       return it.opener.openedModule.subModulesUpdate( o2 );
     })
 
@@ -2168,6 +2174,7 @@ function commandSubmodulesVersionsDownload( e )
     _.assert( _.arrayIs( it.openers ) );
 
     let o2 = _.mapExtend( null, e.optionsMap );
+    delete o2.withSubmodules;
     o2.modules = it.openers;
     _.routineOptions( cui.modulesDownload, o2 );
     if( o2.recursive === 2 )
@@ -2215,6 +2222,7 @@ function commandSubmodulesVersionsUpdate( e )
   {
     let o2 = cui.filterImplied();
     o2 = _.mapExtend( o2, e.optionsMap );
+    delete o2.withSubmodules;
 
     return it.opener.openedModule.subModulesUpdate( o2 );
   }
