@@ -989,7 +989,7 @@ function hashDescriptorOfFile( filePath )
   return null;
 
   let descriptor = Object.create( null );
-  descriptor.hash = fileProvider.hashRead( filePath );
+  descriptor.hash = fileProvider.hashRead({ filePath, logger : _.Logger({ output : will.transaction.logger, verbosity : 0 }) });
   descriptor.size = stat.size;
 
   if( _.bigIntIs( descriptor.size ) )

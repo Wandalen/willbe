@@ -2646,7 +2646,7 @@ function commandModuleNew( e )
     e.optionsMap.localPath = will.transaction.withPath;
   }
 
-  return will.moduleNew( _.mapOnly_( null, e.optionsMap, will.moduleNew.defaults ) );
+  return will.moduleNew({ verbosity : will.transaction.verbosity, ... e.optionsMap });
 }
 
 commandModuleNew.defaults =
