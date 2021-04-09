@@ -307,6 +307,8 @@ function _command_head( o )
 
   cui._transactionExtend( o.routine, e.implyMap );
 
+  e.optionsMap = _.mapBut_( null, e.optionsMap, e.implyMap );
+
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
@@ -3266,15 +3268,10 @@ function commandClean( e )
   let cui = this;
   cui._command_head( commandClean, arguments );
 
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandClean.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  _.routineOptions( commandClean, implyMap );
-  cui._propertiesImply( implyMap );
-
-  e.propertiesMap.dry = !!e.propertiesMap.dry;
-  if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-  e.propertiesMap.fast = !e.propertiesMap.dry;
-  e.propertiesMap.fast = 0; /* xxx : implement */
+  e.optionsMap.dry = !!e.optionsMap.dry;
+  if( e.optionsMap.fast === undefined || e.optionsMap.fast === null )
+  e.optionsMap.fast = !e.optionsMap.dry;
+  e.optionsMap.fast = 0; /* xxx : implement */
 
   return cui._commandCleanLike
   ({
@@ -3290,7 +3287,7 @@ function commandClean( e )
 
     // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
-    o2 = _.mapExtend( o2, e.propertiesMap );
+    o2 = _.mapExtend( o2, e.optionsMap );
     o2.modules = it.openers;
     _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
@@ -3302,9 +3299,17 @@ function commandClean( e )
 
 }
 
-commandClean.defaults = _.mapExtend( null, commandImply.defaults );
-commandClean.defaults.withSubmodules = 0;
-commandClean.defaults.withOut = 1;
+commandClean.defaults =
+{
+  withSubmodules : 0,
+  withOut : 0,
+  dry : null,
+  cleaningSubmodules : null,
+  cleaningOut : null,
+  cleaningTemp : null,
+  recursive : null,
+  fast : null
+}
 commandClean.hint = 'Clean current module.';
 commandClean.longHint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
 commandClean.commandSubjectHint = false;
@@ -3388,13 +3393,6 @@ function commandBuild( e )
   let cui = this;
   cui._command_head( commandBuild, arguments );
   let doneContainer = [];
-
-  debugger
-
-  let implyMap = _.mapOnly_( null, e.propertiesMap, commandBuild.defaults );
-  e.propertiesMap = _.mapBut_( null, e.propertiesMap, implyMap );
-  _.routineOptions( commandBuild, implyMap );
-  cui._propertiesImply( implyMap );
 
   return cui._commandBuildLike
   ({
