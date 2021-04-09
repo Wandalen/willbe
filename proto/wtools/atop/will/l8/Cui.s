@@ -281,27 +281,31 @@ function _command_head( o )
     - Routine does not check propertiesMap if command does not have commandPropertiesMap
     - e.optionsMap contains properties of the command with applied defaults
     - e.implyMap contains properties for transaction object
-    - e.implyMap properties priority in implyMap is next:
-      - Property from imply command
-      - Property from options map
-      - Property from command's defaults
+    - e.implyMap properties priority:
+      - Explicitly provided options from e.optionsMap
+      - Explicitly provided options from cui.implied map
+      - Command's defaults
+      - Transaction defaults
     - Transaction object is not destroyed, but extended with properties from implyMap
     - Command without defaults reuses transaction object and should handle properties by itself
   */
 
   e.optionsMap = _.mapExtend( null, e.propertiesMap );
 
+  e.implyMap = _.mapExtend( null, e.optionsMap );
+
+  if( cui.implied )
+  _.mapSupplementNulls( e.implyMap, cui.implied );
+
   if( o.routine.defaults )
   {
     _.routineOptions( o.routine, e.optionsMap );
-
-    e.implyMap = _.mapExtend( null, e.optionsMap );
-
-    if( cui.implied )
-    _.mapExtend( e.implyMap, cui.implied );
-
-    cui._transactionExtend( o.routine, e.implyMap );
+    _.mapSupplementNulls( e.implyMap, o.routine.defaults );
   }
+
+  _.mapSupplementNulls( e.implyMap, _.will.Transaction.TransactionFields );
+
+  cui._transactionExtend( o.routine, e.implyMap );
 
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
