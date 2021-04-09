@@ -1872,7 +1872,7 @@ function _repoDownload( o )
     let willFilePath = path.join( path.dir( opener.repo.downloadPath ), opener.aliasName + '.will.yml' );
 
     let packageJsonPath = path.join( opener.repo.downloadPath, 'package.json' );
-    let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json', logger : _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta ) });
     let includeAny = path.s.dot( packageJson.files );
 
     let willFile =

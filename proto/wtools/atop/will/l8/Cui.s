@@ -254,13 +254,13 @@ function _command_head( o )
   //   e.propertiesMap = propertiesMap;
   // }
 
-  if( cui.implied && o.usingImpliedMap )
-  {
-    if( o.routine.defaults )
-    _.mapExtend( e.propertiesMap, _.mapOnly_( null, cui.implied, o.routine.defaults ) );
-    else
-    _.mapExtend( e.propertiesMap, cui.implied );
-  }
+  // if( cui.implied && o.usingImpliedMap )
+  // {
+  //   if( o.routine.defaults )
+  //   _.mapExtend( e.propertiesMap, _.mapOnly_( null, cui.implied, o.routine.defaults ) );
+  //   else
+  //   _.mapExtend( e.propertiesMap, cui.implied );
+  // }
 
   _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( e.propertiesMap ) );
   if( o.routine.commandProperties )
@@ -273,6 +273,35 @@ function _command_head( o )
     `Command .${e.subjectDescriptor.phraseDescriptor.phrase} does not expect subject`
     + `, but got "${e.subject}"`
   );
+
+  /*
+    Expected behavior of the _command_head
+    - e.propertiesMap stays unchanged
+    - Routine throws an error if propertiesMap contain unknown property and command does not expect it
+    - Routine does not check propertiesMap if command does not have commandPropertiesMap
+    - e.optionsMap contains properties of the command with applied defaults
+    - e.implyMap contains properties for transaction object
+    - e.implyMap properties priority in implyMap is next:
+      - Property from imply command
+      - Property from options map
+      - Property from command's defaults
+    - Transaction object is not destroyed, but extended with properties from implyMap
+    - Command without defaults reuses transaction object and should handle properties by itself
+  */
+
+  e.optionsMap = _.mapExtend( null, e.propertiesMap );
+
+  if( o.routine.defaults )
+  {
+    _.routineOptions( o.routine, e.optionsMap );
+
+    e.implyMap = _.mapExtend( null, e.optionsMap );
+
+    if( cui.implied )
+    _.mapExtend( e.implyMap, cui.implied );
+
+    cui._transactionExtend( o.routine, e.implyMap );
+  }
 
   // if( o.routine.commandProperties && o.routine.commandProperties.v )
   /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
@@ -300,7 +329,7 @@ _command_head.defaults =
   routine : null,
   args : null,
   // propertiesMapAsProperty : 0,
-  usingImpliedMap : 1
+  // usingImpliedMap : 1
 }
 
 //
@@ -389,8 +418,8 @@ function _transactionBegin( command, propertiesMap )
     cui.transaction = null;
   }
 
-  let implyMap = _.mapOnly_( null, propertiesMap, cui.commandImply.defaults );
-  cui.transaction = _.will.Transaction.Make( implyMap, cui.will );
+  // let implyMap = _.mapOnly_( null, propertiesMap, cui.commandImply.defaults );
+  cui.transaction = _.will.Transaction.Make( propertiesMap, cui.logger );
 
   return cui.transaction;
 }
@@ -405,8 +434,8 @@ function _transactionExtend( command, propertiesMap )
   if( transaction && transaction.isInitial )
   return cui._transactionBegin( command, propertiesMap );
 
-  let implyMap = _.mapOnly_( null, propertiesMap, cui.commandImply.defaults );
-  cui.transaction.extend( implyMap );
+  // let implyMap = _.mapOnly_( null, propertiesMap, cui.commandImply.defaults );
+  cui.transaction.extend( propertiesMap );
 
   return cui.transaction;
 }
@@ -596,8 +625,8 @@ function _commandsEnd( command )
 
   if( will.topCommand !== command )
   {
-    will.transaction.finit();
-    will.transaction = null;
+    // will.transaction.finit();
+    // will.transaction = null;
     return false;
   }
 
@@ -1521,6 +1550,7 @@ function commandVersionBump( e )
   let cui = this;
   let properties = e.propertiesMap;
   cui._command_head( commandVersionBump, arguments );
+
 
   if( e.subject )
   properties.versionDelta = e.subject;
@@ -2663,28 +2693,21 @@ function commandModuleNew( e )
   let path = will.fileProvider.path;
   will._command_head( commandModuleNew, arguments );
 
-  // let implyMap = _.mapOnly_( null,  e.propertiesMap, commandModuleNew.defaults );
-  // e.propertiesMap = _.mapBut_( null,  e.propertiesMap, implyMap );
-  // _.routineOptions( commandModuleNew, implyMap );
-  // will._propertiesImply( implyMap );
-
-  _.routineOptions( commandModuleNew, e.propertiesMap );
-  will._propertiesImply( e.propertiesMap );
+  // _.routineOptions( commandModuleNew, e.propertiesMap );
+  // will._propertiesImply( e.propertiesMap );
 
   if( e.commandArgument )
-  e.propertiesMap.localPath = e.commandArgument;
-  // if( e.propertiesMap.verbosity === undefined )
-  // e.propertiesMap.verbosity = 1;
+  e.optionsMap.localPath = e.commandArgument;
 
   if( will.transaction.withPath )
   {
-    if( e.propertiesMap.localPath )
-    e.propertiesMap.localPath = path.join( path.detrail( will.transaction.withPath ), e.propertiesMap.localPath );
+    if( e.optionsMap.localPath )
+    e.optionsMap.localPath = path.join( path.detrail( will.transaction.withPath ), e.optionsMap.localPath );
     else
-    e.propertiesMap.localPath = will.transaction.withPath;
+    e.optionsMap.localPath = will.transaction.withPath;
   }
 
-  return will.moduleNew( _.mapOnly_( null, e.propertiesMap, will.moduleNew.defaults ) );
+  return will.moduleNew( _.mapOnly_( null, e.optionsMap, will.moduleNew.defaults ) );
 }
 
 commandModuleNew.defaults = _.mapExtend( null, commandImply.defaults );
@@ -3540,7 +3563,7 @@ function commandWith( e )
   ({
     routine : commandWith,
     args : arguments,
-    usingImpliedMap : 0
+    // usingImpliedMap : 0
   });
 
   // if( cui.currentOpener )
@@ -3583,10 +3606,8 @@ function commandWith( e )
 
   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.commandArgument ) );
-
   cui.implied = _.mapExtend( cui.implied, { withPath } );
-  _.mapExtend( e.propertiesMap, _.mapOnly_( null,  cui.implied, commandWith.defaults ) );
-  cui._propertiesImply( e.propertiesMap );
+  cui._transactionExtend( commandWith, cui.implied );
 
   return cui.modulesFindWithAt
   ({
@@ -3612,8 +3633,8 @@ function commandWith( e )
 
     _.assert( cui.transaction instanceof _.will.Transaction );
     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
-    cui.transaction.finit();
-    cui.transaction = null;
+    // cui.transaction.finit();
+    // cui.transaction = null;
 
     return it;
   })
@@ -4412,14 +4433,16 @@ function commandWillfileMergeIntoSingle( e )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
-  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml' });;
+  let logger = _.logger.relative( cui.transaction.logger, cui.fileProviderVerbosityDelta );
+
+  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
   filterAboutNpmFields();
   filterSubmodulesCriterions();
   if( e.propertiesMap.filterSameSubmodules )
   filterSameSubmodules()
   if( e.propertiesMap.submodulesDisabling )
   submodulesDisable();
-  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml' });
+  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger });
 
   /* */
 

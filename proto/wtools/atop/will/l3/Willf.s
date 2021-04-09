@@ -377,7 +377,8 @@ function _read()
       ({
         encoding : 'buffer.bytes',
         filePath : willf.filePath,
-        verbosity : 0,
+        // verbosity : 0,
+        logger : _.logger.relative( will.transaction.logger, -will.transaction.logger.verbosity )
       });
 
     }

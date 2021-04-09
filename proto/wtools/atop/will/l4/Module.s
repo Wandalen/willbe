@@ -3438,7 +3438,7 @@ function moduleFixateAct( o )
     try
     {
 
-      let code = fileProvider.fileRead( willfilePath );
+      let code = fileProvider.fileRead({ filePath : willfilePath, logger : _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta ) });
 
       if( !_.strHas( code, o.originalPath ) )
       {
@@ -7581,7 +7581,7 @@ function willfileGenerateFromNpm( o )
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
-  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' })
+  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta ) })
   let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
 
   /* */
@@ -7606,6 +7606,7 @@ function willfileExtendWillfile( o )
   let path = fileProvider.path;
   let opts = _.routineOptionsPreservingUndefines( willfileExtendWillfile, o );
   let request = opts.request.split( /\s+/ );
+  let logger = _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta );
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -7655,7 +7656,7 @@ function willfileExtendWillfile( o )
       throw _.errBrief( 'Unexpected configuration files. Please, improve selector.' );
 
       let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
-      let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding });
+      let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding, logger });
       if( !_.longHas( files[ j ].exts, 'will' ) )
       srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig });
 
@@ -7902,10 +7903,10 @@ function willfileExtendWillfile( o )
   {
     if( dstWillfiles.length !== 0 )
     {
-      let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding });
+      let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding, logger });
       if( dstWillfiles.length === 2 )
       {
-        let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding });
+        let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding, logger });
         for( let sectionName in config2 )
         {
           if( sectionName in willfile )
@@ -8022,6 +8023,7 @@ function _willfileOnPropertyAct( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
+  let loggerForProvider = _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta );
 
   _.routineOptionsPreservingUndefines( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
@@ -8037,9 +8039,9 @@ function _willfileOnPropertyAct( o )
 
   let willfile, willfile2;
   let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
-  willfile = fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding });
+  willfile = fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
   if( dstWillfileRecords.length === 2 )
-  willfile2 = fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding });
+  willfile2 = fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
 
   /* */
 
