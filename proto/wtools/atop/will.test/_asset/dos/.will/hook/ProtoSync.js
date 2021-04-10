@@ -9,7 +9,9 @@ function onModule( context )
   if( o.v !== null && o.v !== undefined ) o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
+  debugger;
   if( !config )
   return null;
   if( !config.path )

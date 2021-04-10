@@ -93,9 +93,10 @@ function _repoRequest_functor( fo )
     /* xxx : standartize */
     if( o.token === null )
     {
-      let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-      if( !config )
-      config = fileProvider.configUserRead();
+      let config = _.censor.configRead();
+      // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+      // if( !config )
+      // config = fileProvider.configUserRead();
       if( config !== null && config.about && config.about[ 'github.token' ] )
       o.token = config.about[ 'github.token' ];
     }
@@ -9090,9 +9091,10 @@ function gitPrOpen( o )
   /* xxx : standartize */
   if( !o.token )
   {
-    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    if( !config )
-    config = fileProvider.configUserRead();
+    let config = _.censor.configRead();
+    // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    // if( !config )
+    // config = fileProvider.configUserRead();
     if( config !== null && config.about && config.about[ 'github.token' ] )
     o.token = config.about[ 'github.token' ];
   }
@@ -9157,11 +9159,12 @@ function _providerArchiveMake( o )
 
   let config = _.censor.configRead({ profileDir : o.profile });
   // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  if( !config )
-  config = fileProvider.configUserRead();
+  // if( !config )
+  // config = fileProvider.configUserRead();
 
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = o.dirPath;
+  /* qqq : for Dmyto : bad! */
 
   if( config && config.path && config.path.hlink )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
@@ -9177,6 +9180,8 @@ function _providerArchiveMake( o )
 
   return provider;
 }
+
+/* qqq : for Dmytro : bad : defaults? */
 
 //
 
@@ -9224,7 +9229,10 @@ function gitPull( o )
   let provider;
   if( o.restoringHardLinks )
   {
-    provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
+    debugger;
+    /* qqq : for Dmytro : ? */
+    // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : module.dirPath, verbosity : o.verbosity, profile : o.profile });
     if( o.verbosity )
     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
