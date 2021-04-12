@@ -63,7 +63,7 @@ function clone( name, version )
   if( !_.fileProvider.isDir( _.path.join( repoDirPath, name ) ) )
   start( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name ); /* qqq : for Dmytro : use routine _.git.* */
   start({ execPath : 'git checkout ' + version, currentPath : _.path.join( repoDirPath, name ) }); /* qqq : for Dmytro : use routine _.git.* */
-  _.git.reset({ localPath : _.path.join( repoDirPath, name ) });
+  ready.then( () => _.git.reset({ localPath : _.path.join( repoDirPath, name ) }) )
   /* qqq : for Dmytro : implement and cover _.path.joiner */
 
 }
