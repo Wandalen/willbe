@@ -3294,6 +3294,7 @@ function commandSubmodulesClean( e )
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.mapExtend( o2, e.optionsMap );
     o2.modules = it.openers;
+    delete o2.withSubmodules;
     _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
@@ -3313,8 +3314,8 @@ commandSubmodulesClean.defaults =
   recursive : 0,
   fast : 0,
   force : 0,
+  withSubmodules : 0
 }
-commandSubmodulesClean.defaults.withSubmodules = 0;
 
 var command = commandSubmodulesClean.command = Object.create( null );
 command.hint = 'Delete all downloaded submodules.';
@@ -3322,11 +3323,12 @@ command.subjectHint = false;
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
 command.properties =
 {
+  ... commandImply.command.properties,
+
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   force : 'Force cleaning. force:0 - checks submodules for local changes before cleanup, force:1 - removes submodules without any checks.',
-  ... commandImply.command.properties,
 }
 
 //
