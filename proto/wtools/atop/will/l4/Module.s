@@ -3438,7 +3438,7 @@ function moduleFixateAct( o )
     try
     {
 
-      let code = fileProvider.fileRead({ filePath : willfilePath, logger : _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta ) });
+      let code = fileProvider.fileRead({ filePath : willfilePath, logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) });
 
       if( !_.strHas( code, o.originalPath ) )
       {
@@ -7581,7 +7581,7 @@ function willfileGenerateFromNpm( o )
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
-  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta ) })
+  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) })
   let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
 
   /* */
@@ -7606,7 +7606,7 @@ function willfileExtendWillfile( o )
   let path = fileProvider.path;
   let opts = _.routineOptionsPreservingUndefines( willfileExtendWillfile, o );
   let request = opts.request.split( /\s+/ );
-  let logger = _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta );
+  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -8023,7 +8023,7 @@ function _willfileOnPropertyAct( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let loggerForProvider = _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta );
+  let loggerForProvider = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
   _.routineOptionsPreservingUndefines( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
@@ -9522,7 +9522,7 @@ function prList( o )
   let path = fileProvider.path;
   let logger = will.logger; /* xxx : qqq : use transaction */
 
-  o.logger = _.logger.absolute( logger, o.logger ); /* xxx : adjust logger.relative. write basic test */
+  o.logger = _.logger.absolute( logger, o.logger ); /* xxx : adjust logger.relativeMaybe. write basic test */
 
   _.routineOptions( prList, o );
 

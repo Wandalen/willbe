@@ -4300,7 +4300,7 @@ function commandWillfileMergeIntoSingle( e )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
-  let logger = _.logger.relative( cui.transaction.logger, cui.fileProviderVerbosityDelta );
+  let logger = _.logger.relativeMaybe( cui.transaction.logger, cui.fileProviderVerbosityDelta );
 
   let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
   filterAboutNpmFields();

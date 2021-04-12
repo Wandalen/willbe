@@ -878,7 +878,7 @@ function versionGet()
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let packageJsonPath = path.join( __dirname, '../../../../../package.json' );
-  let packageJson =  fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json', logger : _.logger.relative( will.transaction.logger, will.fileProviderVerbosityDelta ) });
+  let packageJson =  fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) });
   return packageJson.version
 }
 
