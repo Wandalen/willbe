@@ -2410,11 +2410,12 @@ var command = commandSubmodulesGit.command = Object.create( null );
 command.hint = 'Run custom Git command on submodules of the module.';
 command.subjectHint = 'Custom git command exclude name of command "git".';
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.commandProperties,
+command.properties =
 {
+  ... commandImply.command.properties,
   hardLinkMaybe : 'Disables saving of hardlinks. Default value is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".'
-});
+};
 
 //
 
@@ -2819,11 +2820,12 @@ var command = commandModulesGit.command = Object.create( null );
 command.hint = 'Run custom Git command on module and its submodules.';
 command.subjectHint = 'Custom git command exclude name of command "git".';
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.commandProperties,
+command.properties =
 {
+  ... commandImply.command.properties,
   hardLinkMaybe : 'Disables saving of hardlinks. Default value is 0.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-});
+};
 
 //
 
