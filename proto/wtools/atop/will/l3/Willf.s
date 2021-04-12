@@ -377,7 +377,7 @@ function _read()
       ({
         encoding : 'buffer.bytes',
         filePath : willf.filePath,
-        verbosity : 0,
+        logger : 0,
       });
 
     }

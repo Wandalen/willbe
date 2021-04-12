@@ -5536,6 +5536,11 @@ commandNpmInstall.defaults =
   verbosity : 2,
 };
 
+/* qqq2 : for Dmytro : write test routines
+- make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
+- duplicate tests in NpmTools and willbe
+*/
+
 var command = commandNpmInstall.command = Object.create( null );
 command.hint = 'Add as dependency to NPM.';
 command.propertiesAliases =
