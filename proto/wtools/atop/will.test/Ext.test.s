@@ -15640,8 +15640,9 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/.circleci/config.yml',
       './.module/ModuleForTesting12/.github',
       './.module/ModuleForTesting12/.github/workflows',
-      './.module/ModuleForTesting12/.github/workflows/PullRequest.yml',
-      './.module/ModuleForTesting12/.github/workflows/Push.yml',
+      './.module/ModuleForTesting12/.github/workflows/StandardPublish.yml',
+      './.module/ModuleForTesting12/.github/workflows/StandardPullRequest.yml',
+      './.module/ModuleForTesting12/.github/workflows/StandardPush.yml',
       './.module/ModuleForTesting12/doc',
       './.module/ModuleForTesting12/doc/ModuleForTesting12.md',
       './.module/ModuleForTesting12/doc/README.md',
@@ -28887,7 +28888,8 @@ function commandSubmodulesGit( test )
     return null;
   });
   a.appStart( '.with original/GitSync .submodules.git add --all' );
-  a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules.git commit -am "new lines" hardLinkMaybe:1` )
+  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules.git commit -am "new lines" hardLinkMaybe:1` )
+  a.appStart( `.with original/GitSync .submodules.git commit -am "new lines" profile:${ profile } hardLinkMaybe:1` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -28919,7 +28921,8 @@ function commandSubmodulesGit( test )
     return null;
   });
 
-  a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git commit -am "new lines2"` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git commit -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules.git commit -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -28944,7 +28947,8 @@ function commandSubmodulesGit( test )
   /* */
 
   begin();
-  a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules.git remote add origin1 https://github.com/user/{about::name}.git` )
+  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules.git remote add origin1 https://github.com/user/{about::name}.git` )
+  a.appStart( `.with original/GitSync .submodules.git remote add origin1 https://github.com/user/{about::name}.git profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = '.with original/GitSync .modules.git remote add origin1 https://github.com/user/{about::name}.git';
@@ -30213,7 +30217,8 @@ function commandSubmodulesGitSync( test )
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git.sync -am "new lines2"` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git.sync -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32073,7 +32078,8 @@ function commandModulesGitSync( test )
     return null;
   })
 
-  a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .modules.git.sync -am "new lines2"` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .modules.git.sync -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32337,13 +32343,15 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
     return null;
   })
 
-  a.appStartNonThrowing( `.with super/ .imply profile:${ profile } .modules.git.sync v:5` )
+  // a.appStartNonThrowing( `.with super/ .imply profile:${ profile } .modules.git.sync v:5` )
+  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .imply profile:${ profile } .modules.git.sync v:5"` ), 1 );
+    // test.identical( _.strCount( op.output, `Command ".with super/ .imply profile:${ profile } .modules.git.sync v:5"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );

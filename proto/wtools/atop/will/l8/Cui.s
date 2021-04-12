@@ -1413,8 +1413,7 @@ commandImply.defaults =
   withInvalid : null,
   withSubmodules : null,
   withPath : null,
-  willFileAdapting : null,
-  profile : null
+  willFileAdapting : null
 };
 
 var command = commandImply.command = Object.create( null );
@@ -1439,8 +1438,7 @@ command.properties =
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
-  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".'
+  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
 };
 
 // function commandImply( e )
@@ -2393,7 +2391,7 @@ function commandSubmodulesGit( e )
       // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
   }
 }
@@ -2597,7 +2595,7 @@ function commandSubmodulesGitSync( e )
     ({
       dirPath : cui.fileProvider.path.common( pathsContainer ),
       verbosity : cui.transaction.verbosity,
-      profile : cui.transaction.profile
+      profile : e.optionsMap.profile
     });
 
     if( cui.transaction.verbosity )
@@ -2803,7 +2801,7 @@ function commandModulesGit( e )
       // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
   }
 }
@@ -3007,7 +3005,7 @@ function commandModulesGitSync( e )
     ({
       dirPath : cui.fileProvider.path.common( pathsContainer ),
       verbosity : cui.transaction.verbosity,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
 
     if( cui.transaction.verbosity )
@@ -3296,6 +3294,7 @@ function commandSubmodulesClean( e )
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.mapExtend( o2, e.optionsMap );
     o2.modules = it.openers;
+    delete o2.withSubmodules;
     _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
@@ -3315,8 +3314,8 @@ commandSubmodulesClean.defaults =
   recursive : 0,
   fast : 0,
   force : 0,
+  withSubmodules : 0
 }
-commandSubmodulesClean.defaults.withSubmodules = 0;
 
 var command = commandSubmodulesClean.command = Object.create( null );
 command.hint = 'Delete all downloaded submodules.';
@@ -3324,11 +3323,12 @@ command.subjectHint = false;
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
 command.properties =
 {
+  ... commandImply.command.properties,
+
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   force : 'Force cleaning. force:0 - checks submodules for local changes before cleanup, force:1 - removes submodules without any checks.',
-  ... commandImply.command.properties,
 }
 
 //
@@ -4592,7 +4592,7 @@ function commandGit( e )
       command : e.subject,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : cui.transaction.profile
+      profile : e.optionsMap.profile
     });
   }
 }
@@ -4676,7 +4676,7 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.transaction.verbosity,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
   }
 }
