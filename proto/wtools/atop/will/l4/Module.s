@@ -117,7 +117,7 @@ function _repoRequest_functor( fo )
 
     return requestRoutine
     ({
-      remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
+      remotePath : _.git.path.nativize( o.remotePath ), /* xxx : ! */
       token : o.token,
       throwing : o.throwing,
       logger : o.logger,
@@ -9114,7 +9114,7 @@ function gitPrOpen( o )
     else
     o.remotePath = _.git.remotePathFromLocal( module.dirPath );
   }
-  o.remotePath = _.git.remotePathNativize( o.remotePath );
+  o.remotePath = _.git.path.nativize( o.remotePath );
 
   o.title = _.strUnquote( o.title );
 
@@ -9620,89 +9620,10 @@ gitTag.defaults =
   description : '',
   dry : 0,
   light : 0,
-  // v : null, /* qqq : for Dmytro : bad! */
   verbosity : 1,
 }
-/* qqq : for Dmytro : for Vova : remove options v aaa:removed */
 
 //
-
-// function repoPullList( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger; /* xxx : qqq : use transaction */
-//
-//   o.logger = _.logger.absoluteMaybe( logger, o.logger ); /* xxx : adjust logger.relativeMaybe. write basic test */
-//
-//   _.routineOptions( repoPullList, o );
-//
-//   /* xxx : standartize */
-//   if( !o.token )
-//   {
-//     let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-//     if( !config )
-//     config = fileProvider.configUserRead();
-//     if( config !== null && config.about && config.about[ 'github.token' ] )
-//     o.token = config.about[ 'github.token' ];
-//   }
-//
-//   if( !o.remotePath )
-//   {
-//     if( module.pathMap.repository )
-//     o.remotePath = module.pathMap.repository;
-//   }
-//
-//   if( !o.remotePath )
-//   {
-//     if( !o.throwing )
-//     return _.take( null );
-//     throw _.err( `Module ${module.qualifiedName} is not remote` );
-//   }
-//
-//   return _.repo.pullList
-//   ({
-//     remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
-//     token : o.token,
-//     throwing : o.throwing,
-//     logger : o.logger,
-//     sync : 0,
-//   }).then( ( op ) =>
-//   {
-//     if( o.logger && o.logger.verbosity )
-//     if( op.result )
-//     {
-//       let info = _.repo.pullCollectionExportString( op.result, { verbosity : o.logger.verbosity } );
-//       if( o.logger.verbosity === 1 )
-//       {
-//         if( info.length )
-//         o.logger.log( `${module.nameWithLocation} ${info}` );
-//       }
-//       else
-//       {
-//         if( info.length )
-//         o.logger.log( `${module.nameWithLocation} ${info}` );
-//         else if( o.logger.verbosity > 2 )
-//         o.logger.log( `${module.nameWithLocation}` );
-//       }
-//     }
-//     return op;
-//   });
-//
-// }
-//
-// repoPullList.defaults =
-// {
-//   remotePath : null,
-//   token : null,
-//   withOpened : 1,
-//   withClosed : 0,
-//   dry : 0,
-//   logger : 1,
-//   throwing : 1,
-// }
 
 let repoPullList = _repoRequest_functor
 ({
@@ -9711,83 +9632,6 @@ let repoPullList = _repoRequest_functor
 });
 
 //
-
-// function repoProgramList( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger; /* xxx : qqq : use transaction */
-//
-//   o.logger = _.logger.absoluteMaybe( logger, o.logger ); /* xxx : adjust logger.relativeMaybe. write basic test */
-//
-//   _.routineOptions( repoProgramList, o );
-//
-//   /* xxx : standartize */
-//   if( !o.token )
-//   {
-//     let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-//     if( !config )
-//     config = fileProvider.configUserRead();
-//     if( config !== null && config.about && config.about[ 'github.token' ] )
-//     o.token = config.about[ 'github.token' ];
-//   }
-//
-//   if( !o.remotePath )
-//   {
-//     if( module.pathMap.repository )
-//     o.remotePath = module.pathMap.repository;
-//   }
-//
-//   if( !o.remotePath )
-//   {
-//     if( !o.throwing )
-//     return _.take( null );
-//     throw _.err( `Module ${module.qualifiedName} is not remote` );
-//   }
-//
-//   return _.repo.programList
-//   ({
-//     remotePath : _.git.remotePathNativize( o.remotePath ), /* xxx : ! */
-//     token : o.token,
-//     throwing : o.throwing,
-//     logger : o.logger,
-//     sync : 0,
-//   }).then( ( op ) =>
-//   {
-//     if( o.logger && o.logger.verbosity )
-//     if( op.result )
-//     {
-//       let info = _.repo.programCollectionExportString( op.result, { verbosity : o.logger.verbosity } );
-//       if( o.logger.verbosity === 1 )
-//       {
-//         if( info.length )
-//         o.logger.log( `${module.nameWithLocation} ${info}` );
-//       }
-//       else
-//       {
-//         if( info.length )
-//         o.logger.log( `${module.nameWithLocation} ${info}` );
-//         else if( o.logger.verbosity > 2 )
-//         o.logger.log( `${module.nameWithLocation}` );
-//       }
-//     }
-//     return op;
-//   });
-//
-// }
-//
-// repoProgramList.defaults =
-// {
-//   remotePath : null,
-//   token : null,
-//   withOpened : 1,
-//   withClosed : 0,
-//   dry : 0,
-//   logger : 1,
-//   throwing : 1,
-// }
 
 let repoProgramList = _repoRequest_functor
 ({
