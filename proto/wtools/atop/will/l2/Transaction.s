@@ -224,9 +224,7 @@ let TransactionFields =
 
   ... _.Will.IntentionFields,
 
-  willFileAdapting : 0,
-
-  profile : 'default'
+  willFileAdapting : 0
 }
 
 // --
@@ -273,8 +271,7 @@ let Accessors =
 {
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
-  withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
-  profile : { get : _transactionPropertyGetter_functor( 'profile' ), set : _transactionPropertySetter_functor( 'profile' ) },
+  withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet }
 }
 
 _.each( TransactionFields, ( val, key ) =>
