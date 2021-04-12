@@ -378,7 +378,7 @@ function _read()
         encoding : 'buffer.bytes',
         filePath : willf.filePath,
         // verbosity : 0,
-        logger : false
+        logger : 0
       });
 
     }
