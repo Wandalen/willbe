@@ -4755,8 +4755,10 @@ function commandGitReset( e )
   }
 }
 
-commandGitReset.defaults = _.mapExtend( null, commandImply.defaults,
+commandGitReset.defaults =
 {
+  ... commandImply.defaults,
+
   dirPath : '.',
   removingUntracked : 0,
   removingIgnored : 0,
@@ -4764,7 +4766,7 @@ commandGitReset.defaults = _.mapExtend( null, commandImply.defaults,
   dry : 0,
   verbosity : 2,
   withSubmodules : 0
-});
+};
 
 var command = commandGitReset.command = Object.create( null );
 command.hint = 'Reset local changes in repository of the module.';
@@ -4808,8 +4810,10 @@ function commandGitStatus( e )
   }
 }
 
-commandGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
+commandGitStatus.defaults =
 {
+  ... commandImply.defaults,
+
   local : 1,
   uncommittedIgnored : 0,
   remote : 1,
@@ -4817,7 +4821,7 @@ commandGitStatus.defaults = _.mapExtend( null, commandImply.defaults,
   prs : 1,
   verbosity : 1,
   withSubmodules : 0
-});
+}
 
 var command = commandGitStatus.command = Object.create( null );
 command.hint = 'Check the status of the repository.';
@@ -4862,14 +4866,16 @@ function commandGitSync( e )
   }
 }
 
-commandGitSync.defaults = _.mapExtend( null, commandImply.defaults,
+commandGitSync.defaults =
 {
+  ... commandImply.defaults,
+
   dirPath : null,
   dry : 0,
   profile : 'default',
   verbosity : 1,
   withSubmodules : 0
-});
+};
 
 var command = commandGitSync.command = Object.create( null );
 command.hint = 'Syncronize local and remote repositories.';
@@ -4911,15 +4917,17 @@ function commandGitTag( e )
   }
 }
 
-commandGitTag.defaults = _.mapExtend( null, commandImply.defaults,
+commandGitTag.defaults =
 {
+  ... commandImply.defaults,
+
   name : '.',
   description : '',
   dry : 0,
   light : 0,
   verbosity : 1,
   withSubmodules : 0
-});
+};
 
 var command = commandGitTag.command = Object.create( null );
 command.hint = 'Add tag for current commit.';
@@ -4982,8 +4990,10 @@ function commandRepoPullOpen( e )
   }
 }
 
-commandRepoPullOpen.defaults = _.mapExtend( null, commandImply.defaults,
+commandRepoPullOpen.defaults =
 {
+  ... commandImply.defaults,
+
   token : null,
   srcBranch : null,
   dstBranch : 'master',
@@ -4991,7 +5001,7 @@ commandRepoPullOpen.defaults = _.mapExtend( null, commandImply.defaults,
   body : null,
   verbosity : 2,
   withSubmodules : 1
-});
+};
 
 var command = commandRepoPullOpen.command = Object.create( null );
 command.hint = 'Open pull request from current modules.';
