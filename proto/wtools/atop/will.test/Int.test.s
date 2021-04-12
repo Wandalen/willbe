@@ -3149,7 +3149,7 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.mustNotThrowError( build.perform() );
   })
 
   .then( ( arg ) =>
@@ -3157,7 +3157,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/path.out.will' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/path.out.will.yml' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3188,7 +3188,7 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.mustNotThrowError( build.perform() );
   })
 
   .then( ( arg ) =>
@@ -3196,7 +3196,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/reflector.out.will' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/reflector.out.will.yml' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3226,13 +3226,12 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.shouldThrowErrorAsync( build.perform() );
   })
 
-  .finally( ( err, arg ) =>
+  .then( ( err ) =>
   {
     var module = opener.openedModule;
-
     test.true( _.errIs( err ) );
     test.identical( _.strCount( String( err ), 'Failed to export' ), 1 );
     test.identical( _.strCount( String( err ), 'module::nopath / exported::export.debug' ), 1 );
@@ -3264,10 +3263,10 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.shouldThrowErrorAsync( build.perform() );
   })
 
-  .finally( ( err, arg ) =>
+  .then( ( err ) =>
   {
     var module = opener.openedModule;
 
@@ -3301,14 +3300,12 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.mustNotThrowError( build.perform() );
   })
 
-  .finally( ( err, arg ) =>
+  .then( ( arg ) =>
   {
     var module = opener.openedModule;
-
-    test.true( err === undefined );
 
     test.description = 'files';
     var exp = [ '.', './nonglob.out.will.yml' ];

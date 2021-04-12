@@ -40,7 +40,7 @@ function MakeFor_body( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -101,7 +101,7 @@ function MakeSingle( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
   o = _.routineOptions( MakeSingle, arguments );
@@ -216,7 +216,7 @@ function form1()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( reflector.formed >= 1 )
   return reflector;
@@ -273,7 +273,7 @@ function form2( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( reflector.formed >= 2 )
   return reflector;
@@ -359,7 +359,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( reflector.formed === 3 )
   return reflector;
@@ -411,7 +411,7 @@ function _inheritMultiple( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
@@ -474,7 +474,7 @@ function _inheritSingle( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let reflector2 = o.ancestor;
 
   _.assertRoutineOptions( _inheritSingle, arguments );
@@ -598,7 +598,7 @@ function _inheritPathMap( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assertRoutineOptions( _inheritPathMap, arguments );
   _.assert( reflector.filePath === null || _.mapIs( reflector.filePath ) )
@@ -632,7 +632,7 @@ function _inheritPathMapAct1( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assertRoutineOptions( _inheritPathMapAct1, arguments );
   _.assert( o.pathMap === null || _.mapIs( o.pathMap ) )
@@ -703,7 +703,7 @@ function _inheritPathMapAct2( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assertRoutineOptions( _inheritPathMapAct2, arguments );
 
@@ -787,7 +787,7 @@ function _inheritPathMapAct3( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assertRoutineOptions( _inheritPathMapAct3, arguments );
 
@@ -896,7 +896,7 @@ function _inheritPrefixes( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assertRoutineOptions( _inheritPathMap, arguments );
   _.assert( reflector.src.prefixPath === null || _.strIs( reflector.src.prefixPath ) || _.arrayIs( reflector.src.prefixPath ) );
@@ -1634,7 +1634,7 @@ function pathsRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );

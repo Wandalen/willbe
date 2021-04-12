@@ -31,7 +31,7 @@ function MakeFor_body( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -160,7 +160,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( step.formed >= 3 )
   return step;
@@ -193,7 +193,7 @@ function framePerform( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let hub = will.fileProvider;
 
   let result = _.Consequence.Try( () =>
@@ -233,14 +233,18 @@ function verbosityWithDelta( delta )
 {
   let step = this;
   let will = step.module.will;
-  let verbosity = step.verbosity !== null ? step.verbosity : ( will.verbosity + delta );
+  // let verbosity = step.verbosity !== null ? step.verbosity : ( will.verbosity + delta );
+  let verbosity = step.verbosity !== null ? step.verbosity : ( will.transaction.verbosity + delta );
 
-  if( will.verbosity < -delta )
+  // if( will.verbosity < -delta )
+  if( will.transaction.verbosity < -delta )
   verbosity = 0;
   if( verbosity > 0 )
-  if( will.verbosity <= -delta )
+  // if( will.verbosity <= -delta )
+  if( will.transaction.verbosity <= -delta )
   verbosity = 1;
-  if( will.verbosity >= 9 )
+  // if( will.verbosity >= 9 )
+  if( will.transaction.verbosity >= 9 )
   verbosity = 9;
 
   if( verbosity < 0 )

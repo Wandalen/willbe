@@ -111,7 +111,8 @@ function status( o )
   let path = fileProvider.path;
   let result = Object.create( null );
   let ready = _.take( null );
-  let vcs = will.vcsToolsFor( repo.remotePath );
+  // let vcs = will.vcsToolsFor( repo.remotePath );
+  let vcs = _.repo.vcsFor( repo.remotePath );
   let remoteProvider = will.vcsProviderFor( repo.remotePath );
 
   o = _.routineOptions( status, arguments );
@@ -468,7 +469,8 @@ function status( o )
     ({
       remotePath : repo.remotePath,
       localPath : repo.downloadPath,
-      logger : will.verbosity - 3,
+      // logger : will.verbosity - 3,
+      logger : will.transaction.verbosity - 3,
     });
 
     return _.Consequence.From( result )
@@ -682,7 +684,8 @@ function exportString()
   let repo = this;
   let will = repo.will;
   let result = '';
-  let vcs = will.vcsToolsFor( repo.remotePath );
+  // let vcs = will.vcsToolsFor( repo.remotePath );
+  let vcs = _.repo.vcsFor( repo.remotePath );
 
   if( vcs )
   result += `${vcs.protocols[ 0 ]} repository ${repo.id}\n`;

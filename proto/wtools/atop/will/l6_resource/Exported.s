@@ -194,7 +194,7 @@ function _verify()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( exported.inModule && !exported.inModule.isOut );
   _.assert( exported.outModule && exported.outModule.isOut );
@@ -237,7 +237,7 @@ function _performPrepare1( frame )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let step = frame.resource;
 
   _.assert( arguments.length === 1 );
@@ -274,7 +274,7 @@ function _performOutModule( frame )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let outFilePath = inModule.outfilePathGet();
 
   if( exported.outModule )
@@ -398,7 +398,7 @@ function _performPrepare2()
   let inModule = exported.inModule;
   let outModule = exported.outModule;
   let will = outModule.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert
   (
@@ -472,7 +472,7 @@ function _performExportedReflectors()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!outModule );
@@ -708,7 +708,7 @@ function _performPaths()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let build = outModule.buildMap[ exported.name ];
 
   let originalWillFilesPath = outModule.resourceObtain( 'path', 'module.original.willfiles' );
@@ -752,7 +752,7 @@ function _performArchive()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let build = inModule.buildMap[ exported.name ];
 
   _.assert( exported.archiveFilePath === null );
@@ -795,7 +795,8 @@ function _performArchive()
   }
 
   let zip = Tar.create( o2, [ '.' ] );
-  if( will.verbosity >= 3 )
+  // if( will.verbosity >= 3 )
+  if( will.transaction.verbosity >= 3 )
   logger.log( ' + ' + 'Write out archive ' + hd.path.moveTextualReport( archiveFilePath, exportedDirPath ) );
 
   return null;
@@ -812,7 +813,7 @@ function _performWriteOutFile()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let build = outModule.buildMap[ exported.name ];
 
   /* */
@@ -834,7 +835,8 @@ function _performWriteOutFile()
 
   /* */
 
-  if( will.verbosity >= 3 )
+  // if( will.verbosity >= 3 )
+  if( will.transaction.verbosity >= 3 )
   logger.log( ' + ' + 'Write out willfile ' + _.color.strFormat( outFilePath, 'path' ) );
 
   return null;
@@ -851,7 +853,7 @@ function _performAttachOutFile()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let build = outModule.buildMap[ exported.name ];
   let outFilePath = outModule.outfilePathGet();
 
@@ -875,7 +877,7 @@ function _performReloadOutFile()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let build = outModule.buildMap[ exported.name ];
 
   /* */
@@ -903,7 +905,7 @@ function perform( frame )
   let inModule = exported.inModule;
   let will = inModule.will;
   let con = _.take( null );
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 

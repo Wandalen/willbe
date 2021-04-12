@@ -375,7 +375,7 @@ function unform()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed );
@@ -410,7 +410,7 @@ function form()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( resource.formed === 0 )
   resource.form1();
@@ -438,7 +438,7 @@ function form1()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !resource.formed );
@@ -557,7 +557,7 @@ function _inheritMultiple( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   /* begin */
 
@@ -634,7 +634,7 @@ function _inheritSingle( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( _.strIs( o.ancestor ) )
   o.ancestor = module[ module.MapName ][ o.ancestor ];
@@ -680,7 +680,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 2 );

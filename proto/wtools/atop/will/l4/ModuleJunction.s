@@ -92,7 +92,7 @@ function reform()
   let will = junction.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( junction.formed === -1 )
   return;
@@ -519,7 +519,7 @@ function mergeMaybe( usingPath )
   let will = junction.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let junction2, reset;
 
   _.assert( arguments.length === 1 );
@@ -744,7 +744,7 @@ function _From( o )
   let junctionMap = will.junctionMap;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let made = false;
   let changed = false;
 

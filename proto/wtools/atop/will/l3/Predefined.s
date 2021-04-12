@@ -28,7 +28,7 @@ function stepRoutineDelete( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
   let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
@@ -111,7 +111,7 @@ function stepRoutineReflect( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
   let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
@@ -196,7 +196,7 @@ function stepRoutineTimelapseBegin( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
@@ -223,7 +223,7 @@ function stepRoutineTimelapseEnd( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
@@ -250,7 +250,7 @@ function stepRoutineJs( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
@@ -306,7 +306,7 @@ function stepRoutineEcho( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
@@ -359,7 +359,7 @@ function stepRoutineShell( frame )
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
   let forEachDstReflector, forEachDst;
   let verbosity = step.verbosityWithDelta( -1 );
@@ -446,7 +446,7 @@ function stepRoutineTranspile( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -560,7 +560,7 @@ function stepRoutineView( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -1042,7 +1042,7 @@ function stepRoutineSubmodulesVersionsVerify( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -1095,7 +1095,7 @@ function stepRoutineSubmodulesReload( frame )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -1158,7 +1158,7 @@ function stepRoutineExport( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let build = frame.closesBuildGet();
 
   _.assert( arguments.length === 1 );

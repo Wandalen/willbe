@@ -160,7 +160,7 @@ function form()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
@@ -202,7 +202,7 @@ function preform()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   // if( willf.id === 259 )
   // debugger;
@@ -232,7 +232,7 @@ function _registerForm()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( willf.formed === 0 );
@@ -277,7 +277,7 @@ function _inPathsForm()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( willf.formed > 1 )
   return;
@@ -336,7 +336,7 @@ function _read()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( willf.formed > 2 )
   return true;
@@ -408,7 +408,8 @@ function _read()
     if( err )
     willf._readLog( 1, 1 );
 
-    if( will.verbosity >= 5 )
+    // if( will.verbosity >= 5 )
+    if( will.transaction.verbosity >= 5 )
     {
       logger.up( 2 );
       logger.error( _.errOnce( error ) );
@@ -430,7 +431,7 @@ function _open()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let inconsistent = 0;
 
   // if( willf.id === 259 )
@@ -585,7 +586,8 @@ function _open()
     willf.error = willf.error || error;
     willf._readLog( 0, inconsistent ? 2 : 1 );
 
-    if( will.verbosity >= 5 )
+    // if( will.verbosity >= 5 )
+    if( will.transaction.verbosity >= 5 )
     {
       logger.up( 2 );
       logger.error( _.errOnce( error ) );
@@ -607,7 +609,7 @@ function reopen( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptions( reopen, arguments );
 
@@ -652,13 +654,14 @@ function _readLog( reading, failed )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let read;
 
   let verbosity = 3;
   if( reading )
   verbosity = 5;
-  if( will.verbosity < verbosity )
+  // if( will.verbosity < verbosity )
+  if( will.transaction.verbosity < verbosity )
   return;
 
   let low = reading ? 'read' : 'open';
@@ -711,7 +714,7 @@ function _importToModule()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let structure = willf.structure;
 
   _.assert( willf.formed === 4 );
@@ -788,7 +791,7 @@ function _resourcesImport_head( routine, args )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   let o = args[ 0 ]
   if( args.length > 1 )
@@ -808,7 +811,7 @@ function _resourcesImport_body( o )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let openedModule = willf.openedModule;
   let dirPath = openedModule.dirPath;
   let willfilesPath = openedModule.willfilesPath;
@@ -850,67 +853,7 @@ let _resourcesImport = _.routine.uniteCloning_( _resourcesImport_head, _resource
 function _adapt()
 {
   let willf = this;
-  let will = willf.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let structure = willf.structure;
-
-  if( willf.isOut || willf.role === 'export' )
-  return;
-
-  if( structure.format === willf.FormatVersion )
-  return;
-
-  /* submodule */
-
-  if( structure.submodule )
-  _.each( structure.submodule, ( val, key ) =>
-  {
-    let path = null;
-    let objectIs = _.objectIs( val );
-
-    if( objectIs )
-    path = val.path;
-    else
-    path = val;
-
-    if( !fileProvider.path.isGlobal( path ) )
-    return;
-    let vcs = will.vcsToolsFor( path );
-    if( !vcs )
-    return;
-
-    let parsed = vcs.path.parse( path );
-    let isOldFormat = parsed.hash && !parsed.isFixated;
-    if( !isOldFormat )
-    return;
-
-    parsed.tag = parsed.hash;
-    delete parsed.hash;
-
-    if( parsed.localVcsPath && vcs.path.name( parsed.localVcsPath ) )
-    {
-      let ext = vcs.path.ext( parsed.localVcsPath );
-
-      if( !ext )
-      parsed.localVcsPath = vcs.path.changeExt( parsed.localVcsPath, 'out.will.yml' )
-
-      if( parsed.query )
-      parsed.query = `${parsed.query}&out=${parsed.localVcsPath}`
-      else
-      parsed.query = `out=${parsed.localVcsPath}`;
-
-      delete parsed.localVcsPath;
-    }
-
-    path = vcs.path.str( parsed );
-
-    if( objectIs )
-    val.path = path;
-    else
-    structure.submodule[ key ] = path;
-  })
-
+  _.will.importFileStructureAdapt( willf );
 }
 
 // --
@@ -1027,7 +970,7 @@ function hashDescriptorOfFile( filePath )
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -1036,7 +979,8 @@ function hashDescriptorOfFile( filePath )
 
   _.assert( _.strIs( filePath ) );
 
-  if( will.verbosity >= 7 )
+  // if( will.verbosity >= 7 )
+  if( will.transaction.verbosity >= 7 )
   logger.log( ` . Hash ${filePath}` );
 
   let stat = fileProvider.statRead( filePath );
@@ -1044,7 +988,7 @@ function hashDescriptorOfFile( filePath )
   return null;
 
   let descriptor = Object.create( null );
-  descriptor.hash = fileProvider.hashRead( filePath );
+  descriptor.hash = fileProvider.hashRead({ filePath, logger : _.Logger({ output : will.transaction.logger, verbosity : 0 }) });
   descriptor.size = stat.size;
 
   if( _.bigIntIs( descriptor.size ) )
@@ -1249,7 +1193,7 @@ function isConsistent( opening )
 {
   let willf = this;
   let will = willf.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let result;
 
   _.assert( _.boolLike( willf.isOut ) );
@@ -1359,7 +1303,7 @@ function _attachedModulesOpenWillfiles()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let structure = willf.structure;
 
   _.assert( _.mapIs( structure ) );
@@ -1458,7 +1402,7 @@ function exists()
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( willf.formed >= 2 );
@@ -1627,7 +1571,7 @@ function save( o )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   o = _.routineOptions( save, arguments );
 
@@ -1636,7 +1580,8 @@ function save( o )
 
   _.assert( _.strIs( willf.filePath ) );
 
-  if( will.verbosity >= 2 )
+  // if( will.verbosity >= 2 )
+  if( will.transaction.verbosity >= 2 )
   logger.log( `Saving ${_.color.strFormat( willf.filePath, 'path' )}` );
 
   debugger;

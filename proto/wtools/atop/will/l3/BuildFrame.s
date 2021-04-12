@@ -78,7 +78,7 @@ function form()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !frame.formed );
@@ -108,7 +108,7 @@ function frameUp( resource2 )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let resource = frame.resource;
 
   _.assert( arguments.length === 1 );
@@ -135,7 +135,7 @@ function closesBuildGet()
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let resource = frame.resource;
 
   if( frame.resource instanceof _.will.Build )

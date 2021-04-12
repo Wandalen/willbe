@@ -36,7 +36,17 @@ function init( o )
 
   _.assert( arguments.length === 1 );
 
-  t.formAssociates( o );
+  if( o.logger )
+  {
+    _.assert( o.logger instanceof _.Logger );
+    t.logger = o.logger;
+  }
+  else
+  {
+    _.assert( o.targetLogger instanceof _.Logger );
+    t.logger = _.Logger({ output : o.targetLogger, name : 'transaction' });
+    _.assert( t.logger.output === o.targetLogger );
+  }
 
   _.workpiece.initFields( t );
   Object.preventExtensions( t );
@@ -49,9 +59,9 @@ function init( o )
 
 //
 
-function Make( properties, will )
+function Make( properties, targetLogger )
 {
-  return new _.will.Transaction({ will, ... _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) });
+  return new _.will.Transaction({ targetLogger, ... _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) });
 }
 
 //
@@ -60,7 +70,9 @@ function extend( properties )
 {
   let t = this;
   _.assert( arguments.length === 1 );
+  t.formed = 0;
   _.mapExtend( t, _.mapBut_( _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ), [ 'verbosity' ] ) );
+  t.formed = 1;
   return t;
 }
 
@@ -69,8 +81,7 @@ function extend( properties )
 function unform()
 {
   let t = this;
-  let will = t.will;
-  let logger = will.logger;
+  let logger = t.logger;
   _.assert( logger.verbosity === t.verbosity, 'Verbosity of the main logger was changed' );
   t.formed = 0;
 }
@@ -95,32 +106,11 @@ function form()
 
 //
 
-function formAssociates( o )
-{
-  let t = this;
-  _.assert( o.will instanceof _.Will );
-
-  t.will = o.will;
-  t.will.transaction = t;
-
-  // if( o.logger )
-  // t.logger = o.logger;
-  // else
-  // t.logger = new _.Logger({ output : t.will.logger, name : 'transaction' });
-
-  // _.assert( t.logger instanceof _.Logger );
-  // _.assert( t.logger.output === t.will.logger );
-}
-
-//
-
 function verbosityGet()
 {
   let t = this;
-  let will = t.will;
-  let logger = will.logger;
-  // let logger = t.logger;
-  _.assert( t.formed === 0 || logger.verbosity === t._.verbosity, 'Verbosity of the transaction logger was changed outside of the transaction' );
+  let logger = t.logger;
+  _.assert( logger.verbosity === t._.verbosity, 'Verbosity of the transaction logger was changed outside of the transaction' );
   /* qqq : for Vova : logger should always exists */
   return t._.verbosity;
 }
@@ -130,12 +120,13 @@ function verbosityGet()
 function verbositySet( src )
 {
   let t = this;
-  let will = t.will;
-  let logger = will.logger;
-  // let logger = t.logger;
+  let logger = t.logger;
 
   if( t.formed )
   return;
+
+  if( src === null )
+  src = _.will.Transaction.TransactionFields.verbosity;
 
   t._.verbosity = src;
   logger.verbosity = src;
@@ -208,6 +199,10 @@ function _transactionPropertySetter_functor( propName )
     let t = this;
     if( t.formed )
     return;
+
+    if( src === null )
+    src = _.will.Transaction.TransactionFields[ propName ];
+
     t._[ propName ] = src;
   }
 }
@@ -229,7 +224,9 @@ let TransactionFields =
 
   ... _.Will.IntentionFields,
 
-  willFileAdapting : 0
+  willFileAdapting : 0,
+
+  profile : 'default'
 }
 
 // --
@@ -248,12 +245,18 @@ let Aggregates =
 
 let Associates =
 {
-  will : null, /* qqq : for Vova : remove */
+  // will : null, /* qqq : for Vova : remove */
+  logger : null
 }
 
 let Restricts =
 {
   formed : 0,
+}
+
+let Medials =
+{
+  targetLogger : null
 }
 
 let Statics =
@@ -271,6 +274,7 @@ let Accessors =
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
   withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
+  profile : { get : _transactionPropertyGetter_functor( 'profile' ), set : _transactionPropertySetter_functor( 'profile' ) },
 }
 
 _.each( TransactionFields, ( val, key ) =>
@@ -295,7 +299,6 @@ let Extension =
 
   unform,
   form,
-  formAssociates,
 
   verbositySet,
   withSubmodulesSet,
@@ -306,6 +309,7 @@ let Extension =
   Aggregates,
   Associates,
   Restricts,
+  Medials,
   Statics,
   Forbids,
   Accessors,

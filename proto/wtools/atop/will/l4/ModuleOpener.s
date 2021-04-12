@@ -352,7 +352,7 @@ function willfileUnregister( willf )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.arrayRemoveElementOnceStrictly( willf.openers, opener );
 
@@ -367,7 +367,7 @@ function willfileRegister( willf )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
 
@@ -391,7 +391,7 @@ function _willfilesFindAct( o )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let records;
 
   o = _.routineOptions( _willfilesFindAct, arguments );
@@ -452,7 +452,7 @@ function _willfilesFind()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let result = [];
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -495,7 +495,7 @@ function close()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let module = opener.openedModule;
 
   _.assert( !opener.isFinited() );
@@ -1161,7 +1161,7 @@ function _repoForm()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( opener.formed >= 1 );
   _.assert( opener.formed <= 2 );
@@ -1263,7 +1263,7 @@ function _repoFormFormal()
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let willfilesPath = opener.remotePath || opener.willfilesPath;
 
   _.assert( _.strDefined( opener.aliasName ) );
@@ -1321,7 +1321,7 @@ function _repoDownload( o )
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let time = _.time.now();
   let downloading = null;
   let origin = null;
@@ -1438,7 +1438,9 @@ function _repoDownload( o )
       create will module for npm module after download
     */
 
-    vcsTool = will.vcsToolsFor( opener.repo.remotePath );
+    // vcsTool = will.vcsToolsFor( opener.repo.remotePath );
+    vcsTool = _.repo.vcsFor( opener.repo.remotePath );
+
     if( downloading && !o.dry && vcsTool === _.npm )
     moduleNpmCreate();
 
@@ -1687,7 +1689,8 @@ function _repoDownload( o )
     let o2 =
     {
       reflectMap : { [ opener.remotePath ] : opener.downloadPath },
-      verbosity : will.verbosity - 5,
+      // verbosity : will.verbosity - 5,
+      verbosity : will.transaction.verbosity - 5,
       extra :
       {
         fetching : 0
@@ -1696,7 +1699,9 @@ function _repoDownload( o )
 
     if( o.mode === 'update' )
     {
-      let vscTools = will.vcsToolsFor( opener.remotePath );
+      // let vscTools = will.vcsToolsFor( opener.remotePath );
+      let vscTools = _.repo.vcsFor( opener.remotePath );
+
       _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
       o2.extra.fetchingTags = 1;
@@ -1783,7 +1788,8 @@ function _repoDownload( o )
         ` Please commit changes or delete it manually.`
       );
       reflected[ opener2.downloadPath ] = true;
-      if( will.verbosity >= 3 )
+      // if( will.verbosity >= 3 )
+      if( will.transaction.verbosity >= 3 )
       logger.log( ` + Reflected ${path.moveTextualReport( opener2.downloadPath, opener.downloadPath )}` );
       let filter = { filePath : { [ opener.downloadPath ] : opener2.downloadPath } }
       return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linking : 'hardLink' });
@@ -1866,7 +1872,7 @@ function _repoDownload( o )
     let willFilePath = path.join( path.dir( opener.repo.downloadPath ), opener.aliasName + '.will.yml' );
 
     let packageJsonPath = path.join( opener.repo.downloadPath, 'package.json' );
-    let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) });
     let includeAny = path.s.dot( packageJson.files );
 
     let willFile =
@@ -1945,7 +1951,8 @@ build :
   function log()
   {
     let module = opener.openedModule ? opener.openedModule : opener;
-    if( will.verbosity >= 3 && downloading )
+    // if( will.verbosity >= 3 && downloading )
+    if( will.transaction.verbosity >= 3 && downloading )
     {
       if( o.dry )
       {
@@ -2250,7 +2257,9 @@ function remotePathChangeVersionTo( to )
   _.assert( _.strDefined( to ) );
   _.sure( _.strBegins( to, '!' ) || _.strBegins( to, '#' ), `Argument "to" should begins with "!" or "#" Got:${to}` )
 
-  var vcs = will.vcsToolsFor( opener.remotePath );
+  // var vcs = will.vcsToolsFor( opener.remotePath );
+  let vcs = _.repo.vcsFor( opener.remotePath );
+
   // var remoteParsed = vcs.pathParse( opener.remotePath )
   var remoteParsed = vcs.path.parse({ remotePath : opener.remotePath, full : 1, atomic : 0 })
 

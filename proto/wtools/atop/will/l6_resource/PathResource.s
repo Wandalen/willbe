@@ -39,7 +39,7 @@ function OnInstanceExists( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.routineOptions( OnInstanceExists, arguments );
 
@@ -143,7 +143,7 @@ function form2()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( resource.formed >= 2 )
   return resource;
@@ -167,7 +167,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( resource.formed >= 3 )
   return resource;
@@ -211,7 +211,7 @@ function exportStructure()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let o = _.routineOptions( exportStructure, arguments );
 
   let result = Parent.prototype.exportStructure.apply( resource, [ o ] );
@@ -271,7 +271,7 @@ function pathsRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );

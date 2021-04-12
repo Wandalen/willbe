@@ -108,7 +108,7 @@ function form1()
   let will = rootModule.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( relation.module instanceof _.will.Module );
@@ -150,7 +150,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let result = relation;
 
   if( relation.formed >= 3 )
@@ -206,7 +206,7 @@ function close()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let rootModule = module.rootModule;
 
   relation._wantedOpened = 0;
@@ -230,7 +230,7 @@ function _closeEnd()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let rootModule = module.rootModule;
 
   if( relation.formed > 2 )
@@ -248,7 +248,7 @@ function _openAct( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let rootModule = module.rootModule;
 
   o = _.routineOptions( _openAct, arguments );
@@ -301,7 +301,7 @@ function _openEnd()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let rootModule = module.rootModule;
 
   _.assert( relation.formed === 3 );
@@ -331,7 +331,7 @@ function _moduleAdoptEnd()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let rootModule = module.rootModule;
 
   _.assert( relation.formed < 3 );
@@ -471,7 +471,7 @@ function isMandatory()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( !relation.enabled )
   return false;
@@ -658,7 +658,7 @@ function pathsRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
@@ -815,7 +815,7 @@ function exportString( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
   let resultMap = Parent.prototype.exportStructure.call( relation );
   let tab = '  ';
 
@@ -856,9 +856,10 @@ function errorNotFound( err )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
-  if( will.verbosity >= 3 )
+  // if( will.verbosity >= 3 )
+  if( will.transaction.verbosity >= 3 )
   if( !relation.module.rootModule || relation.module.rootModule === relation.module )
   logger.error
   (
@@ -871,13 +872,16 @@ function errorNotFound( err )
 
   err = _.err( err );
 
-  if( will.verbosity >= 2 && !_.error.isBrief( err ) )
+  // if( will.verbosity >= 2 && !_.error.isBrief( err ) )
+  if( will.transaction.verbosity >= 2 && !_.error.isBrief( err ) )
   {
     logger.error( _.errOnce( err ) );
   }
-  else if( will.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
+  // else if( will.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
+  else if( will.transaction.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
   {
-    if( will.verbosity < 5 )
+    // if( will.verbosity < 5 )
+    if( will.transaction.verbosity < 5 )
     err = _.errBrief( err );
     logger.error( _.errOnce( err ) );
   }
