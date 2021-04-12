@@ -2497,8 +2497,9 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
@@ -2506,7 +2507,7 @@ command.properties = _.mapExtend( null, commandImply.command.properties,
   body : 'Body message.',
   verbosity : 'Set verbosity. Default is 2.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-});
+};
 
 //
 
@@ -2551,8 +2552,9 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   local : 'Check local commits. Default value is 1.',
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
@@ -2560,7 +2562,7 @@ command.properties = _.mapExtend( null, commandImply.command.properties,
   prs : 'Check pull requests. Default is prs:1.',
   verbosity : 'Set verbosity. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-});
+};
 
 //
 
@@ -2638,13 +2640,15 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-});
+
+};
 
 //
 
@@ -2680,12 +2684,13 @@ var command = commandModuleNew.command = Object.create( null );
 command.hint = 'Create a new module.';
 command.subjectHint = 'Path to module file. Default value is ".will.yml".';
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   localPath : 'Path to module file. Default value is ".will.yml".',
   withPath : 'A module selector.',
   verbosity : 'Set verbosity. Default is 1.'
-})
+}
 
 //
 
@@ -2902,8 +2907,9 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
@@ -2911,7 +2917,7 @@ command.properties = _.mapExtend( null, commandImply.command.properties,
   body : 'Body message.',
   verbosity : 'Set verbosity. Default is 2.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-});
+};
 
 //
 
@@ -2956,8 +2962,9 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   local : 'Check local commits. Default value is 1.',
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
@@ -2965,7 +2972,7 @@ command.properties = _.mapExtend( null, commandImply.command.properties,
   prs : 'Check pull requests. Default is prs:1.',
   verbosity : 'Set verbosity. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-});
+};
 
 //
 
@@ -3042,13 +3049,14 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-});
+};
 
 //
 
@@ -3717,15 +3725,16 @@ command.hint = 'Generate JSON file from willfile(s) of current module.';
 command.longHint = 'Generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.\n';
 command.subjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   'packagePath' : 'Path to generated JSON file. Default is "{path::out}/package.json".'
   + '\n\t"will .npm.from.willfile packagePath:debug/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "debug".',
   'entryPath' : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".'
   + '\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
   'filesPath' : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
   + '\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
-});
+};
 
 //
 
@@ -3811,13 +3820,14 @@ command.hint = 'Generate willfile from JSON file.';
 command.longHint = 'Generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".\n';
 command.subjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   'packagePath' : 'Path to source json file. Default is "./package.json".'
   + '\n\t"will .willfile.from.npm packagePath:old.package.json" - generate willfile "will.yml" from JSON file "old.package.json".',
   'willfilePath' : 'Path to generated willfile. Default is "./.will.yml".'
   + '\n\t"will .willfile.from.npm willfilePath:Named" - generate willfile "Named.will.yml" from file "package.json".',
-});
+};
 
 //
 
@@ -4763,15 +4773,16 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
   removingIgnored : 'Enable deleting of ignored files. Default is removingIgnored:1.',
   removingSubrepositories : 'Enable deleting of git subrepositories in repository of module. Default is removingIgnored:1.',
   dry : 'Dry run without resetting. Default is dry:0.',
   verbosity : 'Set verbosity. Default is 2.',
-});
+};
 
 //
 
@@ -4815,15 +4826,16 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   local : 'Check local commits. Default value is 1.',
   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
   remote : 'Check remote unmerged commits. Default value is 1.',
   remoteBranches : 'Check remote branches. Default value is 0.',
   prs : 'Check pull requests. Default is prs:1.',
   verbosity : 'Set verbosity. Default is 1.',
-});
+};
 
 //
 
@@ -4866,13 +4878,14 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
   dry : 'Dry run without syncronizing. Default is dry:0.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
-});
+};
 
 //
 
@@ -4915,14 +4928,15 @@ command.propertiesAliases =
 {
   verbosity : [ 'v' ]
 }
-command.properties = _.mapExtend( null, commandImply.command.properties,
+command.properties =
 {
+  ... commandImply.command.properties,
   name : 'Tag name. Default is name:".".',
   description : 'Description of annotated tag. Default is description:"".',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
   verbosity : 'Set verbosity. Default is 1.',
-});
+};
 
 //
 
