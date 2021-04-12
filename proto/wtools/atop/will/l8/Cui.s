@@ -1413,8 +1413,7 @@ commandImply.defaults =
   withInvalid : null,
   withSubmodules : null,
   withPath : null,
-  willFileAdapting : null,
-  profile : null
+  willFileAdapting : null
 };
 
 var command = commandImply.command = Object.create( null );
@@ -1439,8 +1438,7 @@ command.properties =
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
-  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".'
+  willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
 };
 
 // function commandImply( e )
@@ -2393,7 +2391,7 @@ function commandSubmodulesGit( e )
       // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
   }
 }
@@ -2597,7 +2595,7 @@ function commandSubmodulesGitSync( e )
     ({
       dirPath : cui.fileProvider.path.common( pathsContainer ),
       verbosity : cui.transaction.verbosity,
-      profile : cui.transaction.profile
+      profile : e.optionsMap.profile
     });
 
     if( cui.transaction.verbosity )
@@ -2803,7 +2801,7 @@ function commandModulesGit( e )
       // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
   }
 }
@@ -3007,7 +3005,7 @@ function commandModulesGitSync( e )
     ({
       dirPath : cui.fileProvider.path.common( pathsContainer ),
       verbosity : cui.transaction.verbosity,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
 
     if( cui.transaction.verbosity )
@@ -4592,7 +4590,7 @@ function commandGit( e )
       command : e.subject,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : cui.transaction.profile
+      profile : e.optionsMap.profile
     });
   }
 }
@@ -4676,7 +4674,7 @@ function commandGitPull( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.transaction.verbosity,
-      profile : cui.transaction.profile,
+      profile : e.optionsMap.profile,
     });
   }
 }
