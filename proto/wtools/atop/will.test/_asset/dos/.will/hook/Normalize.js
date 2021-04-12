@@ -13,15 +13,6 @@ function onModule( context )
   let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
-  /* xxx :
-    - disable empty modules
-    - split workflow publish?
-    - adjust :
-        npm.proto.entry:
-          - proto/wtools/amid/bufferFromFile/Main.ss
-          - proto/node_modules/bufferfromfile
-  */
-
   if( !context.module )
   return;
   if( !context.module.about.name )
@@ -33,13 +24,14 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  // hardLink( context, '.eslintrc.yml', '.eslintrc.yml' );
-  // hardLink( context, 'proto/Integration.test.s', 'Integration.test.s' );
-  // hardLink( context, '.github/workflows/Test.yml', 'common/.github/workflows/Test.yml' );
-  // hardLink( context, '.circleci/config.yml', 'common/.circleci/config.yml' );
+  // hardLinkFromProto( context, '.eslintrc.yml', '.eslintrc.yml' );
+  // hardLinkFromProto( context, 'proto/Integration.test.s', 'Integration.test.s' );
+  // hardLinkFromProto( context, '.github/workflows/Test.yml', 'common/.github/workflows/Test.yml' );
+  // hardLinkFromProto( context, '.circleci/config.yml', 'common/.circleci/config.yml' );
 
-  // workflowsReplace( context );
-  // workflowsDelete( context );
+  // repoProgramsNormalize( context );
+  // repoProgramsReplace( context );
+  // repoProgramsDelete( context );
   // gitIgnorePatch( context );
   // gitIgnoreReplace( context );
 
@@ -64,9 +56,10 @@ function onModule( context )
   // npmEntryPathAdjust( context );
   // npmFilesDeleteTools( context );
   // willProtoEntryPathFromNpm( context );
-  // willProtoEntryPathRelativize( context );
+  // willProtoEntryPathOrder( context );
   // willProtoEntryPathAdjustTools( context );
-  willDisableIfEmpty( context );
+  // willDisableIfEmpty( context );
+  // deleteIfDisabled( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
@@ -92,7 +85,19 @@ onModule.defaults =
 
 //
 
-function hardLink( context, dstPath, srcPath )
+function protoPathGet()
+{
+  let _ = _global_.wTools;
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let protoPath = _.censor.configGet({ selector : 'path/proto' });
+  if( !_.fileProvider.fileExists( protoPath ) )
+  return null;
+  return protoPath;
+}
+
+//
+
+function hardLinkFromProto( context, dstPath, srcPath )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -100,20 +105,21 @@ function hardLink( context, dstPath, srcPath )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.junction.dirPath;
+  let protoPath = protoPathGet();
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  if( !config )
-  return null;
-  if( !config.path )
-  return null;
-  if( !config.path.proto || !config.path.module )
-  return null;
-  let protoPath = config.path.proto;
-  if( !fileProvider.fileExists( protoPath ) )
-  return null;
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // if( !config )
+  // return null;
+  // if( !config.path )
+  // return null;
+  // if( !config.path.proto || !config.path.module )
+  // return null;
+  // let protoPath = config.path.proto;
+  // if( !fileProvider.fileExists( protoPath ) )
+  // return null;
 
   let mpath = _.routineJoin( path, path.join, [ inPath ] );
-  let ppath = _.routineJoin( path, path.join, [ protoPath ] );
+  let ppath = _.routineJoin( path, path.join, [ protoPathGet() ] );
 
   let moduleName = context.module.about.name;
 
@@ -124,7 +130,7 @@ function hardLink( context, dstPath, srcPath )
   ({
     dstPath : mpath( dstPath ),
     srcPath : ppath( srcPath ),
-    allowingDiscrepancy : 0, /* xxx : make 0 */
+    allowingDiscrepancy : 0,
     makingDirectory : 1,
     verbosity : o.verbosity >= 2 ? o.verbosity : 0,
   });
@@ -134,7 +140,62 @@ function hardLink( context, dstPath, srcPath )
 
 //
 
-function workflowsReplace( context )
+function repoProgramsNormalize( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+  let pabs = _.routineJoin( path, path.join, [ protoPathGet() ] );
+
+  if( !fileProvider.isDir( abs( '.github/workflows' ) ) )
+  return;
+
+  let nameOfCollection = nameOfCollectionGet();
+
+  logger.log( `Replacing repo programs of ${context.junction.nameWithLocationGet()} by ${_.ct.format( nameOfCollection, 'entity' )} collection` );
+
+  if( !o.dry )
+  {
+    fileProvider.filesDelete( abs( '.github/workflows/PullRequest.yml' ) );
+    fileProvider.filesDelete( abs( '.github/workflows/Publish.yml' ) );
+    fileProvider.filesDelete( abs( '.github/workflows/Push.yml' ) );
+  }
+
+  programHlink( 'Publish' );
+  programHlink( 'PullRequest' );
+  programHlink( 'Push' );
+
+  function programHlink( nameOfFile )
+  {
+    if( fileProvider.isTerminal( pabs( `common/.github/workflows/${nameOfCollection}${nameOfFile}.yml` ) ) )
+    hardLinkFromProto( context, `.github/workflows/${nameOfCollection}${nameOfFile}.yml`, `common/.github/workflows/${nameOfCollection}${nameOfFile}.yml` );
+  }
+
+  function nameOfCollectionGet()
+  {
+    let files = fileProvider.dirRead( abs( '.github/workflows' ) );
+    for( let f = 0 ; f < files.length ; f++ )
+    {
+      let file = files[ f ];
+      if( _.strEnds( file, 'Push.yml' ) )
+      {
+        let name = _.strRemoveEnd( file, 'Push.yml' );
+        if( name === '' )
+        return 'Standard';
+        return name;
+      }
+    }
+  }
+
+}
+
+//
+
+function repoProgramsReplace( context )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -152,9 +213,9 @@ function workflowsReplace( context )
 
   logger.log( `Replacing workflows of ${context.junction.nameWithLocationGet()}` );
 
-  hardLink( context, '.github/workflows/Publish.yml', 'common/.github/workflows/Publish.yml' );
-  hardLink( context, '.github/workflows/PullRequest.yml', 'common/.github/workflows/PullRequest.yml' );
-  hardLink( context, '.github/workflows/Push.yml', 'common/.github/workflows/Push.yml' );
+  hardLinkFromProto( context, '.github/workflows/Publish.yml', 'common/.github/workflows/Publish.yml' );
+  hardLinkFromProto( context, '.github/workflows/PullRequest.yml', 'common/.github/workflows/PullRequest.yml' );
+  hardLinkFromProto( context, '.github/workflows/Push.yml', 'common/.github/workflows/Push.yml' );
 
   fileProvider.fileDelete( abs( '.github/workflows/Test.yml' ) );
 
@@ -162,7 +223,7 @@ function workflowsReplace( context )
 
 //
 
-function workflowsDelete( context )
+function repoProgramsDelete( context )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -238,7 +299,7 @@ function gitIgnoreReplace( context )
 
   logger.log( `Replacing gitignore of ${context.junction.nameWithLocationGet()}` );
 
-  hardLink( context, '.gitignore', 'hlink/.gitignore' );
+  hardLinkFromProto( context, '.gitignore', 'hlink/.gitignore' );
 
 }
 
@@ -366,7 +427,8 @@ function badgeGithubReplace( context )
   return
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -420,7 +482,8 @@ function badgeStabilityAdd( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -474,7 +537,8 @@ function badgeCircleCiAdd( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -526,7 +590,8 @@ function badgeCircleCiRemove( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+
   if( !config )
   return null;
   if( !config.about )
@@ -578,7 +643,8 @@ function badgeCircleCiReplace( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -629,7 +695,8 @@ function badgesSwap( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -851,7 +918,7 @@ function willProtoEntryPathFromNpm( context )
 
 //
 
-function willProtoEntryPathRelativize( context )
+function willProtoEntryPathOrder( context )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -864,14 +931,31 @@ function willProtoEntryPathRelativize( context )
   if( !context.module )
   return;
 
+  // - adjust :
+  //     npm.proto.entry:
+  //       - proto/wtools/amid/bufferFromFile/Main.ss
+  //       - proto/node_modules/bufferfromfile
+  // npm.proto.entry:
+  //   - proto/node_modules/Tools
+  //   - proto/node_modules/wimagereaderdds
+
   let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
 
   if( !protoEntryPath )
   return;
 
-  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  let pependArray = [];
+  _.each( protoEntryPath, ( entryPath ) =>
   {
-    return path.isAbsolute( entryPath ) ? path.relative( inPath, entryPath ) : entryPath
+    if( _.strBegins( entryPath, 'proto/node_modules' ) )
+    if( !_.strEnds( entryPath, 'node_modules/Tools' ) )
+    pependArray.push();
+  });
+
+  _.each( protoEntryPath.slice(), ( entryPath ) =>
+  {
+    _.arrayRemove( protoEntryPath, entryPath );
+    _.arrayPrepend( protoEntryPath, entryPath );
   });
 
   console.log( `${protoEntryPath}` );
@@ -945,7 +1029,7 @@ function willDisableIfEmpty( context )
   if( !protoEntryPath )
   return;
 
-  let any = _.any( ( entryPath ) =>
+  let any = _.any( protoEntryPath, ( entryPath ) =>
   {
     if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
     return true;
@@ -954,7 +1038,10 @@ function willDisableIfEmpty( context )
   if( !any )
   return;
 
-  console.log( `Disabling ${context.junction.nameWithLocationGet()}` );
+  logger.log( `Disabling ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
 
   _.will.fileWriteResource
   ({
@@ -964,12 +1051,45 @@ function willDisableIfEmpty( context )
     val : 0,
   });
 
-  // // willDisableIfEmpty( context );
-  //
-  //   npm.proto.entry:
-  //   - proto/node_modules/Tools
-  //   - proto/node_modules/wimagewriterdds
-  //
+}
+
+//
+
+function deleteIfDisabled( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  debugger;
+
+  if( context.module.about.enabled )
+  return;
+
+  if( _.git.localPathFromInside( inPath ) !== inPath )
+  return;
+
+  let changes = _.git.hasLocalChanges( context.junction.dirPath );
+  _.assert( changes !== undefined );
+  if( changes )
+  {
+    logger.log( `Cant delete ${context.junction.nameWithLocationGet()}, it has local changes.` );
+    return;
+  }
+
+  logger.log( `Deleting ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.filesDelete( abs( '.' ) );
 
 }
 
@@ -992,7 +1112,8 @@ function readmeModuleNameAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -1064,7 +1185,8 @@ function readmeTryOutAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -1125,7 +1247,8 @@ function readmeToAddRemove( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -1182,7 +1305,8 @@ function readmeToAddAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )

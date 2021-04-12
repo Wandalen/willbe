@@ -96,7 +96,8 @@ function decoratedAbsoluteNameGet()
 function nameWithLocationGet()
 {
   let module = this;
-  let name = _.ct.format( module.qualifiedName + '#' + module.id, 'entity' );
+  // let name = _.ct.format( module.qualifiedName + '#' + module.id, 'entity' );
+  let name = _.ct.format( module.qualifiedName, 'entity' );
   if( module.localPath )
   {
     let localPath = _.ct.format( module.localPath, 'path' );
@@ -148,6 +149,7 @@ let Accessors =
 {
 
   qualifiedName : { get : qualifiedNameGet, writable : 0 },
+  nameWithLocation : { writable : 0 },
   decoratedQualifiedName : { get : decoratedQualifiedNameGet, combining : 'rewrite', writable : 0 },
   decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
 
