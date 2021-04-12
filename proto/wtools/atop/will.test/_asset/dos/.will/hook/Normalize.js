@@ -13,16 +13,6 @@ function onModule( context )
   let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
-  /* xxx :
-    - disable empty modules
-    - split workflow publish?
-    - adjust :
-        npm.proto.entry:
-          - proto/wtools/amid/bufferFromFile/Main.ss
-          - proto/node_modules/bufferfromfile
-    - remove branches from github workflows
-  */
-
   if( !context.module )
   return;
   if( !context.module.about.name )
@@ -68,7 +58,8 @@ function onModule( context )
   // willProtoEntryPathFromNpm( context );
   // willProtoEntryPathOrder( context );
   // willProtoEntryPathAdjustTools( context );
-  willDisableIfEmpty( context );
+  // willDisableIfEmpty( context );
+  // deleteIfDisabled( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
@@ -1038,13 +1029,11 @@ function willDisableIfEmpty( context )
   if( !protoEntryPath )
   return;
 
-  debugger;
   let any = _.any( protoEntryPath, ( entryPath ) =>
   {
     if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
     return true;
   });
-  debugger;
 
   if( !any )
   return;
@@ -1062,12 +1051,45 @@ function willDisableIfEmpty( context )
     val : 0,
   });
 
-  // // willDisableIfEmpty( context );
-  //
-  //   npm.proto.entry:
-  //   - proto/node_modules/Tools
-  //   - proto/node_modules/wimagewriterdds
-  //
+}
+
+//
+
+function deleteIfDisabled( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  debugger;
+
+  if( context.module.about.enabled )
+  return;
+
+  if( _.git.localPathFromInside( inPath ) !== inPath )
+  return;
+
+  let changes = _.git.hasLocalChanges( context.junction.dirPath );
+  _.assert( changes !== undefined );
+  if( changes )
+  {
+    logger.log( `Cant delete ${context.junction.nameWithLocationGet()}, it has local changes.` );
+    return;
+  }
+
+  logger.log( `Deleting ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.filesDelete( abs( '.' ) );
 
 }
 
