@@ -1331,7 +1331,7 @@ function _commandModuleOrientedLike( o )
     ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
-  _.assert( _.strIs( o.name ) ); debugger;
+  _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
