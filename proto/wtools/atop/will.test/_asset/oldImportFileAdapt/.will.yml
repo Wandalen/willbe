@@ -1,0 +1,35 @@
+about :
+
+  name : "oldWillFile"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+
+submodule :
+
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1#master
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out.will.yml#master
+  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/#delta
+  ModuleForTesting2 :
+    path : git+https:///github.com/Wandalen/wModuleForTesting2.git/#0a9ac9ecbfbab54af8f99c61a9dd938659b065a1
+
+path :
+
+  in : '.'
+  out : 'out'
+
+step :
+
+  export.proto :
+
+    export : path::in
+    tar : 0
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

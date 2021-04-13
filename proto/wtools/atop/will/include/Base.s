@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../../wtools/Tools.s' );
+  const _ = require( 'Tools' );
 
   _.include( 'wSelector' );
   _.include( 'wResolver' );

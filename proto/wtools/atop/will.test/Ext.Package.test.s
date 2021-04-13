@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  const _ = require( '../../Tools.s' );
+  const _ = require( 'Tools' );
 
   _.include( 'wTesting' );;
   _.include( 'wProcess' );
@@ -56,7 +56,7 @@ function packageInstall( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -254,7 +254,7 @@ function packageLocalVersions( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -412,7 +412,7 @@ function packageRemoteVersions( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -545,7 +545,7 @@ function packageVersion( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 

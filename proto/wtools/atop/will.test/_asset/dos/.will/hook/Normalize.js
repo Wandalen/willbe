@@ -10,32 +10,35 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return;
   if( !context.module.about.name )
   return;
-  if( !context.module.about.enabled )
-  return;
+  // if( !context.module.about.enabled )
+  // return;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  // hardLink( context, '.eslintrc.yml', '.eslintrc.yml' );
-  // hardLink( context, 'proto/Integration.test.s', 'Integration.test.s' );
-  // hardLink( context, '.github/workflows/Test.yml', 'hlink/.github/workflows/Test.yml' );
-  // hardLink( context, '.circleci/config.yml', 'hlink/.circleci/config.yml' );
+  // hardLinkFromProto( context, '.eslintrc.yml', '.eslintrc.yml' );
+  // hardLinkFromProto( context, 'proto/Integration.test.s', 'Integration.test.s' );
+  // hardLinkFromProto( context, '.github/workflows/Test.yml', 'common/.github/workflows/Test.yml' );
+  // hardLinkFromProto( context, '.circleci/config.yml', 'common/.circleci/config.yml' );
 
-  // workflowsReplace( context );
+  // repoProgramsNormalize( context );
+  // repoProgramsReplace( context );
+  // repoProgramsDelete( context );
   // gitIgnorePatch( context );
   // gitIgnoreReplace( context );
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
   // fileProvider.filesDelete({ filePath : abs( '**/.DS_Store' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
   // fileProvider.filesDelete({ filePath : abs( 'appveyor.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
+  // fileRenameTools( context );
 
   // integrationTestRename( context );
   // samplesRename( context );
@@ -50,6 +53,13 @@ function onModule( context )
 
   // npmDepRemoveSelf( context );
   // npmDepAddFileNodeModulesEntry( context );
+  // npmEntryPathAdjust( context );
+  // npmFilesDeleteTools( context );
+  // willProtoEntryPathFromNpm( context );
+  // willProtoEntryPathOrder( context );
+  // willProtoEntryPathAdjustTools( context );
+  // willDisableIfEmpty( context );
+  // deleteIfDisabled( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
@@ -57,12 +67,13 @@ function onModule( context )
   // readmeToAddAdjust( context );
   // readmeSampleRename( context );
 
-  sourceNodeModulesEntryAdd( context );
+  // sourceNodeModulesEntryAdd( context );
   // sourcesRemoveOld( context );
   // sourcesRemoveOld2( context );
   // sampleFix( context );
   // sampleTrivial( context );
 
+  // context.start( 'censor.local .hlink' );
 }
 
 onModule.defaults =
@@ -74,28 +85,41 @@ onModule.defaults =
 
 //
 
-function hardLink( context, dstPath, srcPath )
+function protoPathGet()
+{
+  let _ = _global_.wTools;
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let protoPath = _.censor.configGet({ selector : 'path/proto' });
+  if( !_.fileProvider.fileExists( protoPath ) )
+  return null;
+  return protoPath;
+}
+
+//
+
+function hardLinkFromProto( context, dstPath, srcPath )
 {
   let o = context.request.map;
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
+  let protoPath = protoPathGet();
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  if( !config )
-  return null;
-  if( !config.path )
-  return null;
-  if( !config.path.proto || !config.path.module )
-  return null;
-  let protoPath = config.path.proto;
-  if( !fileProvider.fileExists( protoPath ) )
-  return null;
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // if( !config )
+  // return null;
+  // if( !config.path )
+  // return null;
+  // if( !config.path.proto || !config.path.module )
+  // return null;
+  // let protoPath = config.path.proto;
+  // if( !fileProvider.fileExists( protoPath ) )
+  // return null;
 
   let mpath = _.routineJoin( path, path.join, [ inPath ] );
-  let ppath = _.routineJoin( path, path.join, [ protoPath ] );
+  let ppath = _.routineJoin( path, path.join, [ protoPathGet() ] );
 
   let moduleName = context.module.about.name;
 
@@ -106,7 +130,7 @@ function hardLink( context, dstPath, srcPath )
   ({
     dstPath : mpath( dstPath ),
     srcPath : ppath( srcPath ),
-    allowingDiscrepancy : 0, /* xxx : make 0 */
+    allowingDiscrepancy : 0,
     makingDirectory : 1,
     verbosity : o.verbosity >= 2 ? o.verbosity : 0,
   });
@@ -116,14 +140,69 @@ function hardLink( context, dstPath, srcPath )
 
 //
 
-function workflowsReplace( context )
+function repoProgramsNormalize( context )
 {
   let o = context.request.map;
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+  let pabs = _.routineJoin( path, path.join, [ protoPathGet() ] );
+
+  if( !fileProvider.isDir( abs( '.github/workflows' ) ) )
+  return;
+
+  let nameOfCollection = nameOfCollectionGet();
+
+  logger.log( `Replacing repo programs of ${context.junction.nameWithLocationGet()} by ${_.ct.format( nameOfCollection, 'entity' )} collection` );
+
+  if( !o.dry )
+  {
+    fileProvider.filesDelete( abs( '.github/workflows/PullRequest.yml' ) );
+    fileProvider.filesDelete( abs( '.github/workflows/Publish.yml' ) );
+    fileProvider.filesDelete( abs( '.github/workflows/Push.yml' ) );
+  }
+
+  programHlink( 'Publish' );
+  programHlink( 'PullRequest' );
+  programHlink( 'Push' );
+
+  function programHlink( nameOfFile )
+  {
+    if( fileProvider.isTerminal( pabs( `common/.github/workflows/${nameOfCollection}${nameOfFile}.yml` ) ) )
+    hardLinkFromProto( context, `.github/workflows/${nameOfCollection}${nameOfFile}.yml`, `common/.github/workflows/${nameOfCollection}${nameOfFile}.yml` );
+  }
+
+  function nameOfCollectionGet()
+  {
+    let files = fileProvider.dirRead( abs( '.github/workflows' ) );
+    for( let f = 0 ; f < files.length ; f++ )
+    {
+      let file = files[ f ];
+      if( _.strEnds( file, 'Push.yml' ) )
+      {
+        let name = _.strRemoveEnd( file, 'Push.yml' );
+        if( name === '' )
+        return 'Standard';
+        return name;
+      }
+    }
+  }
+
+}
+
+//
+
+function repoProgramsReplace( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !fileProvider.fileExists( abs( '.github/workflows/Test.yml' ) ) )
@@ -134,11 +213,35 @@ function workflowsReplace( context )
 
   logger.log( `Replacing workflows of ${context.junction.nameWithLocationGet()}` );
 
-  hardLink( context, '.github/workflows/Publish.yml', 'hlink/.github/workflows/Publish.yml' );
-  hardLink( context, '.github/workflows/PullRequest.yml', 'hlink/.github/workflows/PullRequest.yml' );
-  hardLink( context, '.github/workflows/Push.yml', 'hlink/.github/workflows/Push.yml' );
+  hardLinkFromProto( context, '.github/workflows/Publish.yml', 'common/.github/workflows/Publish.yml' );
+  hardLinkFromProto( context, '.github/workflows/PullRequest.yml', 'common/.github/workflows/PullRequest.yml' );
+  hardLinkFromProto( context, '.github/workflows/Push.yml', 'common/.github/workflows/Push.yml' );
 
   fileProvider.fileDelete( abs( '.github/workflows/Test.yml' ) );
+
+}
+
+//
+
+function repoProgramsDelete( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !fileProvider.fileExists( abs( '.github/workflows/Publish.yml' ) ) )
+  return;
+
+  logger.log( `Deleting workflows ${abs( '.github/workflows/Publish.yml' )}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.fileDelete( abs( '.github/workflows/Publish.yml' ) );
 
 }
 
@@ -151,7 +254,7 @@ function gitIgnorePatch( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !fileProvider.isTerminal( abs( '.gitignore' ) ) )
@@ -185,7 +288,7 @@ function gitIgnoreReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !fileProvider.fileExists( abs( '.gitignore' ) ) )
@@ -196,7 +299,32 @@ function gitIgnoreReplace( context )
 
   logger.log( `Replacing gitignore of ${context.junction.nameWithLocationGet()}` );
 
-  hardLink( context, '.gitignore', 'hlink/.gitignore' );
+  hardLinkFromProto( context, '.gitignore', 'hlink/.gitignore' );
+
+}
+
+//
+
+function fileRenameTools( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let toolsPath = abs( 'proto/node_modules/Tools' );
+  let toolsPath2 = abs( 'proto/node_modules/Tools' );
+
+  if( !fileProvider.fileExists( toolsPath ) )
+  return;
+
+  fileProvider.fileRename( toolsPath2, toolsPath );
 
 }
 
@@ -209,7 +337,7 @@ function integrationTestRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -234,7 +362,7 @@ function samplesRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -262,7 +390,7 @@ function dwtoolsRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -290,7 +418,7 @@ function badgeGithubReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -299,7 +427,8 @@ function badgeGithubReplace( context )
   return
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -343,7 +472,7 @@ function badgeStabilityAdd( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -353,7 +482,8 @@ function badgeStabilityAdd( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -397,7 +527,7 @@ function badgeCircleCiAdd( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -407,7 +537,8 @@ function badgeCircleCiAdd( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -449,7 +580,7 @@ function badgeCircleCiRemove( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -459,7 +590,8 @@ function badgeCircleCiRemove( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+
   if( !config )
   return null;
   if( !config.about )
@@ -501,7 +633,7 @@ function badgeCircleCiReplace( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -511,7 +643,8 @@ function badgeCircleCiReplace( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -552,7 +685,7 @@ function badgesSwap( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -562,7 +695,8 @@ function badgesSwap( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -602,11 +736,11 @@ function npmDepRemoveSelf( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
-  let configPath = path.join( inPath, 'was.package.json' );
-  let name = _.npm.localName({ configPath });
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
   if( !name )
   return;
 
@@ -629,15 +763,15 @@ function npmDepAddFileNodeModulesEntry( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
-  let protoPath = path.join( inPath, 'proto' );
+  let protoPath = abs( 'proto' );
   if( !protoPath )
   return;
 
-  let configPath = path.join( inPath, 'was.package.json' );
-  let name = _.npm.localName({ configPath });
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
   if( !name )
   return;
 
@@ -650,7 +784,7 @@ function npmDepAddFileNodeModulesEntry( context )
 
   let relativeIncludeDirPath = path.relative( inPath, path.dir( includePath ) );
 
-  let files = _.npm.localFilePath({ configPath });
+  let files = _.npm.fileReadFilePath({ configPath });
 
   if( !files && !files.length )
   return;
@@ -658,13 +792,304 @@ function npmDepAddFileNodeModulesEntry( context )
   if( o.dry )
   return;
 
-  _.npm.filePathAdd
+  _.npm.fileAddfilePath
   ({
     configPath,
     filePath : relativeIncludeDirPath,
     dry : o.dry,
     verbosity : o.verbosity - 1,
   });
+
+}
+
+//
+
+function npmEntryPathAdjust( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
+  if( !name )
+  return;
+
+  let protoPath = abs( 'proto' );
+  let includePath = path.join( protoPath, 'node_modules', name );
+
+  _.npm.fileWriteField
+  ({
+    key : 'main',
+    val : path.relative( inPath, includePath ),
+    configPath,
+    dry : o.dry,
+    logger : o.verbosity - 1,
+  });
+
+}
+
+//
+
+function npmFilesDeleteTools( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let configPath = abs( 'was.package.json' );
+  let filesPath = _.npm.fileReadField({ configPath, key : 'files' });
+  if( !filesPath )
+  return;
+
+  filesPath = _.filter_( filesPath, ( filePath ) =>
+  {
+    if( abs( filePath ) !== abs( 'proto/node_modules/Tools' ) )
+    return filePath;
+    return;
+  });
+
+  _.npm.fileWriteField
+  ({
+    key : 'files',
+    val : filesPath,
+    configPath,
+    dry : o.dry,
+    logger : o.verbosity - 1,
+  });
+
+}
+
+//
+
+function willProtoEntryPathFromNpm( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
+  if( !name )
+  return;
+
+  let entryPath = _.npm.fileReadEntryPath({ configPath });
+  if( !entryPath )
+  return;
+  entryPath = abs( entryPath );
+
+  let protoPath = abs( 'proto' );
+  let includePath = path.join( protoPath, 'node_modules', name );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'path',
+    resourceName : 'npm.proto.entry',
+    withExport : 0,
+    val : [ entryPath, includePath ],
+  });
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  console.log( `protoEntryPath : ${protoEntryPath}` );
+
+}
+
+//
+
+function willProtoEntryPathOrder( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  // - adjust :
+  //     npm.proto.entry:
+  //       - proto/wtools/amid/bufferFromFile/Main.ss
+  //       - proto/node_modules/bufferfromfile
+  // npm.proto.entry:
+  //   - proto/node_modules/Tools
+  //   - proto/node_modules/wimagereaderdds
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+
+  if( !protoEntryPath )
+  return;
+
+  let pependArray = [];
+  _.each( protoEntryPath, ( entryPath ) =>
+  {
+    if( _.strBegins( entryPath, 'proto/node_modules' ) )
+    if( !_.strEnds( entryPath, 'node_modules/Tools' ) )
+    pependArray.push();
+  });
+
+  _.each( protoEntryPath.slice(), ( entryPath ) =>
+  {
+    _.arrayRemove( protoEntryPath, entryPath );
+    _.arrayPrepend( protoEntryPath, entryPath );
+  });
+
+  console.log( `${protoEntryPath}` );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'path',
+    resourceName : 'npm.proto.entry',
+    withExport : 0,
+    val : protoEntryPath,
+  });
+
+}
+
+//
+
+function willProtoEntryPathAdjustTools( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  if( !protoEntryPath )
+  return;
+
+  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  {
+    if( abs( entryPath ) !== abs( 'proto/node_modules/Tools' ) )
+    return entryPath;
+    return 'proto/node_modules/Tools';
+  });
+
+  console.log( `${protoEntryPath}` );
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'path',
+    resourceName : 'npm.proto.entry',
+    withExport : 0,
+    val : protoEntryPath,
+  });
+
+}
+
+//
+
+function willDisableIfEmpty( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  if( !protoEntryPath )
+  return;
+
+  let any = _.any( protoEntryPath, ( entryPath ) =>
+  {
+    if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
+    return true;
+  });
+
+  if( !any )
+  return;
+
+  logger.log( `Disabling ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
+
+  _.will.fileWriteResource
+  ({
+    commonPath : context.module.commonPath,
+    resourceKind : 'about',
+    resourceName : 'enabled',
+    val : 0,
+  });
+
+}
+
+//
+
+function deleteIfDisabled( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
+
+  debugger;
+
+  if( context.module.about.enabled )
+  return;
+
+  if( _.git.localPathFromInside( inPath ) !== inPath )
+  return;
+
+  let changes = _.git.hasLocalChanges( context.junction.dirPath );
+  _.assert( changes !== undefined );
+  if( changes )
+  {
+    logger.log( `Cant delete ${context.junction.nameWithLocationGet()}, it has local changes.` );
+    return;
+  }
+
+  logger.log( `Deleting ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.filesDelete( abs( '.' ) );
 
 }
 
@@ -677,7 +1102,7 @@ function readmeModuleNameAdjust( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -687,7 +1112,8 @@ function readmeModuleNameAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -749,7 +1175,7 @@ function readmeTryOutAdjust( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -759,7 +1185,8 @@ function readmeTryOutAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -810,7 +1237,7 @@ function readmeToAddRemove( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -820,7 +1247,8 @@ function readmeToAddRemove( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -867,7 +1295,7 @@ function readmeToAddAdjust( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -877,7 +1305,8 @@ function readmeToAddAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   if( !config )
   return null;
   if( !config.about )
@@ -929,7 +1358,7 @@ function readmeSampleRename( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -962,7 +1391,7 @@ function sourcesRemoveOld( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -1017,25 +1446,31 @@ function sourceNodeModulesEntryAdd( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return;
-  if( context.module.about.native )
+  if( context.module.about.values.native )
   return
 
-  let protoPath = path.join( inPath, 'proto' );
-  let configPath = path.join( inPath, 'was.package.json' );
-  let name = _.npm.localName({ configPath });
+  let protoPath = abs( 'proto' );
+  let configPath = abs( 'was.package.json' );
+  let name = _.npm.fileReadName({ configPath });
   if( !name )
   return;
 
-  let entryPath = _.npm.localEntryPath({ configPath });
-  if( !entryPath )
+  let name2 = context.module.about.name;
+  if( !name2 )
   return;
 
-  entryPath = path.join( inPath, entryPath );
+  if( _.longHas( [ 'wTools', 'wTesting' ], name2 ) )
+  return;
+
+  let entryPath = _.npm.fileReadEntryPath({ configPath });
+  if( !entryPath )
+  return;
+  entryPath = abs( entryPath );
 
   if( !fileProvider.fileExists( entryPath ) )
   {
@@ -1053,7 +1488,17 @@ function sourceNodeModulesEntryAdd( context )
   if( o.dry )
   return;
 
-  let code = `module.exports = require( '${relativeEntryPath}' );`;
+  let code =
+`
+module.exports = require( '${relativeEntryPath}' );
+const _ = _global_.wTools;
+_.module.predeclare
+({
+  alias : [ '${name2}', '${name2.toLowerCase()}' ],
+  entryPath : __filename,
+});
+`;
+
   fileProvider.fileWrite( includePath, code );
 
 }
@@ -1067,7 +1512,7 @@ function sourcesRemoveOld2( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -1096,7 +1541,7 @@ function sampleFix( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
@@ -1129,7 +1574,7 @@ function sampleTrivial( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
-  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let inPath = context.junction.dirPath;
   let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )

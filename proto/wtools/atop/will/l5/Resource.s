@@ -229,7 +229,18 @@ function MakeSingle( o )
     if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
     if( importing && isOut )
     {
+      if( !instance.importableFromPeer )
       return;
+
+      let peerModule = o.resource.module.peerModule;
+      if( peerModule )
+      {
+        let resource = peerModule.resourceGet( instance.KindName, instance.name );
+        if( resource.path === null )
+        return;
+        o.resource = resource.cloneData()
+        o.resource.module = module;
+      }
     }
 
     if( instance && rewriting )
@@ -363,8 +374,8 @@ function unform()
   let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  let logger = will.logger;
+  let path = fileProvider.path;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed );
@@ -398,8 +409,8 @@ function form()
   let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  let logger = will.logger;
+  let path = fileProvider.path;
+  let logger = will.transaction.logger;
 
   if( resource.formed === 0 )
   resource.form1();
@@ -426,8 +437,8 @@ function form1()
   let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  let logger = will.logger;
+  let path = fileProvider.path;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !resource.formed );
@@ -545,8 +556,8 @@ function _inheritMultiple( o )
   let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  let logger = will.logger;
+  let path = fileProvider.path;
+  let logger = will.transaction.logger;
 
   /* begin */
 
@@ -622,8 +633,8 @@ function _inheritSingle( o )
   let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  let logger = will.logger;
+  let path = fileProvider.path;
+  let logger = will.transaction.logger;
 
   if( _.strIs( o.ancestor ) )
   o.ancestor = module[ module.MapName ][ o.ancestor ];
@@ -668,8 +679,8 @@ function form3()
   let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  let logger = will.logger;
+  let path = fileProvider.path;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 2 );
@@ -1177,7 +1188,7 @@ function resolve_body( o )
   _.assert( !!module );
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   // _.assert( o.currentContext === null || o.currentContext === resource );
@@ -1227,7 +1238,7 @@ function inPathResolve_body( o )
   let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );
@@ -1301,7 +1312,7 @@ function reflectorResolve_body( o )
   let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );;
@@ -1332,7 +1343,7 @@ function pathRebase( o )
   let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
-  const path = fileProvider.path;
+  let path = fileProvider.path;
   // let Resolver = _.will.resolver;
 
   o = _.routineOptions( pathRebase, arguments );
@@ -1382,6 +1393,7 @@ let Aggregates =
   exportable : 1,
   importableFromIn : 1,
   importableFromOut : 1,
+  importableFromPeer : 0,
   // generated : 0,
   phantom : 0,
 }
@@ -1544,18 +1556,6 @@ _.classDeclare
   withClass : 1,
 });
 
-//
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
-
 _.will[ Self.shortName ] = Self;
-
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
 
 })();
