@@ -365,7 +365,6 @@ function _globCriterionFilter()
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let will = rit.baseModule.will;
 
-  // if( it.down && it.down.selectorIsGlob )
   if( it.down && it.down.selectorType === 'glob' )
   if( rit.criterion && it.src && it.src.criterionSattisfy )
   {
