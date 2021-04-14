@@ -4344,7 +4344,7 @@ function commandWillfileSupplementWillfile( e )
 
 commandWillfileSupplementWillfile.defaults =
 {
-  verbosity : 3,
+  ... commandWillfileExtendWillfile.defaults
 };
 
 var command = commandWillfileSupplementWillfile.command = Object.create( null );
