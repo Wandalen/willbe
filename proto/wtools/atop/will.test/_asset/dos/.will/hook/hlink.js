@@ -15,14 +15,16 @@ function onModule( context )
   _.routineOptions( onModule, o );
 
   let fileProvider2 = new _.FileFilter.Archive();
-  let config = fileProvider2.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider2.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
 
   /* basePath */
 
   let basePath = _.arrayAs( context.junction.dirPath );
   if( config && config.path && config.path.hlink )
   _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.hlink ) );
-  basePath = path.s.join( context.will.withPath, basePath );
+  // basePath = path.s.join( context.will.withPath, basePath );
+  basePath = path.s.join( context.will.transaction.withPath, basePath );
   _.assert( _.all( fileProvider2.statsResolvedRead( basePath ) ) );
 
   /* mask */
@@ -52,11 +54,11 @@ function onModule( context )
   /* run */
 
   if( o.verbosity < 2 )
-  fileProvider2.archive.verbosity = 0;
+  fileProvider2.archive.logger.verbosity = 0;
   else if( o.verbosity === 2 )
-  fileProvider2.archive.verbosity = 2;
+  fileProvider2.archive.logger.verbosity = 2;
   else
-  fileProvider2.archive.verbosity = o.verbosity - 1;
+  fileProvider2.archive.logger.verbosity = o.verbosity - 1;
   fileProvider2.archive.allowingMissed = 0;
   fileProvider2.archive.allowingCycled = 0;
 

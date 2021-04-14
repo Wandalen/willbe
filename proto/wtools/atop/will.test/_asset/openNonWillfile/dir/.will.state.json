@@ -4,11 +4,11 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../Layer1.s' );
+  const _ = require( 'Tools' );
   _.include( 'wTesting' );
 }
 
-let _global = _global_;
+const _global = _global_;
 let _ = _global_.wModuleForTesting1;
 
 // --

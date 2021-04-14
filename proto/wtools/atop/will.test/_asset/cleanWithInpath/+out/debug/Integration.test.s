@@ -7,15 +7,15 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( 'wTools' );
+  const _ = require( 'wTools' );
   _.include( 'wTesting' );
 }
 
 //
 
 let _ = _globals_.testing.wTools;
-let fileProvider = _.fileProvider;
-let path = fileProvider.path;
+const fileProvider = _.fileProvider;
+const path = fileProvider.path;
 
 // --
 // test
@@ -24,7 +24,7 @@ let path = fileProvider.path;
 function samples( test )
 {
   let context = this;
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   let sampleDir = path.join( __dirname, '../sample' );
 
@@ -111,7 +111,7 @@ function eslint( test )
   let eslint = process.platform === 'win32' ? 'node_modules/eslint/bin/eslint' : 'node_modules/.bin/eslint';
   eslint = path.join( rootPath, eslint );
   let sampleDir = path.join( rootPath, 'sample' );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   if( _.process.insideTestContainer() && process.platform !== 'linux' )
   return test.true( true );
@@ -168,7 +168,7 @@ eslint.rapidity = -1;
 // declare
 // --
 
-var Self =
+const Proto =
 {
 
   name : 'Integration',
@@ -185,7 +185,7 @@ var Self =
 
 //
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 _global_.wTester.test( Self.name );
 

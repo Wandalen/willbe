@@ -6,13 +6,12 @@ function onModule( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  // debugger;
-  // console.log( 'xxx : proto sync' );
-
   if( o.v !== null && o.v !== undefined ) o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
+  debugger;
   if( !config )
   return null;
   if( !config.path )
@@ -32,12 +31,28 @@ function onModule( context )
   if( o.verbosity )
   verbosity = o.verbosity >= 2 ? 5 : 1;
 
+  /* */
+
+  let excludeAny =
+  [
+    /\.git$/,
+    /\.svn$/,
+    /\.hg$/,
+    /\.tmp($|\/)/,
+    /\.DS_Store$/,
+    /(^|\/)-/,
+  ]
+
+  let maskAll = _.RegexpObject( excludeAny, 'excludeAny' );
+
+  /* */
+
   let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
   if( fileProvider.fileExists( moduleProtoPath ) )
   {
-    return fileProvider.filesReflect
+    fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleProtoPath ] : protoPath } },
+      filter : { filePath : { [ moduleProtoPath ] : protoPath }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
@@ -49,9 +64,37 @@ function onModule( context )
   let moduleStepPath = path.join( context.junction.dirPath, 'step' );
   if( fileProvider.fileExists( moduleStepPath ) )
   {
-    return fileProvider.filesReflect
+    fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'step' ) } },
+      filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'common/step' ) }, maskAll },
+      dstRewritingOnlyPreserving : 1,
+      breakingSrcHardLink : 1,
+      breakingDstHardLink : 0,
+      linking : 'hardLink',
+      verbosity
+    });
+  }
+
+  let moduleWorkflowsPath = path.join( context.junction.dirPath, '.github/workflows' );
+  if( fileProvider.fileExists( moduleWorkflowsPath ) )
+  {
+    fileProvider.filesReflect
+    ({
+      filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'common/.github/workflows' ) }, maskAll },
+      dstRewritingOnlyPreserving : 1,
+      breakingSrcHardLink : 1,
+      breakingDstHardLink : 0,
+      linking : 'hardLink',
+      verbosity
+    });
+  }
+
+  let circleciPath = path.join( context.junction.dirPath, '.circleci' );
+  if( fileProvider.fileExists( circleciPath ) )
+  {
+    fileProvider.filesReflect
+    ({
+      filter : { filePath : { [ circleciPath ] : path.join( protoPath, 'common/.circleci' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,

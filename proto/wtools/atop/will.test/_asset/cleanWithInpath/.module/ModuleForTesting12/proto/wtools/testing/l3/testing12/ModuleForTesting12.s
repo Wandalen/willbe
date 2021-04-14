@@ -3,13 +3,12 @@
 
 'use strict';
 
+let _;
 if( typeof module !== 'undefined' )
 {
   require( '../../Basic.s' );
-  require( 'wmodulefortesting2' );
+  _ = require( 'wmodulefortesting2' );
 }
-
-let test = _global_._test_;
 
 // --
 // Routines
@@ -17,8 +16,8 @@ let test = _global_._test_;
 
 function divideMulOnSum()
 {
-  let sum = test.sumOfNumbers.apply( this, arguments );
-  let mul = test.mulOfNumbers.apply( this, arguments );
+  let sum = _.sumOfNumbers.apply( this, arguments );
+  let mul = _.mulOfNumbers.apply( this, arguments );
   let result = mul / sum;
 
   return result;
@@ -26,14 +25,15 @@ function divideMulOnSum()
 
 //
 
-test = Object.assign( test, { divideMulOnSum } );
+Object.assign( _, { divideMulOnSum } );
 
 // --
 // export
 // --
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = test;
+module[ 'exports' ].divideMulOnSum = divideMulOnSum;
+module[ 'exports' ] = _;
 
 })();
 

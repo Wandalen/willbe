@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../Tools.s' );
+  const _ = require( 'Tools' );
 
   _.include( 'wTesting' );;
   _.include( 'wProcess' );
@@ -15,8 +15,8 @@ if( typeof module !== 'undefined' )
 
 }
 
-let _global = _global_;
-let _ = _global_.wTools;
+const _global = _global_;
+const _ = _global_.wTools;
 
 // --
 // context
@@ -28,7 +28,7 @@ function onSuiteBegin()
 
   self.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   self.assetsOriginalPath = _.path.join( __dirname, '_asset' );
-  self.repoDirPath = _.path.join( self.assetsOriginalPath, '_repo' );
+  self.repoDirPath = _.path.join( self.assetsOriginalPath, '-repo' );
   self.willPath = _.path.nativize( _.Will.WillPathGet() );
 }
 
@@ -56,7 +56,7 @@ function packageInstall( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -254,7 +254,7 @@ function packageLocalVersions( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -412,7 +412,7 @@ function packageRemoteVersions( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -545,7 +545,7 @@ function packageVersion( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
 
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
+  let ready = _.take( null );
 
   _.fileProvider.dirMake( routinePath )
 
@@ -698,7 +698,7 @@ packageVersion.experimental = 1;
 // declare
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Tools.WillExternals.Package',
@@ -729,7 +729,7 @@ let Self =
 
 //
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 

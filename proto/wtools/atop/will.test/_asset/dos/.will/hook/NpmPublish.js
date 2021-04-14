@@ -19,9 +19,6 @@ function onModule( context )
   if( !context.junction.module )
   return;
 
-  if( !context.junction.module.about.enabled )
-  return;
-
   if( !o.tag )
   throw _.errBrief( 'Expects option {-tag-}' );
 
@@ -86,11 +83,11 @@ function onModule( context )
   fileProvider.filesDelete( abs( 'node_modules' ) );
   fileProvider.filesDelete( abs( 'package-lock.json' ) );
 
-  let bumped = _.npm.bump
+  let bumped = _.npm.fileBump
   ({
     dry : o.dry,
     configPath : wasСonfigPath,
-    verbosity : o.verbosity - 4,
+    logger : o.verbosity - 4,
   });
 
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
@@ -104,23 +101,23 @@ function onModule( context )
     activeСonfigPath = configPath;
   }
 
-  _.npm.fixate
+  _.npm.fileFixate
   ({
     dry : o.dry,
     localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
-    onDependency,
-    verbosity : o.verbosity - 2,
+    onDep,
+    logger : o.verbosity - 2,
   });
 
-  /* adjust styles */
-  {
-    context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
-    let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
-    read += '\n';
-    fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
-  }
+  // /* adjust styles */
+  // {
+  //   context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
+  //   let read = fileProvider.fileRead( `${context.junction.dirPath}/package.json` );
+  //   read += '\n';
+  //   fileProvider.fileWrite( `${context.junction.dirPath}/package.json`, read );
+  // }
 
   {
     let context2 = context.will.hookContextNew( context );
@@ -160,7 +157,7 @@ function onModule( context )
     localPath : context.junction.dirPath,
     tag : o.tag,
     ready : context.ready,
-    verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
+    logger : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
   {
@@ -169,7 +166,7 @@ function onModule( context )
     context2.will.hooks.ProtoSync.call( context2 );
   }
 
-  function onDependency( dep )
+  function onDep( dep )
   {
     // console.log( dep );
 
@@ -178,7 +175,7 @@ function onModule( context )
 
     let about = aboutCache[ dep.name ];
     if( !about )
-    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    about = aboutCache[ dep.name ] = _.npm.remoteAbout( dep.name );
     if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
     {
       dep.version = o.tag;
@@ -211,7 +208,7 @@ function isEnabled( context, localPath )
   let path = context.will.fileProvider.path;
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );
-  let config = fileProvider.configRead( localPath );
+  let config = fileProvider.fileReadUnknown( localPath );
   if( !config.name )
   return false;
   if( config.enabled !== undefined && !config.enabled )

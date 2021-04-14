@@ -9,9 +9,9 @@
  * @module Tools/atop/willbe
  */
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wWillResource;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wWillResource;
 function wWillResource( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -229,7 +229,18 @@ function MakeSingle( o )
     if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
     if( importing && isOut )
     {
+      if( !instance.importableFromPeer )
       return;
+
+      let peerModule = o.resource.module.peerModule;
+      if( peerModule )
+      {
+        let resource = peerModule.resourceGet( instance.KindName, instance.name );
+        if( resource.path === null )
+        return;
+        o.resource = resource.cloneData()
+        o.resource.module = module;
+      }
     }
 
     if( instance && rewriting )
@@ -364,7 +375,7 @@ function unform()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed );
@@ -399,7 +410,7 @@ function form()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( resource.formed === 0 )
   resource.form1();
@@ -427,7 +438,7 @@ function form1()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !resource.formed );
@@ -546,7 +557,7 @@ function _inheritMultiple( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   /* begin */
 
@@ -623,7 +634,7 @@ function _inheritSingle( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   if( _.strIs( o.ancestor ) )
   o.ancestor = module[ module.MapName ][ o.ancestor ];
@@ -646,7 +657,7 @@ function _inheritSingle( o )
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly_( null, resource2, _.mapOnlyNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
@@ -669,7 +680,7 @@ function form3()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
+  let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 2 );
@@ -779,7 +790,7 @@ function criterionInherit( criterion2 )
 
   criterion1 = resource.criterion = resource.criterion || Object.create( null );
 
-  _.mapSupplement( criterion1, _.mapBut( criterion2, { default : null, predefined : null } ) )
+  _.mapSupplement( criterion1, _.mapBut_( null, criterion2, { default : null, predefined : null } ) )
 
   return criterion1;
 }
@@ -823,7 +834,7 @@ function CriterionVariable( criterionMaps, criterion )
 
   }
 
-  let result = _.mapBut( criterion, all );
+  let result = _.mapBut_( null, criterion, all );
 
   return result;
 }
@@ -1001,7 +1012,7 @@ function exportStructure()
     return;
   }
 
-  let o2 = _.mapOnly( o, resource.cloneData.defaults );
+  let o2 = _.mapOnly_( null, o, resource.cloneData.defaults );
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
@@ -1142,8 +1153,7 @@ function moduleSet( src )
 
 //
 
-
-function moduleForResolveGet()
+function toModuleForResolver()
 {
   let resource = this;
   _.assert( arguments.length === 0 );
@@ -1383,6 +1393,7 @@ let Aggregates =
   exportable : 1,
   importableFromIn : 1,
   importableFromOut : 1,
+  importableFromPeer : 0,
   // generated : 0,
   phantom : 0,
 }
@@ -1444,7 +1455,7 @@ let Accessors =
   decoratedAbsoluteName : { get : decoratedAbsoluteNameGet, writable : 0 },
   inherit : { set : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
   module : {},
-  moduleForResolve : { get : moduleForResolveGet, set : 0 },
+  // resolverModule : { get : toModuleForResolver, set : 0 },
 }
 
 // --
@@ -1509,7 +1520,7 @@ let Extension =
   shortNameArrayGet,
   willfSet,
   moduleSet,
-  moduleForResolveGet,
+  toModuleForResolver,
 
   // resolver
 
@@ -1545,18 +1556,6 @@ _.classDeclare
   withClass : 1,
 });
 
-//
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
-
 _.will[ Self.shortName ] = Self;
-
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
 
 })();
