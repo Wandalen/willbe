@@ -4718,20 +4718,30 @@ function commandGitPush( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.transaction.verbosity,
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
     });
   }
 }
 
 commandGitPush.defaults =
 {
-  withSubmodules : 0
-}
-
+  withSubmodules : 0,
+  verbosity : 3,
+  withTags : 1,
+  force : 1,
+  dry : 0,
+};
 var command = commandGitPush.command = Object.create( null );
 command.hint = 'Push commits and tags to remote repository.';
 command.subjectHint = false;
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.command.properties );
+command.properties =
+{
+  ... commandImply.command.properties,
+  withTags : 'Enable pushing of tags. Default is 1',
+  force : 'Enable force pushing of commit history and tags. Default is 1',
+  dry : 'Enable dry pushing of commit history and tags. Default is 0',
+};
 
 //
 
