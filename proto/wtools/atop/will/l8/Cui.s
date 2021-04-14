@@ -2471,10 +2471,10 @@ function commandSubmodulesGitPrOpen( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.gitPrOpen
+    return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
     });
   }
 }
@@ -2881,10 +2881,10 @@ function commandModulesGitPrOpen( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.gitPrOpen
+    return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
     });
   }
 }
@@ -4977,17 +4977,18 @@ function commandRepoPullOpen( e )
   return cui._commandBuildLike
   ({
     event : e,
-    name : 'git pr open',
+    name : 'repo pull open',
     onEach : handleEach,
     commandRoutine : commandRepoPullOpen,
   });
 
   function handleEach( it )
   {
-    return it.opener.openedModule.gitPrOpen
+    return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults ),
+      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.repoPullOpen.defaults ),
+      // ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ), /* Dmytro : rewrites options */
     });
   }
 }

@@ -9085,13 +9085,13 @@ gitDiff.defaults =
 
 //
 
-function gitPrOpen( o )
+function repoPullOpen( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  _.routineOptionsPreservingUndefines( gitPrOpen, o );
+  _.routineOptionsPreservingUndefines( repoPullOpen, o );
 
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
@@ -9123,17 +9123,18 @@ function gitPrOpen( o )
   let ready = _.take( null );
   ready.then( () =>
   {
-    return _.git.pullOpen
+    return _.repo.pullOpen
     ({
       token : o.token,
       remotePath : o.remotePath,
-      title : o.title,
-      body : o.body,
+      // title : o.title,
+      // body : o.body,
+      descriptionHead : o.title,
+      descriptionBody : o.body,
       srcBranch : o.srcBranch,
       dstBranch : o.dstBranch,
       sync : 1,
       throwing : 1,
-      verbosity : o.verbosity,
     });
   })
   .finally( ( err, arg ) =>
@@ -9146,7 +9147,7 @@ function gitPrOpen( o )
   return ready;
 }
 
-gitPrOpen.defaults =
+repoPullOpen.defaults =
 {
   token : null,
   remotePath : null,
@@ -10299,7 +10300,7 @@ let Extension =
 
   gitExecCommand,
   gitDiff,
-  gitPrOpen,
+  repoPullOpen,
   gitPull,
   gitPush,
   gitReset,
