@@ -40901,6 +40901,11 @@ function commandsSubmoduleSafetyInvalidUrl( test )
   return a.ready;
 }
 
+commandsSubmoduleSafetyInvalidUrl.description =
+`
+Should throw error about invalid protocol in remote path.
+`
+
 //
 
 function commandSubmodulesUpdateOptionTo( test )
