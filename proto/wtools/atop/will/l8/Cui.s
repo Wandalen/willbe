@@ -4592,7 +4592,7 @@ function commandGit( e )
     ({
       dirPath : it.junction.dirPath,
       command : e.subject,
-      verbosity : cui.transaction.verbosity,
+      verbosity : e.optionsMap.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile
     });
@@ -4603,7 +4603,8 @@ commandGit.defaults =
 {
   hardLinkMaybe : 0,
   profile : 'default',
-  withSubmodules : 0
+  withSubmodules : 0,
+  verbosity : 2
 }
 
 var command = commandGit.command = Object.create( null );
@@ -4638,14 +4639,15 @@ function commandGitDiff( e )
     return it.opener.openedModule.gitDiff
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.transaction.verbosity,
+      verbosity : e.optionsMap.verbosity,
     });
   }
 }
 
 commandGitDiff.defaults =
 {
-  withSubmodules : 0
+  withSubmodules : 0,
+  verbosity : 2
 }
 
 var command = commandGitDiff.command = Object.create( null );
@@ -4677,7 +4679,7 @@ function commandGitPull( e )
     return it.opener.openedModule.gitPull
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.transaction.verbosity,
+      verbosity : e.optionsMap.verbosity,
       profile : e.optionsMap.profile,
     });
   }
@@ -4686,7 +4688,8 @@ function commandGitPull( e )
 commandGitPull.defaults =
 {
   withSubmodules : 0,
-  profile : 'default'
+  profile : 'default',
+  verbosity : 2
 }
 
 var command = commandGitPull.command = Object.create( null );
@@ -4719,14 +4722,15 @@ function commandGitPush( e )
     return it.opener.openedModule.gitPush
     ({
       dirPath : it.junction.dirPath,
-      verbosity : cui.transaction.verbosity,
+      verbosity : e.optionsMap.verbosity,
     });
   }
 }
 
 commandGitPush.defaults =
 {
-  withSubmodules : 0
+  withSubmodules : 0,
+  verbosity : 2
 }
 
 var command = commandGitPush.command = Object.create( null );
