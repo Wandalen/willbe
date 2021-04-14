@@ -33462,14 +33462,14 @@ function commandGitPrOpen( test )
 
 //
 
-function commandGitPrOpenRemote( test )
+function commandRepoPullOpenRemote( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.about || !config.about.name !== 'wtools-bot' )
+  let config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
   return test.true( true );
 
   let user = config.about.user;
@@ -33484,19 +33484,15 @@ function commandGitPrOpenRemote( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
-    test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `> ` ), 3 );
+    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
     return null;
   });
 
   /* */
 
   prepareFirstBranch();
-  a.appStart( '.with original/GitPrOpen .git.pr "New PR" srcBranch:new' )
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'opened pull request, only title and srcBranch';
@@ -33509,7 +33505,7 @@ function commandGitPrOpenRemote( test )
   /* */
 
   prepareSecondBranch();
-  a.appStart( '.with original/GitPrOpen .git.pr "new2" srcBranch:new2 dstBranch:master body:description' )
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
   .then( ( op ) =>
   {
     test.case = 'opened pull request, body and dstBranch';
@@ -41477,7 +41473,7 @@ const Proto =
     commandGitDifferentCommands,
     commandGitDiff,
     commandGitPrOpen,
-    commandGitPrOpenRemote,
+    commandRepoPullOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
     commandGitPush,
