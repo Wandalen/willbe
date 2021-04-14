@@ -2364,7 +2364,7 @@ function commandSubmodulesGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -2774,7 +2774,7 @@ function commandModulesGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.command.properties );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -3678,7 +3678,8 @@ command.subjectHint = 'A module or resource selector.';
 function commandNpmFromWillfile( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   cui._command_head( commandNpmFromWillfile, arguments );
   // _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
@@ -3743,7 +3744,8 @@ command.properties =
 function commandWillfileFromNpm( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_head( commandWillfileFromNpm, arguments );
   // _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
@@ -4567,7 +4569,7 @@ function commandGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.command.properties );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
