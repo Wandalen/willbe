@@ -40861,6 +40861,48 @@ It means that utility doesn't modify the data of the module if it's not required
 
 //
 
+function commandsSubmoduleSafetyInvalidUrl( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesSafety' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : `.submodules.download` });
+
+  a.ready.then( () =>
+  {
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  })
+
+  let op = { args : `.submodules.download` }
+  a.appStart( op );
+
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    {
+      _.errAttend( err );
+      _.errLogOnce( err );
+    }
+
+    test.true( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandSubmodulesUpdateOptionTo( test )
 {
   let context = this;
@@ -41515,6 +41557,7 @@ const Proto =
     commandNpmPublishFullRegularModule,
 
     commandsSubmoduleSafety,
+    commandsSubmoduleSafetyInvalidUrl,
     commandSubmodulesUpdateOptionTo,
 
     willFilterFieldsOverwrite,
