@@ -33999,7 +33999,7 @@ function commandGitPush( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/ .git.push' )
@@ -34018,6 +34018,23 @@ function commandGitPush( test )
   /* */
 
   begin();
+  a.appStart( '.with original/ .git.push dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .git.push dry:1 - succefull dry pushing of commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '> git push --dry-run -u origin --all --force' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, 'Would set upstream of \'master\' to \'master\' of \'origin\'' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
   a.appStart( '.with original/ .git.push' )
   a.appStart( '.with original/ .git.push' )
   .then( ( op ) =>
@@ -34028,6 +34045,44 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -a v1.0 -m v1.0' });
+  a.appStart( '.with original/ .git.push force:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .git.push v:0 force:0 - no force push';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, ' > git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -a v1.0 -m v1.0' });
+  a.appStart( '.with original/ .git.push withTags:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .git.push v:0 withTags:0 - push no tags';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, ' > git push -u origin --all --force' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 0 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
     return null;
   });
 
