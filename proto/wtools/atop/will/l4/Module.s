@@ -9324,8 +9324,10 @@ function gitPush( o )
   let ready = _.git.push
   ({
     localPath : o.dirPath,
-    withTags : status.unpushedTags,
-    force : 1, /* Dmytro : can be a command option */
+    withTags : o.withTags && status.unpushedTags,
+    withHistory : 1,
+    force : o.force,
+    dry : o.dry,
     sync : 0,
     throwing : 1,
   });
@@ -9343,9 +9345,11 @@ function gitPush( o )
 gitPush.defaults =
 {
   dirPath : null,
-  // v : null,
   verbosity : 2,
-}
+  withTags : null,
+  force : 1,
+  dry : 0,
+};
 
 //
 
