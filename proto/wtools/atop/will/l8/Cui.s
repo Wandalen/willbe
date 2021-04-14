@@ -3803,21 +3803,23 @@ function commandWillfileFromNpm( e )
     if( _.mapKeys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
+
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
+      packagePath : e.optionsMap.packagePath,
+      willfilePath : e.optionsMap.willfilePath,
       currentContext,
       verbosity : 3,
     });
   }
 }
 
-commandWillfileFromNpm.defaults =  _.mapExtend( null, commandImply.defaults,
+commandWillfileFromNpm.defaults =
 {
   packagePath : null,
   willfilePath : null,
   withSubmodules : 0,
-});
+};
 
 var command = commandWillfileFromNpm.command = Object.create( null );
 command.hint = 'Generate willfile from JSON file.';
