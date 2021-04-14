@@ -29141,7 +29141,8 @@ function commandSubmodulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
