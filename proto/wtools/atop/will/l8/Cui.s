@@ -4268,7 +4268,28 @@ function commandWillfileExtendWillfile( e )
 
 commandWillfileExtendWillfile.defaults =
 {
-  verbosity : 3,
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
+
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
+  'npm.name' : 1,
+  'npm.scripts' : 1,
+
+  'submodulesDisabling' : 0,
+  'format' : 'willfile',
+  'verbosity' : 3,
 };
 
 var command = commandWillfileExtendWillfile.command = Object.create( null );
