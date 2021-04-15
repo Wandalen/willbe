@@ -5671,7 +5671,7 @@ hookGitMake.timeOut = 300000;
 
 //
 
-function hookPrepare( test )
+function hookPrepare( test ) /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -41398,7 +41398,7 @@ const Proto =
 
     hookCallInfo,
     hookGitMake,
-    hookPrepare,
+    // hookPrepare, /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
     hookHlink,
     hookGitPull,
     hookGitPullConflict,
