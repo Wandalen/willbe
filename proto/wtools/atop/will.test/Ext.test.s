@@ -13245,16 +13245,13 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:1 -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13288,20 +13285,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:1 -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13327,7 +13321,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/supermodule.out.will.yml',
       './super.out/debug',
       './super.out/debug/File.debug.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -13335,20 +13329,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:0 -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:0' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13388,20 +13379,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:0 -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:0' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13441,12 +13429,12 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursiveUsingSubmodule */
+}
 
 exportRecursiveUsingSubmodule.timeOut = 300000;
 
@@ -14886,9 +14874,7 @@ function exportOutResourceWithoutGeneratedCriterion( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
@@ -14947,13 +14933,12 @@ function exportOutResourceWithoutGeneratedCriterion( test )
     test.identical( _.setFrom( got ), _.setFrom( exp ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportOutResourceWithoutGeneratedCriterion */
+}
 
 //
 
