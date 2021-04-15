@@ -312,7 +312,7 @@ function _command_head( o )
   _.routineOptions( o.routine, e.optionsMap );
 
   // if( o.routine.command.properties && o.routine.command.properties.v )
-  /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
+  /* aaa : for Dmytro : design good solution instead of this workaround. before implementing discuss! */ /* Dmytro : fixed, not me */
   // if( o.routine.command.properties && o.routine.command.properties.v )
   // if( e.propertiesMap.v !== undefined )
   // {
@@ -3166,9 +3166,9 @@ function commandHookCall( e )
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
   }
-
 }
 
+commandHookCall.defaults = _.mapExtend( null, commandImply.defaults );
 var command = commandHookCall.command = Object.create( null );
 command.hint = 'Call a specified hook on the module.';
 command.subjectHint = 'A hook to execute';
@@ -4931,27 +4931,27 @@ function commandGitTag( e )
 commandGitTag.defaults =
 {
   ... commandImply.defaults,
-
   name : '.',
   description : '',
+  toVersion : null,
   dry : 0,
   light : 0,
   verbosity : 1,
   withSubmodules : 0
 };
-
 var command = commandGitTag.command = Object.create( null );
-command.hint = 'Add tag for current commit.';
+command.hint = 'Add tag for commit.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
   name : 'Tag name. Default is name:".".',
   description : 'Description of annotated tag. Default is description:"".',
+  toVersion : 'The commit to add tag. Default is current HEAD commit.',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
   verbosity : 'Set verbosity. Default is 1.',
@@ -6194,7 +6194,7 @@ let Extension =
   commandGitTag,
   commandGitHookPreservingHardLinks,
 
-  commandRepoPullOpen, /* qqq : cover */
+  commandRepoPullOpen, /* aaa : cover */ /* Dmytro : covered */
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,
