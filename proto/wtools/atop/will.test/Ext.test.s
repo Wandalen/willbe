@@ -2529,15 +2529,14 @@ function eachBrokenCommand( test )
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodulesFew' );
   a.reflect();
-  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
   /* - */
 
-  a.appStartNonThrowing( `.each */* .resource.list path::module.common` )
-  .finally( ( err, op ) =>
+  a.appStartNonThrowing( `.each */* .resource.list path::module.common` );
+  a.ready.then( ( op ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
-    test.true( !err );
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2545,12 +2544,12 @@ function eachBrokenCommand( test )
     // test.identical( _.strCount( op.output, 'Module at' ), 3 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function eachBrokenCommand */
+}
 
 //
 
@@ -5417,14 +5416,13 @@ function withDoCommentOut( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !!outfile.execution );
     return null;
-  })
+  });
   a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution verbosity:5' )
   .then( ( op ) =>
   {
@@ -5433,18 +5431,17 @@ function withDoCommentOut( test )
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !outfile.execution );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !!outfile.execution );
     return null;
-  })
+  });
   a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1 verbosity:1' )
   .then( ( op ) =>
   {
@@ -5453,19 +5450,19 @@ function withDoCommentOut( test )
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !!outfile.execution );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function withDoCommentOut */
+}
 
 withDoCommentOut.timeOut = 300000;
 withDoCommentOut.description =
 `
 - commenting out works
 - arguments passing to action works
-`
+`;
 
 //
 
@@ -5653,14 +5650,11 @@ function hookGitMake( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
+    test.true( _.git.isRepository({ remotePath : `https://github.com/${ user }/New2` }) );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/New2` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/New2` ), 1 );
-    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
-    test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2` ), 1 );
-    test.identical( _.strCount( op.output, `> ` ), 3 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${ user }/New2` ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
 
     var exp = [ '.', './will.yml' ];
     var files = a.find( a.abs( 'New2' ) );
@@ -5681,8 +5675,7 @@ function hookGitMake( test )
   /* - */
 
   return a.ready;
-
-} /* end of function hookGitMake */
+}
 
 hookGitMake.timeOut = 300000;
 
