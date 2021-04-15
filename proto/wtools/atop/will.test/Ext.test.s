@@ -15755,6 +15755,64 @@ function exportMainIsGitRepository( test )
 
 //
 
+function exportTwoFirstIsDepOfSecond( test ) /* xxx : for Kos */
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportTwoFirstIsDepOfSecond' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.reflect();
+
+  a.shellSync( 'git clone https://github.com/Wandalen/wModuleForTesting1.git')
+  a.shellSync( 'git clone https://github.com/Wandalen/wModuleForTesting3.git')
+
+  a.appStart({ args : `.with "*/*" .export` })
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Out-willfile is inconsistent with its in-willfiles' ), 0 );
+
+    test.will = 'ModuleForTesting3 should not download copy of ModuleForTesting1, but reuse already opened'
+    let modulesOfTesting3 = a.fileProvider.dirRead( a.abs( 'wModuleForTesting3/.module' ) );
+    test.identical( modulesOfTesting3, null );
+
+    test.will = 'consistency of ModuleForTesting3 contains updated values for ModuleForTesting1'
+    let ModuleForTesting1Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) )
+    let ModuleForTesting3Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting3/out/wModuleForTesting3.out.will.yml' ) )
+    let expectedModule1Im = ModuleForTesting1Out.consistency[ '../.im.will.yml' ];
+    let expectedModule1Ex = ModuleForTesting1Out.consistency[ '../.ex.will.yml' ];
+    let gotModule1Im = ModuleForTesting3Out.consistency[ '../.module/ModuleForTesting1/.im.will.yml' ];
+    let gotModule1Ex = ModuleForTesting3Out.consistency[ '../.module/ModuleForTesting1/.ex.will.yml' ];
+    test.identical( gotModule1Im, expectedModule1Im )
+    test.identical( gotModule1Ex, expectedModule1Ex )
+
+    return null;
+  })
+
+  return a.ready;
+}
+
+exportTwoFirstIsDepOfSecond.description =
+`
+Two remote modules. First is a submodule of the second.
+Exporting modules using .with */*.
+Second module should not download copy of first module, but use already opened module.
+Out will-file of the second module should contain updated hash and size of the in will-files of the first module.
+`
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -25083,7 +25141,8 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+
     return null;
   });
 
@@ -29083,7 +29142,8 @@ function commandSubmodulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
@@ -29176,7 +29236,8 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 0 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
@@ -30787,7 +30848,8 @@ function commandModulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
-    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
@@ -30883,7 +30945,8 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
-    test.identical( _.strCount( op.output, 'On branch master\nYour branch is up to date with \'origin/master\'.' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
@@ -34015,7 +34078,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
     return null;
   });
 
@@ -40861,6 +40924,53 @@ It means that utility doesn't modify the data of the module if it's not required
 
 //
 
+function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesSafety' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : `.submodules.download` });
+
+  a.ready.then( () =>
+  {
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  })
+
+  let op = { args : `.submodules.download` }
+  a.appStart( op );
+
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    {
+      _.errAttend( err );
+      _.errLogOnce( err );
+    }
+
+    test.true( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+commandsSubmoduleSafetyInvalidUrl.description =
+`
+Should throw error about invalid protocol in remote path.
+`
+
+//
+
 function commandSubmodulesUpdateOptionTo( test )
 {
   let context = this;
@@ -41332,6 +41442,7 @@ const Proto =
     exportWithoutSubSubModules,
     exportWithSubmoduleWithNotDownloadedSubmodule,
     exportMainIsGitRepository,
+    exportTwoFirstIsDepOfSecond,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
@@ -41515,6 +41626,7 @@ const Proto =
     commandNpmPublishFullRegularModule,
 
     commandsSubmoduleSafety,
+    commandsSubmoduleSafetyInvalidUrl,
     commandSubmodulesUpdateOptionTo,
 
     willFilterFieldsOverwrite,

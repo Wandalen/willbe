@@ -2364,7 +2364,7 @@ function commandSubmodulesGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -2774,7 +2774,7 @@ function commandModulesGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.command.properties );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -3678,7 +3678,8 @@ command.subjectHint = 'A module or resource selector.';
 function commandNpmFromWillfile( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   cui._command_head( commandNpmFromWillfile, arguments );
   // _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
@@ -3743,7 +3744,8 @@ command.properties =
 function commandWillfileFromNpm( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_head( commandWillfileFromNpm, arguments );
   // _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
@@ -3801,21 +3803,23 @@ function commandWillfileFromNpm( e )
     if( _.mapKeys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
+
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
+      packagePath : e.optionsMap.packagePath,
+      willfilePath : e.optionsMap.willfilePath,
       currentContext,
       verbosity : 3,
     });
   }
 }
 
-commandWillfileFromNpm.defaults =  _.mapExtend( null, commandImply.defaults,
+commandWillfileFromNpm.defaults =
 {
   packagePath : null,
   willfilePath : null,
   withSubmodules : 0,
-});
+};
 
 var command = commandWillfileFromNpm.command = Object.create( null );
 command.hint = 'Generate willfile from JSON file.';
@@ -4264,7 +4268,28 @@ function commandWillfileExtendWillfile( e )
 
 commandWillfileExtendWillfile.defaults =
 {
-  verbosity : 3,
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
+
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
+  'npm.name' : 1,
+  'npm.scripts' : 1,
+
+  'submodulesDisabling' : 0,
+  'format' : 'willfile',
+  'verbosity' : 3,
 };
 
 var command = commandWillfileExtendWillfile.command = Object.create( null );
@@ -4319,7 +4344,7 @@ function commandWillfileSupplementWillfile( e )
 
 commandWillfileSupplementWillfile.defaults =
 {
-  verbosity : 3,
+  ... commandWillfileExtendWillfile.defaults
 };
 
 var command = commandWillfileSupplementWillfile.command = Object.create( null );
@@ -4567,7 +4592,7 @@ function commandGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.command.properties );
   if( _.mapKeys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
