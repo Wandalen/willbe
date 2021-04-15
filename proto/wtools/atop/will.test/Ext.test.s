@@ -5160,21 +5160,11 @@ function withDoInfo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    mode : 'spawn',
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -5188,7 +5178,7 @@ function withDoInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -5203,7 +5193,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5218,7 +5208,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5233,7 +5223,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5248,7 +5238,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5263,7 +5253,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5279,7 +5269,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -7441,10 +7431,11 @@ function hookWasPackageExtendWillfile( test )
   a.appStart( '.call WasPackageExtendWillfile' )
   .then( ( op ) =>
   {
+    debugger;
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 3 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, 'willfilefromnpm' );
@@ -7458,7 +7449,7 @@ function hookWasPackageExtendWillfile( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
@@ -12555,17 +12546,14 @@ function exportBroken( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.export debug:1';
     a.reflect();
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export debug:1' })
-
   .then( ( op ) =>
   {
 
@@ -12602,8 +12590,7 @@ function exportBroken( test )
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
       }
-    }
-
+    };
     test.identical( outfile.exported, exported );
 
     var exportedReflector =
@@ -12611,7 +12598,6 @@ function exportBroken( test )
       mandatory : 1,
       src :
       {
-        // filePath : { '.' : '' },
         filePath : { '**' : '' },
         prefixPath : 'debug'
       },
@@ -12651,7 +12637,9 @@ function exportBroken( test )
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -12796,16 +12784,13 @@ function exportCourrputedOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with sub .export debug:1';
     return null;
-  })
+  });
 
   a.appStart( '.with sub .export debug:1' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -12826,12 +12811,12 @@ function exportCourrputedOutfileUnknownSection( test )
     test.identical( _.strCount( op.output, /Exported module::sub \/ build::export.debug with .* file\(s\) in .*/ ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportCourrputedOutfileUnknownSection */
+}
 
 //
 
@@ -13180,16 +13165,13 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ab/ .export.recursive -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .export.recursive' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13204,20 +13186,17 @@ function exportRecursive( test )
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ab/ .export.recursive -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .export.recursive' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13232,12 +13211,12 @@ function exportRecursive( test )
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursive */
+}
 
 //
 
@@ -13251,16 +13230,13 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:1 -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13294,20 +13270,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:1 -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13333,7 +13306,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/supermodule.out.will.yml',
       './super.out/debug',
       './super.out/debug/File.debug.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -13341,20 +13314,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:0 -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:0' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13394,20 +13364,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:0 -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:0' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13447,12 +13414,12 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursiveUsingSubmodule */
+}
 
 exportRecursiveUsingSubmodule.timeOut = 300000;
 
@@ -14725,17 +14692,14 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:1 ; .with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14767,18 +14731,15 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:0 ; .with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14804,22 +14765,19 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:0 ; .with */* .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14849,18 +14807,15 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with */* .export.recursive';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14886,13 +14841,12 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportWithDisabled */
+}
 
 exportWithDisabled.timeOut = 300000;
 
@@ -14905,9 +14859,7 @@ function exportOutResourceWithoutGeneratedCriterion( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
@@ -14966,13 +14918,12 @@ function exportOutResourceWithoutGeneratedCriterion( test )
     test.identical( _.setFrom( got ), _.setFrom( exp ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportOutResourceWithoutGeneratedCriterion */
+}
 
 //
 
@@ -16474,9 +16425,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean ';
     var files = a.find( a.abs( '.module' ) );
@@ -16487,7 +16436,6 @@ function cleanBroken1( test )
   /* - */
 
   a.appStart({ execPath : '.clean dry:1' })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1';
@@ -16501,12 +16449,11 @@ function cleanBroken1( test )
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.clean' })
-
   .then( ( op ) =>
   {
     test.case = '.clean';
@@ -16515,7 +16462,7 @@ function cleanBroken1( test )
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -16534,12 +16481,11 @@ function cleanBroken1( test )
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     return null;
@@ -16562,7 +16508,7 @@ function cleanBroken1( test )
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -16729,9 +16675,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.reflect();
@@ -17062,15 +17006,14 @@ function cleanWithInPath( test )
   /* - */
 
   var hadFiles;
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
     hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' })
   a.ready.then( ( op ) =>
@@ -17086,7 +17029,7 @@ function cleanWithInPath( test )
       './module/out/ForGit.txt',
       './proto',
       './proto/WithSubmodules.s'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
@@ -17094,7 +17037,7 @@ function cleanWithInPath( test )
     test.identical( _.strCount( op.output, '- Clean deleted ' + hadFiles + ' file(s)' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -29574,7 +29517,7 @@ commandSubmodulesGitDiff.rapidity = -1;
 
 //
 
-function commandSubmodulesGitPrOpen( test )
+function commandSubmodulesRepoPullOpen( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -29588,7 +29531,7 @@ function commandSubmodulesGitPrOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
@@ -29600,12 +29543,12 @@ function commandSubmodulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -29617,11 +29560,11 @@ function commandSubmodulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.git.pr "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
@@ -29633,7 +29576,7 @@ function commandSubmodulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -31279,19 +31222,19 @@ commandModulesGitDiff.rapidity = -1;
 
 //
 
-function commandModulesGitPrOpen( test )
+function commandModulesRepoPullOpen( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   return test.true( true );
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -31303,12 +31246,12 @@ function commandModulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -31320,11 +31263,11 @@ function commandModulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.git.pr "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
@@ -31336,7 +31279,7 @@ function commandModulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -33448,7 +33391,7 @@ function commandGitDiff( test )
 
 //
 
-function commandGitPrOpen( test )
+function commandRepoPullOpen( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -33460,7 +33403,7 @@ function commandGitPrOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -33475,7 +33418,7 @@ function commandGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:new token:$GIT_TOKEN' )
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
   .then( ( op ) =>
   {
     test.case = 'token from environment variables, wrong data, throwing';
@@ -33490,7 +33433,7 @@ function commandGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, wrong data, throwing';
@@ -33505,7 +33448,7 @@ function commandGitPrOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.with original/Git.* .git.pr "some title" srcBranch:"user:new" dstBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
@@ -33525,14 +33468,14 @@ function commandGitPrOpen( test )
 
 //
 
-function commandGitPrOpenRemote( test )
+function commandRepoPullOpenRemote( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.about || !config.about.name !== 'wtools-bot' )
+  let config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
   return test.true( true );
 
   let user = config.about.user;
@@ -33547,19 +33490,15 @@ function commandGitPrOpenRemote( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
-    test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( op.output, `> ` ), 3 );
+    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
     return null;
   });
 
   /* */
 
   prepareFirstBranch();
-  a.appStart( '.with original/GitPrOpen .git.pr "New PR" srcBranch:new' )
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'opened pull request, only title and srcBranch';
@@ -33572,7 +33511,7 @@ function commandGitPrOpenRemote( test )
   /* */
 
   prepareSecondBranch();
-  a.appStart( '.with original/GitPrOpen .git.pr "new2" srcBranch:new2 dstBranch:master body:description' )
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
   .then( ( op ) =>
   {
     test.case = 'opened pull request, body and dstBranch';
@@ -34066,7 +34005,7 @@ function commandGitPush( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/ .git.push' )
@@ -34085,6 +34024,23 @@ function commandGitPush( test )
   /* */
 
   begin();
+  a.appStart( '.with original/ .git.push dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .git.push dry:1 - succefull dry pushing of commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '> git push --dry-run -u origin --all --force' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, 'Would set upstream of \'master\' to \'master\' of \'origin\'' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
   a.appStart( '.with original/ .git.push' )
   a.appStart( '.with original/ .git.push' )
   .then( ( op ) =>
@@ -34095,6 +34051,44 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -a v1.0 -m v1.0' });
+  a.appStart( '.with original/ .git.push force:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .git.push v:0 force:0 - no force push';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, ' > git push -u origin --all' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -a v1.0 -m v1.0' });
+  a.appStart( '.with original/ .git.push withTags:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/ .git.push v:0 withTags:0 - push no tags';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, ' > git push -u origin --all --force' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 0 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
     return null;
   });
 
@@ -35465,7 +35459,7 @@ function commandGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/ .git.tag name:v1.0' )
@@ -35562,6 +35556,71 @@ function commandGitTag( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add same tag twice, should not throw error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 1 );
+    return null;
+  })
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  var commitHash;
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git rev-parse HEAD' });
+  a.ready.then( ( op ) =>
+  {
+    commitHash = op.output.trim();
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m "empty commit"' });
+  a.ready.then( () =>
+  {
+    let ready = _.take( null );
+    a.appStart
+    ({
+      execPath : `.with original/ .git.tag name:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
+      ready
+    });
+    return ready;
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add tag to older commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v5.0' ), 1 );
+    return null;
+  })
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v5.0            Version 5.0' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git rev-list -n 1 v5.0' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, commitHash ), 1 );
     return null;
   });
 
@@ -41564,7 +41623,7 @@ const Proto =
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitDiff,
-    commandSubmodulesGitPrOpen,
+    commandSubmodulesRepoPullOpen,
     commandSubmodulesGitStatusWithOnlyRoot,
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
@@ -41575,7 +41634,7 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
-    commandModulesGitPrOpen,
+    commandModulesRepoPullOpen,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
     commandModulesGitSync,
@@ -41587,8 +41646,8 @@ const Proto =
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitDiff,
-    commandGitPrOpen,
-    commandGitPrOpenRemote,
+    commandRepoPullOpen,
+    commandRepoPullOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
     commandGitPush,
