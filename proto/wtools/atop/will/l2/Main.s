@@ -122,7 +122,9 @@ let FilterFields =
 {
   withEnabled : 1,
   withDisabled : 0,
-  ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
+  // ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
+  ... RelationFilterDefaults
+
 }
 
 //
@@ -1093,15 +1095,14 @@ function filterDefaults( o )
 
   _.assert( will.transaction instanceof _.will.Transaction );
 
-  if( o.withEnabledSubmodules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
-  o.withEnabledSubmodules = will.transaction.withEnabled;
-  if( o.withDisabledSubmodules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
-  o.withDisabledSubmodules = will.transaction.withDisabled;
-
-  if( o.withEnabledModules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
-  o.withEnabledModules = will.transaction.withEnabled;
-  if( o.withDisabledModules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
-  o.withDisabledModules = will.transaction.withDisabled;
+  // if( o.withEnabledSubmodules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  // o.withEnabledSubmodules = will.transaction.withEnabled;
+  // if( o.withDisabledSubmodules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  // o.withDisabledSubmodules = will.transaction.withDisabled;
+  // if( o.withEnabledModules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  // o.withEnabledModules = will.transaction.withEnabled;
+  // if( o.withDisabledModules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  // o.withDisabledModules = will.transaction.withDisabled;
 
   for( let n in _.Will.RelationFilterDefaults )
   {
@@ -1449,7 +1450,10 @@ function relationFit_body( object, opts )
 
   if( !opts.withDisabledSubmodules && relation )
   if( !relation.enabled )
-  return false;
+  {
+    debugger
+    return false;
+  }
 
   return true;
 }
@@ -1968,9 +1972,9 @@ function modulesFindWithAt( o )
     // debugger;
     // op.sortedOpeners = op.openers.slice();
     // op.sortedOpeners.forEach( ( opener ) => _.assert( opener instanceof _.will.ModuleOpener ) );
-    // debugger;
+    debugger;
 
-    op.sortedOpeners = will.graphTopSort( op.openers );
+    op.sortedOpeners = will.graphTopSort( op.openers, op.options );
     op.sortedOpeners.reverse();
 
     op.sortedOpeners = op.sortedOpeners.filter( ( object ) =>
@@ -2008,6 +2012,8 @@ function modulesFindWithAt( o )
 
 var defaults = modulesFindWithAt.defaults = _.mapExtend( null, ModuleFilterNulls );
 
+defaults.withEnabledSubmodules = null;
+defaults.withDisabledSubmodules = null;
 defaults.selector = null;
 defaults.tracing = null;
 defaults.atLeastOne = 1;
@@ -2539,6 +2545,7 @@ let modulesFor = _.routine.uniteCloning_( modulesFor_head, modulesFor_body );
 function modulesDownload_head( routine, args )
 {
   let module = this;
+  let will = module.will;
 
   _.assert( arguments.length === 2 );
   _.assert( args.length <= 2 );
@@ -2547,6 +2554,8 @@ function modulesDownload_head( routine, args )
 
   o = _.routineOptions( routine, o );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
+
+  will.filterDefaults( o );
 
   return o;
 }
@@ -3745,13 +3754,13 @@ defaults.withoutDuplicates = 0;
 
 //
 
-function graphTopSort( modules )
+function graphTopSort( modules, o )
 {
   let will = this;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 )
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
 
-  let group = will.graphGroupMake();
+  let group = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
 
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );

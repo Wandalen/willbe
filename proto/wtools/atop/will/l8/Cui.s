@@ -176,7 +176,7 @@ function openersFind( o )
   // _.assert( will.currentOpener === null );
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 || arguments.length === 1 );
-
+  debugger
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
   delete o2.localPath;
@@ -1408,7 +1408,11 @@ commandImply.defaults =
   withOut : null,
   withIn : 1,
   withEnabled : null,
+  withEnabledModules : null,
+  withEnabledSubmodules : null,
   withDisabled : null,
+  withDisabledModules : null,
+  withDisabledSubmodules : null,
   withValid : null,
   withInvalid : null,
   withSubmodules : null,
@@ -1430,7 +1434,11 @@ command.properties =
   withOut : 'Include out modules. Default is 1.',
   withIn : 'Include in modules. Default is 1.',
   withEnabled : 'Include enabled modules. Default is 1.',
+  withEnabledModules : 'Include enabled modules. Default is 1.',
+  withEnabledSubmodules : 'Include enabled submodules. Default is 1.',
   withDisabled : 'Include disabled modules. Default is 0.',
+  withDisabledModules : 'Include disabled modules. Default is 0.',
+  withDisabledSubmodules : 'Include disabled submodules. Default is 0.',
   withValid : 'Include valid modules. Default is 1.',
   withInvalid : 'Include invalid modules. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
@@ -2182,6 +2190,10 @@ function commandSubmodulesVersionsDownload( e )
 commandSubmodulesVersionsDownload.defaults =
 {
   withSubmodules : 1,
+  withEnabledModules : null,
+  withDisabledModules : null,
+  withDisabledSubmodules : null,
+  withEnabledSubmodules : null,
   dry : 0,
   recursive : 1
 }
