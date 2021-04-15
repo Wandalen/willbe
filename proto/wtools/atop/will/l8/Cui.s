@@ -511,7 +511,7 @@ function _commandsMake()
     'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
     'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
     'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
-    'submodules git pr open' :          { ro : _.routineJoin( cui, cui.commandSubmodulesGitPrOpen )          },
+    'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
     'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
     'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
@@ -2455,17 +2455,17 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandSubmodulesGitPrOpen( e )
+function commandSubmodulesRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesGitPrOpen, arguments );
+  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
 
   return cui._commandModulesLike
   ({
     event : e,
     name : 'submodules git pr open',
     onEach : handleEach,
-    commandRoutine : commandSubmodulesGitPrOpen,
+    commandRoutine : commandSubmodulesRepoPullOpen,
     withRoot : 0,
   });
 
@@ -2479,23 +2479,22 @@ function commandSubmodulesGitPrOpen( e )
   }
 }
 
-commandSubmodulesGitPrOpen.defaults =
+commandSubmodulesRepoPullOpen.defaults =
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
-  title : null,
+  // title : null,
   body : null,
   verbosity : null,
   withSubmodules : 1
-}
-
-var command = commandSubmodulesGitPrOpen.command = Object.create( null );
+};
+var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -6138,7 +6137,7 @@ let Extension =
   commandSubmodulesShell,
   commandSubmodulesGit,
   commandSubmodulesGitDiff,
-  commandSubmodulesGitPrOpen,
+  commandSubmodulesRepoPullOpen,
   commandSubmodulesGitStatus,
   commandSubmodulesGitSync,
 

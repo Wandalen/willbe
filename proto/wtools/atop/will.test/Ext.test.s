@@ -29513,7 +29513,7 @@ commandSubmodulesGitDiff.rapidity = -1;
 
 //
 
-function commandSubmodulesGitPrOpen( test )
+function commandSubmodulesRepoPullOpen( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -29527,7 +29527,7 @@ function commandSubmodulesGitPrOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
@@ -29539,12 +29539,12 @@ function commandSubmodulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -29556,11 +29556,11 @@ function commandSubmodulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.git.pr "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
@@ -29572,7 +29572,7 @@ function commandSubmodulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -41504,7 +41504,7 @@ const Proto =
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitDiff,
-    commandSubmodulesGitPrOpen,
+    commandSubmodulesRepoPullOpen,
     commandSubmodulesGitStatusWithOnlyRoot,
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
