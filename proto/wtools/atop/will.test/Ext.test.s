@@ -12796,16 +12796,13 @@ function exportCourrputedOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with sub .export debug:1';
     return null;
-  })
+  });
 
   a.appStart( '.with sub .export debug:1' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -12826,12 +12823,12 @@ function exportCourrputedOutfileUnknownSection( test )
     test.identical( _.strCount( op.output, /Exported module::sub \/ build::export.debug with .* file\(s\) in .*/ ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportCourrputedOutfileUnknownSection */
+}
 
 //
 
