@@ -4735,8 +4735,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4759,7 +4758,16 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4789,8 +4797,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4884,8 +4891,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileFormatVersion */
+}
 
 exportCourrputedSubmoduleOutfileFormatVersion.description =
 `
