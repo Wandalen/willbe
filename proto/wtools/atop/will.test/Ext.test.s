@@ -16434,9 +16434,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean ';
     var files = a.find( a.abs( '.module' ) );
@@ -16447,7 +16445,6 @@ function cleanBroken1( test )
   /* - */
 
   a.appStart({ execPath : '.clean dry:1' })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1';
@@ -16461,12 +16458,11 @@ function cleanBroken1( test )
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.clean' })
-
   .then( ( op ) =>
   {
     test.case = '.clean';
@@ -16475,7 +16471,7 @@ function cleanBroken1( test )
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -16494,12 +16490,11 @@ function cleanBroken1( test )
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     return null;
@@ -16522,7 +16517,7 @@ function cleanBroken1( test )
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
-  })
+  });
 
   /* - */
 

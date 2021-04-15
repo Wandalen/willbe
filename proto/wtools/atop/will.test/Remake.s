@@ -44,6 +44,11 @@ del( `${asset}/*out/**` );
 will( `.with ${asset}/ab/ .export.recursive` );
 copy( `${asset}/+out`, `${asset}/out` );
 
+var asset = `submodulesBroken1`;
+del( `${asset}/*out/**` );
+will( `.with ${asset} .export` );
+copy( `${asset}/+out`, `${asset}/out` );
+
 var asset = `twoExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub .export debug:0` );
