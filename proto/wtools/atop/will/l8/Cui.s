@@ -312,7 +312,7 @@ function _command_head( o )
   _.routineOptions( o.routine, e.optionsMap );
 
   // if( o.routine.command.properties && o.routine.command.properties.v )
-  /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
+  /* aaa : for Dmytro : design good solution instead of this workaround. before implementing discuss! */ /* Dmytro : fixed, not me */
   // if( o.routine.command.properties && o.routine.command.properties.v )
   // if( e.propertiesMap.v !== undefined )
   // {
@@ -511,7 +511,7 @@ function _commandsMake()
     'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
     'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
     'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
-    'submodules git pr open' :          { ro : _.routineJoin( cui, cui.commandSubmodulesGitPrOpen )          },
+    'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
     'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
     'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
@@ -531,7 +531,7 @@ function _commandsMake()
     'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
     'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
     'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
-    'modules git pr open' :             { ro : _.routineJoin( cui, cui.commandModulesGitPrOpen )             },
+    'modules repo pull open' :          { ro : _.routineJoin( cui, cui.commandModulesRepoPullOpen )             },
     'modules git status' :              { ro : _.routineJoin( cui, cui.commandModulesGitStatus )             },
     'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
@@ -2455,47 +2455,46 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandSubmodulesGitPrOpen( e )
+function commandSubmodulesRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesGitPrOpen, arguments );
+  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
 
   return cui._commandModulesLike
   ({
     event : e,
-    name : 'submodules git pr open',
+    name : 'submodules repo pull open',
     onEach : handleEach,
-    commandRoutine : commandSubmodulesGitPrOpen,
+    commandRoutine : commandSubmodulesRepoPullOpen,
     withRoot : 0,
   });
 
   function handleEach( it )
   {
-    return it.opener.openedModule.gitPrOpen
+    return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
     });
   }
 }
 
-commandSubmodulesGitPrOpen.defaults =
+commandSubmodulesRepoPullOpen.defaults =
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
-  title : null,
+  // title : null,
   body : null,
   verbosity : null,
   withSubmodules : 1
-}
-
-var command = commandSubmodulesGitPrOpen.command = Object.create( null );
+};
+var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -2865,48 +2864,48 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandModulesGitPrOpen( e )
+function commandModulesRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandModulesGitPrOpen, arguments );
+  cui._command_head( commandModulesRepoPullOpen, arguments );
 
   return cui._commandModulesLike
   ({
     event : e,
-    name : 'modules git pr open',
+    name : 'modules repo pull open',
     onEach : handleEach,
-    commandRoutine : commandModulesGitPrOpen,
+    commandRoutine : commandModulesRepoPullOpen,
     withRoot : 1,
   });
 
   function handleEach( it )
   {
-    return it.opener.openedModule.gitPrOpen
+    return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
     });
   }
 }
 
-commandModulesGitPrOpen.defaults =
+commandModulesRepoPullOpen.defaults =
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
-  title : null,
+  // title : null,
   body : null,
   verbosity : 2,
   withSubmodules : 1
 };
 
-var command = commandModulesGitPrOpen.command = Object.create( null );
+var command = commandModulesRepoPullOpen.command = Object.create( null );
 command.hint = 'Open pull requests from current module and its submodules.';
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -3167,9 +3166,9 @@ function commandHookCall( e )
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
   }
-
 }
 
+commandHookCall.defaults = _.mapExtend( null, commandImply.defaults );
 var command = commandHookCall.command = Object.create( null );
 command.hint = 'Call a specified hook on the module.';
 command.subjectHint = 'A hook to execute';
@@ -4743,20 +4742,30 @@ function commandGitPush( e )
     ({
       dirPath : it.junction.dirPath,
       verbosity : cui.transaction.verbosity,
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
     });
   }
 }
 
 commandGitPush.defaults =
 {
-  withSubmodules : 0
-}
-
+  withSubmodules : 0,
+  verbosity : 3,
+  withTags : 1,
+  force : 1,
+  dry : 0,
+};
 var command = commandGitPush.command = Object.create( null );
 command.hint = 'Push commits and tags to remote repository.';
 command.subjectHint = false;
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
-command.properties = _.mapExtend( null, commandImply.command.properties );
+command.properties =
+{
+  ... commandImply.command.properties,
+  withTags : 'Enable pushing of tags. Default is 1',
+  force : 'Enable force pushing of commit history and tags. Default is 1',
+  dry : 'Enable dry pushing of commit history and tags. Default is 0',
+};
 
 //
 
@@ -4947,27 +4956,27 @@ function commandGitTag( e )
 commandGitTag.defaults =
 {
   ... commandImply.defaults,
-
   name : '.',
   description : '',
+  toVersion : null,
   dry : 0,
   light : 0,
   verbosity : 1,
   withSubmodules : 0
 };
-
 var command = commandGitTag.command = Object.create( null );
-command.hint = 'Add tag for current commit.';
+command.hint = 'Add tag for commit.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
   name : 'Tag name. Default is name:".".',
   description : 'Description of annotated tag. Default is description:"".',
+  toVersion : 'The commit to add tag. Default is current HEAD commit.',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
   verbosity : 'Set verbosity. Default is 1.',
@@ -5002,17 +5011,17 @@ function commandRepoPullOpen( e )
   return cui._commandBuildLike
   ({
     event : e,
-    name : 'git pr open',
+    name : 'repo pull open',
     onEach : handleEach,
     commandRoutine : commandRepoPullOpen,
   });
 
   function handleEach( it )
   {
-    return it.opener.openedModule.gitPrOpen
+    return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ),
     });
   }
 }
@@ -5024,7 +5033,7 @@ commandRepoPullOpen.defaults =
   token : null,
   srcBranch : null,
   dstBranch : 'master',
-  title : null,
+  // title : null, /* Dmytro : rewrites options */
   body : null,
   verbosity : 2,
   withSubmodules : 1
@@ -6153,7 +6162,7 @@ let Extension =
   commandSubmodulesShell,
   commandSubmodulesGit,
   commandSubmodulesGitDiff,
-  commandSubmodulesGitPrOpen,
+  commandSubmodulesRepoPullOpen,
   commandSubmodulesGitStatus,
   commandSubmodulesGitSync,
 
@@ -6163,7 +6172,7 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitDiff,
-  commandModulesGitPrOpen,
+  commandModulesRepoPullOpen,
   commandModulesGitStatus,
   commandModulesGitSync,
 
@@ -6210,7 +6219,7 @@ let Extension =
   commandGitTag,
   commandGitHookPreservingHardLinks,
 
-  commandRepoPullOpen, /* qqq : cover */
+  commandRepoPullOpen, /* aaa : cover */ /* Dmytro : covered */
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,
