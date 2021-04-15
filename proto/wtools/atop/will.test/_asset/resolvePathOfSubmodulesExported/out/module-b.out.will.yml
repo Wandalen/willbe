@@ -9,6 +9,7 @@ module:
   module-b.out:
     about:
       name: module-b
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -22,8 +23,6 @@ module:
           predefined: 1
         path: module-b.out
       in:
-        criterion:
-          predefined: 0
         path: .
       module.original.willfiles:
         criterion:
@@ -33,17 +32,16 @@ module:
         criterion:
           predefined: 1
         path: ../b.will.yml
-      download:
+      module.peer.in:
         criterion:
           predefined: 1
-      remote:
+        path: ..
+      download:
         criterion:
           predefined: 1
       proto:
         path: ../proto
       out:
-        criterion:
-          predefined: 0
         path: .
       temp:
         path:
@@ -51,11 +49,13 @@ module:
           - ../out2
       exported.dir.proto.export:
         criterion:
+          generated: 1
           default: 1
           export: 1
         path: ../proto/b
       exported.files.proto.export:
         criterion:
+          generated: 1
           default: 1
           export: 1
         path:
@@ -78,14 +78,16 @@ module:
         dst:
           prefixPath: ''
         recursive: 1
-        mandatory: 1
       exported.proto.export:
         src:
           filePath:
             '**': ''
           prefixPath: ../proto/b
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
+          generated: 1
           default: 1
           export: 1
       exported.files.proto.export:
@@ -96,8 +98,8 @@ module:
           prefixPath: 'path::exported.dir.proto.export'
           recursive: 0
         recursive: 0
-        mandatory: 1
         criterion:
+          generated: 1
           default: 1
           export: 1
     step:
@@ -109,7 +111,7 @@ module:
           - module.export
       files:
         opts:
-          reflector: 'reflector::files*'
+          filePath: 'reflector::files'
         inherit:
           - files.reflect
     build:
@@ -142,13 +144,12 @@ module:
   ../b:
     about:
       name: module-b
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
     path:
       in:
-        criterion:
-          predefined: 0
         path: .
       module.willfiles:
         criterion:
@@ -162,6 +163,10 @@ module:
         criterion:
           predefined: 1
         path: out/module-b.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
       module.common:
         criterion:
           predefined: 1
@@ -169,37 +174,14 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
-        path: ./proto
+        path: proto
       out:
-        criterion:
-          predefined: 0
         path: out
       temp:
         path:
           - 'path::out'
           - out2
-      exported.dir.proto.export:
-        criterion:
-          default: 1
-          export: 1
-        path: ./proto/b
-      exported.files.proto.export:
-        criterion:
-          default: 1
-          export: 1
-        path:
-          - proto/b
-          - proto/b/-Excluded.js
-          - proto/b/File.js
-          - proto/b/File.test.js
-          - proto/b/File1.debug.js
-          - proto/b/File1.release.js
-          - proto/b/File2.debug.js
-          - proto/b/File2.release.js
     submodule: {}
     reflector:
       files:
@@ -208,28 +190,6 @@ module:
             '{path::proto}/b/**': '{path::out}/b'
           recursive: 1
         recursive: 1
-        mandatory: 1
-      exported.proto.export:
-        src:
-          filePath:
-            '**': ''
-          prefixPath: proto/b
-        mandatory: 1
-        criterion:
-          default: 1
-          export: 1
-      exported.files.proto.export:
-        src:
-          filePath:
-            'path::exported.files.proto.export': ''
-          basePath: .
-          prefixPath: 'path::exported.dir.proto.export'
-          recursive: 0
-        recursive: 0
-        mandatory: 1
-        criterion:
-          default: 1
-          export: 1
     step:
       export.proto:
         opts:
@@ -239,7 +199,7 @@ module:
           - module.export
       files:
         opts:
-          reflector: 'reflector::files*'
+          filePath: 'reflector::files'
         inherit:
           - files.reflect
     build:
@@ -251,19 +211,6 @@ module:
       proto.export:
         steps:
           - 'step::export.proto'
-        criterion:
-          default: 1
-          export: 1
-    exported:
-      proto.export:
-        version: 0.0.1
-        recursive: 0
-        withIntegrated: 2
-        tar: 0
-        exportedReflector: 'reflector::exported.proto.export'
-        exportedFilesReflector: 'reflector::exported.files.proto.export'
-        exportedDirPath: 'path::exported.dir.proto.export'
-        exportedFilesPath: 'path::exported.files.proto.export'
         criterion:
           default: 1
           export: 1

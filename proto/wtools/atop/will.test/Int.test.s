@@ -1855,6 +1855,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( () =>
   {
     let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform();
@@ -1866,8 +1867,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download.criterion, { predefined : 1 } );
-    test.identical( path.download.path, undefined );
+    test.identical( path.download, undefined );
 
     opener.finit();
     return null;
@@ -1887,6 +1887,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( () =>
   {
     let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform();
@@ -1898,8 +1899,41 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download.criterion, { predefined : 1 } );
-    test.identical( path.download.path, undefined );
+    test.identical( path.download, undefined );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'change downloadPath in runtime';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
+    module.downloadPath = '../';
+    test.identical( module.pathResourceMap.download.path, '../' );
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download, undefined );
 
     opener.finit();
     return null;
@@ -3500,8 +3534,7 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export debug';
     a.reflect();
@@ -4539,8 +4572,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4563,7 +4595,16 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4593,8 +4634,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4681,8 +4721,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileUnknownSection */
+}
 
 exportCourrputedSubmoduleOutfileUnknownSection.description =
 `
@@ -4701,8 +4740,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4725,7 +4763,16 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4755,8 +4802,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4850,8 +4896,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileFormatVersion */
+}
 
 exportCourrputedSubmoduleOutfileFormatVersion.description =
 `
@@ -5078,8 +5123,7 @@ function exportsResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
@@ -5108,12 +5152,12 @@ function exportsResolve( test )
 
     opener.finit();
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportsResolve */
+}
 
 //
 
@@ -7796,17 +7840,15 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
-
     test.case = 'path::export';
     let resolved = opener.openedModule.pathResolve
     ({
@@ -7831,7 +7873,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.identical( a.rel( resolved ), expected );
 
     return null;
-  })
+  });
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -7840,7 +7882,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.true( err === undefined );
     opener.finit();
     return arg;
-  })
+  });
 
   /* - */
 

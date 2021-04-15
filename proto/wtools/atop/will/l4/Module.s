@@ -1968,7 +1968,7 @@ function isAliveGet()
 {
   let module = this;
   return module.formed2 >= 1;
-  /* qqq : for Dmytro : ? */
+  /* xxx : investigate : ? */
   // return module.stager.stageStateBegun( 'preformed' );
 }
 
@@ -9085,13 +9085,13 @@ gitDiff.defaults =
 
 //
 
-function gitPrOpen( o )
+function repoPullOpen( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  _.routineOptionsPreservingUndefines( gitPrOpen, o );
+  _.routineOptionsPreservingUndefines( repoPullOpen, o );
 
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
@@ -9123,17 +9123,18 @@ function gitPrOpen( o )
   let ready = _.take( null );
   ready.then( () =>
   {
-    return _.git.pullOpen
+    return _.repo.pullOpen
     ({
       token : o.token,
       remotePath : o.remotePath,
-      title : o.title,
-      body : o.body,
+      // title : o.title,
+      // body : o.body,
+      descriptionHead : o.title,
+      descriptionBody : o.body,
       srcBranch : o.srcBranch,
       dstBranch : o.dstBranch,
       sync : 1,
       throwing : 1,
-      verbosity : o.verbosity,
     });
   })
   .finally( ( err, arg ) =>
@@ -9146,7 +9147,7 @@ function gitPrOpen( o )
   return ready;
 }
 
-gitPrOpen.defaults =
+repoPullOpen.defaults =
 {
   token : null,
   remotePath : null,
@@ -9323,7 +9324,10 @@ function gitPush( o )
   let ready = _.git.push
   ({
     localPath : o.dirPath,
-    withTags : status.unpushedTags,
+    withTags : o.withTags && status.unpushedTags,
+    withHistory : 1,
+    force : o.force,
+    dry : o.dry,
     sync : 0,
     throwing : 1,
   });
@@ -9341,9 +9345,11 @@ function gitPush( o )
 gitPush.defaults =
 {
   dirPath : null,
-  // v : null,
   verbosity : 2,
-}
+  withTags : null,
+  force : 1,
+  dry : 0,
+};
 
 //
 
@@ -9579,14 +9585,10 @@ function gitTag( o )
 
   // if( module.repo.remotePath || !module.about.name )
   if( !module.about.name )
-  {
-    throw _.errBrief( 'Module should be local, opened and have name' );
-  }
+  throw _.errBrief( 'Module should be local, opened and have name' );
 
   if( !_.strDefined( o.name ) )
-  {
-    throw _.errBrief( 'Expects name of tag defined' );
-  }
+  throw _.errBrief( 'Expects defined name of tag' );
 
   if( o.description === null )
   o.description = o.name;
@@ -9600,28 +9602,29 @@ function gitTag( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Creating tag ${o.name}` );
+  logger.log( `Creating tag ${ o.name }` );
 
-  _.git.tagMake
+  return _.git.tagMake
   ({
     localPath,
     tag : o.name,
     description : o.description || '',
+    toVersion : o.toVersion,
     light : o.light,
+    force : 1,
     sync : 1,
   });
-
-  return null;
 }
 
 gitTag.defaults =
 {
   name : null,
   description : '',
+  toVersion : null,
   dry : 0,
   light : 0,
   verbosity : 1,
-}
+};
 
 //
 
@@ -10298,7 +10301,7 @@ let Extension =
 
   gitExecCommand,
   gitDiff,
-  gitPrOpen,
+  repoPullOpen,
   gitPull,
   gitPush,
   gitReset,
