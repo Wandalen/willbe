@@ -12555,17 +12555,14 @@ function exportBroken( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.export debug:1';
     a.reflect();
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export debug:1' })
-
   .then( ( op ) =>
   {
 
@@ -12602,8 +12599,7 @@ function exportBroken( test )
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
       }
-    }
-
+    };
     test.identical( outfile.exported, exported );
 
     var exportedReflector =
@@ -12611,7 +12607,6 @@ function exportBroken( test )
       mandatory : 1,
       src :
       {
-        // filePath : { '.' : '' },
         filePath : { '**' : '' },
         prefixPath : 'debug'
       },
@@ -12651,7 +12646,9 @@ function exportBroken( test )
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
