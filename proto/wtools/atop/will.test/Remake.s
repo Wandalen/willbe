@@ -12,7 +12,7 @@ let start = _.process.starter
   currentPath : repoDirPath,
   outputCollecting : 1,
   ready,
-})
+});
 
 let will = _.process.starter
 ({
@@ -23,7 +23,7 @@ let will = _.process.starter
   ready,
   throwingExitCode : 0,
   deasync : 1,
-})
+});
 
 let reposDownload = require( `./ReposDownload.s` );
 
