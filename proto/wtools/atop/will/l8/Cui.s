@@ -2463,7 +2463,7 @@ function commandSubmodulesRepoPullOpen( e )
   return cui._commandModulesLike
   ({
     event : e,
-    name : 'submodules git pr open',
+    name : 'submodules repo pull open',
     onEach : handleEach,
     commandRoutine : commandSubmodulesRepoPullOpen,
     withRoot : 0,
