@@ -5160,21 +5160,11 @@ function withDoInfo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    mode : 'spawn',
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -5188,7 +5178,7 @@ function withDoInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -5203,7 +5193,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5218,7 +5208,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5233,7 +5223,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5248,7 +5238,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5263,7 +5253,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -5279,7 +5269,7 @@ function withDoInfo( test )
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -7441,10 +7431,11 @@ function hookWasPackageExtendWillfile( test )
   a.appStart( '.call WasPackageExtendWillfile' )
   .then( ( op ) =>
   {
+    debugger;
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 3 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, 'willfilefromnpm' );
@@ -7458,7 +7449,7 @@ function hookWasPackageExtendWillfile( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
@@ -35453,7 +35444,7 @@ function commandGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/ .git.tag name:v1.0' )
@@ -35550,6 +35541,71 @@ function commandGitTag( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add same tag twice, should not throw error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 1 );
+    return null;
+  })
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  var commitHash;
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git rev-parse HEAD' });
+  a.ready.then( ( op ) =>
+  {
+    commitHash = op.output.trim();
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m "empty commit"' });
+  a.ready.then( () =>
+  {
+    let ready = _.take( null );
+    a.appStart
+    ({
+      execPath : `.with original/ .git.tag name:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
+      ready
+    });
+    return ready;
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add tag to older commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v5.0' ), 1 );
+    return null;
+  })
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v5.0            Version 5.0' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git rev-list -n 1 v5.0' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, commitHash ), 1 );
     return null;
   });
 
