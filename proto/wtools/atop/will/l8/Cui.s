@@ -176,7 +176,7 @@ function openersFind( o )
   // _.assert( will.currentOpener === null );
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  debugger
+
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
   delete o2.localPath;
@@ -2162,6 +2162,7 @@ function commandSubmodulesVersionsDownload( e )
 {
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
+
 
   return cui._commandCleanLike
   ({

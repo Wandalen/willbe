@@ -1450,10 +1450,7 @@ function relationFit_body( object, opts )
 
   if( !opts.withDisabledSubmodules && relation )
   if( !relation.enabled )
-  {
-    debugger
-    return false;
-  }
+  return false;
 
   return true;
 }
@@ -1972,9 +1969,9 @@ function modulesFindWithAt( o )
     // debugger;
     // op.sortedOpeners = op.openers.slice();
     // op.sortedOpeners.forEach( ( opener ) => _.assert( opener instanceof _.will.ModuleOpener ) );
-    debugger;
+    // debugger;
 
-    op.sortedOpeners = will.graphTopSort( op.openers, op.options );
+    op.sortedOpeners = will.graphTopSort( op.openers );
     op.sortedOpeners.reverse();
 
     op.sortedOpeners = op.sortedOpeners.filter( ( object ) =>
@@ -2760,7 +2757,8 @@ function modulesDownload_body( o )
       return junctionLocalMaybe( junction );
       if( !junction.isRemote || !junction.relation )
       return junctionLocalMaybe( junction );
-      if( junction.relation && !junction.relation.enabled )
+      // if( junction.relation && !junction.relation.enabled )
+      if( junction.relation && !junction.relation.enabled && !o.withDisabledSubmodules )
       return junctionLocalMaybe( junction );
 
       ready2.then( () =>
@@ -3754,13 +3752,13 @@ defaults.withoutDuplicates = 0;
 
 //
 
-function graphTopSort( modules, o )
+function graphTopSort( modules )
 {
   let will = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
 
-  let group = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
+  let group = will.graphGroupMake();
 
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
