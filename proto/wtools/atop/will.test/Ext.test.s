@@ -12546,17 +12546,14 @@ function exportBroken( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.export debug:1';
     a.reflect();
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export debug:1' })
-
   .then( ( op ) =>
   {
 
@@ -12593,8 +12590,7 @@ function exportBroken( test )
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
       }
-    }
-
+    };
     test.identical( outfile.exported, exported );
 
     var exportedReflector =
@@ -12602,7 +12598,6 @@ function exportBroken( test )
       mandatory : 1,
       src :
       {
-        // filePath : { '.' : '' },
         filePath : { '**' : '' },
         prefixPath : 'debug'
       },
@@ -12642,7 +12637,9 @@ function exportBroken( test )
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -12787,16 +12784,13 @@ function exportCourrputedOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with sub .export debug:1';
     return null;
-  })
+  });
 
   a.appStart( '.with sub .export debug:1' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -12817,12 +12811,12 @@ function exportCourrputedOutfileUnknownSection( test )
     test.identical( _.strCount( op.output, /Exported module::sub \/ build::export.debug with .* file\(s\) in .*/ ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportCourrputedOutfileUnknownSection */
+}
 
 //
 
@@ -13171,16 +13165,13 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ab/ .export.recursive -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .export.recursive' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13195,20 +13186,17 @@ function exportRecursive( test )
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ab/ .export.recursive -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .export.recursive' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13223,12 +13211,12 @@ function exportRecursive( test )
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursive */
+}
 
 //
 
@@ -13242,16 +13230,13 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:1 -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13285,20 +13270,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:1 -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13324,7 +13306,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/supermodule.out.will.yml',
       './super.out/debug',
       './super.out/debug/File.debug.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -13332,20 +13314,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:0 -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:0' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13385,20 +13364,17 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with super .export.recursive debug:0 -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export.recursive debug:0' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13438,12 +13414,12 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursiveUsingSubmodule */
+}
 
 exportRecursiveUsingSubmodule.timeOut = 300000;
 
@@ -14716,17 +14692,14 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:1 ; .with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14758,18 +14731,15 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:0 ; .with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14795,22 +14765,19 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:0 ; .with */* .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14840,18 +14807,15 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with */* .export.recursive';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14877,13 +14841,12 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportWithDisabled */
+}
 
 exportWithDisabled.timeOut = 300000;
 
@@ -14896,9 +14859,7 @@ function exportOutResourceWithoutGeneratedCriterion( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
@@ -14957,13 +14918,12 @@ function exportOutResourceWithoutGeneratedCriterion( test )
     test.identical( _.setFrom( got ), _.setFrom( exp ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportOutResourceWithoutGeneratedCriterion */
+}
 
 //
 
@@ -16465,9 +16425,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean ';
     var files = a.find( a.abs( '.module' ) );
@@ -16478,7 +16436,6 @@ function cleanBroken1( test )
   /* - */
 
   a.appStart({ execPath : '.clean dry:1' })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1';
@@ -16492,12 +16449,11 @@ function cleanBroken1( test )
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.clean' })
-
   .then( ( op ) =>
   {
     test.case = '.clean';
@@ -16506,7 +16462,7 @@ function cleanBroken1( test )
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -16525,12 +16481,11 @@ function cleanBroken1( test )
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     return null;
@@ -16553,7 +16508,7 @@ function cleanBroken1( test )
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -16720,9 +16675,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.reflect();
@@ -17053,15 +17006,14 @@ function cleanWithInPath( test )
   /* - */
 
   var hadFiles;
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
     hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' })
   a.ready.then( ( op ) =>
@@ -17077,7 +17029,7 @@ function cleanWithInPath( test )
       './module/out/ForGit.txt',
       './proto',
       './proto/WithSubmodules.s'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
@@ -17085,7 +17037,7 @@ function cleanWithInPath( test )
     test.identical( _.strCount( op.output, '- Clean deleted ' + hadFiles + ' file(s)' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
