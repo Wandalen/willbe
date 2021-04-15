@@ -7405,26 +7405,15 @@ function hookWasPackageExtendWillfile( test )
 
   /* - */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'extend unnamed willfiles without options';
-    a.reflect();
-    a.fileProvider.filesReflect
-    ({
-      reflectMap :
-      {
-        [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ),
-        [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
-      }
-    });
-
     return null;
   });
 
   a.appStart( '.call WasPackageExtendWillfile' )
   .then( ( op ) =>
   {
-    debugger;
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '+ writing' ), 2 );
     test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
@@ -7444,19 +7433,9 @@ function hookWasPackageExtendWillfile( test )
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'extend unnamed willfiles with options';
-    a.reflect();
-    a.fileProvider.filesReflect
-    ({
-      reflectMap :
-      {
-        [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ),
-        [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
-      }
-    });
-
     return null;
   });
 
@@ -7465,8 +7444,8 @@ function hookWasPackageExtendWillfile( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, 'willfilefromnpm' );
@@ -7480,7 +7459,7 @@ function hookWasPackageExtendWillfile( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStartNonThrowing( '.call WasPackageExtendWillfile unknown:1' )
   .then( ( op ) =>
@@ -7493,6 +7472,25 @@ function hookWasPackageExtendWillfile( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect
+      ({
+        reflectMap :
+        {
+          [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ),
+          [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
+        }
+      });
+      return null;
+    });
+  }
 }
 
 //
