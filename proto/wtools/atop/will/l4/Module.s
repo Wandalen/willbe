@@ -1968,7 +1968,7 @@ function isAliveGet()
 {
   let module = this;
   return module.formed2 >= 1;
-  /* qqq : for Dmytro : ? */
+  /* xxx : investigate : ? */
   // return module.stager.stageStateBegun( 'preformed' );
 }
 
@@ -9585,14 +9585,10 @@ function gitTag( o )
 
   // if( module.repo.remotePath || !module.about.name )
   if( !module.about.name )
-  {
-    throw _.errBrief( 'Module should be local, opened and have name' );
-  }
+  throw _.errBrief( 'Module should be local, opened and have name' );
 
   if( !_.strDefined( o.name ) )
-  {
-    throw _.errBrief( 'Expects name of tag defined' );
-  }
+  throw _.errBrief( 'Expects defined name of tag' );
 
   if( o.description === null )
   o.description = o.name;
@@ -9606,28 +9602,29 @@ function gitTag( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Creating tag ${o.name}` );
+  logger.log( `Creating tag ${ o.name }` );
 
-  _.git.tagMake
+  return _.git.tagMake
   ({
     localPath,
     tag : o.name,
     description : o.description || '',
+    toVersion : o.toVersion,
     light : o.light,
+    force : 1,
     sync : 1,
   });
-
-  return null;
 }
 
 gitTag.defaults =
 {
   name : null,
   description : '',
+  toVersion : null,
   dry : 0,
   light : 0,
   verbosity : 1,
-}
+};
 
 //
 
