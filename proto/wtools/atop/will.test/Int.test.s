@@ -4573,8 +4573,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4597,7 +4596,16 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4627,8 +4635,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4715,8 +4722,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileUnknownSection */
+}
 
 exportCourrputedSubmoduleOutfileUnknownSection.description =
 `
@@ -5118,8 +5124,7 @@ function exportsResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
@@ -5148,12 +5153,12 @@ function exportsResolve( test )
 
     opener.finit();
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportsResolve */
+}
 
 //
 
