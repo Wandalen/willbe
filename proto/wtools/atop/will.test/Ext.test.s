@@ -14725,17 +14725,14 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:1 ; .with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14767,18 +14764,15 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:0 ; .with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14804,22 +14798,19 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:0 ; .with */* .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14849,18 +14840,15 @@ function exportWithDisabled( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with */* .export.recursive';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
-  })
+  });
 
   a.appStart( '.with */* .export.recursive' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -14886,13 +14874,12 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportWithDisabled */
+}
 
 exportWithDisabled.timeOut = 300000;
 
@@ -16671,9 +16658,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.reflect();
@@ -17004,15 +16989,14 @@ function cleanWithInPath( test )
   /* - */
 
   var hadFiles;
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
     hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' })
   a.ready.then( ( op ) =>
@@ -17028,7 +17012,7 @@ function cleanWithInPath( test )
       './module/out/ForGit.txt',
       './proto',
       './proto/WithSubmodules.s'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
@@ -17036,7 +17020,7 @@ function cleanWithInPath( test )
     test.identical( _.strCount( op.output, '- Clean deleted ' + hadFiles + ' file(s)' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
