@@ -13174,16 +13174,13 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ab/ .export.recursive -- first'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .export.recursive' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13198,20 +13195,17 @@ function exportRecursive( test )
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ab/ .export.recursive -- second'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .export.recursive' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13226,12 +13220,12 @@ function exportRecursive( test )
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursive */
+}
 
 //
 

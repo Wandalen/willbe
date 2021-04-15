@@ -39,6 +39,11 @@ will( `.with ${asset}/super .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
+var asset = `resolvePathOfSubmodulesExported`;
+del( `${asset}/*out/**` );
+will( `.with ${asset}/ab/ .export.recursive` );
+copy( `${asset}/+out`, `${asset}/out` );
+
 var asset = `twoExported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub .export debug:0` );

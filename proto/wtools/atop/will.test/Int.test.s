@@ -3534,8 +3534,7 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export debug';
     a.reflect();
@@ -7841,17 +7840,15 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
-
     test.case = 'path::export';
     let resolved = opener.openedModule.pathResolve
     ({
@@ -7876,7 +7873,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.identical( a.rel( resolved ), expected );
 
     return null;
-  })
+  });
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -7885,7 +7882,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.true( err === undefined );
     opener.finit();
     return arg;
-  })
+  });
 
   /* - */
 
