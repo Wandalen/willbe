@@ -31216,19 +31216,19 @@ commandModulesGitDiff.rapidity = -1;
 
 //
 
-function commandModulesGitPrOpen( test )
+function commandModulesRepoPullOpen( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   return test.true( true );
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -31240,12 +31240,12 @@ function commandModulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -31257,11 +31257,11 @@ function commandModulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.git.pr "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
@@ -31273,7 +31273,7 @@ function commandModulesGitPrOpen( test )
     test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -41515,7 +41515,7 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
-    commandModulesGitPrOpen,
+    commandModulesRepoPullOpen,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
     commandModulesGitSync,

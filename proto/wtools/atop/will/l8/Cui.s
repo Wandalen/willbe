@@ -531,7 +531,7 @@ function _commandsMake()
     'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
     'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
     'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
-    'modules git pr open' :             { ro : _.routineJoin( cui, cui.commandModulesGitPrOpen )             },
+    'modules repo pull open' :          { ro : _.routineJoin( cui, cui.commandModulesRepoPullOpen )             },
     'modules git status' :              { ro : _.routineJoin( cui, cui.commandModulesGitStatus )             },
     'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
@@ -2865,17 +2865,17 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandModulesGitPrOpen( e )
+function commandModulesRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandModulesGitPrOpen, arguments );
+  cui._command_head( commandModulesRepoPullOpen, arguments );
 
   return cui._commandModulesLike
   ({
     event : e,
-    name : 'modules git pr open',
+    name : 'modules repo pull open',
     onEach : handleEach,
-    commandRoutine : commandModulesGitPrOpen,
+    commandRoutine : commandModulesRepoPullOpen,
     withRoot : 1,
   });
 
@@ -2889,24 +2889,24 @@ function commandModulesGitPrOpen( e )
   }
 }
 
-commandModulesGitPrOpen.defaults =
+commandModulesRepoPullOpen.defaults =
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
-  title : null,
+  // title : null,
   body : null,
   verbosity : 2,
   withSubmodules : 1
 };
 
-var command = commandModulesGitPrOpen.command = Object.create( null );
+var command = commandModulesRepoPullOpen.command = Object.create( null );
 command.hint = 'Open pull requests from current module and its submodules.';
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4997,8 +4997,7 @@ function commandRepoPullOpen( e )
     return it.opener.openedModule.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.propertiesMap, it.opener.openedModule.repoPullOpen.defaults ),
-      // ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ), /* Dmytro : rewrites options */
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ),
     });
   }
 }
@@ -5010,7 +5009,7 @@ commandRepoPullOpen.defaults =
   token : null,
   srcBranch : null,
   dstBranch : 'master',
-  title : null,
+  // title : null, /* Dmytro : rewrites options */
   body : null,
   verbosity : 2,
   withSubmodules : 1
@@ -6149,7 +6148,7 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitDiff,
-  commandModulesGitPrOpen,
+  commandModulesRepoPullOpen,
   commandModulesGitStatus,
   commandModulesGitSync,
 
