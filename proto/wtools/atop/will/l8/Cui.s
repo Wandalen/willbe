@@ -2621,9 +2621,13 @@ function commandSubmodulesGitSync( e )
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   return cui._commandModulesLike
+  // return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git sync',
+    // onUp : onModulesBegin,
+    // onEachModule,
+    // onDown : onModulesEnd,
     onModulesBegin,
     onEach,
     onModulesEnd,
@@ -2653,6 +2657,15 @@ function commandSubmodulesGitSync( e )
 
   /* */
 
+  // function onEachModule( module )
+  // {
+  //   return module.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+  //     restoringHardLinks : 0,
+  //   });
+  // }
   function onEach( it )
   {
     return it.opener.openedModule.gitSync
@@ -2790,25 +2803,34 @@ function commandModulesShell( e )
   let cui = this;
   cui._command_head( commandModulesShell, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesShell,
     withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandModulesShell.command = Object.create( null );
