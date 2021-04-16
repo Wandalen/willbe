@@ -32815,6 +32815,51 @@ original/f.txt
 
 //
 
+function commandModules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModules' );
+
+  /* */
+
+  begin()
+  // a.appStart({ execPath : `.with *-clone/* .imply withDisabled:1 .modules .git.sync` })
+  a.appStart({ execPath : `.with *-clone/* .imply withDisabled:1 .modules.git.sync` })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    let currentPath = a.abs( './disabled' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell( `git clone disabled disabled-clone` );
+    currentPath = a.abs( './enabled' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell( `git clone enabled enabled-clone` );
+
+    a.shell( `git -C disabled commit --allow-empty -m "test"` );
+    a.shell( `git -C enabled commit --allow-empty -m "test"` );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -41692,6 +41737,7 @@ const Proto =
     commandModulesGitSyncRestoreHardLinksInModuleWithFail,
     commandModulesGitSyncRestoreHardLinksInModule,
     commandModulesGitSyncRestoreHardLinksInSubmodule,
+    commandModules,
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
