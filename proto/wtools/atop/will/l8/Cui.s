@@ -3192,24 +3192,33 @@ function commandShell( e )
   let cui = this;
   cui._command_head( commandShell, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandShell,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandShell.command = Object.create( null );
