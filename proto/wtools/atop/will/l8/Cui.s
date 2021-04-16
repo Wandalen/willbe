@@ -4737,25 +4737,38 @@ function commandGit( e )
 
   cui._command_head( commandGit, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGit,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile
+  //   });
+  // }
 }
 
 commandGit.defaults =
@@ -4763,8 +4776,7 @@ commandGit.defaults =
   hardLinkMaybe : 0,
   profile : 'default',
   withSubmodules : 0
-}
-
+};
 var command = commandGit.command = Object.create( null );
 command.hint = 'Run custom Git command in repository of module.';
 command.subjectHint = 'Custom git command exclude name of command "git".';
