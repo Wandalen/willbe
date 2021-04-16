@@ -2915,24 +2915,34 @@ function commandModulesGitDiff( e )
   let cui = this;
   cui._command_head( commandModulesGitDiff, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGitDiff,
     withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandModulesGitDiff.defaults =
