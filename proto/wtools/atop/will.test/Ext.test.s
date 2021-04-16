@@ -28104,7 +28104,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledSubmodules:0` })
+    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withSubmodules:0` })
+    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledSubmodules:0` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28116,7 +28117,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabledSubmodules:0 .submodules.download withEnabled:0` })
+    a.appStart({ args : `${withWith} .imply withSubmodules:0 .submodules.download withEnabled:0` })
+    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:0 .submodules.download withEnabled:0` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28128,7 +28130,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledSubmodules:1` })
+    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withSubmodules:1` })
+    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledSubmodules:1` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28140,7 +28143,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabledSubmodules:1 .submodules.download withEnabled:0` })
+    a.appStart({ args : `${withWith} .imply withSubmodules:1 .submodules.download withEnabled:0` })
+    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:1 .submodules.download withEnabled:0` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28152,7 +28156,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledSubmodules:0` })
+    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withSubmodules:0` })
+    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledSubmodules:0` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28164,7 +28169,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabledSubmodules:0 .submodules.download withEnabled:1` })
+    a.appStart({ args : `${withWith} .imply withSubmodules:0 .submodules.download withEnabled:1` })
+    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:0 .submodules.download withEnabled:1` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28176,7 +28182,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledSubmodules:1` })
+    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withSubmodules:1` })
+    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledSubmodules:1` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28188,7 +28195,8 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabledSubmodules:1 .submodules.download withEnabled:1` })
+    a.appStart({ args : `${withWith} .imply withSubmodules:1 .submodules.download withEnabled:1` })
+    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:1 .submodules.download withEnabled:1` })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28199,100 +28207,99 @@ function commandImplyPropertyWithEnabled( test )
 
     /* */
 
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledModules:0` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabledModules:0 .submodules.download withEnabled:0` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledModules:1` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabledModules:1 .submodules.download withEnabled:0` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledModules:0` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabledModules:0 .submodules.download withEnabled:1` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledModules:1` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withEnabledModules:1 .submodules.download withEnabled:1` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledModules:0` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = null;
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabledModules:0 .submodules.download withEnabled:0` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = null;
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledModules:1` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = null
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabledModules:1 .submodules.download withEnabled:0` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = null;
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledModules:0` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = null;
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabledModules:0 .submodules.download withEnabled:1` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = null;
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledModules:1` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = [ 'ModuleForTesting1' ];
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
+    //
+    // /* */
+    //
+    // clean()
+    // a.appStart({ args : `${withWith} .imply withEnabledModules:1 .submodules.download withEnabled:1` })
+    // .then( () =>
+    // {
+    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    //   let expected = [ 'ModuleForTesting1' ];
+    //   test.identical( modules, expected );
+    //   return null;
+    // })
   }
 
   /* */
@@ -28304,7 +28311,7 @@ function commandImplyPropertyWithEnabled( test )
       a.fileProvider.filesDelete( a.abs( '.' ) );
       a.reflect();
       return null;
-    })
+    });
   }
 }
 
