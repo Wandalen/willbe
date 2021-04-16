@@ -15,7 +15,7 @@ submodule :
 path :
 
   proto : './proto'
-  in : '.'
+  in : '..'
   out : 'out'
   out.debug :
     path : './out/debug'

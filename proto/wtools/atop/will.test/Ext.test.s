@@ -6318,7 +6318,8 @@ function hookGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
 
     return null;
   });
@@ -27702,8 +27703,8 @@ function runDebugWill( test )
       if( op.exitCode === 0 )
       {
         test.description = 'utility debugnode exists';
-        test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
-        test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
+        // test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
+        // test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
         test.identical( _.strCount( op.output, 'Command ".help"' ), 1 );
         test.identical( _.strCount( op.output, '.help - Get help.' ), 1 );
         test.identical( _.strCount( op.output, '.imply - Change state or imply value of a variable.' ), 1 );
@@ -27843,7 +27844,8 @@ function commandImplyPropertyWithDisabled( test )
   /* - */
 
   act({ withWith : 0 })
-  act({ withWith : 1 })
+  act({ withWith : 1, implyFirst : 0 })
+  // act({ withWith : 1, implyFirst : 1 }) //qqq for Vova: to implement
 
   /* - */
 
@@ -27855,10 +27857,29 @@ function commandImplyPropertyWithDisabled( test )
   {
     let withWith = o.withWith ? '.with **/' : '';
 
+    function commandFor( opts )
+    {
+      let command = [ `.imply ${opts.imply}`, `${opts.command}` ];
+
+      if( o.withWith )
+      {
+        if( o.implyFirst )
+        command.splice( 1, 0, withWith );
+        else
+        command.unshift( withWith );
+      }
+
+      command = command.join( ' ' );
+
+      test.case = command;
+
+      return command;
+    }
+
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:0 .submodules.download withDisabledSubmodules:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27870,7 +27891,7 @@ function commandImplyPropertyWithDisabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabledSubmodules:0 .submodules.download withDisabled:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27882,7 +27903,7 @@ function commandImplyPropertyWithDisabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:0 .submodules.download withDisabledSubmodules:1` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27894,7 +27915,7 @@ function commandImplyPropertyWithDisabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabledSubmodules:1 .submodules.download withDisabled:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27903,54 +27924,59 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:1 .submodules.download withDisabledSubmodules:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting1a' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withDisabledSubmodules:0 .submodules.download withDisabled:1` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting1a' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:1 .submodules.download withDisabledSubmodules:1` })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting1a' ];
+      let expected = [ 'ModuleForTesting1' ];
       if( o.withWith )
-      expected.push( 'ModuleForTesting2', 'ModuleForTesting2a' );
+      expected.push( 'ModuleForTesting1a' );
       test.identical( modules, expected );
+
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabledSubmodules:1 .submodules.download withDisabled:1` })
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting1a' ];
+      let expected = [ 'ModuleForTesting1' ]
       if( o.withWith )
-      expected.push( 'ModuleForTesting2', 'ModuleForTesting2a' );
+      expected.push( 'ModuleForTesting1a' );
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      if( o.withWith )
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      if( o.withWith )
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
       test.identical( modules, expected );
       return null;
     })
@@ -27958,7 +27984,7 @@ function commandImplyPropertyWithDisabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:0 .submodules.download withDisabledModules:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:0' }) })
     .then( () =>
     {
      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27970,7 +27996,7 @@ function commandImplyPropertyWithDisabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabledModules:0 .submodules.download withDisabled:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27979,10 +28005,24 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:0 .submodules.download withDisabledModules:1` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      if( o.withWith )
+      expected.push( 'ModuleForTesting1a' );
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -27996,68 +28036,52 @@ function commandImplyPropertyWithDisabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabledModules:1 .submodules.download withDisabled:0` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1','ModuleForTesting2' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:1 .submodules.download withDisabledModules:0` })
-    .then( () =>
-    {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      if( o.withWith )
-      expected.push( 'ModuleForTesting1a' );
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withDisabledModules:0 .submodules.download withDisabled:1` })
-    .then( () =>
-    {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      if( o.withWith )
-      expected.push( 'ModuleForTesting1a' );
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : `${withWith} .imply withDisabled:1 .submodules.download withDisabledModules:1` })
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting1' ];
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       if( o.withWith )
-      expected.push( 'ModuleForTesting1a', 'ModuleForTesting2a' );
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
 
       test.identical( modules, expected );
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withDisabledModules:1 .submodules.download withDisabled:1` })
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
      .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting1' ];
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       if( o.withWith )
-      expected.push( 'ModuleForTesting1a', 'ModuleForTesting2a' );
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
 
       test.identical( modules, expected );
       return null;
@@ -28078,6 +28102,8 @@ function commandImplyPropertyWithDisabled( test )
   }
 }
 
+commandImplyPropertyWithDisabled.timeOut = 600000;
+
 //
 
 function commandImplyPropertyWithEnabled( test )
@@ -28089,7 +28115,8 @@ function commandImplyPropertyWithEnabled( test )
   /* - */
 
   act({ withWith : 0 })
-  act({ withWith : 1 })
+  act({ withWith : 1, implyFirst : 0 })
+  // act({ withWith : 1, implyFirst : 1 }) //qqq: for Vova to implement
 
   /* - */
 
@@ -28101,11 +28128,29 @@ function commandImplyPropertyWithEnabled( test )
   {
     let withWith = o.withWith ? '.with **/' : '';
 
+    function commandFor( opts )
+    {
+      let command = [ `.imply ${opts.imply}`, `${opts.command}` ];
+
+      if( o.withWith )
+      {
+        if( o.implyFirst )
+        command.splice( 1, 0, withWith );
+        else
+        command.unshift( withWith );
+      }
+
+      command = command.join( ' ' );
+
+      test.case = command;
+
+      return command;
+    }
+
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withSubmodules:0` })
-    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledSubmodules:0` })
+    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28117,8 +28162,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withSubmodules:0 .submodules.download withEnabled:0` })
-    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:0 .submodules.download withEnabled:0` })
+    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28130,8 +28174,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withSubmodules:1` })
-    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledSubmodules:1` })
+    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28143,8 +28186,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withSubmodules:1 .submodules.download withEnabled:0` })
-    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:1 .submodules.download withEnabled:0` })
+    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28156,8 +28198,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withSubmodules:0` })
-    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledSubmodules:0` })
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledSubmodules:0' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28169,8 +28210,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withSubmodules:0 .submodules.download withEnabled:1` })
-    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:0 .submodules.download withEnabled:1` })
+    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28182,8 +28222,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withSubmodules:1` })
-    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledSubmodules:1` })
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledSubmodules:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28195,8 +28234,7 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : `${withWith} .imply withSubmodules:1 .submodules.download withEnabled:1` })
-    // a.appStart({ args : `${withWith} .imply withEnabledSubmodules:1 .submodules.download withEnabled:1` })
+    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:1' }) })
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -28207,99 +28245,100 @@ function commandImplyPropertyWithEnabled( test )
 
     /* */
 
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledModules:0` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = null;
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabledModules:0 .submodules.download withEnabled:0` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = null;
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabled:0 .submodules.download withEnabledModules:1` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = null
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabledModules:1 .submodules.download withEnabled:0` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = null;
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledModules:0` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = null;
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabledModules:0 .submodules.download withEnabled:1` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = null;
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabled:1 .submodules.download withEnabledModules:1` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = [ 'ModuleForTesting1' ];
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
-    //
-    // /* */
-    //
-    // clean()
-    // a.appStart({ args : `${withWith} .imply withEnabledModules:1 .submodules.download withEnabled:1` })
-    // .then( () =>
-    // {
-    //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    //   let expected = [ 'ModuleForTesting1' ];
-    //   test.identical( modules, expected );
-    //   return null;
-    // })
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledModules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledModules:1', command : '.submodules.download withEnabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
   }
 
   /* */
@@ -28314,6 +28353,8 @@ function commandImplyPropertyWithEnabled( test )
     });
   }
 }
+
+commandImplyPropertyWithEnabled.timeOut = 600000;
 
 //
 
@@ -34067,7 +34108,8 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
-    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
     return null;
   });
 
@@ -34086,7 +34128,8 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 0 );
-    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
+    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
     return null;
   });
 
