@@ -5133,21 +5133,27 @@ function commandGitTag( e )
   let cui = this;
   cui._command_head( commandGitTag, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git tag',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitTag,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitTag
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
-    });
+    return module.gitTag({ ... _.mapOnly_( null, e.optionsMap, module.gitTag.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitTag
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
+  //   });
+  // }
 }
 
 commandGitTag.defaults =
