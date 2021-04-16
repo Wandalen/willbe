@@ -4843,31 +4843,41 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git pull',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitPull,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPull
+    return module.gitPull
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitPull
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandGitPull.defaults =
 {
   withSubmodules : 0,
-  profile : 'default'
-}
-
+  profile : 'default',
+};
 var command = commandGitPull.command = Object.create( null );
 command.hint = 'Pull changes from remote repository.';
 command.subjectHint = false;
@@ -4876,7 +4886,7 @@ command.properties =
 {
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
   ... commandImply.command.properties
-}
+};
 
 //
 
