@@ -2333,25 +2333,35 @@ function commandSubmodulesShell( e )
   let cui = this;
   cui._command_head( commandSubmodulesShell, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesShell,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   debugger;
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandSubmodulesShell.command = Object.create( null );

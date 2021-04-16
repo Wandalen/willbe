@@ -28813,8 +28813,8 @@ function commandSubmodulesShell( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 2 );
-    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 1 );
 
     return null;
   });
