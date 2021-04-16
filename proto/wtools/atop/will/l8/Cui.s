@@ -1238,7 +1238,7 @@ function _commandModulesLike( o )
     })
     .then( function( it )
     {
-      if( o.withRoot )
+      if( o.withStem )
       _.arrayPrependOnce( it.sortedOpeners, opener );
       else
       _.arrayRemove( it.sortedOpeners, opener );
@@ -1311,7 +1311,7 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withRoot = 1; /* qqq : for Dmytro : ?? */
+defaults.withStem = 1; /* qqq : for Dmytro : ?? */
 
 //
 
@@ -1536,25 +1536,30 @@ function commandVersionBump( e )
   cui._command_head( commandVersionBump, arguments );
   let properties = e.optionsMap;
 
-
   if( e.subject )
   properties.versionDelta = e.subject;
 
   if( _.numberIs( properties.versionDelta ) && !_.intIs( properties.versionDelta ) )
   properties.versionDelta = _.entity.exportString( properties.versionDelta );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'version bump',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandVersionBump,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.willfileVersionBump( properties );
+    return module.willfileVersionBump( properties );
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.willfileVersionBump( properties );
+  // }
 }
 
 commandVersionBump.defaults =
@@ -2333,25 +2338,35 @@ function commandSubmodulesShell( e )
   let cui = this;
   cui._command_head( commandSubmodulesShell, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesShell,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   debugger;
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandSubmodulesShell.command = Object.create( null );
@@ -2373,27 +2388,40 @@ function commandSubmodulesGit( e )
 
   cui._command_head( commandSubmodulesGit, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGit,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
-      // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandSubmodulesGit.defaults =
@@ -2422,24 +2450,34 @@ function commandSubmodulesGitDiff( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitDiff, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGitDiff,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandSubmodulesGitDiff.defaults =
@@ -2460,23 +2498,33 @@ function commandSubmodulesRepoPullOpen( e )
   let cui = this;
   cui._command_head( commandSubmodulesRepoPullOpen, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules repo pull open',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesRepoPullOpen,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.repoPullOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
 }
 
 commandSubmodulesRepoPullOpen.defaults =
@@ -2514,22 +2562,28 @@ function commandSubmodulesGitStatus( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitStatus, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGitStatus,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandSubmodulesGitStatus.defaults =
@@ -2572,14 +2626,18 @@ function commandSubmodulesGitSync( e )
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   return cui._commandModulesLike
+  // return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git sync',
+    // onUp : onModulesBegin,
+    // onEachModule,
+    // onDown : onModulesEnd,
     onModulesBegin,
     onEach,
     onModulesEnd,
     commandRoutine : commandSubmodulesGitSync,
-    withRoot : 0,
+    withStem : 0,
   });
 
   /* */
@@ -2604,6 +2662,15 @@ function commandSubmodulesGitSync( e )
 
   /* */
 
+  // function onEachModule( module )
+  // {
+  //   return module.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+  //     restoringHardLinks : 0,
+  //   });
+  // }
   function onEach( it )
   {
     return it.opener.openedModule.gitSync
@@ -2741,25 +2808,34 @@ function commandModulesShell( e )
   let cui = this;
   cui._command_head( commandModulesShell, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesShell,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandModulesShell.command = Object.create( null );
@@ -2782,27 +2858,40 @@ function commandModulesGit( e )
 
   cui._command_head( commandModulesGit, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGit,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
-      // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandModulesGit.defaults =
@@ -2831,24 +2920,34 @@ function commandModulesGitDiff( e )
   let cui = this;
   cui._command_head( commandModulesGitDiff, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGitDiff,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandModulesGitDiff.defaults =
@@ -2869,23 +2968,33 @@ function commandModulesRepoPullOpen( e )
   let cui = this;
   cui._command_head( commandModulesRepoPullOpen, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules repo pull open',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesRepoPullOpen,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.repoPullOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
 }
 
 commandModulesRepoPullOpen.defaults =
@@ -2925,22 +3034,28 @@ function commandModulesGitStatus( e )
   let cui = this;
   cui._command_head( commandModulesGitStatus, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGitStatus,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus ({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandModulesGitStatus.defaults =
@@ -2982,15 +3097,19 @@ function commandModulesGitSync( e )
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git sync',
-    onModulesBegin,
-    onEach,
-    onModulesEnd,
+    // onUp : onModulesBegin,
+    onEachModule,
+    // onDown : onModulesEnd,
+    // onModulesBegin,
+    // onEach,
+    // onModulesEnd,
     commandRoutine : commandModulesGitSync,
-    withRoot : 1,
+    withStem : 1,
   });
 
   /* */
@@ -3014,15 +3133,24 @@ function commandModulesGitSync( e )
 
   /* */
 
-  function onEach( it )
+  function onEachModule( module )
   {
-    return it.opener.openedModule.gitSync
+    return module.gitSync
     ({
       commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
       restoringHardLinks : 0,
     });
   }
+  // function onEach( it )
+  // {
+  //   return it.opener.openedModule.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+  //     restoringHardLinks : 0,
+  //   });
+  // }
 
   /* */
 
@@ -3064,24 +3192,33 @@ function commandShell( e )
   let cui = this;
   cui._command_head( commandShell, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandShell,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandShell.command = Object.create( null );
@@ -4600,25 +4737,38 @@ function commandGit( e )
 
   cui._command_head( commandGit, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGit,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile
+  //   });
+  // }
 }
 
 commandGit.defaults =
@@ -4626,8 +4776,7 @@ commandGit.defaults =
   hardLinkMaybe : 0,
   profile : 'default',
   withSubmodules : 0
-}
-
+};
 var command = commandGit.command = Object.create( null );
 command.hint = 'Run custom Git command in repository of module.';
 command.subjectHint = 'Custom git command exclude name of command "git".';
@@ -4639,7 +4788,6 @@ command.properties =
   ... commandImply.command.properties
 };
 
-
 //
 
 function commandGitDiff( e )
@@ -4647,29 +4795,38 @@ function commandGitDiff( e )
   let cui = this;
   cui._command_head( commandGitDiff, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitDiff,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandGitDiff.defaults =
 {
   withSubmodules : 0
-}
-
+};
 var command = commandGitDiff.command = Object.create( null );
 command.hint = 'Get diffs in module repository.';
 command.subjectHint = false;
@@ -4686,31 +4843,41 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git pull',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitPull,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPull
+    return module.gitPull
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitPull
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandGitPull.defaults =
 {
   withSubmodules : 0,
-  profile : 'default'
-}
-
+  profile : 'default',
+};
 var command = commandGitPull.command = Object.create( null );
 command.hint = 'Pull changes from remote repository.';
 command.subjectHint = false;
@@ -4719,7 +4886,7 @@ command.properties =
 {
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
   ... commandImply.command.properties
-}
+};
 
 //
 
@@ -4728,23 +4895,34 @@ function commandGitPush( e )
   let cui = this;
   cui._command_head( commandGitPush, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git push',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitPush,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPush
+    return module.gitPush
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, module.gitPush.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitPush
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
+  //   });
+  // }
 }
 
 commandGitPush.defaults =
@@ -4774,21 +4952,27 @@ function commandGitReset( e )
   let cui = this;
   cui._command_head( commandGitReset, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git reset',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitReset,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitReset
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
-    });
+    return module.gitReset({ ... _.mapOnly_( null, e.optionsMap, module.gitReset.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitReset
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
+  //   });
+  // }
 }
 
 commandGitReset.defaults =
@@ -4803,14 +4987,13 @@ commandGitReset.defaults =
   verbosity : 2,
   withSubmodules : 0
 };
-
 var command = commandGitReset.command = Object.create( null );
 command.hint = 'Reset local changes in repository of the module.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4829,21 +5012,27 @@ function commandGitStatus( e )
   let cui = this;
   cui._command_head( commandGitStatus, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitStatus,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandGitStatus.defaults =
@@ -4857,15 +5046,14 @@ commandGitStatus.defaults =
   prs : 1,
   verbosity : 1,
   withSubmodules : 0
-}
-
+};
 var command = commandGitStatus.command = Object.create( null );
 command.hint = 'Check the status of the repository.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4884,22 +5072,32 @@ function commandGitSync( e )
   let cui = this;
   cui._command_head( commandGitSync, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git sync',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitSync,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitSync
+    return module.gitSync
     ({
       commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
+  //   });
+  // }
 }
 
 commandGitSync.defaults =
@@ -4912,14 +5110,13 @@ commandGitSync.defaults =
   verbosity : 1,
   withSubmodules : 0
 };
-
 var command = commandGitSync.command = Object.create( null );
 command.hint = 'Syncronize local and remote repositories.';
 command.subjectHint = 'A commit message. Default value is "."';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4936,21 +5133,27 @@ function commandGitTag( e )
   let cui = this;
   cui._command_head( commandGitTag, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git tag',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitTag,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitTag
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
-    });
+    return module.gitTag({ ... _.mapOnly_( null, e.optionsMap, module.gitTag.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitTag
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
+  //   });
+  // }
 }
 
 commandGitTag.defaults =
@@ -5008,22 +5211,32 @@ function commandRepoPullOpen( e )
   let cui = this;
   cui._command_head( commandRepoPullOpen, arguments );
 
+  // return cui._commandBuildLike
   return cui._commandBuildLike
   ({
     event : e,
     name : 'repo pull open',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandRepoPullOpen,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.repoPullOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ),
+  //   });
+  // }
 }
 
 commandRepoPullOpen.defaults =
@@ -5038,14 +5251,13 @@ commandRepoPullOpen.defaults =
   verbosity : 2,
   withSubmodules : 1
 };
-
 var command = commandRepoPullOpen.command = Object.create( null );
 command.hint = 'Open pull request from current modules.';
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
