@@ -5295,16 +5295,6 @@ function withDoStatus( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
-  a.appStart = _.process.starter // Dmytro : not exists in assetFor
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    mode : 'spawn',
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  })
 
   /* - */
 
@@ -5316,11 +5306,11 @@ function withDoStatus( test )
     a.shell({ execPath : 'git init', currentPath : a.abs( 'disabled' ) });
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -5333,9 +5323,9 @@ function withDoStatus( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.hooks.list' )
   .then( ( op ) =>
@@ -5344,9 +5334,9 @@ function withDoStatus( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '/status.js' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .do ./.will/hook/status.js' )
   .then( ( op ) =>
@@ -5357,18 +5347,18 @@ function withDoStatus( test )
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'changes';
     a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/README.md' ), '\n' );
     a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/README.md' ), '\n' );
     a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/LICENSE' ), '\n' );
     return null;
-  })
+  });
 
   a.appStart( '.with ** .do ./.will/hook/status.js' )
   .then( ( op ) =>
@@ -5382,12 +5372,12 @@ function withDoStatus( test )
 
     test.identical( _.strCount( op.output, 'M ' ), 3 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function withDoStatus */
+}
 
 withDoStatus.rapidity = -1;
 withDoStatus.timeOut = 300000;
@@ -18901,11 +18891,10 @@ function shellQuotedCommand( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-
     test.identical( _.strCount( op.output, 'Command ".shell "ls -a""' ), 1 );
     test.identical( _.strCount( op.output, /\. Opened \. .*\.ex\.will\.yml/ ), 1 );
     test.identical( _.strCount( op.output, /\. Opened \. .*\.im\.will\.yml/ ), 1 );
-    test.identical( _.strCount( op.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s)' ), 0 );
     test.identical( _.strCount( op.output, '> ls -a' ), 1 );
     test.identical( _.strCount( op.output, '..' ), 1 );
     test.identical( _.strCount( op.output, 'doc' ), 3 );
@@ -18938,7 +18927,7 @@ function shellQuotedCommand( test )
     test.identical( _.strCount( op.output, /\. Opened \. .*\/\.im\.will\.yml/ ), 2 );
     test.identical( _.strCount( op.output, /\. Opened \. .*\/doc\.ex\.will\.yml/ ), 2 );
     test.identical( _.strCount( op.output, /\. Opened \. .*\/doc\.im\.will\.yml/ ), 2 );
-    test.identical( _.strCount( op.output, '. Read 8 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 8 willfile(s)' ), 0 );
     test.identical( _.strCount( op.output, '> ls -a' ), 4 );
     test.identical( _.strCount( op.output, '..' ), 4 );
     test.identical( _.strCount( op.output, 'doc' ), 18 );
@@ -28861,8 +28850,8 @@ function commandSubmodulesShell( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 2 );
-    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 1 );
 
     return null;
   });
@@ -30568,8 +30557,8 @@ function commandModulesShell( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 4 );
     test.identical( _.strCount( op.output, 'Named.will.yml' ), 3 );
-    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 1 );
 
     return null;
   });
@@ -30839,7 +30828,7 @@ function commandModulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
-    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 2 );
     test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
@@ -30936,7 +30925,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
-    test.identical( _.strCount( op.output, 'On branch master' ), 1 );
+    test.identical( _.strCount( op.output, 'On branch master' ), 2 );
     test.identical( _.strCount( op.output, /Your branch is up.*to.*date with 'origin\/master'\./ ), 1 );
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
@@ -34096,7 +34085,6 @@ function commandGitPush( test )
     test.case = '.with original/ .git.push - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
     return null;
