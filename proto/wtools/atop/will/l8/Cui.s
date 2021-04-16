@@ -4895,23 +4895,34 @@ function commandGitPush( e )
   let cui = this;
   cui._command_head( commandGitPush, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git push',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitPush,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPush
+    return module.gitPush
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, module.gitPush.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitPush
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
+  //   });
+  // }
 }
 
 commandGitPush.defaults =

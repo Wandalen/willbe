@@ -34037,7 +34037,6 @@ function commandGitPush( test )
     test.case = '.with original/ .git.push - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
     return null;
