@@ -1867,7 +1867,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download, undefined );
+    test.identical( path.download, { criterion : { predefined : 1 } } );
 
     opener.finit();
     return null;
@@ -1899,7 +1899,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download, undefined );
+    test.identical( path.download, { criterion : { predefined : 1 } } );
 
     opener.finit();
     return null;
@@ -1933,7 +1933,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download, undefined );
+    test.identical( path.download, { criterion : { predefined : 1 } } );
 
     opener.finit();
     return null;
