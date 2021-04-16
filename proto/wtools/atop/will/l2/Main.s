@@ -4776,7 +4776,8 @@ function hookContextFrom( o )
   o.module = o.opener.openedModule;
   o.openers = will.currentOpeners; /* xxx : currentOpeners is not available here! */
   if( !o.junction )
-  o.junction = will.junctionFrom( opener );
+  o.junction = will.junctionFrom( o.opener );
+  // o.junction = will.junctionFrom( opener );
   if( !o.opener )
   o.opener = o.junction.opener;
   if( !o.module )
