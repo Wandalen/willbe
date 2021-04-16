@@ -4952,21 +4952,27 @@ function commandGitReset( e )
   let cui = this;
   cui._command_head( commandGitReset, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git reset',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitReset,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitReset
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
-    });
+    return module.gitReset({ ... _.mapOnly_( null, e.optionsMap, module.gitReset.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitReset
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
+  //   });
+  // }
 }
 
 commandGitReset.defaults =
@@ -4981,14 +4987,13 @@ commandGitReset.defaults =
   verbosity : 2,
   withSubmodules : 0
 };
-
 var command = commandGitReset.command = Object.create( null );
 command.hint = 'Reset local changes in repository of the module.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
