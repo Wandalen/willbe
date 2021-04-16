@@ -1238,7 +1238,7 @@ function _commandModulesLike( o )
     })
     .then( function( it )
     {
-      if( o.withRoot )
+      if( o.withStem )
       _.arrayPrependOnce( it.sortedOpeners, opener );
       else
       _.arrayRemove( it.sortedOpeners, opener );
@@ -1311,7 +1311,7 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withRoot = 1; /* qqq : for Dmytro : ?? */
+defaults.withStem = 1; /* qqq : for Dmytro : ?? */
 
 //
 
@@ -2383,27 +2383,40 @@ function commandSubmodulesGit( e )
 
   cui._command_head( commandSubmodulesGit, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGit,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
-      // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandSubmodulesGit.defaults =
@@ -2438,7 +2451,7 @@ function commandSubmodulesGitDiff( e )
     name : 'submodules git diff',
     onEach : handleEach,
     commandRoutine : commandSubmodulesGitDiff,
-    withRoot : 0,
+    withStem : 0,
   });
 
   function handleEach( it )
@@ -2476,7 +2489,7 @@ function commandSubmodulesRepoPullOpen( e )
     name : 'submodules repo pull open',
     onEach : handleEach,
     commandRoutine : commandSubmodulesRepoPullOpen,
-    withRoot : 0,
+    withStem : 0,
   });
 
   function handleEach( it )
@@ -2530,7 +2543,7 @@ function commandSubmodulesGitStatus( e )
     name : 'submodules git status',
     onEach : handleEach,
     commandRoutine : commandSubmodulesGitStatus,
-    withRoot : 0,
+    withStem : 0,
   });
 
   function handleEach( it )
@@ -2589,7 +2602,7 @@ function commandSubmodulesGitSync( e )
     onEach,
     onModulesEnd,
     commandRoutine : commandSubmodulesGitSync,
-    withRoot : 0,
+    withStem : 0,
   });
 
   /* */
@@ -2757,7 +2770,7 @@ function commandModulesShell( e )
     name : 'modules shell',
     onEach : handleEach,
     commandRoutine : commandModulesShell,
-    withRoot : 1,
+    withStem : 1,
   });
 
   function handleEach( it )
@@ -2798,7 +2811,7 @@ function commandModulesGit( e )
     name : 'modules git',
     onEach : handleEach,
     commandRoutine : commandModulesGit,
-    withRoot : 1,
+    withStem : 1,
   });
 
   function handleEach( it )
@@ -2847,7 +2860,7 @@ function commandModulesGitDiff( e )
     name : 'modules git diff',
     onEach : handleEach,
     commandRoutine : commandModulesGitDiff,
-    withRoot : 1,
+    withStem : 1,
   });
 
   function handleEach( it )
@@ -2885,7 +2898,7 @@ function commandModulesRepoPullOpen( e )
     name : 'modules repo pull open',
     onEach : handleEach,
     commandRoutine : commandModulesRepoPullOpen,
-    withRoot : 1,
+    withStem : 1,
   });
 
   function handleEach( it )
@@ -2941,7 +2954,7 @@ function commandModulesGitStatus( e )
     name : 'modules git status',
     onEach : handleEach,
     commandRoutine : commandModulesGitStatus,
-    withRoot : 1,
+    withStem : 1,
   });
 
   function handleEach( it )
@@ -3000,7 +3013,7 @@ function commandModulesGitSync( e )
     onEach,
     onModulesEnd,
     commandRoutine : commandModulesGitSync,
-    withRoot : 1,
+    withStem : 1,
   });
 
   /* */
