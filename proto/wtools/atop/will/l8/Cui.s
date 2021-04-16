@@ -3252,7 +3252,7 @@ function commandClean( e )
 commandClean.defaults =
 {
   withSubmodules : 0,
-  withOut : 0,
+  withOut : 1,
   dry : 0,
   cleaningSubmodules : 1,
   cleaningOut : 1,

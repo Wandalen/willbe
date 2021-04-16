@@ -27711,8 +27711,8 @@ function runDebugWill( test )
       if( op.exitCode === 0 )
       {
         test.description = 'utility debugnode exists';
-        test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
-        test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
+        // test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
+        // test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
         test.identical( _.strCount( op.output, 'Command ".help"' ), 1 );
         test.identical( _.strCount( op.output, '.help - Get help.' ), 1 );
         test.identical( _.strCount( op.output, '.imply - Change state or imply value of a variable.' ), 1 );
