@@ -2557,22 +2557,28 @@ function commandSubmodulesGitStatus( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitStatus, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGitStatus,
     withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandSubmodulesGitStatus.defaults =
