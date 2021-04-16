@@ -2853,27 +2853,40 @@ function commandModulesGit( e )
 
   cui._command_head( commandModulesGit, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGit,
     withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
-      // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandModulesGit.defaults =
