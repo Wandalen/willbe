@@ -5046,15 +5046,14 @@ commandGitStatus.defaults =
   prs : 1,
   verbosity : 1,
   withSubmodules : 0
-}
-
+};
 var command = commandGitStatus.command = Object.create( null );
 command.hint = 'Check the status of the repository.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -5073,22 +5072,32 @@ function commandGitSync( e )
   let cui = this;
   cui._command_head( commandGitSync, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git sync',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitSync,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitSync
+    return module.gitSync
     ({
       commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
+  //   });
+  // }
 }
 
 commandGitSync.defaults =
@@ -5101,14 +5110,13 @@ commandGitSync.defaults =
   verbosity : 1,
   withSubmodules : 0
 };
-
 var command = commandGitSync.command = Object.create( null );
 command.hint = 'Syncronize local and remote repositories.';
 command.subjectHint = 'A commit message. Default value is "."';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
