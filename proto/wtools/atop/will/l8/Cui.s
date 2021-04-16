@@ -4788,7 +4788,6 @@ command.properties =
   ... commandImply.command.properties
 };
 
-
 //
 
 function commandGitDiff( e )
@@ -4796,29 +4795,38 @@ function commandGitDiff( e )
   let cui = this;
   cui._command_head( commandGitDiff, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitDiff,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandGitDiff.defaults =
 {
   withSubmodules : 0
-}
-
+};
 var command = commandGitDiff.command = Object.create( null );
 command.hint = 'Get diffs in module repository.';
 command.subjectHint = false;
