@@ -5225,7 +5225,7 @@ function commandRepoPullOpen( e )
   cui._command_head( commandRepoPullOpen, arguments );
 
   // return cui._commandBuildLike
-  return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'repo pull open',
