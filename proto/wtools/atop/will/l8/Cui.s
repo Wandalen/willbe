@@ -2493,23 +2493,33 @@ function commandSubmodulesRepoPullOpen( e )
   let cui = this;
   cui._command_head( commandSubmodulesRepoPullOpen, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules repo pull open',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesRepoPullOpen,
     withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.repoPullOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
 }
 
 commandSubmodulesRepoPullOpen.defaults =
