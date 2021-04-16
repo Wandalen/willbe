@@ -1536,25 +1536,30 @@ function commandVersionBump( e )
   cui._command_head( commandVersionBump, arguments );
   let properties = e.optionsMap;
 
-
   if( e.subject )
   properties.versionDelta = e.subject;
 
   if( _.numberIs( properties.versionDelta ) && !_.intIs( properties.versionDelta ) )
   properties.versionDelta = _.entity.exportString( properties.versionDelta );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'version bump',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandVersionBump,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.willfileVersionBump( properties );
+    return module.willfileVersionBump( properties );
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.willfileVersionBump( properties );
+  // }
 }
 
 commandVersionBump.defaults =
@@ -3092,13 +3097,17 @@ function commandModulesGitSync( e )
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git sync',
-    onModulesBegin,
-    onEach,
-    onModulesEnd,
+    // onUp : onModulesBegin,
+    onEachModule,
+    // onDown : onModulesEnd,
+    // onModulesBegin,
+    // onEach,
+    // onModulesEnd,
     commandRoutine : commandModulesGitSync,
     withStem : 1,
   });
@@ -3124,15 +3133,24 @@ function commandModulesGitSync( e )
 
   /* */
 
-  function onEach( it )
+  function onEachModule( module )
   {
-    return it.opener.openedModule.gitSync
+    return module.gitSync
     ({
       commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
       restoringHardLinks : 0,
     });
   }
+  // function onEach( it )
+  // {
+  //   return it.opener.openedModule.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+  //     restoringHardLinks : 0,
+  //   });
+  // }
 
   /* */
 
