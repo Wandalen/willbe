@@ -210,6 +210,23 @@ function _transactionPropertySetter_functor( propName )
 
 //
 
+function _transactionWithPropertySetter_functor( propName, backPropName )
+{
+  return function set( src )
+  {
+    let t = this;
+    if( t.formed )
+    return;
+
+    if( src === null )
+    src = t[ backPropName ];
+
+    t._[ propName ] = src;
+  }
+}
+
+//
+
 let TransactionFields =
 {
   verbosity : 3,
@@ -222,6 +239,11 @@ let TransactionFields =
   withPath : null,
   withSubmodules : null,
 
+  withEnabledModules : null,
+  withEnabledSubmodules : null,
+
+  withDisabledModules : null,
+  withDisabledSubmodules : null,
 
   ... _.Will.IntentionFields,
 
@@ -272,7 +294,11 @@ let Accessors =
 {
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
-  withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet }
+  withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
+  withEnabledModules : { get : _transactionPropertyGetter_functor( 'withEnabledModules' ), set : _transactionWithPropertySetter_functor( 'withEnabledModules', 'withEnabled' ) },
+  withEnabledSubmodules : { get : _transactionPropertyGetter_functor( 'withEnabledSubmodules' ), set : _transactionWithPropertySetter_functor( 'withEnabledSubmodules', 'withEnabled' ) },
+  withDisabledModules : { get : _transactionPropertyGetter_functor( 'withDisabledModules' ), set : _transactionWithPropertySetter_functor( 'withDisabledModules', 'withDisabled' ) },
+  withDisabledSubmodules : { get : _transactionPropertyGetter_functor( 'withDisabledSubmodules' ), set : _transactionWithPropertySetter_functor( 'withDisabledSubmodules', 'withDisabled' ) },
 }
 
 _.each( TransactionFields, ( val, key ) =>

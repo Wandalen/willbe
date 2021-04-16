@@ -122,7 +122,9 @@ let FilterFields =
 {
   withEnabled : 1,
   withDisabled : 0,
-  ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
+  // ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
+  ... RelationFilterDefaults
+
 }
 
 //
@@ -1093,15 +1095,14 @@ function filterDefaults( o )
 
   _.assert( will.transaction instanceof _.will.Transaction );
 
-  if( o.withEnabledSubmodules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
-  o.withEnabledSubmodules = will.transaction.withEnabled;
-  if( o.withDisabledSubmodules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
-  o.withDisabledSubmodules = will.transaction.withDisabled;
-
-  if( o.withEnabledModules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
-  o.withEnabledModules = will.transaction.withEnabled;
-  if( o.withDisabledModules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
-  o.withDisabledModules = will.transaction.withDisabled;
+  // if( o.withEnabledSubmodules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  // o.withEnabledSubmodules = will.transaction.withEnabled;
+  // if( o.withDisabledSubmodules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  // o.withDisabledSubmodules = will.transaction.withDisabled;
+  // if( o.withEnabledModules === null && will.transaction.withEnabled !== undefined && will.transaction.withEnabled !== null )
+  // o.withEnabledModules = will.transaction.withEnabled;
+  // if( o.withDisabledModules === null && will.transaction.withDisabled !== undefined && will.transaction.withDisabled !== null )
+  // o.withDisabledModules = will.transaction.withDisabled;
 
   for( let n in _.Will.RelationFilterDefaults )
   {
@@ -2008,6 +2009,8 @@ function modulesFindWithAt( o )
 
 var defaults = modulesFindWithAt.defaults = _.mapExtend( null, ModuleFilterNulls );
 
+defaults.withEnabledSubmodules = null;
+defaults.withDisabledSubmodules = null;
 defaults.selector = null;
 defaults.tracing = null;
 defaults.atLeastOne = 1;
@@ -2538,7 +2541,7 @@ let modulesFor = _.routine.uniteCloning_( modulesFor_head, modulesFor_body );
 
 function modulesDownload_head( routine, args )
 {
-  let module = this;
+  let will = this;
 
   _.assert( arguments.length === 2 );
   _.assert( args.length <= 2 );
@@ -2547,6 +2550,8 @@ function modulesDownload_head( routine, args )
 
   o = _.routineOptions( routine, o );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
+
+  will.filterDefaults( o );
 
   return o;
 }
@@ -2751,7 +2756,8 @@ function modulesDownload_body( o )
       return junctionLocalMaybe( junction );
       if( !junction.isRemote || !junction.relation )
       return junctionLocalMaybe( junction );
-      if( junction.relation && !junction.relation.enabled )
+      // if( junction.relation && !junction.relation.enabled )
+      if( junction.relation && !junction.relation.enabled && !o.withDisabledSubmodules )
       return junctionLocalMaybe( junction );
 
       ready2.then( () =>
@@ -3749,7 +3755,7 @@ function graphTopSort( modules )
 {
   let will = this;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 )
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
 
   let group = will.graphGroupMake();
 
