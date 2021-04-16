@@ -27932,7 +27932,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:0' }) })
@@ -27947,7 +27947,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:1' }) })
@@ -27961,7 +27961,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:1' }) })
@@ -27975,7 +27975,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:1' }) })
@@ -28013,7 +28013,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:1' }) })
@@ -28027,7 +28027,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:0' }) })
@@ -28065,7 +28065,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:1' }) })
@@ -28080,7 +28080,7 @@ function commandImplyPropertyWithDisabled( test )
       return null;
     })
 
-    /* */
+    /* fails */
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
@@ -28361,6 +28361,8 @@ function commandImplyPropertyWithEnabled( test )
     })
   }
 }
+
+commandImplyPropertyWithEnabled.timeOut = 600000;
 
 //
 
