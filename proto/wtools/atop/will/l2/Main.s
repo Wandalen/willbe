@@ -2541,8 +2541,7 @@ let modulesFor = _.routine.uniteCloning_( modulesFor_head, modulesFor_body );
 
 function modulesDownload_head( routine, args )
 {
-  let module = this;
-  let will = module.will;
+  let will = this;
 
   _.assert( arguments.length === 2 );
   _.assert( args.length <= 2 );
