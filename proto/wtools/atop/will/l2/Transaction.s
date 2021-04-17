@@ -107,6 +107,30 @@ function form()
 
 //
 
+function wasFilterFieldsChanged( transaction )
+{
+  let t = this;
+
+  if( t.withPath !== transaction.withPath )
+  return true;
+
+  for( let propName in t.TransactionModuleFields )
+  if( t[ propName ] !== transaction[ propName ] )
+  return true;
+
+  return false;
+}
+
+//
+
+function relationFilterFieldsGet()
+{
+  let t = this;
+  return _.mapOnly_( null, t, _.Will.RelationFilterDefaults );
+}
+
+//
+
 function verbosityGet()
 {
   let t = this;
@@ -181,12 +205,36 @@ function withSubmodulesSet( src )
 
 //
 
+function modulesDepthSet( src )
+{
+  let t = this;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.arrayIs( src ) );
+  _.assert( src.length === 2 );
+
+  if( t.formed )
+  return;
+
+  if( !t._.modulesDepth )
+  {
+    t._.modulesDepth = src.slice();
+  }
+  else
+  {
+    t._.modulesDepth[ 0 ] = src[ 0 ];
+    t._.modulesDepth[ 1 ] = src[ 1 ];
+  }
+}
+
+//
+
 function _transactionPropertyGetter_functor( propName )
 {
   return function get()
   {
     let t = this;
-    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) || _.strDefined( t._[ propName ] ) || _.numberIs( t._[ propName ] ) );
+    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) || _.strDefined( t._[ propName ] ) || _.numberIs( t._[ propName ] ) || _.arrayIs( t._[ propName ] ) );
     return t._[ propName ];
   }
 }
@@ -247,7 +295,17 @@ let TransactionFields =
 
   ... _.Will.IntentionFields,
 
-  willFileAdapting : 0
+  willFileAdapting : 0,
+
+  modulesDepth : _.define.own([ 0, 0 ])
+}
+
+//
+
+let TransactionModuleFields =
+{
+  withEnabledModules : null,
+  withDisabledModules : null,
 }
 
 // --
@@ -284,6 +342,7 @@ let Statics =
 {
   Make,
   TransactionFields,
+  TransactionModuleFields,
 }
 
 let Forbids =
@@ -299,6 +358,7 @@ let Accessors =
   withEnabledSubmodules : { get : _transactionPropertyGetter_functor( 'withEnabledSubmodules' ), set : _transactionWithPropertySetter_functor( 'withEnabledSubmodules', 'withEnabled' ) },
   withDisabledModules : { get : _transactionPropertyGetter_functor( 'withDisabledModules' ), set : _transactionWithPropertySetter_functor( 'withDisabledModules', 'withDisabled' ) },
   withDisabledSubmodules : { get : _transactionPropertyGetter_functor( 'withDisabledSubmodules' ), set : _transactionWithPropertySetter_functor( 'withDisabledSubmodules', 'withDisabled' ) },
+  modulesDepth : { get : _transactionPropertyGetter_functor( 'modulesDepth' ), set : modulesDepthSet }
 }
 
 _.each( TransactionFields, ( val, key ) =>
@@ -324,8 +384,12 @@ let Extension =
   unform,
   form,
 
+  wasFilterFieldsChanged,
+  relationFilterFieldsGet,
+
   verbositySet,
   withSubmodulesSet,
+  modulesDepthSet,
 
   // relation
 

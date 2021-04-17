@@ -177,6 +177,15 @@ function openersFind( o )
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
+  if( o.localPath === null )
+  {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    o.localPath = will.transaction.withPath || './';
+  }
+
+  if( o.tracing === null )
+  o.tracing = !path.isGlob( o.localPath );
+
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
   delete o2.localPath;
@@ -205,8 +214,10 @@ openersFind.defaults =
 
   ... _.mapExtend( null, _.Will.prototype.modulesFindWithAt.defaults ),
 
-  localPath : './',
-  tracing : 1,
+  // localPath : './',
+  localPath : null,
+  // tracing : 1,
+  tracing : null,
 
 }
 
@@ -441,6 +452,9 @@ function _transactionExtend( command, propertiesMap )
   let cui = this;
   let transaction = cui.transaction;
 
+  if( transaction === null )
+  return cui._transactionBegin( command, propertiesMap );
+
   if( transaction && transaction.isInitial )
   return cui._transactionBegin( command, propertiesMap );
 
@@ -536,6 +550,8 @@ function _commandsMake()
     'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
     'with' :                            { ro : _.routineJoin( cui, cui.commandWith )                         },
+    'modules' :                         { ro : _.routineJoin( cui, cui.commandModules )                         },
+    'submodules' :                      { ro : _.routineJoin( cui, cui.commandSubmodules )                         },
     'each' :                            { ro : _.routineJoin( cui, cui.commandEach )                         },
 
     'npm from willfile' :               { ro : _.routineJoin( cui, cui.commandNpmFromWillfile )              },
@@ -1315,6 +1331,34 @@ defaults.withStem = 1; /* qqq : for Dmytro : ?? */
 
 //
 
+function openersFindMaybe( o )
+{
+  let cui = this;
+  let path = cui.fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+
+  if( cui.currentOpeners )
+  {
+    if( !o.reload )
+    return null;
+
+    cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+    cui.currentOpeners = null;
+  }
+
+  let isGlob = path.isGlob( o.localPath );
+
+  return cui.openersFind
+  ({
+    localPath : o.localPath,
+    atLeastOne : !isGlob,
+    tracing : !isGlob
+  })
+}
+
+//
+
 function _commandModuleOrientedLike( o )
 {
   let will = this;
@@ -1336,22 +1380,31 @@ function _commandModuleOrientedLike( o )
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null )
-  ready.then( () => will.openersFind() )
+  // if( will.currentOpeners === null )
+  // ready.then( () => will.openersFind() )
 
-  let openers = will.currentOpeners;
+  let reload = will.transaction.wasFilterFieldsChanged( will.transactionOld );
 
-  let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-  o2.modules = openers;
-  return will.modulesFor( o2 )
-  .finally( ( err, arg ) =>
+  ready.then( () => will.openersFindMaybe({ localPath : will.transaction.withPath, reload : reload }) );
+
+  ready.then( () =>
   {
-    will._commandsEnd( o.commandRoutine );
-    if( err )
-    throw _.err( err, `\nFailed to ${o.name}` );
-    return arg;
-  });
+    debugger
+    let openers = will.currentOpeners;
+    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+    o2.modules = openers;
+    o2.recursive = 2;
+    return will.modulesFor( o2 )
+    .finally( ( err, arg ) =>
+    {
+      will._commandsEnd( o.commandRoutine );
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name}` );
+      return arg;
+    });
+  })
 
+  return ready;
 }
 
 /* qqq : for Dmytro : bad : discuss modulesFor */
@@ -3632,7 +3685,7 @@ command.subjectHint = 'A name of export scenario.';
 
 /* xxx : add test routine checking wrong syntax error handling */
 
-function commandWith( e )
+function commandWithOld( e )
 {
   let cui = this.form();
   let path = cui.fileProvider.path;
@@ -3720,11 +3773,116 @@ function commandWith( e )
 
 }
 
+//
+
+function commandWith( e )
+{
+  let cui = this.form();
+  let path = cui.fileProvider.path;
+
+  _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
+  _.assert( arguments.length === 1 );
+
+  if( !e.instructionArgument )
+  throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
+
+  if( process.platform === 'linux' )
+  {
+    let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
+    if( quoteRanges.length !== 2 || ( quoteRanges[ 0 ] !== 0 && quoteRanges[ 1 ] !== e.instructionArgument.length ) )
+    {
+      let splits = e.instructionArgument.split( ' ' );
+      if( splits.length > 1 )
+      {
+        let screenMap = _.paths.ext( splits );
+        for( let i = screenMap.length - 1 ; i >= 0 ; i-- )
+        {
+          if( screenMap[ i ] === '' )
+          {
+            splits[ i ] = _.strUnquote( `${ splits[ i ] } ${ splits[ i + 1 ] }` );
+            splits.splice( i + 1, 1 );
+          }
+        }
+        e.instructionArgument = _.strCommonLeft( ... splits ) + '*';
+      }
+    }
+  }
+
+  debugger
+
+  // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
+  let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
+  cui.implied = _.mapExtend( cui.implied, { withPath } );
+
+  cui._command_head
+  ({
+    routine : commandWith,
+    args : arguments,
+  });
+
+  _.assert( cui.transaction instanceof _.will.Transaction );
+  _.assert( cui.transaction.withPath === withPath );
+}
+
 // commandWith.defaults = _.mapExtend( null, commandImply.defaults );
 
 var command = commandWith.command = Object.create( null );
 command.hint = 'Select a module to execute command.';
 command.subjectHint = 'A module selector.';
+command.properties = Object.create( null );
+
+//
+
+function commandModules( e )
+{
+  let cui = this.form();
+
+  _.assert( arguments.length === 1 );
+
+  cui.implied = _.mapExtend( cui.implied, { modulesDepth : [ 0, Infinity ] } );
+
+  cui._command_head
+  ({
+    routine : commandModules,
+    args : arguments,
+  });
+
+  _.assert( cui.transaction instanceof _.will.Transaction );
+  cui.transaction.finit();
+  cui.transactionOld = cui.transaction;
+  cui.transaction = null;
+}
+
+var command = commandModules.command = Object.create( null );
+command.hint = 'Marks next commands to be executed modules.';
+command.subjectHint = false;
+command.properties = Object.create( null );
+
+//
+
+function commandSubmodules( e )
+{
+  let cui = this.form();
+
+  _.assert( arguments.length === 1 );
+
+  cui.implied = _.mapExtend( cui.implied, { modulesDepth : [ 1, Infinity ] } );
+
+  cui._command_head
+  ({
+    routine : commandSubmodules,
+    args : arguments,
+  });
+
+  _.assert( cui.transaction instanceof _.will.Transaction );
+  cui.transaction.finit();
+  cui.transactionOld = cui.transaction;
+  cui.transaction = null;
+}
+
+var command = commandSubmodules.command = Object.create( null );
+command.hint = 'Marks next commands to be executed for submodules.';
+command.subjectHint = false;
 command.properties = Object.create( null );
 
 //
@@ -5093,10 +5251,12 @@ function commandGitSync( e )
     onEachModule : handleEach,
     // onEach : handleEach,
     commandRoutine : commandGitSync,
+    ... cui.transaction.relationFilterFieldsGet()
   });
 
   function handleEach( module )
   {
+    debugger
     return module.gitSync
     ({
       commit : e.subject,
@@ -6288,6 +6448,7 @@ let Restricts =
   topCommand : null,
   will : null,
   implied : _.define.own( {} ),
+  transactionOld : null
 }
 
 let Statics =
@@ -6325,6 +6486,7 @@ let Extension =
   _openersCurrentEach,
   openersCurrentEach,
   openersFind,
+  openersFindMaybe,
   // currentOpenerChange,
 
   // etc
@@ -6415,6 +6577,8 @@ let Extension =
   // command iterator
 
   commandWith,
+  commandModules,
+  commandSubmodules,
   commandEach,
 
   // command converters
