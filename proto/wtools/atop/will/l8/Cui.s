@@ -3533,7 +3533,8 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
+    // let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
       ... filterProperties,
@@ -3573,7 +3574,8 @@ function commandExportPurging( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3610,7 +3612,8 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
