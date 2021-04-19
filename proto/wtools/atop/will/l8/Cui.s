@@ -3110,17 +3110,17 @@ function commandModulesGitSync( e )
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
+  return cui._commandModulesLike
+  // return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git sync',
     // onUp : onModulesBegin,
-    onEachModule,
+    // onEachModule,
     // onDown : onModulesEnd,
-    // onModulesBegin,
-    // onEach,
-    // onModulesEnd,
+    onModulesBegin,
+    onEach,
+    onModulesEnd,
     commandRoutine : commandModulesGitSync,
     withStem : 1,
   });
@@ -3146,24 +3146,24 @@ function commandModulesGitSync( e )
 
   /* */
 
-  function onEachModule( module )
-  {
-    return module.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-      restoringHardLinks : 0,
-    });
-  }
-  // function onEach( it )
+  // function onEachModule( module )
   // {
-  //   return it.opener.openedModule.gitSync
+  //   return module.gitSync
   //   ({
   //     commit : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
   //     restoringHardLinks : 0,
   //   });
   // }
+  function onEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+      restoringHardLinks : 0,
+    });
+  }
 
   /* */
 
