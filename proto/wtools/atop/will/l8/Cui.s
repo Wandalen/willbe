@@ -3110,17 +3110,17 @@ function commandModulesGitSync( e )
   let provider;
   cui._command_head( commandModulesGitSync, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
+  return cui._commandModulesLike
+  // return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git sync',
     // onUp : onModulesBegin,
-    onEachModule,
+    // onEachModule,
     // onDown : onModulesEnd,
-    // onModulesBegin,
-    // onEach,
-    // onModulesEnd,
+    onModulesBegin,
+    onEach,
+    onModulesEnd,
     commandRoutine : commandModulesGitSync,
     withStem : 1,
   });
@@ -3146,24 +3146,24 @@ function commandModulesGitSync( e )
 
   /* */
 
-  function onEachModule( module )
-  {
-    return module.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-      restoringHardLinks : 0,
-    });
-  }
-  // function onEach( it )
+  // function onEachModule( module )
   // {
-  //   return it.opener.openedModule.gitSync
+  //   return module.gitSync
   //   ({
   //     commit : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
   //     restoringHardLinks : 0,
   //   });
   // }
+  function onEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+      restoringHardLinks : 0,
+    });
+  }
 
   /* */
 
@@ -3533,7 +3533,8 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
+    // let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
       ... filterProperties,
@@ -3573,7 +3574,8 @@ function commandExportPurging( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3610,7 +3612,8 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -5225,7 +5228,7 @@ function commandRepoPullOpen( e )
   cui._command_head( commandRepoPullOpen, arguments );
 
   // return cui._commandBuildLike
-  return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'repo pull open',
