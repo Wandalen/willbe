@@ -20287,7 +20287,8 @@ function submodulesDownloadInvalidUrl( test )
   a.appStartNonThrowing({ execPath : '.with badProtocol .submodules.download' })
   .then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
+    // test.notIdentical( op.exitCode, 0 );
+    test.identical( op.exitCode, 0 ); /* Dmytro : peer modules forms and throw no error because private routine _peerModulesForm use option `throwing : 0`. If broken path is not recognized as remote path, then utility handle submodule as local submodule and throw no error too */
     test.identical( _.strCount( op.output, 'Command ".with badProtocol .submodules.download"' ), 1 );
     test.identical( _.strCount( op.output, /\. Opened \. .*badProtocol\.will\.yml/ ), 1 );
     test.identical( _.strCount( op.output, '! Failed to open module::submodulesDownloadErrorsBadProtocol' ), 1 );
@@ -20296,10 +20297,12 @@ function submodulesDownloadInvalidUrl( test )
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module at' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module::submodulesDownloadErrorsBadProtocol / relation::ModuleForTesting2a' ), 2 );
-    // test.true( _.strHas( op.output, 'Failed to download module' ) );
-    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    return null;
 
+    test.identical( _.strCount( op.output, '. Read 1 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/1 submodule(s) of module::submodulesDownloadErrorsBadProtocol were downloaded in' ), 1 );
+    // test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    return null;
   });
 
   /* - */

@@ -2861,7 +2861,6 @@ function modulesDownload_body( o )
 
   function junctionLocalMaybe( junction )
   {
-
     if( junction.isRemote )
     return junctionRemote( junction );
 
