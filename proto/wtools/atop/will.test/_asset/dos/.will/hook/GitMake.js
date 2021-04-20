@@ -7,16 +7,12 @@ function onGitMake( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  if( !context.module || context.module.repo.remotePath || !context.module.about.name )
-  {
-    debugger;
-    throw _.errBrief( 'Module should be local, opened and have name' );
-  }
+  // if( !context.module || context.module.repo.remotePath || !context.module.about.name )
+  if( !context.module || !context.module.about.name )
+  throw _.errBrief( 'Module should be local, opened and have name' );
 
   let localPath = context.junction.dirPath;
   let remotePath = null;
-
-  debugger;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
@@ -25,7 +21,8 @@ function onGitMake( context )
   try
   {
 
-    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    let config = _.censor.configRead();
     if( config && config.path && config.path.remoteRepository )
     {
       _.mapSupplement( config, context );
@@ -56,7 +53,7 @@ function onGitMake( context )
       token,
       local : o.local,
       remote : o.remote,
-      verbosity : o.verbosity - 1,
+      logger : o.verbosity - 1,
       dry : o.dry,
     });
 
@@ -82,6 +79,6 @@ onGitMake.defaults =
   remote : 1,
   verbosity : 2,
   v : null,
-}
+};
 
 module.exports = onGitMake;

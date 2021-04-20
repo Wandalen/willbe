@@ -1,0 +1,165 @@
+
+about :
+
+  name : 'Update'
+  version : '0.0.0'
+
+submodule :
+
+  ModuleForTesting3 : git+https:///github.com/Wandalen/wModuleForTesting3.git/out/wModuleForTesting3.out.will!master
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+
+step :
+
+  _submodules.update :
+    inherit : submodules.update
+
+    criterion :
+      dry : [ 0, 1 ]
+      loggingNoChanges : [ 0, 1 ]
+      recursive : [ 0, 1, 2 ]
+      withStem : [ 0, 1 ]
+      withDisabledStem : [ 0, 1 ]
+      to : [ 0, '!master', '!gamma' ]
+
+    dry : '{f::this/criterion/dry}'
+    loggingNoChanges : '{f::this/criterion/loggingNoChanges}'
+    recursive : '{f::this/criterion/recursive}'
+    withStem : '{f::this/criterion/withStem}'
+    withDisabledStem : '{f::this/criterion/withDisabledStem}'
+    to : '{f::this/criterion/to}'
+
+build :
+
+  default :
+    criterion :
+      default : 1
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::_submodules.update.*=1
+
+  dry.clean :
+    criterion :
+      dry : 1
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::submodules.clean
+      - step::_submodules.update.*=1
+
+  dry :
+    criterion :
+      dry : 1
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::_submodules.update.*=1
+
+  loggingNoChanges.on :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::_submodules.update.*=1
+
+  loggingNoChanges.off :
+    criterion :
+      dry : 0
+      loggingNoChanges : 0
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::_submodules.update.*=1
+
+  recursive.off :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 0
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::submodules.clean
+      - step::_submodules.update.*=1
+
+  recursive.one :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::submodules.clean
+      - step::_submodules.update.*=1
+
+  recursive.two :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 2
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::submodules.clean
+      - step::_submodules.update.*=1
+
+  withStem.on :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::submodules.clean
+      - step::_submodules.update.*=1
+
+  withStem.off :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 0
+      withDisabledStem : 1
+      to : 0
+    steps :
+      - step::submodules.clean
+      - step::_submodules.update.*=1
+
+  to :
+    criterion :
+      dry : 0
+      loggingNoChanges : 1
+      recursive : 1
+      withStem : 1
+      withDisabledStem : 1
+      to : [ '!master', '!gamma' ]
+    steps :
+      - step::_submodules.update.*=1

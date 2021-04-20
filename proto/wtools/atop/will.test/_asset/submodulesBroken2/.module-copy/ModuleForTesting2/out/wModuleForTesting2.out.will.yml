@@ -169,7 +169,7 @@ module:
         path:
           - ../proto
           - ../proto/wtools
-          - ../proto/wtools/Tools.s
+          - ../proto/node_modules/Tools
           - ../proto/wtools/abase
           - ../proto/wtools/abase/l2
           - ../proto/wtools/abase/l2/testing2
@@ -2366,7 +2366,7 @@ module:
         path:
           - ../proto
           - ../proto/wtools
-          - ../proto/wtools/Tools.s
+          - ../proto/node_modules/Tools
           - ../proto/wtools/abase
           - ../proto/wtools/abase/l1
           - ../proto/wtools/abase/l1/testing1

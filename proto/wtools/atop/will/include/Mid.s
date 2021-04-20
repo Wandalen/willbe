@@ -5,35 +5,40 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( './Base.s' );
+  const _ = require( './Base.s' );
 
-  require( '../l0/Namespace.s' );
+  require( '../l1/Basic.s' );
+  require( '../l1/Extra.s' );
+  require( '../l1/File.s' );
 
-  require( '../l1/Main.s' );
-  require( '../l1/Namespace.s' );
+  require( '../l2/Main.s' );
+  require( '../l2/Transaction.s' );
 
-  require( '../l2/About.s' );
-  require( '../l2/BuildFrame.s' );
-  require( '../l2/BuildRun.s' );
-  require( '../l2/Predefined.s' );
-  require( '../l2/Repository.s' );
-  require( '../l2/Resolver.s' );
+  require( '../l3/About.s' );
+  require( '../l3/BuildFrame.s' );
+  require( '../l3/BuildRun.s' );
+  require( '../l3/Predefined.s' );
+  require( '../l3/Repository.s' );
+  require( '../l3/Resolver.s' );
+  require( '../l3/Willf.s' );
 
-  require( '../l3/AbstractModule.s' );
-  require( '../l3/Module.s' );
-  require( '../l3/ModuleHandle.s' );
-  require( '../l3/ModuleOpener.s' );
-  require( '../l3/ModuleJunction.s' );
+  require( '../l4/AbstractJunction.s' );
+  require( '../l4/AbstractModule1.s' );
+  require( '../l4/AbstractModule2.s' );
+  require( '../l4/Module.s' );
+  require( '../l4/ModuleHandle.s' );
+  require( '../l4/ModuleJunction.s' );
+  require( '../l4/ModuleOpener.s' );
 
   require( '../l5/Resource.s' );
 
-  require( '../l6/Build.s' );
-  require( '../l6/Exported.s' );
-  require( '../l6/Willf.s' );
-  require( '../l6/PathResource.s' );
-  require( '../l6/Reflector.s' );
-  require( '../l6/Step.s' );
-  require( '../l6/ModulesRelation.s' );
+  require( '../l6_resource/Build.s' );
+  require( '../l6_resource/Exported.s' );
+  require( '../l6_resource/PathResource.s' );
+  require( '../l6_resource/Reflector.s' );
+  require( '../l6_resource/Step.s' );
+  require( '../l6_resource/ModulesRelation.s' );
+  // require( '../l6_resource/Willf.s' );
 
   module[ 'exports' ] = _global_.wTools;
 }

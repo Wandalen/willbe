@@ -5,36 +5,19 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../wtools/Tools.s' );
+  const _ = require( '../../../node_modules/Tools' );
 
   _.include( 'wTesting' );
   _.include( 'wProcess' );
   _.include( 'wFiles' );
 
   require( '../will/include/Mid.s' );
-
 }
 
-let _global = _global_;
-let _ = _global_.wTools;
+const _global = _global_;
+const _ = _global_.wTools;
 
 /*
-xxx : should work
-  > will.local .imply withOut:0 .with * .call GitStatus
-  not only
-  > will.local .imply withOut:0 ; .with * .call GitStatus
-xxx : find solution
-  > git push --tags
-  fatal: TaskCanceledException encountered.
-  A task was canceled.
-  bash: /dev/tty: No such device or address
-
-*/
-
-/* xxx : check
-
-let submodulesPath = a.abs( '.module' );
-var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
 
 */
 
@@ -48,7 +31,7 @@ function onSuiteBegin()
 
   context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
-  context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
+  context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
 
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
@@ -77,18 +60,6 @@ function assetFor( test, name )
   name = test.name;
 
   let a = test.assetFor( name );
-
-  // a.test = test;
-  // a.name = name;
-  // a.originalAssetPath = _.path.join( context.assetsOriginalPath, name );
-  // a.originalAbs = context.abs_functor( a.originalAssetPath );
-  // a.originalRel = context.rel_functor( a.originalAssetPath );
-  // a.routinePath = _.path.join( context.suiteTempPath, test.name );
-  // a.abs = context.abs_functor( a.routinePath );
-  // a.rel = context.rel_functor( a.routinePath );
-  // a.fileProvider = _.fileProvider;
-  // a.path = _.fileProvider.path;
-  // a.ready = _.Consequence().take( null );
 
   a.will = new _.Will;
 
@@ -144,161 +115,24 @@ function assetFor( test, name )
     try
     {
       /* Dmytro : all default values for option `sync` is `null`, so each routine checks the option and applies `null`. Last time, the routine `_fileCopyDo` run async copy and throw error */
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
     catch( err )
     {
       _.errAttend( err );
-      /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
-      _.Consequence().take( null )
+      /* Dmytro : temporary, clean -repo directory before copying files, prevents fails in *nix systems */
+      _.take( null )
       .delay( 3000 )
       .deasync();
-      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '-repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '-repo' ) } });
     }
   }
-
-  // a.shell = _.process.starter
-  // ({
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
-  //
-  // a.appStart = _.process.starter
-  // ({
-  //   execPath : context.appJsPath,
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'fork',
-  // })
-  //
-  // a.appStartNonThrowing = _.process.starter
-  // ({
-  //   execPath : context.appJsPath,
-  //   currentPath : a.routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : a.ready,
-  //   mode : 'fork',
-  // })
 
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
 
   return a;
 }
-
-// function assetFor( test, name )
-// {
-//   let context = this;
-//   let a = Object.create( null );
-//
-//   if( !name )
-//   name = test.name;
-//
-//   a.test = test;
-//   a.name = name;
-//   a.originalAssetPath = _.path.join( context.assetsOriginalPath, name );
-//   a.originalAbs = context.abs_functor( a.originalAssetPath );
-//   a.originalRel = context.rel_functor( a.originalAssetPath );
-//   a.routinePath = _.path.join( context.suiteTempPath, test.name );
-//   a.abs = context.abs_functor( a.routinePath );
-//   a.rel = context.rel_functor( a.routinePath );
-//   a.will = new _.Will;
-//   a.fileProvider = _.fileProvider;
-//   a.path = _.fileProvider.path;
-//   a.ready = _.Consequence().take( null );
-//
-//   a.reflect = function reflect()
-//   {
-//     _.fileProvider.filesDelete( a.routinePath );
-//     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-//     try
-//     {
-//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
-//     }
-//     catch( err )
-//     {
-//       _.Consequence().take( null ).delay( 3000 ).deasync();
-//       _.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
-//       _.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
-//     }
-//   }
-//
-//   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
-//
-//   return a;
-// }
-//
-// //
-//
-// function abs_functor( routinePath )
-// {
-//   _.assert( _.strIs( routinePath ) );
-//   _.assert( arguments.length === 1 );
-//   return function abs( filePath )
-//   {
-//     if( arguments.length === 1 && filePath === null )
-//     return filePath;
-//
-//     let args = _.longSlice( arguments );
-//     args.unshift( routinePath );
-//
-//     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
-//     {
-//       return _.filter_( null, filePath, ( filePath ) => abs( filePath, ... args.slice( 2, args.length ) ) );
-//     }
-//
-//     return _.uri.s.join.apply( _.uri.s, args );
-//   }
-// }
-//
-// //
-//
-// function rel_functor( routinePath )
-// {
-//   _.assert( _.strIs( routinePath ) );
-//   _.assert( arguments.length === 1 );
-//   return function rel( filePath )
-//   {
-//     _.assert( arguments.length === 1 );
-//     if( filePath === null )
-//     return filePath;
-//     if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
-//     {
-//       return _.filter_( null, filePath, ( filePath ) => rel( filePath ) );
-//     }
-//     if( _.uri.isRelative( filePath ) && !_.uri.isRelative( routinePath ) )
-//     return filePath;
-//     return _.uri.s.relative.apply( _.uri.s, [ routinePath, filePath ] );
-//   }
-// }
-
-// //
-//
-// function ReplaceSetsAreIdentical()
-// {
-//   _.include( 'wIntrospector' );
-//
-//   let file = _.introspector.thisFile().refine();
-//
-//   logger.log( file.productExportInfo() );
-//
-//   file.product.nodes.map( null, ( node ) =>
-//   {
-//     let found = file.nodeSearch( node, 'setsAreIdentical' );
-//     if( _.mapKeys( found ).length )
-//   });
-//
-//   file.arrange();
-// }
-//
-// // ReplaceSetsAreIdentical();
 
 // --
 // tests
@@ -307,7 +141,7 @@ function assetFor( test, name )
 function preCloneRepos( test )
 {
   let context = this;
-  let a = context.assetFor( test, '_repo' );
+  let a = context.assetFor( test, '-repo' );
 
   a.ready.then( () =>
   {
@@ -318,7 +152,9 @@ function preCloneRepos( test )
   return a.ready;
 }
 
-//
+// --
+// open
+// --
 
 function buildSimple( test )
 {
@@ -544,8 +380,6 @@ function openNamedFast( test )
     var got = _.filter_( null, _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
     test.identical( _.setFrom( got ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
-    _.debugger = 1;
-    debugger;
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
@@ -1996,6 +1830,328 @@ function moduleClone( test )
 
 } /* end of function moduleClone */
 
+// --
+// export
+// --
+
+function exportModuleAndCheckDefaultPathsSimple( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  let opener;
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check export file';
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    let expected =
+    {
+      'criterion' : { 'predefined' : 1 }
+    }
+    test.identical( path.download, expected );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'reexport';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    let expected =
+    {
+      'criterion' : { 'predefined' : 1 }
+    }
+    test.identical( path.download, expected );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'change downloadPath in runtime';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
+    module.downloadPath = '../';
+    test.identical( module.pathResourceMap.download.path, '../' );
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    let expected =
+    {
+      'criterion' : { 'predefined' : 1 }
+    }
+    test.identical( path.download, expected );
+
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function exportGitModuleAndCheckDefaultPathsSimple( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  let opener;
+  a.reflect();
+
+  a.shell( 'git init' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check export file';
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'reexport';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'open';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.downloadPath, a.abs( '.' ) );
+    test.false( a.fileProvider.path.isTrailed( module.downloadPath ) );
+    let pathMap = module.resourceMapForKind( 'path' );
+    test.identical( pathMap.download.path, a.abs( '.' ) );
+
+    let junction = module.toJunction();
+    test.identical( junction.openers.length, 1 );
+    test.identical( junction.openers[ 0 ], opener );
+
+    test.identical( opener.isMain, true );
+    test.identical( opener.downloadPath, a.abs( '.' ) )
+
+    opener.finit();
+
+    return null;
+
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reexportGitModule( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithDefaultPaths' );
+  let opener;
+  a.reflect();
+
+  a.shell( 'git init' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export main module as a git repository twice';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    path.download.path = path.download.path + '/';
+
+    a.fileProvider.fileWrite
+    ({
+      filePath : a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ),
+      data : config,
+      encoding : 'yaml'
+    });
+
+    opener.finit();
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    test.identical( path.download.criterion, { predefined : 1 } );
+    test.identical( path.download.path, '..' );
+
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
 //
 
 /*
@@ -2036,7 +2192,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2098,7 +2254,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2156,7 +2312,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2213,7 +2369,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2348,7 +2504,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2442,7 +2598,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2507,7 +2663,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2771,7 +2927,7 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2868,7 +3024,7 @@ function exportSuperIn( test )
     test.identical( files, exp );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2930,7 +3086,7 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3039,7 +3195,7 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.mustNotThrowError( build.perform() );
   })
 
   .then( ( arg ) =>
@@ -3047,7 +3203,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/path.out.will' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/path.out.will.yml' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3078,7 +3234,7 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.mustNotThrowError( build.perform() );
   })
 
   .then( ( arg ) =>
@@ -3086,7 +3242,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/reflector.out.will' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/reflector.out.will.yml' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3116,13 +3272,12 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.shouldThrowErrorAsync( build.perform() );
   })
 
-  .finally( ( err, arg ) =>
+  .then( ( err ) =>
   {
     var module = opener.openedModule;
-
     test.true( _.errIs( err ) );
     test.identical( _.strCount( String( err ), 'Failed to export' ), 1 );
     test.identical( _.strCount( String( err ), 'module::nopath / exported::export.debug' ), 1 );
@@ -3154,10 +3309,10 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.shouldThrowErrorAsync( build.perform() );
   })
 
-  .finally( ( err, arg ) =>
+  .then( ( err ) =>
   {
     var module = opener.openedModule;
 
@@ -3191,14 +3346,12 @@ function exportDefaultPath( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    return build.perform();
+    return test.mustNotThrowError( build.perform() );
   })
 
-  .finally( ( err, arg ) =>
+  .then( ( arg ) =>
   {
     var module = opener.openedModule;
-
-    test.true( err === undefined );
 
     test.description = 'files';
     var exp = [ '.', './nonglob.out.will.yml' ];
@@ -3274,7 +3427,7 @@ function exportOutdated( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3335,7 +3488,7 @@ function exportOutdated( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3393,8 +3546,7 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export debug';
     a.reflect();
@@ -3422,7 +3574,7 @@ function exportRecursive( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/ab/module-ab.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/ab/module-ab.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'module-ab.out', '../../a', '../module-a.out', '../../b', '../module-b.out', '../../ab/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3533,7 +3685,7 @@ function exportDotless( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3542,7 +3694,7 @@ function exportDotless( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3646,7 +3798,7 @@ function exportDotlessSingle( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3655,7 +3807,7 @@ function exportDotlessSingle( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3750,7 +3902,7 @@ function exportStepOpts( test )
     test.identical( got.opts, exp );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'out/module-a.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/module-a.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'module-a.out', '../a' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3908,7 +4060,7 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3917,7 +4069,7 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/submodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4022,7 +4174,7 @@ function exportSteps( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4034,7 +4186,7 @@ function exportSteps( test )
     test.identical( _.setFrom( steps ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/submodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4149,7 +4301,7 @@ function exportCourrputedOutfileUnknownSection( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4248,7 +4400,7 @@ function exportCourruptedOutfileSyntax( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4380,7 +4532,7 @@ function exportCourruptedSubmodulesDisabled( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4432,8 +4584,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4456,8 +4607,17 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } }); /* xxx */
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.description = 'finit';
@@ -4486,8 +4646,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4516,7 +4675,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.true( err === undefined );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4574,8 +4733,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileUnknownSection */
+}
 
 exportCourrputedSubmoduleOutfileUnknownSection.description =
 `
@@ -4594,8 +4752,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4618,7 +4775,16 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4648,8 +4814,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4678,7 +4843,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.true( err === undefined );
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4743,8 +4908,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileFormatVersion */
+}
 
 exportCourrputedSubmoduleOutfileFormatVersion.description =
 `
@@ -4753,7 +4917,215 @@ exportCourrputedSubmoduleOutfileFormatVersion.description =
   - recursive export works
 `
 
+// --
+// etc
+// --
+
+function framePerform( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'make' );
+  a.reflect();
+
+  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
+  opener.find();
+
+  return opener.open().split()
+  .then( () =>
+  {
+
+    var expected = [];
+    var files = a.find( a.abs( 'out' ) );
+    let builds = opener.openedModule.buildsResolve();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+    build.form();
+    let run = new _.will.BuildRun({ build });
+    run.form();
+    let frame = run.frameUp( build );
+    let steps = build.stepsEach();
+    let step = steps[ 0 ];
+    step.opts.currentPath = a.routinePath;
+
+    /* */
+
+    let frame2 = frame.frameUp( step );
+    step.form();
+
+    return step.framePerform( frame2 )
+    .finally( ( err, arg ) =>
+    {
+      test.description = 'files';
+
+      var files = a.find( a.routinePath );
+      var exp =
+      [
+        '.',
+        './v1.will.yml',
+        './v2.will.yml',
+        './file',
+        './file/File.js',
+        './file/File.test.js',
+        './file/Produce.js',
+        './file/Src1.txt',
+        './file/Src2.txt',
+        './out',
+        './out/Produced.js2',
+        './out/Produced.txt2',
+        './out/shouldbe.txt'
+      ];
+      test.identical( files, exp );
+
+      opener.finit();
+      frame2.finit();
+
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+}
+
 //
+
+function customLogger( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+  // let logger = new _.Logger({ output : null, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
+  let logger = new _.Logger({ output : console, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
+  let loggerOutput = [];
+  a.will = new _.Will({ logger });
+  a.reflect();
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
+
+  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+  opener.find();
+
+  return opener.open().split()
+  .then( () =>
+  {
+
+    var expected = [];
+    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    let builds = opener.openedModule.buildsResolve();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+
+    return build.perform()
+    .finally( ( err, arg ) =>
+    {
+
+      test.description = 'files';
+      var expected = [ '.', './debug', './debug/File.js' ];
+      var files = /*context.find*/a.find( a.abs( 'out' ) );
+      test.identical( files, expected );
+
+      opener.finit();
+
+      test.description = 'no garbage left';
+      test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
+
+      let output = loggerOutput.join( '\n' );
+      test.true( _.strHas( output, /Building .*module::customLogger \/ build::debug.*/ ) );
+      test.true( _.strHas( output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
+      test.true( _.strHas( output, / \+ .*reflector::reflect.proto.* reflected 2 file\(s\)/ ) );
+      test.true( _.strHas( output, /Built .*module::customLogger \/ build::debug.*/ ) );
+
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+
+  /*  */
+
+  function onTransformEnd( o )
+  {
+    loggerOutput.push( o._outputForTerminal[ 0 ] )
+    // loggerOutput.push( o._outputForPrinter[ 0 ] )
+  }
+}
+
+//
+
+function moduleIsNotValid( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDownloadErrors' );
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'download submodule';
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
+
+    a.will.prefer
+    ({
+      allOfSub : 1,
+    });
+
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () => opener.openedModule.subModulesDownload() )
+
+  .then( () =>
+  {
+    test.case = 'change out will-file';
+
+    opener.close();
+
+    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
+    let outWillFile = a.fileProvider.fileReadUnknown( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'repopen module';
+    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
+    opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    test.case = 'check if module is valid';
+    if( err )
+    _.errAttend( err );
+    test.true( _.errIs( err ) );
+    test.identical( opener.isValid(), false );
+    test.identical( opener.openedModule.isValid(), false );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
+// --
+// resolve
+// --
 
 function exportsResolve( test )
 {
@@ -4763,8 +5135,7 @@ function exportsResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
@@ -4793,12 +5164,12 @@ function exportsResolve( test )
 
     opener.finit();
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportsResolve */
+}
 
 //
 
@@ -5085,74 +5456,57 @@ Submodules are exported willfiles.
 
 //
 
-// aaa : for Dmytro : bad, write proper test /* Dmytro : fixed, routine should not delete output directory */
-function framePerform( test )
+function moduleResolveWithFunctionThisInSelector( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'make' );
-  a.reflect();
+  let a = context.assetFor( test, 'stepShellUsingCriterionValue' );
+  let opener;
 
-  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './v1' ) });
-  opener.find();
-
-  return opener.open().split()
-  .then( () =>
+  a.ready.then( () =>
   {
-
-    var expected = [];
-    var files = a.find( a.abs( 'out' ) );
-    let builds = opener.openedModule.buildsResolve();
-
-    test.identical( builds.length, 1 );
-
-    let build = builds[ 0 ];
-    build.form();
-    let run = new _.will.BuildRun({ build });
-    run.form();
-    let frame = run.frameUp( build );
-    let steps = build.stepsEach();
-    let step = steps[ 0 ];
-    step.opts.currentPath = a.routinePath;
-
-    /* */
-
-    let frame2 = frame.frameUp( step );
-    step.form();
-
-    return step.framePerform( frame2 )
-    .finally( ( err, arg ) =>
-    {
-      test.description = 'files';
-
-      var files = a.find( a.routinePath );
-      var exp =
-      [
-        '.',
-        './v1.will.yml',
-        './v2.will.yml',
-        './file',
-        './file/File.js',
-        './file/File.test.js',
-        './file/Produce.js',
-        './file/Src1.txt',
-        './file/Src2.txt',
-        './out',
-        './out/Produced.js2',
-        './out/Produced.txt2',
-        './out/shouldbe.txt'
-      ];
-      test.identical( files, exp );
-
-      opener.finit();
-      frame2.finit();
-
-      if( err )
-      throw err;
-      return arg;
-    });
-
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open({ all : 1, resourcesFormed : 1 });
   });
+
+  /* - */
+
+  a.ready.then( ( arg ) =>
+  {
+    test.case = 'currentThis is not specified';
+    let module = opener.openedModule;
+    let resolved = module.resolve
+    ({
+      selector : 'node -e "console.log( \'debug:{f::this/criterion/debug}\' )"',
+      prefixlessAction : 'resolved',
+      currentContext : module.stepMap[ 'print.criterion.value.' ],
+      pathNativizing : 1,
+      arrayFlattening : 0,
+    });
+    test.true( _.strIs( resolved ) );
+    test.identical( resolved, 'node -e "console.log( \'debug:0\' )"' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.true( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  return a.ready;
 }
+
+/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
+moduleResolveWithFunctionThisInSelector.description =
+`
+Test routine checks that module resolves resources when the selector contains part f::this.
+`;
 
 //
 
@@ -5944,7 +6298,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 21 );
+    test.identical( resolved.length, 22 );
 
     test.case = '*::*a*/qualifiedName';
     var exp =
@@ -5962,6 +6316,7 @@ function superResolve( test )
       'step::willfile.generate',
       'step::git.status',
       'step::git.tag',
+      'step::modules.update',
       'step::submodules.download',
       'step::submodules.update',
       'step::submodules.agree',
@@ -7497,17 +7852,15 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
-
     test.case = 'path::export';
     let resolved = opener.openedModule.pathResolve
     ({
@@ -7532,7 +7885,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.identical( a.rel( resolved ), expected );
 
     return null;
-  })
+  });
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -7541,7 +7894,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.true( err === undefined );
     opener.finit();
     return arg;
-  })
+  });
 
   /* - */
 
@@ -8616,8 +8969,6 @@ function pathsResolveResolvedPath( test )
     test.case = src;
     // var exp = 'some'; /* yyy */
     var exp = a.abs( 'some' );
-    _.debugger = 1;
-    debugger;
     var got = module.pathResolve
     ({
       selector : src,
@@ -8772,8 +9123,6 @@ function pathsResolveFailing( test )
     test.identical( got, expected );
 
     test.case = 'path::entry.*=1: null';
-    _.debugger = 1;
-    debugger;
     var got = opener.openedModule.pathResolve
     ({
       selector : { 'path::entry.*=1' : null },
@@ -8838,6 +9187,133 @@ function pathsResolveFailing( test )
 }
 
 //
+
+function resourcePathRemote( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportInformal' );
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './module/' ) });
+    return opener.open();
+  })
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform()
+  })
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    test.description = 'finit';
+    opener.finit();
+    test.true( module.isFinited() );
+    test.true( opener.isFinited() );
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    // let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
+    let informalOpener =  module.submoduleMap[ 'ModuleForTesting2b' ].opener;
+    let informalOpened = informalOpener.openedModule;
+    let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
+
+    test.identical( informalPathRemoteResource.path, null );
+    // test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' );
+
+    return null;
+  })
+
+
+  return a.ready;
+}
+
+//
+
+function filesFromResource( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let opener;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open({ all : 1, resourcesFormed : 1 });
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve resource - directory does not exist';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
+    test.identical( got, a.abs([ 'out' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve resource - directory exists';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::proto}', currentContext : module });
+    test.identical( got, a.abs([ 'proto' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve with criterion';
+    let module = opener.openedModule;
+    let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
+    test.identical( got, a.abs([ './out/debug' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve directory from absolute path';
+    let module = opener.openedModule;
+    let selector = a.abs( 'proto/' );
+    let got = module.filesFromResource({ selector, currentContext : module });
+    test.identical( got, a.abs([ './proto' ]) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'resolve directory from relative path';
+    let module = opener.openedModule;
+    let selector = './proto/';
+    let got = module.filesFromResource({ selector, currentContext : module });
+    test.identical( got, a.abs([ './proto' ]) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+// --
+// each module
+// --
 
 function modulesEach( test )
 {
@@ -9050,65 +9526,98 @@ function modulesEachDuplicates( test )
 
 //
 
-function filesFromResource( test )
+function modulesFindEachAt( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesRemoteRepos' );
-  let opener;
-
-  /* - */
+  let opener, o;
 
   a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
-    return opener.open({ all : 1, resourcesFormed : 1 });
+    a.will.prefer({ allOfSub : 1, });
+    return opener.open({ all : 1, resourcesFormed : 0 });
   });
+
+  /* - */
 
   a.ready.then( () =>
   {
-    test.case = 'resolve resource - directory does not exist';
-    let module = opener.openedModule;
-    let got = module.filesFromResource({ selector : '{path::out}', currentContext : module });
-    test.identical( got, a.abs([ 'out' ]) );
+    test.case = 'select all submodules from module without downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( true );
+    test.true( op.options === o );
+    test.identical( op.openers.length, 1 );
+    test.true( op.openers[ 0 ] === opener );
+    test.identical( op.sortedOpeners.length, 1 );
+    test.true( op.sortedOpeners[ 0 ] === opener );
+    test.identical( op.junctions.length, 1 );
     return null;
   });
 
-  a.ready.then( () =>
-  {
-    test.case = 'resolve resource - directory exists';
-    let module = opener.openedModule;
-    let got = module.filesFromResource({ selector : '{path::proto}', currentContext : module });
-    test.identical( got, a.abs([ 'proto' ]) );
-    return null;
-  });
+  /* */
+
+  a.ready.then( () => opener.openedModule.subModulesDownload() );
+
+  /* */
 
   a.ready.then( () =>
   {
-    test.case = 'resolve with criterion';
-    let module = opener.openedModule;
-    let got = module.filesFromResource({ selector : '{path::out.*=1}', criterion : { debug : 1 }, currentContext : module });
-    test.identical( got, a.abs([ './out/debug' ]) );
+    test.case = 'select all submodules from module with downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( op.options === o );
+    test.identical( op.openers.length, 2 );
+    test.true( op.openers[ 0 ] !== opener );
+    test.true( op.openers[ 1 ] !== opener );
+    test.identical( op.openers[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( op.openers[ 1 ].name, 'ModuleForTesting2' );
+    test.identical( op.sortedOpeners.length, 2 );
+    test.true( op.sortedOpeners[ 0 ] !== opener );
+    test.true( op.sortedOpeners[ 1 ] !== opener );
+    test.true( op.openers[ 0 ] === op.sortedOpeners[ 0 ] );
+    test.true( op.openers[ 1 ] === op.sortedOpeners[ 1 ] );
+    test.identical( op.junctions.length, 2 );
     return null;
   });
 
-  a.ready.then( () =>
-  {
-    test.case = 'resolve directory from absolute path';
-    let module = opener.openedModule;
-    let selector = a.abs( 'proto/' );
-    let got = module.filesFromResource({ selector, currentContext : module });
-    test.identical( got, a.abs([ './proto' ]) );
-    return null;
-  });
+  /* */
 
   a.ready.then( () =>
   {
-    test.case = 'resolve directory from relative path';
-    let module = opener.openedModule;
-    let selector = './proto/';
-    let got = module.filesFromResource({ selector, currentContext : module });
-    test.identical( got, a.abs([ './proto' ]) );
+    test.case = 'select submodule by pattern from module with downloaded submodules';
+    o =
+    {
+      selector : _.strUnquote( '*Testing1' ),
+      currentOpener : opener,
+    };
+    return a.will.modulesFindEachAt( o );
+  });
+  a.ready.then( ( op ) =>
+  {
+    test.true( op.options === o );
+    test.identical( op.openers.length, 1 );
+    test.true( op.openers[ 0 ] !== opener );
+    test.identical( op.openers[ 0 ].name, 'ModuleForTesting1' );
+    test.identical( op.sortedOpeners.length, 1 );
+    test.true( op.sortedOpeners[ 0 ] !== opener );
+    test.identical( op.junctions.length, 1 );
     return null;
   });
 
@@ -9119,11 +9628,166 @@ function filesFromResource( test )
 
 //
 
+function modulesForOpeners( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'hierarchyDuplicate' );
+  let opener;
+  let onEachModules, onEachJunctions, onEachVisitedObjects;
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './z' ) });
+    return opener.open();
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withStem : 1';
+    clean();
+    let o2 =
+    {
+      withPeers : 0,
+      withStem : 1,
+      modules : [ opener ],
+      onEachModule : onEachModule,
+      onEachJunction : onEachJunction,
+      onEachVisitedObject : onEachVisitedObject,
+      onBegin : onBegin,
+      onEnd : onEnd,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+
+      test.description = 'onEachModules';
+      var exp = [ a.abs( 'z' ), a.abs( 'group1/a' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::z', 'module::a' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [ a.abs( 'z' ), a.abs( 'group1/a' ), a.abs( '.module/ModuleForTesting1/' ) ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::z )',
+        'junction::( module::z / module::a )',
+        'junction::( module::z / opener::ModuleForTesting1 )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [ a.abs( 'z' ), a.abs( 'group1/a' ), a.abs( '.module/ModuleForTesting1/' ) ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [ 'opener::z', 'relation::a', 'relation::ModuleForTesting1' ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withStem : 0';
+    clean();
+    let o2 =
+    {
+      withPeers : 0,
+      withStem : 0,
+      modules : [ opener ],
+      onEachModule : onEachModule,
+      onEachJunction : onEachJunction,
+      onEachVisitedObject : onEachVisitedObject,
+      onBegin : onBegin,
+      onEnd : onEnd,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ a.abs( 'group1/a' ) ];
+      test.identical( _.select( onEachModules, '*/commonPath' ), exp );
+      var exp = [ 'wWillModule' ];
+      test.identical( onEachModules.map( ( e ) => _.entity.strTypeWithoutTraits( e ) ), exp );
+      return op;
+    });
+  })
+
+  /* - */
+
+  return a.ready.then( () =>
+  {
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  function onEachModule( module, op )
+  {
+    onEachModules.push( module );
+    return null;
+  }
+
+  /* - */
+
+  function onEachJunction( junction, op )
+  {
+    onEachJunctions.push( junction );
+    return null;
+  }
+
+  /* - */
+
+  function onEachVisitedObject( object, op )
+  {
+    onEachVisitedObjects.push( object );
+    return null;
+  }
+
+  /* - */
+
+  function onBegin( object, op )
+  {
+    debugger;
+    return null;
+  }
+
+  /* - */
+
+  function onEnd( object, op )
+  {
+    debugger;
+    return null;
+  }
+
+  /* - */
+
+  function clean()
+  {
+    onEachModules = [];
+    onEachJunctions = [];
+    onEachVisitedObjects = [];
+  }
+
+  /* - */
+
+}
+
+// --
+// submodule
+// --
+
 function submodulesRemoteResolve( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesRemoteRepos' );
-  let opener;
+  let opener, config;
 
   /* - */
 
@@ -9131,17 +9795,15 @@ function submodulesRemoteResolve( test )
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
+    config = a.fileProvider.fileReadUnknown({ filePath : a.abs( '.im.will.yml' ) });
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
-    a.will.prefer
-    ({
-      allOfSub : 1,
-    });
+    a.will.prefer({ allOfSub : 1 });
 
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.open( 'not downloaded' );
 
@@ -9156,24 +9818,24 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
-    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma' );
+    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.true( !submodule.opener.repo.hasFiles );
     test.true( !submodule.opener.openedModule );
 
     test.close( 'not downloaded' );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     return opener.openedModule.subModulesDownload();
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.open( 'downloaded' );
 
@@ -9192,7 +9854,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma' );
+    test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -9201,7 +9863,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma' );
+    test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
@@ -9219,12 +9881,12 @@ function submodulesRemoteResolve( test )
 
     test.close( 'downloaded' );
     return null;
-  })
+  });
 
   /* */
 
   return a.ready;
-} /* end of function submodulesRemoteResolve */
+}
 
 //
 
@@ -9321,26 +9983,24 @@ function submodulesLocalResolve( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesLocalRepos' );
-  let opener;
+  let opener, tag;
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
+    let config = a.fileProvider.fileReadUnknown({ filePath : a.abs( '.im.will.yml' ) });
+    tag = _.git.path.parse({ remotePath : config.submodule.ModuleForTesting1 }).tag;
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
-    a.will.prefer
-    ({
-      allOfSub : 1,
-    });
+    a.will.prefer({ allOfSub : 1 });
 
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.open( 'not downloaded' );
 
@@ -9355,23 +10015,23 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
 
     test.true( !submodule.opener.repo.hasFiles );
     test.true( !submodule.opener.openedModule );
 
     test.close( 'not downloaded' );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     return opener.openedModule.subModulesDownload();
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.open( 'downloaded' );
 
@@ -9390,7 +10050,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -9399,7 +10059,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
@@ -9417,12 +10077,12 @@ function submodulesLocalResolve( test )
 
     test.close( 'downloaded' );
     return null;
-  })
+  });
 
   /* */
 
   return a.ready;
-} /* end of function submodulesLocalResolve */
+}
 
 //
 
@@ -9538,197 +10198,9 @@ function submodulesDeleteAndDownload( test )
   return a.ready;
 }
 
-//
-
-function customLogger( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  // let logger = new _.Logger({ output : null, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
-  let logger = new _.Logger({ output : console, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
-  let loggerOutput = [];
-  a.will = new _.Will({ logger });
-  a.reflect();
-  a.fileProvider.filesDelete( a.abs( 'out' ) );
-
-  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
-  opener.find();
-
-  return opener.open().split()
-  .then( () =>
-  {
-
-    var expected = [];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
-    let builds = opener.openedModule.buildsResolve();
-
-    test.identical( builds.length, 1 );
-
-    let build = builds[ 0 ];
-
-    return build.perform()
-    .finally( ( err, arg ) =>
-    {
-
-      test.description = 'files';
-      var expected = [ '.', './debug', './debug/File.js' ];
-      var files = /*context.find*/a.find( a.abs( 'out' ) );
-      test.identical( files, expected );
-
-      opener.finit();
-
-      test.description = 'no garbage left';
-      test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
-
-      let output = loggerOutput.join( '\n' );
-      test.true( _.strHas( output, /Building .*module::customLogger \/ build::debug.*/ ) );
-      test.true( _.strHas( output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-      test.true( _.strHas( output, / \+ .*reflector::reflect.proto.* reflected 2 file\(s\)/ ) );
-      test.true( _.strHas( output, /Built .*module::customLogger \/ build::debug.*/ ) );
-
-      if( err )
-      throw err;
-      return arg;
-    });
-
-  });
-
-  /*  */
-
-  function onTransformEnd( o )
-  {
-    loggerOutput.push( o._outputForTerminal[ 0 ] )
-    // loggerOutput.push( o._outputForPrinter[ 0 ] )
-  }
-}
-
-//
-
-function resourcePathRemote( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'exportInformal' );
-  let opener;
-
-  a.ready
-  .then( () =>
-  {
-    a.reflect();
-    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './module/' ) });
-    return opener.open();
-  })
-  .then( () =>
-  {
-    let module = opener.openedModule;
-    let builds = module.exportsResolve();
-    let build = builds[ 0 ];
-    return build.perform()
-  })
-  .then( () =>
-  {
-    let module = opener.openedModule;
-    test.description = 'finit';
-    opener.finit();
-    test.true( module.isFinited() );
-    test.true( opener.isFinited() );
-
-    return null;
-  })
-
-  .then( () =>
-  {
-    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
-    return opener.open();
-  })
-  .then( () =>
-  {
-    let module = opener.openedModule;
-    // let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
-    let informalOpener =  module.submoduleMap[ 'ModuleForTesting2b' ].opener;
-    let informalOpened = informalOpener.openedModule;
-    let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
-
-    test.identical( informalPathRemoteResource.path, null );
-    // test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' );
-
-    return null;
-  })
-
-
-  return a.ready;
-}
-
-//
-
-function moduleIsNotValid( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodulesDownloadErrors' );
-  let opener;
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'download submodule';
-    a.reflect();
-    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
-
-    a.will.prefer
-    ({
-      allOfSub : 1,
-    });
-
-    return opener.open({ all : 1, resourcesFormed : 0 });
-  })
-
-  .then( () => opener.openedModule.subModulesDownload() )
-
-  .then( () =>
-  {
-    test.case = 'change out will-file';
-
-    opener.close();
-
-    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
-    let outWillFile = a.fileProvider.configRead( outWillFilePath );
-    outWillFile.section = { field : 'value' };
-    a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
-
-    return null;
-  })
-
-  .then( () =>
-  {
-    test.case = 'repopen module';
-    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
-    opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
-    return opener.open({ all : 1, resourcesFormed : 0 });
-  })
-
-  .finally( ( err, arg ) =>
-  {
-    test.case = 'check if module is valid';
-    if( err )
-    _.errAttend( err );
-    test.true( _.errIs( err ) );
-    test.identical( opener.isValid(), false );
-    test.identical( opener.openedModule.isValid(), false );
-    opener.close();
-    return null;
-  })
-
-  return a.ready;
-}
-
-//
+// --
+// repo
+// --
 
 function isRepositoryReformSeveralTimes( test )
 {
@@ -11255,11 +11727,63 @@ function repoStatusLocalUncommittedChanges( test )
   return a.ready;
 }
 
+//
+
+function remotePathOfMainGitRepo( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'remotePathOfMain' );
+  let opener;
+
+  a.shell.predefined.sync = 1;
+  a.shell.predefined.deasync = 0;
+  a.shell.predefined.ready = null;
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    a.shell( 'git init' )
+    a.shell( 'git remote add origin https://github.com/test/TestRepo.git' )
+
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.identical( opener.remotePath, 'git+https:///github.com/test/TestRepo.git/' );
+    return null;
+  })
+
+  /* - */
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+remotePathOfMainGitRepo.description =
+`
+Checks remotePath of the main module as a git repository.
+`
+
 // --
 // define class
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Tools.Willbe.Int',
@@ -11275,11 +11799,7 @@ let Self =
     assetsOriginalPath : null,
     appJsPath : null,
     repoDirPath : null,
-    // find : null,
-    // findAll : null,
     assetFor,
-    // abs_functor,
-    // rel_functor
   },
 
   tests :
@@ -11287,7 +11807,7 @@ let Self =
 
     preCloneRepos,
 
-    //
+    // open
 
     buildSimple,
     openNamedFast,
@@ -11300,6 +11820,11 @@ let Self =
     openerClone,
     moduleClone,
 
+    // export
+
+    exportModuleAndCheckDefaultPathsSimple,
+    exportGitModuleAndCheckDefaultPathsSimple,
+    reexportGitModule,
     exportSeveralExports,
     exportSuper,
     exportSuperIn,
@@ -11317,13 +11842,19 @@ let Self =
     exportCourrputedSubmoduleOutfileUnknownSection,
     exportCourrputedSubmoduleOutfileFormatVersion,
 
+    // etc
+
+    framePerform,
+    customLogger,
+    moduleIsNotValid,
+
+    // resolve
+
     exportsResolve,
     buildsResolve,
     moduleResolveSimple,
     moduleResolve,
-
-    framePerform,
-
+    moduleResolveWithFunctionThisInSelector,
     trivialResolve,
     detailedResolve,
     reflectorResolve,
@@ -11331,28 +11862,33 @@ let Self =
     superResolve,
     pathsResolve,
     pathsResolveImportIn,
-    // pathsResolveOfSubmodulesLocal, /* xxx2 : make it working */
+    // pathsResolveOfSubmodulesLocal, /* xxx : make it working */
     pathsResolveOfSubmodulesRemote,
     pathsResolveOfSubmodulesAndOwn,
     pathsResolveOutFileOfExports,
     pathsResolveComposite,
-
     pathsResolveComposite2,
     pathsResolveArray,
     pathsResolveResolvedPath,
     pathsResolveFailing,
+    resourcePathRemote,
+    filesFromResource,
+
+    // each module
 
     modulesEach,
     modulesEachDuplicates,
-    filesFromResource,
+    modulesFindEachAt,
+    modulesForOpeners,
+
+    // submodule
+
     submodulesRemoteResolve,
     submodulesRemoteResolveNotDownloaded,
     submodulesLocalResolve,
     submodulesDeleteAndDownload,
 
-    customLogger,
-    resourcePathRemote,
-    moduleIsNotValid,
+    // repo
 
     isRepositoryReformSeveralTimes,
     repoStatus,
@@ -11360,7 +11896,8 @@ let Self =
     repoStatusForOutdatedRepo,
     repoStatusForInvalidRepo,
     repoStatusLocalChanges,
-    repoStatusLocalUncommittedChanges
+    repoStatusLocalUncommittedChanges,
+    remotePathOfMainGitRepo,
 
   }
 
@@ -11370,7 +11907,7 @@ let Self =
 // export
 // --
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 

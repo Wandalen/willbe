@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.337",
+  "version" : "0.5.394",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -10,8 +10,8 @@
     { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
   "license" : "MIT",
-  "main" : "proto/wtools/atop/will/entry/Include.s",
-  "files" : [ "proto/wtools/atop/will", "proto/wtools/Tools.s", "out" ],
+  "main" : "proto/node_modules/willbe",
+  "files" : [ "proto/wtools/atop/will", "out", "proto/node_modules" ],
   "bin" :
   {
     "will.singleproc" : "proto/wtools/atop/will/entry/Exec",

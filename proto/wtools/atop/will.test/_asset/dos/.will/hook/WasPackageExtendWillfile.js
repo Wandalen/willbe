@@ -16,7 +16,8 @@ function onModule( context )
     request : `${ commonPath } was.package.json`,
     format : 'willfile',
     onSection : _.mapExtend,
-    ... o,
+    ... _.mapOnly_( null, o, module.willfileExtendWillfile.defaults ),
+    // ... o,
   })
 }
 

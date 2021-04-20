@@ -15,12 +15,13 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
   let token = null;
   if( config !== null && config.about && config.about[ 'github.token' ] )
   token = config.about[ 'github.token' ];
 
-  let o2 = _.mapOnly( o, _.git.statusFull.defaults );
+  let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = context.junction.dirPath;
   if( !o2.token )
   o2.token = token;

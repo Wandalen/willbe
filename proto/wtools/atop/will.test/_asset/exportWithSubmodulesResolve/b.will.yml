@@ -1,0 +1,43 @@
+
+about :
+
+  name : "module-b"
+  description : "Module for testing"
+  version : "0.0.1"
+
+path :
+
+  proto : './proto'
+  out : 'out'
+  temp :
+    - path::out
+    - out2
+
+reflector :
+
+  files :
+    src :
+      recursive : 1
+      filePath :
+        '{path::proto}/b/**' : '{path::out}/b'
+
+step :
+
+  export.proto :
+    export : '{path::proto}/b/**'
+    tar : 0
+
+build :
+
+  files :
+    criterion :
+      default : 1
+    steps :
+      - step::files
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

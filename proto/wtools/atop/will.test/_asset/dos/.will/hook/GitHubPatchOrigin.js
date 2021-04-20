@@ -14,7 +14,8 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  let config = _.censor.configRead();
 
   if( !context.module.about.name )
   return;
@@ -39,7 +40,7 @@ function onModule( context )
     logger.log( `Patching ${_.ct.format( context.junction.dirPath, 'path' )}` );
     if( o.dry )
     return null;
-    let ready = new _.Consequence().take( null );
+    let ready = _.take( null );
     context.start({ execPath : `git remote set-url origin git+ssh://git@github.com/${config.about.user}/${context.module.name}.git`, ready });
     context.start({ execPath : `git remote show origin`, ready });
     return null;

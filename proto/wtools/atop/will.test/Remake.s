@@ -1,18 +1,18 @@
 
-let _ = require( `../../../wtools/Tools.s` );
+const _ = require( `../../../node_modules/Tools` );
 _.include( `wProcess` );
 _.include( `wFiles` );
 
 let execPath = _.path.nativize( _.path.join( __dirname, `../will/entry/Exec` ) );
 let assetsOriginalPath = _.path.join( __dirname, `_asset` );
-let repoDirPath = _.path.join( assetsOriginalPath, `_repo` );
-let ready = new _.Consequence().take( null );
+let repoDirPath = _.path.join( assetsOriginalPath, `-repo` );
+let ready = _.take( null );
 let start = _.process.starter
 ({
   currentPath : repoDirPath,
   outputCollecting : 1,
   ready,
-})
+});
 
 let will = _.process.starter
 ({
@@ -23,7 +23,7 @@ let will = _.process.starter
   ready,
   throwingExitCode : 0,
   deasync : 1,
-})
+});
 
 let reposDownload = require( `./ReposDownload.s` );
 
@@ -38,6 +38,16 @@ will( `.with ${asset}/super .export debug:0` );
 will( `.with ${asset}/super .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
+
+var asset = `resolvePathOfSubmodulesExported`;
+del( `${asset}/*out/**` );
+will( `.with ${asset}/ab/ .export.recursive` );
+copy( `${asset}/+out`, `${asset}/out` );
+
+var asset = `submodulesBroken1`;
+del( `${asset}/*out/**` );
+will( `.with ${asset} .export` );
+copy( `${asset}/+out`, `${asset}/out` );
 
 var asset = `twoExported`;
 del( `${asset}/*.out/**` );

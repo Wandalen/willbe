@@ -2,7 +2,7 @@
 submodule :
 
   # ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!master
-  ModuleForTesting12 : git+hd://../_repo/ModuleForTesting12/
+  ModuleForTesting12 : git+hd://../-repo/ModuleForTesting12/
 
 path :
 

@@ -36,7 +36,7 @@ function trivial( test )
 // declare
 // --
 
-var Self =
+const Proto =
 {
 
   name : 'Tools.base.l3.ModuleForTesting12',
@@ -51,7 +51,7 @@ var Self =
 
 //
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
