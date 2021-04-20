@@ -11442,7 +11442,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11522,7 +11521,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -11656,7 +11654,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11736,7 +11733,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -40548,6 +40544,181 @@ function commandNpmPublishFullRegularModule( test )
 
 //
 
+function commandNpmDepAdd( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmDepAdd' );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'without options, only subject - dot';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'without options, only subject - module';
+    return null;
+  });
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git wModuleForTesting1' );
+  a.appStart( '\'.npm.dep.add "hd://./wModuleForTesting1" editing:0\'' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add "hd://./wModuleForTesting1" editing:0"' ), 1 );
+    var exp =
+    /Linking hd:\/\/\/.*\/commandNpmDepAdd\/wModuleForTesting1 to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'as === module.name, dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:test dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:test dry:1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'as !== module.name';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:wmodulefortesting1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:wmodulefortesting1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  let filesBefore;
+  begin().then( () =>
+  {
+    test.case = 'rewrite soft link to module by another link';
+    return null;
+  });
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git wModuleForTesting1' );
+  a.appStart( '\'.npm.dep.add "hd://./wModuleForTesting1" editing:0\'' );
+  a.ready.then( ( op ) =>
+  {
+    filesBefore = a.find( a.abs( 'wModuleForTesting1' ) );
+
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add "hd://./wModuleForTesting1" editing:0"' ), 1 );
+    var exp =
+    /Linking hd:\/\/\/.*\/commandNpmDepAdd\/wModuleForTesting1 to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:wmodulefortesting1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+    var files = find( 'node_modules' )
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+    var filesAfter = a.find( a.abs( 'wModuleForTesting1' ) );
+    test.identical( filesBefore, filesAfter );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:wmodulefortesting1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () =>
+    {
+      a.fileProvider.dirMake( a.abs( 'node_modules' ) );
+      a.fileProvider.dirMake( a.abs( 'node_modules/wmodulefortesting2' ) );
+      return null;
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+}
+
+//
+
 function commandsSubmoduleSafety( test )
 {
   let context = this;
@@ -41715,9 +41886,11 @@ const Proto =
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
     commandWillfileMergeIntoSingleFilterNpmFields,
+
     commandNpmPublish,
     commandNpmPublishFullModuleFromUtility,
     commandNpmPublishFullRegularModule,
+    commandNpmDepAdd,
 
     commandsSubmoduleSafety,
     commandsSubmoduleSafetyInvalidUrl,
