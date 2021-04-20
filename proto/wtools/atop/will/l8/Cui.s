@@ -1301,7 +1301,8 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withStem = 1; /* qqq : for Dmytro : ?? */
+defaults.withStem = 1;
+// defaults.withStem = 1; /* aaa : for Dmytro : ?? */ /* Dmytro : replaced for all module */
 
 //
 
@@ -4672,8 +4673,8 @@ function commandWillfileMergeIntoSingle( e )
 
   function submodulesDisable()
   {
-    if( !config )
-    config = configRead( dstPath.absolute ); /* qqq : for Dmytro : ?? */
+    // if( !config )
+    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
     for( let dependency in config.submodule )
     config.submodule[ dependency ].enabled = 0;
   }
@@ -5498,11 +5499,13 @@ command.properties =
 
 //
 
-/* qqq : for Dmytro : first cover
+/* aaa : for Dmytro : first cover
 will .npm.dep.add . dry:1 editing:0
 */
 
-/* qqq : for Dmytro : write full coverage */
+/* Dmytro : covered */
+
+/* aaa : for Dmytro : write full coverage */ /* Dmytro : covered behavior that was implemented before, no additional features are tested */
 
 function commandNpmDepAdd( e )
 {
@@ -5584,9 +5587,13 @@ commandNpmInstall.defaults =
   verbosity : 2,
 };
 
-/* qqq2 : for Dmytro : write test routines
+/* aaa2 : for Dmytro : write test routines
 - make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
 - duplicate tests in NpmTools and willbe
+*/
+/* Dmytro : covered
+- first requirements is actual for routine `commandNpmDepAdd`, the case is covered
+- duplicated
 */
 var command = commandNpmInstall.command = Object.create( null );
 command.hint = 'Install NPM dependencies for the module.';

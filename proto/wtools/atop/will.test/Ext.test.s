@@ -40621,6 +40621,28 @@ function commandNpmDepAdd( test )
 
   begin().then( () =>
   {
+    test.case = 'dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 dry:1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
     test.case = 'as !== module.name';
     return null;
   });
