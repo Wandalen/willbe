@@ -40719,6 +40719,216 @@ function commandNpmDepAdd( test )
 
 //
 
+function commandNpmInstall( test )
+{
+  let self = this;
+  let a = test.assetFor( 'npmDepAdd' );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'default options, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 0, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install locked:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 0, package-lock.json not exists';
+    a.fileProvider.filesDelete( a.abs( 'package-lock.json' ) );
+    return null;
+  });
+  a.appStart( '.npm.install locked:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 1, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install locked:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 0';
+    return null;
+  });
+  a.appStart( '.npm.install locked:1 linkingSelf:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 1';
+    return null;
+  });
+  a.appStart( '.npm.install linkingSelf:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install linkingSelf:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.install locked:0 linkingSelf:1 dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0 linkingSelf:1 dry:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+
+  /* */
+
+  function versionGet( dirName )
+  {
+    return a.fileProvider.configRead
+    ({
+      filePath : a.abs( 'node_modules', dirName, 'package.json' ),
+      encoding : 'json',
+    }).version;
+  }
+}
+
+//
+
 function commandsSubmoduleSafety( test )
 {
   let context = this;
@@ -41891,6 +42101,7 @@ const Proto =
     commandNpmPublishFullModuleFromUtility,
     commandNpmPublishFullRegularModule,
     commandNpmDepAdd,
+    commandNpmInstall,
 
     commandsSubmoduleSafety,
     commandsSubmoduleSafetyInvalidUrl,

@@ -185,13 +185,9 @@ function openersFind( o )
   {
 
     if( err )
-    debugger;
-    if( err )
     throw _.err( err );
 
     will.currentOpeners = it.openers;
-    if( !will.currentOpeners.length )
-    debugger;
     if( !will.currentOpeners.length )
     throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
 
@@ -873,8 +869,6 @@ function _commandBuildLike( o )
   {
     will._commandsEnd( o.commandRoutine );
     if( err )
-    debugger;
-    if( err )
     logger.error( _.errOnce( err ) );
     if( err )
     throw err;
@@ -971,8 +965,6 @@ function _commandCleanLike( o )
   function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
-    if( err )
-    debugger;
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1071,8 +1063,6 @@ function _commandNewLike( o )
   function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
-    if( err )
-    debugger;
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -2372,7 +2362,6 @@ function commandSubmodulesShell( e )
   }
   // function handleEach( it )
   // {
-  //   debugger;
   //   return it.opener.openedModule.shell
   //   ({
   //     execPath : e.instructionArgument,
@@ -3558,7 +3547,6 @@ command.subjectHint = 'A name of export scenario.';
 function commandExportPurging( e )
 {
   let cui = this;
-  debugger
   cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
 
@@ -5540,7 +5528,6 @@ commandNpmDepAdd.defaults =
   dry : 0,
   verbosity : 1,
 };
-
 var command = commandNpmDepAdd.command = Object.create( null );
 command.hint = 'Add as dependency to NPM.';
 command.subjectHint = 'Dependency path.';
