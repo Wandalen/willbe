@@ -5523,7 +5523,7 @@ function commandNpmDepAdd( e )
 
   _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
 
-  e.optionsMap.depPath = e.subject;
+  e.optionsMap.depPath = _.strUnquote( e.subject );
   e.optionsMap.localPath = e.optionsMap.to;
   delete e.optionsMap.to;
 
