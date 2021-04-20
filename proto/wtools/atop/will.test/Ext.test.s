@@ -23610,125 +23610,125 @@ function stepModulesUpdate( test )
 
   /* */
 
-  a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'to:master', predownloadSubmodules : 0 })
-  a.appStart( `.build to.!master` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'to:master', predownloadSubmodules : 1 })
-  a.appStart( `.build to.!gamma` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
-  a.appStart( '.build dry.clean' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
-  a.appStart( '.build dry' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.one' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
+  // a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
+  // a.appStart( '.build default' )
+  // .then( ( op ) =>
+  // {
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
+  // a.appStart( '.build default' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'to:master', predownloadSubmodules : 0 })
+  // a.appStart( `.build to.!master` )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'to:master', predownloadSubmodules : 1 })
+  // a.appStart( `.build to.!gamma` )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
+  // a.appStart( '.build dry.clean' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+  //   test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
+  // a.appStart( '.build dry' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
+  // a.appStart( '.build recursive.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+  //   test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
+  // a.appStart( '.build recursive.one' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
 
   /* */
 
@@ -23749,71 +23749,71 @@ function stepModulesUpdate( test )
 
   /* */
 
-  a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
+  // a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
+  // a.appStart( '.build loggingNoChanges.on' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
+  // a.appStart( '.build loggingNoChanges.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
+  // a.appStart( '.build withStem.on' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
+  // a.appStart( '.build withStem.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
 
   /* */
 
@@ -29548,74 +29548,6 @@ commandSubmodulesGitDiff.rapidity = -1;
 
 //
 
-function commandSubmodulesRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config;
-  if( _.censor )
-  config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
 function commandSubmodulesGitStatusWithOnlyRoot( test )
 {
   let context = this;
@@ -30325,6 +30257,74 @@ function commandSubmodulesGitSync( test )
 }
 
 commandSubmodulesGitSync.rapidity = -1;
+
+//
+
+function commandSubmodulesRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -31250,72 +31250,6 @@ function commandModulesGitDiff( test )
 }
 
 commandModulesGitDiff.rapidity = -1;
-
-//
-
-function commandModulesRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
 
 //
 
@@ -32798,6 +32732,72 @@ original/f.txt
 
 //
 
+function commandModulesRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -33416,217 +33416,6 @@ function commandGitDiff( test )
       return null;
     });
     a.shell({ currentPath, execPath : 'git commit -am second' });
-    return a.ready;
-  }
-}
-
-//
-
-function commandRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
-  .then( ( op ) =>
-  {
-    test.case = 'token from environment variables, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function commandRepoPullOpenRemote( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  let user = config.about.user;
-
-  /* */
-
-  begin();
-  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
-  .then( ( op ) =>
-  {
-    test.case = 'make repo';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
-    test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
-    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
-    return null;
-  });
-
-  /* */
-
-  prepareFirstBranch();
-  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request, only title and srcBranch';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  prepareSecondBranch();
-  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request, body and dstBranch';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  })
-
-  /* */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      return null;
-    });
-
-    a.ready.then( ( op ) =>
-    {
-      return _.git.repositoryDelete
-      ({
-        remotePath : `https://github.com/${user}/New2`,
-        token : config.about[ 'github.token' ],
-      });
-    })
-
-    return a.ready;
-  }
-
-  /* */
-
-  function prepareFirstBranch()
-  {
-    let currentPath = a.abs( 'original' );
-    a.shell
-    ({
-      currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
-    });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -m first' });
-    a.shell({ currentPath, execPath : 'git push -u origin master' });
-    a.shell({ currentPath, execPath : 'git checkout -b new' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
-    a.shell({ currentPath, execPath : 'git commit -am second' });
-    a.shell({ currentPath, execPath : 'git push -u origin new' });
-    return a.ready;
-  }
-
-  /* */
-
-  function prepareSecondBranch()
-  {
-    let currentPath = a.abs( 'original' );
-    a.shell({ currentPath, execPath : 'git checkout master' });
-    a.shell({ currentPath, execPath : 'git checkout -b new2' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
-    a.shell({ currentPath, execPath : 'git commit -am second' });
-    a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
   }
 }
@@ -35669,6 +35458,217 @@ function commandGitTag( test )
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -am first' });
+    return a.ready;
+  }
+}
+
+//
+
+function commandRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
+  .then( ( op ) =>
+  {
+    test.case = 'token from environment variables, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandRepoPullOpenRemote( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  let user = config.about.user;
+
+  /* */
+
+  begin();
+  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
+  .then( ( op ) =>
+  {
+    test.case = 'make repo';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( op.output, `localPath :` ), 1 );
+    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  prepareFirstBranch();
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, only title and srcBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  prepareSecondBranch();
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, body and dstBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.ready.then( ( op ) =>
+    {
+      return _.git.repositoryDelete
+      ({
+        remotePath : `https://github.com/${user}/New2`,
+        token : config.about[ 'github.token' ],
+      });
+    })
+
+    return a.ready;
+  }
+
+  /* */
+
+  function prepareFirstBranch()
+  {
+    let currentPath = a.abs( 'original' );
+    a.shell
+    ({
+      currentPath,
+      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+    });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -m first' });
+    a.shell({ currentPath, execPath : 'git push -u origin master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new' });
+    return a.ready;
+  }
+
+  /* */
+
+  function prepareSecondBranch()
+  {
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git checkout master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new2' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
   }
 }
@@ -41655,10 +41655,11 @@ const Proto =
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitDiff,
-    commandSubmodulesRepoPullOpen,
     commandSubmodulesGitStatusWithOnlyRoot,
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
+
+    commandSubmodulesRepoPullOpen,
 
     commandModulesUpdate,
     commandModulesShell,
@@ -41666,7 +41667,6 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
-    commandModulesRepoPullOpen,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
     commandModulesGitSync,
@@ -41675,11 +41675,11 @@ const Proto =
     commandModulesGitSyncRestoreHardLinksInModule,
     commandModulesGitSyncRestoreHardLinksInSubmodule,
 
+    commandModulesRepoPullOpen,
+
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitDiff,
-    commandRepoPullOpen,
-    commandRepoPullOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
     commandGitPush,
@@ -41690,6 +41690,9 @@ const Proto =
     commandGitSyncRestoringHardlinks,
     commandGitSyncRestoreHardLinksWithShared,
     commandGitTag,
+
+    commandRepoPullOpen,
+    commandRepoPullOpenRemote,
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,

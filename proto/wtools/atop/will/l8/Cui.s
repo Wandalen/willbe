@@ -2506,70 +2506,6 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandSubmodulesRepoPullOpen( e )
-{
-  let cui = this;
-  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
-
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules repo pull open',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesRepoPullOpen,
-    withStem : 0,
-  });
-
-  function handleEach( module )
-  {
-    return module.repoPullOpen
-    ({
-      title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.repoPullOpen
-  //   ({
-  //     title : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
-  //   });
-  // }
-}
-
-commandSubmodulesRepoPullOpen.defaults =
-{
-  token : null,
-  srcBranch : null,
-  dstBranch : null,
-  // title : null,
-  body : null,
-  verbosity : null,
-  withSubmodules : 1
-};
-var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
-command.subjectHint = 'A title for PR';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-};
-command.properties =
-{
-  ... commandImply.command.properties,
-  token : 'An individual authorization token. By default reads from user config file.',
-  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
-  dstBranch : 'A destination branch. Default is "master".',
-  title : 'Option that rewrite title in provided argument.',
-  body : 'Body message.',
-  verbosity : 'Set verbosity. Default is 2.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-};
-
-//
-
 function commandSubmodulesGitStatus( e )
 {
   let cui = this;
@@ -2726,6 +2662,70 @@ command.properties =
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
 
+};
+
+//
+
+function commandSubmodulesRepoPullOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
+
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'submodules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandSubmodulesRepoPullOpen,
+    withStem : 0,
+  });
+
+  function handleEach( module )
+  {
+    return module.repoPullOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+    });
+  }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
+}
+
+commandSubmodulesRepoPullOpen.defaults =
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  // title : null,
+  body : null,
+  verbosity : null,
+  withSubmodules : 1
+};
+var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
+command.subjectHint = 'A title for PR';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  ... commandImply.command.properties,
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
 };
 
 //
@@ -2976,72 +2976,6 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandModulesRepoPullOpen( e )
-{
-  let cui = this;
-  cui._command_head( commandModulesRepoPullOpen, arguments );
-
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules repo pull open',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesRepoPullOpen,
-    withStem : 1,
-  });
-
-  function handleEach( module )
-  {
-    return module.repoPullOpen
-    ({
-      title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.repoPullOpen
-  //   ({
-  //     title : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
-  //   });
-  // }
-}
-
-commandModulesRepoPullOpen.defaults =
-{
-  token : null,
-  srcBranch : null,
-  dstBranch : null,
-  // title : null,
-  body : null,
-  verbosity : 2,
-  withSubmodules : 1
-};
-
-var command = commandModulesRepoPullOpen.command = Object.create( null );
-command.hint = 'Open pull requests from current module and its submodules.';
-command.subjectHint = 'A title for PR';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-};
-command.properties =
-{
-  ... commandImply.command.properties,
-  token : 'An individual authorization token. By default reads from user config file.',
-  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
-  dstBranch : 'A destination branch. Default is "master".',
-  title : 'Option that rewrite title in provided argument.',
-  body : 'Body message.',
-  verbosity : 'Set verbosity. Default is 2.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-};
-
-//
-
 function commandModulesGitStatus( e )
 {
   let cui = this;
@@ -3196,6 +3130,72 @@ command.properties =
   dry : 'Dry run without syncronizing. Default is dry:0.',
   verbosity : 'Set verbosity. Default is 1.',
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
+};
+
+//
+
+function commandModulesRepoPullOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesRepoPullOpen, arguments );
+
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'modules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandModulesRepoPullOpen,
+    withStem : 1,
+  });
+
+  function handleEach( module )
+  {
+    return module.repoPullOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+    });
+  }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
+}
+
+commandModulesRepoPullOpen.defaults =
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  // title : null,
+  body : null,
+  verbosity : 2,
+  withSubmodules : 1
+};
+
+var command = commandModulesRepoPullOpen.command = Object.create( null );
+command.hint = 'Open pull requests from current module and its submodules.';
+command.subjectHint = 'A title for PR';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  ... commandImply.command.properties,
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
 };
 
 //
@@ -5547,7 +5547,7 @@ command.subjectHint = 'Dependency path.';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   to : 'Path to the directory with directory node_modules. Current path by default.',
@@ -5601,13 +5601,12 @@ commandNpmInstall.defaults =
 - make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
 - duplicate tests in NpmTools and willbe
 */
-
 var command = commandNpmInstall.command = Object.create( null );
-command.hint = 'Add as dependency to NPM.';
+command.hint = 'Install NPM dependencies for the module.';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   to : 'Path to directory with package.json file. Default is current directory.',
@@ -6390,9 +6389,10 @@ let Extension =
   commandSubmodulesShell,
   commandSubmodulesGit,
   commandSubmodulesGitDiff,
-  commandSubmodulesRepoPullOpen,
   commandSubmodulesGitStatus,
   commandSubmodulesGitSync,
+
+  commandSubmodulesRepoPullOpen,
 
   commandModuleNew,
   commandModuleNewWith,
@@ -6400,9 +6400,10 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitDiff,
-  commandModulesRepoPullOpen,
   commandModulesGitStatus,
   commandModulesGitSync,
+
+  commandModulesRepoPullOpen,
 
   commandShell,
   commandDo,
