@@ -1079,6 +1079,166 @@ function filesAtFilePathWithGlobsWithTrailedPath( test )
   test.close( 'glob - */**/' );
 }
 
+//
+
+function filePathIs( test )
+{
+  test.case = 'empty string';
+  var got = _.will.filePathIs( '' );
+  test.identical( got, false );
+
+  test.case = 'simple string';
+  var got = _.will.filePathIs( 'abc' );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'will';
+  var got = _.will.filePathIs( 'will' );
+  test.identical( got, false );
+
+  test.case = 'will.';
+  var got = _.will.filePathIs( 'will.' );
+  test.identical( got, false );
+
+  test.case = '.will';
+  var got = _.will.filePathIs( '.will' );
+  test.identical( got, false );
+
+  test.case = '.will.';
+  var got = _.will.filePathIs( '.will.' );
+  test.identical( got, false );
+
+  test.case = 'will.yml';
+  var got = _.will.filePathIs( 'will.yml' );
+  test.identical( got, true );
+
+  test.case = 'will.json';
+  var got = _.will.filePathIs( 'will.yml' );
+  test.identical( got, true );
+
+  test.case = '.will.yml';
+  var got = _.will.filePathIs( '.will.yml' );
+  test.identical( got, true );
+
+  test.case = '.will.json';
+  var got = _.will.filePathIs( '.will.yml' );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'out.will';
+  var got = _.will.filePathIs( 'out.will' );
+  test.identical( got, false );
+
+  test.case = 'out.will.';
+  var got = _.will.filePathIs( 'out.will.' );
+  test.identical( got, false );
+
+  test.case = 'out.will.yml';
+  var got = _.will.filePathIs( 'out.will.yml' );
+  test.identical( got, true );
+
+  test.case = '.im.will';
+  var got = _.will.filePathIs( '.im.will' );
+  test.identical( got, false );
+
+  test.case = '.im.will.';
+  var got = _.will.filePathIs( '.im.will.' );
+  test.identical( got, false );
+
+  test.case = '.im.will.yml';
+  var got = _.will.filePathIs( '.im.will.yml' );
+  test.identical( got, true );
+
+  test.case = '.ex.will';
+  var got = _.will.filePathIs( '.ex.will' );
+  test.identical( got, false );
+
+  test.case = '.ex.will.';
+  var got = _.will.filePathIs( '.ex.will.' );
+  test.identical( got, false );
+
+  test.case = '.ex.will.yml';
+  var got = _.will.filePathIs( '.ex.will.yml' );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = '/will.yml';
+  var got = _.will.filePathIs( '/will.yml' );
+  test.identical( got, true );
+
+  test.case = '/.will.yml';
+  var got = _.will.filePathIs( '/.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/.im.will.yml';
+  var got = _.will.filePathIs( '/.im.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/.ex.will.yml';
+  var got = _.will.filePathIs( '/.ex.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/out.will.yml';
+  var got = _.will.filePathIs( '/out.will.yml' );
+  test.identical( got, true );
+
+  /* */
+  test.case = '/a/will.yml';
+  var got = _.will.filePathIs( '/a/will.yml' );
+  test.identical( got, true );
+
+  test.case = '/a/.will.yml';
+  var got = _.will.filePathIs( '/a/.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/a/.im.will.yml';
+  var got = _.will.filePathIs( '/a/.im.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/a/.ex.will.yml';
+  var got = _.will.filePathIs( '/a/.ex.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/a/out.will.yml';
+  var got = _.will.filePathIs( '/a/out.will.yml' );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = './will.yml';
+  var got = _.will.filePathIs( './will.yml' );
+  test.identical( got, true );
+
+  test.case = './.will.yml';
+  var got = _.will.filePathIs( './.will.yml' );
+  test.identical( got, true );
+
+  test.case = './.im.will.yml';
+  var got = _.will.filePathIs( './.im.will.yml' );
+  test.identical( got, true );
+
+  test.case = './.ex.will.yml';
+  var got = _.will.filePathIs( './.ex.will.yml' );
+  test.identical( got, true );
+
+  test.case = './out.will.yml';
+  var got = _.will.filePathIs( './out.will.yml' );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = '/a/Named.will.yml';
+  var got = _.will.filePathIs( '/a/Named.will.yml' );
+  test.identical( got, true );
+
+  test.case = '/a/Named.out.will.yml';
+  var got = _.will.filePathIs( '/a/Named.out.will.yml' );
+  test.identical( got, true );
+}
+
 // --
 // declare
 // --
@@ -1113,6 +1273,8 @@ let Self =
     filesAtFilePathWithoutGlobs,
     filesAtFilePathWithGlobs,
     filesAtFilePathWithGlobsWithTrailedPath,
+
+    filePathIs,
 
   }
 
