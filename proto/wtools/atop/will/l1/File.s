@@ -164,7 +164,6 @@ function fileAt_body( o )
         if( fileProvider.resolvedIsTerminal( filePath ) )
         result.push({ filePath : filePath, role : 'export', out : false });
       }
-
     }
 
   });

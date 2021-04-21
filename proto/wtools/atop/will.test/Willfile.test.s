@@ -5,7 +5,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../wtools/Tools.s' );
+  let _ = require( '../../../node_modules/Tools' );
 
   _.include( 'wTesting' );
 
@@ -1378,6 +1378,7 @@ let Self =
 
   name : 'Tools.Willbe.Willfile',
   silencing : 1,
+  enabled : 0,
 
   onSuiteBegin,
   onSuiteEnd,
