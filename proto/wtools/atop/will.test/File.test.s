@@ -271,13 +271,13 @@ function fileAt( test )
   test.case = 'extra arguments';
   test.shouldThrowErrorSync( () => _.will.fileAt( a.abs( './' ), a.abs( './' ) ) );
 
-  test.case = 'filePath is terminal file, not willfile';
+  test.case = 'commonPath is terminal file, not willfile';
   test.shouldThrowErrorSync( () => _.will.fileAt( a.abs( './proto/File.s' ) ) );
 
-  test.case = 'filePath is global path';
+  test.case = 'commonPath is global path';
   test.shouldThrowErrorSync( () => _.will.fileAt( a.abs( 'hd:///home/' ) ) );
 
-  test.case = 'filePath is path with glob';
+  test.case = 'commonPath is path with glob';
   test.shouldThrowErrorSync( () => _.will.fileAt( a.abs( './**' ) ) );
 
   test.case = 'wrong type of options map';
@@ -696,6 +696,319 @@ function filesAtFilePathWithoutGlobs( test )
   test.shouldThrowErrorSync( () => _.will.filesAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 0 }) );
 }
 
+//
+
+function filesAtFilePathWithGlobs( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  test.open( 'no willfiles' );
+
+  test.case = 'directory without willfiles';
+  var got = _.will.filesAt( a.abs( './*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to unnamed willfile, willfile does not exist';
+  var got = _.will.filesAt( a.abs( './.im.will.yml*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, willfile does not exist';
+  var got = _.will.filesAt( a.abs( './Author.will.yml*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, not full path';
+  var got = _.will.filesAt( a.abs( './Author*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.will.filesAt( a.abs( './Author.will*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, has im, not full path';
+  var got = _.will.filesAt( a.abs( './.im*' ) );
+  test.identical( got, [] );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt( a.abs( './Author/*' ) );
+  test.identical( got, [] );
+
+  test.close( 'no willfiles' );
+
+  /* - */
+
+  test.open( 'glob - ./*' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt( a.abs( './*' ) );
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt( a.abs( './*' ) );
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to willfile, willfile exists';
+  a.reflect();
+  var got = _.will.filesAt( a.abs( './.im.will.yml*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.will.filesAt( a.abs( './Author.will.yml*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.will.filesAt( a.abs( './Author*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.will.filesAt( a.abs( './Author.will*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  var got = _.will.filesAt( a.abs( './.im*' ) );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt( a.abs( './Author/*' ) );
+  test.identical( got, [] );
+
+  /* */
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt({ commonPath : a.abs( './*' ) });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt({ commonPath : a.abs( './*' ) });
+  test.identical( got.length, 17 );
+  test.identical( got[ 0 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to willfile, willfile exists';
+  a.reflect();
+  var got = _.will.filesAt({ commonPath : a.abs( './.im.will.yml' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author.will.yml*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author.will*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  var got = _.will.filesAt({ commonPath : a.abs( './.im*' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author/*' ) });
+  test.identical( got, [] );
+
+  test.close( 'glob - ./*' );
+
+  /* - */
+
+  test.open( 'glob - ./**' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt({ commonPath : a.abs( './**' ) });
+  test.identical( got.length, 34 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 17 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 18 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt({ commonPath : a.abs( './**' ) });
+  test.identical( got.length, 34 );
+  test.identical( got[ 0 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 17 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 18 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author.will.yml**' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author**' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author.will**' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  a.reflect();
+  var got = _.will.filesAt({ commonPath : a.abs( './.im**' ) });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt({ commonPath : a.abs( './Author/**' ) });
+  test.identical( got, [] );
+
+  test.close( 'glob - ./**' );
+
+  /* - */
+
+  test.open( 'glob - */*' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/*' ) });
+  test.identical( got.length, 34 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 17 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 18 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt({ commonPath : a.abs( '*/*' ) });
+  test.identical( got.length, 34 );
+  test.identical( got[ 0 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 17 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 18 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author.will.yml*' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author*' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author.will*' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+  var got = _.will.filesAt({ commonPath : a.abs( '*/.im*' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author/*' ) });
+  test.identical( got, [] );
+
+  test.close( 'glob - */*' );
+
+  /* - */
+
+  test.open( 'glob - */**' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/**' ) });
+  test.identical( got.length, 34 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 17 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 18 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt({ commonPath : a.abs( '*/**' ) });
+  test.identical( got.length, 34 );
+  test.identical( got[ 0 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 17 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 18 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to named willfile, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author.will.yml**' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/Author.will.yml' ) );
+
+  test.case = 'path to named willfile, not full path, willfile exists';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author**' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has will, not full path';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author.will**' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/Author.will.yml' ) );
+
+  test.case = 'path to named willfile, has im, not full path';
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+  var got = _.will.filesAt({ commonPath : a.abs( '*/.im**' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author/**' ) });
+  test.identical( got, [] );
+
+  test.close( 'glob - */**' );
+}
+
+filesAtFilePathWithGlobs.rapidity = -1;
+filesAtFilePathWithGlobs.timeOut = 3e5;
+
 // --
 // declare
 // --
@@ -728,6 +1041,7 @@ let Self =
     fileAtWillfilesInSubdirectories,
 
     filesAtFilePathWithoutGlobs,
+    filesAtFilePathWithGlobs,
 
   }
 
