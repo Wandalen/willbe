@@ -10470,36 +10470,51 @@ function modulesFor( test )
       recursive : 2,
       modules : openers,
     }
-    return a.will.modulesFor( o2 )
+    return a.will.moduleWithNameMap.b.subModulesDownload()
+    .then( () => a.will.modulesFor( o2 ) )
     .then( ( op ) =>
     {
       test.description = 'onEachModules';
-      var exp = [];
+      var exp =
+      [
+        a.abs( 'group1/.module/ModuleForTesting1/' ),
+        a.abs( 'group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
       test.identical( _.select( onEachModules, '*/localPath' ), exp );
-      var exp = [];
+      var exp =
+      [
+        'module::wModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+      var exp = [ false, true ];
+      test.identical( _.select( onEachModules, '*/isOut' ), exp );
 
       test.description = 'onEachJunctions';
       var exp =
       [
-        a.abs( './group1/.module/ModuleForTesting1/' )
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
       ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
       var exp =
       [
-        'junction::( module::a / module::b / opener::ModuleForTesting1 )'
+        'junction::( module::a / module::wModuleForTesting1 )',
+        'junction::( module::a / module::wModuleForTesting1 )'
       ]
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
       var exp =
       [
-        a.abs( './group1/.module/ModuleForTesting1/' )
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
       ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
       var exp =
       [
-        'relation::ModuleForTesting1'
+        'relation::ModuleForTesting1',
+        'module::wModuleForTesting1'
       ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
@@ -10567,6 +10582,254 @@ function modulesFor( test )
     a.ready.then( () =>
     {
       clean();
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      if( o2.tracing === undefined )
+      o2.tracing = a.path.isGlob( o2.selector );
+
+      return a.will.modulesFindWithAt( o2 )
+      .then( ( it ) =>
+      {
+        openers = it.openers;
+        return null;
+      })
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
+}
+
+//
+
+function modulesForWithSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesFor' );
+  let onEachModules, onEachJunctions, onEachVisitedObjects;
+  let openers;
+
+  let defaults =
+  {
+    withBranches : 1,
+    withDisabledModules : 0,
+    withDisabledStem : null,
+    withDisabledSubmodules : 0,
+    withEnabledModules : 1,
+    withEnabledSubmodules : 1,
+    withIn : 1,
+    withInvalid : 1,
+    withKnown : 1,
+    withMandatorySubmodules : 1,
+    withOptionalSubmodules : 1,
+    withOut : 1,
+    withPeers : 1,
+    withStem : 1,
+    withTerminals : 1,
+    withUnknown : 0,
+    withValid : 1,
+    withoutDuplicates : 0,
+
+    onEachModule : onEachModule,
+    onEachJunction : onEachJunction,
+    onEachVisitedObject : onEachVisitedObject,
+    onBegin : onBegin,
+    onEnd : onEnd,
+  }
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'submodules is not opened';
+    let o2 =
+    {
+      ... defaults,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::b )',
+        'junction::( module::b / opener::ModuleForTesting1 )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::b',
+        'relation::ModuleForTesting1'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'submodules is opened';
+    let o2 =
+    {
+      ... defaults,
+      modules : openers,
+    }
+
+    return a.will.moduleWithNameMap.b.subModulesDownload()
+    .then( () => a.will.modulesFor( o2 ) )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp =
+      [
+        'module::b',
+        'module::wModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::b )',
+        'junction::( module::b / module::wModuleForTesting1 )',
+        'junction::( module::b / module::wModuleForTesting1 )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::b',
+        'relation::ModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  return a.ready;
+
+
+  /* - */
+
+  function onEachModule( module, op )
+  {
+    onEachModules.push( module );
+    return null;
+  }
+
+  /* - */
+
+  function onEachJunction( junction, op )
+  {
+    onEachJunctions.push( junction );
+    return null;
+  }
+
+  /* - */
+
+  function onEachVisitedObject( object, op )
+  {
+    onEachVisitedObjects.push( object );
+    return null;
+  }
+
+  /* - */
+
+  function onBegin( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function onEnd( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function clean()
+  {
+    onEachModules = [];
+    onEachJunctions = [];
+    onEachVisitedObjects = [];
+  }
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      clean();
+      a.fileProvider.filesDelete( a.abs( '.' ) );
       a.reflect();
 
       if( o2.tracing === undefined )
@@ -12697,6 +12960,7 @@ const Proto =
     modulesFindEachAt,
     modulesForOpeners,
     modulesFor,
+    modulesForWithSubmodules,
 
     // submodule
 
