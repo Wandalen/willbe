@@ -453,6 +453,62 @@ function fileAtWithOptions( test )
 
 fileAtWithOptions.rapidity = -1;
 
+//
+
+function fileAtWillfilesWithDifferentExtensions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  test.case = 'path to dir, standard exetensions';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( './Author.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Version.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './.ex.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, not standard exetensions';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( './Author.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Contributors.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Keywords.will.yml' ), dstPath : a.abs( 'will.json' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './License.will.yml' ), dstPath : a.abs( '.will.json' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Name.will.yml' ), dstPath : a.abs( '.im.will.json' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Version.will.yml' ), dstPath : a.abs( '.ex.will.json' ) });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 8 );
+  test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 4 ].filePath, a.abs( './will.json' ) );
+  test.identical( got[ 5 ].filePath, a.abs( './.will.json' ) );
+  test.identical( got[ 6 ].filePath, a.abs( './.im.will.json' ) );
+  test.identical( got[ 7 ].filePath, a.abs( './.ex.will.json' ) );
+
+  /* */
+
+  test.case = 'path to dir, not supported exetensions';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( './Author.will.yml' ), dstPath : a.abs( 'will.bson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Contributors.will.yml' ), dstPath : a.abs( '.will.bson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Keywords.will.yml' ), dstPath : a.abs( 'will.cson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './License.will.yml' ), dstPath : a.abs( '.will.cson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Name.will.yml' ), dstPath : a.abs( '.im.will.cson' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Version.will.yml' ), dstPath : a.abs( '.ex.will.cson' ) });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+}
 
 // --
 // declare
@@ -482,6 +538,7 @@ let Self =
 
     fileAt,
     fileAtWithOptions,
+    fileAtWillfilesWithDifferentExtensions,
 
   }
 
