@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  b : ./group1/b
+  b : ./b
 
 path :
 

@@ -1,11 +1,11 @@
 
 about :
-  name : a
+  name : c
   version : '0.0.0'
 
 submodule :
 
-  b : ./group1/b
+  d : ./d
 
 path :
 

@@ -1830,6 +1830,129 @@ function moduleClone( test )
 
 } /* end of function moduleClone */
 
+//
+
+function modulesUpform( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesUpform' );
+  let openers;
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ), transaction : { withSubmodules : 0 } })
+  .then( () =>
+  {
+    test.case = 'module with nested submodules, withSubmodules:0';
+    let o2 =
+    {
+      modules : openers,
+    }
+    var exp = [ 'module::a' ]
+    test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+    a.will.transaction.extend({ withSubmodules : 0 })
+
+    return a.will.modulesUpform( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ 'module::a' ]
+      test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+      return op;
+    })
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ), transaction : { withSubmodules : 0 } })
+  .then( () =>
+  {
+    test.case = 'module with nested submodules, withSubmodules:1';
+    let o2 =
+    {
+      modules : openers,
+    }
+    var exp = [ 'module::a' ]
+    test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+    a.will.transaction.extend({ withSubmodules : 1 })
+
+    return a.will.modulesUpform( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ 'module::a', 'module::b' ]
+      test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+      return op;
+    })
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ), transaction : { withSubmodules : 0 } })
+  .then( () =>
+  {
+    test.case = 'module with nested submodules, withSubmodules:2';
+    let o2 =
+    {
+      modules : openers,
+    }
+    var exp = [ 'module::a' ]
+    test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+    a.will.transaction.extend({ withSubmodules : 2 })
+
+    return a.will.modulesUpform( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ 'module::a', 'module::b', 'module::c', 'module::d' ]
+      test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+      return op;
+    })
+  })
+  end()
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      a.will.transaction.finit();
+      a.will.transaction = _.will.Transaction({ targetLogger : a.will.logger, ... o2.transaction || {} });
+
+      let opener = a.will.openerMakeManual({ willfilesPath : o2.selector });
+      openers = [ opener ];
+
+      return opener.open();
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
+}
+
 // --
 // export
 // --
@@ -12898,6 +13021,7 @@ const Proto =
     openCurruptedUnknownField,
     openerClone,
     moduleClone,
+    modulesUpform,
 
     // export
 

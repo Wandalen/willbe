@@ -16,16 +16,6 @@ path :
       debug : 1
   temp : '{path::out}'
 
-reflector :
-
-  reflect.submodules :
-    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
-    criterion :
-      debug : 1
-    dst :
-      basePath : .
-      prefixPath : path::out.debug
-
 step :
 
   export :
@@ -39,8 +29,6 @@ build :
 
   export :
     steps :
-      - submodules.download
-      - reflect.submodules
       - export
     criterion :
       debug : 1
