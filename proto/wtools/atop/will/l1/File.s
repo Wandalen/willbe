@@ -232,8 +232,15 @@ function _filesAtFindTerminals( o )
 
   if( !o.withIn )
   filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+  if( !o.withSingle )
+  filter.maskTerminal.includeAll.push( /(^|\.|\/)(ex|im)(\.)/ )
+
   if( !o.withOut )
   filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+  if( !o.withExport )
+  filter.maskTerminal.excludeAny.push( /(^|\.|\/)ex(\.)/ )
+  if( !o.withImport )
+  filter.maskTerminal.excludeAny.push( /(^|\.|\/)im(\.)/ )
 
   let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( o.commonPath );
   let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( o.commonPath );
@@ -243,12 +250,10 @@ function _filesAtFindTerminals( o )
   {
     if( o.withImport )
     postfix += '?(im.)';
-    if( o.withImport )
+    if( o.withExport )
     postfix += '?(ex.)';
     if( o.withOut )
     postfix += '?(out.)';
-    else if( o.withIn )
-    postfix += '';
 
     postfix += 'will';
 
