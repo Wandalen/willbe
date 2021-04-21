@@ -130,6 +130,96 @@ function assetFor( test, name )
 // tests
 // --
 
+function fileClassify( test )
+{
+  test.case = 'root - /';
+  var got = _.will.fileClassify( '/' );
+  test.identical( got, { filePath : '/' } );
+
+  test.case = 'not willfile';
+  var got = _.will.fileClassify( '/a/abc' );
+  test.identical( got, { filePath : '/a/abc' } );
+
+  /* */
+
+  test.case = 'will.yml';
+  var got = _.will.fileClassify( '/a/will.yml' );
+  test.identical( got, { filePath : '/a/will.yml', role : 'single', out : false } );
+
+  test.case = '.will.yml';
+  var got = _.will.fileClassify( '/a/.will.yml' );
+  test.identical( got, { filePath : '/a/.will.yml', role : 'single', out : false } );
+
+  test.case = '.ex.will.yml';
+  var got = _.will.fileClassify( '/a/.ex.will.yml' );
+  test.identical( got, { filePath : '/a/.ex.will.yml', role : 'export', out : false } );
+
+  test.case = '.im.will.yml';
+  var got = _.will.fileClassify( '/a/.im.will.yml' );
+  test.identical( got, { filePath : '/a/.im.will.yml', role : 'import', out : false } );
+
+  test.case = '.out.will.yml';
+  var got = _.will.fileClassify( '/a/.out.will.yml' );
+  test.identical( got, { filePath : '/a/.out.will.yml', role : 'single', out : true } );
+
+  /* */
+
+  test.case = 'Namedwill.yml';
+  var got = _.will.fileClassify( '/a/Namedwill.yml' );
+  test.identical( got, { filePath : '/a/Namedwill.yml' } );
+
+  test.case = 'Named.will.yml';
+  var got = _.will.fileClassify( '/a/Named.will.yml' );
+  test.identical( got, { filePath : '/a/Named.will.yml', role : 'single', out : false } );
+
+  test.case = 'Named.ex.will.yml';
+  var got = _.will.fileClassify( '/a/Named.ex.will.yml' );
+  test.identical( got, { filePath : '/a/Named.ex.will.yml', role : 'export', out : false } );
+
+  test.case = 'Named.im.will.yml';
+  var got = _.will.fileClassify( '/a/Named.im.will.yml' );
+  test.identical( got, { filePath : '/a/Named.im.will.yml', role : 'import', out : false } );
+
+  test.case = 'Named.out.will.yml';
+  var got = _.will.fileClassify( '/a/Named.out.will.yml' );
+  test.identical( got, { filePath : '/a/Named.out.will.yml', role : 'single', out : true } );
+
+  /* */
+
+  test.case = 'another valid extension - will.json';
+  var got = _.will.fileClassify( '/a/will.json' );
+  test.identical( got, { filePath : '/a/will.json', role : 'single', out : false } );
+
+  test.case = 'another valid extension - .will.json';
+  var got = _.will.fileClassify( '/a/.will.json' );
+  test.identical( got, { filePath : '/a/.will.json', role : 'single', out : false } );
+
+  test.case = 'another not valid extension - will.txt';
+  var got = _.will.fileClassify( '/a/will.txt' );
+  test.identical( got, { filePath : '/a/will.txt' } );
+
+  test.case = 'another valid extension - .will.txt';
+  var got = _.will.fileClassify( '/a/.will.txt' );
+  test.identical( got, { filePath : '/a/.will.txt' } );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.fileClassify() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.fileClassify( '/', '/.will.yml' ) );
+
+  test.case = 'not absolute path';
+  test.shouldThrowErrorSync( () => _.will.fileClassify( './.will.yml' ) );
+  test.shouldThrowErrorSync( () => _.will.fileClassify( 'hd:///.will.yml' ) );
+}
+
+//
+
 function fileAt( test )
 {
   let context = this;
@@ -2017,6 +2107,8 @@ let Self =
 
   tests :
   {
+
+    fileClassify,
 
     fileAt,
     fileAtWithOptions,
