@@ -78,7 +78,7 @@ function fileAt_body( o )
   let isTrailed = path.isTrailed( o.commonPath );
 
   if( !isTrailed ) /* qqq : cover */
-  if( fileProvider.isTerminal( o.commonPath ) )  /* qqq : cover */
+  if( fileProvider.isTerminal( o.commonPath ) )  /* aaa : cover */ /* Dmytro : covered */
   {
     _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
     let r = _.will.fileClassify( o.commonPath );
@@ -437,7 +437,7 @@ let Extension =
 {
 
   fileClassify, /* qqq : for Dmytro : cover */
-  fileAt, /* qqq : for Dmytro : cover */
+  fileAt, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
   filePathIs,
   filePathIsOut,
 

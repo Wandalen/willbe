@@ -510,6 +510,33 @@ function fileAtWillfilesWithDifferentExtensions( test )
   test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
 }
 
+//
+
+function fileAtWillfilesInSubdirectories( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  test.case = 'path to dir, no willfiles in subdirectory';
+  a.reflect();
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, withAllNamed - 1, willfiles in subdirectory';
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+}
+
 // --
 // declare
 // --
@@ -539,6 +566,7 @@ let Self =
     fileAt,
     fileAtWithOptions,
     fileAtWillfilesWithDifferentExtensions,
+    fileAtWillfilesInSubdirectories,
 
   }
 
