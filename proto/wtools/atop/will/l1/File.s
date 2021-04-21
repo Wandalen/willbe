@@ -306,7 +306,9 @@ function filesAt_body( o )
     if( !path.isSafe( o.commonPath, o.safe ) )
     return [];
 
-    let commonPathDir = path.dir( o.commonPath );
+    let commonPathDir = o.commonPath;
+    if( !isTrailed )
+    commonPathDir = path.dir( o.commonPath );
     let commonDirIsGlob = path.isGlob( commonPathDir );
     let recursive = _.strHas( path.fullName( o.commonPath ), '**' );
 
@@ -409,7 +411,7 @@ function filesAt_body( o )
     for( let i = 0; i < dirs.length; i++ )
     {
       o2.commonPath = path.join( dirs[ i ], './' );
-      let records = _.will.findAt( o2 );
+      let records = _.will.fileAt( o2 );
       _.arrayAppendArray( result, records );
     }
 

@@ -1009,6 +1009,76 @@ function filesAtFilePathWithGlobs( test )
 filesAtFilePathWithGlobs.rapidity = -1;
 filesAtFilePathWithGlobs.timeOut = 3e5;
 
+//
+
+function filesAtFilePathWithGlobsWithTrailedPath( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  test.open( 'glob - */' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/' ) });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt({ commonPath : a.abs( '*/' ) });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author/' ) });
+  test.identical( got, [] );
+
+  test.close( 'glob - */' );
+
+  /* - */
+
+  test.open( 'glob - */**/' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+
+  test.case = 'path to dir with unnamed split willfiles';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/**/' ) });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'path to dir with unnamed willfiles, renamed willfiles';
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.filesAt({ commonPath : a.abs( '*/**/' ) });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'path to directory named as willfile';
+  var got = _.will.filesAt({ commonPath : a.abs( '*/Author/' ) });
+  test.identical( got, [] );
+
+  test.close( 'glob - */**/' );
+}
+
 // --
 // declare
 // --
@@ -1042,6 +1112,7 @@ let Self =
 
     filesAtFilePathWithoutGlobs,
     filesAtFilePathWithGlobs,
+    filesAtFilePathWithGlobsWithTrailedPath,
 
   }
 
