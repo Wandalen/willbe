@@ -1873,7 +1873,6 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     }
     test.identical( path.download, expected );
 
-
     opener.finit();
     return null;
   });
