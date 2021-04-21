@@ -290,6 +290,169 @@ function fileAt( test )
   test.shouldThrowErrorSync( () => _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 0 }) );
 }
 
+//
+
+function fileAtWithOptions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* */
+
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Author.will.yml' ), dstPath : a.abs( '.out.will.yml' ) });
+
+  test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0 });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withSingle : 0 });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withImport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withExport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+
+  /* */
+
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( 'Author.will.yml' ), dstPath : a.abs( '.out.will.yml' ) });
+
+  test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withSingle : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withImport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
+
+  test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.fileAt({ commonPath : a.abs( './' ) });
+  test.identical( got.length, 3 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withExport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
+
+  /* */
+
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( '.ex.will.yml' ), dstPath : a.abs( 'Author.out.will.yml' ) });
+
+  test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withSingle : 0 });
+  test.identical( got, [] );
+
+  test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withImport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withExport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
+
+  /* */
+
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( '.ex.will.yml' ), dstPath : a.abs( 'Author.out.will.yml' ) });
+
+  test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
+
+  test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withSingle : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
+
+  test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withImport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
+
+  test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withExport : 0 });
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, fileProvider - _.fileProvider';
+  a.reflect();
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), fileProvider : _.fileProvider });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+
+  /* */
+
+  test.case = 'path to dir, withSingle - 0, has single files';
+  a.reflect();
+  a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './.im.will.yml' ), dstPath : a.abs( '.will.yml' ) });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withSingle : 1 });
+  test.identical( got.length, 2 );
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withSingle : 0 });
+  test.identical( got.length, 0 );
+}
+
+fileAtWithOptions.rapidity = -1;
+
 
 // --
 // declare
@@ -318,6 +481,7 @@ let Self =
   {
 
     fileAt,
+    fileAtWithOptions,
 
   }
 
