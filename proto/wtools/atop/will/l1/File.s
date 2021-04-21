@@ -43,6 +43,25 @@ function fileClassify( filePath )
 
 //
 
+function _fileAtClassifyTerminals( o )
+{
+  _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
+
+  let r = _.will.fileClassify( o.commonPath );
+  if( r.out )
+  {
+    if( o.withOut )
+    return r;
+  }
+  else
+  {
+    if( o.withIn )
+    return r;
+  }
+}
+
+//
+
 function fileAt_head( routine, args )
 {
   let o = args[ 0 ]
@@ -77,24 +96,31 @@ function fileAt_body( o )
 
   let isTrailed = path.isTrailed( o.commonPath );
 
-  if( !isTrailed ) /* qqq : cover */
+  if( !isTrailed ) /* aaa : cover */ /* Dmytro : covered */
   if( fileProvider.isTerminal( o.commonPath ) )  /* aaa : cover */ /* Dmytro : covered */
   {
-    _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
-    let r = _.will.fileClassify( o.commonPath );
-    if( r.out )
-    {
-      if( o.withOut )
-      result.push( r );
-      return result;
-    }
-    else
-    {
-      if( o.withIn )
-      result.push( r );
-      return result;
-    }
+    result.push( _.will._fileAtClassifyTerminals( o ) );
+    return result;
   }
+
+  // if( !isTrailed )
+  // if( fileProvider.isTerminal( o.commonPath ) )
+  // {
+  //   _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
+  //   let r = _.will.fileClassify( o.commonPath );
+  //   if( r.out )
+  //   {
+  //     if( o.withOut )
+  //     result.push( r );
+  //     return result;
+  //   }
+  //   else
+  //   {
+  //     if( o.withIn )
+  //     result.push( r );
+  //     return result;
+  //   }
+  // }
 
   if( !path.isSafe( o.commonPath, o.safe ) )
   return result;
@@ -181,9 +207,249 @@ fileAt_body.defaults =
   withExport : 1,
   safe : 1,
   fileProvider : null,
-}
+};
 
 let fileAt = _.routine.unite( fileAt_head, fileAt_body );
+
+//
+
+function _filesAtFindTerminals( o )
+{
+  let filter =
+   {
+     maskTerminal :
+     {
+      includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
+      excludeAny :
+      [
+        /\.DS_Store$/,
+        /(^|\/)-/,
+      ],
+      includeAll : []
+    },
+    recursive : 1,
+  };
+
+  if( !o.withIn )
+  filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+  if( !o.withOut )
+  filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+
+  let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( o.commonPath );
+  let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( o.commonPath );
+
+  let postfix = '?(.)';
+  if( !hasWill )
+  {
+    if( o.withImport )
+    postfix += '?(im.)';
+    if( o.withImport )
+    postfix += '?(ex.)';
+    if( o.withOut )
+    postfix += '?(out.)';
+    else if( o.withIn )
+    postfix += '';
+
+    postfix += 'will';
+
+    if( !hasExt )
+    postfix += '.*';
+
+    o.commonPath += postfix;
+  }
+
+  var globTerminals = o.fileProvider.filesFinder
+  ({
+    filter,
+    withTerminals : 1,
+    withDirs : 0,
+    maskPreset : 0,
+    mandatory : 0,
+    safe : 0,
+    mode : 'distinct',
+  });
+
+  return globTerminals( o.commonPath );
+}
+
+//
+
+function filesAt_body( o )
+{
+  let fileProvider = o.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !path.isGlobal( o.commonPath ), 'Expects local path {-o.commonPath-}' );
+  _.assert( o.withIn || o.withOut, 'Routine searches in and out willfiles. Please, define option {-o.withIn-} or {-o.withOut-}' );
+
+  let result = [];
+
+  let isTrailed = path.isTrailed( o.commonPath );
+  let commonPathIsGlob = path.isGlob( o.commonPath );
+
+  if( !isTrailed && !commonPathIsGlob )
+  if( fileProvider.isTerminal( o.commonPath ) )
+  {
+    result.push( _.will._fileAtClassifyTerminals( o ) );
+    return result;
+  }
+
+  if( commonPathIsGlob )
+  return willfilesFind( o );
+  else
+  return _.will.fileAt( o );
+
+  /* */
+
+  function willfilesFind( o )
+  {
+    if( !path.isSafe( o.commonPath, o.safe ) )
+    return [];
+
+    let commonPathDir = path.dir( o.commonPath );
+    let commonDirIsGlob = path.isGlob( commonPathDir );
+    let recursive = _.strHas( path.fullName( o.commonPath ), '**' );
+
+    if( !commonDirIsGlob )
+    if( !recursive )
+    return willfilesFindTerminals( o );
+
+    /* */
+
+    let optionsForDirSearch = optionsMake( o.commonPath );
+    let dirs = fileProvider.filesFind( optionsForDirSearch );
+
+    if( commonDirIsGlob )
+    {
+      let optionsForDirSearch2 = optionsMake( commonPathDir );
+      let dirsExcludedMaybe = fileProvider.filesFind( optionsForDirSearch2 );
+      dirs = _.arrayAppendArrayOnce( dirs, dirsExcludedMaybe );
+    }
+    else
+    {
+      dirs = _.arrayAppendOnce( dirs, commonPathDir );
+    }
+
+    /* */
+
+    if( isTrailed )
+    result = findAtTrailed( dirs );
+    else
+    result = findAtNotTrailed( dirs );
+
+    return result;
+  }
+
+  /* */
+
+  function willfilesFindTerminals( o )
+  {
+    let o2 = _.mapExtend( null, o );
+
+    let terminals = _filesAtFindTerminals( o2 );
+    let globGetsAllNames = _.strBegins( path.name( o2.commonPath ), [ '?', '*' ] );
+    let names = [ 'will', '.will', '.im.will', '.ex.will', '.out.will' ];
+    let o3 = { withIn : o2.withIn, withOut : o2.withOut };
+    let onRecord = ( record ) =>
+    {
+      record = path.globShortFilter({ src : record, selector : o.commonPath, onEvaluate : ( el ) => el.absolute });
+      if( record && globGetsAllNames && !o.withAllNamed )
+      record = _.strHasAny( record.name, names ) ? record : undefined;
+
+      if( record === null )
+      {
+        return undefined;
+      }
+      else
+      {
+        o3.commonPath = record.absolute;
+        return _.will._fileAtClassifyTerminals( o3 );
+      }
+    };
+    _.filter_( terminals, terminals, onRecord );
+    return terminals;
+  }
+
+  /* */
+
+  function optionsMake( commonPath )
+  {
+    let filter =
+    {
+      filePath : commonPath,
+      maskDirectory : {},
+      maskTransientDirectory : {},
+    };
+
+    if( _.strHas( commonPath, '**' ) )
+    filter.recursive = 2;
+
+    let o2 =
+    {
+      filter,
+      withTerminals : 0,
+      withDirs : 1,
+      maskPreset : 0,
+      mandatory : 0,
+      safe : 0,
+      mode : 'distinct',
+      outputFormat : 'absolute',
+    };
+
+    return o2;
+  }
+
+  /* */
+
+  function findAtTrailed( dirs )
+  {
+    let result = [];
+    let o2 = _.mapExtend( null, o );
+
+    for( let i = 0; i < dirs.length; i++ )
+    {
+      o2.commonPath = path.join( dirs[ i ], './' );
+      let records = _.will.findAt( o2 );
+      _.arrayAppendArray( result, records );
+    }
+
+    return result;
+  }
+
+  /* */
+
+  function findAtNotTrailed( dirs )
+  {
+    let result = [];
+    let o2 = _.mapExtend( null, o );
+    let name = path.fullName( o2.commonPath );
+
+    for( let i = 0; i < dirs.length; i++ )
+    {
+      o2.commonPath = path.join( dirs[ i ], name );
+      let records = willfilesFindTerminals( o2 );
+      _.arrayAppendArray( result, records );
+    }
+
+    return result;
+  }
+}
+
+filesAt_body.defaults =
+{
+  commonPath : null,
+  withIn : 1,
+  withOut : 1,
+  withSingle : 1,
+  withImport : 1,
+  withExport : 1,
+  safe : 1,
+  fileProvider : null,
+};
+
+//
+
+const filesAt = _.routine.unite( fileAt_head, filesAt_body );
 
 //
 
@@ -199,7 +465,8 @@ function filePathIsOut( filePath )
 function filePathIs( filePath )
 {
   let fname = _.path.fullName( filePath );
-  let r = /\.will\.\w+/;
+  let r = /(^|\.)will\.\w+/;
+  // let r = /\.will\.\w+/;
   if( _.strHas( fname, r ) )
   return true;
   return false;
@@ -437,7 +704,10 @@ let Extension =
 {
 
   fileClassify, /* qqq : for Dmytro : cover */
+  _fileAtClassifyTerminals,
   fileAt, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
+  _filesAtFindTerminals,
+  filesAt,
   filePathIs,
   filePathIsOut,
 
