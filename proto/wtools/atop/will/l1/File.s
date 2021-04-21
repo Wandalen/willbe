@@ -468,7 +468,7 @@ function filePathIs( filePath )
 {
   let fname = _.path.fullName( filePath );
   let r = /(^|\.)will\.\w+/;
-  // let r = /\.will\.\w+/;
+  // let r = /\.will\.\w+/; /* Dmytro : the regexp does not include willfiles that start with word `will` */
   if( _.strHas( fname, r ) )
   return true;
   return false;
