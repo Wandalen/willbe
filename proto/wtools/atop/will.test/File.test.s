@@ -1534,6 +1534,306 @@ filesAtCommonPathWithGlobsWithOptions.rapidity = -1;
 
 //
 
+function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  test.open( 'glob - */' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Version.will.yml' ), dstPath : a.abs( 'out.will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './proto/Version.will.yml' ), dstPath : a.abs( 'proto/out.will.yml' ) });
+
+  test.case = 'withIn - 1, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 1,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 6 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/out.will.yml' ) );
+  test.identical( got[ 4 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 5 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/out.will.yml' ) );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 0,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got, [] );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 0,
+    withExport : 1
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/out.will.yml' ) );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 0
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/out.will.yml' ) );
+
+  /* */
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 0,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 1,
+    withImport : 0,
+    withExport : 1
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '*/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 0
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.close( 'glob - */' );
+
+  /* - */
+
+  test.open( 'glob - **/' );
+
+  a.reflect();
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
+  a.fileProvider.fileRename({ srcPath : a.abs( './Version.will.yml' ), dstPath : a.abs( 'out.will.yml' ) });
+  a.fileProvider.fileRename({ srcPath : a.abs( './proto/Version.will.yml' ), dstPath : a.abs( 'proto/out.will.yml' ) });
+
+  test.case = 'withIn - 1, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 1,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 6 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/out.will.yml' ) );
+  test.identical( got[ 4 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 5 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/out.will.yml' ) );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 0,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got, [] );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 0,
+    withExport : 1
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/out.will.yml' ) );
+
+  test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 0,
+    withOut : 1,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 0
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/out.will.yml' ) );
+
+  /* */
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 0,
+    withImport : 1,
+    withExport : 1
+  });
+  test.identical( got.length, 4 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 1,
+    withImport : 0,
+    withExport : 1
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+
+  test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
+  var got = _.will.filesAt
+  ({
+    commonPath : a.abs( '**/' ),
+    withIn : 1,
+    withOut : 0,
+    withSingle : 1,
+    withImport : 1,
+    withExport : 0
+  });
+  test.identical( got.length, 2 );
+  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './proto/.im.will.yml' ) );
+
+  test.close( 'glob - **/' );
+}
+
+filesAtCommonPathWithGlobsWithTrailedPathWithOptions.rapidity = -1;
+
+//
+
 function filePathIs( test )
 {
   test.case = 'empty string';
@@ -1728,6 +2028,7 @@ let Self =
     filesAtCommonPathWithGlobsWithTrailedPath,
     filesAtCommonPathWithoutGlobsWithOptions,
     filesAtCommonPathWithGlobsWithOptions,
+    filesAtCommonPathWithGlobsWithTrailedPathWithOptions,
 
     filePathIs,
 

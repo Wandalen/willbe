@@ -129,6 +129,7 @@ function fileAt_body( o )
   {
     let filePath
 
+    if( o.withSingle )
     if( o.withOut )
     {
       filePath = o.commonPath + '.out.will.' + ext;
