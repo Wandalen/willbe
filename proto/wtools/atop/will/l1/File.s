@@ -13,6 +13,7 @@ const Self = _.will = _.will || Object.create( null );
 function fileClassify( filePath )
 {
 
+  _.assert( arguments.length === 1, 'Expects single file path {-filePath-}' );
   _.assert( _.path.isAbsolute( filePath ) );
 
   let result = _.any( _.will.FileExtension, ( ext ) =>
@@ -24,19 +25,22 @@ function fileClassify( filePath )
     if( _.strEnds( filePath, '.out.will.' + ext ) )
     return { filePath, role : 'single', out : true }
 
-    if( _.strEnds( filePath, '.will.' + ext ) )
-    return { filePath, role : 'single', out : false }
-
     if( _.strEnds( filePath, '.im.will.' + ext ) )
     return { filePath, role : 'import', out : false }
 
     if( _.strEnds( filePath, '.ex.will.' + ext ) )
     return { filePath, role : 'export', out : false }
 
+    if( _.strEnds( filePath, '.will.' + ext ) )
+    return { filePath, role : 'single', out : false }
+
+    if( _.strEnds( filePath, _.path.upToken + 'will.' + ext ) )
+    return { filePath, role : 'single', out : false }
+
   });
 
   if( !result )
-  return { filePath }
+  return { filePath };
 
   return result;
 }
@@ -461,15 +465,6 @@ const filesAt = _.routine.unite( fileAt_head, filesAt_body );
 
 //
 
-function filePathIsOut( filePath )
-{
-  if( _.arrayIs( filePath ) )
-  filePath = filePath[ 0 ];
-  return _.strHas( filePath, /\.out(\.\w+)?(\.\w+)?$/ );
-}
-
-//
-
 function filePathIs( filePath )
 {
   let fname = _.path.fullName( filePath );
@@ -478,6 +473,15 @@ function filePathIs( filePath )
   if( _.strHas( fname, r ) )
   return true;
   return false;
+}
+
+//
+
+function filePathIsOut( filePath )
+{
+  if( _.arrayIs( filePath ) )
+  filePath = filePath[ 0 ];
+  return _.strHas( filePath, /\.out(\.\w+)?(\.\w+)?$/ );
 }
 
 //
@@ -711,11 +715,13 @@ const FileExtension = [ 'yml', 'json' ];
 let Extension =
 {
 
-  fileClassify, /* qqq : for Dmytro : cover */
+  fileClassify, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
+
   _fileAtClassifyTerminals,
   fileAt, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
   _filesAtFindTerminals,
-  filesAt,
+  filesAt, /* Dmytro : implemented, covered */
+
   filePathIs,
   filePathIsOut,
 
