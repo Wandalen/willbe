@@ -2529,15 +2529,14 @@ function eachBrokenCommand( test )
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodulesFew' );
   a.reflect();
-  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
   /* - */
 
-  a.appStartNonThrowing( `.each */* .resource.list path::module.common` )
-  .finally( ( err, op ) =>
+  a.appStartNonThrowing( `.each */* .resource.list path::module.common` );
+  a.ready.then( ( op ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
-    test.true( !err );
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2545,12 +2544,12 @@ function eachBrokenCommand( test )
     // test.identical( _.strCount( op.output, 'Module at' ), 3 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function eachBrokenCommand */
+}
 
 //
 
@@ -5397,14 +5396,13 @@ function withDoCommentOut( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !!outfile.execution );
     return null;
-  })
+  });
   a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution verbosity:5' )
   .then( ( op ) =>
   {
@@ -5413,18 +5411,17 @@ function withDoCommentOut( test )
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !outfile.execution );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     a.reflect();
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !!outfile.execution );
     return null;
-  })
+  });
   a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1 verbosity:1' )
   .then( ( op ) =>
   {
@@ -5433,19 +5430,19 @@ function withDoCommentOut( test )
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'execution_section/will.yml' ) );
     test.true( !!outfile.execution );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function withDoCommentOut */
+}
 
 withDoCommentOut.timeOut = 300000;
 withDoCommentOut.description =
 `
 - commenting out works
 - arguments passing to action works
-`
+`;
 
 //
 
@@ -5633,14 +5630,11 @@ function hookGitMake( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
+    test.true( _.git.isRepository({ remotePath : `https://github.com/${ user }/New2` }) );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${user}/New2` ), 1 );
-    test.identical( _.strCount( op.output, `Making remote repository https://github.com/${user}/New2` ), 1 );
-    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
-    test.identical( _.strCount( op.output, `git init .` ), 1 );
-    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2` ), 1 );
-    test.identical( _.strCount( op.output, `> ` ), 3 );
+    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${ user }/New2` ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
 
     var exp = [ '.', './will.yml' ];
     var files = a.find( a.abs( 'New2' ) );
@@ -5661,14 +5655,13 @@ function hookGitMake( test )
   /* - */
 
   return a.ready;
-
-} /* end of function hookGitMake */
+}
 
 hookGitMake.timeOut = 300000;
 
 //
 
-function hookPrepare( test )
+function hookPrepare( test ) /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -7403,26 +7396,15 @@ function hookWasPackageExtendWillfile( test )
 
   /* - */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'extend unnamed willfiles without options';
-    a.reflect();
-    a.fileProvider.filesReflect
-    ({
-      reflectMap :
-      {
-        [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ),
-        [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
-      }
-    });
-
     return null;
   });
 
   a.appStart( '.call WasPackageExtendWillfile' )
   .then( ( op ) =>
   {
-    debugger;
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '+ writing' ), 2 );
     test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
@@ -7442,19 +7424,9 @@ function hookWasPackageExtendWillfile( test )
 
   /* */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'extend unnamed willfiles with options';
-    a.reflect();
-    a.fileProvider.filesReflect
-    ({
-      reflectMap :
-      {
-        [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ),
-        [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
-      }
-    });
-
     return null;
   });
 
@@ -7463,8 +7435,8 @@ function hookWasPackageExtendWillfile( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, 'willfilefromnpm' );
@@ -7478,7 +7450,7 @@ function hookWasPackageExtendWillfile( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStartNonThrowing( '.call WasPackageExtendWillfile unknown:1' )
   .then( ( op ) =>
@@ -7491,6 +7463,25 @@ function hookWasPackageExtendWillfile( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect
+      ({
+        reflectMap :
+        {
+          [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ),
+          [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
+        }
+      });
+      return null;
+    });
+  }
 }
 
 //
@@ -20296,7 +20287,8 @@ function submodulesDownloadInvalidUrl( test )
   a.appStartNonThrowing({ execPath : '.with badProtocol .submodules.download' })
   .then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
+    // test.notIdentical( op.exitCode, 0 );
+    test.identical( op.exitCode, 0 ); /* Dmytro : peer modules forms and throw no error because private routine _peerModulesForm use option `throwing : 0`. If broken path is not recognized as remote path, then utility handle submodule as local submodule and throw no error too */
     test.identical( _.strCount( op.output, 'Command ".with badProtocol .submodules.download"' ), 1 );
     test.identical( _.strCount( op.output, /\. Opened \. .*badProtocol\.will\.yml/ ), 1 );
     test.identical( _.strCount( op.output, '! Failed to open module::submodulesDownloadErrorsBadProtocol' ), 1 );
@@ -20305,10 +20297,12 @@ function submodulesDownloadInvalidUrl( test )
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module at' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module::submodulesDownloadErrorsBadProtocol / relation::ModuleForTesting2a' ), 2 );
-    // test.true( _.strHas( op.output, 'Failed to download module' ) );
-    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    return null;
 
+    test.identical( _.strCount( op.output, '. Read 1 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/1 submodule(s) of module::submodulesDownloadErrorsBadProtocol were downloaded in' ), 1 );
+    // test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    return null;
   });
 
   /* - */
@@ -28348,7 +28342,7 @@ function commandImplyPropertyWithEnabled( test )
       a.fileProvider.filesDelete( a.abs( '.' ) );
       a.reflect();
       return null;
-    })
+    });
   }
 }
 
@@ -41445,7 +41439,7 @@ const Proto =
 
     hookCallInfo,
     hookGitMake,
-    hookPrepare,
+    // hookPrepare, /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
     hookHlink,
     hookGitPull,
     hookGitPullConflict,
