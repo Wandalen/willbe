@@ -111,6 +111,9 @@ function wasFilterFieldsChanged( transaction )
 {
   let t = this;
 
+  if( !transaction )
+  return false;
+
   if( t.withPath !== transaction.withPath )
   return true;
 
