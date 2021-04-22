@@ -737,8 +737,8 @@ let Extension =
 
   fileReadResource, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
   fileReadPath, /* aaa : for Dmytro : light coverage */ /* Dmytro : covered */
-  fileWriteResource, /* qqq : for Dmytro : cover */
-  fileWritePath, /* qqq : for Dmytro : light coverage */
+  fileWriteResource, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
+  fileWritePath, /* aaa : for Dmytro : light coverage */ /* Dmytro : covered */
 
   environmentPathFind,
 

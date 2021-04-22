@@ -2306,7 +2306,6 @@ function fileWriteResource( test )
     commonPath : a.abs( './' ),
     resourceKind : 'about',
     resourceName : 'name',
-    val : false,
   });
   test.identical( got.filePath, a.abs( './.ex.will.yml' ) );
 
@@ -2462,6 +2461,174 @@ function fileWriteResource( test )
   });
 }
 
+//
+
+function fileWritePath( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  test.case = 'commonPath - path to dir, resourceName - in, exists, val - not defined';
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './' ),
+    resourceName : 'in',
+  });
+  test.identical( read, '.' );
+
+  var got = _.will.fileWritePath
+  ({
+    commonPath : a.abs( './' ),
+    resourceName : 'in',
+  });
+  test.identical( got.filePath, a.abs( './.im.will.yml' ) );
+
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './' ),
+    resourceName : 'in',
+  });
+  test.identical( read, undefined );
+
+  /* */
+
+  test.case = 'commonPath - path with name of file, resourceName - proto, val - map';
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './PathMain' ),
+    resourceName : 'proto',
+  });
+  test.identical( read, { path : 'proto' } );
+
+  var got = _.will.fileWritePath
+  ({
+    commonPath : a.abs( './PathMain' ),
+    resourceName : 'proto',
+    val : { path : 'out/proto' },
+  });
+  test.identical( got.filePath, a.abs( './PathMain.will.yml' ) );
+
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './PathMain' ),
+    resourceName : 'proto',
+  });
+  test.identical( read, { path : 'out/proto' } );
+
+  /* */
+
+  test.case = 'commonPath - path with full name of file, resourceKind - reflector - hack, resourceName - proto.debug';
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './.im.will.yml' ),
+    resourceKind : 'reflector',
+    resourceName : 'proto.debug',
+  });
+  var exp =
+  {
+    inherit : 'predefined.*',
+    criterion : { 'debug' : 1 },
+    filePath : { 'path::proto' : '{path::out.*=1}/source' },
+  };
+  test.identical( read, exp );
+
+  var got = _.will.fileWritePath
+  ({
+    commonPath : a.abs( './.im.will.yml' ),
+    resourceKind : 'reflector',
+    resourceName : 'proto.debug',
+    val : { filePath : { 'path::proto' : '{path::out.*=1}/source' } },
+  });
+  test.identical( got.filePath, a.abs( './.im.will.yml' ) );
+
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './.im.will.yml' ),
+    resourceKind : 'reflector',
+    resourceName : 'proto.debug',
+  });
+  test.identical( read, { filePath : { 'path::proto' : '{path::out.*=1}/source' } } );
+
+  /* */
+
+  test.case = 'commonPath - path to dir, resourceName - unknown - resource not exists';
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './.im.will.yml' ),
+    resourceName : 'unknown',
+  });
+  test.identical( read, undefined );
+
+  var got = _.will.fileWritePath
+  ({
+    commonPath : a.abs( './.im.will.yml' ),
+    resourceName : 'unknown',
+    val : 'unknown'
+  });
+  test.identical( got.filePath, a.abs( './.im.will.yml' ) );
+
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './.im.will.yml' ),
+    resourceName : 'unknown',
+  });
+  test.identical( read, 'unknown' );
+
+  /* */
+
+  test.case = 'commonPath - path to file, file not exists, throwing - 0';
+  var got = _.will.fileWritePath
+  ({
+    commonPath : a.abs( './Unknown.will.yml' ),
+    resourceName : 'proto',
+    val : { path : 'proto' },
+    throwing : 0,
+  });
+  test.identical( got, undefined );
+
+  var read = _.will.fileReadPath
+  ({
+    commonPath : a.abs( './Unknown.will.yml' ),
+    resourceName : 'proto',
+    throwing : 0,
+  });
+  test.identical( read, undefined );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  a.reflect();
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.fileWritePath() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.fileWritePath( a.abs( '.' ), 'in', 'in' ) );
+
+  test.case = 'resourceKind is not defined';
+  test.shouldThrowErrorSync( () => _.will.fileWritePath({ commonPath : a.abs( '.' ), resourceName : 'in' }) );
+
+  test.case = 'common path has no willfiles';
+  test.shouldThrowErrorSync( () => _.will.fileWritePath({ commonPath : a.abs( 'proto' ), resourceName : 'in' }) );
+
+  test.case = 'common path has willfiles but options for searching allows no read';
+  test.shouldThrowErrorSync( () =>
+  {
+    return _.will.fileWritePath
+    ({
+      commonPath : a.abs( './PathMain' ),
+      resourceKind : 'path',
+      resourceName : 'proto',
+      withSingle : 0,
+    });
+  });
+}
+
 // --
 // declare
 // --
@@ -2507,6 +2674,7 @@ let Self =
     fileReadResource,
     fileReadPath,
     fileWriteResource,
+    fileWritePath,
 
   }
 
