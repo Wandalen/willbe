@@ -160,18 +160,18 @@ function fileAt_body( o )
           result.push({ filePath : filePath, role : 'single', out : false });
         }
 
-        if( o.withImport )
-        {
-          filePath = o.commonPath + 'im.will.' + ext;
-          if( fileProvider.resolvedIsTerminal( filePath ) )
-          result.push({ filePath : filePath, role : 'import', out : false });
-        }
-
         if( o.withExport )
         {
           filePath = o.commonPath + 'ex.will.' + ext;
           if( fileProvider.resolvedIsTerminal( filePath ) )
           result.push({ filePath : filePath, role : 'export', out : false });
+        }
+
+        if( o.withImport )
+        {
+          filePath = o.commonPath + 'im.will.' + ext;
+          if( fileProvider.resolvedIsTerminal( filePath ) )
+          result.push({ filePath : filePath, role : 'import', out : false });
         }
       }
 
@@ -182,18 +182,18 @@ function fileAt_body( o )
         result.push({ filePath : filePath, role : 'single', out : false });
       }
 
-      if( o.withImport )
-      {
-        filePath = o.commonPath + '.im.will.' + ext;
-        if( fileProvider.resolvedIsTerminal( filePath ) )
-        result.push({ filePath : filePath, role : 'import', out : false });
-      }
-
       if( o.withExport )
       {
         filePath = o.commonPath + '.ex.will.' + ext;
         if( fileProvider.resolvedIsTerminal( filePath ) )
         result.push({ filePath : filePath, role : 'export', out : false });
+      }
+
+      if( o.withImport )
+      {
+        filePath = o.commonPath + '.im.will.' + ext;
+        if( fileProvider.resolvedIsTerminal( filePath ) )
+        result.push({ filePath : filePath, role : 'import', out : false });
       }
     }
 

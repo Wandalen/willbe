@@ -263,8 +263,8 @@ function fileAt( test )
   test.case = 'path to dir with unnamed split willfiles';
   var got = _.will.fileAt( a.abs( './' ) );
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir with unnamed willfiles, renamed willfiles';
   a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
@@ -310,8 +310,8 @@ function fileAt( test )
   test.case = 'path to dir with unnamed split willfiles';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir with unnamed willfiles, renamed willfiles';
   a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
@@ -397,16 +397,16 @@ function fileAtWithOptions( test )
   test.identical( got.length, 3 );
   var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0 });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
   var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withSingle : 0 });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
@@ -524,8 +524,8 @@ function fileAtWithOptions( test )
   a.reflect();
   var got = _.will.fileAt({ commonPath : a.abs( './' ), fileProvider : _.fileProvider });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   /* */
 
@@ -558,8 +558,8 @@ function fileAtWillfilesWithDifferentExtensions( test )
   test.identical( got.length, 4 );
   test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './.im.will.yml' ) );
 
   /* */
 
@@ -575,12 +575,12 @@ function fileAtWillfilesWithDifferentExtensions( test )
   test.identical( got.length, 8 );
   test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './.im.will.yml' ) );
   test.identical( got[ 4 ].filePath, a.abs( './will.json' ) );
   test.identical( got[ 5 ].filePath, a.abs( './.will.json' ) );
-  test.identical( got[ 6 ].filePath, a.abs( './.im.will.json' ) );
-  test.identical( got[ 7 ].filePath, a.abs( './.ex.will.json' ) );
+  test.identical( got[ 6 ].filePath, a.abs( './.ex.will.json' ) );
+  test.identical( got[ 7 ].filePath, a.abs( './.im.will.json' ) );
 
   /* */
 
@@ -594,8 +594,8 @@ function fileAtWillfilesWithDifferentExtensions( test )
   a.fileProvider.fileRename({ srcPath : a.abs( './Version.will.yml' ), dstPath : a.abs( '.ex.will.cson' ) });
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 }
 
 //
@@ -611,8 +611,8 @@ function fileAtWillfilesInSubdirectories( test )
   a.reflect();
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   /* */
 
@@ -621,8 +621,8 @@ function fileAtWillfilesInSubdirectories( test )
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'proto/' ) } });
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 }
 
 //
@@ -670,8 +670,8 @@ function filesAtCommonPathWithoutGlobs( test )
   test.case = 'path to dir with unnamed split willfiles';
   var got = _.will.filesAt( a.abs( './' ) );
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir with unnamed willfiles, renamed willfiles';
   a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
@@ -717,8 +717,8 @@ function filesAtCommonPathWithoutGlobs( test )
   test.case = 'path to dir with unnamed split willfiles';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir with unnamed willfiles, renamed willfiles';
   a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
@@ -1114,10 +1114,10 @@ function filesAtCommonPathWithGlobsWithTrailedPath( test )
   test.case = 'path to dir with unnamed split willfiles';
   var got = _.will.filesAt({ commonPath : a.abs( '*/' ) });
   test.identical( got.length, 4 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'path to dir with unnamed willfiles, renamed willfiles';
   a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
@@ -1126,8 +1126,8 @@ function filesAtCommonPathWithGlobsWithTrailedPath( test )
   test.identical( got.length, 4 );
   test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'path to directory named as willfile';
   var got = _.will.filesAt({ commonPath : a.abs( '*/Author/' ) });
@@ -1145,10 +1145,10 @@ function filesAtCommonPathWithGlobsWithTrailedPath( test )
   test.case = 'path to dir with unnamed split willfiles';
   var got = _.will.filesAt({ commonPath : a.abs( '*/**/' ) });
   test.identical( got.length, 4 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'path to dir with unnamed willfiles, renamed willfiles';
   a.fileProvider.fileRename({ srcPath : a.abs( './.ex.will.yml' ), dstPath : a.abs( 'will.yml' ) });
@@ -1157,8 +1157,8 @@ function filesAtCommonPathWithGlobsWithTrailedPath( test )
   test.identical( got.length, 4 );
   test.identical( got[ 0 ].filePath, a.abs( './will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'path to directory named as willfile';
   var got = _.will.filesAt({ commonPath : a.abs( '*/Author/' ) });
@@ -1184,16 +1184,16 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.identical( got.length, 3 );
   var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0 });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
   var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withSingle : 0 });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
@@ -1311,8 +1311,8 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   a.reflect();
   var got = _.will.filesAt({ commonPath : a.abs( './' ), fileProvider : _.fileProvider });
   test.identical( got.length, 2 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
 
   /* */
 
@@ -1327,6 +1327,7 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
 }
 
 filesAtCommonPathWithoutGlobsWithOptions.rapidity = -1;
+filesAtCommonPathWithoutGlobsWithOptions.timeOut = 3e5;
 
 //
 
@@ -1646,11 +1647,11 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   });
   test.identical( got.length, 6 );
   test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.im.will.yml' ) );
   test.identical( got[ 3 ].filePath, a.abs( './proto/out.will.yml' ) );
-  test.identical( got[ 4 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 5 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 4 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 5 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.filesAt
@@ -1719,10 +1720,10 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
     withExport : 1
   });
   test.identical( got.length, 4 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt
@@ -1735,10 +1736,10 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
     withExport : 1
   });
   test.identical( got.length, 4 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt
@@ -1791,11 +1792,11 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   });
   test.identical( got.length, 6 );
   test.identical( got[ 0 ].filePath, a.abs( './out.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './.im.will.yml' ) );
   test.identical( got[ 3 ].filePath, a.abs( './proto/out.will.yml' ) );
-  test.identical( got[ 4 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 5 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 4 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 5 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.filesAt
@@ -1864,10 +1865,10 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
     withExport : 1
   });
   test.identical( got.length, 4 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt
@@ -1880,10 +1881,10 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
     withExport : 1
   });
   test.identical( got.length, 4 );
-  test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
-  test.identical( got[ 1 ].filePath, a.abs( './.ex.will.yml' ) );
-  test.identical( got[ 2 ].filePath, a.abs( './proto/.im.will.yml' ) );
-  test.identical( got[ 3 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
+  test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
+  test.identical( got[ 2 ].filePath, a.abs( './proto/.ex.will.yml' ) );
+  test.identical( got[ 3 ].filePath, a.abs( './proto/.im.will.yml' ) );
 
   test.case = 'withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt
