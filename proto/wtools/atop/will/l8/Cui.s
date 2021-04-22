@@ -188,7 +188,10 @@ function openersFind( o )
 
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
+  o2.atLeastOne = !path.isGlob( o.localPath )
   delete o2.localPath;
+  delete o2.allowNoOpeners;
+
   return will.modulesFindWithAt( o2 )
   .finally( function( err, it )
   {
@@ -199,10 +202,15 @@ function openersFind( o )
     throw _.err( err );
 
     will.currentOpeners = it.openers;
+
     if( !will.currentOpeners.length )
-    debugger;
-    if( !will.currentOpeners.length )
-    throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+    {
+      debugger;
+      if( !o.allowNoOpeners )
+      throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+      else
+      will.currentOpeners = null;
+    }
 
     return will.currentOpeners;
   })
@@ -218,6 +226,8 @@ openersFind.defaults =
   localPath : null,
   // tracing : 1,
   tracing : null,
+
+  allowNoOpeners : false
 
 }
 
@@ -1104,6 +1114,7 @@ defaults.event = null;
 defaults.onEach = null;
 defaults.commandRoutine = null;
 defaults.name = null;
+defaults.allowNoOpeners = null;
 
 // _commandNewLike.defaults =
 // {
@@ -2853,6 +2864,7 @@ function commandModuleNewWith( e )
     withOut : 0,
     // withDisabledModules : 0,
     withInvalid : 1,
+    allowNoOpeners : true
   })
   .then( ( arg ) =>
   {
@@ -3820,7 +3832,8 @@ function commandWith( e )
   }
 
   // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
-  let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
+  // let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
+  let withPath = path.join( path.current(), e.instructionArgument );
   cui.implied = _.mapExtend( cui.implied, { withPath } );
 
   cui._command_head

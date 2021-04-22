@@ -12974,7 +12974,8 @@ function exportDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'No module sattisfy' ), 1 );
+    // test.identical( _.strCount( op.output, 'No module sattisfy' ), 1 );
+    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
 
     return null;
   })
@@ -13773,7 +13774,8 @@ function exportTracing( test )
   {
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
+    // test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
+    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
     _.errAttend( err );
     return null;
   })
@@ -17465,7 +17467,8 @@ function cleanDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 0 );
-    test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
+    // test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
+    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
 
     return null;
   })

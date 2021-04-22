@@ -97,6 +97,8 @@ function form()
   if( t[ p ] === null )
   t[ p ] = TransactionFields[ p ];
 
+  debugger
+
   if( !t.withPath )
   t.withPath = _.fileProvider.path.join( _.fileProvider.path.current(), './' );
 
@@ -269,18 +271,16 @@ function _transactionPropertySetter_functor( propName )
 
 //
 
-function _transactionWithPropertySetter_functor( propName, backPropName )
+function _transactionWithPropertyGetter_functor( propName, backPropName )
 {
-  return function set( src )
+  return function get( src )
   {
     let t = this;
-    if( t.formed )
-    return;
 
-    if( src === null )
-    src = t[ backPropName ];
+    if( t._[ propName ] === null )
+    return t[ backPropName ];
 
-    t._[ propName ] = src;
+    return t._[ propName ];
   }
 }
 
@@ -365,10 +365,10 @@ let Accessors =
   _ : { get : _.accessor.getter.withSymbol, writable : 0 },
   verbosity : { get : verbosityGet, set : verbositySet },
   withSubmodules : { get : _transactionPropertyGetter_functor( 'withSubmodules' ), set : withSubmodulesSet },
-  withEnabledModules : { get : _transactionPropertyGetter_functor( 'withEnabledModules' ), set : _transactionWithPropertySetter_functor( 'withEnabledModules', 'withEnabled' ) },
-  withEnabledSubmodules : { get : _transactionPropertyGetter_functor( 'withEnabledSubmodules' ), set : _transactionWithPropertySetter_functor( 'withEnabledSubmodules', 'withEnabled' ) },
-  withDisabledModules : { get : _transactionPropertyGetter_functor( 'withDisabledModules' ), set : _transactionWithPropertySetter_functor( 'withDisabledModules', 'withDisabled' ) },
-  withDisabledSubmodules : { get : _transactionPropertyGetter_functor( 'withDisabledSubmodules' ), set : _transactionWithPropertySetter_functor( 'withDisabledSubmodules', 'withDisabled' ) },
+  withEnabledModules : { get : _transactionWithPropertyGetter_functor( 'withEnabledModules', 'withEnabled' ), set : _transactionPropertySetter_functor( 'withEnabledModules' ) },
+  withEnabledSubmodules : { get : _transactionWithPropertyGetter_functor( 'withEnabledSubmodules', 'withEnabled' ), set : _transactionPropertySetter_functor( 'withEnabledSubmodules' ) },
+  withDisabledModules : { get : _transactionWithPropertyGetter_functor( 'withDisabledModules', 'withDisabled' ), set : _transactionPropertySetter_functor( 'withDisabledModules' ) },
+  withDisabledSubmodules : { get : _transactionWithPropertyGetter_functor( 'withDisabledSubmodules', 'withDisabled' ), set : _transactionPropertySetter_functor( 'withDisabledSubmodules' ) },
   modulesDepth : { get : _transactionPropertyGetter_functor( 'modulesDepth' ), set : modulesDepthSet }
 }
 
