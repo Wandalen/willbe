@@ -410,14 +410,13 @@ function _willfilesFindAct( o )
   }
   else
   {
-    // if( _.strEnds( o.willfilesPath, '/l2' ) )
-    // debugger;
     records = will.willfilesFind
     ({
       commonPath : o.willfilesPath,
+      // commonPath,
       withIn : o.withIn,
       withOut : o.withOut,
-      exact : !!opener.superRelation,
+      // exact : !!opener.superRelation, /* Dmytro : hack, should not be used */
       usingCache : 1,
     });
   }
