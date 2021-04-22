@@ -594,9 +594,14 @@ fileWriteResource_body.defaults =
   resourceName : null,
   resourceKind : null,
   val : null,
-}
+};
+
+//
 
 let fileWriteResource = _.routine.unite( fileResource_head, fileWriteResource_body );
+
+//
+
 let fileWritePath = _.routine.uniteCloning( fileResource_head, fileWriteResource_body );
 fileWritePath.defaults.resourceKind = 'path';
 
