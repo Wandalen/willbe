@@ -133,18 +133,18 @@ function fileAt_body( o )
   {
     let filePath
 
-    if( o.withSingle )
     if( o.withOut )
+    if( o.withSingle )
     {
       filePath = o.commonPath + '.out.will.' + ext;
       if( fileProvider.resolvedIsTerminal( filePath ) )
-      result.push({ filePath : filePath, role : 'single', out : false });
+      result.push({ filePath, role : 'single', out : false });
 
       if( isTrailed )
       {
         filePath = o.commonPath + 'out.will.' + ext;
         if( fileProvider.resolvedIsTerminal( filePath ) )
-        result.push({ filePath : filePath, role : 'single', out : false });
+        result.push({ filePath, role : 'single', out : false });
       }
     }
 
@@ -157,21 +157,21 @@ function fileAt_body( o )
         {
           filePath = o.commonPath + 'will.' + ext;
           if( fileProvider.resolvedIsTerminal( filePath ) )
-          result.push({ filePath : filePath, role : 'single', out : false });
+          result.push({ filePath, role : 'single', out : false });
         }
 
         if( o.withExport )
         {
           filePath = o.commonPath + 'ex.will.' + ext;
           if( fileProvider.resolvedIsTerminal( filePath ) )
-          result.push({ filePath : filePath, role : 'export', out : false });
+          result.push({ filePath, role : 'export', out : false });
         }
 
         if( o.withImport )
         {
           filePath = o.commonPath + 'im.will.' + ext;
           if( fileProvider.resolvedIsTerminal( filePath ) )
-          result.push({ filePath : filePath, role : 'import', out : false });
+          result.push({ filePath, role : 'import', out : false });
         }
       }
 
@@ -179,22 +179,32 @@ function fileAt_body( o )
       {
         filePath = o.commonPath + '.will.' + ext;
         if( fileProvider.resolvedIsTerminal( filePath ) )
-        result.push({ filePath : filePath, role : 'single', out : false });
+        {
+          result.push({ filePath, role : 'single', out : false });
+        }
+        else
+        {
+          let path = o.commonPath + '.' + ext;
+          if( _.will.filePathIs( path ) )
+          if( fileProvider.resolvedIsTerminal( path ) )
+          result.push({ filePath : path, role : 'single', out : false });
+        }
       }
 
       if( o.withExport )
       {
         filePath = o.commonPath + '.ex.will.' + ext;
         if( fileProvider.resolvedIsTerminal( filePath ) )
-        result.push({ filePath : filePath, role : 'export', out : false });
+        result.push({ filePath, role : 'export', out : false });
       }
 
       if( o.withImport )
       {
         filePath = o.commonPath + '.im.will.' + ext;
         if( fileProvider.resolvedIsTerminal( filePath ) )
-        result.push({ filePath : filePath, role : 'import', out : false });
+        result.push({ filePath, role : 'import', out : false });
       }
+
     }
 
   });

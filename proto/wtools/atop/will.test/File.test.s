@@ -292,7 +292,8 @@ function fileAt( test )
 
   test.case = 'path to named willfile, has will, not full path';
   var got = _.will.fileAt( a.abs( './Author.will' ) );
-  test.identical( got, [] );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, has im, not full path';
   var got = _.will.fileAt( a.abs( './.im' ) );
@@ -339,7 +340,8 @@ function fileAt( test )
 
   test.case = 'path to named willfile, has will, not full path';
   var got = _.will.fileAt({ commonPath : a.abs( './Author.will' ) });
-  test.identical( got, [] );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, has im, not full path';
   var got = _.will.fileAt({ commonPath : a.abs( './.im' ) });
@@ -699,7 +701,8 @@ function filesAtCommonPathWithoutGlobs( test )
 
   test.case = 'path to named willfile, has will, not full path';
   var got = _.will.filesAt( a.abs( './Author.will' ) );
-  test.identical( got, [] );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, has im, not full path';
   var got = _.will.filesAt( a.abs( './.im' ) );
@@ -746,7 +749,8 @@ function filesAtCommonPathWithoutGlobs( test )
 
   test.case = 'path to named willfile, has will, not full path';
   var got = _.will.filesAt({ commonPath : a.abs( './Author.will' ) });
-  test.identical( got, [] );
+  test.identical( got.length, 1 );
+  test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, has im, not full path';
   var got = _.will.filesAt({ commonPath : a.abs( './.im' ) });
