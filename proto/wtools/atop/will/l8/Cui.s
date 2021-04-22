@@ -184,7 +184,7 @@ function openersFind( o )
   }
 
   if( o.tracing === null )
-  o.tracing = !path.isGlob( o.localPath );
+  o.tracing = !path.isGlob( o.localPath ) && path.isTrailed( o.localPath );
 
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
@@ -1359,13 +1359,9 @@ function openersFindMaybe( o )
     cui.currentOpeners = null;
   }
 
-  let isGlob = path.isGlob( o.localPath );
-
   return cui.openersFind
   ({
-    localPath : o.localPath,
-    atLeastOne : !isGlob,
-    tracing : !isGlob
+    localPath : o.localPath
   })
 }
 
