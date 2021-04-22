@@ -3830,7 +3830,10 @@ function commandWith( e )
 
   // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
   // let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
-  let withPath = path.join( path.current(), _.strUnquote( e.instructionArgument ) );
+  let withPath = _.strUnquote( e.instructionArgument );
+  if( withPath === '.' )
+  withPath = './';
+  withPath = path.join( path.current(), withPath );
   cui.implied = _.mapExtend( cui.implied, { withPath } );
 
   cui._command_head
