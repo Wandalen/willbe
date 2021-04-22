@@ -2998,6 +2998,7 @@ function modulesUpform( o )
 
     let o3 = _.mapOnly_( null, o, module.upform.defaults ); /* xxx : not optimal */
 
+    if( o3.subModulesFormed === null )
     o3.subModulesFormed = subModulesFormed;
 
     return module.upform( o3 );
