@@ -1362,7 +1362,6 @@ function openersFindMaybe( o )
 function _commandModuleOrientedLike( o )
 {
   let will = this;
-  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routineOptions( _commandModuleOrientedLike, arguments );
@@ -1380,16 +1379,24 @@ function _commandModuleOrientedLike( o )
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
+  let modulesDepth = will.transaction.modulesDepth;
+
+  if( o.withStem === null )
+  o.withStem = modulesDepth[ 0 ] === 0;
+
   // if( will.currentOpeners === null )
   // ready.then( () => will.openersFind() )
 
   let reload = will.transaction.wasFilterFieldsChanged( will.transactionOld );
 
-  ready.then( () => will.openersFindMaybe({ localPath : will.transaction.withPath, reload : reload }) );
+  ready.then( () => will.openersFindMaybe({ localPath : will.transaction.withPath, reload : reload }) )
+
+  if( reload )
+  ready.then( () => will.modulesUpform({ modules : will.currentOpeners, recursive : modulesDepth[ 0 ] }) )
 
   ready.then( () =>
   {
-    debugger
+
     let openers = will.currentOpeners;
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
@@ -1412,7 +1419,8 @@ var defaults = _commandModuleOrientedLike.defaults =
 {
   ... Parent.prototype.modulesFor.defaults,
   withPeers : 0,
-  withStem : 1,
+  // withStem : 1,
+  withStem : null,
   event : null,
   commandRoutine : null,
   name : null,
@@ -2687,7 +2695,7 @@ command.properties =
 function commandSubmodulesGitSync( e )
 {
   let cui = this;
-  let logger = cui.transaction.logger;
+  // let logger = cui.transaction.logger;
   let provider;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
@@ -2722,7 +2730,7 @@ function commandSubmodulesGitSync( e )
     });
 
     if( cui.transaction.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 
@@ -3688,93 +3696,93 @@ command.subjectHint = 'A name of export scenario.';
 
 /* xxx : add test routine checking wrong syntax error handling */
 
-function commandWithOld( e )
-{
-  let cui = this.form();
-  let path = cui.fileProvider.path;
+// function commandWith( e )
+// {
+//   let cui = this.form();
+//   let path = cui.fileProvider.path;
 
-  cui._command_head
-  ({
-    routine : commandWith,
-    args : arguments,
-    // usingImpliedMap : 0
-  });
+//   cui._command_head
+//   ({
+//     routine : commandWith,
+//     args : arguments,
+//     // usingImpliedMap : 0
+//   });
 
-  // if( cui.currentOpener )
-  // {
-  //   cui.currentOpener.finit();
-  //   cui.currentOpenerChange( null );
-  // }
+//   // if( cui.currentOpener )
+//   // {
+//   //   cui.currentOpener.finit();
+//   //   cui.currentOpenerChange( null );
+//   // }
 
-  if( cui.currentOpeners )
-  cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
-  cui.currentOpeners = null;
+//   if( cui.currentOpeners )
+//   cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+//   cui.currentOpeners = null;
 
-  _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
-  _.assert( arguments.length === 1 );
+//   _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
+//   _.assert( arguments.length === 1 );
 
-  if( !e.instructionArgument )
-  throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
+//   if( !e.instructionArgument )
+//   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  if( process.platform === 'linux' )
-  {
-    let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
-    if( quoteRanges.length !== 2 || ( quoteRanges[ 0 ] !== 0 && quoteRanges[ 1 ] !== e.instructionArgument.length ) )
-    {
-      let splits = e.instructionArgument.split( ' ' );
-      if( splits.length > 1 )
-      {
-        let screenMap = _.paths.ext( splits );
-        for( let i = screenMap.length - 1 ; i >= 0 ; i-- )
-        {
-          if( screenMap[ i ] === '' )
-          {
-            splits[ i ] = _.strUnquote( `${ splits[ i ] } ${ splits[ i + 1 ] }` );
-            splits.splice( i + 1, 1 );
-          }
-        }
-        e.instructionArgument = _.strCommonLeft( ... splits ) + '*';
-      }
-    }
-  }
+//   if( process.platform === 'linux' )
+//   {
+//     let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
+//     if( quoteRanges.length !== 2 || ( quoteRanges[ 0 ] !== 0 && quoteRanges[ 1 ] !== e.instructionArgument.length ) )
+//     {
+//       let splits = e.instructionArgument.split( ' ' );
+//       if( splits.length > 1 )
+//       {
+//         let screenMap = _.paths.ext( splits );
+//         for( let i = screenMap.length - 1 ; i >= 0 ; i-- )
+//         {
+//           if( screenMap[ i ] === '' )
+//           {
+//             splits[ i ] = _.strUnquote( `${ splits[ i ] } ${ splits[ i + 1 ] }` );
+//             splits.splice( i + 1, 1 );
+//           }
+//         }
+//         e.instructionArgument = _.strCommonLeft( ... splits ) + '*';
+//       }
+//     }
+//   }
 
-  // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
-  let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
+//   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
+//   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
 
-  cui.implied = _.mapExtend( cui.implied, { withPath } );
-  cui._transactionExtend( commandWith, cui.implied );
+//   cui.implied = _.mapExtend( cui.implied, { withPath } );
+//   cui._transactionExtend( commandWith, cui.implied );
 
-  return cui.modulesFindWithAt
-  ({
-    selector : _.strUnquote( e.instructionArgument ),
-    atLeastOne : !path.isGlob( e.instructionArgument ),
-  })
-  .then( function( it )
-  {
-    cui.currentOpeners = it.sortedOpeners;
+//   return cui.modulesFindWithAt
+//   ({
+//     selector : _.strUnquote( e.instructionArgument ),
+//     atLeastOne : !path.isGlob( e.instructionArgument ),
+//   })
+//   .then( function( it )
+//   {
+//     cui.currentOpeners = it.sortedOpeners;
 
-    if( !cui.currentOpeners.length )
-    {
-      let equalizer = ( parsed, command ) => parsed.commandName === command;
-      if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
-      throw _.errBrief
-      (
-        `No module sattisfy criteria.`
-        , `\nLooked at ${ _.strQuote( path.resolve( e.instructionArgument ) )}`
-      );
-      else
-      cui.currentOpeners = null;
-    }
+//     if( !cui.currentOpeners.length )
+//     {
+//       let equalizer = ( parsed, command ) => parsed.commandName === command;
+//       if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+//       throw _.errBrief
+//       (
+//         `No module sattisfy criteria.`
+//         , `\nLooked at ${ _.strQuote( path.resolve( e.instructionArgument ) )}`
+//       );
+//       else
+//       cui.currentOpeners = null;
+//     }
 
-    _.assert( cui.transaction instanceof _.will.Transaction );
-    // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
-    // cui.transaction.finit();
-    // cui.transaction = null;
+//     _.assert( cui.transaction instanceof _.will.Transaction );
+//     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
+//     // cui.transaction.finit();
+//     // cui.transaction = null;
 
-    return it;
-  })
+//     return it;
+//   })
 
-}
+// }
 
 //
 
@@ -3811,8 +3819,6 @@ function commandWith( e )
     }
   }
 
-  debugger
-
   // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
   let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
   cui.implied = _.mapExtend( cui.implied, { withPath } );
@@ -3825,6 +3831,11 @@ function commandWith( e )
 
   _.assert( cui.transaction instanceof _.will.Transaction );
   _.assert( cui.transaction.withPath === withPath );
+
+  cui.transaction.finit();
+  cui.transactionOld = cui.transaction;
+  cui.transaction = null;
+
 }
 
 // commandWith.defaults = _.mapExtend( null, commandImply.defaults );
@@ -5259,7 +5270,7 @@ function commandGitSync( e )
 
   function handleEach( module )
   {
-    debugger
+
     return module.gitSync
     ({
       commit : e.subject,
@@ -5283,8 +5294,8 @@ commandGitSync.defaults =
   dirPath : null,
   dry : 0,
   profile : 'default',
-  verbosity : 1,
-  withSubmodules : 0
+  // verbosity : 1,
+  // withSubmodules : 0
 };
 var command = commandGitSync.command = Object.create( null );
 command.hint = 'Syncronize local and remote repositories.';

@@ -118,6 +118,11 @@ function wasFilterFieldsChanged( transaction )
   if( t[ propName ] !== transaction[ propName ] )
   return true;
 
+  if( t.modulesDepth[ 0 ] !== transaction.modulesDepth[ 0 ] )
+  return true
+  if( t.modulesDepth[ 1 ] !== transaction.modulesDepth[ 1 ] )
+  return true
+
   return false;
 }
 
@@ -225,6 +230,9 @@ function modulesDepthSet( src )
     t._.modulesDepth[ 0 ] = src[ 0 ];
     t._.modulesDepth[ 1 ] = src[ 1 ];
   }
+
+  _.assert( t._.modulesDepth[ 0 ] >= 0 && t._.modulesDepth[ 0 ] <= 2 );
+  _.assert( t._.modulesDepth[ 1 ] === 0 || t._.modulesDepth[ 1 ] === Infinity );
 }
 
 //
