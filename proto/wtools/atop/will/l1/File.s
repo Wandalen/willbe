@@ -516,12 +516,18 @@ function fileReadResource_body( o )
     return;
   }
 
-  return _.any( found, ( file ) =>
+  for( let i = 0 ; i < found.length ; i++ )
   {
-    let read = o.fileProvider.fileReadUnknown({ filePath : file.filePath });
+    let read = o.fileProvider.fileReadUnknown({ filePath : found[ i ].filePath });
     if( read[ o.resourceKind ] && _.property.has( read[ o.resourceKind ], o.resourceName ) )
     return read[ o.resourceKind ][ o.resourceName ];
-  });
+  };
+  // return _.any( found, ( file ) => /* Dmytro : routine not handle undefines */
+  // {
+  //   let read = o.fileProvider.fileReadUnknown({ filePath : file.filePath });
+  //   if( read[ o.resourceKind ] && _.property.has( read[ o.resourceKind ], o.resourceName ) )
+  //   return read[ o.resourceKind ][ o.resourceName ];
+  // });
 
 }
 
