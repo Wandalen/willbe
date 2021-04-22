@@ -4132,16 +4132,19 @@ function _willfilesReadLog()
 
 function WillfilesFind( o )
 {
-
   if( _.strIs( o ) )
   o = { commonPath : o };
 
   _.routineOptions( WillfilesFind, o );
 
   if( !o.fileProvider )
-  o.fileProvider = _.fileProvider;
+  o.fileProvider = _.fileSystem;
   if( !o.logger )
   o.logger = _global_.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolIs( o.recursive ) );
+  _.assert( o.recursive === false, 'not implemented' );
 
   const fileProvider = o.fileProvider;
   let path = fileProvider.path;
@@ -4153,66 +4156,67 @@ function WillfilesFind( o )
   o.commonPath = _.strRemoveEnd( o.commonPath, '.' );
   o.commonPath = path.resolve( o.commonPath );
 
-  _.assert( arguments.length === 1 );
-  _.assert( _.boolIs( o.recursive ) );
-  _.assert( o.recursive === false, 'not tested' );
   _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
 
-  let recursive = o.recursive;
-  if( _.boolIs( recursive ) )
-  recursive = recursive === false ? 1 : 2;
+  /* */
+
+  let result;
+  let o2 = _.mapOnly_( null, o, _.will.filesAt.defaults );
 
   if( !o.tracing )
-  return _willfilesFind( o.commonPath );
+  return end( _.will.filesAt( o2 ) );
 
-  let commonPaths = path.traceToRoot( o.commonPath );
-
-  let result = _willfilesFind( commonPaths[ commonPaths.length - 1 ] );
+  let commonPaths = path.traceToRoot( o2.commonPath );
+  o2.commonPath = commonPaths[ commonPaths.length - 1 ];
+  result = _.will.filesAt( o2 );
   if( result.length )
-  return result;
+  return end( result );
 
-  for( let d = commonPaths.length - 1 ; d >= 0 ; d-- )
+  for( let d = commonPaths.length - 2 ; d >= 0 ; d-- )
   {
-    let commonPath = commonPaths[ d ];
-    let result = _willfilesFind( path.trail( commonPath ) );
+    o2.commonPath = path.trail( commonPaths[ d ] );
+    result = _.will.filesAt( o2 );
     if( result.length )
-    return result;
+    return end( result );
   }
 
   return [];
 
   /* */
 
-  function _willfilesFind( filePath )
+  function end( result )
   {
-    let willfiles = _.Will.WillfilesFindWithGlob
-    ({
-      filePath,
-      recursive,
-      withIn : o.withIn,
-      withOut : o.withOut,
-      exact : o.exact,
-      withAllNamed : _.strEnds( filePath, '*' ),
-      excludingUnderscore : o.excludingUnderscore,
-    });
+    if( o.excludingUnderscore )
+    result = pathsFilterUnderscores( result );
 
-    return willfilesSort( willfiles );
+    if( o.outputFormat === 'descriptor' )
+    return result;
+    if( o.outputFormat === 'record' )
+    return recordsMake( result );
+    _.assert( 0, 'Unknown format of output records' );
   }
 
-  function willfilesSort( willfiles )
+  /* */
+
+  function pathsFilterUnderscores( paths )
   {
-    let result = [];
-    willfiles.forEach( ( willfile ) =>
+    let excludeRegexps = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
+    return _.filter_( paths, paths, ( record ) =>
     {
-      if( _.will.filePathIsOut( file.absolute ) )
-      files2.push( file );
-    });
-    willfiles.forEach( ( willfile ) =>
-    {
-      if( !_.will.filePathIsOut( file.absolute ) )
-      files2.push( file );
-    });
-    return result;
+      let found = _.any( excludeRegexps, ( regexp ) => regexp.test( record.filePath ) );
+      if( found )
+      return;
+      return record;
+    })
+  }
+
+  /* */
+
+  function recordsMake( records )
+  {
+    for( let i = 0 ; i < records.length ; i++ )
+    records[ i ] = fileProvider.record( records[ i ].filePath );
+    return records;
   }
 
   // if( _.strIs( o ) )
@@ -4376,13 +4380,193 @@ WillfilesFind.defaults =
   commonPath : null,
   withIn : 1,
   withOut : 1,
-  exact : 0,
+  withExport : 1,
+  withSingle : 1,
+  withImport : 1,
+  fileProvider : null,
+
   recursive : false,
   tracing : 0,
   excludingUnderscore : 0,
-  fileProvider : null,
-  logger : null,
-}
+  outputFormat : 'record', /* Dmytro : introduced option outputFormat : [ 'record', 'descriptor' ], routines of utility looks for file records, not willfile descriptors */
+  logger : null, /* Dmytro : not used, maybe should be deleted */
+};
+
+// function WillfilesFind( o )
+// {
+//
+//   if( _.strIs( o ) )
+//   o = { commonPath : o }
+//
+//   _.routineOptions( WillfilesFind, o );
+//
+//   if( !o.fileProvider )
+//   o.fileProvider = _.fileProvider;
+//   if( !o.logger )
+//   o.logger = _global_.logger;
+//
+//   const fileProvider = o.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = o.logger;
+//
+//   if( o.commonPath === '.' )
+//   o.commonPath = './';
+//   o.commonPath = path.normalize( o.commonPath );
+//   o.commonPath = _.strRemoveEnd( o.commonPath, '.' );
+//   o.commonPath = path.resolve( o.commonPath );
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.boolIs( o.recursive ) );
+//   _.assert( o.recursive === false );
+//   _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
+//
+//   if( !o.tracing )
+//   return findFor( o.commonPath );
+//
+//   let commonPaths = path.traceToRoot( o.commonPath );
+//
+//   {
+//     let result = findFor( commonPaths[ commonPaths.length-1 ] );
+//     if( result.length )
+//     return result;
+//   }
+//
+//   for( let d = commonPaths.length-1 ; d >= 0 ; d-- )
+//   {
+//     let commonPath = commonPaths[ d ];
+//     let result = findFor( path.trail( commonPath ) );
+//     if( result.length )
+//     return result;
+//   }
+//
+//   return [];
+//
+//   function findFor( commonPath )
+//   {
+//
+//     if( !path.isSafe( commonPath, 1 ) )
+//     return [];
+//
+//     let filter =
+//     {
+//       filePath : commonPath,
+//       maskTransientDirectory :
+//       {
+//       },
+//       maskDirectory :
+//       {
+//       },
+//       maskTerminal :
+//       {
+//         includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
+//         excludeAny :
+//         [
+//           /\.DS_Store$/,
+//           /(^|\/)-/,
+//         ],
+//         includeAll : []
+//       }
+//     };
+//
+//     if( o.excludingUnderscore && path.isGlob( commonPath ) )
+//     {
+//       filter.maskDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
+//       filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
+//     }
+//
+//     if( !o.withIn )
+//     filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+//     if( !o.withOut )
+//     filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+//
+//     if( !path.isGlob( commonPath ) )
+//     filter.recursive = o.recursive ? 2 : 1;
+//
+//     let o2 =
+//     {
+//       filter,
+//       maskPreset : 0,
+//       mandatory : 0,
+//       safe : 0,
+//       mode : 'distinct',
+//     }
+//
+//     filter.filePath = path.mapExtend( filter.filePath );
+//     filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
+//     {
+//       if( !_.strIs( it.dst ) )
+//       return { [ it.src ] : it.dst };
+//
+//       _.sure( !o.tracing || !path.isGlob( it.src ) )
+//
+//       let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
+//       let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );
+//       let hasImEx = /(^|\.|\/)(im|ex)[^\/]*$\./.test( it.src );
+//
+//       let postfix = '?(.)';
+//       if( !hasWill )
+//       {
+//         postfix += '?(im.|ex.)';
+//         if( !o.exact )
+//         if( o.withOut && o.withIn )
+//         {
+//           postfix += '?(out.)';
+//         }
+//         else if( o.withIn )
+//         {
+//           postfix += '';
+//         }
+//         else if( o.withOut )
+//         {
+//           postfix += 'out.';
+//         }
+//         postfix += 'will';
+//       }
+//
+//       if( !hasExt )
+//       postfix += '.*';
+//
+//       it.src += postfix;
+//
+//       return { [ it.src ] : it.dst };
+//     });
+//
+//     // if( _.strEnds( o.commonPath, '/l2' ) )
+//     // debugger;
+//     // debugger;
+//     let files = fileProvider.filesFind( o2 );
+//     // debugger;
+//     // if( _.strEnds( o.commonPath, '/l2' ) )
+//     // debugger;
+//
+//     let files2 = [];
+//     files.forEach( ( file ) =>
+//     {
+//       if( _.will.filePathIsOut( file.absolute ) )
+//       files2.push( file );
+//     });
+//     files.forEach( ( file ) =>
+//     {
+//       if( !_.will.filePathIsOut( file.absolute ) )
+//       files2.push( file );
+//     });
+//
+//     return files2;
+//   }
+// }
+//
+// WillfilesFind.defaults =
+// {
+//   commonPath : null,
+//   withIn : 1,
+//   withOut : 1,
+//   exact : 0,
+//   recursive : false,
+//   tracing : 0,
+//   excludingUnderscore : 0,
+//   fileProvider : null,
+//   logger : null,
+// }
 
 //
 
