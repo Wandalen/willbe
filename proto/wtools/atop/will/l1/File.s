@@ -531,9 +531,14 @@ fileReadResource_body.defaults =
   throwing : 1,
   resourceName : null,
   resourceKind : null,
-}
+};
+
+//
 
 let fileReadResource = _.routine.unite( fileResource_head, fileReadResource_body );
+
+//
+
 let fileReadPath = _.routine.uniteCloning( fileResource_head, fileReadResource_body );
 fileReadPath.defaults.resourceKind = 'path';
 
@@ -725,8 +730,8 @@ let Extension =
   filePathIs,
   filePathIsOut,
 
-  fileReadResource, /* qqq : for Dmytro : cover */
-  fileReadPath, /* qqq : for Dmytro : light coverage */
+  fileReadResource, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
+  fileReadPath, /* aaa : for Dmytro : light coverage */ /* Dmytro : covered */
   fileWriteResource, /* qqq : for Dmytro : cover */
   fileWritePath, /* qqq : for Dmytro : light coverage */
 
