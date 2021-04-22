@@ -97,8 +97,6 @@ function form()
   if( t[ p ] === null )
   t[ p ] = TransactionFields[ p ];
 
-  debugger
-
   if( !t.withPath )
   t.withPath = _.fileProvider.path.join( _.fileProvider.path.current(), './' );
 

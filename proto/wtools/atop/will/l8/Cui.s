@@ -188,7 +188,7 @@ function openersFind( o )
 
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
-  o2.atLeastOne = !path.isGlob( o.localPath )
+  o2.atLeastOne = !path.isGlob( o.localPath );
   delete o2.localPath;
   delete o2.allowNoOpeners;
 
@@ -201,7 +201,8 @@ function openersFind( o )
     if( err )
     throw _.err( err );
 
-    will.currentOpeners = it.openers;
+    // will.currentOpeners = it.openers;
+    will.currentOpeners = it;
 
     if( !will.currentOpeners.length )
     {
