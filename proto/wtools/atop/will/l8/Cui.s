@@ -202,7 +202,7 @@ function openersFind( o )
     throw _.err( err );
 
     // will.currentOpeners = it.openers;
-    will.currentOpeners = it;
+    will.currentOpeners = it.sortedOpeners;
 
     if( !will.currentOpeners.length )
     {
