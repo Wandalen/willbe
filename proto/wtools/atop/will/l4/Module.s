@@ -4563,7 +4563,7 @@ function _resourcesFormAct()
 
   /* */
 
-  module._resourcesAllForm( _.will.ModulesRelation, con );
+  // module._resourcesAllForm( _.will.ModulesRelation, con );
   module._resourcesAllForm( _.will.Exported, con );
   module._resourcesAllForm( _.will.PathResource, con );
   module._resourcesAllForm( _.will.Reflector, con );

@@ -2957,7 +2957,19 @@ function modulesUpform( o )
 
   function handleEach( module, op )
   {
+    let will = module.will;
+    let opener = module.toOpener();
+    let isMain = opener.isMain;
+    if( !isMain && opener.openedModule && will.mainOpener && will.mainOpener.openedModule === opener.openedModule )
+    isMain = true;
+
+    let subModulesFormed = isMain ? will.transaction.subModulesFormedOfMain : will.transaction.subModulesFormedOfSub
+
     let o3 = _.mapOnly_( null, o, module.upform.defaults ); /* xxx : not optimal */
+
+    if( o3.subModulesFormed === null )
+    o3.subModulesFormed = subModulesFormed;
+
     return module.upform( o3 );
   }
 
