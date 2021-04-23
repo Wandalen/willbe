@@ -28918,7 +28918,7 @@ function commandSubmodulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
+    test.case = '.with original/GitSync .submodules .git.sync -am "new lines" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
@@ -30188,11 +30188,11 @@ function commandSubmodulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.sync - committing and pushing, without remote submodule';
+    test.case = '.with original .submodules .git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/ .submodules.git.sync profile:${ profile }` )
+  a.appStart( `.with original/ .submodules .git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30220,10 +30220,10 @@ function commandSubmodulesGitSync( test )
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/GitSync .submodules.git.sync -am "new lines" profile:${ profile }` )
+  a.appStart( `.with original/GitSync .submodules .git.sync -am "new lines" profile:${ profile }` )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
+    test.case = '.with original/GitSync .submodules .git.sync -am "new lines" - committing and pushing with local submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30250,13 +30250,13 @@ function commandSubmodulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" - committing and pushing with local submodule';
+    test.case = '.imply withSubmodules:0 .with original/GitSync .submodules .git.sync -am "new lines2" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git.sync -am "new lines2"` )
-  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" profile:${ profile }` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules .git.sync -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules .git.sync -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );

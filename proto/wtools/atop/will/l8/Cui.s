@@ -538,7 +538,7 @@ function _commandsMake()
     'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
     'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
     'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
-    'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
+    // 'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
     'shell' :                           { ro : _.routineJoin( cui, cui.commandShell )                        },
     'do' :                              { ro : _.routineJoin( cui, cui.commandDo )                           },
@@ -2700,102 +2700,102 @@ command.properties =
 
 //
 
-function commandSubmodulesGitSync( e )
-{
-  let cui = this;
-  // let logger = cui.transaction.logger;
-  let provider;
-  cui._command_head( commandSubmodulesGitSync, arguments );
+// function commandSubmodulesGitSync( e )
+// {
+//   let cui = this;
+//   // let logger = cui.transaction.logger;
+//   let provider;
+//   cui._command_head( commandSubmodulesGitSync, arguments );
 
-  return cui._commandModulesLike
-  // return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules git sync',
-    // onUp : onModulesBegin,
-    // onEachModule,
-    // onDown : onModulesEnd,
-    onModulesBegin,
-    onEach,
-    onModulesEnd,
-    commandRoutine : commandSubmodulesGitSync,
-    withStem : 0,
-  });
+//   return cui._commandModulesLike
+//   // return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules git sync',
+//     // onUp : onModulesBegin,
+//     // onEachModule,
+//     // onDown : onModulesEnd,
+//     onModulesBegin,
+//     onEach,
+//     onModulesEnd,
+//     commandRoutine : commandSubmodulesGitSync,
+//     withStem : 0,
+//   });
 
-  /* */
+//   /* */
 
-  function onModulesBegin( openers, rootOpener )
-  {
-    let pathsContainer = [ rootOpener.openedModule.dirPath ];
-    for( let i = 0 ; i < openers.length ; i++ )
-    pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    rootOpener.openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile
-    });
+//   function onModulesBegin( openers, rootOpener )
+//   {
+//     let pathsContainer = [ rootOpener.openedModule.dirPath ];
+//     for( let i = 0 ; i < openers.length ; i++ )
+//     pathsContainer.push( openers[ i ].openedModule.dirPath );
+//     provider =
+//     rootOpener.openedModule._providerArchiveMake
+//     ({
+//       dirPath : cui.fileProvider.path.common( pathsContainer ),
+//       verbosity : cui.transaction.verbosity,
+//       profile : e.optionsMap.profile
+//     });
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
-  }
+//     if( cui.transaction.verbosity )
+//     cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+//     provider.archive.restoreLinksBegin();
+//   }
 
-  /* */
+//   /* */
 
-  // function onEachModule( module )
-  // {
-  //   return module.gitSync
-  //   ({
-  //     commit : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-  //     restoringHardLinks : 0,
-  //   });
-  // }
-  function onEach( it )
-  {
-    return it.opener.openedModule.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
-      restoringHardLinks : 0,
-    });
-  }
+//   // function onEachModule( module )
+//   // {
+//   //   return module.gitSync
+//   //   ({
+//   //     commit : e.subject,
+//   //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+//   //     restoringHardLinks : 0,
+//   //   });
+//   // }
+//   function onEach( it )
+//   {
+//     return it.opener.openedModule.gitSync
+//     ({
+//       commit : e.subject,
+//       ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+//       restoringHardLinks : 0,
+//     });
+//   }
 
-  /* */
+//   /* */
 
-  function onModulesEnd( openers )
-  {
-    provider.archive.restoreLinksEnd();
-  }
-}
+//   function onModulesEnd( openers )
+//   {
+//     provider.archive.restoreLinksEnd();
+//   }
+// }
 
-commandSubmodulesGitSync.defaults =
-{
-  dirPath : null,
-  dry : 0,
-  profile : 'default',
-  verbosity : 1,
-  withSubmodules : 1
-};
+// commandSubmodulesGitSync.defaults =
+// {
+//   dirPath : null,
+//   dry : 0,
+//   profile : 'default',
+//   verbosity : 1,
+//   withSubmodules : 1
+// };
 
-var command = commandSubmodulesGitSync.command = Object.create( null );
-command.hint = 'Syncronize repositories of submodules of current module.';
-command.subjectHint = 'A commit message. Default value is "."';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-command.properties =
-{
-  ... commandImply.command.properties,
-  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
-  dry : 'Dry run without syncronizing. Default is dry:0.',
-  verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".',
+// var command = commandSubmodulesGitSync.command = Object.create( null );
+// command.hint = 'Syncronize repositories of submodules of current module.';
+// command.subjectHint = 'A commit message. Default value is "."';
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// }
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+//   dry : 'Dry run without syncronizing. Default is dry:0.',
+//   verbosity : 'Set verbosity. Default is 1.',
+//   profile : 'A name of profile to get path for hardlinking. Default is "default".',
 
-};
+// };
 
 //
 
@@ -6578,7 +6578,7 @@ let Extension =
   commandSubmodulesGitDiff,
   commandSubmodulesRepoPullOpen,
   commandSubmodulesGitStatus,
-  commandSubmodulesGitSync,
+  // commandSubmodulesGitSync,
 
   commandModuleNew,
   commandModuleNewWith,
