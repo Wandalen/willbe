@@ -191,7 +191,6 @@ function openersFind( o )
     if( o.localPath === path.current() || path.isTrailed( o.localPath )  )
     o.tracing = 1;
   }
-  o.tracing = !path.isGlob( o.localPath ) && path.isTrailed( o.localPath );
 
   let o2 = _.mapExtend( null, o );
   o2.selector = o.localPath;
@@ -1391,6 +1390,7 @@ function _commandModuleOrientedLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
+  _.assert( o.onCommandEnd === null || _.routineIs( o.onCommandEnd ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1417,14 +1417,18 @@ function _commandModuleOrientedLike( o )
     o2.modules = openers;
     o2.recursive = 2;
     return will.modulesFor( o2 )
-    .finally( ( err, arg ) =>
-    {
-      will._commandsEnd( o.commandRoutine );
-      if( err )
-      throw _.err( err, `\nFailed to ${o.name}` );
-      return arg;
-    });
   })
+
+  if( o.onCommandEnd )
+  ready.then( () => o.onCommandEnd() )
+
+  ready.finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    throw _.err( err, `\nFailed to ${o.name}` );
+    return arg;
+  });
 
   return ready;
 }
@@ -1439,6 +1443,8 @@ var defaults = _commandModuleOrientedLike.defaults =
   event : null,
   commandRoutine : null,
   name : null,
+
+  onCommandEnd : null
 }
 
 // --
@@ -3183,7 +3189,7 @@ command.subjectHint = 'A path to hook and arguments.';
 // function commandModulesGitSync( e )
 // {
 //   let cui = this;
-//   let logger = cui.transaction.logger;
+//   // let logger = cui.transaction.logger;
 //   let provider;
 //   cui._command_head( commandModulesGitSync, arguments );
 
@@ -3217,7 +3223,7 @@ command.subjectHint = 'A path to hook and arguments.';
 //     });
 
 //     if( cui.transaction.verbosity )
-//     logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+//     cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
 //     provider.archive.restoreLinksBegin();
 //   }
 
@@ -5046,6 +5052,10 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
+  let pathsContainer = [];
+  let ready = _.Consequence();
+  let provider;
+
   // return cui._commandBuildLike
   return cui._commandModuleOrientedLike
   ({
@@ -5054,16 +5064,25 @@ function commandGitPull( e )
     onEachModule : handleEach,
     // onEach : handleEach,
     commandRoutine : commandGitPull,
+    onCommandEnd : handleCommandEnd,
   });
 
   function handleEach( module )
   {
-    return module.gitPull
-    ({
-      dirPath : module.dirPath,
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    pathsContainer.push( module.dirPath );
+
+    ready.then( () =>
+    {
+      return module.gitPull
+      ({
+        dirPath : module.dirPath,
+        verbosity : cui.transaction.verbosity,
+        profile : e.optionsMap.profile,
+        restoringHardLinks : 0
+      });
+    })
+
+    return null;
   }
   // function handleEach( it )
   // {
@@ -5074,11 +5093,36 @@ function commandGitPull( e )
   //     profile : e.optionsMap.profile,
   //   });
   // }
+
+  function handleCommandEnd()
+  {
+    let openers = cui.currentOpeners;
+    provider = openers[ 0 ].openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : cui.transaction.verbosity,
+      profile : e.optionsMap.profile,
+    });
+
+    if( cui.transaction.verbosity )
+    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    provider.archive.restoreLinksBegin();
+
+    ready.tap( () =>
+    {
+      provider.archive.restoreLinksEnd();
+      return null;
+    });
+
+    ready.take( null );
+
+    return ready;
+  }
 }
 
 commandGitPull.defaults =
 {
-  // withSubmodules : 0,
+  withSubmodules : 0,
   profile : 'default',
 };
 var command = commandGitPull.command = Object.create( null );
@@ -5274,6 +5318,9 @@ function commandGitSync( e )
 {
   let cui = this;
   cui._command_head( commandGitSync, arguments );
+  let pathsContainer = [];
+  let ready = _.Consequence();
+  let provider;
 
   // return cui._commandBuildLike
   return cui._commandModuleOrientedLike
@@ -5283,17 +5330,24 @@ function commandGitSync( e )
     onEachModule : handleEach,
     // onEach : handleEach,
     commandRoutine : commandGitSync,
+    onCommandEnd : handleCommandEnd,
     ... cui.transaction.relationFilterFieldsGet()
   });
 
   function handleEach( module )
   {
+    pathsContainer.push( module.dirPath );
 
-    return module.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-    });
+    ready.then( () =>
+    {
+      return module.gitSync
+      ({
+        commit : e.subject,
+        ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+        restoringHardLinks : 0
+      });
+    })
+    return null;
   }
   // function handleEach( it )
   // {
@@ -5303,6 +5357,31 @@ function commandGitSync( e )
   //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
   //   });
   // }
+
+  function handleCommandEnd()
+  {
+    let openers = cui.currentOpeners;
+    provider = openers[ 0 ].openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : cui.transaction.verbosity,
+      profile : e.optionsMap.profile,
+    });
+
+    if( cui.transaction.verbosity )
+    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    provider.archive.restoreLinksBegin();
+
+    ready.tap( () =>
+    {
+      provider.archive.restoreLinksEnd();
+      return null;
+    });
+
+    ready.take( null );
+
+    return ready;
+  }
 }
 
 commandGitSync.defaults =
