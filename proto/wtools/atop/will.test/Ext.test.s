@@ -1929,7 +1929,7 @@ function openWith( test )
 
   .then( () =>
   {
-    test.case = '.with doc/ .export -- deleted doc/.will.yml'
+    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml'
 
     a.reflect();
     a.fileProvider.fileDelete( a.abs( 'doc/.ex.will.yml' ) );
@@ -1939,7 +1939,7 @@ function openWith( test )
   })
 
   a.appStart({ execPath : '.clean' })
-  a.appStartNonThrowing({ execPath : '.with doc/ .export' })
+  a.appStartNonThrowing({ execPath : '.with doc/.will.yml .export' })
 
   .then( ( op ) =>
   {
