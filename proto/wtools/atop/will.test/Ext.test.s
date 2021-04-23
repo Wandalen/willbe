@@ -22879,7 +22879,7 @@ function versionsAgree( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Your branch is up to date/ ) );
+    test.true( _.strHas( op.output, /Your branch is up.*to.*date/ ) );
     return null;
   });
 
