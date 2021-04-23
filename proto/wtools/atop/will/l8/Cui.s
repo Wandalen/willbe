@@ -533,7 +533,7 @@ function _commandsMake()
     'submodules versions update' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate )     },
     'submodules versions verify' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsVerify )     },
     'submodules versions agree' :       { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsAgree )      },
-    'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
+    // 'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
     // 'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
     // 'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
     // 'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
@@ -553,7 +553,7 @@ function _commandsMake()
 
     'module new' :                      { ro : _.routineJoin( cui, cui.commandModuleNew )                    },
     'module new with' :                 { ro : _.routineJoin( cui, cui.commandModuleNewWith )                },
-    'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
+    // 'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
     // 'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
     // 'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
     // 'modules repo pull open' :          { ro : _.routineJoin( cui, cui.commandModulesRepoPullOpen )             },
@@ -2415,45 +2415,45 @@ command.properties =
 
 //
 
-function commandSubmodulesShell( e )
-{
-  let cui = this;
-  cui._command_head( commandSubmodulesShell, arguments );
+// function commandSubmodulesShell( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandSubmodulesShell, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules shell',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesShell,
-    withStem : 0,
-  });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules shell',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandSubmodulesShell,
+//     withStem : 0,
+//   });
 
-  function handleEach( module )
-  {
-    return module.shell
-    ({
-      execPath : e.instructionArgument,
-      currentPath : module.dirPath,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   debugger;
-  //   return it.opener.openedModule.shell
-  //   ({
-  //     execPath : e.instructionArgument,
-  //     currentPath : it.opener.openedModule.dirPath,
-  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
-  //   });
-  // }
-}
+//   function handleEach( module )
+//   {
+//     return module.shell
+//     ({
+//       execPath : e.instructionArgument,
+//       currentPath : module.dirPath,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   debugger;
+//   //   return it.opener.openedModule.shell
+//   //   ({
+//   //     execPath : e.instructionArgument,
+//   //     currentPath : it.opener.openedModule.dirPath,
+//   //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+//   //   });
+//   // }
+// }
 
-var command = commandSubmodulesShell.command = Object.create( null );
-command.hint = 'Run shell command on each submodule of current module.';
-command.subjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
+// var command = commandSubmodulesShell.command = Object.create( null );
+// command.hint = 'Run shell command on each submodule of current module.';
+// command.subjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
 
 //
 
@@ -2886,45 +2886,45 @@ command.subjectHint = 'A path to hook and arguments.';
 
 //
 
-function commandModulesShell( e )
-{
-  let cui = this;
-  cui._command_head( commandModulesShell, arguments );
+// function commandModulesShell( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandModulesShell, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules shell',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesShell,
-    withStem : 1,
-  });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules shell',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandModulesShell,
+//     withStem : 1,
+//   });
 
-  function handleEach( module )
-  {
-    return module.shell
-    ({
-      execPath : e.instructionArgument,
-      currentPath : module.dirPath,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.shell
-  //   ({
-  //     execPath : e.instructionArgument,
-  //     currentPath : it.opener.openedModule.dirPath,
-  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
-  //   });
-  // }
-}
+//   function handleEach( module )
+//   {
+//     return module.shell
+//     ({
+//       execPath : e.instructionArgument,
+//       currentPath : module.dirPath,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.shell
+//   //   ({
+//   //     execPath : e.instructionArgument,
+//   //     currentPath : it.opener.openedModule.dirPath,
+//   //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+//   //   });
+//   // }
+// }
 
-var command = commandModulesShell.command = Object.create( null );
-command.hint = 'Run shell command on current module including each submodule of the module.';
-command.subjectHint =
-'A command to execute in shell. Command executes for current module including each submodule of the module.';
+// var command = commandModulesShell.command = Object.create( null );
+// command.hint = 'Run shell command on current module including each submodule of the module.';
+// command.subjectHint =
+// 'A command to execute in shell. Command executes for current module including each submodule of the module.';
 
 //
 
@@ -6573,7 +6573,7 @@ let Extension =
   commandSubmodulesVersionsVerify,
   commandSubmodulesVersionsAgree,
 
-  commandSubmodulesShell,
+  // commandSubmodulesShell,
   // commandSubmodulesGit,
   // commandSubmodulesGitDiff,
   // commandSubmodulesRepoPullOpen,
@@ -6583,7 +6583,7 @@ let Extension =
   commandModuleNew,
   commandModuleNewWith,
 
-  commandModulesShell,
+  // commandModulesShell,
   // commandModulesGit,
   // commandModulesGitDiff,
   // commandModulesRepoPullOpen,

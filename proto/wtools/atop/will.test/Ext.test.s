@@ -28822,10 +28822,10 @@ function commandSubmodulesShell( test )
 
   /* - */
 
-  a.appStart( '.with ./* .submodules.shell ls' )
+  a.appStart( '.with ./* .submodules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .submodules.shell ls - without submodules, no executed commands';
+    test.case = '.with ./* .submodules .shell ls - without submodules, no executed commands';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -28839,10 +28839,10 @@ function commandSubmodulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.with ./* .submodules.shell ls' )
+  a.appStart( '.with ./* .submodules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .submodules.shell ls - with submodules';
+    test.case = '.with ./* .submodules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -28856,10 +28856,10 @@ function commandSubmodulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.imply withSubmodules:0 .with ./* .submodules.shell ls' )
+  a.appStart( '.imply withSubmodules:0 .with ./* .submodules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:0 .with ./* .submodules.shell ls - disabled submodules';
+    test.case = '.imply withSubmodules:0 .with ./* .submodules .shell ls - disabled submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30527,10 +30527,10 @@ function commandModulesShell( test )
 
   /* - */
 
-  a.appStart( '.with ./* .modules.shell ls' )
+  a.appStart( '.with ./* .modules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .modules.shell ls - without submodules, no executed commands';
+    test.case = '.with ./* .modules .shell ls - without submodules, no executed commands';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -30545,10 +30545,10 @@ function commandModulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.with ./* .modules.shell ls' )
+  a.appStart( '.with ./* .modules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .modules.shell ls - with submodules';
+    test.case = '.with ./* .modules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30563,10 +30563,10 @@ function commandModulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.imply withSubmodules:0 .with ./* .modules.shell ls' )
+  a.appStart( '.imply withSubmodules:0 .with ./* .modules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:0 .with ./* .modules.shell ls - disabled submodules';
+    test.case = '.imply withSubmodules:0 .with ./* .modules .shell ls - disabled submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
