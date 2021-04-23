@@ -8772,7 +8772,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 
   /* - */
 
-  a.appStart({ execPath : '.with * .submodules.clean recursive:2' })
+  a.appStart({ execPath : '.with * .clean.submodules recursive:2' })
   a.appStart({ execPath : '.with * .submodules.download recursive:2' })
 
   /* - */
@@ -16922,10 +16922,10 @@ function cleanSubmodules( test )
 
   /* */
 
-  a.appStart({ execPath : '.with NoTemp .submodules.clean' })
+  a.appStart({ execPath : '.with NoTemp .clean.submodules' })
   .then( ( op ) =>
   {
-    test.case = '.submodules.clean';
+    test.case = '.clean.submodules';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, `${files.length}` ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
@@ -18113,13 +18113,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with z .submodules.clean';
+    test.case = '.with z .clean.submodules';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with z .submodules.clean' )
+  a.appStart( '.with z .clean.submodules' )
 
   .then( ( op ) =>
   {
@@ -18158,13 +18158,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean';
+    test.case = '.with * .clean.submodules';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean' )
+  a.appStart( '.with * .clean.submodules' )
 
   .then( ( op ) =>
   {
@@ -18202,13 +18202,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:1';
+    test.case = '.with * .clean.submodules recursive:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:1' )
+  a.appStart( '.with * .clean.submodules recursive:1' )
 
   .then( ( op ) =>
   {
@@ -18246,13 +18246,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:2';
+    test.case = '.with * .clean.submodules recursive:2';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:2' )
+  a.appStart( '.with * .clean.submodules recursive:2' )
 
   .then( ( op ) =>
   {
@@ -18290,13 +18290,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:1';
+    test.case = '.with ** .clean.submodules recursive:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:1' )
+  a.appStart( '.with ** .clean.submodules recursive:1' )
 
   .then( ( op ) =>
   {
@@ -18334,13 +18334,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:2';
+    test.case = '.with ** .clean.submodules recursive:2';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:2' )
+  a.appStart( '.with ** .clean.submodules recursive:2' )
 
   .then( ( op ) =>
   {
@@ -18394,13 +18394,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with z .submodules.clean dry:1';
+    test.case = '.with z .clean.submodules dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with z .submodules.clean dry:1' )
+  a.appStart( '.with z .clean.submodules dry:1' )
 
   .then( ( op ) =>
   {
@@ -18438,13 +18438,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean dry:1';
+    test.case = '.with * .clean.submodules dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean dry:1' )
+  a.appStart( '.with * .clean.submodules dry:1' )
 
   .then( ( op ) =>
   {
@@ -18482,13 +18482,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:1 dry:1';
+    test.case = '.with * .clean.submodules recursive:1 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:1 dry:1' )
+  a.appStart( '.with * .clean.submodules recursive:1 dry:1' )
 
   .then( ( op ) =>
   {
@@ -18526,13 +18526,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:2 dry:1';
+    test.case = '.with * .clean.submodules recursive:2 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:2 dry:1' )
+  a.appStart( '.with * .clean.submodules recursive:2 dry:1' )
 
   .then( ( op ) =>
   {
@@ -18570,13 +18570,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:1 dry:1';
+    test.case = '.with ** .clean.submodules recursive:1 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:1 dry:1' )
+  a.appStart( '.with ** .clean.submodules recursive:1 dry:1' )
 
   .then( ( op ) =>
   {
@@ -18614,13 +18614,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:2 dry:1';
+    test.case = '.with ** .clean.submodules recursive:2 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:2 dry:1' )
+  a.appStart( '.with ** .clean.submodules recursive:2 dry:1' )
 
   .then( ( op ) =>
   {
@@ -19203,11 +19203,11 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  a.appStart({ execPath : '.submodules.clean' })
+  a.appStart({ execPath : '.clean.submodules' })
 
   .then( ( op ) =>
   {
-    test.case = '.submodules.clean';
+    test.case = '.clean.submodules';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 0 file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
@@ -19341,12 +19341,12 @@ function submodulesDownloadUpdate( test )
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.clean';
+    test.case = '.clean.submodules';
     files = a.findAll( a.abs( '.module' ) );
     return files;
   })
 
-  a.appStart({ execPath : '.submodules.clean' })
+  a.appStart({ execPath : '.clean.submodules' })
   .then( ( op ) =>
   {
 
@@ -28783,7 +28783,7 @@ function commandSubmodulesClean( test )
 
   /* FAILS */
 
-  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
@@ -28796,7 +28796,7 @@ function commandSubmodulesClean( test )
 
   /* FAILS */
 
-  a.appStart( '.submodules.clean ; .submodules.update recursive:2' )
+  a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
@@ -41593,7 +41593,7 @@ function willFilterFieldsOverwrite( test )
 
   /* - */
 
-  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );

@@ -529,8 +529,8 @@ function _commandsMake()
     'about list' :                      { ro : _.routineJoin( cui, cui.commandAboutList )                    },
     'about' :                           { ro : _.routineJoin( cui, cui.commandAboutList )                    },
 
-    'submodules clean' :                { ro : _.routineJoin( cui, cui.commandSubmodulesClean )              },
-    'submodules add' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesAdd )                },
+    'clean submodules' :                { ro : _.routineJoin( cui, cui.commandCleanSubmodules )              },
+    'add submodules' :                  { ro : _.routineJoin( cui, cui.commandAddSubmodules )                },
     'submodules fixate' :               { ro : _.routineJoin( cui, cui.commandSubmodulesFixate )             },
     'submodules upgrade' :              { ro : _.routineJoin( cui, cui.commandSubmodulesUpgrade )            },
 
@@ -2080,17 +2080,17 @@ command.properties =
 
 //
 
-function commandSubmodulesAdd( e )
+function commandAddSubmodules( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesAdd, arguments );
+  cui._command_head( commandAddSubmodules, arguments );
 
   return cui._commandBuildLike
   ({
     event : e,
     name : 'add submodules',
     onEach : handleEach,
-    commandRoutine : commandSubmodulesAdd,
+    commandRoutine : commandAddSubmodules,
   });
 
   function handleEach( it )
@@ -2134,7 +2134,7 @@ function commandSubmodulesAdd( e )
 
 }
 
-var command = commandSubmodulesAdd.command = Object.create( null );
+var command = commandAddSubmodules.command = Object.create( null );
 command.hint = 'Add submodules.';
 command.subjectHint = 'A selector ( path ) for module that will be included in module.';
 
@@ -3494,10 +3494,10 @@ command.properties =
 
 //
 
-function commandSubmodulesClean( e )
+function commandCleanSubmodules( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesClean, arguments );
+  cui._command_head( commandCleanSubmodules, arguments );
 
   e.optionsMap.dry = !!e.optionsMap.dry;
   if( e.optionsMap.fast === undefined || e.optionsMap.fast === null )
@@ -3509,7 +3509,7 @@ function commandSubmodulesClean( e )
     event : e,
     name : 'clean',
     onAll : handleAll,
-    commandRoutine : commandSubmodulesClean,
+    commandRoutine : commandCleanSubmodules,
   });
 
   function handleAll( it )
@@ -3534,7 +3534,7 @@ function commandSubmodulesClean( e )
 
 }
 
-commandSubmodulesClean.defaults =
+commandCleanSubmodules.defaults =
 {
   dry : 0,
   recursive : 0,
@@ -3543,7 +3543,7 @@ commandSubmodulesClean.defaults =
   withSubmodules : 0
 }
 
-var command = commandSubmodulesClean.command = Object.create( null );
+var command = commandCleanSubmodules.command = Object.create( null );
 command.hint = 'Delete all downloaded submodules.';
 command.subjectHint = false;
 command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
@@ -6569,7 +6569,7 @@ let Extension =
   commandModulesTree,
   commandModulesUpdate,
 
-  commandSubmodulesAdd,
+  commandAddSubmodules,
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
 
@@ -6600,7 +6600,7 @@ let Extension =
   commandHookCall,
   commandHooksList,
   commandClean,
-  commandSubmodulesClean,
+  commandCleanSubmodules,
   commandBuild,
   commandExport,
   commandExportPurging,
