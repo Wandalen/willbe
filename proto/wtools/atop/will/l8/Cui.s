@@ -4973,7 +4973,8 @@ commandGit.defaults =
 {
   hardLinkMaybe : 0,
   profile : 'default',
-  withSubmodules : 0
+  withOut : 0
+  // withSubmodules : 0
 };
 var command = commandGit.command = Object.create( null );
 command.hint = 'Run custom Git command in repository of module.';
@@ -5023,7 +5024,7 @@ function commandGitDiff( e )
 
 commandGitDiff.defaults =
 {
-  withSubmodules : 0
+  // withSubmodules : 0
 };
 var command = commandGitDiff.command = Object.create( null );
 command.hint = 'Get diffs in module repository.';
@@ -5073,7 +5074,7 @@ function commandGitPull( e )
 
 commandGitPull.defaults =
 {
-  withSubmodules : 0,
+  // withSubmodules : 0,
   profile : 'default',
 };
 var command = commandGitPull.command = Object.create( null );
@@ -5125,8 +5126,8 @@ function commandGitPush( e )
 
 commandGitPush.defaults =
 {
-  withSubmodules : 0,
-  verbosity : 3,
+  // withSubmodules : 0,
+  // verbosity : 3,
   withTags : 1,
   force : 1,
   dry : 0,
@@ -5182,8 +5183,8 @@ commandGitReset.defaults =
   removingIgnored : 0,
   removingSubrepositories : 0,
   dry : 0,
-  verbosity : 2,
-  withSubmodules : 0
+  // verbosity : 2,
+  // withSubmodules : 0
 };
 var command = commandGitReset.command = Object.create( null );
 command.hint = 'Reset local changes in repository of the module.';
@@ -5242,8 +5243,8 @@ commandGitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  verbosity : 1,
-  withSubmodules : 0
+  // verbosity : 1,
+  // withSubmodules : 0
 };
 var command = commandGitStatus.command = Object.create( null );
 command.hint = 'Check the status of the repository.';
@@ -5364,8 +5365,8 @@ commandGitTag.defaults =
   toVersion : null,
   dry : 0,
   light : 0,
-  verbosity : 1,
-  withSubmodules : 0
+  // verbosity : 1,
+  // withSubmodules : 0
 };
 var command = commandGitTag.command = Object.create( null );
 command.hint = 'Add tag for commit.';
