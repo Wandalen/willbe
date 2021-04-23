@@ -184,6 +184,13 @@ function openersFind( o )
   }
 
   if( o.tracing === null )
+  {
+    o.tracing = 0;
+
+    if( !path.isGlob( o.localPath ) )
+    if( o.localPath === path.current() || path.isTrailed( o.localPath )  )
+    o.tracing = 1;
+  }
   o.tracing = !path.isGlob( o.localPath ) && path.isTrailed( o.localPath );
 
   let o2 = _.mapExtend( null, o );
@@ -3830,10 +3837,7 @@ function commandWith( e )
 
   // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
   // let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
-  let withPath = _.strUnquote( e.instructionArgument );
-  if( withPath === '.' )
-  withPath = './';
-  withPath = path.join( path.current(), withPath );
+  let withPath = path.join( path.current(), _.strUnquote( e.instructionArgument ) );
   cui.implied = _.mapExtend( cui.implied, { withPath } );
 
   cui._command_head
