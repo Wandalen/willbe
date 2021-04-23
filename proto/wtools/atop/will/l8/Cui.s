@@ -3442,36 +3442,58 @@ function commandClean( e )
   e.optionsMap.fast = !e.optionsMap.dry;
   e.optionsMap.fast = 0; /* xxx : implement */
 
-  return cui._commandCleanLike
+  // return cui._commandCleanLike
+  // ({
+  //   event : e,
+  //   name : 'clean',
+  //   onAll : handleAll,
+  //   commandRoutine : commandClean,
+  // });
+
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'clean',
-    onAll : handleAll,
-    commandRoutine : commandClean,
+    onEachModule : handleEach,
+    commandRoutine : commandGit,
   });
 
-  function handleAll( it )
+  function handleEach( module )
   {
-    _.assert( _.arrayIs( it.openers ) );
-
     // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.mapExtend( o2, e.optionsMap );
     delete o2.withSubmodules;
-    o2.modules = it.openers;
+    o2.modules = [ module ];
     _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
-    o2.modules = it.roots;
+    o2.modules = cui.modulesOnlyRoots( o2.modules )
     o2.asCommand = 1;
 
     return cui.modulesClean( o2 );
   }
 
+  // function handleAll( it )
+  // {
+  //   _.assert( _.arrayIs( it.openers ) );
+
+  //   // let o2 = cui.filterImplied();
+  //   let o2 = { ... cui.RelationFilterOn };
+  //   o2 = _.mapExtend( o2, e.optionsMap );
+  //   delete o2.withSubmodules;
+  //   o2.modules = it.openers;
+  //   _.routineOptions( cui.modulesClean, o2 );
+  //   if( o2.recursive === 2 )
+  //   o2.modules = it.roots;
+  //   o2.asCommand = 1;
+
+  //   return cui.modulesClean( o2 );
+  // }
 }
 
 commandClean.defaults =
 {
-  withSubmodules : 0,
+  // withSubmodules : 0,
   withOut : 1,
   dry : 0,
   cleaningSubmodules : 1,
