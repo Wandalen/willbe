@@ -4219,12 +4219,12 @@ function WillfilesFind( o )
     let result = [];
     records.forEach( ( record ) =>
     {
-      if( _.Will.PathIsOut( record.filePath ) )
+      if( _.will.filePathIsOut( record.filePath ) )
       result.push( record );
     });
     records.forEach( ( record ) =>
     {
-      if( !_.Will.PathIsOut( record.filePath ) )
+      if( !_.will.filePathIsOut( record.filePath ) )
       result.push( record );
     });
     return result;
