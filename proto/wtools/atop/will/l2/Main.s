@@ -4189,6 +4189,8 @@ function WillfilesFind( o )
     if( o.excludingUnderscore )
     result = pathsFilterUnderscores( result );
 
+    result = outAndInWillfilesSort( result );
+
     if( o.outputFormat === 'descriptor' )
     return result;
     if( o.outputFormat === 'record' )
@@ -4207,7 +4209,25 @@ function WillfilesFind( o )
       if( found )
       return;
       return record;
-    })
+    });
+  }
+
+  /* */
+
+  function outAndInWillfilesSort( records )
+  {
+    let result = [];
+    records.forEach( ( record ) =>
+    {
+      if( _.Will.PathIsOut( record.filePath ) )
+      result.push( record );
+    });
+    records.forEach( ( record ) =>
+    {
+      if( !_.Will.PathIsOut( record.filePath ) )
+      result.push( record );
+    });
+    return result;
   }
 
   /* */
@@ -4388,7 +4408,7 @@ WillfilesFind.defaults =
   recursive : false,
   tracing : 0,
   excludingUnderscore : 0,
-  outputFormat : 'record', /* Dmytro : introduced option outputFormat : [ 'record', 'descriptor' ], routines of utility looks for file records, not willfile descriptors */
+  outputFormat : 'record', /* Dmytro : introduced option outputFormat : [ 'record', 'descriptor' ], routines of utility looks for file records, not willfile descriptors. It saves back compatibility */
   logger : null, /* Dmytro : not used, maybe should be deleted */
 };
 
