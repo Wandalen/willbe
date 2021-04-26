@@ -44,7 +44,7 @@ function MakeFor_body( o )
 
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
-  o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  o3.resource.criterion = _.props.extend( null, o.resource.criterion || {} );
   o3.resource.steps = [ `step::${o.name}` ];
   o3.Importing = 1; /* xxx : ? */
   o3.module = module;
@@ -62,7 +62,7 @@ function MakeFor_body( o )
 
 _.routineExtend( MakeFor_body, Parent.MakeFor.body );
 
-let MakeFor = _.routine.uniteCloning_( Parent.MakeFor.head, MakeFor_body );
+let MakeFor = _.routine.uniteCloning_replaceByUnite( Parent.MakeFor.head, MakeFor_body );
 
 //
 
@@ -80,7 +80,7 @@ function init( o )
     {
       let opts2 = _.mapBut_( null, o, step.constructor.FieldsOfInputGroups );
       _.mapDelete( o, opts2 );
-      o.opts = _.mapExtend( o.opts || null, opts2 )
+      o.opts = _.props.extend( o.opts || null, opts2 )
     }
     if( o )
     step.copy( o );
@@ -104,7 +104,7 @@ function form2()
 
   if( step.stepRoutine )
   {
-    _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
+    _.props.supplement( step.opts, step.stepRoutine.stepOptions );
   }
 
   /* */
@@ -129,7 +129,7 @@ function form2()
       _.assert( step2.formed >= 2 );
       _.assert( _.objectIs( step2.uniqueOptions ) );
 
-      if( _.mapKeys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) ).length )
+      if( _.props.keys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) ).length )
       {
         step.inherit.push( step2.name );
       }
@@ -138,7 +138,7 @@ function form2()
       throw _.err
       (
         'Cant deduce ancestors of', step.qualifiedName, ' to inherit them\n',
-        'Several steps have such unique options', _.mapKeys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) )
+        'Several steps have such unique options', _.props.keys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) )
       );
 
     }
@@ -170,7 +170,7 @@ function form3()
   _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
   _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.qualifiedName + ' deos not have defined {- stepOptions -}' );
 
-  _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
+  _.props.supplement( step.opts, step.stepRoutine.stepOptions );
 
   if( step.opts && step.stepRoutine.stepOptions )
   {

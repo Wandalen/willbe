@@ -28,7 +28,7 @@ function ResouceStructureFrom( o )
   _.assert( arguments.length === 1 );
   if( _.strIs( o ) || _.arrayIs( o ) )
   return { path : o }
-  return _.mapExtend( null, o );
+  return _.props.extend( null, o );
 }
 
 //
@@ -41,13 +41,13 @@ function OnInstanceExists( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptions( OnInstanceExists, arguments );
+  _.routine.options_( OnInstanceExists, arguments );
 
   o.resource.criterion = o.resource.criterion || Object.create( null );
 
   _.assert( _.boolLike( o.instance.importableFromIn ) );
   if( !o.instance.importableFromIn )
-  _.mapSupplement( o.resource.criterion, o.instance.criterion );
+  _.props.supplement( o.resource.criterion, o.instance.criterion );
 
   o.resource.exportable = o.instance.exportable;
   o.resource.importableFromIn = o.instance.importableFromIn;
@@ -212,7 +212,7 @@ function exportStructure()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let o = _.routineOptions( exportStructure, arguments );
+  let o = _.routine.options_( exportStructure, arguments );
 
   let result = Parent.prototype.exportStructure.apply( resource, [ o ] );
 
@@ -274,7 +274,7 @@ function pathsRebase( o )
   let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
-  o = _.routineOptions( pathsRebase, arguments );
+  o = _.routine.options_( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
   _.assert( path.isAbsolute( o.exInPath ) );
 
@@ -320,10 +320,10 @@ function _pathSet( src )
   let module = resource.module;
   let ex = resource.path;
 
-  _.assert( src === null || _.strIs( src ) || _.arrayLike( src ) );
+  _.assert( src === null || _.strIs( src ) || _.argumentsArray.like( src ) );
 
-  if( _.arrayLike( src ) )
-  src = _.arraySlice( src );
+  if( _.argumentsArray.like( src ) )
+  src = _.array.slice( src );
 
   if( src === '' )
   {

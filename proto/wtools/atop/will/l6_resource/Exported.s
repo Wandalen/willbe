@@ -248,7 +248,7 @@ function _performPrepare1( frame )
   exported.tar = opts.tar;
   exported.step = step;
   exported.build = build;
-  exported.criterion = _.mapExtend( null, build.criterion );
+  exported.criterion = _.props.extend( null, build.criterion );
   exported.version = inModule.about.version || '0.0.0';
 
   if( exported.recursive === null ) /* xxx : remove maybe */
@@ -568,7 +568,7 @@ function _performExportedReflectors()
   // debugger;
   if( recursive !== null )
   exportedReflector.src.recursive = recursive;
-  exportedReflector.criterion = _.mapExtend( exportedReflector.criterion, exported.criterion );
+  exportedReflector.criterion = _.props.extend( exportedReflector.criterion, exported.criterion );
   // exportedReflector.generated = 1;
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
@@ -606,7 +606,7 @@ function _performExportedReflectors()
   exported.exportedDirPath = outModule.resourceGenerate( 'path', 'exported.dir.' + exported.name );
   // exported.exportedDirPath.generated = 1;
   exported.exportedDirPath.path = path.undot( path.relative( outModule.inPath, exportedDirPath ) );
-  exported.exportedDirPath.criterion = _.mapExtend( exported.exportedDirPath.criterion, exported.criterion );
+  exported.exportedDirPath.criterion = _.props.extend( exported.exportedDirPath.criterion, exported.criterion );
   // exported.exportedDirPath.criterion.generated = 1;
   exported.exportedDirPath.form();
   _.assert( !!exported.exportedDirPath.criterion.generated );
@@ -629,7 +629,7 @@ function _performExportedFilesReflector()
 
   exported.exportedFilesPath = outModule.resourceGenerate( 'path', 'exported.files.' + exported.name );
   // exported.exportedFilesPath.generated = 1;
-  exported.exportedFilesPath.criterion = _.mapExtend( exported.exportedFilesPath.criterion, exported.criterion );
+  exported.exportedFilesPath.criterion = _.props.extend( exported.exportedFilesPath.criterion, exported.criterion );
   // exported.exportedFilesPath.criterion.generated = 1;
   _.assert( !!exported.exportedFilesPath.criterion.generated );
 
@@ -678,7 +678,7 @@ function _performExportedFilesReflector()
 
   let exportedFilesReflector = exported.exportedFilesReflector = outModule.resourceGenerate( 'reflector', 'exported.files.' + exported.name );
   // exportedFilesReflector.generated = 1;
-  _.mapExtend( exportedFilesReflector.criterion, exported.exportedReflector.criterion );
+  _.props.extend( exportedFilesReflector.criterion, exported.exportedReflector.criterion );
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefineLight();
@@ -770,7 +770,7 @@ function _performArchive()
   let archiveFilePath = build.archiveFilePathFor();
   exported.archiveFilePath = outModule.resourceGenerate( 'path', 'archiveFile.' + exported.name );
   exported.archiveFilePath.path = path.undot( path.relative( outModule.inPath, archiveFilePath ) );
-  exported.archiveFilePath.criterion = _.mapExtend( exported.archiveFilePath.criterion, exported.criterion );
+  exported.archiveFilePath.criterion = _.props.extend( exported.archiveFilePath.criterion, exported.criterion );
   // exported.archiveFilePath.criterion.generated = 1;
   exported.archiveFilePath.form();
   _.assert( !!exported.archiveFilePath.criterion.generated );
