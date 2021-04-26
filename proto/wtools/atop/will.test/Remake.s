@@ -1,5 +1,5 @@
 
-const _ = require( `../../../node_modules/Tools` );
+const _ = require( `Tools` );
 _.include( `wProcess` );
 _.include( `wFiles` );
 
