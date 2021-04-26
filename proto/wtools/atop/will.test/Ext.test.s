@@ -20290,20 +20290,20 @@ function submodulesDownloadInvalidUrl( test )
   a.appStartNonThrowing({ execPath : '.with badProtocol .submodules.download' })
   .then( ( op ) =>
   {
-    // test.notIdentical( op.exitCode, 0 );
-    test.identical( op.exitCode, 0 ); /* Dmytro : peer modules forms and throw no error because private routine _peerModulesForm use option `throwing : 0`. If broken path is not recognized as remote path, then utility handle submodule as local submodule and throw no error too */
+    test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".with badProtocol .submodules.download"' ), 1 );
     test.identical( _.strCount( op.output, /\. Opened \. .*badProtocol\.will\.yml/ ), 1 );
-    test.identical( _.strCount( op.output, '! Failed to open module::submodulesDownloadErrorsBadProtocol' ), 1 );
-    var exp =
-    'Error looking for will files for opener::ModuleForTesting2a at "git+bad:///github.com/Wandalen/wModuleForTesting2a.git/"';
+    var exp = 'No repo provider for path::git+bad:///github.com/Wandalen/wModuleForTesting2a.git/';
     test.identical( _.strCount( op.output, exp ), 1 );
+    var exp = 'Failed to make module at git+bad:///github.com/Wandalen/wModuleForTesting2a.git/';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource relation::ModuleForTesting2a' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant form relation::ModuleForTesting2a' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to import willfile' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module at' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module::submodulesDownloadErrorsBadProtocol / relation::ModuleForTesting2a' ), 2 );
 
     test.identical( _.strCount( op.output, '. Read 1 willfile(s) in' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/1 submodule(s) of module::submodulesDownloadErrorsBadProtocol were downloaded in' ), 1 );
-    // test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.identical( _.strCount( op.output, '+ 0/1 submodule(s) of module::submodulesDownloadErrorsBadProtocol were downloaded in' ), 0 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
   });
