@@ -41339,11 +41339,11 @@ commandsSubmoduleSafety.description =
 `
 Checks if .submodules.* commands are safe to use in different situations.
 It means that utility doesn't modify the data of the module if it's not required.
-`
+`;
 
 //
 
-function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */ /* Dmytro : used namespace `repo` for classifying of repo paths, test routine works fine */
+function commandsSubmoduleSafetyDownloadInvalidUrl( test ) /* xxx : for Kos */ /* Dmytro : used namespace `repo` for classifying of repo paths, test routine works fine */
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesSafety' );
@@ -41408,7 +41408,79 @@ function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */ /* Dmytro
   return a.ready;
 }
 
-commandsSubmoduleSafetyInvalidUrl.description =
+commandsSubmoduleSafetyDownloadInvalidUrl.description =
+`
+Should throw error about invalid protocol in remote path.
+`;
+
+//
+
+function commandsSubmoduleSafetyVerifyInvalidUrl( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesSafety' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'downloaded submodules';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ args : `.submodules.download` });
+  a.ready.then( () =>
+  {
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  });
+
+  var op = { args : `.submodules.verify` };
+  a.appStart( op );
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    _.errAttend( err );
+
+    test.true( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'not downloaded submodules';
+    a.reflect();
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  });
+
+  var op = { args : `.submodules.verify` };
+  a.appStart( op );
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    _.errAttend( err );
+
+    test.true( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+commandsSubmoduleSafetyVerifyInvalidUrl.description =
 `
 Should throw error about invalid protocol in remote path.
 `;
@@ -42072,7 +42144,8 @@ const Proto =
     commandNpmPublishFullRegularModule,
 
     commandsSubmoduleSafety,
-    commandsSubmoduleSafetyInvalidUrl,
+    commandsSubmoduleSafetyDownloadInvalidUrl,
+    commandsSubmoduleSafetyVerifyInvalidUrl,
     commandSubmodulesUpdateOptionTo,
 
     willFilterFieldsOverwrite,
