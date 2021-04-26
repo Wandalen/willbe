@@ -1830,6 +1830,129 @@ function moduleClone( test )
 
 } /* end of function moduleClone */
 
+//
+
+function modulesUpform( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesUpform' );
+  let openers;
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ), transaction : { withSubmodules : 0 } })
+  .then( () =>
+  {
+    test.case = 'module with nested submodules, withSubmodules:0';
+    let o2 =
+    {
+      modules : openers,
+    }
+    var exp = [ 'module::a' ]
+    test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+    a.will.transaction.extend({ withSubmodules : 0 })
+
+    return a.will.modulesUpform( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ 'module::a' ]
+      test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+      return op;
+    })
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ), transaction : { withSubmodules : 0 } })
+  .then( () =>
+  {
+    test.case = 'module with nested submodules, withSubmodules:1';
+    let o2 =
+    {
+      modules : openers,
+    }
+    var exp = [ 'module::a' ]
+    test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+    a.will.transaction.extend({ withSubmodules : 1 })
+
+    return a.will.modulesUpform( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ 'module::a', 'module::b' ]
+      test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+      return op;
+    })
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ), transaction : { withSubmodules : 0 } })
+  .then( () =>
+  {
+    test.case = 'module with nested submodules, withSubmodules:2';
+    let o2 =
+    {
+      modules : openers,
+    }
+    var exp = [ 'module::a' ]
+    test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+    a.will.transaction.extend({ withSubmodules : 2 })
+
+    return a.will.modulesUpform( o2 )
+    .then( ( op ) =>
+    {
+      var exp = [ 'module::a', 'module::b', 'module::c', 'module::d' ]
+      test.identical( _.select( a.will.modulesArray, '*/qualifiedName' ), exp );
+
+      return op;
+    })
+  })
+  end()
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      a.will.transaction.finit();
+      a.will.transaction = _.will.Transaction({ targetLogger : a.will.logger, ... o2.transaction || {} });
+
+      let opener = a.will.openerMakeManual({ willfilesPath : o2.selector });
+      openers = [ opener ];
+
+      return opener.open();
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
+}
+
 // --
 // export
 // --
@@ -1855,6 +1978,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( () =>
   {
     let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform();
@@ -1866,8 +1990,11 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download.criterion, { predefined : 1 } );
-    test.identical( path.download.path, undefined );
+    let expected =
+    {
+      'criterion' : { 'predefined' : 1 }
+    }
+    test.identical( path.download, expected );
 
     opener.finit();
     return null;
@@ -1887,6 +2014,7 @@ function exportModuleAndCheckDefaultPathsSimple( test )
   a.ready.then( () =>
   {
     let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform();
@@ -1898,8 +2026,49 @@ function exportModuleAndCheckDefaultPathsSimple( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
 
     let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
-    test.identical( path.download.criterion, { predefined : 1 } );
-    test.identical( path.download.path, undefined );
+    let expected =
+    {
+      'criterion' : { 'predefined' : 1 }
+    }
+    test.identical( path.download, expected );
+
+    opener.finit();
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'change downloadPath in runtime';
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    a.will.prefer({ allOfMain : 0, allOfSub : 0 });
+    a.will.readingBegin();
+    return opener.open();
+  });
+
+  a.ready.then( () =>
+  {
+    let module = opener.openedModule;
+    test.identical( module.pathResourceMap.download.path, null );
+    module.downloadPath = '../';
+    test.identical( module.pathResourceMap.download.path, '../' );
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return build.perform();
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check reexported file';
+    let config = a.fileProvider.configRead( a.abs( 'out/ExportWithDefaultPaths.out.will.yml' ) )
+
+    let path = config.module[ 'ExportWithDefaultPaths.out' ].path;
+    let expected =
+    {
+      'criterion' : { 'predefined' : 1 }
+    }
+    test.identical( path.download, expected );
 
     opener.finit();
     return null;
@@ -3500,8 +3669,7 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export debug';
     a.reflect();
@@ -4539,8 +4707,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4563,7 +4730,16 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4593,8 +4769,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4681,8 +4856,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileUnknownSection */
+}
 
 exportCourrputedSubmoduleOutfileUnknownSection.description =
 `
@@ -4701,8 +4875,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super';
     a.reflect();
@@ -4725,7 +4898,16 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.true( _.errIs( err ) );
 
     test.description = 'files';
-    var exp = [ '.', './sub.ex.will.yml', './sub.im.will.yml', './super.ex.will.yml', './super.im.will.yml', './sub.out', './sub.out/sub.out.will.yml' ]
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml'
+    ];
     var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
@@ -4755,8 +4937,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export super, recursive : 2';
     a.reflect();
@@ -4850,8 +5031,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourrputedSubmoduleOutfileFormatVersion */
+}
 
 exportCourrputedSubmoduleOutfileFormatVersion.description =
 `
@@ -5078,8 +5258,7 @@ function exportsResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
@@ -5108,12 +5287,12 @@ function exportsResolve( test )
 
     opener.finit();
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportsResolve */
+}
 
 //
 
@@ -7796,17 +7975,15 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
-
     test.case = 'path::export';
     let resolved = opener.openedModule.pathResolve
     ({
@@ -7831,7 +8008,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.identical( a.rel( resolved ), expected );
 
     return null;
-  })
+  });
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -7840,7 +8017,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
     test.true( err === undefined );
     opener.finit();
     return arg;
-  })
+  });
 
   /* - */
 
@@ -9723,6 +9900,1085 @@ function modulesForOpeners( test )
 
   /* - */
 
+}
+
+//
+
+function modulesFor( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesFor' );
+  let onEachModules, onEachJunctions, onEachVisitedObjects;
+  let openers;
+
+  let defaults =
+  {
+    withBranches : 1,
+    withDisabledModules : 0,
+    withDisabledStem : null,
+    withDisabledSubmodules : 0,
+    withEnabledModules : 1,
+    withEnabledSubmodules : 1,
+    withIn : 1,
+    withInvalid : 1,
+    withKnown : 1,
+    withMandatorySubmodules : 1,
+    withOptionalSubmodules : 1,
+    withOut : 1,
+    withPeers : 1,
+    withStem : 1,
+    withTerminals : 1,
+    withUnknown : 0,
+    withValid : 1,
+    withoutDuplicates : 0,
+
+    onEachModule : onEachModule,
+    onEachJunction : onEachJunction,
+    onEachVisitedObject : onEachVisitedObject,
+    onBegin : onBegin,
+    onEnd : onEnd,
+  }
+
+  /* - */
+
+  begin({ selector : a.abs( './' ) })
+  .then( () =>
+  {
+    test.case = 'single module, no submodules';
+    let o2 =
+    {
+      ... defaults,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::default' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [ a.abs( './' ) ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp = [ 'junction::( module::default )' ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [ a.abs( './' ) ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [ 'opener::default' ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with submodules, recursive:0';
+    let o2 =
+    {
+      ... defaults,
+      recursive : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp = [ 'junction::( module::b )' ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [ 'opener::b' ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with submodules, recursive:1';
+    let o2 =
+    {
+      ... defaults,
+      recursive : 1,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [ a.abs( './group1/b' ), a.abs( './group1/.module/ModuleForTesting1/' ) ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp = [ 'junction::( module::b )', 'junction::( module::b / opener::ModuleForTesting1 )' ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [ a.abs( './group1/b' ), a.abs( './group1/.module/ModuleForTesting1/' ) ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [ 'opener::b', 'relation::ModuleForTesting1' ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with submodules, recursive:2';
+    let o2 =
+    {
+      ... defaults,
+      recursive : 2,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [ a.abs( './group1/b' ), a.abs( './group1/.module/ModuleForTesting1/' ) ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp = [ 'junction::( module::b )', 'junction::( module::b / opener::ModuleForTesting1 )' ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [ a.abs( './group1/b' ), a.abs( './group1/.module/ModuleForTesting1/' ) ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [ 'opener::b', 'relation::ModuleForTesting1' ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with nested submodules, recursive:1';
+    let o2 =
+    {
+      ... defaults,
+      recursive : 1,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './a' ), a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::a', 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './a' ),
+        a.abs( './group1/b' ),
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::a )',
+        'junction::( module::a / module::b )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './a' ),
+        a.abs( './group1/b' ),
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::a',
+        'relation::b',
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with nested submodules, recursive:2';
+    let o2 =
+    {
+      ... defaults,
+      recursive : 2,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './a' ), a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::a', 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './a' ),
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::a )',
+        'junction::( module::a / module::b )',
+        'junction::( module::a / module::b / opener::ModuleForTesting1 )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './a' ),
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::a',
+        'relation::b',
+        'relation::ModuleForTesting1'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with nested submodules, withEnabledSubmodules:0 recursive:2';
+    let o2 =
+    {
+      ... defaults,
+      recursive : 2,
+      withEnabledSubmodules : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './a' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::a' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './a' ),
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::a )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './a' ),
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::a',
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ) })
+  .then( () =>
+  {
+    test.case = 'single module, withEnabledModules:0';
+    let o2 =
+    {
+      ... defaults,
+      withEnabledModules : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp = [];
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with nested submodules, withStem : 0';
+    let o2 =
+    {
+      ... defaults,
+      withStem : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::a / module::b )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'relation::b',
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group2/c' ) })
+  .then( () =>
+  {
+    test.case = 'exported module, withIn : 0';
+    let o2 =
+    {
+      ... defaults,
+      withIn : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group2/out/c.out' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::c' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group2/out/c.out' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::c / module::c )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group2/out/c.out' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'module::c'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group2/c' ) })
+  .then( () =>
+  {
+    test.case = 'exported module, withOut : 0';
+    let o2 =
+    {
+      ... defaults,
+      withOut : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group2/c' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::c' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group2/c' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::c )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group2/c' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::c'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group2/c' ) })
+  .then( () =>
+  {
+    test.case = 'exported module, withIn : 0, withOut : 0';
+    let o2 =
+    {
+      ... defaults,
+      withIn : 0,
+      withOut : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp = [];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp = [];
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp = [];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp = [];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group2/c' ) })
+  .then( () =>
+  {
+    test.case = 'exported module, withPeers : 0';
+    let o2 =
+    {
+      ... defaults,
+      withPeers : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group2/c' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::c' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group2/c' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::c )',
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group2/c' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::c'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'module with single termninal, withTerminals : 0';
+    let o2 =
+    {
+      ... defaults,
+      withTerminals : 0,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( 'group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( 'group1/b' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::b )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( 'group1/b' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::b'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './a' ) })
+  .then( () =>
+  {
+    test.case = 'single module, with nested submodules, recursive:2, withBranches:0';
+    let o2 =
+    {
+      ... defaults,
+      withBranches : 0,
+      recursive : 2,
+      modules : openers,
+    }
+    return a.will.moduleWithNameMap.b.subModulesDownload()
+    .then( () => a.will.modulesFor( o2 ) )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp =
+      [
+        a.abs( 'group1/.module/ModuleForTesting1/' ),
+        a.abs( 'group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp =
+      [
+        'module::wModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+      var exp = [ false, true ];
+      test.identical( _.select( onEachModules, '*/isOut' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::a / module::wModuleForTesting1 )',
+        'junction::( module::a / module::wModuleForTesting1 )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'relation::ModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  return a.ready;
+
+
+  /* - */
+
+  function onEachModule( module, op )
+  {
+    onEachModules.push( module );
+    return null;
+  }
+
+  /* - */
+
+  function onEachJunction( junction, op )
+  {
+    onEachJunctions.push( junction );
+    return null;
+  }
+
+  /* - */
+
+  function onEachVisitedObject( object, op )
+  {
+    onEachVisitedObjects.push( object );
+    return null;
+  }
+
+  /* - */
+
+  function onBegin( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function onEnd( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function clean()
+  {
+    onEachModules = [];
+    onEachJunctions = [];
+    onEachVisitedObjects = [];
+  }
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      clean();
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      if( o2.tracing === undefined )
+      o2.tracing = a.path.isGlob( o2.selector );
+
+      return a.will.modulesFindWithAt( o2 )
+      .then( ( it ) =>
+      {
+        openers = it.openers;
+        return null;
+      })
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
+}
+
+//
+
+function modulesForWithSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesFor' );
+  let onEachModules, onEachJunctions, onEachVisitedObjects;
+  let openers;
+
+  let defaults =
+  {
+    withBranches : 1,
+    withDisabledModules : 0,
+    withDisabledStem : null,
+    withDisabledSubmodules : 0,
+    withEnabledModules : 1,
+    withEnabledSubmodules : 1,
+    withIn : 1,
+    withInvalid : 1,
+    withKnown : 1,
+    withMandatorySubmodules : 1,
+    withOptionalSubmodules : 1,
+    withOut : 1,
+    withPeers : 1,
+    withStem : 1,
+    withTerminals : 1,
+    withUnknown : 0,
+    withValid : 1,
+    withoutDuplicates : 0,
+
+    onEachModule : onEachModule,
+    onEachJunction : onEachJunction,
+    onEachVisitedObject : onEachVisitedObject,
+    onBegin : onBegin,
+    onEnd : onEnd,
+  }
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'submodules is not opened';
+    let o2 =
+    {
+      ... defaults,
+      modules : openers,
+    }
+    return a.will.modulesFor( o2 )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp = [ a.abs( './group1/b' ) ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp = [ 'module::b' ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::b )',
+        'junction::( module::b / opener::ModuleForTesting1 )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::b',
+        'relation::ModuleForTesting1'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  begin({ selector : a.abs( './group1/b' ) })
+  .then( () =>
+  {
+    test.case = 'submodules is opened';
+    let o2 =
+    {
+      ... defaults,
+      modules : openers,
+    }
+
+    return a.will.moduleWithNameMap.b.subModulesDownload()
+    .then( () => a.will.modulesFor( o2 ) )
+    .then( ( op ) =>
+    {
+      test.description = 'onEachModules';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachModules, '*/localPath' ), exp );
+      var exp =
+      [
+        'module::b',
+        'module::wModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
+      test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachJunctions';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
+      var exp =
+      [
+        'junction::( module::b )',
+        'junction::( module::b / module::wModuleForTesting1 )',
+        'junction::( module::b / module::wModuleForTesting1 )'
+      ]
+      test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
+
+      test.description = 'onEachVisitedObjects';
+      var exp =
+      [
+        a.abs( './group1/b' ),
+        a.abs( './group1/.module/ModuleForTesting1/' ),
+        a.abs( './group1/.module/ModuleForTesting1/out/wModuleForTesting1.out' )
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
+      var exp =
+      [
+        'opener::b',
+        'relation::ModuleForTesting1',
+        'module::wModuleForTesting1'
+      ];
+      test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
+
+      return op;
+    });
+  })
+  end()
+
+  /* - */
+
+  return a.ready;
+
+
+  /* - */
+
+  function onEachModule( module, op )
+  {
+    onEachModules.push( module );
+    return null;
+  }
+
+  /* - */
+
+  function onEachJunction( junction, op )
+  {
+    onEachJunctions.push( junction );
+    return null;
+  }
+
+  /* - */
+
+  function onEachVisitedObject( object, op )
+  {
+    onEachVisitedObjects.push( object );
+    return null;
+  }
+
+  /* - */
+
+  function onBegin( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function onEnd( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function clean()
+  {
+    onEachModules = [];
+    onEachJunctions = [];
+    onEachVisitedObjects = [];
+  }
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      clean();
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      if( o2.tracing === undefined )
+      o2.tracing = a.path.isGlob( o2.selector );
+
+      return a.will.modulesFindWithAt( o2 )
+      .then( ( it ) =>
+      {
+        openers = it.openers;
+        return null;
+      })
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
 }
 
 // --
@@ -11765,6 +13021,7 @@ const Proto =
     openCurruptedUnknownField,
     openerClone,
     moduleClone,
+    modulesUpform,
 
     // export
 
@@ -11826,6 +13083,8 @@ const Proto =
     modulesEachDuplicates,
     modulesFindEachAt,
     modulesForOpeners,
+    modulesFor,
+    modulesForWithSubmodules,
 
     // submodule
 

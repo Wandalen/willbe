@@ -172,14 +172,26 @@ function openersFind( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routine.options_( openersFind, arguments );
+  o = _.routine.options( openersFind, arguments );
   // _.assert( will.currentOpener === null );
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
+  if( o.localPath === null )
+  {
+    _.assert( will.transaction instanceof _.will.Transaction );
+    o.localPath = will.transaction.withPath || './';
+  }
+
+  if( o.tracing === null )
+  o.tracing = !path.isGlob( o.localPath ) && path.isTrailed( o.localPath );
+
   let o2 = _.props.extend( null, o );
   o2.selector = o.localPath;
+  o2.atLeastOne = !path.isGlob( o.localPath );
   delete o2.localPath;
+  delete o2.allowNoOpeners;
+
   return will.modulesFindWithAt( o2 )
   .finally( function( err, it )
   {
@@ -189,11 +201,17 @@ function openersFind( o )
     if( err )
     throw _.err( err );
 
-    will.currentOpeners = it.openers;
+    // will.currentOpeners = it.openers;
+    will.currentOpeners = it.sortedOpeners;
+
     if( !will.currentOpeners.length )
-    debugger;
-    if( !will.currentOpeners.length )
-    throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+    {
+      debugger;
+      if( !o.allowNoOpeners )
+      throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+      else
+      will.currentOpeners = null;
+    }
 
     return will.currentOpeners;
   })
@@ -203,10 +221,14 @@ function openersFind( o )
 openersFind.defaults =
 {
 
-  ... _.props.extend( null, _.Will.prototype.modulesFindWithAt.defaults ),
+  ... _.mapExtend( null, _.Will.prototype.modulesFindWithAt.defaults ),
 
-  localPath : './',
-  tracing : 1,
+  // localPath : './',
+  localPath : null,
+  // tracing : 1,
+  tracing : null,
+
+  allowNoOpeners : false
 
 }
 
@@ -312,7 +334,7 @@ function _command_head( o )
   _.routine.options_( o.routine, e.optionsMap );
 
   // if( o.routine.command.properties && o.routine.command.properties.v )
-  /* qqq : for Dmytro : design good solution instead of this workaround. before implementing discuss! */
+  /* aaa : for Dmytro : design good solution instead of this workaround. before implementing discuss! */ /* Dmytro : fixed, not me */
   // if( o.routine.command.properties && o.routine.command.properties.v )
   // if( e.propertiesMap.v !== undefined )
   // {
@@ -441,6 +463,9 @@ function _transactionExtend( command, propertiesMap )
   let cui = this;
   let transaction = cui.transaction;
 
+  if( transaction === null )
+  return cui._transactionBegin( command, propertiesMap );
+
   if( transaction && transaction.isInitial )
   return cui._transactionBegin( command, propertiesMap );
 
@@ -511,7 +536,7 @@ function _commandsMake()
     'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
     'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
     'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
-    'submodules git pr open' :          { ro : _.routineJoin( cui, cui.commandSubmodulesGitPrOpen )          },
+    'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
     'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
     'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
@@ -531,11 +556,13 @@ function _commandsMake()
     'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
     'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
     'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
-    'modules git pr open' :             { ro : _.routineJoin( cui, cui.commandModulesGitPrOpen )             },
+    'modules repo pull open' :          { ro : _.routineJoin( cui, cui.commandModulesRepoPullOpen )             },
     'modules git status' :              { ro : _.routineJoin( cui, cui.commandModulesGitStatus )             },
     'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
     'with' :                            { ro : _.routineJoin( cui, cui.commandWith )                         },
+    'modules' :                         { ro : _.routineJoin( cui, cui.commandModules )                         },
+    'submodules' :                      { ro : _.routineJoin( cui, cui.commandSubmodules )                         },
     'each' :                            { ro : _.routineJoin( cui, cui.commandEach )                         },
 
     'npm from willfile' :               { ro : _.routineJoin( cui, cui.commandNpmFromWillfile )              },
@@ -1088,6 +1115,7 @@ defaults.event = null;
 defaults.onEach = null;
 defaults.commandRoutine = null;
 defaults.name = null;
+defaults.allowNoOpeners = null;
 
 // _commandNewLike.defaults =
 // {
@@ -1238,7 +1266,7 @@ function _commandModulesLike( o )
     })
     .then( function( it )
     {
-      if( o.withRoot )
+      if( o.withStem )
       _.arrayPrependOnce( it.sortedOpeners, opener );
       else
       _.arrayRemove( it.sortedOpeners, opener );
@@ -1311,14 +1339,37 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withRoot = 1; /* qqq : for Dmytro : ?? */
+defaults.withStem = 1; /* qqq : for Dmytro : ?? */
+
+//
+
+function openersFindMaybe( o )
+{
+  let cui = this;
+  let path = cui.fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+
+  if( cui.currentOpeners )
+  {
+    if( !o.reload )
+    return null;
+
+    cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+    cui.currentOpeners = null;
+  }
+
+  return cui.openersFind
+  ({
+    localPath : o.localPath
+  })
+}
 
 //
 
 function _commandModuleOrientedLike( o )
 {
   let will = this;
-  let logger = will.transaction.logger;
   let ready = _.take( null );
 
   _.routine.options_( _commandModuleOrientedLike, arguments );
@@ -1336,22 +1387,39 @@ function _commandModuleOrientedLike( o )
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
-  if( will.currentOpeners === null )
-  ready.then( () => will.openersFind() )
+  let modulesDepth = will.transaction.modulesDepth;
 
-  let openers = will.currentOpeners;
+  if( o.withStem === null )
+  o.withStem = modulesDepth[ 0 ] === 0;
 
-  let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-  o2.modules = openers;
-  return will.modulesFor( o2 )
-  .finally( ( err, arg ) =>
+  // if( will.currentOpeners === null )
+  // ready.then( () => will.openersFind() )
+
+  let reload = will.transaction.wasFilterFieldsChanged( will.transactionOld );
+
+  ready.then( () => will.openersFindMaybe({ localPath : will.transaction.withPath, reload : reload }) )
+
+  if( reload )
+  ready.then( () => will.modulesUpform({ modules : will.currentOpeners, recursive : modulesDepth[ 0 ] }) )
+
+  ready.then( () =>
   {
-    will._commandsEnd( o.commandRoutine );
-    if( err )
-    throw _.err( err, `\nFailed to ${o.name}` );
-    return arg;
-  });
 
+    let openers = will.currentOpeners;
+    let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
+    o2.modules = openers;
+    o2.recursive = 2;
+    return will.modulesFor( o2 )
+    .finally( ( err, arg ) =>
+    {
+      will._commandsEnd( o.commandRoutine );
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name}` );
+      return arg;
+    });
+  })
+
+  return ready;
 }
 
 /* qqq : for Dmytro : bad : discuss modulesFor */
@@ -1359,7 +1427,8 @@ var defaults = _commandModuleOrientedLike.defaults =
 {
   ... Parent.prototype.modulesFor.defaults,
   withPeers : 0,
-  withStem : 1,
+  // withStem : 1,
+  withStem : null,
   event : null,
   commandRoutine : null,
   name : null,
@@ -1408,7 +1477,11 @@ commandImply.defaults =
   withOut : null,
   withIn : 1,
   withEnabled : null,
+  withEnabledModules : null,
+  withEnabledSubmodules : null,
   withDisabled : null,
+  withDisabledModules : null,
+  withDisabledSubmodules : null,
   withValid : null,
   withInvalid : null,
   withSubmodules : null,
@@ -1430,7 +1503,11 @@ command.properties =
   withOut : 'Include out modules. Default is 1.',
   withIn : 'Include in modules. Default is 1.',
   withEnabled : 'Include enabled modules. Default is 1.',
+  withEnabledModules : 'Include enabled modules. Default is 1.',
+  withEnabledSubmodules : 'Include enabled submodules. Default is 1.',
   withDisabled : 'Include disabled modules. Default is 0.',
+  withDisabledModules : 'Include disabled modules. Default is 0.',
+  withDisabledSubmodules : 'Include disabled submodules. Default is 0.',
   withValid : 'Include valid modules. Default is 1.',
   withInvalid : 'Include invalid modules. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
@@ -1536,25 +1613,30 @@ function commandVersionBump( e )
   cui._command_head( commandVersionBump, arguments );
   let properties = e.optionsMap;
 
-
   if( e.subject )
   properties.versionDelta = e.subject;
 
   if( _.numberIs( properties.versionDelta ) && !_.intIs( properties.versionDelta ) )
   properties.versionDelta = _.entity.exportString( properties.versionDelta );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'version bump',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandVersionBump,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.willfileVersionBump( properties );
+    return module.willfileVersionBump( properties );
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.willfileVersionBump( properties );
+  // }
 }
 
 commandVersionBump.defaults =
@@ -2155,6 +2237,7 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
+
   return cui._commandCleanLike
   ({
     event : e,
@@ -2182,6 +2265,10 @@ function commandSubmodulesVersionsDownload( e )
 commandSubmodulesVersionsDownload.defaults =
 {
   withSubmodules : 1,
+  withEnabledModules : null,
+  withDisabledModules : null,
+  withDisabledSubmodules : null,
+  withEnabledSubmodules : null,
   dry : 0,
   recursive : 1
 }
@@ -2333,25 +2420,35 @@ function commandSubmodulesShell( e )
   let cui = this;
   cui._command_head( commandSubmodulesShell, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesShell,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   debugger;
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandSubmodulesShell.command = Object.create( null );
@@ -2364,7 +2461,7 @@ function commandSubmodulesGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
   if( _.props.keys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -2373,27 +2470,40 @@ function commandSubmodulesGit( e )
 
   cui._command_head( commandSubmodulesGit, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGit,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
-      // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandSubmodulesGit.defaults =
@@ -2422,24 +2532,34 @@ function commandSubmodulesGitDiff( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitDiff, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGitDiff,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandSubmodulesGitDiff.defaults =
@@ -2455,47 +2575,56 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandSubmodulesGitPrOpen( e )
+function commandSubmodulesRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesGitPrOpen, arguments );
+  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
-    name : 'submodules git pr open',
-    onEach : handleEach,
-    commandRoutine : commandSubmodulesGitPrOpen,
-    withRoot : 0,
+    name : 'submodules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandSubmodulesRepoPullOpen,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPrOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
 }
 
-commandSubmodulesGitPrOpen.defaults =
+commandSubmodulesRepoPullOpen.defaults =
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
-  title : null,
+  // title : null,
   body : null,
   verbosity : null,
   withSubmodules : 1
-}
-
-var command = commandSubmodulesGitPrOpen.command = Object.create( null );
+};
+var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -2515,22 +2644,28 @@ function commandSubmodulesGitStatus( e )
   let cui = this;
   cui._command_head( commandSubmodulesGitStatus, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandSubmodulesGitStatus,
-    withRoot : 0,
+    withStem : 0,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandSubmodulesGitStatus.defaults =
@@ -2568,19 +2703,23 @@ command.properties =
 function commandSubmodulesGitSync( e )
 {
   let cui = this;
-  let logger = cui.transaction.logger;
+  // let logger = cui.transaction.logger;
   let provider;
   cui._command_head( commandSubmodulesGitSync, arguments );
 
   return cui._commandModulesLike
+  // return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'submodules git sync',
+    // onUp : onModulesBegin,
+    // onEachModule,
+    // onDown : onModulesEnd,
     onModulesBegin,
     onEach,
     onModulesEnd,
     commandRoutine : commandSubmodulesGitSync,
-    withRoot : 0,
+    withStem : 0,
   });
 
   /* */
@@ -2599,12 +2738,21 @@ function commandSubmodulesGitSync( e )
     });
 
     if( cui.transaction.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
     provider.archive.restoreLinksBegin();
   }
 
   /* */
 
+  // function onEachModule( module )
+  // {
+  //   return module.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+  //     restoringHardLinks : 0,
+  //   });
+  // }
   function onEach( it )
   {
     return it.opener.openedModule.gitSync
@@ -2713,6 +2861,7 @@ function commandModuleNewWith( e )
     withOut : 0,
     // withDisabledModules : 0,
     withInvalid : 1,
+    allowNoOpeners : true
   })
   .then( ( arg ) =>
   {
@@ -2742,25 +2891,34 @@ function commandModulesShell( e )
   let cui = this;
   cui._command_head( commandModulesShell, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesShell,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandModulesShell.command = Object.create( null );
@@ -2774,7 +2932,7 @@ function commandModulesGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.command.properties );
   if( _.props.keys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -2783,27 +2941,40 @@ function commandModulesGit( e )
 
   cui._command_head( commandModulesGit, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGit,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
-      // verbosity : cui.verbosity,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandModulesGit.defaults =
@@ -2832,24 +3003,34 @@ function commandModulesGitDiff( e )
   let cui = this;
   cui._command_head( commandModulesGitDiff, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGitDiff,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
-      // verbosity : cui.verbosity,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     // verbosity : cui.verbosity,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandModulesGitDiff.defaults =
@@ -2865,48 +3046,58 @@ command.properties = commandImply.command.properties;
 
 //
 
-function commandModulesGitPrOpen( e )
+function commandModulesRepoPullOpen( e )
 {
   let cui = this;
-  cui._command_head( commandModulesGitPrOpen, arguments );
+  cui._command_head( commandModulesRepoPullOpen, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
-    name : 'modules git pr open',
-    onEach : handleEach,
-    commandRoutine : commandModulesGitPrOpen,
-    withRoot : 1,
+    name : 'modules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandModulesRepoPullOpen,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPrOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
 }
 
-commandModulesGitPrOpen.defaults =
+commandModulesRepoPullOpen.defaults =
 {
   token : null,
   srcBranch : null,
   dstBranch : null,
-  title : null,
+  // title : null,
   body : null,
   verbosity : 2,
   withSubmodules : 1
 };
 
-var command = commandModulesGitPrOpen.command = Object.create( null );
+var command = commandModulesRepoPullOpen.command = Object.create( null );
 command.hint = 'Open pull requests from current module and its submodules.';
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -2926,22 +3117,28 @@ function commandModulesGitStatus( e )
   let cui = this;
   cui._command_head( commandModulesGitStatus, arguments );
 
-  return cui._commandModulesLike
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandModulesGitStatus,
-    withRoot : 1,
+    withStem : 1,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus ({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandModulesGitStatus.defaults =
@@ -2984,14 +3181,18 @@ function commandModulesGitSync( e )
   cui._command_head( commandModulesGitSync, arguments );
 
   return cui._commandModulesLike
+  // return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'modules git sync',
+    // onUp : onModulesBegin,
+    // onEachModule,
+    // onDown : onModulesEnd,
     onModulesBegin,
     onEach,
     onModulesEnd,
     commandRoutine : commandModulesGitSync,
-    withRoot : 1,
+    withStem : 1,
   });
 
   /* */
@@ -3015,6 +3216,15 @@ function commandModulesGitSync( e )
 
   /* */
 
+  // function onEachModule( module )
+  // {
+  //   return module.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+  //     restoringHardLinks : 0,
+  //   });
+  // }
   function onEach( it )
   {
     return it.opener.openedModule.gitSync
@@ -3065,24 +3275,33 @@ function commandShell( e )
   let cui = this;
   cui._command_head( commandShell, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'shell',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandShell,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.shell
+    return module.shell
     ({
       execPath : e.instructionArgument,
-      currentPath : it.opener.openedModule.dirPath,
-      // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : module.dirPath,
     });
   }
-
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.shell
+  //   ({
+  //     execPath : e.instructionArgument,
+  //     currentPath : it.opener.openedModule.dirPath,
+  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+  //   });
+  // }
 }
 
 var command = commandShell.command = Object.create( null );
@@ -3167,9 +3386,9 @@ function commandHookCall( e )
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
   }
-
 }
 
+commandHookCall.defaults = _.mapExtend( null, commandImply.defaults );
 var command = commandHookCall.command = Object.create( null );
 command.hint = 'Call a specified hook on the module.';
 command.subjectHint = 'A hook to execute';
@@ -3240,7 +3459,7 @@ function commandClean( e )
 commandClean.defaults =
 {
   withSubmodules : 0,
-  withOut : 0,
+  withOut : 1,
   dry : 0,
   cleaningSubmodules : 1,
   cleaningOut : 1,
@@ -3384,7 +3603,8 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
+    // let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
       ... filterProperties,
@@ -3424,7 +3644,8 @@ function commandExportPurging( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3461,7 +3682,8 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3483,27 +3705,100 @@ command.subjectHint = 'A name of export scenario.';
 
 /* xxx : add test routine checking wrong syntax error handling */
 
+// function commandWith( e )
+// {
+//   let cui = this.form();
+//   let path = cui.fileProvider.path;
+
+//   cui._command_head
+//   ({
+//     routine : commandWith,
+//     args : arguments,
+//     // usingImpliedMap : 0
+//   });
+
+//   // if( cui.currentOpener )
+//   // {
+//   //   cui.currentOpener.finit();
+//   //   cui.currentOpenerChange( null );
+//   // }
+
+//   if( cui.currentOpeners )
+//   cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
+//   cui.currentOpeners = null;
+
+//   _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
+//   _.assert( arguments.length === 1 );
+
+//   if( !e.instructionArgument )
+//   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
+
+//   if( process.platform === 'linux' )
+//   {
+//     let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
+//     if( quoteRanges.length !== 2 || ( quoteRanges[ 0 ] !== 0 && quoteRanges[ 1 ] !== e.instructionArgument.length ) )
+//     {
+//       let splits = e.instructionArgument.split( ' ' );
+//       if( splits.length > 1 )
+//       {
+//         let screenMap = _.paths.ext( splits );
+//         for( let i = screenMap.length - 1 ; i >= 0 ; i-- )
+//         {
+//           if( screenMap[ i ] === '' )
+//           {
+//             splits[ i ] = _.strUnquote( `${ splits[ i ] } ${ splits[ i + 1 ] }` );
+//             splits.splice( i + 1, 1 );
+//           }
+//         }
+//         e.instructionArgument = _.strCommonLeft( ... splits ) + '*';
+//       }
+//     }
+//   }
+
+//   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
+//   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
+
+//   cui.implied = _.mapExtend( cui.implied, { withPath } );
+//   cui._transactionExtend( commandWith, cui.implied );
+
+//   return cui.modulesFindWithAt
+//   ({
+//     selector : _.strUnquote( e.instructionArgument ),
+//     atLeastOne : !path.isGlob( e.instructionArgument ),
+//   })
+//   .then( function( it )
+//   {
+//     cui.currentOpeners = it.sortedOpeners;
+
+//     if( !cui.currentOpeners.length )
+//     {
+//       let equalizer = ( parsed, command ) => parsed.commandName === command;
+//       if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+//       throw _.errBrief
+//       (
+//         `No module sattisfy criteria.`
+//         , `\nLooked at ${ _.strQuote( path.resolve( e.instructionArgument ) )}`
+//       );
+//       else
+//       cui.currentOpeners = null;
+//     }
+
+//     _.assert( cui.transaction instanceof _.will.Transaction );
+//     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
+//     // cui.transaction.finit();
+//     // cui.transaction = null;
+
+//     return it;
+//   })
+
+// }
+
+//
+
 function commandWith( e )
 {
   let cui = this.form();
   let path = cui.fileProvider.path;
-
-  cui._command_head
-  ({
-    routine : commandWith,
-    args : arguments,
-    // usingImpliedMap : 0
-  });
-
-  // if( cui.currentOpener )
-  // {
-  //   cui.currentOpener.finit();
-  //   cui.currentOpenerChange( null );
-  // }
-
-  if( cui.currentOpeners )
-  cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
-  cui.currentOpeners = null;
 
   _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
   _.assert( arguments.length === 1 );
@@ -3533,41 +3828,29 @@ function commandWith( e )
     }
   }
 
-  // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
-  let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
+  // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
+  //
+  // cui.implied = _.props.extend( cui.implied, { withPath } );
+  // cui._transactionExtend( commandWith, cui.implied );
 
+  let withPath = _.strUnquote( e.instructionArgument );
+  if( withPath === '.' )
+  withPath = './';
+  withPath = path.join( path.current(), withPath );
   cui.implied = _.props.extend( cui.implied, { withPath } );
-  cui._transactionExtend( commandWith, cui.implied );
 
-  return cui.modulesFindWithAt
+  cui._command_head
   ({
-    selector : _.strUnquote( e.instructionArgument ),
-    atLeastOne : !path.isGlob( e.instructionArgument ),
-  })
-  .then( function( it )
-  {
-    cui.currentOpeners = it.sortedOpeners;
+    routine : commandWith,
+    args : arguments,
+  });
 
-    if( !cui.currentOpeners.length )
-    {
-      let equalizer = ( parsed, command ) => parsed.commandName === command;
-      if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
-      throw _.errBrief
-      (
-        `No module sattisfy criteria.`
-        , `\nLooked at ${ _.strQuote( path.resolve( e.instructionArgument ) )}`
-      );
-      else
-      cui.currentOpeners = null;
-    }
+  _.assert( cui.transaction instanceof _.will.Transaction );
+  _.assert( cui.transaction.withPath === withPath );
 
-    _.assert( cui.transaction instanceof _.will.Transaction );
-    // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
-    // cui.transaction.finit();
-    // cui.transaction = null;
-
-    return it;
-  })
+  cui.transaction.finit();
+  cui.transactionOld = cui.transaction;
+  cui.transaction = null;
 
 }
 
@@ -3576,6 +3859,60 @@ function commandWith( e )
 var command = commandWith.command = Object.create( null );
 command.hint = 'Select a module to execute command.';
 command.subjectHint = 'A module selector.';
+command.properties = Object.create( null );
+
+//
+
+function commandModules( e )
+{
+  let cui = this.form();
+
+  _.assert( arguments.length === 1 );
+
+  cui.implied = _.mapExtend( cui.implied, { modulesDepth : [ 0, Infinity ] } );
+
+  cui._command_head
+  ({
+    routine : commandModules,
+    args : arguments,
+  });
+
+  _.assert( cui.transaction instanceof _.will.Transaction );
+  cui.transaction.finit();
+  cui.transactionOld = cui.transaction;
+  cui.transaction = null;
+}
+
+var command = commandModules.command = Object.create( null );
+command.hint = 'Marks next commands to be executed modules.';
+command.subjectHint = false;
+command.properties = Object.create( null );
+
+//
+
+function commandSubmodules( e )
+{
+  let cui = this.form();
+
+  _.assert( arguments.length === 1 );
+
+  cui.implied = _.mapExtend( cui.implied, { modulesDepth : [ 1, Infinity ] } );
+
+  cui._command_head
+  ({
+    routine : commandSubmodules,
+    args : arguments,
+  });
+
+  _.assert( cui.transaction instanceof _.will.Transaction );
+  cui.transaction.finit();
+  cui.transactionOld = cui.transaction;
+  cui.transaction = null;
+}
+
+var command = commandSubmodules.command = Object.create( null );
+command.hint = 'Marks next commands to be executed for submodules.';
+command.subjectHint = false;
 command.properties = Object.create( null );
 
 //
@@ -3678,7 +4015,8 @@ command.subjectHint = 'A module or resource selector.';
 function commandNpmFromWillfile( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   cui._command_head( commandNpmFromWillfile, arguments );
   // _.routine.options_( commandNpmFromWillfile, e.propertiesMap );
@@ -3743,7 +4081,8 @@ command.properties =
 function commandWillfileFromNpm( e )
 {
   let cui = this;
-  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+  let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_head( commandWillfileFromNpm, arguments );
   // _.routine.options_( commandWillfileFromNpm, e.propertiesMap );
@@ -3801,21 +4140,24 @@ function commandWillfileFromNpm( e )
     if( _.props.keys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
+
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.willfileGenerateFromNpm.defaults ),
+      packagePath : e.optionsMap.packagePath,
+      willfilePath : e.optionsMap.willfilePath,
       currentContext,
       verbosity : 3,
     });
   }
 }
 
-commandWillfileFromNpm.defaults =  _.props.extend( null, commandImply.defaults,
+// commandWillfileFromNpm.defaults =  _.props.extend( null, commandImply.defaults,
+commandWillfileFromNpm.defaults =
 {
   packagePath : null,
   willfilePath : null,
   withSubmodules : 0,
-});
+};
 
 var command = commandWillfileFromNpm.command = Object.create( null );
 command.hint = 'Generate willfile from JSON file.';
@@ -4264,7 +4606,28 @@ function commandWillfileExtendWillfile( e )
 
 commandWillfileExtendWillfile.defaults =
 {
-  verbosity : 3,
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
+
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
+  'npm.name' : 1,
+  'npm.scripts' : 1,
+
+  'submodulesDisabling' : 0,
+  'format' : 'willfile',
+  'verbosity' : 3,
 };
 
 var command = commandWillfileExtendWillfile.command = Object.create( null );
@@ -4319,7 +4682,7 @@ function commandWillfileSupplementWillfile( e )
 
 commandWillfileSupplementWillfile.defaults =
 {
-  verbosity : 3,
+  ... commandWillfileExtendWillfile.defaults
 };
 
 var command = commandWillfileSupplementWillfile.command = Object.create( null );
@@ -4567,7 +4930,7 @@ function commandGit( e )
 {
   let cui = this;
 
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.defaults );
+  let commandOptions = _.mapBut_( null, e.propertiesMap, commandGit.command.properties );
   if( _.props.keys( commandOptions ).length >= 1 )
   {
     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
@@ -4576,25 +4939,38 @@ function commandGit( e )
 
   cui._command_head( commandGit, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGit,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitExecCommand
+    return module.gitExecCommand
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       command : e.subject,
       verbosity : cui.transaction.verbosity,
       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
       profile : e.optionsMap.profile
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitExecCommand
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     command : e.subject,
+  //     verbosity : cui.transaction.verbosity,
+  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+  //     profile : e.optionsMap.profile
+  //   });
+  // }
 }
 
 commandGit.defaults =
@@ -4602,8 +4978,7 @@ commandGit.defaults =
   hardLinkMaybe : 0,
   profile : 'default',
   withSubmodules : 0
-}
-
+};
 var command = commandGit.command = Object.create( null );
 command.hint = 'Run custom Git command in repository of module.';
 command.subjectHint = 'Custom git command exclude name of command "git".';
@@ -4615,7 +4990,6 @@ command.properties =
   ... commandImply.command.properties
 };
 
-
 //
 
 function commandGitDiff( e )
@@ -4623,29 +4997,38 @@ function commandGitDiff( e )
   let cui = this;
   cui._command_head( commandGitDiff, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git diff',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitDiff,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitDiff
+    return module.gitDiff
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitDiff
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //   });
+  // }
 }
 
 commandGitDiff.defaults =
 {
   withSubmodules : 0
-}
-
+};
 var command = commandGitDiff.command = Object.create( null );
 command.hint = 'Get diffs in module repository.';
 command.subjectHint = false;
@@ -4662,31 +5045,41 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git pull',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitPull,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPull
+    return module.gitPull
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
       profile : e.optionsMap.profile,
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitPull
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //     profile : e.optionsMap.profile,
+  //   });
+  // }
 }
 
 commandGitPull.defaults =
 {
   withSubmodules : 0,
-  profile : 'default'
-}
-
+  profile : 'default',
+};
 var command = commandGitPull.command = Object.create( null );
 command.hint = 'Pull changes from remote repository.';
 command.subjectHint = false;
@@ -4695,7 +5088,7 @@ command.properties =
 {
   profile : 'A name of profile to get path for hardlinking. Default is "default".',
   ... commandImply.command.properties
-}
+};
 
 //
 
@@ -4704,34 +5097,55 @@ function commandGitPush( e )
   let cui = this;
   cui._command_head( commandGitPush, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git push',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitPush,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPush
+    return module.gitPush
     ({
-      dirPath : it.junction.dirPath,
+      dirPath : module.dirPath,
       verbosity : cui.transaction.verbosity,
+      ... _.mapOnly_( null, e.optionsMap, module.gitPush.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitPush
+  //   ({
+  //     dirPath : it.junction.dirPath,
+  //     verbosity : cui.transaction.verbosity,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPush.defaults ),
+  //   });
+  // }
 }
 
 commandGitPush.defaults =
 {
-  withSubmodules : 0
-}
-
+  withSubmodules : 0,
+  verbosity : 3,
+  withTags : 1,
+  force : 1,
+  dry : 0,
+};
 var command = commandGitPush.command = Object.create( null );
 command.hint = 'Push commits and tags to remote repository.';
 command.subjectHint = false;
 command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
-command.properties = _.props.extend( null, commandImply.command.properties );
+command.properties =
+{
+  ... commandImply.command.properties,
+  withTags : 'Enable pushing of tags. Default is 1',
+  force : 'Enable force pushing of commit history and tags. Default is 1',
+  dry : 'Enable dry pushing of commit history and tags. Default is 0',
+};
 
 //
 
@@ -4740,21 +5154,27 @@ function commandGitReset( e )
   let cui = this;
   cui._command_head( commandGitReset, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git reset',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitReset,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitReset
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
-    });
+    return module.gitReset({ ... _.mapOnly_( null, e.optionsMap, module.gitReset.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitReset
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitReset.defaults )
+  //   });
+  // }
 }
 
 commandGitReset.defaults =
@@ -4769,14 +5189,13 @@ commandGitReset.defaults =
   verbosity : 2,
   withSubmodules : 0
 };
-
 var command = commandGitReset.command = Object.create( null );
 command.hint = 'Reset local changes in repository of the module.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4795,21 +5214,27 @@ function commandGitStatus( e )
   let cui = this;
   cui._command_head( commandGitStatus, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git status',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitStatus,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitStatus
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-    });
+    return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitStatus
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+  //   });
+  // }
 }
 
 commandGitStatus.defaults =
@@ -4823,15 +5248,14 @@ commandGitStatus.defaults =
   prs : 1,
   verbosity : 1,
   withSubmodules : 0
-}
-
+};
 var command = commandGitStatus.command = Object.create( null );
 command.hint = 'Check the status of the repository.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4850,22 +5274,34 @@ function commandGitSync( e )
   let cui = this;
   cui._command_head( commandGitSync, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git sync',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitSync,
+    ... cui.transaction.relationFilterFieldsGet()
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitSync
+
+    return module.gitSync
     ({
       commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
+      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitSync
+  //   ({
+  //     commit : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
+  //   });
+  // }
 }
 
 commandGitSync.defaults =
@@ -4875,17 +5311,16 @@ commandGitSync.defaults =
   dirPath : null,
   dry : 0,
   profile : 'default',
-  verbosity : 1,
-  withSubmodules : 0
+  // verbosity : 1,
+  // withSubmodules : 0
 };
-
 var command = commandGitSync.command = Object.create( null );
 command.hint = 'Syncronize local and remote repositories.';
 command.subjectHint = 'A commit message. Default value is "."';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -4902,47 +5337,53 @@ function commandGitTag( e )
   let cui = this;
   cui._command_head( commandGitTag, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'git tag',
-    onEach : handleEach,
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandGitTag,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitTag
-    ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
-    });
+    return module.gitTag({ ... _.mapOnly_( null, e.optionsMap, module.gitTag.defaults ) });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.gitTag
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitTag.defaults )
+  //   });
+  // }
 }
 
 commandGitTag.defaults =
 {
   ... commandImply.defaults,
-
   name : '.',
   description : '',
+  toVersion : null,
   dry : 0,
   light : 0,
   verbosity : 1,
   withSubmodules : 0
 };
-
 var command = commandGitTag.command = Object.create( null );
-command.hint = 'Add tag for current commit.';
+command.hint = 'Add tag for commit.';
 command.subjectHint = false;
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
   name : 'Tag name. Default is name:".".',
   description : 'Description of annotated tag. Default is description:"".',
+  toVersion : 'The commit to add tag. Default is current HEAD commit.',
   dry : 'Dry run without tagging. Default is dry:0.',
   light : 'Enables lightweight tags. Default is light:0.',
   verbosity : 'Set verbosity. Default is 1.',
@@ -4974,22 +5415,32 @@ function commandRepoPullOpen( e )
   let cui = this;
   cui._command_head( commandRepoPullOpen, arguments );
 
-  return cui._commandBuildLike
+  // return cui._commandBuildLike
+  return cui._commandModuleOrientedLike
   ({
     event : e,
-    name : 'git pr open',
-    onEach : handleEach,
+    name : 'repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
     commandRoutine : commandRepoPullOpen,
   });
 
-  function handleEach( it )
+  function handleEach( module )
   {
-    return it.opener.openedModule.gitPrOpen
+    return module.repoPullOpen
     ({
       title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitPrOpen.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ),
+  //   });
+  // }
 }
 
 commandRepoPullOpen.defaults =
@@ -4999,19 +5450,18 @@ commandRepoPullOpen.defaults =
   token : null,
   srcBranch : null,
   dstBranch : 'master',
-  title : null,
+  // title : null, /* Dmytro : rewrites options */
   body : null,
   verbosity : 2,
   withSubmodules : 1
 };
-
 var command = commandRepoPullOpen.command = Object.create( null );
 command.hint = 'Open pull request from current modules.';
 command.subjectHint = 'A title for PR';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   ... commandImply.command.properties,
@@ -6029,6 +6479,7 @@ let Restricts =
   topCommand : null,
   will : null,
   implied : _.define.own( {} ),
+  transactionOld : null
 }
 
 let Statics =
@@ -6066,6 +6517,7 @@ let Extension =
   _openersCurrentEach,
   openersCurrentEach,
   openersFind,
+  openersFindMaybe,
   // currentOpenerChange,
 
   // etc
@@ -6128,7 +6580,7 @@ let Extension =
   commandSubmodulesShell,
   commandSubmodulesGit,
   commandSubmodulesGitDiff,
-  commandSubmodulesGitPrOpen,
+  commandSubmodulesRepoPullOpen,
   commandSubmodulesGitStatus,
   commandSubmodulesGitSync,
 
@@ -6138,7 +6590,7 @@ let Extension =
   commandModulesShell,
   commandModulesGit,
   commandModulesGitDiff,
-  commandModulesGitPrOpen,
+  commandModulesRepoPullOpen,
   commandModulesGitStatus,
   commandModulesGitSync,
 
@@ -6156,6 +6608,8 @@ let Extension =
   // command iterator
 
   commandWith,
+  commandModules,
+  commandSubmodules,
   commandEach,
 
   // command converters
@@ -6185,7 +6639,7 @@ let Extension =
   commandGitTag,
   commandGitHookPreservingHardLinks,
 
-  commandRepoPullOpen, /* qqq : cover */
+  commandRepoPullOpen, /* aaa : cover */ /* Dmytro : covered */
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,

@@ -755,11 +755,13 @@ function stepRoutineGitPush( frame )
 stepRoutineGitPush.stepOptions =
 {
   dirPath : null,
-}
+  withTags : 1,
+  force : 1,
+};
 
 stepRoutineGitPush.uniqueOptions =
 {
-}
+};
 
 //
 

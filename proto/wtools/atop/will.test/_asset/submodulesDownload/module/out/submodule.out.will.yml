@@ -9,20 +9,20 @@ consistency:
     hash: 136f3176aac4abc3812e6ff57b852ab7
     size: 1861
   ../.module/ModuleForTesting1/.im.will.yml: &ref_2
-    hash: 8d39ce73a544ea2934646bc8fed76682
-    size: 4949
+    hash: 403a2b8c06670f33b638e7322d907b85
+    size: 4840
   ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: &ref_3
-    hash: 851c9b04a3024edc531ea673443f4174
-    size: 37929
+    hash: 514d478fef09afd7184d351260466d96
+    size: 38321
   ../.module/ModuleForTesting2a/.ex.will.yml: &ref_4
     hash: b00f92e4d42751204fa727922c860129
     size: 1867
   ../.module/ModuleForTesting2a/.im.will.yml: &ref_5
-    hash: 676106223ed3efe250321f1dfbd45a16
-    size: 5080
+    hash: 19e79c2a6e57229ca0fcde1b2d509939
+    size: 4981
   ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: &ref_6
-    hash: f40985399552e48ad435dcb938050638
-    size: 38373
+    hash: ad91ee40c7cd859bbbbf014582b8fed8
+    size: 38788
 module:
   submodule.out:
     about:
@@ -99,7 +99,6 @@ module:
           - ../.module/ModuleForTesting1/.git/hooks/post-update.sample
           - ../.module/ModuleForTesting1/.git/hooks/pre-applypatch.sample
           - ../.module/ModuleForTesting1/.git/hooks/pre-commit.sample
-          - ../.module/ModuleForTesting1/.git/hooks/pre-merge-commit.sample
           - ../.module/ModuleForTesting1/.git/hooks/pre-push.sample
           - ../.module/ModuleForTesting1/.git/hooks/pre-rebase.sample
           - ../.module/ModuleForTesting1/.git/hooks/pre-receive.sample
@@ -119,9 +118,9 @@ module:
           - ../.module/ModuleForTesting1/.git/objects/info
           - ../.module/ModuleForTesting1/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-9ae45db7fee8ae2acaffb819ebe2e6868584d58f.idx
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-bf3042ac50400fc2abf435f941fb44feeda398af.idx
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-9ae45db7fee8ae2acaffb819ebe2e6868584d58f.pack
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-bf3042ac50400fc2abf435f941fb44feeda398af.pack
           - ../.module/ModuleForTesting1/.git/refs
           - ../.module/ModuleForTesting1/.git/refs/heads
           - ../.module/ModuleForTesting1/.git/refs/heads/master
@@ -131,9 +130,10 @@ module:
           - ../.module/ModuleForTesting1/.git/refs/tags
           - ../.module/ModuleForTesting1/.github
           - ../.module/ModuleForTesting1/.github/workflows
-          - ../.module/ModuleForTesting1/.github/workflows/Publish.yml
-          - ../.module/ModuleForTesting1/.github/workflows/PullRequest.yml
-          - ../.module/ModuleForTesting1/.github/workflows/Push.yml
+          - ../.module/ModuleForTesting1/.github/workflows/StandardPublish.yml
+          - >-
+            ../.module/ModuleForTesting1/.github/workflows/StandardPullRequest.yml
+          - ../.module/ModuleForTesting1/.github/workflows/StandardPush.yml
           - ../.module/ModuleForTesting1/doc
           - ../.module/ModuleForTesting1/doc/ModuleForTesting1.md
           - ../.module/ModuleForTesting1/doc/README.md
@@ -182,7 +182,6 @@ module:
           - ../.module/ModuleForTesting2a/.git/hooks/post-update.sample
           - ../.module/ModuleForTesting2a/.git/hooks/pre-applypatch.sample
           - ../.module/ModuleForTesting2a/.git/hooks/pre-commit.sample
-          - ../.module/ModuleForTesting2a/.git/hooks/pre-merge-commit.sample
           - ../.module/ModuleForTesting2a/.git/hooks/pre-push.sample
           - ../.module/ModuleForTesting2a/.git/hooks/pre-rebase.sample
           - ../.module/ModuleForTesting2a/.git/hooks/pre-receive.sample
@@ -202,9 +201,9 @@ module:
           - ../.module/ModuleForTesting2a/.git/objects/info
           - ../.module/ModuleForTesting2a/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-7a63a9bb2b412eb6131785a8caf8826ddde36a57.idx
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-e8d04a85f6f6bb4dc7092cb39413d07b299686b6.idx
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-7a63a9bb2b412eb6131785a8caf8826ddde36a57.pack
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-e8d04a85f6f6bb4dc7092cb39413d07b299686b6.pack
           - ../.module/ModuleForTesting2a/.git/refs
           - ../.module/ModuleForTesting2a/.git/refs/heads
           - ../.module/ModuleForTesting2a/.git/refs/heads/master
@@ -214,9 +213,10 @@ module:
           - ../.module/ModuleForTesting2a/.git/refs/tags
           - ../.module/ModuleForTesting2a/.github
           - ../.module/ModuleForTesting2a/.github/workflows
-          - ../.module/ModuleForTesting2a/.github/workflows/Publish.yml
-          - ../.module/ModuleForTesting2a/.github/workflows/PullRequest.yml
-          - ../.module/ModuleForTesting2a/.github/workflows/Push.yml
+          - ../.module/ModuleForTesting2a/.github/workflows/StandardPublish.yml
+          - >-
+            ../.module/ModuleForTesting2a/.github/workflows/StandardPullRequest.yml
+          - ../.module/ModuleForTesting2a/.github/workflows/StandardPush.yml
           - ../.module/ModuleForTesting2a/doc
           - ../.module/ModuleForTesting2a/doc/ModuleForTesting2a.md
           - ../.module/ModuleForTesting2a/doc/README.md
@@ -241,8 +241,6 @@ module:
           - ../.module/ModuleForTesting2a/sample
           - ../.module/ModuleForTesting2a/sample/trivial
           - ../.module/ModuleForTesting2a/sample/trivial/Sample.s
-          - .
-          - submodule.out.will.yml
     submodule:
       ModuleForTesting1:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta'
@@ -421,7 +419,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ./
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       origins:
@@ -502,6 +500,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - proto/wtools/testing/l1/Include.s
+          - proto/node_modules/wmodulefortesting1
     submodule:
       Testing:
         path: 'npm:///wTesting'
@@ -1102,7 +1104,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ../
+        path: ..
       repository:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       origins:
@@ -1183,6 +1185,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - ../proto/wtools/testing/l1/Include.s
+          - ../proto/node_modules/wmodulefortesting1
       exported.dir.proto.export:
         criterion:
           generated: 1
@@ -1838,8 +1844,8 @@ module:
         hash: 136f3176aac4abc3812e6ff57b852ab7
         size: 1861
       ../.module/ModuleForTesting1/.im.will.yml:
-        hash: 8d39ce73a544ea2934646bc8fed76682
-        size: 4949
+        hash: 403a2b8c06670f33b638e7322d907b85
+        size: 4840
   ../.module/ModuleForTesting2a/:
     about:
       name: wModuleForTesting2a
@@ -1893,7 +1899,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ./
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
       origins:
@@ -1974,6 +1980,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - proto/wtools/testing/l3/testing2a/Include.s
+          - proto/node_modules/wmodulefortesting2a
     submodule:
       ModuleForTesting2:
         path: 'git+https://github.com/Wandalen/wModuleForTesting2.git/!alpha'
@@ -2578,7 +2588,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ../
+        path: ..
       repository:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
       origins:
@@ -2659,6 +2669,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - ../proto/wtools/testing/l3/testing2a/Include.s
+          - ../proto/node_modules/wmodulefortesting2a
       exported.dir.proto.export:
         criterion:
           generated: 1
@@ -3319,5 +3333,5 @@ module:
         hash: b00f92e4d42751204fa727922c860129
         size: 1867
       ../.module/ModuleForTesting2a/.im.will.yml:
-        hash: 676106223ed3efe250321f1dfbd45a16
-        size: 5080
+        hash: 19e79c2a6e57229ca0fcde1b2d509939
+        size: 4981
