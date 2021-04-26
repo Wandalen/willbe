@@ -41343,40 +41343,65 @@ It means that utility doesn't modify the data of the module if it's not required
 
 //
 
-function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */
+function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */ /* Dmytro : used namespace `repo` for classifying of repo paths, test routine works fine */
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesSafety' );
-  a.reflect();
 
   /* - */
 
+  a.ready.then( () =>
+  {
+    test.case = 'downloaded submodules';
+    a.reflect();
+    return null;
+  });
   a.appStart({ args : `.submodules.download` });
-
   a.ready.then( () =>
   {
     let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
     data = _.strReplace( data, 'git+https', 'test+https' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
     return null;
-  })
+  });
 
-  let op = { args : `.submodules.download` }
+  var op = { args : `.submodules.download` };
   a.appStart( op );
-
   a.ready.finally( ( err, got ) =>
   {
     if( err )
-    {
-      _.errAttend( err );
-      _.errLogOnce( err );
-    }
+    _.errAttend( err );
 
     test.true( _.errIs( err ) );
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'not downloaded submodules';
+    a.reflect();
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  });
+
+  var op = { args : `.submodules.download` };
+  a.appStart( op );
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    _.errAttend( err );
+
+    test.true( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  });
 
   /* - */
 
@@ -41386,7 +41411,7 @@ function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */
 commandsSubmoduleSafetyInvalidUrl.description =
 `
 Should throw error about invalid protocol in remote path.
-`
+`;
 
 //
 
@@ -41552,7 +41577,7 @@ function commandSubmodulesUpdateOptionTo( test )
     a.moduleDownloadedShellSync( 'git fetch --tags' )
     a.moduleShellSync( 'git tag -d dev1' )
     return null;
-  })
+  });
   a.appStart( '.submodules.update to:!dev1' )
   .then( ( op ) =>
   {
@@ -41567,7 +41592,7 @@ function commandSubmodulesUpdateOptionTo( test )
     let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     test.identical( willFileAftet, a.willFileBefore );
     return null;
-  })
+  });
 
   /* - */
 
@@ -41581,7 +41606,7 @@ Checks if command tag:
  - Downloads new tags from the remote
  - Updates existing tag
  - Checkouts selected submodules to specific tag
-`
+`;
 
 //
 
