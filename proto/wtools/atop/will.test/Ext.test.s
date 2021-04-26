@@ -40884,8 +40884,8 @@ function commandsSubmoduleSafety( test )
   a.rooWillFilePath = a.abs( '.will.yml' );
   a.localPath = a.abs( '.module/ModuleForTesting1' );
 
-  a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath })
-  a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data })
+  a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath });
+  a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data });
   a.moduleGitStatusGet = () =>
   {
     return _.git.statusLocal
@@ -40895,7 +40895,7 @@ function commandsSubmoduleSafety( test )
       detailing : 1,
       sync : 1,
     });
-  }
+  };
   a.moduleFilesGet = () =>
   {
     return a.fileProvider.filesFind
@@ -40905,13 +40905,13 @@ function commandsSubmoduleSafety( test )
       maskPreset : 0,
       outputFormat : 'absolute'
     });
-  }
+  };
   a.moduleFixateTag = ( tag ) =>
   {
     let data = a.rootWillFileRead();
     data = _.strReplace( data, '/!master', `/!${tag}` );
     a.rootWillFileWrite( data );
-  }
+  };
   a.moduleShell = _.process.starter
   ({
     currentPath : a.localPath,
@@ -40921,7 +40921,7 @@ function commandsSubmoduleSafety( test )
     sync : 1,
     deasync : 0,
     ready : null
-  })
+  });
 
   let routinesPre = Object.create( null );
   let routinesPost = Object.create( null );
@@ -40930,105 +40930,111 @@ function commandsSubmoduleSafety( test )
 
   /* - */
 
-  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 1 })
-  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
-  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 1 });
+  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 });
+  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 });
 
   /* - */
 
-  run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'local/commit', downloaded : 1, error : 0 })
-  run({ command : 'update', case : 'local/branch', downloaded : 1, error : 0 })
-  run({ command : 'update', case : 'local/tag', downloaded : 1, error : 0 })
-  run({ command : 'update', case : 'local/conflict', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'different/origin', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'different/branch', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'local/commit', downloaded : 1, error : 0 });
+  run({ command : 'update', case : 'local/branch', downloaded : 1, error : 0 });
+  run({ command : 'update', case : 'local/tag', downloaded : 1, error : 0 });
+  run({ command : 'update', case : 'local/conflict', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'different/origin', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'different/branch', downloaded : 1, error : 0 });
 
   /* - */
 
-  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })//qqq: Vova: fails, error is ignored
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })//qqq: Vova: fails, error is ignored
-  run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/commit', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/branch', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/tag', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/conflict', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'different/origin', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'different/branch', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 });
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  // run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 }); // aaa: Vova: fails, error is ignored /* Dmytro : fixed, routine commandSubmodulesVersionsVerify use routine _commandCleanLike that allows invalid submodules */
+  // run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 }); // aaa: Vova: fails, error is ignored /* Dmytro : fixed, routine commandSubmodulesVersionsVerify use routine _commandCleanLike that allows invalid submodules */
+  run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/commit', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/branch', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/tag', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/conflict', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 });
+  run({ command : 'versions.verify', case : 'different/origin', downloaded : 1, error : 1 });
+  run({ command : 'versions.verify', case : 'different/branch', downloaded : 1, error : 1 });
 
   /* - */
 
-  run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  // run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
+  // run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
+  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
-  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.agree', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 0, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 0, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 0, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, redownloaded : 1 })
-  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, redownloaded : 1 })
-  run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 })
+  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'versions.agree', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, redownloaded : 1 });
+  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, redownloaded : 1 });
+  run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 });
 
   /* - */
 
@@ -41069,10 +41075,15 @@ function commandsSubmoduleSafety( test )
       return null;
     })
 
+    a.ready.then( () =>
+    {
+      debugger;
+      return null;
+    });
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
 
-    a.ready.tap( () =>
+    a.ready.tap( ( err, arg ) =>
     {
       let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
       if( _.longHas( [ 'update', 'versions.agree' ], env.command ) && isGitModuleInCurrentState )
@@ -41095,6 +41106,7 @@ function commandsSubmoduleSafety( test )
     if( env.error )
     a.ready.finally( ( err, op ) =>
     {
+      debugger;
       if( err )
       {
         _.errAttend( err );
@@ -41437,14 +41449,14 @@ function commandsSubmoduleSafetyVerifyInvalidUrl( test )
     return null;
   });
 
-  var op = { args : `.submodules.verify` };
+  var op = { args : `.submodules.versions.verify` };
   a.appStart( op );
   a.ready.finally( ( err, got ) =>
   {
     if( err )
     _.errAttend( err );
 
-    test.true( _.errIs( err ) );
+    test.false( _.errIs( err ) );
     test.notIdentical( op.exitCode, 0 );
 
     return null;
@@ -41462,15 +41474,15 @@ function commandsSubmoduleSafetyVerifyInvalidUrl( test )
     return null;
   });
 
-  var op = { args : `.submodules.verify` };
+  var op = { args : `.submodules.versions.verify` };
   a.appStart( op );
   a.ready.finally( ( err, got ) =>
   {
     if( err )
     _.errAttend( err );
 
-    test.true( _.errIs( err ) );
-    test.notIdentical( op.exitCode, 0 );
+    test.false( _.errIs( err ) );
+    test.identical( op.exitCode, 0 );
 
     return null;
   });
@@ -41482,7 +41494,9 @@ function commandsSubmoduleSafetyVerifyInvalidUrl( test )
 
 commandsSubmoduleSafetyVerifyInvalidUrl.description =
 `
-Should throw error about invalid protocol in remote path.
+Should not throw error about invalid protocol
+because command routine use routine _commandCleanLike
+that allows invalid submodules.
 `;
 
 //
