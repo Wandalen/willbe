@@ -530,21 +530,30 @@ function IsModuleAt( filePath )
 
 function pathIsRemote( remotePath )
 {
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
   _.assert( arguments.length === 1, 'Expects no arguments' );
   _.assert( _.strIs( remotePath ) );
 
-  // if( remotePath === undefined )
-  // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
-  let remoteProvider = fileProvider.providerForPath( remotePath );
-
-  _.assert( !!remoteProvider );
-
-  return !!remoteProvider.isVcs;
+  let remoteProvider = _.repo.providerForPath( remotePath );
+  return remoteProvider !== _.repo.provider.hd;
 }
+
+// function pathIsRemote( remotePath )
+// {
+//   let will = this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( arguments.length === 1, 'Expects no arguments' );
+//   _.assert( _.strIs( remotePath ) );
+//
+//   // if( remotePath === undefined )
+//   // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+//   let remoteProvider = fileProvider.providerForPath( remotePath );
+//
+//   _.assert( !!remoteProvider );
+//
+//   return !!remoteProvider.isVcs;
+// }
 
 //
 
