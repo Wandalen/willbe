@@ -184,7 +184,13 @@ function openersFind( o )
   }
 
   if( o.tracing === null )
-  o.tracing = !path.isGlob( o.localPath ) && path.isTrailed( o.localPath );
+  {
+    o.tracing = 0;
+
+    if( !path.isGlob( o.localPath ) )
+    if( o.localPath === path.current() || path.isTrailed( o.localPath )  )
+    o.tracing = 1;
+  }
 
   let o2 = _.props.extend( null, o );
   o2.selector = o.localPath;
@@ -522,8 +528,8 @@ function _commandsMake()
     'about list' :                      { ro : _.routineJoin( cui, cui.commandAboutList )                    },
     'about' :                           { ro : _.routineJoin( cui, cui.commandAboutList )                    },
 
-    'submodules clean' :                { ro : _.routineJoin( cui, cui.commandSubmodulesClean )              },
-    'submodules add' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesAdd )                },
+    'clean submodules' :                { ro : _.routineJoin( cui, cui.commandCleanSubmodules )              },
+    'add submodules' :                  { ro : _.routineJoin( cui, cui.commandAddSubmodules )                },
     'submodules fixate' :               { ro : _.routineJoin( cui, cui.commandSubmodulesFixate )             },
     'submodules upgrade' :              { ro : _.routineJoin( cui, cui.commandSubmodulesUpgrade )            },
 
@@ -533,12 +539,12 @@ function _commandsMake()
     'submodules versions update' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate )     },
     'submodules versions verify' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsVerify )     },
     'submodules versions agree' :       { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsAgree )      },
-    'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
-    'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
-    'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
-    'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
-    'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
-    'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
+    // 'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
+    // 'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
+    // 'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
+    // 'submodules repo pull open' :       { ro : _.routineJoin( cui, cui.commandSubmodulesRepoPullOpen )          },
+    // 'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
+    // 'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
     'shell' :                           { ro : _.routineJoin( cui, cui.commandShell )                        },
     'do' :                              { ro : _.routineJoin( cui, cui.commandDo )                           },
@@ -553,12 +559,12 @@ function _commandsMake()
 
     'module new' :                      { ro : _.routineJoin( cui, cui.commandModuleNew )                    },
     'module new with' :                 { ro : _.routineJoin( cui, cui.commandModuleNewWith )                },
-    'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
-    'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
-    'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
-    'modules repo pull open' :          { ro : _.routineJoin( cui, cui.commandModulesRepoPullOpen )             },
-    'modules git status' :              { ro : _.routineJoin( cui, cui.commandModulesGitStatus )             },
-    'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
+    // 'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
+    // 'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
+    // 'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
+    // 'modules repo pull open' :          { ro : _.routineJoin( cui, cui.commandModulesRepoPullOpen )             },
+    // 'modules git status' :              { ro : _.routineJoin( cui, cui.commandModulesGitStatus )             },
+    // 'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
     'with' :                            { ro : _.routineJoin( cui, cui.commandWith )                         },
     'modules' :                         { ro : _.routineJoin( cui, cui.commandModules )                         },
@@ -1384,6 +1390,7 @@ function _commandModuleOrientedLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
+  _.assert( o.onCommandEnd === null || _.routineIs( o.onCommandEnd ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1410,14 +1417,18 @@ function _commandModuleOrientedLike( o )
     o2.modules = openers;
     o2.recursive = 2;
     return will.modulesFor( o2 )
-    .finally( ( err, arg ) =>
-    {
-      will._commandsEnd( o.commandRoutine );
-      if( err )
-      throw _.err( err, `\nFailed to ${o.name}` );
-      return arg;
-    });
   })
+
+  if( o.onCommandEnd )
+  ready.then( () => o.onCommandEnd() )
+
+  ready.finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    throw _.err( err, `\nFailed to ${o.name}` );
+    return arg;
+  });
 
   return ready;
 }
@@ -1432,6 +1443,8 @@ var defaults = _commandModuleOrientedLike.defaults =
   event : null,
   commandRoutine : null,
   name : null,
+
+  onCommandEnd : null
 }
 
 // --
@@ -2073,17 +2086,17 @@ command.properties =
 
 //
 
-function commandSubmodulesAdd( e )
+function commandAddSubmodules( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesAdd, arguments );
+  cui._command_head( commandAddSubmodules, arguments );
 
   return cui._commandBuildLike
   ({
     event : e,
     name : 'add submodules',
     onEach : handleEach,
-    commandRoutine : commandSubmodulesAdd,
+    commandRoutine : commandAddSubmodules,
   });
 
   function handleEach( it )
@@ -2127,7 +2140,7 @@ function commandSubmodulesAdd( e )
 
 }
 
-var command = commandSubmodulesAdd.command = Object.create( null );
+var command = commandAddSubmodules.command = Object.create( null );
 command.hint = 'Add submodules.';
 command.subjectHint = 'A selector ( path ) for module that will be included in module.';
 
@@ -2415,387 +2428,387 @@ command.properties =
 
 //
 
-function commandSubmodulesShell( e )
-{
-  let cui = this;
-  cui._command_head( commandSubmodulesShell, arguments );
+// function commandSubmodulesShell( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandSubmodulesShell, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules shell',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesShell,
-    withStem : 0,
-  });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules shell',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandSubmodulesShell,
+//     withStem : 0,
+//   });
 
-  function handleEach( module )
-  {
-    return module.shell
-    ({
-      execPath : e.instructionArgument,
-      currentPath : module.dirPath,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   debugger;
-  //   return it.opener.openedModule.shell
-  //   ({
-  //     execPath : e.instructionArgument,
-  //     currentPath : it.opener.openedModule.dirPath,
-  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
-  //   });
-  // }
-}
+//   function handleEach( module )
+//   {
+//     return module.shell
+//     ({
+//       execPath : e.instructionArgument,
+//       currentPath : module.dirPath,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   debugger;
+//   //   return it.opener.openedModule.shell
+//   //   ({
+//   //     execPath : e.instructionArgument,
+//   //     currentPath : it.opener.openedModule.dirPath,
+//   //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+//   //   });
+//   // }
+// }
 
-var command = commandSubmodulesShell.command = Object.create( null );
-command.hint = 'Run shell command on each submodule of current module.';
-command.subjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
-
-//
-
-function commandSubmodulesGit( e )
-{
-  let cui = this;
-
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
-  if( _.props.keys( commandOptions ).length >= 1 )
-  {
-    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
-  }
-
-  cui._command_head( commandSubmodulesGit, arguments );
-
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules git',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesGit,
-    withStem : 0,
-  });
-
-  function handleEach( module )
-  {
-    return module.gitExecCommand
-    ({
-      dirPath : module.dirPath,
-      command : e.subject,
-      verbosity : cui.transaction.verbosity,
-      hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : e.optionsMap.profile,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.gitExecCommand
-  //   ({
-  //     dirPath : it.junction.dirPath,
-  //     command : e.subject,
-  //     // verbosity : cui.verbosity,
-  //     verbosity : cui.transaction.verbosity,
-  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-  //     profile : e.optionsMap.profile,
-  //   });
-  // }
-}
-
-commandSubmodulesGit.defaults =
-{
-  withSubmodules : 1,
-  withOut : 0,
-  hardLinkMaybe : 0,
-  profile : 'default'
-}
-
-var command = commandSubmodulesGit.command = Object.create( null );
-command.hint = 'Run custom Git command on submodules of the module.';
-command.subjectHint = 'Custom git command exclude name of command "git".';
-command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
-command.properties =
-{
-  ... commandImply.command.properties,
-  hardLinkMaybe : 'Disables saving of hardlinks. Default value is 1.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".'
-};
+// var command = commandSubmodulesShell.command = Object.create( null );
+// command.hint = 'Run shell command on each submodule of current module.';
+// command.subjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
 
 //
 
-function commandSubmodulesGitDiff( e )
-{
-  let cui = this;
-  cui._command_head( commandSubmodulesGitDiff, arguments );
+// function commandSubmodulesGit( e )
+// {
+//   let cui = this;
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules git diff',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesGitDiff,
-    withStem : 0,
-  });
+//   let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
+//   if( _.mapKeys( commandOptions ).length >= 1 )
+//   {
+//     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+//     e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+//   }
 
-  function handleEach( module )
-  {
-    return module.gitDiff
-    ({
-      dirPath : module.dirPath,
-      verbosity : cui.transaction.verbosity,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.gitDiff
-  //   ({
-  //     dirPath : it.junction.dirPath,
-  //     // verbosity : cui.verbosity,
-  //     verbosity : cui.transaction.verbosity,
-  //   });
-  // }
-}
+//   cui._command_head( commandSubmodulesGit, arguments );
 
-commandSubmodulesGitDiff.defaults =
-{
-  withSubmodules : 1
-}
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules git',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandSubmodulesGit,
+//     withStem : 0,
+//   });
 
-var command = commandSubmodulesGitDiff.command = Object.create( null );
-command.hint = 'Get diffs of submodules repositories.';
-command.subjectHint = false;
-command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
-command.properties = commandImply.command.properties;
+//   function handleEach( module )
+//   {
+//     return module.gitExecCommand
+//     ({
+//       dirPath : module.dirPath,
+//       command : e.subject,
+//       verbosity : cui.transaction.verbosity,
+//       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+//       profile : e.optionsMap.profile,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.gitExecCommand
+//   //   ({
+//   //     dirPath : it.junction.dirPath,
+//   //     command : e.subject,
+//   //     // verbosity : cui.verbosity,
+//   //     verbosity : cui.transaction.verbosity,
+//   //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+//   //     profile : e.optionsMap.profile,
+//   //   });
+//   // }
+// }
 
-//
+// commandSubmodulesGit.defaults =
+// {
+//   withSubmodules : 1,
+//   withOut : 0,
+//   hardLinkMaybe : 0,
+//   profile : 'default'
+// }
 
-function commandSubmodulesRepoPullOpen( e )
-{
-  let cui = this;
-  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
-
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules repo pull open',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesRepoPullOpen,
-    withStem : 0,
-  });
-
-  function handleEach( module )
-  {
-    return module.repoPullOpen
-    ({
-      title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.repoPullOpen
-  //   ({
-  //     title : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
-  //   });
-  // }
-}
-
-commandSubmodulesRepoPullOpen.defaults =
-{
-  token : null,
-  srcBranch : null,
-  dstBranch : null,
-  // title : null,
-  body : null,
-  verbosity : null,
-  withSubmodules : 1
-};
-var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
-command.subjectHint = 'A title for PR';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-};
-command.properties =
-{
-  ... commandImply.command.properties,
-  token : 'An individual authorization token. By default reads from user config file.',
-  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
-  dstBranch : 'A destination branch. Default is "master".',
-  title : 'Option that rewrite title in provided argument.',
-  body : 'Body message.',
-  verbosity : 'Set verbosity. Default is 2.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-};
+// var command = commandSubmodulesGit.command = Object.create( null );
+// command.hint = 'Run custom Git command on submodules of the module.';
+// command.subjectHint = 'Custom git command exclude name of command "git".';
+// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   hardLinkMaybe : 'Disables saving of hardlinks. Default value is 1.',
+//   profile : 'A name of profile to get path for hardlinking. Default is "default".'
+// };
 
 //
 
-function commandSubmodulesGitStatus( e )
-{
-  let cui = this;
-  cui._command_head( commandSubmodulesGitStatus, arguments );
+// function commandSubmodulesGitDiff( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandSubmodulesGitDiff, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules git status',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandSubmodulesGitStatus,
-    withStem : 0,
-  });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules git diff',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandSubmodulesGitDiff,
+//     withStem : 0,
+//   });
 
-  function handleEach( module )
-  {
-    return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.gitStatus
-  //   ({
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-  //   });
-  // }
-}
+//   function handleEach( module )
+//   {
+//     return module.gitDiff
+//     ({
+//       dirPath : module.dirPath,
+//       verbosity : cui.transaction.verbosity,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.gitDiff
+//   //   ({
+//   //     dirPath : it.junction.dirPath,
+//   //     // verbosity : cui.verbosity,
+//   //     verbosity : cui.transaction.verbosity,
+//   //   });
+//   // }
+// }
 
-commandSubmodulesGitStatus.defaults =
-{
-  local : 1,
-  uncommittedIgnored : 0,
-  remote : 1,
-  remoteBranches : 0,
-  prs : 1,
-  verbosity : 1,
-  withSubmodules : 1
-};
+// commandSubmodulesGitDiff.defaults =
+// {
+//   withSubmodules : 1
+// }
 
-var command = commandSubmodulesGitStatus.command = Object.create( null );
-command.hint = 'Check the status of the submodules repositories.';
-command.subjectHint = false;
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-command.properties =
-{
-  ... commandImply.command.properties,
-  local : 'Check local commits. Default value is 1.',
-  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
-  remote : 'Check remote unmerged commits. Default value is 1.',
-  remoteBranches : 'Check remote branches. Default value is 0.',
-  prs : 'Check pull requests. Default is prs:1.',
-  verbosity : 'Set verbosity. Default is 1.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-};
+// var command = commandSubmodulesGitDiff.command = Object.create( null );
+// command.hint = 'Get diffs of submodules repositories.';
+// command.subjectHint = false;
+// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.properties = commandImply.command.properties;
 
 //
 
-function commandSubmodulesGitSync( e )
-{
-  let cui = this;
-  // let logger = cui.transaction.logger;
-  let provider;
-  cui._command_head( commandSubmodulesGitSync, arguments );
+// function commandSubmodulesRepoPullOpen( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandSubmodulesRepoPullOpen, arguments );
 
-  return cui._commandModulesLike
-  // return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'submodules git sync',
-    // onUp : onModulesBegin,
-    // onEachModule,
-    // onDown : onModulesEnd,
-    onModulesBegin,
-    onEach,
-    onModulesEnd,
-    commandRoutine : commandSubmodulesGitSync,
-    withStem : 0,
-  });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules repo pull open',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandSubmodulesRepoPullOpen,
+//     withStem : 0,
+//   });
 
-  /* */
+//   function handleEach( module )
+//   {
+//     return module.repoPullOpen
+//     ({
+//       title : e.subject,
+//       ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.repoPullOpen
+//   //   ({
+//   //     title : e.subject,
+//   //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+//   //   });
+//   // }
+// }
 
-  function onModulesBegin( openers, rootOpener )
-  {
-    let pathsContainer = [ rootOpener.openedModule.dirPath ];
-    for( let i = 0 ; i < openers.length ; i++ )
-    pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider =
-    rootOpener.openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile
-    });
+// commandSubmodulesRepoPullOpen.defaults =
+// {
+//   token : null,
+//   srcBranch : null,
+//   dstBranch : null,
+//   // title : null,
+//   body : null,
+//   verbosity : null,
+//   withSubmodules : 1
+// };
+// var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
+// command.subjectHint = 'A title for PR';
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// };
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   token : 'An individual authorization token. By default reads from user config file.',
+//   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+//   dstBranch : 'A destination branch. Default is "master".',
+//   title : 'Option that rewrite title in provided argument.',
+//   body : 'Body message.',
+//   verbosity : 'Set verbosity. Default is 2.',
+//   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+// };
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
-  }
+//
 
-  /* */
+// function commandSubmodulesGitStatus( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandSubmodulesGitStatus, arguments );
 
-  // function onEachModule( module )
-  // {
-  //   return module.gitSync
-  //   ({
-  //     commit : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-  //     restoringHardLinks : 0,
-  //   });
-  // }
-  function onEach( it )
-  {
-    return it.opener.openedModule.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
-      restoringHardLinks : 0,
-    });
-  }
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules git status',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandSubmodulesGitStatus,
+//     withStem : 0,
+//   });
 
-  /* */
+//   function handleEach( module )
+//   {
+//     return module.gitStatus({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.gitStatus
+//   //   ({
+//   //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+//   //   });
+//   // }
+// }
 
-  function onModulesEnd( openers )
-  {
-    provider.archive.restoreLinksEnd();
-  }
-}
+// commandSubmodulesGitStatus.defaults =
+// {
+//   local : 1,
+//   uncommittedIgnored : 0,
+//   remote : 1,
+//   remoteBranches : 0,
+//   prs : 1,
+//   verbosity : 1,
+//   withSubmodules : 1
+// };
 
-commandSubmodulesGitSync.defaults =
-{
-  dirPath : null,
-  dry : 0,
-  profile : 'default',
-  verbosity : 1,
-  withSubmodules : 1
-};
+// var command = commandSubmodulesGitStatus.command = Object.create( null );
+// command.hint = 'Check the status of the submodules repositories.';
+// command.subjectHint = false;
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// }
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   local : 'Check local commits. Default value is 1.',
+//   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+//   remote : 'Check remote unmerged commits. Default value is 1.',
+//   remoteBranches : 'Check remote branches. Default value is 0.',
+//   prs : 'Check pull requests. Default is prs:1.',
+//   verbosity : 'Set verbosity. Default is 1.',
+//   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+// };
 
-var command = commandSubmodulesGitSync.command = Object.create( null );
-command.hint = 'Syncronize repositories of submodules of current module.';
-command.subjectHint = 'A commit message. Default value is "."';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-command.properties =
-{
-  ... commandImply.command.properties,
-  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
-  dry : 'Dry run without syncronizing. Default is dry:0.',
-  verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".',
+//
 
-};
+// function commandSubmodulesGitSync( e )
+// {
+//   let cui = this;
+//   // let logger = cui.transaction.logger;
+//   let provider;
+//   cui._command_head( commandSubmodulesGitSync, arguments );
+
+//   return cui._commandModulesLike
+//   // return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'submodules git sync',
+//     // onUp : onModulesBegin,
+//     // onEachModule,
+//     // onDown : onModulesEnd,
+//     onModulesBegin,
+//     onEach,
+//     onModulesEnd,
+//     commandRoutine : commandSubmodulesGitSync,
+//     withStem : 0,
+//   });
+
+//   /* */
+
+//   function onModulesBegin( openers, rootOpener )
+//   {
+//     let pathsContainer = [ rootOpener.openedModule.dirPath ];
+//     for( let i = 0 ; i < openers.length ; i++ )
+//     pathsContainer.push( openers[ i ].openedModule.dirPath );
+//     provider =
+//     rootOpener.openedModule._providerArchiveMake
+//     ({
+//       dirPath : cui.fileProvider.path.common( pathsContainer ),
+//       verbosity : cui.transaction.verbosity,
+//       profile : e.optionsMap.profile
+//     });
+
+//     if( cui.transaction.verbosity )
+//     cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+//     provider.archive.restoreLinksBegin();
+//   }
+
+//   /* */
+
+//   // function onEachModule( module )
+//   // {
+//   //   return module.gitSync
+//   //   ({
+//   //     commit : e.subject,
+//   //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+//   //     restoringHardLinks : 0,
+//   //   });
+//   // }
+//   function onEach( it )
+//   {
+//     return it.opener.openedModule.gitSync
+//     ({
+//       commit : e.subject,
+//       ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+//       restoringHardLinks : 0,
+//     });
+//   }
+
+//   /* */
+
+//   function onModulesEnd( openers )
+//   {
+//     provider.archive.restoreLinksEnd();
+//   }
+// }
+
+// commandSubmodulesGitSync.defaults =
+// {
+//   dirPath : null,
+//   dry : 0,
+//   profile : 'default',
+//   verbosity : 1,
+//   withSubmodules : 1
+// };
+
+// var command = commandSubmodulesGitSync.command = Object.create( null );
+// command.hint = 'Syncronize repositories of submodules of current module.';
+// command.subjectHint = 'A commit message. Default value is "."';
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// }
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+//   dry : 'Dry run without syncronizing. Default is dry:0.',
+//   verbosity : 'Set verbosity. Default is 1.',
+//   profile : 'A name of profile to get path for hardlinking. Default is "default".',
+
+// };
 
 //
 
@@ -2830,7 +2843,7 @@ commandModuleNew.defaults =
 var command = commandModuleNew.command = Object.create( null );
 command.hint = 'Create a new module.';
 command.subjectHint = 'Path to module file. Default value is ".will.yml".';
-command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
+command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
 command.properties =
 {
   ... commandImply.command.properties,
@@ -2886,387 +2899,387 @@ command.subjectHint = 'A path to hook and arguments.';
 
 //
 
-function commandModulesShell( e )
-{
-  let cui = this;
-  cui._command_head( commandModulesShell, arguments );
+// function commandModulesShell( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandModulesShell, arguments );
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules shell',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesShell,
-    withStem : 1,
-  });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules shell',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandModulesShell,
+//     withStem : 1,
+//   });
 
-  function handleEach( module )
-  {
-    return module.shell
-    ({
-      execPath : e.instructionArgument,
-      currentPath : module.dirPath,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.shell
-  //   ({
-  //     execPath : e.instructionArgument,
-  //     currentPath : it.opener.openedModule.dirPath,
-  //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
-  //   });
-  // }
-}
+//   function handleEach( module )
+//   {
+//     return module.shell
+//     ({
+//       execPath : e.instructionArgument,
+//       currentPath : module.dirPath,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.shell
+//   //   ({
+//   //     execPath : e.instructionArgument,
+//   //     currentPath : it.opener.openedModule.dirPath,
+//   //     // currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+//   //   });
+//   // }
+// }
 
-var command = commandModulesShell.command = Object.create( null );
-command.hint = 'Run shell command on current module including each submodule of the module.';
-command.subjectHint =
-'A command to execute in shell. Command executes for current module including each submodule of the module.';
-
-//
-
-function commandModulesGit( e )
-{
-  let cui = this;
-
-  let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.command.properties );
-  if( _.props.keys( commandOptions ).length >= 1 )
-  {
-    e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-    e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
-  }
-
-  cui._command_head( commandModulesGit, arguments );
-
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules git',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesGit,
-    withStem : 1,
-  });
-
-  function handleEach( module )
-  {
-    return module.gitExecCommand
-    ({
-      dirPath : module.dirPath,
-      command : e.subject,
-      verbosity : cui.transaction.verbosity,
-      hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-      profile : e.optionsMap.profile,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.gitExecCommand
-  //   ({
-  //     dirPath : it.junction.dirPath,
-  //     command : e.subject,
-  //     // verbosity : cui.verbosity,
-  //     verbosity : cui.transaction.verbosity,
-  //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
-  //     profile : e.optionsMap.profile,
-  //   });
-  // }
-}
-
-commandModulesGit.defaults =
-{
-  withOut : 0,
-  withSubmodules : 1,
-  hardLinkMaybe : 0,
-  profile : 'default'
-}
-
-var command = commandModulesGit.command = Object.create( null );
-command.hint = 'Run custom Git command on module and its submodules.';
-command.subjectHint = 'Custom git command exclude name of command "git".';
-command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
-command.properties =
-{
-  ... commandImply.command.properties,
-  hardLinkMaybe : 'Disables saving of hardlinks. Default value is 0.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+// var command = commandModulesShell.command = Object.create( null );
+// command.hint = 'Run shell command on current module including each submodule of the module.';
+// command.subjectHint =
+// 'A command to execute in shell. Command executes for current module including each submodule of the module.';
 
 //
 
-function commandModulesGitDiff( e )
-{
-  let cui = this;
-  cui._command_head( commandModulesGitDiff, arguments );
+// function commandModulesGit( e )
+// {
+//   let cui = this;
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules git diff',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesGitDiff,
-    withStem : 1,
-  });
+//   let commandOptions = _.mapBut_( null, e.propertiesMap, commandModulesGit.command.properties );
+//   if( _.mapKeys( commandOptions ).length >= 1 )
+//   {
+//     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+//     e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+//   }
 
-  function handleEach( module )
-  {
-    return module.gitDiff
-    ({
-      dirPath : module.dirPath,
-      verbosity : cui.transaction.verbosity,
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.gitDiff
-  //   ({
-  //     dirPath : it.junction.dirPath,
-  //     // verbosity : cui.verbosity,
-  //     verbosity : cui.transaction.verbosity,
-  //   });
-  // }
-}
+//   cui._command_head( commandModulesGit, arguments );
 
-commandModulesGitDiff.defaults =
-{
-  withSubmodules : 1
-}
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules git',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandModulesGit,
+//     withStem : 1,
+//   });
 
-var command = commandModulesGitDiff.command = Object.create( null );
-command.hint = 'Get diffs of root module and submodules repositories.';
-command.subjectHint = false;
-command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
-command.properties = commandImply.command.properties;
+//   function handleEach( module )
+//   {
+//     return module.gitExecCommand
+//     ({
+//       dirPath : module.dirPath,
+//       command : e.subject,
+//       verbosity : cui.transaction.verbosity,
+//       hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+//       profile : e.optionsMap.profile,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.gitExecCommand
+//   //   ({
+//   //     dirPath : it.junction.dirPath,
+//   //     command : e.subject,
+//   //     // verbosity : cui.verbosity,
+//   //     verbosity : cui.transaction.verbosity,
+//   //     hardLinkMaybe : e.optionsMap.hardLinkMaybe,
+//   //     profile : e.optionsMap.profile,
+//   //   });
+//   // }
+// }
 
-//
+// commandModulesGit.defaults =
+// {
+//   withOut : 0,
+//   withSubmodules : 1,
+//   hardLinkMaybe : 0,
+//   profile : 'default'
+// }
 
-function commandModulesRepoPullOpen( e )
-{
-  let cui = this;
-  cui._command_head( commandModulesRepoPullOpen, arguments );
+// var command = commandModulesGit.command = Object.create( null );
+// command.hint = 'Run custom Git command on module and its submodules.';
+// command.subjectHint = 'Custom git command exclude name of command "git".';
+// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   hardLinkMaybe : 'Disables saving of hardlinks. Default value is 0.',
+//   profile : 'A name of profile to get path for hardlinking. Default is "default".',
+// };
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules repo pull open',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesRepoPullOpen,
-    withStem : 1,
-  });
+// //
 
-  function handleEach( module )
-  {
-    return module.repoPullOpen
-    ({
-      title : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
-    });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.repoPullOpen
-  //   ({
-  //     title : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
-  //   });
-  // }
-}
+// function commandModulesGitDiff( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandModulesGitDiff, arguments );
 
-commandModulesRepoPullOpen.defaults =
-{
-  token : null,
-  srcBranch : null,
-  dstBranch : null,
-  // title : null,
-  body : null,
-  verbosity : 2,
-  withSubmodules : 1
-};
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules git diff',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandModulesGitDiff,
+//     withStem : 1,
+//   });
 
-var command = commandModulesRepoPullOpen.command = Object.create( null );
-command.hint = 'Open pull requests from current module and its submodules.';
-command.subjectHint = 'A title for PR';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-};
-command.properties =
-{
-  ... commandImply.command.properties,
-  token : 'An individual authorization token. By default reads from user config file.',
-  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
-  dstBranch : 'A destination branch. Default is "master".',
-  title : 'Option that rewrite title in provided argument.',
-  body : 'Body message.',
-  verbosity : 'Set verbosity. Default is 2.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-};
+//   function handleEach( module )
+//   {
+//     return module.gitDiff
+//     ({
+//       dirPath : module.dirPath,
+//       verbosity : cui.transaction.verbosity,
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.gitDiff
+//   //   ({
+//   //     dirPath : it.junction.dirPath,
+//   //     // verbosity : cui.verbosity,
+//   //     verbosity : cui.transaction.verbosity,
+//   //   });
+//   // }
+// }
 
-//
+// commandModulesGitDiff.defaults =
+// {
+//   withSubmodules : 1
+// }
 
-function commandModulesGitStatus( e )
-{
-  let cui = this;
-  cui._command_head( commandModulesGitStatus, arguments );
+// var command = commandModulesGitDiff.command = Object.create( null );
+// command.hint = 'Get diffs of root module and submodules repositories.';
+// command.subjectHint = false;
+// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.properties = commandImply.command.properties;
 
-  // return cui._commandModulesLike
-  return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules git status',
-    onEachModule : handleEach,
-    // onEach : handleEach,
-    commandRoutine : commandModulesGitStatus,
-    withStem : 1,
-  });
+// //
 
-  function handleEach( module )
-  {
-    return module.gitStatus ({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
-  }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.gitStatus
-  //   ({
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
-  //   });
-  // }
-}
+// function commandModulesRepoPullOpen( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandModulesRepoPullOpen, arguments );
 
-commandModulesGitStatus.defaults =
-{
-  local : 1,
-  uncommittedIgnored : 0,
-  remote : 1,
-  remoteBranches : 0,
-  prs : 1,
-  verbosity : 1,
-  withSubmodules : 1
-};
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules repo pull open',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandModulesRepoPullOpen,
+//     withStem : 1,
+//   });
 
-var command = commandModulesGitStatus.command = Object.create( null );
-command.hint = 'Check the status of the module and submodules repositories.';
-command.subjectHint = false;
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-command.properties =
-{
-  ... commandImply.command.properties,
-  local : 'Check local commits. Default value is 1.',
-  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
-  remote : 'Check remote unmerged commits. Default value is 1.',
-  remoteBranches : 'Check remote branches. Default value is 0.',
-  prs : 'Check pull requests. Default is prs:1.',
-  verbosity : 'Set verbosity. Default is 1.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
-};
+//   function handleEach( module )
+//   {
+//     return module.repoPullOpen
+//     ({
+//       title : e.subject,
+//       ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+//     });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.repoPullOpen
+//   //   ({
+//   //     title : e.subject,
+//   //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+//   //   });
+//   // }
+// }
 
-//
+// commandModulesRepoPullOpen.defaults =
+// {
+//   token : null,
+//   srcBranch : null,
+//   dstBranch : null,
+//   // title : null,
+//   body : null,
+//   verbosity : 2,
+//   withSubmodules : 1
+// };
 
-function commandModulesGitSync( e )
-{
-  let cui = this;
-  let logger = cui.transaction.logger;
-  let provider;
-  cui._command_head( commandModulesGitSync, arguments );
+// var command = commandModulesRepoPullOpen.command = Object.create( null );
+// command.hint = 'Open pull requests from current module and its submodules.';
+// command.subjectHint = 'A title for PR';
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// };
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   token : 'An individual authorization token. By default reads from user config file.',
+//   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+//   dstBranch : 'A destination branch. Default is "master".',
+//   title : 'Option that rewrite title in provided argument.',
+//   body : 'Body message.',
+//   verbosity : 'Set verbosity. Default is 2.',
+//   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+// };
 
-  return cui._commandModulesLike
-  // return cui._commandModuleOrientedLike
-  ({
-    event : e,
-    name : 'modules git sync',
-    // onUp : onModulesBegin,
-    // onEachModule,
-    // onDown : onModulesEnd,
-    onModulesBegin,
-    onEach,
-    onModulesEnd,
-    commandRoutine : commandModulesGitSync,
-    withStem : 1,
-  });
+// //
 
-  /* */
+// function commandModulesGitStatus( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandModulesGitStatus, arguments );
 
-  function onModulesBegin( openers )
-  {
-    let pathsContainer = [];
-    for( let i = 0 ; i < openers.length ; i++ )
-    pathsContainer.push( openers[ i ].openedModule.dirPath );
-    provider = openers[ 0 ].openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+//   // return cui._commandModulesLike
+//   return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules git status',
+//     onEachModule : handleEach,
+//     // onEach : handleEach,
+//     commandRoutine : commandModulesGitStatus,
+//     withStem : 1,
+//   });
 
-    if( cui.transaction.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
-  }
+//   function handleEach( module )
+//   {
+//     return module.gitStatus ({ ... _.mapOnly_( null, e.optionsMap, module.gitStatus.defaults ) });
+//   }
+//   // function handleEach( it )
+//   // {
+//   //   return it.opener.openedModule.gitStatus
+//   //   ({
+//   //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitStatus.defaults )
+//   //   });
+//   // }
+// }
 
-  /* */
+// commandModulesGitStatus.defaults =
+// {
+//   local : 1,
+//   uncommittedIgnored : 0,
+//   remote : 1,
+//   remoteBranches : 0,
+//   prs : 1,
+//   verbosity : 1,
+//   withSubmodules : 1
+// };
 
-  // function onEachModule( module )
-  // {
-  //   return module.gitSync
-  //   ({
-  //     commit : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-  //     restoringHardLinks : 0,
-  //   });
-  // }
-  function onEach( it )
-  {
-    return it.opener.openedModule.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
-      restoringHardLinks : 0,
-    });
-  }
+// var command = commandModulesGitStatus.command = Object.create( null );
+// command.hint = 'Check the status of the module and submodules repositories.';
+// command.subjectHint = false;
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// }
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   local : 'Check local commits. Default value is 1.',
+//   uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+//   remote : 'Check remote unmerged commits. Default value is 1.',
+//   remoteBranches : 'Check remote branches. Default value is 0.',
+//   prs : 'Check pull requests. Default is prs:1.',
+//   verbosity : 'Set verbosity. Default is 1.',
+//   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+// };
 
-  /* */
+// //
 
-  function onModulesEnd( openers )
-  {
-    provider.archive.restoreLinksEnd();
-  }
-}
+// function commandModulesGitSync( e )
+// {
+//   let cui = this;
+//   // let logger = cui.transaction.logger;
+//   let provider;
+//   cui._command_head( commandModulesGitSync, arguments );
 
-commandModulesGitSync.defaults =
-{
-  dirPath : null,
-  dry : 0,
-  profile : 'default',
-  verbosity : 1,
-  withSubmodules : 1
-};
+//   return cui._commandModulesLike
+//   // return cui._commandModuleOrientedLike
+//   ({
+//     event : e,
+//     name : 'modules git sync',
+//     // onUp : onModulesBegin,
+//     // onEachModule,
+//     // onDown : onModulesEnd,
+//     onModulesBegin,
+//     onEach,
+//     onModulesEnd,
+//     commandRoutine : commandModulesGitSync,
+//     withStem : 1,
+//   });
 
-var command = commandModulesGitSync.command = Object.create( null );
-command.hint = 'Syncronize repositories of current module and all submodules of the module.';
-command.subjectHint = 'A commit message. Default value is "."';
-command.propertiesAliases =
-{
-  verbosity : [ 'v' ]
-}
-command.properties =
-{
-  ... commandImply.command.properties,
-  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
-  dry : 'Dry run without syncronizing. Default is dry:0.',
-  verbosity : 'Set verbosity. Default is 1.',
-  profile : 'A name of profile to get path for hardlinking. Default is "default".',
-};
+//   /* */
+
+//   function onModulesBegin( openers )
+//   {
+//     let pathsContainer = [];
+//     for( let i = 0 ; i < openers.length ; i++ )
+//     pathsContainer.push( openers[ i ].openedModule.dirPath );
+//     provider = openers[ 0 ].openedModule._providerArchiveMake
+//     ({
+//       dirPath : cui.fileProvider.path.common( pathsContainer ),
+//       verbosity : cui.transaction.verbosity,
+//       profile : e.optionsMap.profile,
+//     });
+
+//     if( cui.transaction.verbosity )
+//     cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+//     provider.archive.restoreLinksBegin();
+//   }
+
+//   /* */
+
+//   // function onEachModule( module )
+//   // {
+//   //   return module.gitSync
+//   //   ({
+//   //     commit : e.subject,
+//   //     ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+//   //     restoringHardLinks : 0,
+//   //   });
+//   // }
+//   function onEach( it )
+//   {
+//     return it.opener.openedModule.gitSync
+//     ({
+//       commit : e.subject,
+//       ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults ),
+//       restoringHardLinks : 0,
+//     });
+//   }
+
+//   /* */
+
+//   function onModulesEnd( openers )
+//   {
+//     provider.archive.restoreLinksEnd();
+//   }
+// }
+
+// commandModulesGitSync.defaults =
+// {
+//   dirPath : null,
+//   dry : 0,
+//   profile : 'default',
+//   verbosity : 1,
+//   withSubmodules : 1
+// };
+
+// var command = commandModulesGitSync.command = Object.create( null );
+// command.hint = 'Syncronize repositories of current module and all submodules of the module.';
+// command.subjectHint = 'A commit message. Default value is "."';
+// command.propertiesAliases =
+// {
+//   verbosity : [ 'v' ]
+// }
+// command.properties =
+// {
+//   ... commandImply.command.properties,
+//   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+//   dry : 'Dry run without syncronizing. Default is dry:0.',
+//   verbosity : 'Set verbosity. Default is 1.',
+//   profile : 'A name of profile to get path for hardlinking. Default is "default".',
+// };
 
 //
 
@@ -3429,36 +3442,58 @@ function commandClean( e )
   e.optionsMap.fast = !e.optionsMap.dry;
   e.optionsMap.fast = 0; /* xxx : implement */
 
-  return cui._commandCleanLike
+  // return cui._commandCleanLike
+  // ({
+  //   event : e,
+  //   name : 'clean',
+  //   onAll : handleAll,
+  //   commandRoutine : commandClean,
+  // });
+
+  return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'clean',
-    onAll : handleAll,
-    commandRoutine : commandClean,
+    onEachModule : handleEach,
+    commandRoutine : commandGit,
   });
 
-  function handleAll( it )
+  function handleEach( module )
   {
-    _.assert( _.arrayIs( it.openers ) );
-
     // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.props.extend( o2, e.optionsMap );
     delete o2.withSubmodules;
-    o2.modules = it.openers;
-    _.routine.options_( cui.modulesClean, o2 );
+    o2.modules = [ module ];
+    _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
-    o2.modules = it.roots;
+    o2.modules = cui.modulesOnlyRoots( o2.modules )
     o2.asCommand = 1;
 
     return cui.modulesClean( o2 );
   }
 
+  // function handleAll( it )
+  // {
+  //   _.assert( _.arrayIs( it.openers ) );
+
+  //   // let o2 = cui.filterImplied();
+  //   let o2 = { ... cui.RelationFilterOn };
+  //   o2 = _.mapExtend( o2, e.optionsMap );
+  //   delete o2.withSubmodules;
+  //   o2.modules = it.openers;
+  //   _.routineOptions( cui.modulesClean, o2 );
+  //   if( o2.recursive === 2 )
+  //   o2.modules = it.roots;
+  //   o2.asCommand = 1;
+
+  //   return cui.modulesClean( o2 );
+  // }
 }
 
 commandClean.defaults =
 {
-  withSubmodules : 0,
+  // withSubmodules : 0,
   withOut : 1,
   dry : 0,
   cleaningSubmodules : 1,
@@ -3487,10 +3522,10 @@ command.properties =
 
 //
 
-function commandSubmodulesClean( e )
+function commandCleanSubmodules( e )
 {
   let cui = this;
-  cui._command_head( commandSubmodulesClean, arguments );
+  cui._command_head( commandCleanSubmodules, arguments );
 
   e.optionsMap.dry = !!e.optionsMap.dry;
   if( e.optionsMap.fast === undefined || e.optionsMap.fast === null )
@@ -3502,7 +3537,7 @@ function commandSubmodulesClean( e )
     event : e,
     name : 'clean',
     onAll : handleAll,
-    commandRoutine : commandSubmodulesClean,
+    commandRoutine : commandCleanSubmodules,
   });
 
   function handleAll( it )
@@ -3527,7 +3562,7 @@ function commandSubmodulesClean( e )
 
 }
 
-commandSubmodulesClean.defaults =
+commandCleanSubmodules.defaults =
 {
   dry : 0,
   recursive : 0,
@@ -3536,7 +3571,7 @@ commandSubmodulesClean.defaults =
   withSubmodules : 0
 }
 
-var command = commandSubmodulesClean.command = Object.create( null );
+var command = commandCleanSubmodules.command = Object.create( null );
 command.hint = 'Delete all downloaded submodules.';
 command.subjectHint = false;
 command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
@@ -3829,15 +3864,9 @@ function commandWith( e )
   }
 
   // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
-  //
-  // cui.implied = _.props.extend( cui.implied, { withPath } );
-  // cui._transactionExtend( commandWith, cui.implied );
-
-  let withPath = _.strUnquote( e.instructionArgument );
-  if( withPath === '.' )
-  withPath = './';
-  withPath = path.join( path.current(), withPath );
-  cui.implied = _.props.extend( cui.implied, { withPath } );
+  // let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
+  let withPath = path.join( path.current(), _.strUnquote( e.instructionArgument ) );
+  cui.implied = _.mapExtend( cui.implied, { withPath } );
 
   cui._command_head
   ({
@@ -4977,7 +5006,8 @@ commandGit.defaults =
 {
   hardLinkMaybe : 0,
   profile : 'default',
-  withSubmodules : 0
+  withOut : 0
+  // withSubmodules : 0
 };
 var command = commandGit.command = Object.create( null );
 command.hint = 'Run custom Git command in repository of module.';
@@ -5027,7 +5057,7 @@ function commandGitDiff( e )
 
 commandGitDiff.defaults =
 {
-  withSubmodules : 0
+  // withSubmodules : 0
 };
 var command = commandGitDiff.command = Object.create( null );
 command.hint = 'Get diffs in module repository.';
@@ -5045,6 +5075,10 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
+  let pathsContainer = [];
+  let ready = _.Consequence();
+  let provider;
+
   // return cui._commandBuildLike
   return cui._commandModuleOrientedLike
   ({
@@ -5053,16 +5087,25 @@ function commandGitPull( e )
     onEachModule : handleEach,
     // onEach : handleEach,
     commandRoutine : commandGitPull,
+    onCommandEnd : handleCommandEnd,
   });
 
   function handleEach( module )
   {
-    return module.gitPull
-    ({
-      dirPath : module.dirPath,
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    pathsContainer.push( module.dirPath );
+
+    ready.then( () =>
+    {
+      return module.gitPull
+      ({
+        dirPath : module.dirPath,
+        verbosity : cui.transaction.verbosity,
+        profile : e.optionsMap.profile,
+        restoringHardLinks : 0
+      });
+    })
+
+    return null;
   }
   // function handleEach( it )
   // {
@@ -5073,6 +5116,31 @@ function commandGitPull( e )
   //     profile : e.optionsMap.profile,
   //   });
   // }
+
+  function handleCommandEnd()
+  {
+    let openers = cui.currentOpeners;
+    provider = openers[ 0 ].openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : cui.transaction.verbosity,
+      profile : e.optionsMap.profile,
+    });
+
+    if( cui.transaction.verbosity )
+    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    provider.archive.restoreLinksBegin();
+
+    ready.tap( () =>
+    {
+      provider.archive.restoreLinksEnd();
+      return null;
+    });
+
+    ready.take( null );
+
+    return ready;
+  }
 }
 
 commandGitPull.defaults =
@@ -5129,8 +5197,8 @@ function commandGitPush( e )
 
 commandGitPush.defaults =
 {
-  withSubmodules : 0,
-  verbosity : 3,
+  // withSubmodules : 0,
+  // verbosity : 3,
   withTags : 1,
   force : 1,
   dry : 0,
@@ -5186,8 +5254,8 @@ commandGitReset.defaults =
   removingIgnored : 0,
   removingSubrepositories : 0,
   dry : 0,
-  verbosity : 2,
-  withSubmodules : 0
+  // verbosity : 2,
+  // withSubmodules : 0
 };
 var command = commandGitReset.command = Object.create( null );
 command.hint = 'Reset local changes in repository of the module.';
@@ -5246,8 +5314,8 @@ commandGitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  verbosity : 1,
-  withSubmodules : 0
+  // verbosity : 1,
+  // withSubmodules : 0
 };
 var command = commandGitStatus.command = Object.create( null );
 command.hint = 'Check the status of the repository.';
@@ -5273,6 +5341,9 @@ function commandGitSync( e )
 {
   let cui = this;
   cui._command_head( commandGitSync, arguments );
+  let pathsContainer = [];
+  let ready = _.Consequence();
+  let provider;
 
   // return cui._commandBuildLike
   return cui._commandModuleOrientedLike
@@ -5282,17 +5353,24 @@ function commandGitSync( e )
     onEachModule : handleEach,
     // onEach : handleEach,
     commandRoutine : commandGitSync,
+    onCommandEnd : handleCommandEnd,
     ... cui.transaction.relationFilterFieldsGet()
   });
 
   function handleEach( module )
   {
+    pathsContainer.push( module.dirPath );
 
-    return module.gitSync
-    ({
-      commit : e.subject,
-      ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-    });
+    ready.then( () =>
+    {
+      return module.gitSync
+      ({
+        commit : e.subject,
+        ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+        restoringHardLinks : 0
+      });
+    })
+    return null;
   }
   // function handleEach( it )
   // {
@@ -5302,6 +5380,31 @@ function commandGitSync( e )
   //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.gitSync.defaults )
   //   });
   // }
+
+  function handleCommandEnd()
+  {
+    let openers = cui.currentOpeners;
+    provider = openers[ 0 ].openedModule._providerArchiveMake
+    ({
+      dirPath : cui.fileProvider.path.common( pathsContainer ),
+      verbosity : cui.transaction.verbosity,
+      profile : e.optionsMap.profile,
+    });
+
+    if( cui.transaction.verbosity )
+    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    provider.archive.restoreLinksBegin();
+
+    ready.tap( () =>
+    {
+      provider.archive.restoreLinksEnd();
+      return null;
+    });
+
+    ready.take( null );
+
+    return ready;
+  }
 }
 
 commandGitSync.defaults =
@@ -5368,8 +5471,8 @@ commandGitTag.defaults =
   toVersion : null,
   dry : 0,
   light : 0,
-  verbosity : 1,
-  withSubmodules : 0
+  // verbosity : 1,
+  // withSubmodules : 0
 };
 var command = commandGitTag.command = Object.create( null );
 command.hint = 'Add tag for commit.';
@@ -6568,7 +6671,7 @@ let Extension =
   commandModulesTree,
   commandModulesUpdate,
 
-  commandSubmodulesAdd,
+  commandAddSubmodules,
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
 
@@ -6577,29 +6680,29 @@ let Extension =
   commandSubmodulesVersionsVerify,
   commandSubmodulesVersionsAgree,
 
-  commandSubmodulesShell,
-  commandSubmodulesGit,
-  commandSubmodulesGitDiff,
-  commandSubmodulesRepoPullOpen,
-  commandSubmodulesGitStatus,
-  commandSubmodulesGitSync,
+  // commandSubmodulesShell,
+  // commandSubmodulesGit,
+  // commandSubmodulesGitDiff,
+  // commandSubmodulesRepoPullOpen,
+  // commandSubmodulesGitStatus,
+  // commandSubmodulesGitSync,
 
   commandModuleNew,
   commandModuleNewWith,
 
-  commandModulesShell,
-  commandModulesGit,
-  commandModulesGitDiff,
-  commandModulesRepoPullOpen,
-  commandModulesGitStatus,
-  commandModulesGitSync,
+  // commandModulesShell,
+  // commandModulesGit,
+  // commandModulesGitDiff,
+  // commandModulesRepoPullOpen,
+  // commandModulesGitStatus,
+  // commandModulesGitSync,
 
   commandShell,
   commandDo,
   commandHookCall,
   commandHooksList,
   commandClean,
-  commandSubmodulesClean,
+  commandCleanSubmodules,
   commandBuild,
   commandExport,
   commandExportPurging,
