@@ -2744,6 +2744,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/modulesUpform/b.will.yml
           - ../proto/wtools/atop/will.test/_asset/modulesUpform/c.will.yml
           - ../proto/wtools/atop/will.test/_asset/modulesUpform/d.will.yml
+          - ../proto/wtools/atop/will.test/_asset/npmDepAdd
+          - ../proto/wtools/atop/will.test/_asset/npmDepAdd/package-lock.json
+          - ../proto/wtools/atop/will.test/_asset/npmDepAdd/package.json
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/npmFromWillfile/.im.will.yml
