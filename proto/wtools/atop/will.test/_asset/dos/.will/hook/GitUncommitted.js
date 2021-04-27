@@ -13,7 +13,7 @@ function onModule( context )
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
-  _.routineOptions( onModule, o );
+  _.routine.options( onModule, o );
 
   let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = context.junction.dirPath;

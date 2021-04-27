@@ -888,7 +888,7 @@ function Reforms( junctions, will )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
-  if( _.arrayLike( junctions ) )
+  if( _.argumentsArray.like( junctions ) )
   return _.filter_( null, junctions, ( junction ) => cls.Reform( junction, will ) );
   else
   return cls.Reform( junctions, will );
@@ -928,7 +928,7 @@ function JunctionsFrom( junctions, will )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
-  if( _.arrayLike( junctions ) )
+  if( _.argumentsArray.like( junctions ) )
   return _.filter_( null, junctions, ( junction ) => cls.JunctionFrom( junction, will ) );
   else
   return cls.JunctionFrom( junctions, will );
@@ -940,7 +940,7 @@ function _Of( o )
 {
   let cls = this;
 
-  _.assertRoutineOptions( _Of, arguments );
+  _.routine.assertOptions( _Of, arguments );
   _.assert( arguments.length === 1 );
   _.assert( !!o.object );
 
@@ -992,7 +992,7 @@ function Ofs( junctions, will )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
-  if( _.arrayLike( junctions ) )
+  if( _.argumentsArray.like( junctions ) )
   return _.filter_( null, junctions, ( junction ) => cls.Of( junction, will ) );
   else
   return cls.Of( junctions, will );
@@ -1484,7 +1484,7 @@ function submodulesJunctionsFilter( o )
   let will = junction.will;
   let result = [];
 
-  o = _.routineOptions( submodulesJunctionsFilter, arguments );
+  o = _.routine.options_( submodulesJunctionsFilter, arguments );
 
   let filter = _.mapOnly_( null, o, will.relationFit.defaults );
 
@@ -1591,10 +1591,10 @@ submodulesJunctionsFilter.defaults =
 //   if( !_.mapIs( o ) )
 //   o = junction.ObjectToOptionsMap( o );
 //
-//   o = _.routineOptions( shadow, o );
+//   o = _.routine.options_( shadow, o );
 //   _.assert( arguments.length === 1 );
 //
-//   let shadowMap = _.mapExtend( null, o );
+//   let shadowMap = _.props.extend( null, o );
 //   shadowMap.localPath = _.unknown;
 //   shadowMap.remotePath = _.unknown;
 //

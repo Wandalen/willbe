@@ -67,7 +67,7 @@ function statusInvalidate( o )
 {
   let repo = this;
 
-  o = _.routineOptions( statusInvalidate, arguments );
+  o = _.routine.options_( statusInvalidate, arguments );
 
   for( let k in o )
   {
@@ -115,7 +115,7 @@ function status( o )
   let vcs = _.repo.vcsFor( repo.remotePath );
   let remoteProvider = will.vcsProviderFor( repo.remotePath );
 
-  o = _.routineOptions( status, arguments );
+  o = _.routine.options_( status, arguments );
 
   _.assert( _.boolIs( repo.isRemote ) );
 
@@ -707,7 +707,7 @@ function exportString()
 
 function Hash( o )
 {
-  o = _.routineOptions( Hash, o );
+  o = _.routine.options_( Hash, o );
   _.assert( o.downloadPath === null || _.strIs( o.downloadPath ) );
   _.assert( o.remotePath === null || _.strIs( o.remotePath ) );
   return o.downloadPath + '-' + o.remotePath;

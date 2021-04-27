@@ -7,7 +7,7 @@ const _ = _global_.wTools;
 const Self = _.will = _.will || Object.create( null );
 
 // --
-// routines
+// implementation
 // --
 
 function isJunction( object )
@@ -40,6 +40,6 @@ let Extension =
 
 }
 
-_.mapExtend( Self, Extension );
+_.props.extend( Self, Extension );
 
 })();
