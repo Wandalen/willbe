@@ -361,7 +361,7 @@ function precopy2( o )
   if( o.willfilesPath !== undefined )
   module.willfilesPath = o.willfilesPath;
 
-  o = _.mapExtend( null, o );
+  o = _.props.extend( null, o );
 
   delete o.isRemote;
   delete o.isOut;
@@ -468,7 +468,7 @@ function outModuleMake( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptionsPreservingUndefines( outModuleMake, arguments );
+  o = _.routine.options( outModuleMake, arguments );
 
   _.assert( module.original === null );
   _.assert( !module.isOut );
@@ -611,7 +611,7 @@ function outModuleOpen( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( outModuleOpen, arguments );
+  o = _.routine.options( outModuleOpen, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
   let o2 =
@@ -711,7 +711,7 @@ function outModuleOpen( o )
 
 }
 
-outModuleOpen.defaults = _.mapExtend( null, outModuleMake.defaults );
+outModuleOpen.defaults = _.props.extend( null, outModuleMake.defaults );
 
 //
 
@@ -720,7 +720,7 @@ function outModuleOpenOrMake( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( outModuleOpenOrMake, arguments );
+  o = _.routine.options( outModuleOpenOrMake, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
   _.assert( !module.isFinited() );
@@ -740,7 +740,7 @@ function outModuleOpenOrMake( o )
 
 }
 
-outModuleOpenOrMake.defaults = _.mapExtend( null, outModuleOpen.defaults );
+outModuleOpenOrMake.defaults = _.props.extend( null, outModuleOpen.defaults );
 
 // --
 // former
@@ -784,8 +784,8 @@ function unform()
   _.assert( module.willfilesArray.length === 0 );
   _.assert( Object.keys( module.willfileWithRoleMap ).length === 0 );
 
-  _.assert( !_.longHas( _.mapVals( will.moduleWithIdMap ), module ) );
-  _.assert( !_.longHas( _.mapVals( will.moduleWithCommonPathMap ), module ) );
+  _.assert( !_.longHas( _.props.vals( will.moduleWithIdMap ), module ) );
+  _.assert( !_.longHas( _.props.vals( will.moduleWithCommonPathMap ), module ) );
   _.assert( will.moduleWithIdMap[ module.id ] !== module );
   _.assert( !_.longHas( will.modulesArray, module ) );
 
@@ -902,7 +902,7 @@ function upform( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( upform, arguments );
+  o = _.routine.options( upform, arguments );
   module.optionsFormingForward( o );
 
   if( o.attachedWillfilesFormed )
@@ -925,7 +925,7 @@ function upform( o )
   return module.ready;
 }
 
-var defaults = upform.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
+var defaults = upform.defaults = _.props.extend( null, Parent.prototype.optionsFormingForward.defaults );
 defaults.all = 1;
 
 // {
@@ -943,7 +943,7 @@ function reform_( o ) /* xxx */
   let module = this;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( reform_, arguments );
+  o = _.routine.options( reform_, arguments );
   module.optionsFormingForward( o );
 
   if( o.attachedWillfilesFormed )
@@ -962,7 +962,7 @@ function reform_( o ) /* xxx */
   return module.ready;
 }
 
-var defaults = reform_.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
+var defaults = reform_.defaults = _.props.extend( null, Parent.prototype.optionsFormingForward.defaults );
 defaults.all = 0;
 
 // --
@@ -1425,7 +1425,7 @@ function predefinedForm()
   //
   //   if( defaults === null )
   //   defaults = Object.create( null );
-  //   _.mapSupplement( defaults, commonDefaults );
+  //   _.props.supplement( defaults, commonDefaults );
   //
   //   o.criterion = o.criterion || Object.create( null );
   //
@@ -1437,8 +1437,8 @@ function predefinedForm()
   //     o.importableFromOut = o.importable;
   //   }
   //
-  //   _.mapSupplement( o, defaults );
-  //   _.mapSupplement( o.criterion, defaults.criterion );
+  //   _.props.supplement( o, defaults );
+  //   _.props.supplement( o.criterion, defaults.criterion );
   //
   //   if( o.predefined )
   //   {
@@ -1477,7 +1477,7 @@ function predefinedForm()
     //   let criterion = o.criterion;
     //   delete o.criterion;
     //   result.copy( o );
-    //   _.mapExtend( result.criterion, criterion );
+    //   _.props.extend( result.criterion, criterion );
     // }
     // else
     // {
@@ -1551,7 +1551,7 @@ function _predefinedOptionsPrepare( defaults, o )
 
   if( defaults === null )
   defaults = Object.create( null );
-  _.mapSupplement( defaults, commonDefaults );
+  _.props.supplement( defaults, commonDefaults );
 
   o.criterion = o.criterion || Object.create( null );
 
@@ -1563,8 +1563,8 @@ function _predefinedOptionsPrepare( defaults, o )
     o.importableFromOut = o.importable;
   }
 
-  _.mapSupplement( o, defaults );
-  _.mapSupplement( o.criterion, defaults.criterion );
+  _.props.supplement( o, defaults );
+  _.props.supplement( o.criterion, defaults.criterion );
 
   if( o.predefined )
   {
@@ -1603,7 +1603,7 @@ function predefinedPathMake( o )
     let criterion = o.criterion;
     delete o.criterion;
     result.copy( o );
-    _.mapExtend( result.criterion, criterion );
+    _.props.extend( result.criterion, criterion );
   }
   else
   {
@@ -1906,7 +1906,7 @@ function isConsistent( o )
 {
   let module = this;
 
-  o = _.routineOptionsPreservingUndefines( isConsistent, arguments );
+  o = _.routine.options( isConsistent, arguments );
   _.assert( o.recursive === 0 );
 
   let willfiles = module.willfilesEach({ recursive : o.recursive, withPeers : 0 });
@@ -1947,13 +1947,13 @@ function isFull( o )
   if( !module.isOpened() )
   return false;
 
-  o = _.routineOptionsPreservingUndefines( isFull, arguments );
+  o = _.routine.options( isFull, arguments );
   o.only = o.only || Object.create( null );
   o.only.all = 1;
   o.only = module.optionsFormingForward( o.only );
 
   let states = module.stager.stagesState( 'performed' )
-  _.mapSupplement( o.only, _.map_( null, states, () => true ) );
+  _.props.supplement( o.only, _.map_( null, states, () => true ) );
   states = _.only( states, o.only ); /* xxx : review mapOnly / mapBut */
 
   return _.all( states );
@@ -2122,7 +2122,7 @@ function _willfilesOpen()
   _.assert( _.boolLike( module.isOut ), 'Expects defined {- module.isOut -}' );
   _.sure
   (
-    !!_.mapKeys( module.willfileWithRoleMap ).length && !!module.willfilesArray.length,
+    !!_.props.keys( module.willfileWithRoleMap ).length && !!module.willfilesArray.length,
     () => 'Found no will file at ' + _.strQuote( module.dirPath )
   );
 
@@ -2150,9 +2150,9 @@ function _willfilesOpen()
   con.then( ( arg ) =>
   {
     /* add default export step and build if defined none such */
-    if( _.lengthOf( module.buildMap ) !== 0 )
+    if( _.entity.lengthOf( module.buildMap ) !== 0 )
     return arg;
-    if( _.mapVals( module.stepMap ).filter( ( step ) => !step.criterion.predefined ).length !== 0 )
+    if( _.props.vals( module.stepMap ).filter( ( step ) => !step.criterion.predefined ).length !== 0 )
     return arg;
 
     let o2 =
@@ -2309,7 +2309,7 @@ function willfilesEach( o )
 
   if( _.routineIs( arguments[ 0 ] ) )
   o = { onUp : arguments[ 0 ] }
-  o = _.routineOptionsPreservingUndefines( willfilesEach, o );
+  o = _.routine.options( willfilesEach, o );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   let o2 = Object.create( null );
@@ -2408,7 +2408,7 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
   let module = this;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( _attachedWillfilesOpen, arguments );
+  o = _.routine.options( _attachedWillfilesOpen, arguments );
   o.rootModule = o.rootModule || module.rootModule || module;
   o.willfilesArray = o.willfilesArray || module.willfilesArray;
 
@@ -2463,7 +2463,7 @@ function _attachedWillfileOpen( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptionsPreservingUndefines( _attachedWillfileOpen, arguments );
+  o = _.routine.options( _attachedWillfileOpen, arguments );
 
   let filePath = path.join( module.dirPath, o.modulePath );
   filePath = will.LocalPathNormalize( filePath )
@@ -2577,7 +2577,7 @@ function exportAuto()
 
 function moduleBuild_head( routine, args )
 {
-  let o = _.routineOptionsPreservingUndefines( routine, args );
+  let o = _.routine.options( routine, args );
   return o;
 }
 
@@ -2652,9 +2652,9 @@ moduleBuild_body.defaults =
   purging : 0,
 }
 
-let moduleBuild = _.routine.uniteCloning_( moduleBuild_head, moduleBuild_body );
+let moduleBuild = _.routine.uniteCloning_replaceByUnite( moduleBuild_head, moduleBuild_body );
 moduleBuild.defaults.kind = 'build';
-let moduleExport = _.routine.uniteCloning_( moduleBuild_head, moduleBuild_body );
+let moduleExport = _.routine.uniteCloning_replaceByUnite( moduleBuild_head, moduleBuild_body );
 moduleExport.defaults.kind = 'export';
 
 //
@@ -2665,13 +2665,13 @@ function exportedMake( o )
   let outModule = module;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( exportedMake, arguments );
+  o = _.routine.options( exportedMake, arguments );
   _.assert( o.build instanceof _.will.Build );
   _.assert( !module.isFinited() );
 
   if( !module.isOut )
   {
-    _.assert( _.mapKeys( module.exportedMap ).length === 0 );
+    _.assert( _.props.keys( module.exportedMap ).length === 0 );
     _.assert( !module.isFinited() );
 
     if( module.peerModule && !module.peerModule.isValid() )
@@ -2747,10 +2747,10 @@ function modulesEach_head( routine, args )
 {
   let module = this;
 
-  let o = args[ 0 ]
+  let o = args[ 0 ] || null;
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
-  o = _.routineOptionsPreservingUndefines( routine, o );
+  o = _.routine.options( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) )
 
@@ -2763,13 +2763,13 @@ function modulesEach_body( o )
   let will = module.will;
   let logger = will.transaction.logger;
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.modules = [ module ];
 
   return will.modulesEach.body.call( will, o2 );
 }
 
-var defaults = modulesEach_body.defaults = _.mapExtend
+var defaults = modulesEach_body.defaults = _.props.extend
 (
   null,
   _.Will.prototype.modulesEach.defaults
@@ -2779,14 +2779,14 @@ delete defaults.modules;
 
 _.assert( defaults.withPeers === 0 );
 
-let modulesEach = _.routine.uniteCloning_( modulesEach_head, modulesEach_body );
+let modulesEach = _.routine.uniteCloning_replaceByUnite( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, _.Will.RelationFilterOn );
 
 //
 
 function modulesBuild_head( routine, args )
 {
-  let o = _.routineOptionsPreservingUndefines( routine, args );
+  let o = _.routine.options( routine, args );
   return o;
 }
 
@@ -2798,7 +2798,7 @@ function modulesBuild_body( o )
   return will.modulesBuild( o );
 }
 
-var defaults = modulesBuild_body.defaults = _.mapExtend( null, _.mapBut_( null, moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
+var defaults = modulesBuild_body.defaults = _.props.extend( null, _.mapBut_( null, moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
 
 defaults.recursive = 0;
 defaults.withStem = 1;
@@ -2818,11 +2818,11 @@ _.assert( defaults.outputFormat === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesBuild = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
+let modulesBuild = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
 
-let modulesExport = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
+let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
@@ -2836,14 +2836,14 @@ function modulesUpform( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptionsPreservingUndefines( modulesUpform, arguments );
+  o = _.routine.options( modulesUpform, arguments );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.modules = [ module ];
   return will.modulesUpform( o2 );
 }
 
-var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, modulesEach.defaults );
+var defaults = modulesUpform.defaults = _.props.extend( null, upform.defaults, modulesEach.defaults );
 
 defaults.withDisabledStem = 1;
 defaults.recursive = 2;
@@ -2954,7 +2954,7 @@ function superRelationsSet( src )
   module[ superRelationsSymbol ] = [];
 
   if( src === null )
-  _.arrayEmpty( module[ superRelationsSymbol ] );
+  _.array.empty( module[ superRelationsSymbol ] );
   else
   _.arrayAppendArrayOnce( module[ superRelationsSymbol ], src );
 
@@ -3013,10 +3013,10 @@ function submodulesAreDownloaded( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptionsPreservingUndefines( submodulesAreDownloaded, arguments );
+  o = _.routine.options( submodulesAreDownloaded, arguments );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/commonPath' );
@@ -3032,7 +3032,7 @@ function submodulesAreDownloaded( o )
   });
 }
 
-var defaults = submodulesAreDownloaded.defaults = _.mapExtend( null, modulesEach.defaults );
+var defaults = submodulesAreDownloaded.defaults = _.props.extend( null, modulesEach.defaults );
 
 defaults.withStem = 0;
 defaults.withPeers = 0;
@@ -3052,10 +3052,10 @@ function submodulesAllAreDownloaded( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptionsPreservingUndefines( submodulesAllAreDownloaded, arguments );
+  o = _.routine.options( submodulesAllAreDownloaded, arguments );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
 
@@ -3068,7 +3068,7 @@ function submodulesAllAreDownloaded( o )
   });
 }
 
-var defaults = submodulesAllAreDownloaded.defaults = _.mapExtend( null, submodulesAreDownloaded.defaults );
+var defaults = submodulesAllAreDownloaded.defaults = _.props.extend( null, submodulesAreDownloaded.defaults );
 
 //
 
@@ -3080,11 +3080,11 @@ function submodulesAreValid( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptionsPreservingUndefines( submodulesAreValid, arguments );
+  o = _.routine.options( submodulesAreValid, arguments );
   // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/absoluteName' );
@@ -3102,7 +3102,7 @@ function submodulesAreValid( o )
 
 }
 
-var defaults = submodulesAreValid.defaults = _.mapExtend( null, modulesEach.defaults );
+var defaults = submodulesAreValid.defaults = _.props.extend( null, modulesEach.defaults );
 
 defaults.withStem = 0;
 defaults.withPeers = 0;
@@ -3122,11 +3122,11 @@ function submodulesAllAreValid( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptionsPreservingUndefines( submodulesAllAreValid, arguments );
+  o = _.routine.options( submodulesAllAreValid, arguments );
   // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
 
@@ -3138,7 +3138,7 @@ function submodulesAllAreValid( o )
   });
 }
 
-var defaults = submodulesAllAreValid.defaults = _.mapExtend( null, submodulesAreValid.defaults );
+var defaults = submodulesAllAreValid.defaults = _.props.extend( null, submodulesAreValid.defaults );
 
 //
 
@@ -3183,10 +3183,8 @@ function _subModulesDownload_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length <= 2 );
 
-  let o;
-  o = args[ 0 ];
-
-  o = _.routineOptionsPreservingUndefines( routine, o );
+  let o = args[ 0 ] || null;
+  o = _.routine.options( routine, o );
 
   return o;
 }
@@ -3204,7 +3202,7 @@ function _subModulesDownload_body( o )
   return will.modulesDownload( o );
 }
 
-var defaults = _subModulesDownload_body.defaults = _.mapExtend( null, modulesEach.defaults );
+var defaults = _subModulesDownload_body.defaults = _.props.extend( null, modulesEach.defaults );
 
 defaults.mode = 'download';
 defaults.dry = 0;
@@ -3219,24 +3217,24 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-let _subModulesDownload = _.routine.uniteCloning_( _subModulesDownload_head, _subModulesDownload_body );
+let _subModulesDownload = _.routine.uniteCloning_replaceByUnite( _subModulesDownload_head, _subModulesDownload_body );
 
 //
 
-let subModulesDownload = _.routine.uniteCloning_({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesDownload' });
+let subModulesDownload = _.routine.uniteCloning_replaceByUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesDownload' });
 var defaults = subModulesDownload.defaults;
 defaults.mode = 'download';
 
 //
 
-let subModulesUpdate = _.routine.uniteCloning_({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesUpdate' });
+let subModulesUpdate = _.routine.uniteCloning_replaceByUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesUpdate' });
 var defaults = subModulesUpdate.defaults;
 defaults.mode = 'update';
 defaults.to = null;
 
 //
 
-let subModulesAgree = _.routine.uniteCloning_({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesAgree' });
+let subModulesAgree = _.routine.uniteCloning_replaceByUnite({ head : _subModulesDownload_head, body : _subModulesDownload_body, name : 'subModulesAgree' });
 var defaults = subModulesAgree.defaults;
 defaults.mode = 'agree';
 
@@ -3250,9 +3248,9 @@ function submodulesFixate( o )
 
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptionsPreservingUndefines( submodulesFixate, arguments );
+  o = _.routine.options( submodulesFixate, arguments );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.module = module;
   module.moduleFixate( o2 );
 
@@ -3263,7 +3261,7 @@ function submodulesFixate( o )
     if( !submodule.opener )
     continue;
 
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.submodule = submodule;
     o2.module = submodule.opener.openedModule;
     module.moduleFixate( o2 );
@@ -3295,7 +3293,7 @@ function moduleFixate( o )
   if( !_.mapIs( o ) )
   o = { module : o }
 
-  _.routineOptionsPreservingUndefines( moduleFixate, o );
+  _.routine.options( moduleFixate, o );
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
@@ -3336,7 +3334,7 @@ function moduleFixate( o )
       let originalPath = remote.path;
       let fixatedPath = resolve( originalPath )
 
-      let o2 = _.mapExtend( null, o );
+      let o2 = _.props.extend( null, o );
 
       o2.replacer = [ 'remote', 'path' ];
       o2.originalPath = originalPath;
@@ -3379,7 +3377,7 @@ function moduleFixate( o )
     let originalPath = submodule.path;
     let fixatedPath = resolve( originalPath ) /* Dmytro : submodule.fixatedPath has slash before hash, but submodule.longPath has not. It fails execution of command submodules.upgrade. See below */
 
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.replacer = [ submodule.name, 'path' ];
     o2.originalPath = originalPath;
     o2.fixatedPath = fixatedPath;
@@ -3408,7 +3406,7 @@ function moduleFixate( o )
     let grouped = Object.create( null );
     let result = '';
 
-    if( _.mapKeys( report ).length === 0 )
+    if( _.props.keys( report ).length === 0 )
     return;
 
     let fixated = o.upgrading ? 'was upgraded' : 'was fixated';
@@ -3421,7 +3419,7 @@ function moduleFixate( o )
     if( o.dry )
     skipped = 'will be skipped';
 
-    let count = _.mapVals( report ).filter( ( r ) => r.performed ).length;
+    let count = _.props.vals( report ).filter( ( r ) => r.performed ).length;
     let absoluteName = o.submodule ? o.submodule.decoratedAbsoluteName : o.module.decoratedAbsoluteName;
     // let absoluteName = o.module ? o.module.decoratedAbsoluteName : o.submodule.decoratedAbsoluteName;
 
@@ -3484,7 +3482,7 @@ function moduleFixateAct( o )
   if( !_.mapIs( o ) )
   o = { submodule : o }
 
-  _.routineOptionsPreservingUndefines( moduleFixateAct, o );
+  _.routine.options( moduleFixateAct, o );
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
@@ -3534,7 +3532,7 @@ function moduleFixateAct( o )
   for( let f = 0 ; f < o.willfilePath.length ; f++ )
   fileReplace( o.willfilePath[ f ] );
 
-  return _.mapKeys( o.report ).length;
+  return _.props.keys( o.report ).length;
 
   /* */
 
@@ -3623,7 +3621,7 @@ function moduleFixatePathFor( o )
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.upgrading ) );
-  _.routineOptionsPreservingUndefines( moduleFixatePathFor, o );
+  _.routine.options( moduleFixatePathFor, o );
 
   if( !o.originalPath )
   return false;
@@ -3663,15 +3661,15 @@ function submodulesVerify( o )
   let will = module.will;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( submodulesVerify, o );
+  _.routine.options( submodulesVerify, o );
 
-  let o2 = _.mapExtend( null, o );
-  o2.modules = _.mapVals( module.submoduleMap );
+  let o2 = _.props.extend( null, o );
+  o2.modules = _.props.vals( module.submoduleMap );
   o2.withStem = 1;
   return will.modulesVerify( o2 );
 }
 
-var defaults = submodulesVerify.defaults = _.mapExtend( null, _.Will.prototype.modulesFor.defaults );
+var defaults = submodulesVerify.defaults = _.props.extend( null, _.Will.prototype.modulesFor.defaults );
 
 defaults.recursive = 1;
 defaults.throwing = 1;
@@ -3712,14 +3710,14 @@ _.assert( defaults.withDisabledModules === 0 );
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
 //   let logger = will.transaction.logger;
-//   let totalNumber = _.mapKeys( module.submoduleMap ).length;
+//   let totalNumber = _.props.keys( module.submoduleMap ).length;
 //   let verifiedNumber = 0;
 //   let time = _.time.now();
 //
 //   _.assert( module.preformed > 0  );
 //   _.assert( arguments.length === 1 );
 //
-//   _.routineOptionsPreservingUndefines( submodulesVerify, o );
+//   _.routine.options( submodulesVerify, o );
 //
 //   logger.up();
 //
@@ -3880,7 +3878,7 @@ function submodulesRelationsFilter( o )
   let module = this;
   let will = module.will;
 
-  o = _.routineOptionsPreservingUndefines( submodulesRelationsFilter, arguments );
+  o = _.routine.options( submodulesRelationsFilter, arguments );
 
   // if( module.id === 178 )
   // debugger;
@@ -3939,7 +3937,7 @@ function submodulesRelationsOwnFilter( o )
   let will = module.will;
   let result = [];
 
-  o = _.routineOptionsPreservingUndefines( submodulesRelationsOwnFilter, arguments );
+  o = _.routine.options( submodulesRelationsOwnFilter, arguments );
 
   let filter = _.mapOnly_( null, o, will.relationFit.defaults );
 
@@ -4027,7 +4025,7 @@ function submodulesAdd( o )
   let ready = _.take( null );
   let counter = 0;
 
-  o = _.routineOptionsPreservingUndefines( submodulesAdd, arguments );
+  o = _.routine.options( submodulesAdd, arguments );
 
   let junctions = will.junctionsReform( o.modules );
 
@@ -4159,7 +4157,7 @@ function peerModuleOpen( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptionsPreservingUndefines( peerModuleOpen, arguments );
+  o = _.routine.options( peerModuleOpen, arguments );
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( !!will.formed );
   _.assert( !!module.preformed );
@@ -4425,7 +4423,7 @@ function submodulesPeersOpen_body( o )
   let will = module.will;
   let ready = _.take( null );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   delete o2.throwing;
   let modules = module.modulesEach.body.call( module, o2 );
 
@@ -4438,11 +4436,11 @@ function submodulesPeersOpen_body( o )
   return ready;
 }
 
-var defaults = submodulesPeersOpen_body.defaults = _.mapExtend( null, modulesEach.body.defaults );
+var defaults = submodulesPeersOpen_body.defaults = _.props.extend( null, modulesEach.body.defaults );
 
 defaults.throwing = 1;
 
-let submodulesPeersOpen = _.routine.uniteCloning_( modulesEach_head, submodulesPeersOpen_body );
+let submodulesPeersOpen = _.routine.uniteCloning_replaceByUnite( modulesEach_head, submodulesPeersOpen_body );
 
 //
 
@@ -4563,7 +4561,7 @@ function _resourcesFormAct()
 
   /* */
 
-  module._resourcesAllForm( _.will.ModulesRelation, con );
+  // module._resourcesAllForm( _.will.ModulesRelation, con );
   module._resourcesAllForm( _.will.Exported, con );
   module._resourcesAllForm( _.will.PathResource, con );
   module._resourcesAllForm( _.will.Reflector, con );
@@ -4749,9 +4747,13 @@ function resourceAllocate_head( routine, args )
 
   let o = args[ 0 ];
   if( args.length === 2 )
-  o = { resourceKind : args[ 0 ], resourceName : args[ 1 ] }
+  o =
+  {
+    resourceKind : args[ 0 ],
+    resourceName : args[ 1 ],
+  }
 
-  o = _.routineOptionsPreservingUndefines( routine, o );
+  o = _.routine.options( routine, o );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4763,7 +4765,7 @@ function resourceAllocate_body( o )
   let module = this;
   let will = module.will;
 
-  o = _.assertRoutineOptionsPreservingUndefines( resourceAllocate, o );
+  o = _.routine.assertOptions( resourceAllocate, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4807,7 +4809,7 @@ resourceAllocate_body.defaults =
   generating : 0,
 }
 
-let resourceAllocate = _.routine.uniteCloning_( resourceAllocate_head, resourceAllocate_body );
+let resourceAllocate = _.routine.uniteCloning_replaceByUnite( resourceAllocate_head, resourceAllocate_body );
 let resourceGenerate = _.routineDefaults( null, resourceAllocate, { generating : 1 } );
 
 //
@@ -4819,9 +4821,13 @@ function resourceNameAllocate_head( routine, args )
 
   let o = args[ 0 ];
   if( args.length === 2 )
-  o = { resourceKind : args[ 0 ], resourceName : args[ 1 ] }
+  o =
+  {
+    resourceKind : args[ 0 ],
+    resourceName : args[ 1 ],
+  }
 
-  o = _.routineOptionsPreservingUndefines( routine, o );
+  o = _.routine.options( routine, o );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4833,7 +4839,7 @@ function resourceNameAllocate_body( o )
   let module = this;
   let will = module.will;
 
-  o = _.assertRoutineOptionsPreservingUndefines( resourceAllocate, o );
+  o = _.routine.assertOptions( resourceAllocate, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.resourceName ) );
 
@@ -4879,7 +4885,7 @@ resourceNameAllocate_body.defaults =
   generating : 0,
 }
 
-let resourceNameAllocate = _.routine.uniteCloning_( resourceNameAllocate_head, resourceNameAllocate_body );
+let resourceNameAllocate = _.routine.uniteCloning_replaceByUnite( resourceNameAllocate_head, resourceNameAllocate_body );
 let resourceNameGenerate = _.routineDefaults( null, resourceNameAllocate, { generating : 1 } );
 
 // --
@@ -4895,7 +4901,7 @@ function cleanWhatSingle( o )
   let exps = module.exportsResolve();
   let filePaths = [];
 
-  o = _.routineOptionsPreservingUndefines( cleanWhatSingle, arguments );
+  o = _.routine.options( cleanWhatSingle, arguments );
 
   if( o.files === null )
   o.files = Object.create( null );
@@ -5017,7 +5023,7 @@ function cleanWhatSingle( o )
       visitingCertain : !o.fast,
     }
 
-    _.mapSupplement( op, def );
+    _.props.supplement( op, def );
 
     op.filter = op.filter || Object.create( null );
     op.filter.recursive = 2;
@@ -5056,7 +5062,7 @@ function cleanWhat( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptionsPreservingUndefines( cleanWhat, arguments );
+  _.routine.options( cleanWhat, arguments );
 
   if( o.files === null )
   o.files = Object.create( null );
@@ -5073,7 +5079,7 @@ function cleanWhat( o )
   {
     if( module2 === null )
     return;
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     delete o2.recursive;
     module2.cleanWhatSingle( o2 );
   });
@@ -5096,11 +5102,11 @@ function cleanLog( o )
   let path = fileProvider.path;
   let time = _.time.now();
 
-  o = _.routineOptionsPreservingUndefines( cleanLog, arguments );
+  o = _.routine.options( cleanLog, arguments );
 
   if( !o.files )
   {
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     delete o2.files;
     delete o2.explanation;
     delete o2.spentTime;
@@ -5129,7 +5135,7 @@ function clean( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptionsPreservingUndefines( clean, arguments );
+  o = _.routine.options( clean, arguments );
 
   if( o.beginTime === null )
   o.beginTime = _.time.now();
@@ -5219,11 +5225,11 @@ function resolve_body( o )
 }
 
 // _.routineExtend( resolve_body, _.will.resolver.resolve.body );
-// let resolve = _.routine.uniteCloning_( resolve_head, resolve_body );
+// let resolve = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 
 _.routine.extendReplacing( resolve_body, _.will.resolver.resolve.body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
-// let resolve = _.routine.uniteCloning_({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
+// let resolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
 // resolve.defaults.Looker = resolve.defaults;
 _.assert( resolve.defaults === resolve.body.defaults );
 _.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
@@ -5231,7 +5237,7 @@ _.assert( resolve.defaults === resolve.defaults.Looker );
 
 //
 
-// let resolveMaybe = _.routine.uniteCloning_( resolve_head, resolve_body );
+// let resolveMaybe = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 // _.routineExtend( resolveMaybe, _.will.resolver.resolveMaybe );
 
 _.assert( _.will.resolver.resolveMaybe.defaults.missingAction === 'undefine' );
@@ -5243,28 +5249,28 @@ _.assert( resolveMaybe_body !== resolve_body );
 _.assert( resolveMaybe_body.defaults === _.will.resolver.resolveMaybe.defaults );
 _.assert( resolveMaybe_body.defaults !== resolve_body.defaults );
 let resolveMaybe = _.routine.uniteReplacing( resolve_head, resolveMaybe_body );
-// let resolveMaybe = _.routine.uniteCloning_({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
+// let resolveMaybe = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
 _.assert( resolveMaybe.defaults === resolveMaybe.defaults.Looker );
 _.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Looker );
 
 //
 
-// let resolveRaw = _.routine.uniteCloning_( resolve_head, resolve_body );
+// let resolveRaw = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 // _.routineExtend( resolveRaw, _.will.resolver.resolveRaw );
 
 let resolveRaw_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.resolveMaybe.defaults } );
 let resolveRaw = _.routine.uniteReplacing( resolve_head, resolveRaw_body );
-// let resolveRaw = _.routine.uniteCloning_({ head : resolve_head, body : resolveRaw_body, strategy : 'replacing' });
+// let resolveRaw = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolveRaw_body, strategy : 'replacing' });
 
 //
 
 let pathResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.pathResolve.defaults } );
 let pathResolve = _.routine.uniteReplacing( resolve_head, pathResolve_body );
-// let pathResolve = _.routine.uniteCloning_({ head : resolve_head, body : pathResolve_body, strategy : 'replacing' });
+// let pathResolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : pathResolve_body, strategy : 'replacing' });
 _.assert( _.will.resolver.pathResolve.defaults.defaultResourceKind === 'path' );
 _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 
-// let pathResolve = _.routine.uniteCloning_( resolve_head, resolve_body );
+// let pathResolve = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 // _.assert( pathResolve.defaults.defaultResourceKind === null );
 // _.routineExtend( pathResolve, _.will.resolver.pathResolve );
 // _.assert( _.will.resolver.pathResolve.defaults.defaultResourceKind === 'path' );
@@ -5281,7 +5287,7 @@ _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 //   if( _.strIs( o ) )
 //   o = { selector : arguments[ 0 ] }
 //   _.assert( _.strIs( o.selector ) );
-//   _.routineOptionsPreservingUndefines( pathOrReflectorResolve, o );
+//   _.routine.options( pathOrReflectorResolve, o );
 //
 //   resource = module.reflectorResolve
 //   ({
@@ -5329,8 +5335,8 @@ function pathOrReflectorResolve_body( o )
 
 _.routineExtend( pathOrReflectorResolve_body, _.will.resolver.pathOrReflectorResolve.body );
 
-let pathOrReflectorResolve = _.routine.uniteCloning_( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
-// let pathOrReflectorResolve = _.routine.uniteCloning_( resolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routine.uniteCloning_replaceByUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+// let pathOrReflectorResolve = _.routine.uniteCloning_replaceByUnite( resolve_head, pathOrReflectorResolve_body );
 
 //
 
@@ -5342,7 +5348,7 @@ function filesFromResource_head( routine, args )
   if( _.strIs( o ) || _.arrayIs( o ) )
   o = { selector : o }
 
-  _.routineOptionsPreservingUndefines( routine, o );
+  _.routine.options( routine, o );
 
   if( o.visited === null )
   o.visited = [];
@@ -5373,15 +5379,15 @@ function filesFromResource_body( o )
 
 _.routineExtend( filesFromResource_body, _.will.resolver.filesFromResource.body );
 
-let filesFromResource = _.routine.uniteCloning_( filesFromResource_head, filesFromResource_body );
+let filesFromResource = _.routine.uniteCloning_replaceByUnite( filesFromResource_head, filesFromResource_body );
 
 //
 
 let submodulesResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.submodulesResolve.defaults } );
 let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolve_body );
-// let submodulesResolve = _.routine.uniteCloning_({ head : resolve_head, body : submodulesResolve_body, strategy : 'replacing' });
+// let submodulesResolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : submodulesResolve_body, strategy : 'replacing' });
 
-// let submodulesResolve = _.routine.uniteCloning_( resolve_head, resolve_body );
+// let submodulesResolve = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 // _.routineExtend( submodulesResolve, _.will.resolver.submodulesResolve );
 
 _.assert( submodulesResolve.defaults === submodulesResolve.body.defaults );
@@ -5420,11 +5426,15 @@ function _buildsResolve_head( routine, args )
 
   let o;
   if( args[ 1 ] !== undefined )
-  o = { name : args[ 0 ], criterion : args[ 1 ] }
+  o =
+  {
+    name : args[ 0 ],
+    criterion : args[ 1 ],
+  }
   else
-  o = args[ 0 ];
+  o = args[ 0 ] || null;
 
-  o = _.routineOptionsPreservingUndefines( routine, o );
+  o = _.routine.options( routine, o );
   _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
   _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
@@ -5442,12 +5452,12 @@ function _buildsResolve_body( o )
   let module = this;
   let elements = module.buildMap;
 
-  _.assertRoutineOptionsPreservingUndefines( _buildsResolve_body, arguments );
+  _.routine.assertOptions( _buildsResolve_body, arguments );
   _.assert( arguments.length === 1 );
 
   if( o.name )
   {
-    elements = _.mapVals( _.path.globShortFilterKeys( elements, o.name ) );
+    elements = _.props.vals( _.path.globShortFilterKeys( elements, o.name ) );
     if( !elements.length )
     return []
     if( o.criterion === null || Object.keys( o.criterion ).length === 0 )
@@ -5455,7 +5465,7 @@ function _buildsResolve_body( o )
   }
   else
   {
-    elements = _.mapVals( elements );
+    elements = _.props.vals( elements );
   }
 
   let hasMapFilter = _.objectIs( o.criterion ) && Object.keys( o.criterion ).length > 0;
@@ -5527,17 +5537,17 @@ _buildsResolve_body.defaults =
   strictCriterion : 1,
 }
 
-let _buildsResolve = _.routine.uniteCloning_( _buildsResolve_head, _buildsResolve_body );
+let _buildsResolve = _.routine.uniteCloning_replaceByUnite( _buildsResolve_head, _buildsResolve_body );
 
 //
 
-let buildsResolve = _.routine.uniteCloning_( _buildsResolve_head, _buildsResolve_body );
+let buildsResolve = _.routine.uniteCloning_replaceByUnite( _buildsResolve_head, _buildsResolve_body );
 var defaults = buildsResolve.defaults;
 defaults.kind = 'build';
 
 //
 
-let exportsResolve = _.routine.uniteCloning_( _buildsResolve_head, _buildsResolve_body );
+let exportsResolve = _.routine.uniteCloning_replaceByUnite( _buildsResolve_head, _buildsResolve_body );
 var defaults = exportsResolve.defaults;
 defaults.kind = 'export';
 
@@ -5589,7 +5599,7 @@ function pathsRelative( o )
     return o.filePath;
   }
 
-  o = _.routineOptionsPreservingUndefines( pathsRelative, o );
+  o = _.routine.options( pathsRelative, o );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( path.isAbsolute( o.basePath ) );
 
@@ -5635,7 +5645,7 @@ function pathsRebase( o )
   let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
-  o = _.routineOptionsPreservingUndefines( pathsRebase, arguments );
+  o = _.routine.options( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
 
   let inPathResource = module.resourceObtain( 'path', 'in' );
@@ -5731,7 +5741,7 @@ function _pathChanged( o )
   let logger = will.transaction.logger;
 
   _.assert( o.val !== undefined );
-  _.routineOptionsPreservingUndefines( _pathChanged, arguments );
+  _.routine.options( _pathChanged, arguments );
 
   if( o.isIdentical === null )
   o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
@@ -5746,7 +5756,7 @@ function _pathChanged( o )
     {
       if( !( opener instanceof _.will.ModuleOpener ) )
       return;
-      let o2 = _.mapExtend( null, o );
+      let o2 = _.props.extend( null, o );
       o2.touching = 0;
       if( o2.val )
       if( o2.name !== 'inPath' )
@@ -5779,7 +5789,7 @@ function _pathResourceChanged( o )
 
   _.assert( o.val !== undefined );
   _.assert( _.strDefined( o.name ) );
-  _.routineOptionsPreservingUndefines( _pathResourceChanged, arguments );
+  _.routine.options( _pathResourceChanged, arguments );
 
   if( o.isIdentical === null )
   o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
@@ -5787,12 +5797,12 @@ function _pathResourceChanged( o )
 
   if( module.ResourceToPathName.hasKey( o.name ) )
   {
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.name = module.ResourceToPathName.forKey( o.name );
     module._pathChanged( o2 );
   }
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.kind = 'resource.set';
   o2.object = module;
   o2.propName = o.name;
@@ -5840,7 +5850,7 @@ function _filePathChanged1( o )
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, Parent.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.props.extend( null, Parent.prototype._filePathChanged1.defaults );
 
 //
 
@@ -5890,7 +5900,7 @@ function _filePathChanged2( o )
   for( let s in module.submoduleMap )
   {
     let relation = module.submoduleMap[ s ];
-    // if( relation.formed && relation.enabled ) /* ttt */
+    // if( relation.formed && relation.enabled )
     if( relation.formed )
     will.junctionReform( relation );
   }
@@ -5905,7 +5915,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, Parent.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.props.extend( null, Parent.prototype._filePathChanged2.defaults );
 
 //
 
@@ -6300,7 +6310,7 @@ function remotePathEachAdoptAct( o )
   let module = this;
   let will = module.will;
 
-  _.assertRoutineOptionsPreservingUndefines( remotePathEachAdoptAct, o );
+  _.routine.assertOptions( remotePathEachAdoptAct, o );
 
   moduleAdoptPath( module );
 
@@ -6657,7 +6667,7 @@ function exportString( o )
   let will = module.will;
   let result = '';
 
-  o = _.routineOptionsPreservingUndefines( exportString, o );
+  o = _.routine.options( exportString, o );
 
   if( o.verbosity >= 1 )
   result += module.decoratedAbsoluteName + '#' + module.id;
@@ -6788,14 +6798,14 @@ function exportStructure( o )
   o.dst = o.dst || Object.create( null );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptionsPreservingUndefines( exportStructure, arguments );
+  o = _.routine.options( exportStructure, arguments );
 
   o.module = module;
 
   if( !o.exportModule )
   o.exportModule = module;
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   delete o2.dst;
 
   o.dst.about = module.about.exportStructure();
@@ -6813,7 +6823,7 @@ function exportStructure( o )
   {
     for( let f in o.dst )
     {
-      if( _.mapIsEmpty( o.dst[ f ] ) )
+      if( _.map.isEmpty( o.dst[ f ] ) )
       delete o.dst[ f ]
     }
   }
@@ -6864,7 +6874,7 @@ function structureExportOut( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptionsPreservingUndefines( structureExportOut, arguments );
+  o = _.routine.options( structureExportOut, arguments );
 
   o.module = module;
   if( !o.exportModule )
@@ -6967,7 +6977,7 @@ function structureExportForModuleExport( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptionsPreservingUndefines( structureExportForModuleExport, arguments );
+  o = _.routine.options( structureExportForModuleExport, arguments );
   _.assert( module.original === null );
 
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
@@ -7050,7 +7060,7 @@ function structureExportModules( modules, op )
     }
     else
     {
-      let o2 = _.mapExtend( null, op );
+      let o2 = _.props.extend( null, op );
       delete o2.dst;
       let moduleStructure = op.dst.module[ relative ] = module2.exportStructure( o2 );
       consitencyAdd( moduleStructure.consistency );
@@ -7106,7 +7116,7 @@ function structureExportConsistency( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  _.routineOptionsPreservingUndefines( structureExportConsistency, arguments );
+  _.routine.options( structureExportConsistency, arguments );
   _.assert( arguments.length === 1 );
   _.assert( o.exportModule.isOut );
 
@@ -7140,7 +7150,7 @@ function resourceImport( o )
   _.assert( _.mapIs( o ) );
   _.assert( arguments.length === 1 );
   _.assert( o.srcResource instanceof _.will.Resource );
-  _.routineOptionsPreservingUndefines( resourceImport, arguments );
+  _.routine.options( resourceImport, arguments );
 
   let srcModule = o.srcResource.module;
 
@@ -7187,7 +7197,7 @@ function resourceImport( o )
 
     if( _.workpiece.instanceIsStandard( value ) )
     {
-      let o2 = _.mapExtend( null, o );
+      let o2 = _.props.extend( null, o );
       o2.srcResource = value;
       let subresource = module.resourceImport( o2 );
       value = subresource.qualifiedName;
@@ -7202,7 +7212,7 @@ function resourceImport( o )
     if( oldResource )
     {
       let extra = oldResource.extraExport();
-      _.mapExtend( resourceData, extra );
+      _.props.extend( resourceData, extra );
       oldResource.finit();
     }
   }
@@ -7369,7 +7379,7 @@ function npmGenerateFromWillfile( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let opts = _.mapExtend( null, o );
+  let opts = _.props.extend( null, o );
   let verbosity = o.verbosity;
 
   _.assert( arguments.length === 1 );
@@ -7484,11 +7494,11 @@ function _willfileGenerateFromNpm( o )
   {
     delete willfile.path.origins;
   }
-  if( _.mapKeys( willfile.submodule ).length === 0 )
+  if( _.props.keys( willfile.submodule ).length === 0 )
   {
     delete willfile.submodule;
   }
-  if( _.mapKeys( willfile.path ).length === 0 )
+  if( _.props.keys( willfile.path ).length === 0 )
   {
     delete willfile.path;
   }
@@ -7640,7 +7650,7 @@ function willfileGenerateFromNpm( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, o );
+  let opts = _.props.extend( null, o );
   let verbosity = o.verbosity;
 
   _.assert( arguments.length === 1 );
@@ -7710,7 +7720,7 @@ function willfileExtendWillfile( o )
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let opts = _.routineOptionsPreservingUndefines( willfileExtendWillfile, o );
+  let opts = _.routine.options( willfileExtendWillfile, o );
   let request = opts.request.split( /\s+/ );
   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
@@ -7779,7 +7789,7 @@ function willfileExtendWillfile( o )
 
   for( let sectionName in sectionMap )
   {
-    if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+    if( _.props.keys( willfile[ sectionName ] ).length === 0 )
     delete willfile[ sectionName ];
   }
 
@@ -8085,7 +8095,8 @@ function willfileExtendWillfile( o )
     if( _.longIs( src ) )
     return src;
 
-    src = _.mapToArray( src );
+    debugger; /* xxx : qqq : check */
+    src = _.props.pairs( src );
     for( let i = 0 ; i < src.length ; i++ )
     src[ i ] = src[ i ].join( ' ' );
     return src;
@@ -8131,7 +8142,7 @@ function _willfileOnPropertyAct( o )
   let logger = will.transaction.logger;
   let loggerForProvider = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
-  _.routineOptionsPreservingUndefines( _willfileOnPropertyAct, o );
+  _.routine.options( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o ) );
 
@@ -8241,7 +8252,7 @@ function willfileGetProperty( o )
   let will = this.will ? this.will : this;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( willfileGetProperty, o );
+  _.routine.options( willfileGetProperty, o );
 
   o.act = getProperty;
   o.onConfig = configChooseByKeys;
@@ -8287,7 +8298,7 @@ function willfileGetProperty( o )
     return config2;
 
     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
+    _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
 
     return config;
   }
@@ -8310,7 +8321,7 @@ function willfileSetProperty( o )
 {
   let will = this.will ? this.will : this;
 
-  _.routineOptionsPreservingUndefines( willfileSetProperty, o );
+  _.routine.options( willfileSetProperty, o );
 
   o.act = setProperty;
   o.onConfig = configChooseByKeys;
@@ -8401,7 +8412,7 @@ function willfileDeleteProperty( o )
   let will = this.will ? this.will : this;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( willfileDeleteProperty, o );
+  _.routine.options( willfileDeleteProperty, o );
 
   o.act = deleteProperty;
   o.onConfig = configChooseByKeys;
@@ -8448,7 +8459,7 @@ function willfileDeleteProperty( o )
     {
       if( !keys[ 1 ] )
       {
-        _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
+        _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
         delete config2[ keys[ 0 ] ];
         return config;
       }
@@ -8477,7 +8488,7 @@ function willfileExtendProperty( o )
 {
   let will = this;
 
-  _.routineOptionsPreservingUndefines( willfileExtendProperty, o );
+  _.routine.options( willfileExtendProperty, o );
   o.act = extendProperty;
   o.onConfig = configChooseByKeys;
 
@@ -8555,7 +8566,7 @@ function willfileVersionBump( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptionsPreservingUndefines( willfileVersionBump, o );
+  _.routine.options( willfileVersionBump, o );
 
   let version = module.willfilesArray[ 0 ].structure.about.version;
   _.assert( _.strIs( version ), 'Expexts version in format "x.x.x".' );
@@ -8615,7 +8626,7 @@ function npmModulePublish( o )
   let path = fileProvider.path;
   let packagePath = path.join( module.dirPath, 'package.json' );
 
-  _.routineOptions( npmModulePublish, o );
+  _.routine.options_( npmModulePublish, o );
   _.assert( path.isTrailed( module.localPath ), 'not tested' );
 
   if( !module.about.enabled )
@@ -8806,7 +8817,7 @@ npmModulePublish.defaults =
 
 function ResourceSetter_functor( op )
 {
-  _.routineOptionsPreservingUndefines( ResourceSetter_functor, arguments );
+  _.routine.options( ResourceSetter_functor, arguments );
 
   let resourceName = op.resourceName;
   let mapName = op.mapName;
@@ -8958,7 +8969,7 @@ function gitExecCommand( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitExecCommand, o );
+  _.routine.options( gitExecCommand, o );
 
   o.command = module.resolve( o.command );
 
@@ -9039,7 +9050,7 @@ function gitDiff( o )
   let will = module.will;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitDiff, o );
+  _.routine.options( gitDiff, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9091,7 +9102,7 @@ function repoPullOpen( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  _.routineOptionsPreservingUndefines( repoPullOpen, o );
+  _.routine.options( repoPullOpen, o );
 
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
@@ -9202,7 +9213,7 @@ function gitPull( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitPull, o );
+  _.routine.options( gitPull, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9291,7 +9302,7 @@ function gitPush( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitPush, o );
+  _.routine.options( gitPush, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9361,7 +9372,7 @@ function gitReset( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitReset, o );
+  _.routine.options( gitReset, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9412,7 +9423,7 @@ function gitStatus( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitStatus, o );
+  _.routine.options( gitStatus, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9484,7 +9495,7 @@ function gitSync( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitSync, o );
+  _.routine.options( gitSync, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9572,7 +9583,7 @@ function gitTag( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.routineOptionsPreservingUndefines( gitTag, o );
+  _.routine.options( gitTag, o );
 
   o.dirPath = module.pathResolve
   ({
@@ -9656,7 +9667,7 @@ function shell( o )
   if( !_.mapIs( arguments[ 0 ] ) )
   o = { execPath : arguments[ 0 ] }
 
-  o = _.routineOptionsPreservingUndefines( shell, o );
+  o = _.routine.options( shell, o );
   _.assert( _.strIs( o.execPath ) );
   _.assert( arguments.length === 1 );
   _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );

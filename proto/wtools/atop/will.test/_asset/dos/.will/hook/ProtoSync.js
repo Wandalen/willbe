@@ -7,11 +7,10 @@ function onModule( context )
   let path = context.will.fileProvider.path;
 
   if( o.v !== null && o.v !== undefined ) o.verbosity = o.v;
-  _.routineOptions( onModule, o );
+  _.routine.options( onModule, o );
 
-  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  // debugger; return; xxx
   let config = _.censor.configRead();
-  debugger;
   if( !config )
   return null;
   if( !config.path )

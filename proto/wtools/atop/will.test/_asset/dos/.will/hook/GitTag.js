@@ -22,7 +22,7 @@ function onModule( context )
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
-  _.routineOptions( onModule, o );
+  _.routine.options( onModule, o );
   if( o.description === null )
   o.description = o.name;
 

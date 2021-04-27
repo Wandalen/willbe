@@ -7,7 +7,7 @@ function onModule( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  // _.assert( _.lengthOf( context.request.map ) === 0 );
+  // _.assert( _.entity.lengthOf( context.request.map ) === 0 );
 
   /* read stats to fix for windows to update edit time of hard linked files */
   if( process.platform === 'win32' )

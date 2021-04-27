@@ -8,7 +8,7 @@ const _ = _global_.wTools;
 const Self = Object.create( null );
 
 // --
-// routines
+// implementation
 // --
 
 let filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
@@ -29,7 +29,7 @@ function stepRoutineDelete( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -50,7 +50,7 @@ function stepRoutineDelete( frame )
   {
     delete o2.filePath;
     let o3 = filePath.optionsForFindExport();
-    _.mapExtend( o2, o3 );
+    _.props.extend( o2, o3 );
   }
 
   let result = fileProvider.filesDelete( o2 );
@@ -112,7 +112,7 @@ function stepRoutineReflect( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -130,8 +130,8 @@ function stepRoutineReflect( frame )
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
-  // _.mapSupplement( opts, reflectorOptions );
-  _.mapExtend( opts, reflectorOptions );
+  // _.props.supplement( opts, reflectorOptions );
+  _.props.extend( opts, reflectorOptions );
 
   opts.verbosity = 0;
 
@@ -197,7 +197,7 @@ function stepRoutineTimelapseBegin( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
 
@@ -224,7 +224,7 @@ function stepRoutineTimelapseEnd( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
 
@@ -251,7 +251,7 @@ function stepRoutineJs( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
 
@@ -307,7 +307,7 @@ function stepRoutineEcho( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
   _.sure( _.strIs( opts.echo ) );
@@ -360,7 +360,7 @@ function stepRoutineShell( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   let forEachDstReflector, forEachDst;
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -447,7 +447,7 @@ function stepRoutineTranspile( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.sure( _.longHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
@@ -561,7 +561,7 @@ function stepRoutineView( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -634,7 +634,7 @@ function stepRoutineNpmGenerate( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
   opts.currentContext = step;
 
@@ -662,7 +662,7 @@ function stepRoutineWillfileFromNpm( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
   opts.currentContext = step;
 
@@ -689,7 +689,7 @@ function stepRoutineGitExecCommand( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -717,7 +717,7 @@ function stepRoutineGitPull( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -743,7 +743,7 @@ function stepRoutineGitPush( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -770,7 +770,7 @@ function stepRoutineGitReset( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -802,7 +802,7 @@ function stepRoutineGitStatus( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -836,7 +836,7 @@ function stepRoutineGitSync( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -865,7 +865,7 @@ function stepRoutineGitTag( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
   opts.name = opts[ 'tag.name' ];
   opts.description = opts[ 'tag.description' ];
@@ -898,7 +898,7 @@ function stepRoutineModulesUpdate( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -931,7 +931,7 @@ function stepRoutineModulesUpdate( frame )
   con.then( () =>
   {
     let o2 = module.will.filterImplied();
-    o2 = _.mapExtend( o2, opts );
+    o2 = _.props.extend( o2, opts );
     return module.subModulesUpdate( o2 );
   })
 
@@ -981,7 +981,7 @@ function stepRoutineSubmodulesUpdate( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -1098,7 +1098,7 @@ function stepRoutineSubmodulesReload( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.transaction.logger;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -1198,7 +1198,7 @@ function stepRoutineWillbeIsUpToDate( frame )
 
   _.assert( arguments.length === 1 );
 
-  return will.versionIsUpToDate( _.mapExtend( null, step.opts ) );
+  return will.versionIsUpToDate( _.props.extend( null, step.opts ) );
 }
 
 stepRoutineWillbeIsUpToDate.stepOptions =
@@ -1218,7 +1218,7 @@ function stepRoutineWillfileVersionBump( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let opts = _.mapExtend( null, step.opts );
+  let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -1284,7 +1284,7 @@ let Extension =
   stepRoutineWillfileVersionBump,
 }
 
-_.mapExtend( Self, Extension );
+_.props.extend( Self, Extension );
 _.will[ 'Predefined' ] = Self;
 
 })()

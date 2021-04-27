@@ -58,11 +58,11 @@ function nothingIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.nothingIs( _.argumentsArrayMake( [] ) );
+  var got = _.nothingIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.nothingIs( _.unrollMake( [] ) );
+  var got = _.nothingIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -169,11 +169,11 @@ function definedIs( test )
   test.identical( got, true );
 
   test.case = 'check empty arguments array';
-  var got = _.definedIs( _.argumentsArrayMake( [] ) );
+  var got = _.definedIs( _.argumentsArray.make( [] ) );
   test.identical( got, true );
 
   test.case = 'check empty unroll';
-  var got = _.definedIs( _.unrollMake( [] ) );
+  var got = _.definedIs( _.unroll.make( [] ) );
   test.identical( got, true );
 
   test.case = 'check empty map';
@@ -280,11 +280,11 @@ function primitiveIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.primitiveIs( _.argumentsArrayMake( [] ) );
+  var got = _.primitiveIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.primitiveIs( _.unrollMake( [] ) );
+  var got = _.primitiveIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -391,11 +391,11 @@ function symbolIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.symbolIs( _.argumentsArrayMake( [] ) );
+  var got = _.symbolIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.symbolIs( _.unrollMake( [] ) );
+  var got = _.symbolIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -502,11 +502,11 @@ function bigIntIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.bigIntIs( _.argumentsArrayMake( [] ) );
+  var got = _.bigIntIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.bigIntIs( _.unrollMake( [] ) );
+  var got = _.bigIntIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -615,11 +615,11 @@ function vectorAdapterIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.vectorAdapterIs( _.argumentsArrayMake( [] ) );
+  var got = _.vectorAdapterIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.vectorAdapterIs( _.unrollMake( [] ) );
+  var got = _.vectorAdapterIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -884,11 +884,11 @@ function matrixIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.matrixIs( _.argumentsArrayMake( [] ) );
+  var got = _.matrixIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.matrixIs( _.unrollMake( [] ) );
+  var got = _.matrixIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -1008,11 +1008,11 @@ function constructorIsMatrix( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.constructorIsMatrix( _.argumentsArrayMake( [] ) );
+  var got = _.constructorIsMatrix( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.constructorIsMatrix( _.unrollMake( [] ) );
+  var got = _.constructorIsMatrix( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -1132,11 +1132,11 @@ function consequenceIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.consequenceIs( _.argumentsArrayMake( [] ) );
+  var got = _.consequenceIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.consequenceIs( _.unrollMake( [] ) );
+  var got = _.consequenceIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -1261,11 +1261,11 @@ function consequenceLike( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.consequenceLike( _.argumentsArrayMake( [] ) );
+  var got = _.consequenceLike( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.consequenceLike( _.unrollMake( [] ) );
+  var got = _.consequenceLike( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -1390,11 +1390,11 @@ function promiseIs( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.promiseIs( _.argumentsArrayMake( [] ) );
+  var got = _.promiseIs( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.promiseIs( _.unrollMake( [] ) );
+  var got = _.promiseIs( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -1523,11 +1523,11 @@ function promiseLike( test )
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.promiseLike( _.argumentsArrayMake( [] ) );
+  var got = _.promiseLike( _.argumentsArray.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.promiseLike( _.unrollMake( [] ) );
+  var got = _.promiseLike( _.unroll.make( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
@@ -1652,13 +1652,13 @@ function typeOf( test )
   test.identical( got.name, 'Array' );
 
   test.case = 'check empty arguments array';
-  var src = _.argumentsArrayMake( [] );
+  var src = _.argumentsArray.make( [] );
   var got = _.typeOf( src );
   test.identical( got, src.constructor );
   test.identical( got.name, 'Object' );
 
   test.case = 'check empty unroll';
-  var src = _.unrollMake( [] );
+  var src = _.unroll.make( [] );
   var got = _.typeOf( src );
   test.identical( got, src.constructor );
   test.identical( got.name, 'Array' );
@@ -1770,13 +1770,13 @@ function typeOf( test )
   test.identical( got, true );
 
   test.case = 'check empty arguments array';
-  var src = _.argumentsArrayMake( [] );
-  var src1 = _.argumentsArrayMake( [ 1, 2 ] );
+  var src = _.argumentsArray.make( [] );
+  var src1 = _.argumentsArray.make( [ 1, 2 ] );
   var got = _.typeOf( src, src1.constructor );
   test.identical( got, true );
 
   test.case = 'check empty unroll';
-  var src = _.unrollMake( [] );
+  var src = _.unroll.make( [] );
   var src1 = [ 1, 2 ];
   var got = _.typeOf( src, src1.constructor );
   test.identical( got, true );

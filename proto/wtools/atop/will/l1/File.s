@@ -7,7 +7,7 @@ const _ = _global_.wTools;
 const Self = _.will = _.will || Object.create( null );
 
 // --
-// routines
+// implementation
 // --
 
 function fileClassify( filePath )
@@ -54,7 +54,7 @@ function fileAt_head( routine, args )
 
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
 
   return o;
 }
@@ -212,10 +212,10 @@ function fileResource_head( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { commonPath : args[ 0 ], resourceName : args[ 1 ] };
+  o = { commonPath : args[ 0 ], resourceName : ( args.length > 1 ? args[ 1 ] : null ) };
   o.fileProvider = o.fileProvider || _.fileSystem;
 
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
   _.assert( _.will.ResourceKind.has( o.resourceKind ) );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( arguments.length === 2 );
@@ -241,7 +241,7 @@ function fileReadResource_body( o )
   return _.any( found, ( file ) =>
   {
     let read = o.fileProvider.fileReadUnknown({ filePath : file.filePath });
-    if( read[ o.resourceKind ] && _.property.has( read[ o.resourceKind ], o.resourceName ) )
+    if( read[ o.resourceKind ] && _.props.has( read[ o.resourceKind ], o.resourceName ) )
     return read[ o.resourceKind ][ o.resourceName ];
   });
 
@@ -278,7 +278,7 @@ function fileWriteResource_body( o )
   let file = _.any( found, ( file ) =>
   {
     let read = cache[ file.filePath ] = o.fileProvider.fileReadUnknown({ filePath : file.filePath });
-    if( read[ o.resourceKind ] && _.property.has( read[ o.resourceKind ], o.resourceName ) )
+    if( read[ o.resourceKind ] && _.props.has( read[ o.resourceKind ], o.resourceName ) )
     {
       read[ o.resourceKind ][ o.resourceName ] = o.val;
       return file;
@@ -325,7 +325,7 @@ function environmentPathFind( o )
   if( _.strIs( o ) )
   o = { dirPath : o }
 
-  _.routineOptions( environmentPathFind, o );
+  _.routine.options_( environmentPathFind, o );
   _.assert( arguments.length === 1 );
 
   let fileProvider = o.fileProvider || _.fileProvider;
@@ -457,6 +457,6 @@ let Extension =
 
 }
 
-_.mapExtend( Self, Extension );
+_.props.extend( Self, Extension );
 
 })();
