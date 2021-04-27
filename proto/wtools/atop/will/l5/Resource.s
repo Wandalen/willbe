@@ -27,7 +27,7 @@ function MakeFor_head( routine, args )
 {
   let o = args[ 0 ];
 
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( arguments.length === 2 );
 
@@ -38,7 +38,7 @@ function MakeFor_body( o )
 {
   let Cls = this;
 
-  _.assertRoutineOptions( MakeFor_body, arguments );
+  _.routine.assertOptions( MakeFor_body, arguments );
 
   if( !o.resource )
   return;
@@ -59,7 +59,7 @@ function MakeFor_body( o )
   // if( Cls.ResouceDataFrom )
   // o2.resource = Cls.ResouceDataFrom( o.resource );
   // else
-  // o2.resource = _.mapExtend( null, o.resource );
+  // o2.resource = _.props.extend( null, o.resource );
   o2.resource = Cls.ResouceMapFrom( o.resource );
 
   _.assert( o.resource !== o2.resource );
@@ -95,7 +95,7 @@ MakeFor_body.defaults =
 
 }
 
-let MakeFor = _.routine.uniteCloning_( MakeFor_head, MakeFor_body );
+let MakeFor = _.routine.uniteCloning_replaceByUnite( MakeFor_head, MakeFor_body );
 
 //
 
@@ -124,7 +124,7 @@ function MakeForEachCriterion( o )
     let counter = 0;
     let isSingle = true;
 
-    o = _.routineOptions( MakeForEachCriterion, args );
+    o = _.routine.options_( MakeForEachCriterion, args );
     _.assert( args.length === 1 );
     _.assert( _.mapIs( o ) );
     _.assert( _.mapIs( o.resource ) );
@@ -137,15 +137,15 @@ function MakeForEachCriterion( o )
     if( o.resource.criterion )
     o.resource.criterion = Cls.CriterionNormalize( o.resource.criterion );
 
-    if( o.resource.criterion && _.mapKeys( o.resource.criterion ).length > 0 )
+    if( o.resource.criterion && _.props.keys( o.resource.criterion ).length > 0 )
     {
       let samples = _.eachSample_({ sets : o.resource.criterion });
       if( samples.length > 1 )
       for( let index = 0 ; index < samples.length ; index++ )
       {
         let criterion = samples[ index ];
-        let o2 = _.mapExtend( null, o );
-        o2.resource = _.mapExtend( null, o.resource );
+        let o2 = _.props.extend( null, o );
+        o2.resource = _.props.extend( null, o.resource );
         let postfix = Cls.CriterionPostfixFor( samples, criterion );
 
         o2.resource.criterion = criterion;
@@ -194,7 +194,7 @@ function MakeSingle( o )
   let module = o.resource.module;
   let will = module.will;
 
-  o = _.routineOptions( MakeSingle, arguments );
+  o = _.routine.options_( MakeSingle, arguments );
 
   try
   {
@@ -275,7 +275,7 @@ MakeSingle.defaults =
 function ResouceMapFrom( o )
 {
   _.assert( arguments.length === 1 );
-  return _.mapExtend( null, o );
+  return _.props.extend( null, o );
 }
 
 //
@@ -283,7 +283,7 @@ function ResouceMapFrom( o )
 function ResouceStructureFrom( o )
 {
   _.assert( arguments.length === 1 );
-  return _.mapExtend( null, o );
+  return _.props.extend( null, o );
 }
 
 //
@@ -579,7 +579,7 @@ function _inheritMultiple( o )
     });
 
     if( _.mapIs( ancestors ) )
-    ancestors = _.mapVals( ancestors );
+    ancestors = _.props.vals( ancestors );
 
     if( ancestors.length === 1 )
     ancestors = ancestors[ 0 ];
@@ -588,14 +588,14 @@ function _inheritMultiple( o )
 
     if( ancestors instanceof resource.constructor )
     {
-      let o2 = _.mapExtend( null, o );
+      let o2 = _.props.extend( null, o );
       delete o2.ancestors;
       o2.ancestor = ancestors;
       resource._inheritSingle( o2 );
     }
     else if( ancestors.length === 1 )
     {
-      let o2 = _.mapExtend( null, o );
+      let o2 = _.props.extend( null, o );
       delete o2.ancestors;
       o2.ancestor = ancestors[ 0 ];
       resource._inheritSingle( o2 );
@@ -604,7 +604,7 @@ function _inheritMultiple( o )
     {
       for( let a = 0 ; a < ancestors.length ; a++ )
       {
-        let o2 = _.mapExtend( null, o );
+        let o2 = _.props.extend( null, o );
         delete o2.ancestors;
         o2.ancestor = ancestors[ a ];
         resource._inheritSingle( o2 );
@@ -646,7 +646,7 @@ function _inheritSingle( o )
   _.assert( arguments.length === 1 );
   _.assert( resource.formed === 1 );
   _.assert( !!resource2.formed );
-  _.assertRoutineOptions( _inheritSingle, arguments );
+  _.routine.assertOptions( _inheritSingle, arguments );
 
   // if( resource.id === 154 )
   // debugger;
@@ -790,7 +790,7 @@ function criterionInherit( criterion2 )
 
   criterion1 = resource.criterion = resource.criterion || Object.create( null );
 
-  _.mapSupplement( criterion1, _.mapBut_( null, criterion2, { default : null, predefined : null } ) )
+  _.props.supplement( criterion1, _.mapBut_( null, criterion2, { default : null, predefined : null } ) )
 
   return criterion1;
 }
@@ -821,7 +821,7 @@ function CriterionVariable( criterionMaps, criterion )
 
   _.arrayAppendOnce( criterionMaps, criterion );
 
-  let all = _.mapExtend( null, criterionMaps[ 0 ] );
+  let all = _.props.extend( null, criterionMaps[ 0 ] );
   all = this.CriterionNormalize( all );
 
   for( let i = 1 ; i < criterionMaps.length ; i++ )
@@ -903,7 +903,7 @@ function CriterionMapResolve( module, criterionMap )
 
   }
 
-  _.mapExtend( criterionMap, criterionMap2 );
+  _.props.extend( criterionMap, criterionMap2 );
 
   return criterionMap;
 }
@@ -947,7 +947,7 @@ function _exportString( o )
 {
   let resource = this;
   let result = '';
-  o = _.routineOptions( _exportString, arguments );
+  o = _.routine.options_( _exportString, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.entity.exportString( o.fields, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } );
@@ -963,7 +963,7 @@ defaults.fields = 1;
 function exportString()
 {
   let resource = this;
-  let o = _.routineOptions( exportString, arguments );
+  let o = _.routine.options_( exportString, arguments );
 
   let fields = resource.exportStructure( o );
   let result = resource._exportString({ fields });
@@ -981,7 +981,7 @@ defaults.strict = 0;
 function exportStructure()
 {
   let resource = this;
-  let o = _.routineOptions( exportStructure, arguments );
+  let o = _.routine.options_( exportStructure, arguments );
 
   if( !o.formed )
   if( resource.unformedResource )
@@ -1026,7 +1026,7 @@ exportStructure.defaults = Object.create( _.will.Module.prototype.exportStructur
 function extraExport()
 {
   let resource = this;
-  let o = _.routineOptions( extraExport, arguments );
+  let o = _.routine.options_( extraExport, arguments );
 
   o.dst = o.dst || Object.create( null );
 
@@ -1063,7 +1063,7 @@ function compactField( it )
   if( _.arrayIs( it.dst ) && !it.dst.length )
   return;
 
-  if( _.mapIs( it.dst ) && !_.mapKeys( it.dst ).length )
+  if( _.mapIs( it.dst ) && !_.props.keys( it.dst ).length )
   return;
 
   return it.dst;
@@ -1205,7 +1205,7 @@ var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.re
 defaults.prefixlessAction = 'default';
 defaults.Looker = defaults;
 
-// let resolve = _.routine.uniteCloning_( resolve_head, resolve_body );
+// let resolve = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 
 //
@@ -1243,7 +1243,7 @@ function inPathResolve_body( o )
   _.assert( arguments.length === 1 );
   _.assert( _.looker.iterationIs( o ) );
   // _.assert( _.strIs( o.selector ) || _.strsAreAll( o.selector ) );
-  // // _.assertRoutineOptions( inPathResolve_body, arguments );
+  // // _.routine.assertOptions( inPathResolve_body, arguments );
   //
   // if( o.prefixlessAction !== 'default' )
   // o.defaultResourceKind = null;
@@ -1259,14 +1259,14 @@ function inPathResolve_body( o )
 // defaults.prefixlessAction = 'default';
 // defaults.pathResolving = 'in';
 //
-// let inPathResolve = _.routine.uniteCloning_( inPathResolve_head, inPathResolve_body );
-// // let inPathResolve = _.routine.uniteCloning_( resolve.head, inPathResolve_body );
+// let inPathResolve = _.routine.uniteCloning_replaceByUnite( inPathResolve_head, inPathResolve_body );
+// // let inPathResolve = _.routine.uniteCloning_replaceByUnite( resolve.head, inPathResolve_body );
 
 // var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
 // defaults.defaultResourceKind = 'path';
 // defaults.prefixlessAction = 'default';
 // defaults.pathResolving = 'in';
-// let inPathResolve = _.routine.uniteCloning_( inPathResolve_head, inPathResolve_body );
+// let inPathResolve = _.routine.uniteCloning_replaceByUnite( inPathResolve_head, inPathResolve_body );
 
 _.assert( _.prototype.has( resolve.defaults, resolve.defaults.OriginalLooker ) );
 _.routine.extendInheriting( inPathResolve_body, { defaults : resolve.defaults } );
@@ -1276,7 +1276,7 @@ defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
 defaults.Looker = defaults;
-// let inPathResolve = _.routine.uniteCloning_({ head : inPathResolve_head, body : inPathResolve_body, strategy : 'replacing' });
+// let inPathResolve = _.routine.uniteCloning_replaceByUnite({ head : inPathResolve_head, body : inPathResolve_body, strategy : 'replacing' });
 let inPathResolve = _.routine.uniteReplacing( inPathResolve_head, inPathResolve_body );
 _.assert( inPathResolve.defaults === inPathResolve.body.defaults );
 _.assert( _.prototype.has( inPathResolve.defaults, inPathResolve.defaults.OriginalLooker ) );
@@ -1325,13 +1325,13 @@ function reflectorResolve_body( o )
 }
 
 // reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
-// let reflectorResolve = _.routine.uniteCloning_( reflectorResolve_head, reflectorResolve_body );
-// // let reflectorResolve = _.routine.uniteCloning_( resolve.head, reflectorResolve_body );
+// let reflectorResolve = _.routine.uniteCloning_replaceByUnite( reflectorResolve_head, reflectorResolve_body );
+// // let reflectorResolve = _.routine.uniteCloning_replaceByUnite( resolve.head, reflectorResolve_body );
 
 reflectorResolve_body.defaults = _.will.Module.prototype.reflectorResolve.defaults;
 let reflectorResolve = _.routine.uniteReplacing( resolve.head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
-// let reflectorResolve = _.routine.uniteCloning_({ head : resolve.head, body : reflectorResolve_body, strategy : 'replacing' });
+// let reflectorResolve = _.routine.uniteCloning_replaceByUnite({ head : resolve.head, body : reflectorResolve_body, strategy : 'replacing' });
 
 // --
 // etc
@@ -1346,7 +1346,7 @@ function pathRebase( o )
   let path = fileProvider.path;
   // let Resolver = _.will.resolver;
 
-  o = _.routineOptions( pathRebase, arguments );
+  o = _.routine.options_( pathRebase, arguments );
 
   if( o.filePath )
   if( path.isRelative( o.filePath ) )

@@ -367,7 +367,7 @@ function PathToRole( filePath )
 {
   let role = null;
 
-  if( _.arrayLike( filePath ) )
+  if( _.argumentsArray.like( filePath ) )
   return _.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
 
   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
@@ -634,7 +634,7 @@ function vcsProviderFor( o )
   o = { filePath : o }
 
   _.assert( arguments.length === 1 );
-  _.routineOptions( vcsProviderFor, o );
+  _.routine.options_( vcsProviderFor, o );
   _.assert( !!will.formed );
 
   if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
@@ -671,7 +671,7 @@ vcsProviderFor.defaults =
 //   o = { filePath : o }
 
 //   _.assert( arguments.length === 1 );
-//   _.routineOptions( vcsToolsFor, o );
+//   _.routine.options_( vcsToolsFor, o );
 //   _.assert( !!will.formed );
 
 //   if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
@@ -743,7 +743,7 @@ function resourcesInfoExport( o )
   let will = this;
   let result = Object.create( null );
 
-  o = _.routineOptions( resourcesInfoExport, arguments );
+  o = _.routine.options_( resourcesInfoExport, arguments );
 
   let names =
   {
@@ -891,7 +891,7 @@ function versionIsUpToDate( o )
   let will = this;
 
   _.assert( arguments.length === 1 );
-  _.routineOptions( versionIsUpToDate, o );
+  _.routine.options_( versionIsUpToDate, o );
 
   let ready = _.process.start
   ({
@@ -1041,7 +1041,7 @@ function recursiveValueDeduceFromBuild( o )
   let logger = will.transaction.logger;
   let result = null;
 
-  _.routineOptions( recursiveValueDeduceFromBuild, arguments );
+  _.routine.options_( recursiveValueDeduceFromBuild, arguments );
 
   if( will.transaction.withSubmodules !== null )
   return will.transaction.withSubmodules;
@@ -1157,9 +1157,9 @@ function instanceDefaultsSupplement( o )
 
   let transaction = will.transaction;
   let transactionOpeningOpts = _.mapOnlyNulls( _.mapOnly_( null, transaction, will.OpeningDefaults ) );
-  if( !_.mapIsEmpty( transactionOpeningOpts ) )
+  if( !_.map.isEmpty( transactionOpeningOpts ) )
   {
-    _.mapSupplement( transactionOpeningOpts, _.mapOnly_( null, o, will.OpeningDefaults ) );
+    _.props.supplement( transactionOpeningOpts, _.mapOnly_( null, o, will.OpeningDefaults ) );
     will.transaction = transaction.cloneExtending( transactionOpeningOpts );
     transaction.finit();
   }
@@ -1217,7 +1217,7 @@ function prefer( o )
   let will = this;
   let ready = new _.Consequence();
 
-  o = _.routineOptions( prefer, arguments );
+  o = _.routine.options_( prefer, arguments );
 
   forward();
   will.instanceDefaultsApply( o );
@@ -1350,10 +1350,10 @@ function moduleFit_head( routine, args )
 
   let junction = args[ 0 ];
   let opts = args[ 1 ];
-  opts = _.routineOptions( routine, opts );
+  opts = _.routine.options_( routine, opts );
   _.assert( args.length === 2 );
 
-  return _.unrollFrom([ junction, opts ]);
+  return _.unroll.from([ junction, opts ]);
 }
 
 function moduleFit_body( object, opts )
@@ -1408,12 +1408,12 @@ function moduleFit_body( object, opts )
   return true;
 }
 
-var defaults = moduleFit_body.defaults = _.mapExtend( null, ModuleFilterDefaults );
+var defaults = moduleFit_body.defaults = _.props.extend( null, ModuleFilterDefaults );
 
 defaults.withStem = 0;
 defaults.withPeers = 0;
 
-let moduleFit = _.routine.uniteCloning_( moduleFit_head, moduleFit_body );
+let moduleFit = _.routine.uniteCloning_replaceByUnite( moduleFit_head, moduleFit_body );
 
 //
 
@@ -1429,8 +1429,6 @@ function relationFit_body( object, opts )
 
   _.assert( arguments.length === 2 );
   _.assert( will.ObjectIs( object ) || _.will.isJunction( object ) );
-  // _.assert( object instanceof _.will.ModulesRelation || object instanceof _.will.Module || object instanceof _.will.ModuleJunction );
-  // _.assert( object instanceof _.will.ModuleJunction ); /* ttt */
 
   let result = will.moduleFit.body.call( will, object, _.mapOnly_( null, opts, will.moduleFit.defaults ) );
   if( !result )
@@ -1463,7 +1461,7 @@ var defaults = relationFit_body.defaults =
 
 }
 
-let relationFit = _.routine.uniteCloning_( moduleFit_head, relationFit_body );
+let relationFit = _.routine.uniteCloning_replaceByUnite( moduleFit_head, relationFit_body );
 
 //
 
@@ -1477,7 +1475,7 @@ function modulesFilter( junctions, o )
 
   _.assert( arguments.length === 2 );
   _.assert( _.arrayIs( junctions ) );
-  o = _.routineOptions( modulesFilter, o );
+  o = _.routine.options_( modulesFilter, o );
 
   junctions.forEach( ( module ) =>
   {
@@ -1490,7 +1488,7 @@ function modulesFilter( junctions, o )
   return result;
 }
 
-modulesFilter.defaults = _.mapExtend( null, moduleFit.defaults );
+modulesFilter.defaults = _.props.extend( null, moduleFit.defaults );
 
 //
 
@@ -1504,7 +1502,7 @@ function relationsFilter( junctions, o )
 
   _.assert( arguments.length === 2 );
   _.assert( _.arrayIs( junctions ) );
-  o = _.routineOptions( relationsFilter, o );
+  o = _.routine.options_( relationsFilter, o );
 
   junctions.forEach( ( module ) =>
   {
@@ -1518,7 +1516,7 @@ function relationsFilter( junctions, o )
   return result;
 }
 
-relationsFilter.defaults = _.mapExtend( null, relationFit.defaults );
+relationsFilter.defaults = _.props.extend( null, relationFit.defaults );
 // relationsFilter.defaults.withDisabledStem = 0;
 
 //
@@ -1536,7 +1534,7 @@ function moduleIdUnregister( openedModule )
 
   _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
   delete will.moduleWithIdMap[ openedModule.id ];
-  _.assert( _.longCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 0 );
+  _.assert( _.longCountElement( _.props.vals( will.moduleWithIdMap ), openedModule ) === 0 );
   _.arrayRemoveOnceStrictly( will.modulesArray, openedModule );
 
 }
@@ -1556,7 +1554,7 @@ function moduleIdRegister( openedModule )
 
   _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
   will.moduleWithIdMap[ openedModule.id ] = openedModule;
-  _.assert( _.longCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 1 );
+  _.assert( _.longCountElement( _.props.vals( will.moduleWithIdMap ), openedModule ) === 1 );
   _.arrayAppendOnceStrictly( will.modulesArray, openedModule );
 
 }
@@ -1587,7 +1585,7 @@ function modulePathUnregister( openedModule )
     openedModule._registeredPath = null;
   }
 
-  _.assert( _.longCountElement( _.mapVals( will.moduleWithCommonPathMap ), openedModule ) === 0 );
+  _.assert( _.longCountElement( _.props.vals( will.moduleWithCommonPathMap ), openedModule ) === 0 );
 
 }
 
@@ -1613,7 +1611,7 @@ function modulePathRegister( openedModule )
     () => 'Different instance of ' + openedModule.constructor.name + ' is registered at ' + openedModule.commonPath
   );
   will.moduleWithCommonPathMap[ openedModule.commonPath ] = openedModule;
-  _.assert( _.longCountElement( _.mapVals( will.moduleWithCommonPathMap ), openedModule ) === 1 );
+  _.assert( _.longCountElement( _.props.vals( will.moduleWithCommonPathMap ), openedModule ) === 1 );
 
 }
 
@@ -1626,7 +1624,7 @@ function moduleNew( o )
   let path = will.fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptions( moduleNew, arguments );
+  o = _.routine.options_( moduleNew, arguments );
 
   if( o.localPath )
   o.localPath = path.join( path.current(), o.localPath );
@@ -1825,7 +1823,7 @@ function modulesFindWithAt( o )
   let logger = will.transaction.logger;
   let con;
 
-  o = _.routineOptions( modulesFindWithAt, arguments );
+  o = _.routine.options_( modulesFindWithAt, arguments );
   _.sure( _.strDefined( o.selector ), 'Expects string' );
   _.assert( arguments.length === 1 );
 
@@ -2007,7 +2005,7 @@ function modulesFindWithAt( o )
 
 }
 
-var defaults = modulesFindWithAt.defaults = _.mapExtend( null, ModuleFilterNulls );
+var defaults = modulesFindWithAt.defaults = _.props.extend( null, ModuleFilterNulls );
 
 defaults.withEnabledSubmodules = null;
 defaults.withDisabledSubmodules = null;
@@ -2132,7 +2130,7 @@ function modulesEach_head( routine, args )
   let o = args[ 0 ]
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
-  o = _.routineOptions( routine, o );
+  o = _.routine.options_( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) ) /* xxx : add '* / junction' */
 
@@ -2145,7 +2143,7 @@ function modulesEach_body( o )
   let logger = will.transaction.logger;
 
   _.assert( !o.visitedContainer || !!o.nodesGroup, 'Expects nodesGroup if visitedContainer provided' );
-  _.assertRoutineOptions( modulesEach_body, o );
+  _.routine.assertOptions( modulesEach_body, o );
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
@@ -2156,13 +2154,13 @@ function modulesEach_body( o )
   o.modules.forEach( objectAppend );
   _.assert( will.ObjectsAreAll( o.modules ) );
 
-  /* ttt */
+  /* */
 
   let nodes = _.arrayAs( o.modules );
   nodes = _.filter_( null, nodes, ( node ) =>
   {
     if( _.will.isJunction( node ) )
-    return _.unrollFrom( node.objects );
+    return _.unroll.from( node.objects );
     return node;
   });
 
@@ -2193,9 +2191,7 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
 
-  // _.debugger;
   o.result = o.nodesGroup.each( o2 );
-  // _.debugger;
   o.result = _.longOnce( o.result.map( ( junction ) => outputFrom( junction ) ) );
 
   if( o.descriptive )
@@ -2233,7 +2229,7 @@ function modulesEach_body( o )
 
     if( o.withDisabledStem && context.level === 0 )
     {
-      let filter2 = _.mapExtend( null, filter );
+      let filter2 = _.props.extend( null, filter );
       filter2.withDisabledSubmodules = 1;
       filter2.withDisabledModules = 1;
       context.continueNode = will.relationFit( object, filter2 );
@@ -2304,8 +2300,8 @@ function modulesEach_body( o )
 var defaults = modulesEach_body.defaults =
 {
 
-  ... _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults ),
-  ... _.mapExtend( null, relationFit.defaults ),
+  ... _.props.extend( null, _.graph.AbstractNodesGroup.prototype.each.defaults ),
+  ... _.props.extend( null, relationFit.defaults ),
 
   withPeers : 0,
   withStem : 0,
@@ -2329,7 +2325,7 @@ _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 _.assert( defaults.withPeers === 0 );
 
-let modulesEach = _.routine.uniteCloning_( modulesEach_head, modulesEach_body );
+let modulesEach = _.routine.uniteCloning_replaceByUnite( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, RelationFilterOn );
 
 //
@@ -2343,7 +2339,7 @@ function modulesFor_head( routine, args )
 
   let o = args[ 0 ];
 
-  o = _.routineOptions( routine, o );
+  o = _.routine.options_( routine, o );
 
   return o;
 }
@@ -2359,7 +2355,7 @@ function modulesFor_body( o )
   let visitedObjectSet = new Set;
 
   _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( modulesFor_body, arguments );
+  _.routine.assertOptions( modulesFor_body, arguments );
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
@@ -2450,7 +2446,7 @@ function modulesFor_body( o )
 
         if( o.onEachVisitedObject )
         {
-          let o3 = _.mapExtend( null, o );
+          let o3 = _.props.extend( null, o );
           o3.object = object;
           o3.isRoot = isRoot;
           ready.then( () => o.onEachVisitedObject( object, o3 ) );
@@ -2472,7 +2468,7 @@ function modulesFor_body( o )
 
         if( object && object instanceof _.will.Module )
         {
-          let o3 = _.mapExtend( null, o );
+          let o3 = _.props.extend( null, o );
           o3.module = object;
           o3.isRoot = isRoot;
           ready.then( () => o.onEachModule( object, o3 ) );
@@ -2497,7 +2493,7 @@ function modulesFor_body( o )
 
     if( o.onEachJunction )
     {
-      let o3 = _.mapExtend( null, o ); /* xxx : object inherit? */
+      let o3 = _.props.extend( null, o ); /* xxx : object inherit? */
       o3.junction = junction;
       o3.isRoot = isRoot;
       ready.then( () => o.onEachJunction( junction, o3 ) );
@@ -2509,7 +2505,7 @@ function modulesFor_body( o )
 
 }
 
-var defaults = modulesFor_body.defaults = _.mapExtend
+var defaults = modulesFor_body.defaults = _.props.extend
 (
   null,
   modulesEach.defaults,
@@ -2535,7 +2531,7 @@ _.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesFor = _.routine.uniteCloning_( modulesFor_head, modulesFor_body );
+let modulesFor = _.routine.uniteCloning_replaceByUnite( modulesFor_head, modulesFor_body );
 
 //
 
@@ -2548,7 +2544,7 @@ function modulesDownload_head( routine, args )
 
   let o = args[ 0 ];
 
-  o = _.routineOptions( routine, o );
+  o = _.routine.options_( routine, o );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   will.filterDefaults( o );
@@ -2576,7 +2572,7 @@ function modulesDownload_body( o )
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
 
-  _.assertRoutineOptions( modulesDownload_body, arguments );
+  _.routine.assertOptions( modulesDownload_body, arguments );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
@@ -2928,7 +2924,7 @@ function modulesDownload_body( o )
   }
 }
 
-var defaults = modulesDownload_body.defaults = _.mapExtend
+var defaults = modulesDownload_body.defaults = _.props.extend
 (
   null,
   modulesEach.defaults,
@@ -2961,7 +2957,7 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-let modulesDownload = _.routine.uniteCloning_( modulesDownload_head, modulesDownload_body );
+let modulesDownload = _.routine.uniteCloning_replaceByUnite( modulesDownload_head, modulesDownload_body );
 
 //
 
@@ -2972,7 +2968,7 @@ function modulesUpform( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptions( modulesUpform, arguments );
+  o = _.routine.options_( modulesUpform, arguments );
 
   let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
@@ -3006,7 +3002,7 @@ function modulesUpform( o )
 
 }
 
-var defaults = modulesUpform.defaults = _.mapExtend( null, UpformingDefaults, modulesFor.defaults );
+var defaults = modulesUpform.defaults = _.props.extend( null, UpformingDefaults, modulesFor.defaults );
 
 defaults.recursive = 2;
 defaults.withStem = 1;
@@ -3029,7 +3025,7 @@ function modulesClean( o )
   let files = Object.create( null );
   let visitedObjectSet = new Set;
 
-  o = _.routineOptions( modulesClean, arguments );
+  o = _.routine.options_( modulesClean, arguments );
 
   if( o.beginTime === null )
   o.beginTime = _.time.now();
@@ -3073,7 +3069,7 @@ function modulesClean( o )
 
 }
 
-var defaults = modulesClean.defaults = _.mapExtend( null, modulesFor.defaults );
+var defaults = modulesClean.defaults = _.props.extend( null, modulesFor.defaults );
 
 defaults.dry = 0;
 defaults.fast = 0;
@@ -3097,7 +3093,7 @@ delete defaults.onNode;
 
 function modulesBuild_head( routine, args )
 {
-  let o = _.routineOptions( routine, args );
+  let o = _.routine.options_( routine, args );
   if( o.doneContainer === null )
   o.doneContainer = [];
   return o;
@@ -3111,7 +3107,7 @@ function modulesBuild_body( o )
   let logger = will.transaction.logger;
   let ready = _.take( null );
 
-  o = _.assertRoutineOptions( modulesBuild_body, arguments );
+  o = _.routine.assertOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
 
   let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly_( null, o, will.recursiveValueDeduceFromBuild.defaults ) );
@@ -3207,7 +3203,7 @@ function modulesBuild_body( o )
 var defaults = modulesBuild_body.defaults =
 {
 
-  ... _.mapExtend( null, modulesFor.defaults ),
+  ... _.props.extend( null, modulesFor.defaults ),
 
   name : null,
   criterion : null,
@@ -3237,11 +3233,11 @@ _.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
-let modulesBuild = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
+let modulesBuild = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
 
-let modulesExport = _.routine.uniteCloning_( modulesBuild_head, modulesBuild_body );
+let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
@@ -3249,7 +3245,7 @@ modulesExport.defaults.downloading = 1;
 
 function modulesVerify_head( routine, args )
 {
-  let o = _.routineOptions( routine, args );
+  let o = _.routine.options_( routine, args );
   return o;
 }
 
@@ -3264,7 +3260,7 @@ function modulesVerify_body( o )
   let totalNumber = 0;
   let time = _.time.now();
 
-  o = _.assertRoutineOptions( modulesVerify_body, arguments );
+  o = _.routine.assertOptions( modulesVerify_body, arguments );
 
   logger.up();
 
@@ -3335,7 +3331,7 @@ function modulesVerify_body( o )
 var defaults = modulesVerify_body.defaults =
 {
 
-  ... _.mapExtend( null, modulesFor.defaults ),
+  ... _.props.extend( null, modulesFor.defaults ),
 
   recursive : 1,
   throwing : 1,
@@ -3353,7 +3349,7 @@ delete defaults.onEach;
 delete defaults.onEachModule;
 delete defaults.onEachJunction;
 
-let modulesVerify = _.routine.uniteCloning_( modulesVerify_head, modulesVerify_body );
+let modulesVerify = _.routine.uniteCloning_replaceByUnite( modulesVerify_head, modulesVerify_body );
 
 // --
 // object
@@ -3402,7 +3398,7 @@ function ObjectsExportInfo( o )
     }
   }
 
-  _.routineOptions( ObjectsExportInfo, o );
+  _.routine.options_( ObjectsExportInfo, o );
 
   if( _.Will.ObjectIs( o.objects ) )
   o.objects = [ o.objects ];
@@ -3441,7 +3437,7 @@ function ObjectsLogInfo( o )
     }
   }
 
-  _.routineOptions( ObjectsLogInfo, o );
+  _.routine.options_( ObjectsLogInfo, o );
   if( o.logger === null )
   o.logger = _global_.logger;
 
@@ -3490,7 +3486,7 @@ function objectsLogInfo( o )
     }
   }
 
-  _.routineOptions( objectsLogInfo, o );
+  _.routine.options_( objectsLogInfo, o );
 
   let info = will.objectsExportInfo( o );
   logger.log( info );
@@ -3622,7 +3618,7 @@ function junctionsInfoExport( junctions )
   let will = this;
   if( !junctions )
   {
-    junctions = _.longOnce( _.mapVals( will.junctionMap ) );
+    junctions = _.longOnce( _.props.vals( will.junctionMap ) );
     // junctions = junctions.filter( ( junction ) =>
     // {
     //   if( junction.relation && !junction.relation.enabled )
@@ -3655,7 +3651,7 @@ function graphGroupMake( o )
 {
   let will = this;
 
-  o = _.routineOptions( graphGroupMake, arguments );
+  o = _.routine.options_( graphGroupMake, arguments );
   o.will = will;
 
   let sys = new _.graph.AbstractGraphSystem
@@ -3755,7 +3751,7 @@ function graphGroupMake( o )
 
 }
 
-var defaults = graphGroupMake.defaults = _.mapExtend( null, RelationFilterDefaults );
+var defaults = graphGroupMake.defaults = _.props.extend( null, RelationFilterDefaults );
 
 defaults.withPeers = 1;
 defaults.withoutDuplicates = 0;
@@ -3785,10 +3781,8 @@ function graphExportTreeInfo( modules, o )
 {
   let will = this;
 
-  o = _.routineOptions( graphExportTreeInfo, o );
+  o = _.routine.options_( graphExportTreeInfo, o || null );
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
-
-  o = _.routineOptions( graphExportTreeInfo, o );
 
   if( o.onNodeName === null )
   o.onNodeName = junctionNameAndPath;
@@ -3832,7 +3826,7 @@ function graphExportTreeInfo( modules, o )
 
 }
 
-var defaults = graphExportTreeInfo.defaults = _.mapExtend
+var defaults = graphExportTreeInfo.defaults = _.props.extend
 (
   null,
   _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults,
@@ -3859,7 +3853,7 @@ function _openerMake_head( routine, args )
   if( _.strIs( o ) || _.arrayIs( o ) )
   o = { selector : o }
 
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( !o.isMain || !o.mainOpener || !o.opener || o.mainOpener === o.opener );
@@ -3876,7 +3870,7 @@ function _openerMake_body( o )
   let madeOpener = null;
 
   _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( _openerMake_body, arguments );
+  _.routine.assertOptions( _openerMake_body, arguments );
 
   try
   {
@@ -3924,7 +3918,7 @@ _openerMake_body.defaults =
 
 }
 
-let _openerMake = _.routine.uniteCloning_( _openerMake_head, _openerMake_body );
+let _openerMake = _.routine.uniteCloning_replaceByUnite( _openerMake_head, _openerMake_body );
 
 //
 
@@ -3932,7 +3926,7 @@ function openerMakeManual( o )
 {
   let will = this;
 
-  o = _.routineOptions( openerMakeManual, arguments );
+  o = _.routine.options_( openerMakeManual, arguments );
   o.opener = o.opener || Object.create( null );
   o.opener.reason = o.opener.reason || 'user';
   if( o.willfilesPath )
@@ -3989,7 +3983,7 @@ function openerUnregister( opener )
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
   delete will.openerModuleWithIdMap[ opener.id ];
-  _.assert( _.longCountElement( _.mapVals( will.openerModuleWithIdMap ), opener ) === 0 );
+  _.assert( _.longCountElement( _.props.vals( will.openerModuleWithIdMap ), opener ) === 0 );
   _.arrayRemoveOnceStrictly( will.openersArray, opener );
 
 }
@@ -4003,7 +3997,7 @@ function openerRegister( opener )
   _.assert( opener.id > 0 );
   will.openerModuleWithIdMap[ opener.id ] = opener;
   _.arrayAppendOnceStrictly( will.openersArray, opener );
-  _.assert( _.longCountElement( _.mapVals( will.openerModuleWithIdMap ), opener ) === 1 );
+  _.assert( _.longCountElement( _.props.vals( will.openerModuleWithIdMap ), opener ) === 1 );
 
 }
 
@@ -4179,7 +4173,7 @@ function WillfilesFind( o )
   if( _.strIs( o ) )
   o = { commonPath : o }
 
-  _.routineOptions( WillfilesFind, o );
+  _.routine.options_( WillfilesFind, o );
 
   if( !o.fileProvider )
   o.fileProvider = _.fileProvider;
@@ -4380,7 +4374,7 @@ function willfilesFind( o )
     }
   }
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.logger = logger;
   o2.fileProvider = fileProvider;
   delete o2.usingCache;
@@ -4472,7 +4466,7 @@ function willfileFor( o )
   let logger = will.transaction.logger;
   let r = Object.create( null );
 
-  _.routineOptions( willfileFor, arguments );
+  _.routine.options_( willfileFor, arguments );
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( o.willf ) );
   _.assert( _.longHas( [ false, 0, 'supplement' ], o.combining ) );
@@ -4530,7 +4524,7 @@ function willfileUnregister( willf )
     _.assert( will.willfileWithFilePathPathMap[ filePath[ f ] ] === willf );
     delete will.willfileWithFilePathPathMap[ filePath[ f ] ];
   }
-  _.assert( _.longCountElement( _.mapVals( will.willfileWithFilePathPathMap ), willf ) === 0 );
+  _.assert( _.longCountElement( _.props.vals( will.willfileWithFilePathPathMap ), willf ) === 0 );
 
   _.arrayRemoveOnceStrictly( will.willfilesArray, willf );
 
@@ -4553,7 +4547,7 @@ function willfileRegister( willf )
     _.assert( _.longHas( [ willf, undefined ], will.willfileWithFilePathPathMap[ filePath[ f ] ] ) );
     will.willfileWithFilePathPathMap[ filePath[ f ] ] = willf;
   }
-  _.assert( _.longCountElement( _.mapVals( will.willfileWithFilePathPathMap ), willf ) === filePath.length );
+  _.assert( _.longCountElement( _.props.vals( will.willfileWithFilePathPathMap ), willf ) === filePath.length );
 
   will.willfileWithCommonPathMap[ willf.commonPath ] = will.willfileWithCommonPathMap[ willf.commonPath ] || [];
   _.arrayAppendOnceStrictly( will.willfileWithCommonPathMap[ willf.commonPath ], willf );
@@ -4571,7 +4565,7 @@ function cleanLog( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( cleanLog, arguments );
+  o = _.routine.options_( cleanLog, arguments );
 
   _.assert( _.intIs( o.beginTime ) );
   _.assert( _.mapIs( o.files ) )
@@ -4625,7 +4619,7 @@ function cleanDelete( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( cleanDelete, arguments );
+  o = _.routine.options_( cleanDelete, arguments );
 
   will.readingEnd();
 
@@ -4744,7 +4738,7 @@ function hookContextNew( o )
 
   /* xxx : use recursive clone here */
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   delete o2.execPath;
   delete o2.interpreterName;
 
@@ -4761,7 +4755,7 @@ function hookContextNew( o )
   function clone( src )
   {
     if( _.mapIs( src ) )
-    return _.mapExtend( null, src );
+    return _.props.extend( null, src );
     return src;
   }
 
@@ -4780,7 +4774,7 @@ function hookContextFrom( o )
 
   o = will.resourceWrap( o );
 
-  o = _.routineOptions( hookContextFrom, o );
+  o = _.routine.options_( hookContextFrom, o );
   _.assert( arguments.length === 1 );
 
   if( o.opener && !o.module )
@@ -4916,7 +4910,7 @@ function hookCall( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptions( hookCall, arguments );
+  o = _.routine.options_( hookCall, arguments );
   _.assert( o.will === will );
   _.assert( !!o.junction );
 
@@ -5025,7 +5019,7 @@ function hookCall( o )
   {
     if( routine.defaults )
     {
-      _.routineOptions( routine, o.request.map );
+      _.routine.options_( routine, o.request.map );
     }
     else
     {
@@ -5060,7 +5054,7 @@ function hookCall( o )
 
 }
 
-hookCall.defaults = _.mapExtend( null, hookContextFrom.defaults );
+hookCall.defaults = _.props.extend( null, hookContextFrom.defaults );
 
 //
 
@@ -5073,7 +5067,7 @@ function hookFindAt( o )
 
   if( !_.mapIs( o ) )
   o = { execPath : o }
-  _.routineOptions( hookFindAt, o );
+  _.routine.options_( hookFindAt, o );
   _.assert( arguments.length === 1 );
 
   if( fileProvider.isTerminal( o.execPath ) )

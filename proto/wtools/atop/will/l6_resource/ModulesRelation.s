@@ -55,7 +55,7 @@ function ResouceStructureFrom( o )
   _.assert( arguments.length === 1 );
   if( _.strIs( o ) || _.arrayIs( o ) )
   return { path : o }
-  return _.mapExtend( null, o );
+  return _.props.extend( null, o );
 }
 
 //
@@ -251,7 +251,7 @@ function _openAct( o )
   let logger = will.transaction.logger;
   let rootModule = module.rootModule;
 
-  o = _.routineOptions( _openAct, arguments );
+  o = _.routine.options_( _openAct, arguments );
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( relation.formed === 2 );
   _.assert( !!relation.opener );
@@ -307,7 +307,7 @@ function _openEnd()
   _.assert( relation.formed === 3 );
   _.assert( !!relation.opener.openedModule );
 
-  // if( relation.enabled ) /* ttt */
+  // if( relation.enabled )
   will.junctionReform( relation );
 
   let modules2 = relation.opener.openedModule.modulesEachAll
@@ -414,7 +414,7 @@ function submodulesRelationsFilter( o )
 //   let module = relation.module;
 //   let will = module.will;
 //
-//   o = _.routineOptions( submodulesRelationsFilter, arguments );
+//   o = _.routine.options_( submodulesRelationsFilter, arguments );
 //
 //   let result = relation.submodulesRelationsOwnFilter( o );
 //   let junction = will.junctionFrom( relation );
@@ -661,7 +661,7 @@ function pathsRebase( o )
   let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
-  o = _.routineOptions( pathsRebase, arguments );
+  o = _.routine.options_( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
   _.assert( path.isAbsolute( o.exInPath ) );
 
@@ -819,7 +819,7 @@ function exportString( o )
   let resultMap = Parent.prototype.exportStructure.call( relation );
   let tab = '  ';
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routine.options_( exportString, arguments );
 
   if( relation.opener )
   {
@@ -828,7 +828,7 @@ function exportString( o )
     resultMap.local = module2.localPath;
 
     if( relation.opener.openedModule )
-    resultMap[ 'Exported builds' ] = _.entity.exportString( _.mapKeys( module2.openedModule.exportedMap ) );
+    resultMap[ 'Exported builds' ] = _.entity.exportString( _.props.keys( module2.openedModule.exportedMap ) );
 
   }
 

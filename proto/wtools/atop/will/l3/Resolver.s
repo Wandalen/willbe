@@ -194,7 +194,7 @@ function _onQuantitativeFail( err )
   _.assert( rit !== it );
 
   if( _.mapIs( dst ) )
-  dst = _.mapVals( dst );
+  dst = _.props.vals( dst );
 
   if( _.arrayIs( dst ) )
   {
@@ -509,7 +509,7 @@ function _select( visited )
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
 
-  _.assert( !_.property.own( it, 'criterion' ) );
+  _.assert( !_.props.own( it, 'criterion' ) );
 
   let it2 = Parent._select.apply( this, arguments );
 
@@ -535,7 +535,7 @@ function сontextPrepare( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.routineOptionsPreservingUndefines( сontextPrepare, arguments );
+  _.routine.options( сontextPrepare, arguments );
 
   if( !o.currentThis )
   {
@@ -1136,7 +1136,7 @@ function errResolvingMake( o )
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let module = rit.baseModule;
-  _.assertRoutineOptions( errResolvingMake, arguments );
+  _.routine.assertOptions( errResolvingMake, arguments );
   _.assert( arguments.length === 1 );
 
   if( o.err && o.err.ResolvingError )
@@ -1209,7 +1209,7 @@ function performBegin()
     baseModule : it.baseModule,
     force : 0,
   });
-  _.assert( !_.property.own( it, 'currentThis' ) );
+  _.assert( !_.props.own( it, 'currentThis' ) );
 
   _.assert( it.iterationProper( it ) );
   if( !( it.currentContext instanceof _.will.AbstractModule2 ) )
@@ -1218,7 +1218,7 @@ function performBegin()
 
   _.assert( it.criterion === null || _.mapIs( it.criterion ) );
   _.assert( it.baseModule instanceof _.will.AbstractModule2 );
-  _.assert( !_.property.own( it, 'criterion' ) );
+  _.assert( !_.props.own( it, 'criterion' ) );
   _.assert( it.OriginalLooker === ResolverWillbe );
   _.assert( _.prototype.has( it.Looker, ResolverWillbe ) );
   _.assert( it.Looker.Iteration.currentModule !== undefined );
@@ -1480,7 +1480,7 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
-  _.routineOptionsPreservingUndefines( routine, o );
+  _.routine.options( routine, o );
   return o;
 }
 
@@ -1491,12 +1491,12 @@ function pathOrReflectorResolve_body( o )
   let resource;
 
   _.assert( _.aux.is( o ) );
-  _.assertRoutineOptionsPreservingUndefines( pathOrReflectorResolve_body, arguments );
+  _.routine.assertOptions( pathOrReflectorResolve_body, arguments );
   _.assert( !Self.selectorIs( o.selector ) );
   _.assert( o.pathResolving === 'in' );
   _.assert( !o.pathUnwrapping );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.missingAction = 'undefine';
   o2.selector = 'reflector::' + o.selector;
   resource = module.reflectorResolve( o2 );
@@ -1504,7 +1504,7 @@ function pathOrReflectorResolve_body( o )
   if( resource )
   return resource;
 
-  let o3 = _.mapExtend( null, o );
+  let o3 = _.props.extend( null, o );
   o3.missingAction = 'undefine';
   o3.selector = 'path::' + o.selector;
   resource = module.reflectorResolve( o3 );
@@ -1512,26 +1512,26 @@ function pathOrReflectorResolve_body( o )
   return resource;
 }
 
-var defaults = pathOrReflectorResolve_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+var defaults = pathOrReflectorResolve_body.defaults = _.props.extend( null, ResolverWillbe.Prime );
 
 defaults.pathResolving = 'in';
 defaults.missingAction = 'undefine';
 defaults.pathUnwrapping = 0;
 
-let pathOrReflectorResolve = _.routine.uniteCloning_( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
+let pathOrReflectorResolve = _.routine.uniteCloning_replaceByUnite( pathOrReflectorResolve_head, pathOrReflectorResolve_body );
 
 //
 
 function filesFromResource_head( routine, args )
 {
-  let o =_.routineOptionsPreservingUndefines( routine, args );
+  let o =_.routine.options( routine, args );
 
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefines( routine, o );
+  _.routine.options( routine, o );
   else
-  _.routineOptionsPreservingUndefines( null, o, routine );
+  _.routine.options( null, o, routine );
 
   let prefixlessAction = o.prefixlessAction;
   if( prefixlessAction === 'pathOrReflector' )
@@ -1659,7 +1659,7 @@ function filesFromResource_body( o )
 
 }
 
-var defaults = filesFromResource_body.defaults = _.mapExtend( null, ResolverWillbe.Prime );
+var defaults = filesFromResource_body.defaults = _.props.extend( null, ResolverWillbe.Prime );
 
 _.assert( ResolverWillbe.Prime.Looker === undefined );
 
@@ -1676,7 +1676,7 @@ defaults.withDirs = null;
 defaults.withTerminals = null;
 defaults.withStem = null;
 
-let filesFromResource = _.routine.uniteCloning_( filesFromResource_head, filesFromResource_body );
+let filesFromResource = _.routine.uniteCloning_replaceByUnite( filesFromResource_head, filesFromResource_body );
 
 _.assert( defaults.Looker === undefined );
 
@@ -1791,6 +1791,6 @@ let NamespaceExtension =
 
 }
 
-_.mapExtend( _.will.resolver, NamespaceExtension );
+_.props.extend( _.will.resolver, NamespaceExtension );
 
 })();

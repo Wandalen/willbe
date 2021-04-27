@@ -71,7 +71,7 @@ function stepsEach( o )
 
   if( _.routineIs( arguments[ 0 ] ) )
   o = { onEach : arguments[ 0 ] }
-  o = _.routineOptions( stepsEach, o );
+  o = _.routine.options_( stepsEach, o || null );
 
   each( build.steps );
 
@@ -255,7 +255,7 @@ function perform( o )
   will.readingEnd();
 
   _.assert( !!will.willfilesReadEndTime, 'Please, call "will.readingEnd" first' );
-  o = _.routineOptions( build.perform, arguments );
+  o = _.routine.options_( build.perform, arguments );
 
   if( !o.run )
   o.run = new _.will.BuildRun
@@ -375,7 +375,7 @@ function archiveFilePathFor()
   if( !criterions[ c ] )
   delete criterions[ c ];
 
-  let name = _.strJoinPath( [ module.about.name, _.mapKeys( criterions ).join( '-' ), '.out.tgs' ], '.' );
+  let name = _.strJoinPath( [ module.about.name, _.props.keys( criterions ).join( '-' ), '.out.tgs' ], '.' );
 
   return hd.path.resolve( module.outPath, name );
 }
