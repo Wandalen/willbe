@@ -29552,8 +29552,6 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-<<<<<<< HEAD
-=======
   let config;
   if( _.censor )
   config = _.censor.configRead();
@@ -29621,7 +29619,6 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
->>>>>>> 11fb9d55543e43eb1ed70fbb4ad0aad404e8345f
   /* */
 
   begin().then( () =>
@@ -32801,9 +32798,6 @@ original/f.txt
 
 //
 
-<<<<<<< HEAD
-function commandModulesRepoPullOpen( test )
-=======
 function commandModules( test )
 {
   let context = this;
@@ -33130,7 +33124,6 @@ commandSubmodules.rapidity = -1;
 //
 
 function commandGitCheckHardLinkRestoring( test )
->>>>>>> 11fb9d55543e43eb1ed70fbb4ad0aad404e8345f
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -41256,13 +41249,6 @@ function commandNpmInstall( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-<<<<<<< HEAD
-    var files = find( 'node_modules' );
-    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
-    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
-    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
-    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
-=======
     let configPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     let configWasPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
     test.identical( configPackage.name, configWasPackage.name );
@@ -41289,7 +41275,6 @@ function commandNpmInstall( test )
     let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
     let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
     test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
->>>>>>> 11fb9d55543e43eb1ed70fbb4ad0aad404e8345f
 
     test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
     test.identical( _.strCount( op.output, '> npm ci' ), 1 );
