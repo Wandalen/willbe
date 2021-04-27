@@ -56,7 +56,7 @@ const _ = _global_.wTools;
 function onSuiteBegin()
 {
   let context = this;
-  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
@@ -2047,7 +2047,6 @@ function openEach( test )
 
   a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.each . .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5179,7 +5178,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.hook.call info.js' )
   .then( ( op ) =>
@@ -5194,7 +5193,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.with . .hook.call info.js' )
   .then( ( op ) =>
@@ -5209,7 +5208,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.with * .hook.call info.js' )
   .then( ( op ) =>
@@ -5224,7 +5223,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5239,7 +5238,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5254,7 +5253,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5273,8 +5272,7 @@ function withDoInfo( test )
   /* - */
 
   return a.ready;
-
-} /* end of function withDoInfo */
+}
 
 withDoInfo.rapidity = -1;
 withDoInfo.timeOut = 300000;
@@ -5452,22 +5450,11 @@ function hookCallInfo( test )
   let a = context.assetFor( test, 'dos' );
   // aaa : modules for testing are still broken !!! /* Dmytro : fixed */
   // aaa : ?? /* Dmytro : a.appStart - mode : 'fork'; a.shell - mode : 'shell' */
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    mode : 'spawn',
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  });
-
   a.reflect();
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -9396,8 +9383,8 @@ function listSingleModule( test )
   {
     test.case = 'resources list globs negative';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1'  ) );
-    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2'  ) );
+    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1' ) );
+    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2' ) );
     test.true( _.strHas( op.output, 'reflector::reflect.proto.debug' ) );
     test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
     test.true( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
@@ -9416,12 +9403,12 @@ function listSingleModule( test )
     test.case = '.resources.list *proto*';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ) );
     test.true( _.strHas( op.output, `files.reflect` ) );
 
-    test.true( _.strHas( op.output, 'build::proto.export'  ) );
+    test.true( _.strHas( op.output, 'build::proto.export' ) );
     test.true( _.strHas( op.output, `step::export.proto` ) );
 
     return null;
@@ -9435,8 +9422,8 @@ function listSingleModule( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, `out.debug : './out/debug'` ) );
     test.true( !_.strHas( op.output, `reflector::reflect.proto.debug` ) );
-    test.true( !_.strHas( op.output, 'step::reflect.proto.debug'  ) );
-    test.true( !_.strHas( op.output, 'build::debug.raw'  ) );
+    test.true( !_.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'build::debug.raw' ) );
 
     return null;
   })
@@ -9448,11 +9435,11 @@ function listSingleModule( test )
     test.case = 'globs and criterions positive';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'path::proto'  ) );
+    test.true( _.strHas( op.output, 'path::proto' ) );
 
-    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ) );
     test.true( _.strHas( op.output, `files.reflect` ) );
 
     test.identical( _.strCount( op.output, '::' ), 12 );
@@ -9485,8 +9472,8 @@ function listSingleModule( test )
     test.case = '.resources.list * debug:0 raw:1';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.raw'  ) );
-    test.true( _.strHas( op.output, 'build::release.raw'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.raw' ) );
+    test.true( _.strHas( op.output, 'build::release.raw' ) );
     test.identical( _.strCount( op.output, '::' ), 7 );
 
     return null;
@@ -10546,7 +10533,7 @@ function exportSingle( test )
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
     var files = a.find( a.abs( 'out' ) );
-    test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
+    test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.true( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/single.out.will.yml' ) );
@@ -35120,7 +35107,8 @@ function commandGitStatusWithPR( test )
     a.shell
     ({
       currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+      execPath :
+      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
     });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
@@ -38028,7 +38016,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38093,7 +38081,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38465,7 +38453,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38500,7 +38488,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38841,7 +38829,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38906,7 +38894,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -39277,7 +39265,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -39312,7 +39300,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -41558,7 +41546,7 @@ function commandsSubmoduleSafety( test )
       if( routinesPre[ env.case ] )
       return routinesPre[ env.case ]( env ) || true;
       return null;
-    })
+    });
 
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
@@ -41922,7 +41910,7 @@ function commandSubmodulesUpdateOptionTo( test )
     ready : null
   })
 
-  a.init = ()=>
+  a.init = () =>
   {
     a.ready.then( () =>
     {
