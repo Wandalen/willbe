@@ -5117,7 +5117,8 @@ function hooksGet()
 // npm
 // --
 
-/* qqq : for Dmytro : move to npm tools. leave wrap here */
+/* aaa : for Dmytro : move to npm tools. leave wrap here */ /* Dmytro : moved, not me */
+
 function npmDepAdd( o )
 {
   let will = this;
@@ -5130,13 +5131,20 @@ function npmDepAdd( o )
   if( !o.localPath )
   o.localPath = path.current();
 
-  if( !o.as )
-  o.as = _.npm.fileReadName({ localPath : path.current() });
-
   if( o.depPath === '.' )
   o.depPath = 'hd://.'
-  if( path.parse( o.depPath ).protocol === 'hd' )
+
+  let parsed = path.parse( o.depPath );
+  if( parsed.protocol === 'hd' )
   o.depPath = path.join( path.current(), o.depPath );
+
+  // if( !o.as )
+  // o.as = _.npm.fileReadName({ localPath : path.current() });
+  if( !o.as )
+  if( parsed.protocol === 'hd' )
+  o.as = _.npm.fileReadName({ localPath : path.localsFromGlobals( o.depPath ) });
+  else
+  o.as = _.npm.fileReadName({ localPath : path.current() });
 
   _.assert( _.boolLikeFalse( o.editing ), 'not implemented' );
   _.assert( _.boolLikeTrue( o.downloading ), 'not implemented' );

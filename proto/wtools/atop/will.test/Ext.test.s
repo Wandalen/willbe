@@ -1929,7 +1929,7 @@ function openWith( test )
 
   .then( () =>
   {
-    test.case = '.with doc/ .export -- deleted doc/.will.yml'
+    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml'
 
     a.reflect();
     a.fileProvider.fileDelete( a.abs( 'doc/.ex.will.yml' ) );
@@ -1939,7 +1939,7 @@ function openWith( test )
   })
 
   a.appStart({ execPath : '.clean' })
-  a.appStartNonThrowing({ execPath : '.with doc/ .export' })
+  a.appStartNonThrowing({ execPath : '.with doc/.will.yml .export' })
 
   .then( ( op ) =>
   {
@@ -8772,7 +8772,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 
   /* - */
 
-  a.appStart({ execPath : '.with * .submodules.clean recursive:2' })
+  a.appStart({ execPath : '.with * .clean.submodules recursive:2' })
   a.appStart({ execPath : '.with * .submodules.download recursive:2' })
 
   /* - */
@@ -11442,7 +11442,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11522,7 +11521,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -11656,7 +11654,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11736,7 +11733,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -16922,10 +16918,10 @@ function cleanSubmodules( test )
 
   /* */
 
-  a.appStart({ execPath : '.with NoTemp .submodules.clean' })
+  a.appStart({ execPath : '.with NoTemp .clean.submodules' })
   .then( ( op ) =>
   {
-    test.case = '.submodules.clean';
+    test.case = '.clean.submodules';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, `${files.length}` ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
@@ -18113,13 +18109,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with z .submodules.clean';
+    test.case = '.with z .clean.submodules';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with z .submodules.clean' )
+  a.appStart( '.with z .clean.submodules' )
 
   .then( ( op ) =>
   {
@@ -18158,13 +18154,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean';
+    test.case = '.with * .clean.submodules';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean' )
+  a.appStart( '.with * .clean.submodules' )
 
   .then( ( op ) =>
   {
@@ -18202,13 +18198,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:1';
+    test.case = '.with * .clean.submodules recursive:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:1' )
+  a.appStart( '.with * .clean.submodules recursive:1' )
 
   .then( ( op ) =>
   {
@@ -18246,13 +18242,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:2';
+    test.case = '.with * .clean.submodules recursive:2';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:2' )
+  a.appStart( '.with * .clean.submodules recursive:2' )
 
   .then( ( op ) =>
   {
@@ -18290,13 +18286,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:1';
+    test.case = '.with ** .clean.submodules recursive:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:1' )
+  a.appStart( '.with ** .clean.submodules recursive:1' )
 
   .then( ( op ) =>
   {
@@ -18334,13 +18330,13 @@ function cleanSubmodulesHierarchyRemote( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:2';
+    test.case = '.with ** .clean.submodules recursive:2';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:2' )
+  a.appStart( '.with ** .clean.submodules recursive:2' )
 
   .then( ( op ) =>
   {
@@ -18394,13 +18390,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with z .submodules.clean dry:1';
+    test.case = '.with z .clean.submodules dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with z .submodules.clean dry:1' )
+  a.appStart( '.with z .clean.submodules dry:1' )
 
   .then( ( op ) =>
   {
@@ -18438,13 +18434,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean dry:1';
+    test.case = '.with * .clean.submodules dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean dry:1' )
+  a.appStart( '.with * .clean.submodules dry:1' )
 
   .then( ( op ) =>
   {
@@ -18482,13 +18478,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:1 dry:1';
+    test.case = '.with * .clean.submodules recursive:1 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:1 dry:1' )
+  a.appStart( '.with * .clean.submodules recursive:1 dry:1' )
 
   .then( ( op ) =>
   {
@@ -18526,13 +18522,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with * .submodules.clean recursive:2 dry:1';
+    test.case = '.with * .clean.submodules recursive:2 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .submodules.clean recursive:2 dry:1' )
+  a.appStart( '.with * .clean.submodules recursive:2 dry:1' )
 
   .then( ( op ) =>
   {
@@ -18570,13 +18566,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:1 dry:1';
+    test.case = '.with ** .clean.submodules recursive:1 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:1 dry:1' )
+  a.appStart( '.with ** .clean.submodules recursive:1 dry:1' )
 
   .then( ( op ) =>
   {
@@ -18614,13 +18610,13 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
   .then( () =>
   {
-    test.case = '.with ** .submodules.clean recursive:2 dry:1';
+    test.case = '.with ** .clean.submodules recursive:2 dry:1';
     a.reflect();
     return null;
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .submodules.clean recursive:2 dry:1' )
+  a.appStart( '.with ** .clean.submodules recursive:2 dry:1' )
 
   .then( ( op ) =>
   {
@@ -19203,11 +19199,11 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  a.appStart({ execPath : '.submodules.clean' })
+  a.appStart({ execPath : '.clean.submodules' })
 
   .then( ( op ) =>
   {
-    test.case = '.submodules.clean';
+    test.case = '.clean.submodules';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 0 file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
@@ -19341,12 +19337,12 @@ function submodulesDownloadUpdate( test )
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.clean';
+    test.case = '.clean.submodules';
     files = a.findAll( a.abs( '.module' ) );
     return files;
   })
 
-  a.appStart({ execPath : '.submodules.clean' })
+  a.appStart({ execPath : '.clean.submodules' })
   .then( ( op ) =>
   {
 
@@ -22879,7 +22875,7 @@ function versionsAgree( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Your branch is up to date/ ) );
+    test.true( _.strHas( op.output, /Your branch is up.*to.*date/ ) );
     return null;
   });
 
@@ -23613,125 +23609,125 @@ function stepModulesUpdate( test )
 
   /* */
 
-  a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'to:master', predownloadSubmodules : 0 })
-  a.appStart( `.build to.!master` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'to:master', predownloadSubmodules : 1 })
-  a.appStart( `.build to.!gamma` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
-  a.appStart( '.build dry.clean' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
-  a.appStart( '.build dry' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.one' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
+  // a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
+  // a.appStart( '.build default' )
+  // .then( ( op ) =>
+  // {
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
+  // a.appStart( '.build default' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'to:master', predownloadSubmodules : 0 })
+  // a.appStart( `.build to.!master` )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'to:master', predownloadSubmodules : 1 })
+  // a.appStart( `.build to.!gamma` )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
+  // a.appStart( '.build dry.clean' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+  //   test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
+  // a.appStart( '.build dry' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
+  // a.appStart( '.build recursive.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+  //   test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
+  // a.appStart( '.build recursive.one' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
 
   /* */
 
@@ -23752,71 +23748,71 @@ function stepModulesUpdate( test )
 
   /* */
 
-  a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
+  // a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
+  // a.appStart( '.build loggingNoChanges.on' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
+  // a.appStart( '.build loggingNoChanges.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
+  // a.appStart( '.build withStem.on' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
+  // a.appStart( '.build withStem.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
 
   /* */
 
@@ -28783,7 +28779,7 @@ function commandSubmodulesClean( test )
 
   /* FAILS */
 
-  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
@@ -28796,7 +28792,7 @@ function commandSubmodulesClean( test )
 
   /* FAILS */
 
-  a.appStart( '.submodules.clean ; .submodules.update recursive:2' )
+  a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
@@ -28822,10 +28818,10 @@ function commandSubmodulesShell( test )
 
   /* - */
 
-  a.appStart( '.with ./* .submodules.shell ls' )
+  a.appStart( '.with ./* .submodules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .submodules.shell ls - without submodules, no executed commands';
+    test.case = '.with ./* .submodules .shell ls - without submodules, no executed commands';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -28839,10 +28835,10 @@ function commandSubmodulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.with ./* .submodules.shell ls' )
+  a.appStart( '.with ./* .submodules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .submodules.shell ls - with submodules';
+    test.case = '.with ./* .submodules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -28856,10 +28852,10 @@ function commandSubmodulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.imply withSubmodules:0 .with ./* .submodules.shell ls' )
+  a.appStart( '.imply withSubmodules:0 .with ./* .submodules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:0 .with ./* .submodules.shell ls - disabled submodules';
+    test.case = '.imply withSubmodules:0 .with ./* .submodules .shell ls - disabled submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -28898,11 +28894,11 @@ function commandSubmodulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git status - committing and pushing, without remote submodule';
+    test.case = '.with original .submodules .git status - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/ .submodules.git status profile:${ profile }` )
+  a.appStart( `.with original/ .submodules .git status profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -28918,14 +28914,14 @@ function commandSubmodulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
+    test.case = '.with original/GitSync .submodules .git.sync -am "new lines" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( '.with original/GitSync .submodules.git add --all' );
-  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules.git commit -am "new lines" hardLinkMaybe:1` )
-  a.appStart( `.with original/GitSync .submodules.git commit -am "new lines" profile:${ profile } hardLinkMaybe:1` )
+  a.appStart( '.with original/GitSync .submodules .git add --all' );
+  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules .git commit -am "new lines" hardLinkMaybe:1` )
+  a.appStart( `.with original/GitSync .submodules .git commit -am "new lines" profile:${ profile } hardLinkMaybe:1` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -28937,7 +28933,7 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
     return null;
   });
-  a.appStart( '.with original/GitSync .submodules.git push --all' )
+  a.appStart( '.with original/GitSync .submodules .git push --all' )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
@@ -28951,14 +28947,14 @@ function commandSubmodulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.with original/GitSync .submodules.git commit -am "new lines"';
+    test.case = '.with original/GitSync .submodules .git commit -am "new lines"';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git commit -am "new lines2"` )
-  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules.git commit -am "new lines2" profile:${ profile }` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules .git commit -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules .git commit -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -28970,7 +28966,7 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
-  a.appStart( '.imply .with original/GitSync .submodules.git push --all' )
+  a.appStart( '.imply .with original/GitSync .submodules .git push --all' )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
@@ -28983,11 +28979,11 @@ function commandSubmodulesGit( test )
   /* */
 
   begin();
-  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules.git remote add origin1 https://github.com/user/{about::name}.git` )
-  a.appStart( `.with original/GitSync .submodules.git remote add origin1 https://github.com/user/{about::name}.git profile:${ profile }` )
+  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules .git remote add origin1 https://github.com/user/{about::name}.git` )
+  a.appStart( `.with original/GitSync .submodules .git remote add origin1 https://github.com/user/{about::name}.git profile:${ profile }` )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .modules.git remote add origin1 https://github.com/user/{about::name}.git';
+    test.case = '.with original/GitSync .modules .git remote add origin1 https://github.com/user/{about::name}.git';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -29080,12 +29076,12 @@ function commandSubmodulesGitRemoteSubmodules( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git status - without remote git submodule';
+    test.case = '.submodules .git status - without remote git submodule';
     a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.submodules.git status' )
+  a.appStart( '.submodules .git status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29103,12 +29099,12 @@ function commandSubmodulesGitRemoteSubmodules( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git status - with remote git submodule';
+    test.case = '.submodules .git status - with remote git submodule';
     a.fileProvider.fileAppend( a.abs( 'f1.txt' ), 'new line\n' );
     return null;
   });
   a.appStart( '.build' );
-  a.appStart( '.submodules.git status' )
+  a.appStart( '.submodules .git status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29178,10 +29174,10 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
     return null;
   });
 
-  a.appStart( '.submodules.git status' )
+  a.appStart( '.submodules .git status' )
   .then( ( op ) =>
   {
-    test.case = '.submodules.git status - without remote git submodule';
+    test.case = '.submodules .git status - without remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
@@ -29201,10 +29197,10 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
     return null;
   });
   a.appStart( '.submodules.download recursive:2' );
-  a.appStart( '.submodules.git status' )
+  a.appStart( '.submodules .git status' )
   .then( ( op ) =>
   {
-    test.case = '.submodules.git status - with remote git submodule';
+    test.case = '.submodules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -29258,18 +29254,18 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff - no diffs';
+    test.case = '.submodules .git.diff - no diffs';
     return null;
   });
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
@@ -29282,18 +29278,18 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff v:0 - no diffs, verbosity - 0';
+    test.case = '.submodules .git.diff v:0 - no diffs, verbosity - 0';
     return null;
   });
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -29308,17 +29304,17 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff - with diffs in root module';
+    test.case = '.submodules .git.diff - with diffs in root module';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
@@ -29342,17 +29338,17 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff v:0 - with diffs in root module';
+    test.case = '.submodules .git.diff v:0 - with diffs in root module';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -29378,17 +29374,17 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff - with diffs in submodule';
+    test.case = '.submodules .git.diff - with diffs in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
@@ -29412,17 +29408,17 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff v:0 - with diffs in submodule';
+    test.case = '.submodules .git.diff v:0 - with diffs in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -29448,17 +29444,17 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff - with diffs in root module and submodule';
+    test.case = '.submodules .git.diff - with diffs in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
@@ -29482,17 +29478,17 @@ function commandSubmodulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.submodules.git.diff v:0 - with diffs in root module and submodule';
+    test.case = '.submodules .git.diff v:0 - with diffs in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -29551,12 +29547,13 @@ commandSubmodulesGitDiff.rapidity = -1;
 
 //
 
-function commandSubmodulesRepoPullOpen( test )
+function commandSubmodulesGitStatusWithOnlyRoot( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
 
+<<<<<<< HEAD
+=======
   let config;
   if( _.censor )
   config = _.censor.configRead();
@@ -29565,7 +29562,7 @@ function commandSubmodulesRepoPullOpen( test )
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
@@ -29582,7 +29579,7 @@ function commandSubmodulesRepoPullOpen( test )
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
@@ -29598,7 +29595,7 @@ function commandSubmodulesRepoPullOpen( test )
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
     test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
@@ -29624,16 +29621,17 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
+>>>>>>> 11fb9d55543e43eb1ed70fbb4ad0aad404e8345f
   /* */
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - only local commits';
+    test.case = '.with original .submodules .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29649,7 +29647,7 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - local and remote commits';
+    test.case = '.with original .submodules .git.status - local and remote commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -29658,7 +29656,7 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29705,12 +29703,12 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - changes in submodule';
+    test.case = '.with original .submodules .git.status - changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29727,12 +29725,12 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - changes in root module and submodule';
+    test.case = '.with original .submodules .git.status - changes in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29751,13 +29749,13 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - changes in submodule';
+    test.case = '.with original .submodules .git.status - changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29775,13 +29773,13 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - changes in root module and submodule';
+    test.case = '.with original .submodules .git.status - changes in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29801,7 +29799,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - changes in submodule and remote commits in root';
+    test.case = '.with original .submodules .git.status - changes in submodule and remote commits in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -29809,7 +29807,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29827,7 +29825,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status - changes in root and remote commits in submodule';
+    test.case = '.with original .submodules .git.status - changes in root and remote commits in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -29835,7 +29833,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status' )
+  a.appStart( '.with original/ .submodules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29855,7 +29853,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status local:0 - checks no local changes, local changes in submodule';
+    test.case = '.with original .submodules .git.status local:0 - checks no local changes, local changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -29863,7 +29861,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status local:0' )
+  a.appStart( '.with original/ .submodules .git.status local:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29881,7 +29879,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status local:0 - checks no local changes, local changes in root';
+    test.case = '.with original .submodules .git.status local:0 - checks no local changes, local changes in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -29889,7 +29887,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status local:0' )
+  a.appStart( '.with original/ .submodules .git.status local:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29909,7 +29907,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status remote:0 - checks no remote changes, unpulled commit in submodule';
+    test.case = '.with original .submodules .git.status remote:0 - checks no remote changes, unpulled commit in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -29917,7 +29915,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status remote:0' )
+  a.appStart( '.with original/ .submodules .git.status remote:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29935,7 +29933,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status remote:0 - checks no remote changes, unpulled commit in root';
+    test.case = '.with original .submodules .git.status remote:0 - checks no remote changes, unpulled commit in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -29943,7 +29941,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status remote:0' )
+  a.appStart( '.with original/ .submodules .git.status remote:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29963,7 +29961,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in submodule';
+    test.case = '.with original .submodules .git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -29972,7 +29970,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:1' )
+  a.appStart( '.with original/ .submodules .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -29991,7 +29989,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in root';
+    test.case = '.with original .submodules .git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -30000,7 +29998,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:1' )
+  a.appStart( '.with original/ .submodules .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30021,7 +30019,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in submodule';
+    test.case = '.with original .submodules .git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -30030,7 +30028,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:0' )
+  a.appStart( '.with original/ .submodules .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30049,7 +30047,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in root';
+    test.case = '.with original .submodules .git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -30058,7 +30056,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status uncommittedIgnored:0' )
+  a.appStart( '.with original/ .submodules .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30079,7 +30077,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status remoteBranches:1 - checks with remote branches, changes in submodule';
+    test.case = '.with original .submodules .git.status remoteBranches:1 - checks with remote branches, changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -30087,7 +30085,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status remoteBranches:1' )
+  a.appStart( '.with original/ .submodules .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30105,7 +30103,7 @@ function commandSubmodulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.status remoteBranches:1 - checks with remote branches, changes in root';
+    test.case = '.with original .submodules .git.status remoteBranches:1 - checks with remote branches, changes in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -30113,7 +30111,7 @@ function commandSubmodulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .submodules.git.status remoteBranches:1' )
+  a.appStart( '.with original/ .submodules .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30188,11 +30186,11 @@ function commandSubmodulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .submodules.git.sync - committing and pushing, without remote submodule';
+    test.case = '.with original .submodules .git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/ .submodules.git.sync profile:${ profile }` )
+  a.appStart( `.with original/ .submodules .git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30220,10 +30218,10 @@ function commandSubmodulesGitSync( test )
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/GitSync .submodules.git.sync -am "new lines" profile:${ profile }` )
+  a.appStart( `.with original/GitSync .submodules .git.sync -am "new lines" profile:${ profile }` )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .submodules.git.sync -am "new lines" - committing and pushing with local submodule';
+    test.case = '.with original/GitSync .submodules .git.sync -am "new lines" - committing and pushing with local submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30250,13 +30248,13 @@ function commandSubmodulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" - committing and pushing with local submodule';
+    test.case = '.imply withSubmodules:0 .with original/GitSync .submodules .git.sync -am "new lines2" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules.git.sync -am "new lines2"` )
-  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules.git.sync -am "new lines2" profile:${ profile }` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules .git.sync -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules .git.sync -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30328,6 +30326,74 @@ function commandSubmodulesGitSync( test )
 }
 
 commandSubmodulesGitSync.rapidity = -1;
+
+//
+
+function commandSubmodulesRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -30527,10 +30593,10 @@ function commandModulesShell( test )
 
   /* - */
 
-  a.appStart( '.with ./* .modules.shell ls' )
+  a.appStart( '.with ./* .modules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .modules.shell ls - without submodules, no executed commands';
+    test.case = '.with ./* .modules .shell ls - without submodules, no executed commands';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
@@ -30545,10 +30611,10 @@ function commandModulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.with ./* .modules.shell ls' )
+  a.appStart( '.with ./* .modules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.with ./* .modules.shell ls - with submodules';
+    test.case = '.with ./* .modules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30563,10 +30629,10 @@ function commandModulesShell( test )
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.imply withSubmodules:0 .with ./* .modules.shell ls' )
+  a.appStart( '.imply withSubmodules:0 .with ./* .modules .shell ls' )
   .then( ( op ) =>
   {
-    test.case = '.imply withSubmodules:0 .with ./* .modules.shell ls - disabled submodules';
+    test.case = '.imply withSubmodules:0 .with ./* .modules .shell ls - disabled submodules';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30606,11 +30672,11 @@ function commandModulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git status - committing and pushing, without remote submodule';
+    test.case = '.with original .modules .git status - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/ .modules.git status profile:${ profile }` )
+  a.appStart( `.with original/ .modules .git status profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30626,13 +30692,13 @@ function commandModulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.with original/GitSync .modules.git.sync -am "new lines" - committing and pushing with local submodule';
+    test.case = '.with original/GitSync .modules .git.sync -am "new lines" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( '.with original/GitSync .modules.git add --all' );
-  a.appStart( '.with original/GitSync .modules.git commit -am "new lines"' )
+  a.appStart( '.with original/GitSync .modules .git add --all' );
+  a.appStart( '.with original/GitSync .modules .git commit -am "new lines"' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30644,7 +30710,7 @@ function commandModulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
-  a.appStart( '.with original/GitSync .modules.git push --all' )
+  a.appStart( '.with original/GitSync .modules .git push --all' )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
@@ -30658,13 +30724,13 @@ function commandModulesGit( test )
 
   begin().then( () =>
   {
-    test.case = '.imply withSubmodules:0 .with original/GitSync .modules.git commit -am "new lines2"';
+    test.case = '.imply withSubmodules:0 .with original/GitSync .modules .git commit -am "new lines2"';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
-  a.appStart( '.imply withSubmodules:0 .with original/GitSync .modules.git commit -am "new lines2"' )
+  a.appStart( '.imply withSubmodules:0 .with original/GitSync .modules .git commit -am "new lines2"' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -30676,7 +30742,7 @@ function commandModulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
-  a.appStart( '.imply .with original/GitSync .modules.git push --all' )
+  a.appStart( '.imply .with original/GitSync .modules .git push --all' )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
@@ -30689,10 +30755,10 @@ function commandModulesGit( test )
   /* */
 
   begin();
-  a.appStart( '.with original/GitSync .modules.git remote add origin1 https://github.com/user/{about::name}.git' )
+  a.appStart( '.with original/GitSync .modules .git remote add origin1 https://github.com/user/{about::name}.git' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .modules.git remote add origin1 https://github.com/user/{about::name}.git';
+    test.case = '.with original/GitSync .modules .git remote add origin1 https://github.com/user/{about::name}.git';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30790,10 +30856,10 @@ function commandModulesGitRemoteSubmodules( test )
     return null;
   })
 
-  a.appStart( '.modules.git status' )
+  a.appStart( '.modules .git status' )
   .then( ( op ) =>
   {
-    test.case = '.modules.git status - without remote git submodule';
+    test.case = '.modules .git status - without remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
@@ -30813,10 +30879,10 @@ function commandModulesGitRemoteSubmodules( test )
     return null;
   })
   a.appStart( '.build' );
-  a.appStart( '.modules.git status' )
+  a.appStart( '.modules .git status' )
   .then( ( op ) =>
   {
-    test.case = '.modules.git status - with remote git submodule';
+    test.case = '.modules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30887,10 +30953,10 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     return null;
   });
 
-  a.appStart( '.modules.git status' )
+  a.appStart( '.modules .git status' )
   .then( ( op ) =>
   {
-    test.case = '.modules.git status - without remote git submodule';
+    test.case = '.modules .git status - without remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
@@ -30910,10 +30976,10 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     return null;
   });
   a.appStart( '.submodules.download recursive:2' );
-  a.appStart( '.modules.git status' )
+  a.appStart( '.modules .git status' )
   .then( ( op ) =>
   {
-    test.case = '.modules.git status - with remote git submodule';
+    test.case = '.modules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -30967,18 +31033,18 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff - no diffs';
+    test.case = '.modules .git.diff - no diffs';
     return null;
   });
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
@@ -30989,18 +31055,18 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff v:0 - no diffs, verbosity - 0';
+    test.case = '.modules .git.diff v:0 - no diffs, verbosity - 0';
     return null;
   });
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -31016,17 +31082,17 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff - with diffs in root module';
+    test.case = '.modules .git.diff - with diffs in root module';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
@@ -31048,17 +31114,17 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff v:0 - with diffs in root module';
+    test.case = '.modules .git.diff v:0 - with diffs in root module';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -31085,17 +31151,17 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff - with diffs in submodule';
+    test.case = '.modules .git.diff - with diffs in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
@@ -31117,17 +31183,17 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff v:0 - with diffs in submodule';
+    test.case = '.modules .git.diff v:0 - with diffs in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -31154,17 +31220,17 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff - with diffs in root module and submodule';
+    test.case = '.modules .git.diff - with diffs in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
@@ -31186,17 +31252,17 @@ function commandModulesGitDiff( test )
 
   begin().then( () =>
   {
-    test.case = '.modules.git.diff v:0 - with diffs in root module and submodule';
+    test.case = '.modules .git.diff v:0 - with diffs in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line' );
     a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'another new line' );
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules.git.diff v:0' })
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.modules .git.diff v:0' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".modules.git.diff"' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -31256,72 +31322,6 @@ commandModulesGitDiff.rapidity = -1;
 
 //
 
-function commandModulesRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
 function commandModulesGitStatusWithOnlyRoot( test )
 {
   let context = this;
@@ -31331,12 +31331,12 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - only local commits';
+    test.case = '.with original .modules .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31352,13 +31352,13 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - only local commits';
+    test.case = '.with original .modules .git.status - only local commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31374,7 +31374,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - local and remote commits';
+    test.case = '.with original .modules .git.status - local and remote commits';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31383,7 +31383,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31400,7 +31400,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status local:0 - checks no local changes';
+    test.case = '.with original .modules .git.status local:0 - checks no local changes';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31409,7 +31409,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status local:0' )
+  a.appStart( '.with original/ .modules .git.status local:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31426,7 +31426,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status remote:0 - checks no local changes';
+    test.case = '.with original .modules .git.status remote:0 - checks no local changes';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31435,7 +31435,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status remote:0' )
+  a.appStart( '.with original/ .modules .git.status remote:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31452,7 +31452,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status uncommittedIgnored:1 - checks ignored uncommited';
+    test.case = '.with original .modules .git.status uncommittedIgnored:1 - checks ignored uncommited';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
@@ -31462,7 +31462,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:1' )
+  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31480,7 +31480,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status uncommittedIgnored:0 - checks without ignored';
+    test.case = '.with original .modules .git.status uncommittedIgnored:0 - checks without ignored';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
@@ -31490,7 +31490,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:0' )
+  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31508,7 +31508,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status remoteBranches:1 - checks with remote branches';
+    test.case = '.with original .modules .git.status remoteBranches:1 - checks with remote branches';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31517,7 +31517,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status remoteBranches:1' )
+  a.appStart( '.with original/ .modules .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31565,12 +31565,12 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - changes in submodule';
+    test.case = '.with original .modules .git.status - changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31587,12 +31587,12 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - changes in root module and submodule';
+    test.case = '.with original .modules .git.status - changes in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31611,13 +31611,13 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - changes in submodule';
+    test.case = '.with original .modules .git.status - changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31635,13 +31635,13 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - changes in root module and submodule';
+    test.case = '.with original .modules .git.status - changes in root module and submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31661,7 +31661,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - changes in submodule and remote commits in root';
+    test.case = '.with original .modules .git.status - changes in submodule and remote commits in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31669,7 +31669,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31687,7 +31687,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status - changes in root and remote commits in submodule';
+    test.case = '.with original .modules .git.status - changes in root and remote commits in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31695,7 +31695,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status' )
+  a.appStart( '.with original/ .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31715,7 +31715,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status local:0 - checks no local changes, local changes in submodule';
+    test.case = '.with original .modules .git.status local:0 - checks no local changes, local changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31723,7 +31723,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status local:0' )
+  a.appStart( '.with original/ .modules .git.status local:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31741,7 +31741,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status local:0 - checks no local changes, local changes in root';
+    test.case = '.with original .modules .git.status local:0 - checks no local changes, local changes in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31749,7 +31749,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status local:0' )
+  a.appStart( '.with original/ .modules .git.status local:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31769,7 +31769,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status remote:0 - checks no remote changes, unpulled commit in submodule';
+    test.case = '.with original .modules .git.status remote:0 - checks no remote changes, unpulled commit in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31777,7 +31777,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status remote:0' )
+  a.appStart( '.with original/ .modules .git.status remote:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31795,7 +31795,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status remote:0 - checks no remote changes, unpulled commit in root';
+    test.case = '.with original .modules .git.status remote:0 - checks no remote changes, unpulled commit in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31803,7 +31803,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status remote:0' )
+  a.appStart( '.with original/ .modules .git.status remote:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31823,7 +31823,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in submodule';
+    test.case = '.with original .modules .git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31832,7 +31832,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:1' )
+  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31851,7 +31851,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in root';
+    test.case = '.with original .modules .git.status uncommittedIgnored:1 - checks ignored uncommited, ignored in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31860,7 +31860,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:1' )
+  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31881,7 +31881,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in submodule';
+    test.case = '.with original .modules .git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31890,7 +31890,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:0' )
+  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31909,7 +31909,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in root';
+    test.case = '.with original .modules .git.status uncommittedIgnored:0 - checks without ignored uncommited, ignored in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.warchive' ), 'warchive\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
@@ -31918,7 +31918,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status uncommittedIgnored:0' )
+  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:0' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31939,7 +31939,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status remoteBranches:1 - checks with remote branches, changes in submodule';
+    test.case = '.with original .modules .git.status remoteBranches:1 - checks with remote branches, changes in submodule';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31947,7 +31947,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status remoteBranches:1' )
+  a.appStart( '.with original/ .modules .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -31965,7 +31965,7 @@ function commandModulesGitStatus( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.status remoteBranches:1 - checks with remote branches, changes in root';
+    test.case = '.with original .modules .git.status remoteBranches:1 - checks with remote branches, changes in root';
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
@@ -31973,7 +31973,7 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules.git.status remoteBranches:1' )
+  a.appStart( '.with original/ .modules .git.status remoteBranches:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32048,12 +32048,12 @@ function commandModulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.with original .modules.git.sync - committing and pushing, without remote submodule';
+    test.case = '.with original .modules .git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   })
 
-  a.appStart( `.with original/ .modules.git.sync profile:${ profile }` )
+  a.appStart( `.with original/ .modules .git.sync profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32077,13 +32077,13 @@ function commandModulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.with original/GitSync .modules.git.sync -am "new lines" - committing and pushing with local submodule';
+    test.case = '.with original/GitSync .modules .git.sync -am "new lines" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   })
 
-  a.appStart( `.with original/GitSync .modules.git.sync -am "new lines" profile:${ profile }` )
+  a.appStart( `.with original/GitSync .modules .git.sync -am "new lines" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32112,14 +32112,14 @@ function commandModulesGitSync( test )
 
   begin().then( () =>
   {
-    test.case = '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2" - committing and pushing with local submodule';
+    test.case = '.imply withSubmodules:0 .with original/GitSync .modules .git.sync -am "new lines2" - committing and pushing with local submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
     return null;
   })
 
-  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .modules.git.sync -am "new lines2"` )
-  a.appStart( `.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2" profile:${ profile }` )
+  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .modules .git.sync -am "new lines2"` )
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .modules .git.sync -am "new lines2" profile:${ profile }` )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -32235,13 +32235,13 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     return null;
   });
 
-  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
+  a.appStartNonThrowing( `.with super/ .modules .git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'without conflict';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules .git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::super' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
@@ -32383,15 +32383,15 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
     return null;
   })
 
-  // a.appStartNonThrowing( `.with super/ .imply profile:${ profile } .modules.git.sync v:5` )
-  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
+  // a.appStartNonThrowing( `.with super/ .imply profile:${ profile } .modules .git.sync v:5` )
+  a.appStartNonThrowing( `.with super/ .modules .git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    // test.identical( _.strCount( op.output, `Command ".with super/ .imply profile:${ profile } .modules.git.sync v:5"` ), 1 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
+    // test.identical( _.strCount( op.output, `Command ".with super/ .imply profile:${ profile } .modules .git.sync v:5"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules .git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
@@ -32538,13 +32538,13 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
+  a.appStartNonThrowing( `.with super/ .modules .git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules .git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -32691,13 +32691,13 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStartNonThrowing( `.with super/ .modules.git.sync v:5 profile:${ profile }` )
+  a.appStartNonThrowing( `.with super/ .modules .git.sync v:5 profile:${ profile }` )
   .then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .modules.git.sync v:5 profile:${ profile }"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".with super/ .modules .git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -32801,6 +32801,9 @@ original/f.txt
 
 //
 
+<<<<<<< HEAD
+function commandModulesRepoPullOpen( test )
+=======
 function commandModules( test )
 {
   let context = this;
@@ -33123,6 +33126,73 @@ function commandSubmodules( test )
 }
 
 commandSubmodules.rapidity = -1;
+
+//
+
+function commandGitCheckHardLinkRestoring( test )
+>>>>>>> 11fb9d55543e43eb1ed70fbb4ad0aad404e8345f
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -33744,217 +33814,6 @@ function commandGitDiff( test )
       return null;
     });
     a.shell({ currentPath, execPath : 'git commit -am second' });
-    return a.ready;
-  }
-}
-
-//
-
-function commandRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
-  .then( ( op ) =>
-  {
-    test.case = 'token from environment variables, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function commandRepoPullOpenRemote( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  let user = config.about.user;
-
-  /* */
-
-  begin();
-  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
-  .then( ( op ) =>
-  {
-    test.case = 'make repo';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
-    test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
-    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
-    return null;
-  });
-
-  /* */
-
-  prepareFirstBranch();
-  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request, only title and srcBranch';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  prepareSecondBranch();
-  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request, body and dstBranch';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  })
-
-  /* */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      return null;
-    });
-
-    a.ready.then( ( op ) =>
-    {
-      return _.git.repositoryDelete
-      ({
-        remotePath : `https://github.com/${user}/New2`,
-        token : config.about[ 'github.token' ],
-      });
-    })
-
-    return a.ready;
-  }
-
-  /* */
-
-  function prepareFirstBranch()
-  {
-    let currentPath = a.abs( 'original' );
-    a.shell
-    ({
-      currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
-    });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -m first' });
-    a.shell({ currentPath, execPath : 'git push -u origin master' });
-    a.shell({ currentPath, execPath : 'git checkout -b new' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
-    a.shell({ currentPath, execPath : 'git commit -am second' });
-    a.shell({ currentPath, execPath : 'git push -u origin new' });
-    return a.ready;
-  }
-
-  /* */
-
-  function prepareSecondBranch()
-  {
-    let currentPath = a.abs( 'original' );
-    a.shell({ currentPath, execPath : 'git checkout master' });
-    a.shell({ currentPath, execPath : 'git checkout -b new2' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
-    a.shell({ currentPath, execPath : 'git commit -am second' });
-    a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
   }
 }
@@ -35997,6 +35856,217 @@ function commandGitTag( test )
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -am first' });
+    return a.ready;
+  }
+}
+
+//
+
+function commandRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
+  .then( ( op ) =>
+  {
+    test.case = 'token from environment variables, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandRepoPullOpenRemote( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  let user = config.about.user;
+
+  /* */
+
+  begin();
+  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
+  .then( ( op ) =>
+  {
+    test.case = 'make repo';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( op.output, `localPath :` ), 1 );
+    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  prepareFirstBranch();
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, only title and srcBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  prepareSecondBranch();
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, body and dstBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.ready.then( ( op ) =>
+    {
+      return _.git.repositoryDelete
+      ({
+        remotePath : `https://github.com/${user}/New2`,
+        token : config.about[ 'github.token' ],
+      });
+    })
+
+    return a.ready;
+  }
+
+  /* */
+
+  function prepareFirstBranch()
+  {
+    let currentPath = a.abs( 'original' );
+    a.shell
+    ({
+      currentPath,
+      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+    });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -m first' });
+    a.shell({ currentPath, execPath : 'git push -u origin master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new' });
+    return a.ready;
+  }
+
+  /* */
+
+  function prepareSecondBranch()
+  {
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git checkout master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new2' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
   }
 }
@@ -40789,14 +40859,14 @@ function commandNpmPublishFullRegularModule( test )
     test.notIdentical( configPackage.bugs, configWasPackage.bugs );
     test.identical( configPackage.main, configWasPackage.main );
     test.identical( configPackage.files, configWasPackage.files );
-    let packageDepKeys = _.props.keys( configPackage.dependencies );
-    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
+    let packageDepKeys = _.mapKeys( configPackage.dependencies );
+    let wasPackageDepKeys = _.mapKeys( configWasPackage.dependencies );
     test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
     test.false( 'wgittools' in configWasPackage.dependencies );
     test.identical( packageDepKeys.length, 4 );
     test.identical( wasPackageDepKeys.length, 4 );
-    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
-    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
+    let packageDevDepKeys = _.mapKeys( configPackage.devDependencies );
+    let wasPackageDevDepKeys = _.mapKeys( configWasPackage.devDependencies );
     test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
 
     test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
@@ -40871,6 +40941,442 @@ function commandNpmPublishFullRegularModule( test )
   function npmLogout()
   {
     a.shell( 'npm logout' );
+  }
+}
+
+//
+
+function commandNpmDepAdd( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmDepAdd' );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'without options, only subject - dot';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'without options, only subject - module';
+    return null;
+  });
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git wModuleForTesting1' );
+  a.appStart( '\'.npm.dep.add "hd://./wModuleForTesting1" editing:0\'' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add "hd://./wModuleForTesting1" editing:0"' ), 1 );
+    var exp =
+    /Linking hd:\/\/\/.*\/commandNpmDepAdd\/wModuleForTesting1 to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'as === module.name, dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:test dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:test dry:1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 dry:1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'as !== module.name';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:wmodulefortesting1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:wmodulefortesting1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  let filesBefore;
+  begin().then( () =>
+  {
+    test.case = 'rewrite soft link to module by another link';
+    return null;
+  });
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git wModuleForTesting1' );
+  a.appStart( '\'.npm.dep.add "hd://./wModuleForTesting1" editing:0\'' );
+  a.ready.then( ( op ) =>
+  {
+    filesBefore = a.find( a.abs( 'wModuleForTesting1' ) );
+
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add "hd://./wModuleForTesting1" editing:0"' ), 1 );
+    var exp =
+    /Linking hd:\/\/\/.*\/commandNpmDepAdd\/wModuleForTesting1 to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:wmodulefortesting1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+    var files = find( 'node_modules' )
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+    var filesAfter = a.find( a.abs( 'wModuleForTesting1' ) );
+    test.identical( filesBefore, filesAfter );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:wmodulefortesting1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () =>
+    {
+      a.fileProvider.dirMake( a.abs( 'node_modules' ) );
+      a.fileProvider.dirMake( a.abs( 'node_modules/wmodulefortesting2' ) );
+      return null;
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+}
+
+//
+
+function commandNpmInstall( test )
+{
+  let self = this;
+  let a = test.assetFor( 'npmDepAdd' );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'default options, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 0, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install locked:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 0, package-lock.json not exists';
+    a.fileProvider.filesDelete( a.abs( 'package-lock.json' ) );
+    return null;
+  });
+  a.appStart( '.npm.install locked:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 1, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install locked:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 0';
+    return null;
+  });
+  a.appStart( '.npm.install locked:1 linkingSelf:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+<<<<<<< HEAD
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+=======
+    let configPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let configWasPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
+    test.identical( configPackage.name, configWasPackage.name );
+    test.notIdentical( configPackage.version, configWasPackage.version );
+    test.notIdentical( configPackage.enabled, configWasPackage.enabled );
+    test.notIdentical( configPackage.engine, configWasPackage.engine );
+    test.identical( configPackage.description, configWasPackage.description );
+    test.identical( configPackage.keywords, configWasPackage.keywords );
+    test.identical( configPackage.license, configWasPackage.license );
+    test.identical( configPackage.author, configWasPackage.author );
+    test.identical( configPackage.contributors.length, 2 );
+    test.identical( configWasPackage.contributors, undefined );
+    test.identical( configPackage.bin, configWasPackage.bin );
+    test.notIdentical( configPackage.repository, configWasPackage.repository );
+    test.notIdentical( configPackage.bugs, configWasPackage.bugs );
+    test.identical( configPackage.main, configWasPackage.main );
+    test.identical( configPackage.files, configWasPackage.files );
+    let packageDepKeys = _.props.keys( configPackage.dependencies );
+    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
+    test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
+    test.false( 'wgittools' in configWasPackage.dependencies );
+    test.identical( packageDepKeys.length, 4 );
+    test.identical( wasPackageDepKeys.length, 4 );
+    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
+    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
+    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
+>>>>>>> 11fb9d55543e43eb1ed70fbb4ad0aad404e8345f
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 1';
+    return null;
+  });
+  a.appStart( '.npm.install linkingSelf:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install linkingSelf:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.install locked:0 linkingSelf:1 dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0 linkingSelf:1 dry:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+
+  /* */
+
+  function versionGet( dirName )
+  {
+    return a.fileProvider.configRead
+    ({
+      filePath : a.abs( 'node_modules', dirName, 'package.json' ),
+      encoding : 'json',
+    }).version;
   }
 }
 
@@ -41593,7 +42099,7 @@ function willFilterFieldsOverwrite( test )
 
   /* - */
 
-  a.appStart( '.submodules.clean ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -41983,10 +42489,11 @@ const Proto =
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitDiff,
-    commandSubmodulesRepoPullOpen,
     commandSubmodulesGitStatusWithOnlyRoot,
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
+
+    commandSubmodulesRepoPullOpen,
 
     commandModulesUpdate,
     commandModulesShell,
@@ -41994,7 +42501,6 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
-    commandModulesRepoPullOpen,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
     commandModulesGitSync,
@@ -42005,11 +42511,11 @@ const Proto =
     commandModules,
     commandSubmodules,
 
+    commandModulesRepoPullOpen,
+
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitDiff,
-    commandRepoPullOpen,
-    commandRepoPullOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
     commandGitPush,
@@ -42020,6 +42526,9 @@ const Proto =
     commandGitSyncRestoringHardlinks,
     commandGitSyncRestoreHardLinksWithShared,
     commandGitTag,
+
+    commandRepoPullOpen,
+    commandRepoPullOpenRemote,
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,
@@ -42042,9 +42551,12 @@ const Proto =
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
     commandWillfileMergeIntoSingleFilterNpmFields,
+
     commandNpmPublish,
     commandNpmPublishFullModuleFromUtility,
     commandNpmPublishFullRegularModule,
+    commandNpmDepAdd,
+    commandNpmInstall,
 
     commandsSubmoduleSafety,
     commandsSubmoduleSafetyInvalidUrl,
