@@ -229,6 +229,7 @@ module:
           - ../proto/wtools/atop/will.test
           - ../proto/wtools/atop/will.test/Ext.Package.test.s
           - ../proto/wtools/atop/will.test/Ext.test.s
+          - ../proto/wtools/atop/will.test/File.test.s
           - ../proto/wtools/atop/will.test/Int.test.s
           - ../proto/wtools/atop/will.test/Remake.s
           - ../proto/wtools/atop/will.test/ReposDownload.s
@@ -3118,7 +3119,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/selfRefIntegrityBug/proto/File.js
           - ../proto/wtools/atop/will.test/_asset/simple
-          - ../proto/wtools/atop/will.test/_asset/simple/.will.yaml
+          - ../proto/wtools/atop/will.test/_asset/simple/.will.yml
           - ../proto/wtools/atop/will.test/_asset/simple/proto
           - ../proto/wtools/atop/will.test/_asset/simple/proto/File.js
           - ../proto/wtools/atop/will.test/_asset/single
