@@ -1842,7 +1842,7 @@ function exportStructure()
   if( _.path.map.identical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
-  if( _.mapIs( result.dst ) && _.entityLengthOf( result.dst ) === 0 )
+  if( _.mapIs( result.dst ) && _.entity.lengthOf( result.dst ) === 0 )
   delete result.dst;
 
   if( result.src && result.src.prefixPath )
