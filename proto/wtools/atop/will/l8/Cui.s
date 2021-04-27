@@ -203,8 +203,6 @@ function openersFind( o )
   {
 
     if( err )
-    debugger;
-    if( err )
     throw _.err( err );
 
     // will.currentOpeners = it.openers;
@@ -906,8 +904,6 @@ function _commandBuildLike( o )
   {
     will._commandsEnd( o.commandRoutine );
     if( err )
-    debugger;
-    if( err )
     logger.error( _.errOnce( err ) );
     if( err )
     throw err;
@@ -1004,8 +1000,6 @@ function _commandCleanLike( o )
   function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
-    if( err )
-    debugger;
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1104,8 +1098,6 @@ function _commandNewLike( o )
   function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
-    if( err )
-    debugger;
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1345,7 +1337,8 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withStem = 1; /* qqq : for Dmytro : ?? */
+defaults.withStem = 1;
+// defaults.withStem = 1; /* aaa : for Dmytro : ?? */ /* Dmytro : replaced for all module */
 
 //
 
@@ -2812,6 +2805,70 @@ command.properties =
 
 //
 
+function commandSubmodulesRepoPullOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
+
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'submodules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandSubmodulesRepoPullOpen,
+    withStem : 0,
+  });
+
+  function handleEach( module )
+  {
+    return module.repoPullOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+    });
+  }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
+}
+
+commandSubmodulesRepoPullOpen.defaults =
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  // title : null,
+  body : null,
+  verbosity : null,
+  withSubmodules : 1
+};
+var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
+command.subjectHint = 'A title for PR';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  ... commandImply.command.properties,
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+};
+
+//
+
 function commandModuleNew( e )
 {
   let will = this;
@@ -3283,6 +3340,72 @@ command.subjectHint = 'A path to hook and arguments.';
 
 //
 
+function commandModulesRepoPullOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesRepoPullOpen, arguments );
+
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'modules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandModulesRepoPullOpen,
+    withStem : 1,
+  });
+
+  function handleEach( module )
+  {
+    return module.repoPullOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+    });
+  }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
+}
+
+commandModulesRepoPullOpen.defaults =
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  // title : null,
+  body : null,
+  verbosity : 2,
+  withSubmodules : 1
+};
+
+var command = commandModulesRepoPullOpen.command = Object.create( null );
+command.hint = 'Open pull requests from current module and its submodules.';
+command.subjectHint = 'A title for PR';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  ... commandImply.command.properties,
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+};
+
+//
+
 function commandShell( e )
 {
   let cui = this;
@@ -3663,7 +3786,6 @@ command.subjectHint = 'A name of export scenario.';
 function commandExportPurging( e )
 {
   let cui = this;
-  debugger
   cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
 
@@ -4899,8 +5021,8 @@ function commandWillfileMergeIntoSingle( e )
 
   function submodulesDisable()
   {
-    if( !config )
-    config = configRead( dstPath.absolute ); /* qqq : for Dmytro : ?? */
+    // if( !config )
+    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
     for( let dependency in config.submodule )
     config.submodule[ dependency ].enabled = 0;
   }
@@ -5801,11 +5923,13 @@ command.properties =
 
 //
 
-/* qqq : for Dmytro : first cover
+/* aaa : for Dmytro : first cover
 will .npm.dep.add . dry:1 editing:0
 */
 
-/* qqq : for Dmytro : write full coverage */
+/* Dmytro : covered */
+
+/* aaa : for Dmytro : write full coverage */ /* Dmytro : covered behavior that was implemented before, no additional features are tested */
 
 function commandNpmDepAdd( e )
 {
@@ -5814,7 +5938,7 @@ function commandNpmDepAdd( e )
 
   _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
 
-  e.optionsMap.depPath = e.subject;
+  e.optionsMap.depPath = _.strUnquote( e.subject );
   e.optionsMap.localPath = e.optionsMap.to;
   delete e.optionsMap.to;
 
@@ -5831,14 +5955,13 @@ commandNpmDepAdd.defaults =
   dry : 0,
   verbosity : 1,
 };
-
 var command = commandNpmDepAdd.command = Object.create( null );
 command.hint = 'Add as dependency to NPM.';
 command.subjectHint = 'Dependency path.';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   to : 'Path to the directory with directory node_modules. Current path by default.',
@@ -5888,17 +6011,20 @@ commandNpmInstall.defaults =
   verbosity : 2,
 };
 
-/* qqq2 : for Dmytro : write test routines
+/* aaa2 : for Dmytro : write test routines
 - make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
 - duplicate tests in NpmTools and willbe
 */
-
+/* Dmytro : covered
+- first requirements is actual for routine `commandNpmDepAdd`, the case is covered
+- duplicated
+*/
 var command = commandNpmInstall.command = Object.create( null );
-command.hint = 'Add as dependency to NPM.';
+command.hint = 'Install NPM dependencies for the module.';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   to : 'Path to directory with package.json file. Default is current directory.',
@@ -6687,6 +6813,8 @@ let Extension =
   // commandSubmodulesGitStatus,
   // commandSubmodulesGitSync,
 
+  commandSubmodulesRepoPullOpen,
+
   commandModuleNew,
   commandModuleNewWith,
 
@@ -6696,6 +6824,8 @@ let Extension =
   // commandModulesRepoPullOpen,
   // commandModulesGitStatus,
   // commandModulesGitSync,
+
+  commandModulesRepoPullOpen,
 
   commandShell,
   commandDo,
