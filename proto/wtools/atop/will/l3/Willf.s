@@ -611,7 +611,7 @@ function reopen( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptions( reopen, arguments );
+  o = _.routine.options_( reopen, arguments );
 
   if( o.forModule )
   {
@@ -795,9 +795,13 @@ function _resourcesImport_head( routine, args )
 
   let o = args[ 0 ]
   if( args.length > 1 )
-  o = { resourceClass : args[ 0 ], resources : args[ 1 ] }
+  o =
+  {
+    resourceClass : args[ 0 ],
+    resources : args[ 1 ],
+  }
 
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
   _.assert( _.mapIs( o.resources ) || o.resources === null || o.resources === undefined );
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( arguments.length === 2 );
@@ -816,7 +820,7 @@ function _resourcesImport_body( o )
   let dirPath = openedModule.dirPath;
   let willfilesPath = openedModule.willfilesPath;
 
-  _.assertRoutineOptions( _resourcesImport, arguments );
+  _.routine.assertOptions( _resourcesImport, arguments );
 
   if( !o.resources )
   return;
@@ -846,7 +850,7 @@ _resourcesImport_body.defaults =
   resources : null,
 }
 
-let _resourcesImport = _.routine.uniteCloning_( _resourcesImport_head, _resourcesImport_body );
+let _resourcesImport = _.routine.uniteCloning_replaceByUnite( _resourcesImport_head, _resourcesImport_body );
 
 //
 
@@ -1246,7 +1250,7 @@ function isConsistent( opening )
 // {
 //
 //   _.assert( arguments.length === 1, 'Expects no arguments' );
-//   _.routineOptions( WillfilesPathResolve, o );
+//   _.routine.options_( WillfilesPathResolve, o );
 //
 //   /* xxx qqq : refactor and cover routine _.path.split
 //       sequence _.path.split, _.path.join should work for any path
@@ -1573,7 +1577,7 @@ function save( o )
   let path = hub.path;
   let logger = will.transaction.logger;
 
-  o = _.routineOptions( save, arguments );
+  o = _.routine.options_( save, arguments );
 
   let o2 = _.mapOnly_( null, o, willf.exportStructure.defaults );
   let structure = willf.exportStructure( o2 );
@@ -1606,7 +1610,7 @@ function exportStructure( o )
   let willf = this;
   let will = willf.will;
   let module = willf.openedModule;
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routine.options_( exportStructure, arguments );
   debugger;
 
   let o2 = _.mapOnly_( null, o, module.exportStructure.defaults );

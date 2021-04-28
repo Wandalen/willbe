@@ -142,7 +142,7 @@ function copy( o )
     remotePath : null,
   }
   let o2 = _.mapOnly_( null, o, read );
-  _.mapExtend( opener._, o2 );
+  _.props.extend( opener._, o2 );
 
   o = _.mapBut_( null, o, read );
   let result = _.Copyable.prototype.copy.apply( opener, [ o ] );
@@ -394,7 +394,7 @@ function _willfilesFindAct( o )
   let logger = will.transaction.logger;
   let records;
 
-  o = _.routineOptions( _willfilesFindAct, arguments );
+  o = _.routine.options_( _willfilesFindAct, arguments );
   o.willfilesPath = o.willfilesPath || opener.willfilesPath;
 
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
@@ -534,7 +534,7 @@ function find( o )
   let opener = this;
   let will = opener.will;
 
-  o = _.routineOptions( find, arguments );
+  o = _.routine.options_( find, arguments );
   _.assert( _.longHas( [ 'smart', 'strict', 'exact' ], opener.searching ) );
   _.assert( opener.formed <= 2 );
 
@@ -601,7 +601,7 @@ function find( o )
       (
         !opener.willfilesArray.length
         || !openedModule.willfilesArray.length
-        || _.longIdentical( opener.willfilesArray, openedModule.willfilesArray )
+        || _.long.identical( opener.willfilesArray, openedModule.willfilesArray )
       );
       if( opener.willfilesArray.length )
       openedModule.willfilesArray = _.entity.make( opener.willfilesArray );
@@ -633,8 +633,8 @@ function find( o )
 
     }
 
-    _.assert( _.longIdentical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
-    _.assert( _.longIdentical( _.mapVals( opener.willfileWithRoleMap ), _.mapVals( opener.openedModule.willfileWithRoleMap ) ) );
+    _.assert( _.long.identical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
+    _.assert( _.long.identical( _.props.vals( opener.willfileWithRoleMap ), _.props.vals( opener.openedModule.willfileWithRoleMap ) ) );
 
     if( !opener.openedModule.isUsedBy( opener ) )
     opener.openedModule.usedBy( opener );
@@ -667,7 +667,7 @@ function open( o )
   let will = opener.will;
   let ready = new _.Consequence();
 
-  o = _.routineOptions( open, arguments );
+  o = _.routine.options_( open, arguments );
 
   try
   {
@@ -828,7 +828,7 @@ function reopen()
   let opener = this;
   let will = opener.will;
   let module = opener.openedModule;
-  let willfilesPath = _.make( opener.willfilesPath );
+  let willfilesPath = _.entity.cloneShallow( opener.willfilesPath );
   let willf = opener.willfilesArray[ 0 ];
 
   _.assert( !opener.isFinited() );
@@ -987,7 +987,7 @@ function submodulesRelationsFilter( o )
 //   let opener = this;
 //   let will = opener.will;
 //
-//   o = _.routineOptions( submodulesRelationsFilter, arguments );
+//   o = _.routine.options_( submodulesRelationsFilter, arguments );
 //
 //   let result = opener.submodulesRelationsOwnFilter( o );
 //   let junction = will.junctionFrom( opener );
@@ -1334,7 +1334,7 @@ function _repoDownload( o )
   let reflected = Object.create( null );
   let vcsTool = null;
 
-  _.routineOptions( _repoDownload, o );
+  _.routine.options_( _repoDownload, o );
   _.assert( arguments.length === 1 );
   _.assert( opener.formed >= 2 );
   _.assert( !!opener.willfilesPath );
@@ -2002,11 +2002,11 @@ function repoDownload( o )
   let opener = this;
   let will = opener.will;
   o = o || Object.create( null );
-  _.routineOptions( repoDownload, o );
+  _.routine.options_( repoDownload, o );
   return opener._repoDownload( o );
 }
 
-var defaults = repoDownload.defaults = _.mapExtend( null, _repoDownload.defaults );
+var defaults = repoDownload.defaults = _.props.extend( null, _repoDownload.defaults );
 defaults.mode = 'download';
 
 //
@@ -2016,11 +2016,11 @@ function repoUpdate( o )
   let opener = this;
   let will = opener.will;
   o = o || Object.create( null );
-  _.routineOptions( repoUpdate, o );
+  _.routine.options_( repoUpdate, o );
   return opener._repoDownload( o );
 }
 
-var defaults = repoUpdate.defaults = _.mapExtend( null, _repoDownload.defaults );
+var defaults = repoUpdate.defaults = _.props.extend( null, _repoDownload.defaults );
 defaults.mode = 'update';
 
 // --
@@ -2033,7 +2033,7 @@ function _pathChanged( o )
   let will = opener.will;
 
   _.assert( o.val !== undefined );
-  _.routineOptions( _pathChanged, arguments );
+  _.routine.options_( _pathChanged, arguments );
 
   if( o.isIdentical === null )
   o.isIdentical = o.ex === o.val || _.path.map.identical( o.ex, o.val );
@@ -2047,7 +2047,7 @@ function _pathChanged( o )
   if( !o.isIdentical )
   {
     debugger;
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.touching = 0;
     opener.openedModule._pathChanged( o2 );
   }
@@ -2089,7 +2089,7 @@ function _filePathChanged1( o )
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, Parent.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.props.extend( null, Parent.prototype._filePathChanged1.defaults );
 
 //
 
@@ -2131,7 +2131,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, Parent.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.props.extend( null, Parent.prototype._filePathChanged2.defaults );
 
 //
 
@@ -2207,13 +2207,13 @@ function remotePathEachAdoptAct( o )
   // if( !junction )
   // junction = will.junctionFrom( module );
   //
-  // _.assertRoutineOptions( remotePathEachAdoptAct, o );
+  // _.routine.assertOptions( remotePathEachAdoptAct, o );
   //
   // junction.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
   // junction.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
   // junction.reform();
 
-  _.assertRoutineOptions( remotePathEachAdoptAct, o );
+  _.routine.assertOptions( remotePathEachAdoptAct, o );
 
   opener.remotePathAdopt( o );
 
@@ -2622,7 +2622,7 @@ function exportString( o )
   let will = opener.will;
   let result = '';
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routine.options_( exportString, arguments );
 
   if( o.verbosity >= 1 )
   result += opener.decoratedAbsoluteName + '#' + opener.id;
