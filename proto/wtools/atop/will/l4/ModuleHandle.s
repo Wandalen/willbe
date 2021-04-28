@@ -34,7 +34,6 @@ function init( o )
   if( o )
   self.copy( o );
   self.form();
-  debugger;
   return self;
 }
 
@@ -91,7 +90,7 @@ function Froms( objects, will )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
-  if( _.arrayLike( objects ) )
+  if( _.argumentsArray.like( objects ) )
   return _.filter_( null, objects, ( object ) => cls.From( object, will ) );
   else
   return cls.From( objects, will );

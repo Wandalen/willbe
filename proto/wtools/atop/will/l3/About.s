@@ -75,7 +75,7 @@ function copy( o )
   {
 
     _.Copyable.prototype.copy.call( about, o );
-    _.mapExtend( about.values, o.values );
+    _.props.extend( about.values, o.values );
 
   }
   else
@@ -84,7 +84,7 @@ function copy( o )
     let values = _.mapBut_( null, o, about.FieldsOfCopyableGroups );
     let o2 = _.mapOnly_( null, o, about.FieldsOfCopyableGroups );
     _.Copyable.prototype.copy.call( about, o2 );
-    _.mapExtend( about.values, values );
+    _.props.extend( about.values, values );
 
   }
 
@@ -143,7 +143,7 @@ function exportStructure()
 {
   let about = this;
   let fields = about.cloneData({ compact : 1, copyingAggregates : 0 });
-  _.mapExtend( fields, about.values );
+  _.props.extend( fields, about.values );
   return fields;
 }
 

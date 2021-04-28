@@ -5,7 +5,7 @@ function onModule( context )
   let _ = context.tools;
   let module = context.junction.module;
 
-  _.routineOptions( onModule, o );
+  _.routine.options( onModule, o );
 
   o.verbosity = o.v !== undefined && o.v !== null ? o.v : o.verbosity;
 
@@ -17,7 +17,6 @@ function onModule( context )
     format : 'willfile',
     onSection : _.mapExtend,
     ... _.mapOnly_( null, o, module.willfileExtendWillfile.defaults ),
-    // ... o,
   })
 }
 

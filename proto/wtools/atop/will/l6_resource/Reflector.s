@@ -48,7 +48,7 @@ function MakeFor_body( o )
 
   // let o3 = Object.create( null );
   // o3.resource = Object.create( null );
-  // o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  // o3.resource.criterion = _.props.extend( null, o.resource.criterion || {} );
   // o3.resource.shell = o.resource.shell;
   // o3.Importing = 1;
   // o3.module = module;
@@ -59,7 +59,7 @@ function MakeFor_body( o )
   // {
   //   if( !_.mapIs( o.resource.step ) )
   //   o.resource.step = { inherit : o.resource.step }
-  //   _.mapExtend( o3.resource, o.resource.step );
+  //   _.props.extend( o3.resource, o.resource.step );
   // }
   //
   // if( o.resource.shell )
@@ -89,7 +89,7 @@ function MakeFor_body( o )
 
 _.routineExtend( MakeFor_body, Parent.MakeFor.body );
 
-let MakeFor = _.routine.uniteCloning_( Parent.MakeFor.head, MakeFor_body );
+let MakeFor = _.routine.uniteCloning_replaceByUnite( Parent.MakeFor.head, MakeFor_body );
 
 //
 
@@ -104,7 +104,7 @@ function MakeSingle( o )
   let logger = will.transaction.logger;
 
   _.assert( arguments.length === 1 );
-  o = _.routineOptions( MakeSingle, arguments );
+  o = _.routine.options_( MakeSingle, arguments );
 
   let result = Parent.MakeSingle.apply( Cls, arguments );
 
@@ -113,7 +113,7 @@ function MakeSingle( o )
 
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
-  o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  o3.resource.criterion = _.props.extend( null, o.resource.criterion || {} );
   // if( o.resource.shell ) /* Dmytro : temporary fix, need to investigate the behaviour of reflectors which produce shell commands */
   o3.resource.shell = o.resource.shell;
   o3.resource.module = module;
@@ -130,7 +130,7 @@ function MakeSingle( o )
     // debugger;
     if( !_.mapIs( o.resource.step ) )
     o.resource.step = { inherit : o.resource.step }
-    _.mapExtend( o3.resource, o.resource.step );
+    _.props.extend( o3.resource, o.resource.step );
   }
 
   if( o.resource.shell )
@@ -279,7 +279,7 @@ function form2( o )
   return reflector;
 
   _.assert( reflector.formed === 1 );
-  o = _.routineOptions( form2, arguments );
+  o = _.routine.options_( form2, arguments );
 
   if( !reflector.unformedResource && !reflector.criterion.generated )
   {
@@ -417,7 +417,7 @@ function _inheritMultiple( o )
   _.assert( reflector.formed === 1 );
   _.assert( _.arrayIs( reflector.inherit ) );
   _.assert( reflector._accumulator === null );
-  _.routineOptions( _inheritMultiple, arguments );
+  _.routine.options_( _inheritMultiple, arguments );
 
   reflector._accumulator = new _.will.Reflector({ module, original : reflector, name : reflector.name });
   reflector._accumulator.src.pairWithDst( reflector._accumulator.dst );
@@ -477,7 +477,7 @@ function _inheritSingle( o )
   let logger = will.transaction.logger;
   let reflector2 = o.ancestor;
 
-  _.assertRoutineOptions( _inheritSingle, arguments );
+  _.routine.assertOptions( _inheritSingle, arguments );
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
   _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.entity.strType( reflector2 ) );
@@ -600,13 +600,13 @@ function _inheritPathMap( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.assertRoutineOptions( _inheritPathMap, arguments );
+  _.routine.assertOptions( _inheritPathMap, arguments );
   _.assert( reflector.filePath === null || _.mapIs( reflector.filePath ) )
 
   if( reflector.filePath === null )
   return;
 
-  let pathMap = _.mapExtend( null, reflector.filePath );
+  let pathMap = _.props.extend( null, reflector.filePath );
   _.mapDelete( reflector.filePath );
 
   reflector._inheritPathMapAct1
@@ -634,7 +634,7 @@ function _inheritPathMapAct1( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.assertRoutineOptions( _inheritPathMapAct1, arguments );
+  _.routine.assertOptions( _inheritPathMapAct1, arguments );
   _.assert( o.pathMap === null || _.mapIs( o.pathMap ) )
 
   if( o.pathMap === null )
@@ -705,7 +705,7 @@ function _inheritPathMapAct2( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.assertRoutineOptions( _inheritPathMapAct2, arguments );
+  _.routine.assertOptions( _inheritPathMapAct2, arguments );
 
   // if( reflector.name === 'reflect.submodules.debug' )
   // debugger;
@@ -789,7 +789,7 @@ function _inheritPathMapAct3( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.assertRoutineOptions( _inheritPathMapAct3, arguments );
+  _.routine.assertOptions( _inheritPathMapAct3, arguments );
 
   let withDst = false;
   if( o.dst instanceof Self )
@@ -898,7 +898,7 @@ function _inheritPrefixes( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.assertRoutineOptions( _inheritPathMap, arguments );
+  _.routine.assertOptions( _inheritPathMap, arguments );
   _.assert( reflector.src.prefixPath === null || _.strIs( reflector.src.prefixPath ) || _.arrayIs( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || _.strIs( reflector.dst.prefixPath ) || _.arrayIs( reflector.dst.prefixPath ) );
 
@@ -906,7 +906,7 @@ function _inheritPrefixes( o )
 
   let isEmpty = path.isEmpty( reflector.src.filePath );
   if( !isEmpty )
-  if( _.mapIs( reflector.src.filePath ) && _.mapsAreIdentical( reflector.src.filePath, { '.' : '.' } ) )
+  if( _.mapIs( reflector.src.filePath ) && _.map.identical( reflector.src.filePath, { '.' : '.' } ) )
   isEmpty = true;
 
   /* */
@@ -1024,7 +1024,7 @@ function sureRelativeOrGlobal( o )
 {
   let reflector = this;
 
-  o = _.routineOptions( sureRelativeOrGlobal, arguments );
+  o = _.routine.options_( sureRelativeOrGlobal, arguments );
   _.assert( reflector.src instanceof _.FileRecordFilter );
   _.assert( reflector.dst instanceof _.FileRecordFilter );
   _.assert( reflector.src.filePath === reflector.filePath );
@@ -1063,7 +1063,7 @@ function isRelativeOrGlobal( o )
 {
   let reflector = this;
 
-  o = _.routineOptions( isRelativeOrGlobal, arguments );
+  o = _.routine.options_( isRelativeOrGlobal, arguments );
 
   _.assert( reflector.src instanceof _.FileRecordFilter );
   _.assert( reflector.dst instanceof _.FileRecordFilter );
@@ -1252,7 +1252,7 @@ function pathsResolve( o )
 
   _.assert( reflector.src.isPaired( reflector.dst ) );
 
-  o = _.routineOptions( pathsResolve, arguments );
+  o = _.routine.options_( pathsResolve, arguments );
 
   let paired = false;
   if( reflector.src.dst === reflector.dst && reflector.src.filePath === reflector.dst.filePath )
@@ -1577,7 +1577,7 @@ function selectorsNormalize( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( selectorsNormalize, arguments );
+  o = _.routine.options_( selectorsNormalize, arguments );
 
   let paired = false;
   if( reflector.src.dst === reflector.dst && reflector.src.filePath === reflector.dst.filePath )
@@ -1637,7 +1637,7 @@ function pathsRebase( o )
   let logger = will.transaction.logger;
   // let Resolver = _.will.resolver;
 
-  o = _.routineOptions( pathsRebase, arguments );
+  o = _.routine.options_( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
   _.assert( path.isAbsolute( o.exInPath ) );
 
@@ -1705,7 +1705,7 @@ function optionsForFindExport( o )
 
   reflector.form();
 
-  o = _.routineOptions( optionsForFindExport, arguments );
+  o = _.routine.options_( optionsForFindExport, arguments );
   _.assert( reflector.dst === null || !reflector.dst.hasFiltering() );
   _.assert( !o.resolving );
 
@@ -1737,7 +1737,7 @@ function optionsForFindGroupExport( o )
 
   reflector.form();
 
-  o = _.routineOptions( optionsForFindGroupExport, arguments );
+  o = _.routine.options_( optionsForFindGroupExport, arguments );
   _.assert( !o.resolving );
 
   result.mandatory = reflector.mandatory;
@@ -1774,7 +1774,7 @@ function optionsForReflectExport( o )
 
   reflector.form();
 
-  o = _.routineOptions( optionsForReflectExport, arguments );
+  o = _.routine.options_( optionsForReflectExport, arguments );
   _.assert( !o.resolving );
 
   result.mandatory = reflector.mandatory;
@@ -1815,7 +1815,7 @@ function exportStructure()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let o = _.routineOptions( exportStructure, arguments );
+  let o = _.routine.options_( exportStructure, arguments );
 
   _.assert( reflector.src instanceof _.FileRecordFilter );
 
@@ -1842,7 +1842,7 @@ function exportStructure()
   if( _.path.map.identical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
-  if( _.mapIs( result.dst ) && _.entityLengthOf( result.dst ) === 0 )
+  if( _.mapIs( result.dst ) && _.entity.lengthOf( result.dst ) === 0 )
   delete result.dst;
 
   if( result.src && result.src.prefixPath )

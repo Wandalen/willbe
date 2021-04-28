@@ -127,7 +127,9 @@ function optionsFormingForward( o )
   let module = this;
 
   _.assert( arguments.length === 1 );
-  o = _.mapSupplementStructureless( o, optionsFormingForward.defaults );
+  // o = _.routine.options( { defaults : optionsFormingForward.defaults }, o );
+  // o = _.map.supplementStructureless( o, optionsFormingForward.defaults );
+  o = _.map.supplement( o, optionsFormingForward.defaults );
 
   if( _.boolLike( o.all ) )
   {
@@ -145,7 +147,7 @@ function optionsFormingForward( o )
   return o;
 }
 
-optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
+optionsFormingForward.defaults = _.props.extend( null, _.Will.UpformingDefaults );
 
 // --
 // name
@@ -236,7 +238,7 @@ function _filePathChanged2( o )
   if( !o.exWillfilesPath )
   o.exWillfilesPath = module.willfilesPath;
 
-  _.routineOptions( _filePathChanged2, o );
+  _.routine.optionsWithoutUndefined( _filePathChanged2, o );
 
   if( _.arrayIs( o.willfilesPath ) )
   {
@@ -262,7 +264,7 @@ function _filePathChanged2( o )
   o.dirPath = o.dirPath[ 0 ];
   if( _.strIs( o.dirPath ) )
   o.dirPath = path.dirFirst( o.dirPath );
-  if( o.dirPath === null )
+  if( o.dirPath === null || o.dirPath === undefined )
   o.dirPath = module.dirPath;
   if( o.dirPath )
   o.dirPath = path.canonize( o.dirPath );
@@ -340,7 +342,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, _filePathChanged1.defaults );
+_filePathChanged2.defaults = _.props.extend( null, _filePathChanged1.defaults );
 
 //
 
@@ -376,7 +378,7 @@ function remotePathAdopt( o )
 
   if( _.strIs( arguments[ 0 ] ) )
   o = { remotePath : arguments[ 0 ] }
-  o = _.routineOptions( remotePathAdopt, o );
+  o = _.routine.options_( remotePathAdopt, o );
   _.assert( arguments.length === 1 );
 
   if( module.remotePath === o.remotePath )
@@ -413,7 +415,7 @@ function remotePathEachAdopt( o )
 
   if( _.strIs( arguments[ 0 ] ) )
   o = { remotePath : arguments[ 0 ] }
-  o = _.routineOptions( remotePathAdopt, o );
+  o = _.routine.options_( remotePathAdopt, o );
   _.assert( arguments.length === 1 );
 
   if( module.remotePath === o.remotePath )
@@ -621,7 +623,7 @@ function repoVerify( o )
 
   _.assert( module.isPreformed() );
   _.assert( arguments.length === 1 );
-  _.routineOptions( repoVerify, o );
+  _.routine.options_( repoVerify, o );
 
   let ready = _.take( null );
 

@@ -16,7 +16,7 @@ function onGitMake( context )
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
-  _.routineOptions( onGitMake, o );
+  _.routine.options( onGitMake, o );
 
   try
   {
@@ -25,7 +25,7 @@ function onGitMake( context )
     let config = _.censor.configRead();
     if( config && config.path && config.path.remoteRepository )
     {
-      _.mapSupplement( config, context );
+      _.props.supplement( config, context );
       remotePath = _.resolverAdv.resolve
       ({
         src : config,

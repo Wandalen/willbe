@@ -71,8 +71,8 @@ function extend( properties )
   let t = this;
   _.assert( arguments.length === 1 );
   t.formed = 0;
-  // _.mapExtend( t, _.mapBut_( _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ), [ 'verbosity' ] ) );
-  _.mapExtend( t, _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) );
+  // _.props.extend( t, _.mapBut_( null, _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ), [ 'verbosity' ] ) );
+  _.props.extend( t, _.mapOnly_( null, properties, _.will.Transaction.TransactionFields ) );
   t.formed = 1;
   return t;
 }

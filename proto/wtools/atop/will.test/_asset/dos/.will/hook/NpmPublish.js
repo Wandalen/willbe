@@ -14,7 +14,7 @@ function onModule( context )
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
-  _.routineOptions( onModule, o );
+  _.routine.options( onModule, o );
 
   if( !context.junction.module )
   return;

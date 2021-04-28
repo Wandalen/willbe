@@ -12,7 +12,7 @@ function onModule( context )
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
-  _.routineOptions( onModule, o );
+  _.routine.options( onModule, o );
 
   let fileProvider2 = new _.FileFilter.Archive();
   // let config = fileProvider2.configUserRead( _.censor.storageConfigPath );
