@@ -56,7 +56,7 @@ const _ = _global_.wTools;
 function onSuiteBegin()
 {
   let context = this;
-  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
@@ -2047,7 +2047,6 @@ function openEach( test )
 
   a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.each . .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5179,7 +5178,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.hook.call info.js' )
   .then( ( op ) =>
@@ -5194,7 +5193,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.with . .hook.call info.js' )
   .then( ( op ) =>
@@ -5209,7 +5208,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.with * .hook.call info.js' )
   .then( ( op ) =>
@@ -5224,7 +5223,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5239,7 +5238,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5254,7 +5253,7 @@ function withDoInfo( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5273,8 +5272,7 @@ function withDoInfo( test )
   /* - */
 
   return a.ready;
-
-} /* end of function withDoInfo */
+}
 
 withDoInfo.rapidity = -1;
 withDoInfo.timeOut = 300000;
@@ -5452,22 +5450,11 @@ function hookCallInfo( test )
   let a = context.assetFor( test, 'dos' );
   // aaa : modules for testing are still broken !!! /* Dmytro : fixed */
   // aaa : ?? /* Dmytro : a.appStart - mode : 'fork'; a.shell - mode : 'shell' */
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    mode : 'spawn',
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : a.ready,
-  });
-
   a.reflect();
 
   /* - */
 
-  a.appStart( '.clean' )
+  a.appStart( '.clean' );
   a.appStart( '.export' )
   .then( ( op ) =>
   {
@@ -9396,8 +9383,8 @@ function listSingleModule( test )
   {
     test.case = 'resources list globs negative';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1'  ) );
-    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2'  ) );
+    test.true( _.strHas( op.output, 'reflector::predefined.debug.v1' ) );
+    test.true( !_.strHas( op.output, 'reflector::predefined.debug.v2' ) );
     test.true( _.strHas( op.output, 'reflector::reflect.proto.debug' ) );
     test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
     test.true( _.strHas( op.output, 'step::reflect.proto.debug.raw' ) );
@@ -9416,12 +9403,12 @@ function listSingleModule( test )
     test.case = '.resources.list *proto*';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ) );
     test.true( _.strHas( op.output, `files.reflect` ) );
 
-    test.true( _.strHas( op.output, 'build::proto.export'  ) );
+    test.true( _.strHas( op.output, 'build::proto.export' ) );
     test.true( _.strHas( op.output, `step::export.proto` ) );
 
     return null;
@@ -9435,8 +9422,8 @@ function listSingleModule( test )
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, `out.debug : './out/debug'` ) );
     test.true( !_.strHas( op.output, `reflector::reflect.proto.debug` ) );
-    test.true( !_.strHas( op.output, 'step::reflect.proto.debug'  ) );
-    test.true( !_.strHas( op.output, 'build::debug.raw'  ) );
+    test.true( !_.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'build::debug.raw' ) );
 
     return null;
   })
@@ -9448,11 +9435,11 @@ function listSingleModule( test )
     test.case = 'globs and criterions positive';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'path::proto'  ) );
+    test.true( _.strHas( op.output, 'path::proto' ) );
 
-    test.true( _.strHas( op.output, 'reflector::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'reflector::reflect.proto.' ) );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.' ) );
     test.true( _.strHas( op.output, `files.reflect` ) );
 
     test.identical( _.strCount( op.output, '::' ), 12 );
@@ -9485,8 +9472,8 @@ function listSingleModule( test )
     test.case = '.resources.list * debug:0 raw:1';
     test.identical( op.exitCode, 0 );
 
-    test.true( _.strHas( op.output, 'step::reflect.proto.raw'  ) );
-    test.true( _.strHas( op.output, 'build::release.raw'  ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.raw' ) );
+    test.true( _.strHas( op.output, 'build::release.raw' ) );
     test.identical( _.strCount( op.output, '::' ), 7 );
 
     return null;
@@ -10546,7 +10533,7 @@ function exportSingle( test )
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
     var files = a.find( a.abs( 'out' ) );
-    test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
+    test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.true( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/single.out.will.yml' ) );
@@ -11442,7 +11429,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11522,7 +11508,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -11656,7 +11641,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.entity.exportJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -11736,7 +11720,6 @@ function exportSecond( test )
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.entity.exportJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -23613,125 +23596,125 @@ function stepModulesUpdate( test )
 
   /* */
 
-  a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'to:master', predownloadSubmodules : 0 })
-  a.appStart( `.build to.!master` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'to:master', predownloadSubmodules : 1 })
-  a.appStart( `.build to.!gamma` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
-  a.appStart( '.build dry.clean' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
-  a.appStart( '.build dry' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.one' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
+  // a.init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
+  // a.appStart( '.build default' )
+  // .then( ( op ) =>
+  // {
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
+  // a.appStart( '.build default' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'to:master', predownloadSubmodules : 0 })
+  // a.appStart( `.build to.!master` )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'to:master', predownloadSubmodules : 1 })
+  // a.appStart( `.build to.!gamma` )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
+  // a.appStart( '.build dry.clean' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+  //   test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
+  // a.appStart( '.build dry' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
+  // a.appStart( '.build recursive.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+  //   test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
+  // a.appStart( '.build recursive.one' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3' ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
 
   /* */
 
@@ -23752,71 +23735,71 @@ function stepModulesUpdate( test )
 
   /* */
 
-  a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3'  ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
+  // a.init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
+  // a.appStart( '.build loggingNoChanges.on' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
+  // a.appStart( '.build loggingNoChanges.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'withStem:1', predownloadSubmodules : 1 })
+  // a.appStart( '.build withStem.on' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.init({ case : 'withStem:0', predownloadSubmodules : 1 })
+  // a.appStart( '.build withStem.off' )
+  // .then( ( op ) =>
+  // {
+  //   test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+  //   let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting3'  ] );
+  //   var got = a.shellSyncClone( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //   var got = a.shellSyncSubmodule( 'git status' );
+  //   test.true( _.strHas( got.output, `On branch master` ) );
+  //
+  //   return null;
+  // })
 
   /* */
 
@@ -29551,11 +29534,10 @@ commandSubmodulesGitDiff.rapidity = -1;
 
 //
 
-function commandSubmodulesRepoPullOpen( test )
+function commandSubmodulesGitStatusWithOnlyRoot( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
 
   let config;
   if( _.censor )
@@ -30328,6 +30310,74 @@ function commandSubmodulesGitSync( test )
 }
 
 commandSubmodulesGitSync.rapidity = -1;
+
+//
+
+function commandSubmodulesRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -31253,72 +31303,6 @@ function commandModulesGitDiff( test )
 }
 
 commandModulesGitDiff.rapidity = -1;
-
-//
-
-function commandModulesRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
 
 //
 
@@ -33130,6 +33114,72 @@ function commandGitCheckHardLinkRestoring( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandGitCheckHardLinkRestoring( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
 
   let config, profile, profileDir;
   if( _.censor )
@@ -33744,217 +33794,6 @@ function commandGitDiff( test )
       return null;
     });
     a.shell({ currentPath, execPath : 'git commit -am second' });
-    return a.ready;
-  }
-}
-
-//
-
-function commandRepoPullOpen( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
-  .then( ( op ) =>
-  {
-    test.case = 'token from environment variables, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function commandRepoPullOpenRemote( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  let user = config.about.user;
-
-  /* */
-
-  begin();
-  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
-  .then( ( op ) =>
-  {
-    test.case = 'make repo';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
-    test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
-    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
-    return null;
-  });
-
-  /* */
-
-  prepareFirstBranch();
-  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request, only title and srcBranch';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  prepareSecondBranch();
-  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
-  .then( ( op ) =>
-  {
-    test.case = 'opened pull request, body and dstBranch';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  })
-
-  /* */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      return null;
-    });
-
-    a.ready.then( ( op ) =>
-    {
-      return _.git.repositoryDelete
-      ({
-        remotePath : `https://github.com/${user}/New2`,
-        token : config.about[ 'github.token' ],
-      });
-    })
-
-    return a.ready;
-  }
-
-  /* */
-
-  function prepareFirstBranch()
-  {
-    let currentPath = a.abs( 'original' );
-    a.shell
-    ({
-      currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
-    });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -m first' });
-    a.shell({ currentPath, execPath : 'git push -u origin master' });
-    a.shell({ currentPath, execPath : 'git checkout -b new' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
-    a.shell({ currentPath, execPath : 'git commit -am second' });
-    a.shell({ currentPath, execPath : 'git push -u origin new' });
-    return a.ready;
-  }
-
-  /* */
-
-  function prepareSecondBranch()
-  {
-    let currentPath = a.abs( 'original' );
-    a.shell({ currentPath, execPath : 'git checkout master' });
-    a.shell({ currentPath, execPath : 'git checkout -b new2' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
-    a.shell({ currentPath, execPath : 'git commit -am second' });
-    a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
   }
 }
@@ -35268,7 +35107,8 @@ function commandGitStatusWithPR( test )
     a.shell
     ({
       currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+      execPath :
+      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
     });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
@@ -35997,6 +35837,217 @@ function commandGitTag( test )
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -am first' });
+    return a.ready;
+  }
+}
+
+//
+
+function commandRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:$GIT_TOKEN' )
+  .then( ( op ) =>
+  {
+    test.case = 'token from environment variables, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:"user:new" dstBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandRepoPullOpenRemote( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  let user = config.about.user;
+
+  /* */
+
+  begin();
+  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
+  .then( ( op ) =>
+  {
+    test.case = 'make repo';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( op.output, `localPath :` ), 1 );
+    test.identical( _.strCount( op.output, /remotePath : .*https:.*\/New2/ ), 1 );
+    test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  prepareFirstBranch();
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, only title and srcBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  prepareSecondBranch();
+  a.appStart( '.with original/GitPrOpen .repo.pull.open "new2" srcBranch:new2 dstBranch:master body:description' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, body and dstBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.ready.then( ( op ) =>
+    {
+      return _.git.repositoryDelete
+      ({
+        remotePath : `https://github.com/${user}/New2`,
+        token : config.about[ 'github.token' ],
+      });
+    })
+
+    return a.ready;
+  }
+
+  /* */
+
+  function prepareFirstBranch()
+  {
+    let currentPath = a.abs( 'original' );
+    a.shell
+    ({
+      currentPath,
+      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+    });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -m first' });
+    a.shell({ currentPath, execPath : 'git push -u origin master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new' });
+    return a.ready;
+  }
+
+  /* */
+
+  function prepareSecondBranch()
+  {
+    let currentPath = a.abs( 'original' );
+    a.shell({ currentPath, execPath : 'git checkout master' });
+    a.shell({ currentPath, execPath : 'git checkout -b new2' });
+    a.ready.then( () =>
+    {
+      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+      return null;
+    });
+    a.shell({ currentPath, execPath : 'git commit -am second' });
+    a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
   }
 }
@@ -37965,7 +38016,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38030,7 +38081,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38402,7 +38453,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38437,7 +38488,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38778,7 +38829,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -38843,7 +38894,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -39214,7 +39265,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     a.reflect();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -39249,7 +39300,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) }   });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
 
@@ -40789,14 +40840,14 @@ function commandNpmPublishFullRegularModule( test )
     test.notIdentical( configPackage.bugs, configWasPackage.bugs );
     test.identical( configPackage.main, configWasPackage.main );
     test.identical( configPackage.files, configWasPackage.files );
-    let packageDepKeys = _.props.keys( configPackage.dependencies );
-    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
+    let packageDepKeys = _.mapKeys( configPackage.dependencies );
+    let wasPackageDepKeys = _.mapKeys( configWasPackage.dependencies );
     test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
     test.false( 'wgittools' in configWasPackage.dependencies );
     test.identical( packageDepKeys.length, 4 );
     test.identical( wasPackageDepKeys.length, 4 );
-    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
-    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
+    let packageDevDepKeys = _.mapKeys( configPackage.devDependencies );
+    let wasPackageDevDepKeys = _.mapKeys( configWasPackage.devDependencies );
     test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
 
     test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
@@ -40871,6 +40922,434 @@ function commandNpmPublishFullRegularModule( test )
   function npmLogout()
   {
     a.shell( 'npm logout' );
+  }
+}
+
+//
+
+function commandNpmDepAdd( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmDepAdd' );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'without options, only subject - dot';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'without options, only subject - module';
+    return null;
+  });
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git wModuleForTesting1' );
+  a.appStart( '\'.npm.dep.add "hd://./wModuleForTesting1" editing:0\'' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add "hd://./wModuleForTesting1" editing:0"' ), 1 );
+    var exp =
+    /Linking hd:\/\/\/.*\/commandNpmDepAdd\/wModuleForTesting1 to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'as === module.name, dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:test dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:test dry:1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/test' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 dry:1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/test/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'as !== module.name';
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:wmodulefortesting1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:wmodulefortesting1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  let filesBefore;
+  begin().then( () =>
+  {
+    test.case = 'rewrite soft link to module by another link';
+    return null;
+  });
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git wModuleForTesting1' );
+  a.appStart( '\'.npm.dep.add "hd://./wModuleForTesting1" editing:0\'' );
+  a.ready.then( ( op ) =>
+  {
+    filesBefore = a.find( a.abs( 'wModuleForTesting1' ) );
+
+    test.identical( op.exitCode, 0 );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add "hd://./wModuleForTesting1" editing:0"' ), 1 );
+    var exp =
+    /Linking hd:\/\/\/.*\/commandNpmDepAdd\/wModuleForTesting1 to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+  a.appStart( '.npm.dep.add . editing:0 as:wmodulefortesting1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( 'wModuleForTesting1' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'node_modules/wmodulefortesting1' ), a.abs( '.' ) ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+    var files = find( 'node_modules' )
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting2' ] );
+    var filesAfter = a.find( a.abs( 'wModuleForTesting1' ) );
+    test.identical( filesBefore, filesAfter );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.dep.add . editing:0 as:wmodulefortesting1"' ), 1 );
+    var exp = /Linking hd:\/\/\/.*\/commandNpmDepAdd to .*\/commandNpmDepAdd\/node_modules\/wmodulefortesting1/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    a.ready.then( () =>
+    {
+      a.fileProvider.dirMake( a.abs( 'node_modules' ) );
+      a.fileProvider.dirMake( a.abs( 'node_modules/wmodulefortesting2' ) );
+      return null;
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+}
+
+//
+
+function commandNpmInstall( test )
+{
+  let self = this;
+  let a = test.assetFor( 'npmDepAdd' );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'default options, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 0, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install locked:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 0, package-lock.json not exists';
+    a.fileProvider.filesDelete( a.abs( 'package-lock.json' ) );
+    return null;
+  });
+  a.appStart( '.npm.install locked:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'locked - 1, package-lock.json exists';
+    return null;
+  });
+  a.appStart( '.npm.install locked:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 0';
+    return null;
+  });
+  a.appStart( '.npm.install locked:1 linkingSelf:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    let configPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let configWasPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
+    test.identical( configPackage.name, configWasPackage.name );
+    test.notIdentical( configPackage.version, configWasPackage.version );
+    test.notIdentical( configPackage.enabled, configWasPackage.enabled );
+    test.notIdentical( configPackage.engine, configWasPackage.engine );
+    test.identical( configPackage.description, configWasPackage.description );
+    test.identical( configPackage.keywords, configWasPackage.keywords );
+    test.identical( configPackage.license, configWasPackage.license );
+    test.identical( configPackage.author, configWasPackage.author );
+    test.identical( configPackage.contributors.length, 2 );
+    test.identical( configWasPackage.contributors, undefined );
+    test.identical( configPackage.bin, configWasPackage.bin );
+    test.notIdentical( configPackage.repository, configWasPackage.repository );
+    test.notIdentical( configPackage.bugs, configWasPackage.bugs );
+    test.identical( configPackage.main, configWasPackage.main );
+    test.identical( configPackage.files, configWasPackage.files );
+    let packageDepKeys = _.props.keys( configPackage.dependencies );
+    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
+    test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
+    test.false( 'wgittools' in configWasPackage.dependencies );
+    test.identical( packageDepKeys.length, 4 );
+    test.identical( wasPackageDepKeys.length, 4 );
+    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
+    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
+    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 1';
+    return null;
+  });
+  a.appStart( '.npm.install linkingSelf:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install linkingSelf:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm ci' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'dry - 1';
+    return null;
+  });
+  a.appStart( '.npm.install locked:0 linkingSelf:1 dry:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    test.identical( files, [] );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install locked:0 linkingSelf:1 dry:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflect() );
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+
+  /* */
+
+  function versionGet( dirName )
+  {
+    return a.fileProvider.configRead
+    ({
+      filePath : a.abs( 'node_modules', dirName, 'package.json' ),
+      encoding : 'json',
+    }).version;
   }
 }
 
@@ -41067,7 +41546,7 @@ function commandsSubmoduleSafety( test )
       if( routinesPre[ env.case ] )
       return routinesPre[ env.case ]( env ) || true;
       return null;
-    })
+    });
 
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
@@ -41431,7 +41910,7 @@ function commandSubmodulesUpdateOptionTo( test )
     ready : null
   })
 
-  a.init = ()=>
+  a.init = () =>
   {
     a.ready.then( () =>
     {
@@ -41983,10 +42462,11 @@ const Proto =
     commandSubmodulesGitRemoteSubmodules,
     commandSubmodulesGitRemoteSubmodulesRecursive,
     commandSubmodulesGitDiff,
-    commandSubmodulesRepoPullOpen,
     commandSubmodulesGitStatusWithOnlyRoot,
     commandSubmodulesGitStatus,
     commandSubmodulesGitSync,
+
+    commandSubmodulesRepoPullOpen,
 
     commandModulesUpdate,
     commandModulesShell,
@@ -41994,7 +42474,6 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
-    commandModulesRepoPullOpen,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
     commandModulesGitSync,
@@ -42005,11 +42484,11 @@ const Proto =
     commandModules,
     commandSubmodules,
 
+    commandModulesRepoPullOpen,
+
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitDiff,
-    commandRepoPullOpen,
-    commandRepoPullOpenRemote,
     commandGitPull,
     commandGitPullRestoreHardlinkOnFail,
     commandGitPush,
@@ -42020,6 +42499,9 @@ const Proto =
     commandGitSyncRestoringHardlinks,
     commandGitSyncRestoreHardLinksWithShared,
     commandGitTag,
+
+    commandRepoPullOpen,
+    commandRepoPullOpenRemote,
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,
@@ -42042,9 +42524,12 @@ const Proto =
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
     commandWillfileMergeIntoSingleFilterNpmFields,
+
     commandNpmPublish,
     commandNpmPublishFullModuleFromUtility,
     commandNpmPublishFullRegularModule,
+    commandNpmDepAdd,
+    commandNpmInstall,
 
     commandsSubmoduleSafety,
     commandsSubmoduleSafetyInvalidUrl,

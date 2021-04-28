@@ -203,8 +203,6 @@ function openersFind( o )
   {
 
     if( err )
-    debugger;
-    if( err )
     throw _.err( err );
 
     // will.currentOpeners = it.openers;
@@ -227,7 +225,7 @@ function openersFind( o )
 openersFind.defaults =
 {
 
-  ... _.mapExtend( null, _.Will.prototype.modulesFindWithAt.defaults ),
+  ... _.props.extend( null, _.Will.prototype.modulesFindWithAt.defaults ),
 
   // localPath : './',
   localPath : null,
@@ -906,8 +904,6 @@ function _commandBuildLike( o )
   {
     will._commandsEnd( o.commandRoutine );
     if( err )
-    debugger;
-    if( err )
     logger.error( _.errOnce( err ) );
     if( err )
     throw err;
@@ -1004,8 +1000,6 @@ function _commandCleanLike( o )
   function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
-    if( err )
-    debugger;
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1104,8 +1098,6 @@ function _commandNewLike( o )
   function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
-    if( err )
-    debugger;
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1345,7 +1337,8 @@ defaults.onModulesBegin = null;
 defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withStem = 1; /* qqq : for Dmytro : ?? */
+defaults.withStem = 1;
+// defaults.withStem = 1; /* aaa : for Dmytro : ?? */ /* Dmytro : replaced for all module */
 
 //
 
@@ -2474,12 +2467,12 @@ command.properties =
 // {
 //   let cui = this;
 
-//   let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
-//   if( _.mapKeys( commandOptions ).length >= 1 )
-//   {
-//     e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
-//     e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
-//   }
+  // let commandOptions = _.mapBut_( null, e.propertiesMap, commandSubmodulesGit.command.properties );
+  // if( _.props.keys( commandOptions ).length >= 1 )
+  // {
+  //   e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  //   e.propertiesMap = _.mapBut_( null, e.propertiesMap, commandOptions );
+  // }
 
 //   cui._command_head( commandSubmodulesGit, arguments );
 
@@ -2530,7 +2523,7 @@ command.properties =
 // var command = commandSubmodulesGit.command = Object.create( null );
 // command.hint = 'Run custom Git command on submodules of the module.';
 // command.subjectHint = 'Custom git command exclude name of command "git".';
-// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 // command.properties =
 // {
 //   ... commandImply.command.properties,
@@ -2583,7 +2576,7 @@ command.properties =
 // var command = commandSubmodulesGitDiff.command = Object.create( null );
 // command.hint = 'Get diffs of submodules repositories.';
 // command.subjectHint = false;
-// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 // command.properties = commandImply.command.properties;
 
 //
@@ -2812,6 +2805,70 @@ command.properties =
 
 //
 
+function commandSubmodulesRepoPullOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandSubmodulesRepoPullOpen, arguments );
+
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'submodules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandSubmodulesRepoPullOpen,
+    withStem : 0,
+  });
+
+  function handleEach( module )
+  {
+    return module.repoPullOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+    });
+  }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
+}
+
+commandSubmodulesRepoPullOpen.defaults =
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  // title : null,
+  body : null,
+  verbosity : null,
+  withSubmodules : 1
+};
+var command = commandSubmodulesRepoPullOpen.command = Object.create( null );
+command.subjectHint = 'A title for PR';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  ... commandImply.command.properties,
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+};
+
+//
+
 function commandModuleNew( e )
 {
   let will = this;
@@ -2843,7 +2900,7 @@ commandModuleNew.defaults =
 var command = commandModuleNew.command = Object.create( null );
 command.hint = 'Create a new module.';
 command.subjectHint = 'Path to module file. Default value is ".will.yml".';
-command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 command.properties =
 {
   ... commandImply.command.properties,
@@ -3001,7 +3058,7 @@ command.subjectHint = 'A path to hook and arguments.';
 // var command = commandModulesGit.command = Object.create( null );
 // command.hint = 'Run custom Git command on module and its submodules.';
 // command.subjectHint = 'Custom git command exclude name of command "git".';
-// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 // command.properties =
 // {
 //   ... commandImply.command.properties,
@@ -3054,7 +3111,7 @@ command.subjectHint = 'A path to hook and arguments.';
 // var command = commandModulesGitDiff.command = Object.create( null );
 // command.hint = 'Get diffs of root module and submodules repositories.';
 // command.subjectHint = false;
-// command.propertiesAliases = _.mapExtend( null, commandImply.command.propertiesAliases );
+// command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 // command.properties = commandImply.command.properties;
 
 // //
@@ -3283,6 +3340,72 @@ command.subjectHint = 'A path to hook and arguments.';
 
 //
 
+function commandModulesRepoPullOpen( e )
+{
+  let cui = this;
+  cui._command_head( commandModulesRepoPullOpen, arguments );
+
+  // return cui._commandModulesLike
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'modules repo pull open',
+    onEachModule : handleEach,
+    // onEach : handleEach,
+    commandRoutine : commandModulesRepoPullOpen,
+    withStem : 1,
+  });
+
+  function handleEach( module )
+  {
+    return module.repoPullOpen
+    ({
+      title : e.subject,
+      ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
+    });
+  }
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.repoPullOpen
+  //   ({
+  //     title : e.subject,
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults )
+  //   });
+  // }
+}
+
+commandModulesRepoPullOpen.defaults =
+{
+  token : null,
+  srcBranch : null,
+  dstBranch : null,
+  // title : null,
+  body : null,
+  verbosity : 2,
+  withSubmodules : 1
+};
+
+var command = commandModulesRepoPullOpen.command = Object.create( null );
+command.hint = 'Open pull requests from current module and its submodules.';
+command.subjectHint = 'A title for PR';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  ... commandImply.command.properties,
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
+  verbosity : 'Set verbosity. Default is 2.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : 1.',
+};
+
+//
+
 function commandShell( e )
 {
   let cui = this;
@@ -3401,7 +3524,7 @@ function commandHookCall( e )
   }
 }
 
-commandHookCall.defaults = _.mapExtend( null, commandImply.defaults );
+commandHookCall.defaults = _.props.extend( null, commandImply.defaults );
 var command = commandHookCall.command = Object.create( null );
 command.hint = 'Call a specified hook on the module.';
 command.subjectHint = 'A hook to execute';
@@ -3465,7 +3588,7 @@ function commandClean( e )
     o2 = _.props.extend( o2, e.optionsMap );
     delete o2.withSubmodules;
     o2.modules = [ module ];
-    _.routineOptions( cui.modulesClean, o2 );
+    _.routine.options_( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = cui.modulesOnlyRoots( o2.modules )
     o2.asCommand = 1;
@@ -3479,7 +3602,7 @@ function commandClean( e )
 
   //   // let o2 = cui.filterImplied();
   //   let o2 = { ... cui.RelationFilterOn };
-  //   o2 = _.mapExtend( o2, e.optionsMap );
+  //   o2 = _.props.extend( o2, e.optionsMap );
   //   delete o2.withSubmodules;
   //   o2.modules = it.openers;
   //   _.routineOptions( cui.modulesClean, o2 );
@@ -3663,7 +3786,6 @@ command.subjectHint = 'A name of export scenario.';
 function commandExportPurging( e )
 {
   let cui = this;
-  debugger
   cui._command_head( commandExportPurging, arguments );
   let doneContainer = [];
 
@@ -3793,7 +3915,7 @@ command.subjectHint = 'A name of export scenario.';
 //   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
 //   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
 
-//   cui.implied = _.mapExtend( cui.implied, { withPath } );
+//   cui.implied = _.props.extend( cui.implied, { withPath } );
 //   cui._transactionExtend( commandWith, cui.implied );
 
 //   return cui.modulesFindWithAt
@@ -3866,7 +3988,7 @@ function commandWith( e )
   // let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
   // let withPath = path.join( path.current(), cui.transaction.withPath, e.instructionArgument );
   let withPath = path.join( path.current(), _.strUnquote( e.instructionArgument ) );
-  cui.implied = _.mapExtend( cui.implied, { withPath } );
+  cui.implied = _.props.extend( cui.implied, { withPath } );
 
   cui._command_head
   ({
@@ -3898,7 +4020,7 @@ function commandModules( e )
 
   _.assert( arguments.length === 1 );
 
-  cui.implied = _.mapExtend( cui.implied, { modulesDepth : [ 0, Infinity ] } );
+  cui.implied = _.props.extend( cui.implied, { modulesDepth : [ 0, Infinity ] } );
 
   cui._command_head
   ({
@@ -3925,7 +4047,7 @@ function commandSubmodules( e )
 
   _.assert( arguments.length === 1 );
 
-  cui.implied = _.mapExtend( cui.implied, { modulesDepth : [ 1, Infinity ] } );
+  cui.implied = _.props.extend( cui.implied, { modulesDepth : [ 1, Infinity ] } );
 
   cui._command_head
   ({
@@ -4899,8 +5021,8 @@ function commandWillfileMergeIntoSingle( e )
 
   function submodulesDisable()
   {
-    if( !config )
-    config = configRead( dstPath.absolute ); /* qqq : for Dmytro : ?? */
+    // if( !config )
+    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
     for( let dependency in config.submodule )
     config.submodule[ dependency ].enabled = 0;
   }
@@ -5801,11 +5923,13 @@ command.properties =
 
 //
 
-/* qqq : for Dmytro : first cover
+/* aaa : for Dmytro : first cover
 will .npm.dep.add . dry:1 editing:0
 */
 
-/* qqq : for Dmytro : write full coverage */
+/* Dmytro : covered */
+
+/* aaa : for Dmytro : write full coverage */ /* Dmytro : covered behavior that was implemented before, no additional features are tested */
 
 function commandNpmDepAdd( e )
 {
@@ -5814,7 +5938,7 @@ function commandNpmDepAdd( e )
 
   _.sure( _.strDefined( e.subject ), 'Expects dependency path in subject' );
 
-  e.optionsMap.depPath = e.subject;
+  e.optionsMap.depPath = _.strUnquote( e.subject );
   e.optionsMap.localPath = e.optionsMap.to;
   delete e.optionsMap.to;
 
@@ -5831,14 +5955,13 @@ commandNpmDepAdd.defaults =
   dry : 0,
   verbosity : 1,
 };
-
 var command = commandNpmDepAdd.command = Object.create( null );
 command.hint = 'Add as dependency to NPM.';
 command.subjectHint = 'Dependency path.';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   to : 'Path to the directory with directory node_modules. Current path by default.',
@@ -5888,17 +6011,20 @@ commandNpmInstall.defaults =
   verbosity : 2,
 };
 
-/* qqq2 : for Dmytro : write test routines
+/* aaa2 : for Dmytro : write test routines
 - make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
 - duplicate tests in NpmTools and willbe
 */
-
+/* Dmytro : covered
+- first requirements is actual for routine `commandNpmDepAdd`, the case is covered
+- duplicated
+*/
 var command = commandNpmInstall.command = Object.create( null );
-command.hint = 'Add as dependency to NPM.';
+command.hint = 'Install NPM dependencies for the module.';
 command.propertiesAliases =
 {
   verbosity : [ 'v' ]
-}
+};
 command.properties =
 {
   to : 'Path to directory with package.json file. Default is current directory.',
@@ -6687,6 +6813,8 @@ let Extension =
   // commandSubmodulesGitStatus,
   // commandSubmodulesGitSync,
 
+  commandSubmodulesRepoPullOpen,
+
   commandModuleNew,
   commandModuleNewWith,
 
@@ -6696,6 +6824,8 @@ let Extension =
   // commandModulesRepoPullOpen,
   // commandModulesGitStatus,
   // commandModulesGitSync,
+
+  commandModulesRepoPullOpen,
 
   commandShell,
   commandDo,
