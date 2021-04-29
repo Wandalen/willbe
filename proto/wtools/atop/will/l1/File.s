@@ -682,7 +682,7 @@ function importFileStructureAdapt( willf )
   _.each( structure.submodule, ( val, key ) =>
   {
     let path = null;
-    let objectIs = _.objectIs( val );
+    let objectIs = _.object.isBasic( val );
 
     if( objectIs )
     path = val.path;

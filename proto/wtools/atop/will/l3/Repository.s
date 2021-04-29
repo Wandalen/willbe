@@ -338,7 +338,7 @@ function status( o )
       }
       else
       {
-        _.assert( _.objectIs( status ) );
+        _.assert( _.object.isBasic( status ) );
         repo._.hasLocalChanges = result.status;
         repo._.hasLocalUncommittedChanges = result.uncommitted;
         result = result.status;

@@ -36,7 +36,7 @@ function stepRoutineDelete( frame )
   beginLog();
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let filePath = step.inPathResolve( opts.filePath );
 
@@ -565,7 +565,7 @@ function stepRoutineView( frame )
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   debugger;
   let filePath = module.pathResolve
@@ -639,7 +639,7 @@ function stepRoutineNpmGenerate( frame )
   opts.currentContext = step;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.npmGenerateFromWillfile( opts );
 }
@@ -667,7 +667,7 @@ function stepRoutineWillfileFromNpm( frame )
   opts.currentContext = step;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.willfileGenerateFromNpm( opts );
 }
@@ -693,7 +693,7 @@ function stepRoutineGitExecCommand( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitExecCommand( opts );
 }
@@ -721,7 +721,7 @@ function stepRoutineGitPull( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitPull( opts );
 }
@@ -747,7 +747,7 @@ function stepRoutineGitPush( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitPush( opts );
 }
@@ -774,7 +774,7 @@ function stepRoutineGitReset( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitReset( opts );
 }
@@ -806,7 +806,7 @@ function stepRoutineGitStatus( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitStatus( opts );
 }
@@ -840,7 +840,7 @@ function stepRoutineGitSync( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitSync( opts );
 }
@@ -873,7 +873,7 @@ function stepRoutineGitTag( frame )
   delete opts[ 'tag.description' ];
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitTag( opts );
 }
@@ -902,7 +902,7 @@ function stepRoutineModulesUpdate( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   for( let opt in opts )
   {
@@ -985,7 +985,7 @@ function stepRoutineSubmodulesUpdate( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   for( let opt in opts )
   {

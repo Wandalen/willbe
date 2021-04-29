@@ -1910,7 +1910,7 @@ function filePathSet( src )
   let reflector = this;
   if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  _.assert( _.object.isBasic( reflector.src ), 'Reflector should have src to set filePath' );
   reflector.src.filePath = reflector.dst.filePath = _.entity.make( src );
   return reflector.src.filePath;
 }
@@ -1932,7 +1932,7 @@ function recursiveSet( src )
   let reflector = this;
   if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  _.assert( _.object.isBasic( reflector.src ), 'Reflector should have src to set filePath' );
   reflector.src.recursive = src;
   return reflector.src.recursive;
 }

@@ -2293,7 +2293,7 @@ function _willfilesExport()
 
   function handeWillFile( willfile )
   {
-    _.assert( _.objectIs( willfile.data ) );
+    _.assert( _.object.isBasic( willfile.data ) );
     result[ willfile.filePath ] = willfile.data;
   }
 
@@ -4644,7 +4644,7 @@ function resourceMapForKind( resourceKind )
   result = module[ will.ResourceKindToMapName.forKey( resourceKind ) ];
 
   _.assert( arguments.length === 1 );
-  _.sure( _.objectIs( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
+  _.sure( _.object.isBasic( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
 
   return result;
 }
@@ -5468,16 +5468,16 @@ function _buildsResolve_body( o )
     elements = _.props.vals( elements );
   }
 
-  let hasMapFilter = _.objectIs( o.criterion ) && Object.keys( o.criterion ).length > 0;
+  let hasMapFilter = _.object.isBasic( o.criterion ) && Object.keys( o.criterion ).length > 0;
   if( _.routineIs( o.criterion ) || hasMapFilter )
   {
 
-    _.assert( _.objectIs( o.criterion ), 'not tested' );
+    _.assert( _.object.isBasic( o.criterion ), 'not tested' );
 
     elements = filterWith( elements, o.criterion );
 
   }
-  else if( _.objectIs( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
+  else if( _.object.isBasic( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
   {
 
     elements = filterWith( elements, { default : 1 } );
@@ -5496,9 +5496,9 @@ function _buildsResolve_body( o )
   function filterWith( elements, filter )
   {
 
-    _.assert( _.objectIs( filter ), 'not tested' );
+    _.assert( _.object.isBasic( filter ), 'not tested' );
 
-    if( _.objectIs( filter ) && Object.keys( filter ).length > 0 )
+    if( _.object.isBasic( filter ) && Object.keys( filter ).length > 0 )
     {
 
       let template = filter;
@@ -7383,7 +7383,7 @@ function npmGenerateFromWillfile( o )
   let verbosity = o.verbosity;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let currentContext = o.currentContext ? o.currentContext : module;
   opts.packagePath = module.pathResolve
@@ -7654,7 +7654,7 @@ function willfileGenerateFromNpm( o )
   let verbosity = o.verbosity;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
   let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
@@ -7725,7 +7725,7 @@ function willfileExtendWillfile( o )
   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let dstWillfiles = dstFilesFind( request[ 0 ] );
   if( dstWillfiles.length > 2 )
@@ -8144,7 +8144,7 @@ function _willfileOnPropertyAct( o )
 
   _.routine.options( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( o ) );
+  _.assert( _.object.isBasic( o ) );
 
   let dstWillfileRecords = dstRecordsFind( o.request );
   _.assert

@@ -717,7 +717,7 @@ function _commandListLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -838,7 +838,7 @@ function _commandBuildLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -939,7 +939,7 @@ function _commandCleanLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1037,7 +1037,7 @@ function _commandNewLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   // withIn : 1,
   // withOut : 1,
@@ -1139,7 +1139,7 @@ function _commandTreeLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1214,7 +1214,7 @@ function _commandModulesLike( o )
   _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
   _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1382,7 +1382,7 @@ function _commandModuleOrientedLike( o )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.onCommandEnd === null || _.routineIs( o.onCommandEnd ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
