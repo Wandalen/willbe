@@ -28764,7 +28764,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
   a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
   .then( ( op ) =>
@@ -28777,7 +28777,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
   a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
   .then( ( op ) =>
@@ -42484,7 +42484,7 @@ const Proto =
     commandModules,
     commandSubmodules,
 
-    commandModulesRepoPullOpen,
+    // commandModulesRepoPullOpen xxx: Vova: removed?,
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
