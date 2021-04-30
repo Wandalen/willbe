@@ -1146,14 +1146,14 @@ function errResolvingMake( o )
   }
 
   if( rit.currentContext && rit.currentContext.qualifiedName )
-  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShallow( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringCodeShallow( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   else
-  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  o.err = it.errMake( o.err, '\nFailed to resolve', _.ct.format( _.entity.exportStringCodeShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 
   // if( rit.currentContext && rit.currentContext.qualifiedName )
-  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShallow( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringCodeShallow( o.selector ), 'path' ), 'for', rit.currentContext.decoratedAbsoluteName );
   // else
-  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
+  // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringCodeShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 
   _.error.concealedSet( o.err, { ResolvingError : true } );
   debugger;
