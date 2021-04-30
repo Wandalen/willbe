@@ -139,7 +139,7 @@ function MakeForEachCriterion( o )
 
     if( o.resource.criterion && _.props.keys( o.resource.criterion ).length > 0 )
     {
-      let samples = _.eachSample_({ sets : o.resource.criterion });
+      let samples = _.permutation.eachSample({ sets : o.resource.criterion });
       if( samples.length > 1 )
       for( let index = 0 ; index < samples.length ; index++ )
       {
