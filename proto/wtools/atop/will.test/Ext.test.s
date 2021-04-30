@@ -28103,7 +28103,7 @@ function commandImplyPropertyWithDisabled( test )
   }
 }
 
-commandImplyPropertyWithDisabled.timeOut = 600000;
+commandImplyPropertyWithDisabled.timeOut = 1200000;
 
 //
 
@@ -28355,7 +28355,7 @@ function commandImplyPropertyWithEnabled( test )
   }
 }
 
-commandImplyPropertyWithEnabled.timeOut = 600000;
+commandImplyPropertyWithEnabled.timeOut = 1200000;
 
 //
 
