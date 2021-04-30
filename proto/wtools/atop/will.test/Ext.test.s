@@ -33710,7 +33710,7 @@ function commandGitDiff( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
     return null;
   });
@@ -33748,7 +33748,7 @@ function commandGitDiff( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );

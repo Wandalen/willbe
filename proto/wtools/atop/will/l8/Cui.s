@@ -4435,7 +4435,8 @@ function commandWillfileSet( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
