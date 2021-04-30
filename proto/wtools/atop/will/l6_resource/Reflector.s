@@ -387,12 +387,12 @@ function form3()
   _.assert
   (
     reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringDiagnosticShallow( reflector.src.prefixPath )
   );
   _.assert
   (
     reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringDiagnosticShallow( reflector.src.prefixPath )
   );
 
   /* end */
@@ -1910,7 +1910,7 @@ function filePathSet( src )
   let reflector = this;
   if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  _.assert( _.object.isBasic( reflector.src ), 'Reflector should have src to set filePath' );
   reflector.src.filePath = reflector.dst.filePath = _.entity.make( src );
   return reflector.src.filePath;
 }
@@ -1932,7 +1932,7 @@ function recursiveSet( src )
   let reflector = this;
   if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  _.assert( _.object.isBasic( reflector.src ), 'Reflector should have src to set filePath' );
   reflector.src.recursive = src;
   return reflector.src.recursive;
 }

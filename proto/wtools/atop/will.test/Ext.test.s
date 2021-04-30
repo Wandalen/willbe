@@ -41591,7 +41591,7 @@ function commandsSubmoduleSafety( test )
       test.identical( op.exitCode, 0 );
 
       var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
-      if( _.objectIs( expectedOutput ) )
+      if( _.object.isBasic( expectedOutput ) )
       expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
       if( expectedOutput )
       _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
