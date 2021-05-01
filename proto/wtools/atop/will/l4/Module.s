@@ -8906,7 +8906,15 @@ function _remoteChanged()
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
     // let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
-    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, logger : 1 });
+    let opts =
+    {
+      localPath : module.downloadPath,
+      // logger : 1
+    }
+    if( _.longHas( _.git.protocols, remoteProvider.protocol ) )
+    opts.detailing = 1;
+
+    let result = remoteProvider.versionLocalRetrive( opts );
     if( result.version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
