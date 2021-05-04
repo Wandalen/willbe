@@ -1346,7 +1346,7 @@ function _add( object )
   let result;
 
   if( _.arrayIs( object ) )
-  return _.any( _.map_( null, object, ( object ) => junction._add( object ) ) );
+  return _.any( _.container.map_( null, object, ( object ) => junction._add( object ) ) );
 
   // _.assert( _.numberIs( object.formed ) ); /* yyy */
   // if( object.formed <= 0 )
@@ -1389,7 +1389,7 @@ function _remove( object )
   let junction = this;
 
   if( _.arrayIs( object ) )
-  return _.any( _.map_( null, object, ( object ) => junction._remove( object ) ) );
+  return _.any( _.container.map_( null, object, ( object ) => junction._remove( object ) ) );
 
   if( object instanceof _.will.ModulesRelation )
   {

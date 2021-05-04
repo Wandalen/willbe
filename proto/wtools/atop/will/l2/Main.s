@@ -368,7 +368,7 @@ function PathToRole( filePath )
   let role = null;
 
   if( _.argumentsArray.like( filePath ) )
-  return _.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
+  return _.container.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
 
   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
   let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
@@ -3629,7 +3629,7 @@ function junctionsInfoExport( junctions )
     // });
   }
 
-  return _.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
+  return _.container.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
 }
 
 // --
