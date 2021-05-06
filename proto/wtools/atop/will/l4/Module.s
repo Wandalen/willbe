@@ -8919,9 +8919,15 @@ function _remoteChanged()
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
       if( result.isBranch )
-      remotePath.tag = result.version;
+      {
+        remotePath.tag = result.version;
+      }
       else
-      remotePath.hash = result.version;
+      {
+        remotePath.hash = result.version;
+        delete remotePath.tag; /* Dmytro : tag and hash should not exist simultaneously */
+      }
+
       module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
     }
   }
