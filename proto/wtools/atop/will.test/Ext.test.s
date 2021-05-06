@@ -30334,7 +30334,7 @@ function commandSubmodulesGitSync( test )
 
 commandSubmodulesGitSync.rapidity = -1;
 
-//
+
 
 function commandSubmodulesRepoPullOpen( test )
 {
@@ -33130,6 +33130,74 @@ function commandSubmodules( test )
 }
 
 commandSubmodules.rapidity = -1;
+
+//
+
+function commandModulesRepoPullOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
+
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -42507,7 +42575,7 @@ const Proto =
     commandModules,
     commandSubmodules,
 
-    // commandModulesRepoPullOpen xxx: Vova: removed?,
+    commandModulesRepoPullOpen, /* xxx: Vova: removed?, */ /* Dmytro : maybe, I lost this routine */
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
