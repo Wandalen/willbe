@@ -990,7 +990,7 @@ function willProtoEntryPathAdjustTools( context )
   if( !protoEntryPath )
   return;
 
-  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  protoEntryPath = _.container.map_( protoEntryPath, ( entryPath ) =>
   {
     if( abs( entryPath ) !== abs( 'proto/node_modules/Tools' ) )
     return entryPath;

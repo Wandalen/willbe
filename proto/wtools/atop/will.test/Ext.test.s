@@ -13755,11 +13755,34 @@ function exportTracing( test )
 
   .finally( ( err, op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    // test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
-    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
-    _.errAttend( err );
+    test.identical( op.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
+
     return null;
   })
 
@@ -28080,7 +28103,7 @@ function commandImplyPropertyWithDisabled( test )
   }
 }
 
-commandImplyPropertyWithDisabled.timeOut = 600000;
+commandImplyPropertyWithDisabled.timeOut = 1200000;
 
 //
 
@@ -28332,7 +28355,7 @@ function commandImplyPropertyWithEnabled( test )
   }
 }
 
-commandImplyPropertyWithEnabled.timeOut = 600000;
+commandImplyPropertyWithEnabled.timeOut = 1200000;
 
 //
 
@@ -28764,7 +28787,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
   a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
   .then( ( op ) =>
@@ -28777,7 +28800,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
   a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
   .then( ( op ) =>
@@ -33207,8 +33230,8 @@ function commandGitCheckHardLinkRestoring( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
@@ -33687,7 +33710,7 @@ function commandGitDiff( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
     return null;
   });
@@ -33725,7 +33748,7 @@ function commandGitDiff( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
@@ -41591,7 +41614,7 @@ function commandsSubmoduleSafety( test )
       test.identical( op.exitCode, 0 );
 
       var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
-      if( _.objectIs( expectedOutput ) )
+      if( _.object.isBasic( expectedOutput ) )
       expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
       if( expectedOutput )
       _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
@@ -42484,7 +42507,7 @@ const Proto =
     commandModules,
     commandSubmodules,
 
-    commandModulesRepoPullOpen,
+    // commandModulesRepoPullOpen xxx: Vova: removed?,
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,

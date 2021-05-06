@@ -100,7 +100,7 @@ function form2()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( step.formed === 1 );
-  _.assert( _.objectIs( step.opts ) || step.opts === null );
+  _.assert( _.object.isBasic( step.opts ) || step.opts === null );
 
   if( step.stepRoutine )
   {
@@ -127,7 +127,7 @@ function form2()
       step2.form2();
 
       _.assert( step2.formed >= 2 );
-      _.assert( _.objectIs( step2.uniqueOptions ) );
+      _.assert( _.object.isBasic( step2.uniqueOptions ) );
 
       if( _.props.keys( _.mapOnly_( null, step.opts, step2.uniqueOptions ) ).length )
       {

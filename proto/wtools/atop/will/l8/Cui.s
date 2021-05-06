@@ -288,7 +288,7 @@ function _command_head( o )
   //   _.props.extend( e.propertiesMap, cui.implied );
   // }
 
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( e.propertiesMap ) );
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringDiagnosticShallow( e.propertiesMap ) );
   if( o.routine.command.properties )
   _.map.sureHasOnly( e.propertiesMap, o.routine.command.properties, `Command does not expect options:` );
 
@@ -717,7 +717,7 @@ function _commandListLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -838,7 +838,7 @@ function _commandBuildLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -939,7 +939,7 @@ function _commandCleanLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1037,7 +1037,7 @@ function _commandNewLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   // withIn : 1,
   // withOut : 1,
@@ -1139,7 +1139,7 @@ function _commandTreeLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1214,7 +1214,7 @@ function _commandModulesLike( o )
   _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
   _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1382,7 +1382,7 @@ function _commandModuleOrientedLike( o )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.onCommandEnd === null || _.routineIs( o.onCommandEnd ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -4435,7 +4435,8 @@ function commandWillfileSet( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
@@ -4506,7 +4507,8 @@ function commandWillfileDel( e )
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   subjectNormalize();
@@ -4573,7 +4575,8 @@ function commandWillfileDel( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './';
+    // e.subject = './';
+    e.subject = cui.transaction.withPath;
   }
 }
 
@@ -4607,7 +4610,8 @@ function commandWillfileExtend( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
@@ -4679,7 +4683,8 @@ function commandWillfileSupplement( e )
   cui._command_head( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
