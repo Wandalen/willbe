@@ -4435,7 +4435,8 @@ function commandWillfileSet( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
@@ -4506,7 +4507,8 @@ function commandWillfileDel( e )
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   subjectNormalize();
@@ -4573,7 +4575,8 @@ function commandWillfileDel( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './';
+    // e.subject = './';
+    e.subject = cui.transaction.withPath;
   }
 }
 
@@ -4607,7 +4610,8 @@ function commandWillfileExtend( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
@@ -4679,7 +4683,8 @@ function commandWillfileSupplement( e )
   cui._command_head( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {

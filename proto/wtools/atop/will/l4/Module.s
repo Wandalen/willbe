@@ -1953,7 +1953,7 @@ function isFull( o )
   o.only = module.optionsFormingForward( o.only );
 
   let states = module.stager.stagesState( 'performed' )
-  _.props.supplement( o.only, _.map_( null, states, () => true ) );
+  _.props.supplement( o.only, _.container.map_( null, states, () => true ) );
   states = _.only( states, o.only ); /* xxx : review mapOnly / mapBut */
 
   return _.all( states );
@@ -2971,7 +2971,7 @@ function superRelationsAppend( src )
 
   if( _.arrayIs( src ) )
   {
-    return _.map_( null, src, ( src ) => module.supeRelationsAppend( src ) );
+    return _.container.map_( null, src, ( src ) => module.supeRelationsAppend( src ) );
   }
 
   _.assert( src instanceof _.will.ModulesRelation );
@@ -2992,7 +2992,7 @@ function superRelationsRemove( src )
 
   if( _.arrayIs( src ) )
   {
-    return _.map_( null, src, ( src ) => module.superRelationsRemove( src ) );
+    return _.container.map_( null, src, ( src ) => module.superRelationsRemove( src ) );
   }
 
   _.assert( src instanceof _.will.ModulesRelation );
@@ -3021,7 +3021,7 @@ function submodulesAreDownloaded( o )
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/commonPath' );
 
-  return _.map_( null, relations, ( relation ) =>
+  return _.container.map_( null, relations, ( relation ) =>
   {
     if( relation === null )
     return true;
@@ -3089,7 +3089,7 @@ function submodulesAreValid( o )
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/absoluteName' );
 
-  return _.map_( null, relations, ( relation ) =>
+  return _.container.map_( null, relations, ( relation ) =>
   {
     if( relation === null )
     return true;
@@ -8906,7 +8906,15 @@ function _remoteChanged()
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
     // let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
-    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, logger : 1 });
+    let opts =
+    {
+      localPath : module.downloadPath,
+      // logger : 1
+    }
+    if( _.longHas( _.git.protocols, remoteProvider.protocol ) )
+    opts.detailing = 1;
+
+    let result = remoteProvider.versionLocalRetrive( opts );
     if( result.version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );

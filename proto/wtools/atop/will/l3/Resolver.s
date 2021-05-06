@@ -653,7 +653,7 @@ function _pathsTransform( onPath, onStr )
 
   function resourcesTransform( resources )
   {
-    resources = _.map_( null, resources, ( resource ) => transform( resource ) );
+    resources = _.container.map_( null, resources, ( resource ) => transform( resource ) );
     return resources;
   }
 
