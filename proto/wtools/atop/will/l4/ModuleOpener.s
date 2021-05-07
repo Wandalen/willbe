@@ -1677,7 +1677,8 @@ function _repoDownload( o )
       verbosity : will.transaction.verbosity - 5,
       extra :
       {
-        fetching : 0
+        fetching : 0,
+        makingRecordsFast : 1
       },
     }
 
