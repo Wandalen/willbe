@@ -22905,9 +22905,7 @@ function versionsAgreeNpm( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
@@ -22916,12 +22914,11 @@ function versionsAgreeNpm( test )
     a.reflect();
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'agree npm modules';
@@ -22958,11 +22955,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, '!alpha', '!beta' );
@@ -22973,10 +22970,9 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
 
     return null;
-  })
+  });
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'second run of .submodules.versions.agree';
@@ -23012,12 +23008,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
@@ -23053,11 +23048,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
 
@@ -23068,10 +23063,9 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting2b' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
-  })
+  });
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
@@ -23109,13 +23103,15 @@ function versionsAgreeNpm( test )
     var exp =
     [
       '.',
+      './node_modules',
+      './node_modules/wmodulefortesting2b',
       './wtools',
       './wtools/testing',
       './wtools/testing/Basic.s',
       './wtools/testing/l4',
       './wtools/testing/l4/testing2b',
       './wtools/testing/l4/testing2b/Include.s',
-      './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
+      './wtools/testing/l4/testing2b/ModuleForTesting2b.s',
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );

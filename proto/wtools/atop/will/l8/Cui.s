@@ -210,7 +210,6 @@ function openersFind( o )
 
     if( !will.currentOpeners.length )
     {
-      debugger;
       if( !o.allowNoOpeners )
       throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
       else
@@ -1409,7 +1408,7 @@ function _commandModuleOrientedLike( o )
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
     o2.recursive = 2;
-    return will.modulesFor( o2 )
+    return will.modulesFor( o2 );
   })
 
   if( o.onCommandEnd )
@@ -2447,7 +2446,6 @@ command.properties =
 //   }
 //   // function handleEach( it )
 //   // {
-//   //   debugger;
 //   //   return it.opener.openedModule.shell
 //   //   ({
 //   //     execPath : e.instructionArgument,
