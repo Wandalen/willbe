@@ -35373,7 +35373,8 @@ function commandGitSync( test )
   {
     test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
