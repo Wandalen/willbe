@@ -4616,7 +4616,7 @@ function commandWillfileExtend( e )
     let o =
     {
       request : e.subject,
-      onProperty : _.props.extend,
+      onProperty : _.props.extend.bind( _.property ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4689,7 +4689,7 @@ function commandWillfileSupplement( e )
     let o =
     {
       request : e.subject,
-      onProperty : _.props.supplement,
+      onProperty : _.props.supplement.bind( _.props ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
