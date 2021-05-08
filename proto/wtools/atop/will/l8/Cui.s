@@ -4752,7 +4752,7 @@ function commandWillfileExtendWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.extend,
+    onSection : _.props.extend.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4828,7 +4828,7 @@ function commandWillfileSupplementWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4868,7 +4868,7 @@ function commandWillfileMergeIntoSingle( e )
   let o =
   {
     request : willfileName + ' ./',
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
   };
   _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 
@@ -4878,7 +4878,7 @@ function commandWillfileMergeIntoSingle( e )
     {
       request : `${ willfileName } ${ e.optionsMap.secondaryPath }`,
       name : 0,
-      onSection : _.props.extend,
+      onSection : _.props.extend.bind( _.props ),
     };
     _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
   }
