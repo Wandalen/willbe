@@ -35834,7 +35834,8 @@ function commandGitTag( test )
   {
     test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
     return null;
   })
