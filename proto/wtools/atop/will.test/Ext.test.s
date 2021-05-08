@@ -41324,32 +41324,11 @@ function commandNpmInstall( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    let configPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    let configWasPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
-    test.identical( configPackage.name, configWasPackage.name );
-    test.notIdentical( configPackage.version, configWasPackage.version );
-    test.notIdentical( configPackage.enabled, configWasPackage.enabled );
-    test.notIdentical( configPackage.engine, configWasPackage.engine );
-    test.identical( configPackage.description, configWasPackage.description );
-    test.identical( configPackage.keywords, configWasPackage.keywords );
-    test.identical( configPackage.license, configWasPackage.license );
-    test.identical( configPackage.author, configWasPackage.author );
-    test.identical( configPackage.contributors.length, 2 );
-    test.identical( configWasPackage.contributors, undefined );
-    test.identical( configPackage.bin, configWasPackage.bin );
-    test.notIdentical( configPackage.repository, configWasPackage.repository );
-    test.notIdentical( configPackage.bugs, configWasPackage.bugs );
-    test.identical( configPackage.main, configWasPackage.main );
-    test.identical( configPackage.files, configWasPackage.files );
-    let packageDepKeys = _.props.keys( configPackage.dependencies );
-    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
-    test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
-    test.false( 'wgittools' in configWasPackage.dependencies );
-    test.identical( packageDepKeys.length, 4 );
-    test.identical( wasPackageDepKeys.length, 4 );
-    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
-    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
-    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
 
     test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
     test.identical( _.strCount( op.output, '> npm ci' ), 1 );
