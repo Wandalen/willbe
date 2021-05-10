@@ -92,6 +92,7 @@ function onModule( context )
 
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
 
+  context.start( 'will.local .submodules.update' );
   context.start( 'will.local .export' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
