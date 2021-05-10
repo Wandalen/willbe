@@ -1,0 +1,33 @@
+submodule :
+
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+step :
+
+  long.running.step :
+    currentPath : path::in
+    shell : node step.js
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      long.running.step
+
