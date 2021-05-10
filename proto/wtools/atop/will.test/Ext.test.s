@@ -28151,48 +28151,76 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
+    a.ready.then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
@@ -28247,24 +28275,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
@@ -28295,24 +28337,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+   
       return null;
     })
 
