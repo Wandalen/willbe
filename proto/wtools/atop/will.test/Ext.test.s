@@ -7473,187 +7473,187 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
-function hookPublish2( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\s\./ ), 1 );
-    return null;
-  })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am third' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am fourth' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  .then( ( op ) =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 0 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
-    test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/ .call publish2' )
-  .then( ( op ) =>
-  {
-    test.case = 'without option `tag`, should throw error';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( 'original' );
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    a.shell( 'git clone repo/ clone' );
-    return a.ready;
-  }
-}
+// function hookPublish2( test )
+// {
+//   let context = this;
+//   let a = context.assetFor( test, 'gitPush' );
+//
+//   /* */
+//
+//   begin().then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
+//     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, /\s\./ ), 1 );
+//     return null;
+//   })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am third' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am fourth' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   .then( ( op ) =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 0 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+//     test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* - */
+//
+//   a.appStartNonThrowing( '.with original/ .call publish2' )
+//   .then( ( op ) =>
+//   {
+//     test.case = 'without option `tag`, should throw error';
+//     test.notIdentical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
+//
+//     return null;
+//   });
+//
+//   /* - */
+//
+//   return a.ready;
+//
+//   /* */
+//
+//   function begin()
+//   {
+//     a.ready.then( () =>
+//     {
+//       a.reflect();
+//       a.fileProvider.dirMake( a.abs( 'repo' ) );
+//       return null;
+//     });
+//     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+//     let currentPath = a.abs( 'original' );
+//     a.shell({ currentPath, execPath : 'git init' });
+//     a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+//     a.shell({ currentPath, execPath : 'git add --all' });
+//     a.shell({ currentPath, execPath : 'git commit -am first' });
+//     a.shell({ currentPath, execPath : 'git push -u origin --all' });
+//     a.shell( 'git clone repo/ clone' );
+//     return a.ready;
+//   }
+// }
 
 //
 
@@ -42327,7 +42327,7 @@ const Proto =
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
-    hookPublish2,
+    // hookPublish2, /* Dmytro : hook was commented out */
 
     implyWithDot,
     implyWithAsterisk,

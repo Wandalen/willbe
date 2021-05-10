@@ -534,7 +534,7 @@ function pathIsRemote( remotePath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( arguments.length === 1, 'Expects no arguments' );
+  _.assert( arguments.length === 1, 'Expects exactly one argument {-remotePath-}' );
   _.assert( _.strIs( remotePath ) );
 
   // if( remotePath === undefined )
@@ -4961,6 +4961,8 @@ function hookCall( o )
   _.assert( path.isAbsolute( o.execPath ) );
   _.assert( _.strDefined( o.interpreterName ) );
 
+  if( o.interpreterName === 'js' )
+  debugger;
   if( o.interpreterName === 'js' )
   return jsCall();
   else if( o.interpreterName === 'os' )
