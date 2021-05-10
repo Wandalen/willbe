@@ -28789,7 +28789,7 @@ function commandSubmodulesClean( test )
 
   /* OK */
 
-  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
@@ -28802,7 +28802,7 @@ function commandSubmodulesClean( test )
 
   /* OK */
 
-  a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
+  a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
