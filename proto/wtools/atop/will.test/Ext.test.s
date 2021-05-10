@@ -6067,7 +6067,11 @@ function hookGitPullConflict( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   a.ready.then( ( op ) =>
   {
@@ -6224,11 +6228,11 @@ copy
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -6238,11 +6242,11 @@ original
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -6832,7 +6836,11 @@ function hookGitSyncConflict( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -6926,11 +6934,11 @@ copy
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -6940,11 +6948,11 @@ original
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -7006,6 +7014,8 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -7015,10 +7025,13 @@ function hookGitSyncRestoreHardLinksWithShared( test )
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
-
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -7073,11 +7086,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -24393,7 +24406,11 @@ function stepGitCheckHardLinkRestoring( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -24597,11 +24614,11 @@ copy
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 copy
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -24610,11 +24627,11 @@ copy
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 copy
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -24816,7 +24833,11 @@ function stepGitPull( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -24998,11 +25019,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -25011,11 +25032,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -32351,6 +32372,8 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32359,7 +32382,11 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -32431,11 +32458,11 @@ original/f2.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -32511,6 +32538,8 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32518,6 +32547,10 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
+
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
 
   /* */
 
@@ -32583,11 +32616,11 @@ original/f2.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 super
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'super/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -32662,6 +32695,8 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32670,7 +32705,11 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -32736,11 +32775,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -33278,7 +33317,11 @@ function commandGitCheckHardLinkRestoring( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -33512,11 +33555,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -33525,11 +33568,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -34176,7 +34219,11 @@ function commandGitPullRestoreHardlinkOnFail( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin();
   a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
@@ -34213,11 +34260,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -34226,11 +34273,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -35460,7 +35507,11 @@ function commandGitSyncRestoringHardlinks( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   a.ready.then( ( op ) => a.reflect() );
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
@@ -35561,11 +35612,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -35574,11 +35625,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -35613,6 +35664,8 @@ function commandGitSyncRestoreHardLinksWithShared( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -35621,7 +35674,11 @@ function commandGitSyncRestoreHardLinksWithShared( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -35680,11 +35737,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
