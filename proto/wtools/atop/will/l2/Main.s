@@ -539,11 +539,14 @@ function pathIsRemote( remotePath )
 
   // if( remotePath === undefined )
   // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
-  let remoteProvider = fileProvider.providerForPath( remotePath );
+  // let remoteProvider = fileProvider.providerForPath( remotePath );
+
+  let remoteProvider = _.repo.providerForPath({ remotePath });
 
   _.assert( !!remoteProvider );
 
-  return !!remoteProvider.isVcs;
+  return !_.longHasAny( [ 'hd', 'file' ], remoteProvider.name );
+  // return !!remoteProvider.isVcs;
 }
 
 //
