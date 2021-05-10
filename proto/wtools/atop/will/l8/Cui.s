@@ -636,9 +636,6 @@ function _commandsBegin( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.aux.is( o.properties ) );
 
-  if( will.topCommand === null )
-  will.topCommand = o.commandRoutine;
-
   _.assert( will.transaction instanceof _.will.Transaction )
 
 }
@@ -651,7 +648,7 @@ _commandsBegin.defaults =
 
 //
 
-function _commandsEnd( command )
+function _commandsEnd( commandEvent )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -659,11 +656,11 @@ function _commandsEnd( command )
   let logger = will.transaction.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
-  _.assert( _.routineIs( command ) );
+  _.assert( _.objectIs( commandEvent ) );
 
   let beeping = will.transaction.beeping;
 
-  if( will.topCommand !== command )
+  if( commandEvent.index !== commandEvent.parsedCommands.length - 1 )
   {
     // will.transaction.finit();
     // will.transaction = null;
@@ -672,8 +669,6 @@ function _commandsEnd( command )
 
   try
   {
-
-    will.topCommand = null;
 
     // if( will.currentOpener )
     // will.currentOpener.finit();
@@ -797,7 +792,7 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -901,7 +896,7 @@ function _commandBuildLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -998,7 +993,7 @@ function _commandCleanLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1096,7 +1091,7 @@ function _commandNewLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1170,7 +1165,7 @@ function _commandTreeLike( o )
   })
   .finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     err = _.err( err, `\nFailed to ${o.name}` );
     if( err )
@@ -1231,7 +1226,7 @@ function _commandModulesLike( o )
   return ready.finally( ( err, arg ) =>
   {
     will.currentOpeners = openers;
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1416,7 +1411,7 @@ function _commandModuleOrientedLike( o )
 
   ready.finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     throw _.err( err, `\nFailed to ${o.name}` );
     return arg;
@@ -6708,7 +6703,6 @@ let Associates =
 
 let Restricts =
 {
-  topCommand : null,
   will : null,
   implied : _.define.own( {} ),
   transactionOld : null
@@ -6722,7 +6716,7 @@ let Statics =
 let Forbids =
 {
   currentPath : 'currentPath',
-  currentOpenerPath : 'currentOpenerPath',
+  currentOpenerPath : 'currentOpenerPath'
 }
 
 let Accessors =

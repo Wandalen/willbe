@@ -28785,7 +28785,7 @@ function commandSubmodulesClean( test )
 
   /* OK */
 
-  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
@@ -28798,7 +28798,7 @@ function commandSubmodulesClean( test )
 
   /* OK */
 
-  a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
+  a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
@@ -42134,6 +42134,42 @@ Checks if command tag:
 
 //
 
+function commandsSequenceProceduresTermination( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandsSequenceProceduresTermination' );
+
+  a.reflect();
+
+  /* */
+
+  a.appStart( '.submodules.update .build' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, `procedure::` ) );
+    test.false( _.strHas( op.output, /Waiting for .* procedure\(s\)/ ) );
+    test.true( _.strHas( op.output, `step::start` ) );
+    test.true( _.strHas( op.output, `step::end` ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+commandsSequenceProceduresTermination.rapidity = 1;
+commandsSequenceProceduresTermination.routineTimeOut = 30000;
+commandsSequenceProceduresTermination.description =
+`
+Runs two commands in sequence.
+Second command executes long running step.
+Routine checks that procedures termination begins after last command.
+`
+
+//
+
 function willFilterFieldsOverwrite( test )
 {
   let context = this;
@@ -42604,6 +42640,8 @@ const Proto =
     commandsSubmoduleSafety,
     commandsSubmoduleSafetyInvalidUrl,
     commandSubmodulesUpdateOptionTo,
+
+    commandsSequenceProceduresTermination,
 
     willFilterFieldsOverwrite,
 

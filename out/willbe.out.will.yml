@@ -2,13 +2,10 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  willbe.out.will.yml: &ref_0
-    hash: 4425344126d3d05031111f72af845f42
-    size: 264211
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: fd9115e082204dc96496882797909fba
     size: 2605
-  ../.im.will.yml: &ref_2
+  ../.im.will.yml: &ref_1
     hash: c826f313edb63a2504c6530f032d30e2
     size: 6967
 module:
@@ -19,20 +16,20 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts:
+      npm.scripts: &ref_5
         test: 'wtest .run proto/** rapidity:-1'
         docgen: wdocgen .build proto
         single-process-will: node proto/wtools/atop/will/entry/Exec
@@ -43,7 +40,7 @@ module:
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
+      npm.bin: &ref_6
         single-process-will: proto/wtools/atop/will/entry/Exec
         debug-will: proto/wtools/atop/will/entry/ExecDebug
         unrestricted-will: proto/wtools/atop/will/entry/ExecUnrestricted
@@ -1753,6 +1750,12 @@ module:
             ../proto/wtools/atop/will.test/_asset/commandImplyProperties/disabled
           - >-
             ../proto/wtools/atop/will.test/_asset/commandImplyProperties/disabled/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/commandsSequenceProceduresTermination
+          - >-
+            ../proto/wtools/atop/will.test/_asset/commandsSequenceProceduresTermination/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/commandsSequenceProceduresTermination/step.js
           - ../proto/wtools/atop/will.test/_asset/commandVersionsAgree
           - >-
             ../proto/wtools/atop/will.test/_asset/commandVersionsAgree/.ex.will.yml
@@ -4488,24 +4491,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -4600,9 +4585,8 @@ module:
           content: proto
           export: 1
     consistency:
-      willbe.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: willbe
@@ -4610,35 +4594,14 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+      contributors: *ref_4
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** rapidity:-1'
-        docgen: wdocgen .build proto
-        single-process-will: node proto/wtools/atop/will/entry/Exec
-        debug-will: node proto/wtools/atop/will/entry/ExecDebug
-        unrestricted-will: node proto/wtools/atop/will/entry/ExecUnrestricted
-        will: node proto/wtools/atop/will/entry/ExecUnrestricted
-        docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
-        docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
-        docker-run-centos: docker run --rm willbe-centos
-        docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
-        single-process-will: proto/wtools/atop/will/entry/Exec
-        debug-will: proto/wtools/atop/will/entry/ExecDebug
-        unrestricted-will: proto/wtools/atop/will/entry/ExecUnrestricted
-        will: proto/wtools/atop/will/entry/ExecUnrestricted
+      npm.scripts: *ref_5
+      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -5442,4 +5405,3 @@ module:
       ../.im.will.yml:
         hash: c826f313edb63a2504c6530f032d30e2
         size: 6967
-      willbe.out.will.yml: *ref_0

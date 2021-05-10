@@ -1675,9 +1675,10 @@ function _repoDownload( o )
       reflectMap : { [ opener.remotePath ] : opener.downloadPath },
       // verbosity : will.verbosity - 5,
       verbosity : will.transaction.verbosity - 5,
+      outputFormat : 'nothing',
       extra :
       {
-        fetching : 0
+        fetching : 0,
       },
     }
 
