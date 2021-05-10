@@ -92,7 +92,7 @@ function onModule( context )
 
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
 
-  context.start( 'will.local .export' ); /* xxx */
+  context.start( 'will.local .export.purging' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
