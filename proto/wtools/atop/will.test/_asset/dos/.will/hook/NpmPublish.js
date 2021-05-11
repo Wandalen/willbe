@@ -36,7 +36,7 @@ function onModule( context )
     context2.request.original = context2.request.subject;
     delete context2.request.map.tag;
     delete context2.request.map.dry;
-    delete context2.request.map.submodulesUpdate;
+    delete context2.request.map.submodulesUpdating;
     delete context2.request.map.force;
     _.assert( context2.request.map !== context.request.map );
     context2.will.hooks.GitSync.call( context2 );
@@ -92,10 +92,11 @@ function onModule( context )
   });
 
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
- 
-  if( o.submodulesUpdate )
-  context.start( 'will.local .submodules.update' );
-  context.start( 'will.local .export' ); /* xxx */
+
+  if( o.submodulesUpdating )
+  context.start( 'will.local .imply withOut:0 .submodules.update' );
+  // context.start( 'will.local .submodules.update' );
+  context.start( 'will.local .export.purging' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
@@ -128,7 +129,7 @@ function onModule( context )
     context2.request.original = context2.request.subject;
     delete context2.request.map.tag;
     delete context2.request.map.dry;
-    delete context2.request.map.submodulesUpdate;
+    delete context2.request.map.submodulesUpdating;
     delete context2.request.map.force;
     context2.will.hooks.GitSync.call( context2 );
   }
@@ -198,7 +199,7 @@ var defaults = onModule.defaults = Object.create( null );
 defaults.tag = null;
 defaults.v = null;
 defaults.dry = 0;
-defaults.submodulesUpdate = 0;
+defaults.submodulesUpdating = 0;
 defaults.force = 0;
 defaults.verbosity = 2;
 
