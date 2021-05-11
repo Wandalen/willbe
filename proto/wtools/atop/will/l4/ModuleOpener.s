@@ -373,7 +373,6 @@ function willfileRegister( willf )
 
   if( _.arrayIs( willf ) )
   {
-    debugger;
     willf.forEach( ( willf ) => opener.willfileRegister( willf ) );
     return;
   }
@@ -410,8 +409,6 @@ function _willfilesFindAct( o )
   }
   else
   {
-    // if( _.strEnds( o.willfilesPath, '/l2' ) )
-    // debugger;
     records = will.willfilesFind
     ({
       commonPath : o.willfilesPath,
@@ -557,8 +554,6 @@ function find( o )
 
     /* */
 
-    // debugger;
-
     if( !openedModule || !openedModule.willfilesArray.length )
     {
 
@@ -694,8 +689,6 @@ function open( o )
     skipping.peerModulesFormed = !o.peerModulesFormed;
     skipping.subModulesFormed = !o.subModulesFormed;
     skipping.resourcesFormed = !o.resourcesFormed;
-
-    // debugger;
 
     let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'finalFormed' );
     _.assert( !processing, 'not tested' );
@@ -1171,9 +1164,6 @@ function _repoForm()
   let isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
   // let isRemote = opener.repoIsRemote();
 
-  // if( opener.id === 1 )
-  // debugger;
-
   if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath )
   {
     if( !opener._.localPath )
@@ -1240,9 +1230,6 @@ function _repoForm()
   _.assert( remotePath === undefined || remotePath === opener._.remotePath );
   _.assert( opener.repo instanceof _.will.Repository );
 
-  // if( opener.id === 1 )
-  // debugger;
-
   if( opener.formed < 2 )
   opener.formed = 2;
 
@@ -1280,7 +1267,6 @@ function _repoFormFormal()
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener._.remotePath = willfilesPath;
-  // opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName + fileProvider.path.upToken ); /* xxx : qqq : for Dmytro : investigate and find better way to solve problem with opener.downloadPath and module.downloadPath difference */
   opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName );
 
   let willfilesPath2 = path.resolve( cloneDirPath, opener.aliasName, parsed.localVcsPath );
@@ -1289,7 +1275,6 @@ function _repoFormFormal()
 
   if( opener.peerModule && opener.peerModule.remotePath === null )
   {
-    debugger;
     _.assert( 0, 'not tested' );
     _.assert( !!opener.peerModule.localPath );
     _.assert( !!opener.peerModule.opener );
@@ -1610,7 +1595,6 @@ function _repoDownload( o )
 
     if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
     {
-      debugger;
       throw _.err
       (
         'Module', opener.decoratedAbsoluteName, 'is not downloaded, but file at', _.color.strFormat( opener.downloadPath, 'path' ), 'exits.',
@@ -1691,9 +1675,10 @@ function _repoDownload( o )
       reflectMap : { [ opener.remotePath ] : opener.downloadPath },
       // verbosity : will.verbosity - 5,
       verbosity : will.transaction.verbosity - 5,
+      outputFormat : 'nothing',
       extra :
       {
-        fetching : 0
+        fetching : 0,
       },
     }
 
@@ -2047,7 +2032,6 @@ function _pathChanged( o )
   if( o.touching )
   if( !o.isIdentical )
   {
-    debugger;
     let o2 = _.props.extend( null, o );
     o2.touching = 0;
     opener.openedModule._pathChanged( o2 );
@@ -2082,8 +2066,6 @@ function _filePathChanged1( o )
     opener._repoForm();
   }
 
-  if( opener.openedModule && !o.isIdentical )
-  debugger;
   if( opener.openedModule && !o.isIdentical )
   opener.openedModule._filePathChanged2({ willfilesPath : o.willfilesPath });
 
@@ -2228,7 +2210,6 @@ function remotePathEachAdoptAct( o )
 
   function moduleAdoptPath( module )
   {
-    debugger;
     module.remotePathAdopt( o );
     module.userArray.forEach( ( opener2 ) =>
     {
@@ -2449,11 +2430,6 @@ function errorSet( err )
 
   if( opener.error === err )
   return;
-
-  // if( err && opener.commonPath && _.strHas( opener.commonPath, 'ModuleForTesting12ab' ) )
-  // debugger;
-  // if( err )
-  // debugger;
 
   opener[ errorSymbol ] = err; /* xxx qqq : replace */
 

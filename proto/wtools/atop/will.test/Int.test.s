@@ -5192,23 +5192,18 @@ function moduleIsNotValid( test )
   let a = context.assetFor( test, 'submodulesDownloadErrors' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'download submodule';
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
 
-    a.will.prefer
-    ({
-      allOfSub : 1,
-    });
+    a.will.prefer({ allOfSub : 1 });
 
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
-
+  a.ready.then( () => opener.openedModule.subModulesDownload() )
   .then( () =>
   {
     test.case = 'change out will-file';
@@ -11066,7 +11061,8 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
-    test.identical( submodule.opener.openedModule.currentRemotePath, null );
+    test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will#.*/ ) );
+    // test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
@@ -11262,7 +11258,8 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
-    test.identical( submodule.opener.openedModule.currentRemotePath, null );
+    test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+hd:\/\/\/.*\/ModuleForTesting1\?out=out\/wModuleForTesting1\.out\.will#.*/ ) );
+    // test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });

@@ -210,7 +210,6 @@ function openersFind( o )
 
     if( !will.currentOpeners.length )
     {
-      debugger;
       if( !o.allowNoOpeners )
       throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
       else
@@ -288,7 +287,7 @@ function _command_head( o )
   //   _.props.extend( e.propertiesMap, cui.implied );
   // }
 
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( e.propertiesMap ) );
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringDiagnosticShallow( e.propertiesMap ) );
   if( o.routine.command.properties )
   _.map.sureHasOnly( e.propertiesMap, o.routine.command.properties, `Command does not expect options:` );
 
@@ -637,9 +636,6 @@ function _commandsBegin( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.aux.is( o.properties ) );
 
-  if( will.topCommand === null )
-  will.topCommand = o.commandRoutine;
-
   _.assert( will.transaction instanceof _.will.Transaction )
 
 }
@@ -652,7 +648,7 @@ _commandsBegin.defaults =
 
 //
 
-function _commandsEnd( command )
+function _commandsEnd( commandEvent )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -660,11 +656,11 @@ function _commandsEnd( command )
   let logger = will.transaction.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
-  _.assert( _.routineIs( command ) );
+  _.assert( _.objectIs( commandEvent ) );
 
   let beeping = will.transaction.beeping;
 
-  if( will.topCommand !== command )
+  if( commandEvent.index !== commandEvent.parsedCommands.length - 1 )
   {
     // will.transaction.finit();
     // will.transaction = null;
@@ -673,8 +669,6 @@ function _commandsEnd( command )
 
   try
   {
-
-    will.topCommand = null;
 
     // if( will.currentOpener )
     // will.currentOpener.finit();
@@ -717,7 +711,7 @@ function _commandListLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -798,7 +792,7 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -838,7 +832,7 @@ function _commandBuildLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -902,7 +896,7 @@ function _commandBuildLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -939,7 +933,7 @@ function _commandCleanLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -999,7 +993,7 @@ function _commandCleanLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1037,7 +1031,7 @@ function _commandNewLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   // withIn : 1,
   // withOut : 1,
@@ -1097,7 +1091,7 @@ function _commandNewLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1139,7 +1133,7 @@ function _commandTreeLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1171,7 +1165,7 @@ function _commandTreeLike( o )
   })
   .finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     err = _.err( err, `\nFailed to ${o.name}` );
     if( err )
@@ -1214,7 +1208,7 @@ function _commandModulesLike( o )
   _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
   _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1232,7 +1226,7 @@ function _commandModulesLike( o )
   return ready.finally( ( err, arg ) =>
   {
     will.currentOpeners = openers;
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1382,7 +1376,7 @@ function _commandModuleOrientedLike( o )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.onCommandEnd === null || _.routineIs( o.onCommandEnd ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -1409,7 +1403,7 @@ function _commandModuleOrientedLike( o )
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
     o2.recursive = 2;
-    return will.modulesFor( o2 )
+    return will.modulesFor( o2 );
   })
 
   if( o.onCommandEnd )
@@ -1417,7 +1411,7 @@ function _commandModuleOrientedLike( o )
 
   ready.finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     throw _.err( err, `\nFailed to ${o.name}` );
     return arg;
@@ -2447,7 +2441,6 @@ command.properties =
 //   }
 //   // function handleEach( it )
 //   // {
-//   //   debugger;
 //   //   return it.opener.openedModule.shell
 //   //   ({
 //   //     execPath : e.instructionArgument,
@@ -4435,7 +4428,8 @@ function commandWillfileSet( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
@@ -4506,7 +4500,8 @@ function commandWillfileDel( e )
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   subjectNormalize();
@@ -4573,7 +4568,8 @@ function commandWillfileDel( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './';
+    // e.subject = './';
+    e.subject = cui.transaction.withPath;
   }
 }
 
@@ -4607,14 +4603,15 @@ function commandWillfileExtend( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
     let o =
     {
       request : e.subject,
-      onProperty : _.props.extend,
+      onProperty : _.props.extend.bind( _.property ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4679,14 +4676,15 @@ function commandWillfileSupplement( e )
   cui._command_head( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
     let o =
     {
       request : e.subject,
-      onProperty : _.props.supplement,
+      onProperty : _.props.supplement.bind( _.props ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4749,7 +4747,7 @@ function commandWillfileExtendWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.extend,
+    onSection : _.props.extend.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4825,7 +4823,7 @@ function commandWillfileSupplementWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4865,7 +4863,7 @@ function commandWillfileMergeIntoSingle( e )
   let o =
   {
     request : willfileName + ' ./',
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
   };
   _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 
@@ -4875,7 +4873,7 @@ function commandWillfileMergeIntoSingle( e )
     {
       request : `${ willfileName } ${ e.optionsMap.secondaryPath }`,
       name : 0,
-      onSection : _.props.extend,
+      onSection : _.props.extend.bind( _.props ),
     };
     _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
   }
@@ -6705,7 +6703,6 @@ let Associates =
 
 let Restricts =
 {
-  topCommand : null,
   will : null,
   implied : _.define.own( {} ),
   transactionOld : null
@@ -6719,7 +6716,7 @@ let Statics =
 let Forbids =
 {
   currentPath : 'currentPath',
-  currentOpenerPath : 'currentOpenerPath',
+  currentOpenerPath : 'currentOpenerPath'
 }
 
 let Accessors =

@@ -1,5 +1,5 @@
 
-# utility::willbe [![status](https://github.com/Wandalen/willbe/workflows/publish/badge.svg)](https://github.com/Wandalen/willbe/actions?query=workflow%3Apublish) [![unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
+# utility::willbe [![status](https://github.com/Wandalen/willbe/actions/workflows/StandardPublish.yml/badge.svg)](https://github.com/Wandalen/willbe/actions/workflows/StandardPublish.yml) [![unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
 
 Utility for development which helps to manage modularity of complex modular systems.
 

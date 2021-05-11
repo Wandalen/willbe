@@ -215,10 +215,10 @@ function _verify()
   _.assert( _.boolLike( exported.tar ), 'Expects bool-like {- exported.tar -}' );
 
   _.sure( _.strDefined( inModule.dirPath ), 'Expects directory path of the inModule' );
-  _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
+  _.sure( _.object.isBasic( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  _.sure( _.objectIs( inModule.willfileWithRoleMap.import ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Expects import-willfile' );
-  _.sure( _.objectIs( inModule.willfileWithRoleMap.export ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Expects export-willfile' );
+  _.sure( _.object.isBasic( inModule.willfileWithRoleMap.import ) || _.object.isBasic( inModule.willfileWithRoleMap.single ), 'Expects import-willfile' );
+  _.sure( _.object.isBasic( inModule.willfileWithRoleMap.export ) || _.object.isBasic( inModule.willfileWithRoleMap.single ), 'Expects export-willfile' );
   _.sure( _.strDefined( inModule.about.name ), 'Expects defined name of the inModule as astring' );
   // _.sure( _.strDefined( inModule.about.version ), 'Expects defined version of the inModule as string' );
 
@@ -484,7 +484,7 @@ function _performExportedReflectors()
   _.assert( inModule.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  _.assert( _.objectIs( exported.criterion ) );
+  _.assert( _.object.isBasic( exported.criterion ) );
   _.assert( step instanceof _.will.Step );
   _.assert( build instanceof _.will.Build );
   _.assert( exported.exportedReflector === null );
@@ -690,7 +690,7 @@ function _performExportedFilesReflector()
   _.assert( !!exportedFilesReflector.criterion.generated );
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
-  _.assert( _.objectIs( exportedFilesReflector.criterion ) );
+  _.assert( _.object.isBasic( exportedFilesReflector.criterion ) );
   _.assert( !!exportedFilesReflector.src.basePath );
   _.assert( exportedFilesReflector.dst.basePath === null );
 

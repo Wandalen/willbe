@@ -368,7 +368,7 @@ function PathToRole( filePath )
   let role = null;
 
   if( _.argumentsArray.like( filePath ) )
-  return _.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
+  return _.container.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
 
   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
   let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
@@ -530,11 +530,23 @@ function IsModuleAt( filePath )
 
 function pathIsRemote( remotePath )
 {
-  _.assert( arguments.length === 1, 'Expects no arguments' );
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1, 'Expects exactly one argument {-remotePath-}' );
   _.assert( _.strIs( remotePath ) );
 
-  let remoteProvider = _.repo.providerForPath( remotePath );
-  return remoteProvider !== _.repo.provider.hd;
+  // if( remotePath === undefined )
+  // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+  // let remoteProvider = fileProvider.providerForPath( remotePath );
+
+  let remoteProvider = _.repo.providerForPath({ remotePath });
+
+  _.assert( !!remoteProvider );
+
+  return !_.longHasAny( [ 'hd', 'file' ], remoteProvider.name );
+  // return !!remoteProvider.isVcs;
 }
 
 // function pathIsRemote( remotePath )
@@ -3638,7 +3650,7 @@ function junctionsInfoExport( junctions )
     // });
   }
 
-  return _.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
+  return _.container.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
 }
 
 // --
@@ -4967,6 +4979,8 @@ function hookCall( o )
   _.assert( path.isAbsolute( o.execPath ) );
   _.assert( _.strDefined( o.interpreterName ) );
 
+  if( o.interpreterName === 'js' )
+  debugger;
   if( o.interpreterName === 'js' )
   return jsCall();
   else if( o.interpreterName === 'os' )

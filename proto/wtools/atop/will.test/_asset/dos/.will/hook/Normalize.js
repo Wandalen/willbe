@@ -442,7 +442,7 @@ function badgeGithubReplace( context )
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3Apublish)`;
+  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions/workflows/StandardPublish.yml)`;
 
   if( !_.strHas( read, ins ) )
   return false;
@@ -990,7 +990,7 @@ function willProtoEntryPathAdjustTools( context )
   if( !protoEntryPath )
   return;
 
-  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  protoEntryPath = _.container.map_( protoEntryPath, ( entryPath ) =>
   {
     if( abs( entryPath ) !== abs( 'proto/node_modules/Tools' ) )
     return entryPath;
@@ -1319,25 +1319,43 @@ function readmeToAddAdjust( context )
 
   let moduleName = context.module.about.name; debugger;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `node sample/trivial/Sample.s
-\`\`\``;
-  let sub = `node sample/trivial/Sample.s
-\`\`\`
+  let ins1 = `### Try out from the repository`;
+  let ins2 = `### To add to your project`;
+  let ins3 = `@delta'`;
 
-## To add to your project
-\`\`\`
-npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
-\`\`\`
-`;
+  if( !_.strHas( read, ins1 ) )
+  return console.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  if( !_.strHas( read, ins2 ) )
+  return console.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  if( !_.strHas( read, ins3 ) )
+  return console.log( `Skipping ${context.junction.nameWithLocationGet()}` );
 
-  debugger;
-  if( !_.strHas( read, ins ) )
-  return;
+// ### Try out from the repository
+//
+// ```
+// git clone https://github.com/Wandalen/wVocabulary
+// cd wVocabulary
+// will .npm.install
+// node sample/trivial/Sample.s
+// ```
+//
+// Make sure you have utility `willbe` installed. To install willbe: `npm i -g willbe@delta`. Willbe is required to build of the module.
+//
+// ### To add to your project
+// ```
+// npm add 'wvocabulary@delta'
+// ```
+//
+// `Willbe` is not required to use the module in your project as submodule.
+
+  // debugger;
+  // if( !_.strHas( read, ins ) )
+  // return;
 
   logger.log( `Adding "To add" for ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
-  return console.log( filePath );
+  return;
 
   logger.log( _.censor.fileReplace
   ({
