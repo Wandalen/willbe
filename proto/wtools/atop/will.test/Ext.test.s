@@ -155,6 +155,13 @@ function assetFor( test, name )
     return null
   }
 
+  a.reflectMinimal = function reflectMinimal()
+  {
+    a.fileProvider.filesDelete( a.routinePath );
+    a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+    return null;
+  }
+
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
 
   return a;
@@ -21919,7 +21926,8 @@ function submodulesUpdateThrowing( test )
   return a.ready;
 }
 
-submodulesUpdateThrowing.timeOut = 300000;
+submodulesUpdateThrowing.timeOut = 600000;
+submodulesUpdateThrowing.rapidity = -2;
 
 //
 
@@ -25609,6 +25617,7 @@ function stepGitStatus( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
 
   /* */
 
@@ -25812,7 +25821,7 @@ function stepGitStatus( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
