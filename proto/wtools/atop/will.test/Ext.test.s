@@ -20132,7 +20132,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
@@ -20151,7 +20151,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
