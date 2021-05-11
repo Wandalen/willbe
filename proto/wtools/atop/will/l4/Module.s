@@ -9549,7 +9549,7 @@ function gitSync( o )
     if( status.local )
     return module.gitPush.call( module, _.mapBut_( null, o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
     return null;
-  })
+  });
 
   return ready;
 

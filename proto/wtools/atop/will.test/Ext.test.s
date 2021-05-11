@@ -155,6 +155,13 @@ function assetFor( test, name )
     return null
   }
 
+  a.reflectMinimal = function reflectMinimal()
+  {
+    a.fileProvider.filesDelete( a.routinePath );
+    a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+    return null;
+  }
+
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
 
   return a;
@@ -6067,7 +6074,11 @@ function hookGitPullConflict( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   a.ready.then( ( op ) =>
   {
@@ -6224,11 +6235,11 @@ copy
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -6238,11 +6249,11 @@ original
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -6832,7 +6843,11 @@ function hookGitSyncConflict( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -6926,11 +6941,11 @@ copy
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -6940,11 +6955,11 @@ original
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -7006,6 +7021,8 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -7015,10 +7032,13 @@ function hookGitSyncRestoreHardLinksWithShared( test )
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
-
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -7073,11 +7093,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -7473,187 +7493,187 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
-function hookPublish2( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\s\./ ), 1 );
-    return null;
-  })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am third' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am fourth' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  .then( ( op ) =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 0 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
-    test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/ .call publish2' )
-  .then( ( op ) =>
-  {
-    test.case = 'without option `tag`, should throw error';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( 'original' );
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    a.shell( 'git clone repo/ clone' );
-    return a.ready;
-  }
-}
+// function hookPublish2( test )
+// {
+//   let context = this;
+//   let a = context.assetFor( test, 'gitPush' );
+//
+//   /* */
+//
+//   begin().then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
+//     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, /\s\./ ), 1 );
+//     return null;
+//   })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am third' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am fourth' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   .then( ( op ) =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 0 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+//     test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* - */
+//
+//   a.appStartNonThrowing( '.with original/ .call publish2' )
+//   .then( ( op ) =>
+//   {
+//     test.case = 'without option `tag`, should throw error';
+//     test.notIdentical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
+//
+//     return null;
+//   });
+//
+//   /* - */
+//
+//   return a.ready;
+//
+//   /* */
+//
+//   function begin()
+//   {
+//     a.ready.then( () =>
+//     {
+//       a.reflect();
+//       a.fileProvider.dirMake( a.abs( 'repo' ) );
+//       return null;
+//     });
+//     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+//     let currentPath = a.abs( 'original' );
+//     a.shell({ currentPath, execPath : 'git init' });
+//     a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+//     a.shell({ currentPath, execPath : 'git add --all' });
+//     a.shell({ currentPath, execPath : 'git commit -am first' });
+//     a.shell({ currentPath, execPath : 'git push -u origin --all' });
+//     a.shell( 'git clone repo/ clone' );
+//     return a.ready;
+//   }
+// }
 
 //
 
@@ -21906,7 +21926,8 @@ function submodulesUpdateThrowing( test )
   return a.ready;
 }
 
-submodulesUpdateThrowing.timeOut = 300000;
+submodulesUpdateThrowing.timeOut = 600000;
+submodulesUpdateThrowing.rapidity = -2;
 
 //
 
@@ -22905,9 +22926,7 @@ function versionsAgreeNpm( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
@@ -22916,12 +22935,11 @@ function versionsAgreeNpm( test )
     a.reflect();
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'agree npm modules';
@@ -22958,11 +22976,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, '!alpha', '!beta' );
@@ -22973,10 +22991,9 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
 
     return null;
-  })
+  });
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'second run of .submodules.versions.agree';
@@ -23012,12 +23029,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
@@ -23053,11 +23069,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
 
@@ -23068,10 +23084,9 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting2b' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
-  })
+  });
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
@@ -23109,13 +23124,15 @@ function versionsAgreeNpm( test )
     var exp =
     [
       '.',
+      './node_modules',
+      './node_modules/wmodulefortesting2b',
       './wtools',
       './wtools/testing',
       './wtools/testing/Basic.s',
       './wtools/testing/l4',
       './wtools/testing/l4/testing2b',
       './wtools/testing/l4/testing2b/Include.s',
-      './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
+      './wtools/testing/l4/testing2b/ModuleForTesting2b.s',
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );
@@ -24397,7 +24414,11 @@ function stepGitCheckHardLinkRestoring( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -24601,11 +24622,11 @@ copy
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 copy
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -24614,11 +24635,11 @@ copy
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 copy
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -24664,7 +24685,8 @@ copy
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -24820,7 +24842,11 @@ function stepGitPull( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -25002,11 +25028,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -25015,11 +25041,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -25045,7 +25071,8 @@ original
   function begin()
   {
     /* */ /* aaa : for Dmytro : ?? */ /* Dmytro : improved */
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -25568,7 +25595,8 @@ File.txt
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'clone' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -25592,6 +25620,7 @@ function stepGitStatus( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
 
   /* */
 
@@ -25795,7 +25824,7 @@ function stepGitStatus( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
@@ -26013,7 +26042,8 @@ function stepGitSync( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
@@ -26145,7 +26175,8 @@ function stepGitTag( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -32355,6 +32386,8 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32363,7 +32396,11 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -32435,11 +32472,11 @@ original/f2.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -32515,6 +32552,8 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32522,6 +32561,10 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
+
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
 
   /* */
 
@@ -32587,11 +32630,11 @@ original/f2.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 super
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'super/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -32666,6 +32709,8 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32674,7 +32719,11 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -32740,11 +32789,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -33282,7 +33331,11 @@ function commandGitCheckHardLinkRestoring( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -33516,11 +33569,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -33529,11 +33582,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -33651,8 +33704,9 @@ function commandGitDifferentCommands( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    // test.identical( _.strCount( op.output, 'Failed to open' ), 0 ); /* Dmytro : changed default value of withSubmodules in routine */
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
@@ -33697,8 +33751,8 @@ function commandGitDifferentCommands( test )
     test.case = '.git log hardLinkMaybe:1';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
@@ -33722,8 +33776,8 @@ function commandGitDifferentCommands( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
@@ -34179,7 +34233,11 @@ function commandGitPullRestoreHardlinkOnFail( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin();
   a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
@@ -34216,11 +34274,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -34229,11 +34287,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -34391,7 +34449,8 @@ function commandGitPush( test )
   {
     test.case = '.with original/ .git.push v:0 - succefull pushing of tag';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
@@ -35377,7 +35436,8 @@ function commandGitSync( test )
   {
     test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
@@ -35461,7 +35521,11 @@ function commandGitSyncRestoringHardlinks( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   a.ready.then( ( op ) => a.reflect() );
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
@@ -35562,11 +35626,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -35575,11 +35639,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -35614,6 +35678,8 @@ function commandGitSyncRestoreHardLinksWithShared( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -35622,7 +35688,11 @@ function commandGitSyncRestoreHardLinksWithShared( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -35681,11 +35751,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -35838,7 +35908,8 @@ function commandGitTag( test )
   {
     test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
     return null;
   })
@@ -41328,32 +41399,11 @@ function commandNpmInstall( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    let configPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    let configWasPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
-    test.identical( configPackage.name, configWasPackage.name );
-    test.notIdentical( configPackage.version, configWasPackage.version );
-    test.notIdentical( configPackage.enabled, configWasPackage.enabled );
-    test.notIdentical( configPackage.engine, configWasPackage.engine );
-    test.identical( configPackage.description, configWasPackage.description );
-    test.identical( configPackage.keywords, configWasPackage.keywords );
-    test.identical( configPackage.license, configWasPackage.license );
-    test.identical( configPackage.author, configWasPackage.author );
-    test.identical( configPackage.contributors.length, 2 );
-    test.identical( configWasPackage.contributors, undefined );
-    test.identical( configPackage.bin, configWasPackage.bin );
-    test.notIdentical( configPackage.repository, configWasPackage.repository );
-    test.notIdentical( configPackage.bugs, configWasPackage.bugs );
-    test.identical( configPackage.main, configWasPackage.main );
-    test.identical( configPackage.files, configWasPackage.files );
-    let packageDepKeys = _.props.keys( configPackage.dependencies );
-    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
-    test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
-    test.false( 'wgittools' in configWasPackage.dependencies );
-    test.identical( packageDepKeys.length, 4 );
-    test.identical( wasPackageDepKeys.length, 4 );
-    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
-    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
-    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
 
     test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
     test.identical( _.strCount( op.output, '> npm ci' ), 1 );
@@ -42384,7 +42434,7 @@ const Proto =
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
-    hookPublish2,
+    // hookPublish2, /* Dmytro : hook was commented out */
 
     implyWithDot,
     implyWithAsterisk,

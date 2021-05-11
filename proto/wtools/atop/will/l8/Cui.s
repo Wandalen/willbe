@@ -210,7 +210,6 @@ function openersFind( o )
 
     if( !will.currentOpeners.length )
     {
-      debugger;
       if( !o.allowNoOpeners )
       throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
       else
@@ -1404,7 +1403,7 @@ function _commandModuleOrientedLike( o )
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
     o2.recursive = 2;
-    return will.modulesFor( o2 )
+    return will.modulesFor( o2 );
   })
 
   if( o.onCommandEnd )
@@ -2442,7 +2441,6 @@ command.properties =
 //   }
 //   // function handleEach( it )
 //   // {
-//   //   debugger;
 //   //   return it.opener.openedModule.shell
 //   //   ({
 //   //     execPath : e.instructionArgument,
@@ -4613,7 +4611,7 @@ function commandWillfileExtend( e )
     let o =
     {
       request : e.subject,
-      onProperty : _.props.extend,
+      onProperty : _.props.extend.bind( _.property ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4686,7 +4684,7 @@ function commandWillfileSupplement( e )
     let o =
     {
       request : e.subject,
-      onProperty : _.props.supplement,
+      onProperty : _.props.supplement.bind( _.props ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4749,7 +4747,7 @@ function commandWillfileExtendWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.extend,
+    onSection : _.props.extend.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4825,7 +4823,7 @@ function commandWillfileSupplementWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4865,7 +4863,7 @@ function commandWillfileMergeIntoSingle( e )
   let o =
   {
     request : willfileName + ' ./',
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
   };
   _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 
@@ -4875,7 +4873,7 @@ function commandWillfileMergeIntoSingle( e )
     {
       request : `${ willfileName } ${ e.optionsMap.secondaryPath }`,
       name : 0,
-      onSection : _.props.extend,
+      onSection : _.props.extend.bind( _.props ),
     };
     _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
   }
