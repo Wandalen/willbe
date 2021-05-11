@@ -25593,7 +25593,8 @@ File.txt
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'clone' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
