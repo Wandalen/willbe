@@ -26040,7 +26040,8 @@ function stepGitSync( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
