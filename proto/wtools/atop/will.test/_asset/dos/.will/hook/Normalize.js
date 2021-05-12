@@ -43,6 +43,7 @@ function onModule( context )
   // integrationTestRename( context );
   // samplesRename( context );
   // dwtoolsRename( context );
+  metaFilesRename( context );
 
   // badgeGithubReplace( context );
   // badgesSwap( context );
@@ -64,7 +65,7 @@ function onModule( context )
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
   // readmeToAddRemove( context );
-  // readmeToAddAdjust( context );
+  // readmeInstructionsAdjust( context );
   // readmeSampleRename( context );
 
   // sourceNodeModulesEntryAdd( context );
@@ -404,6 +405,41 @@ function dwtoolsRename( context )
   ({
     dstPath : abs( 'proto/wtools' ),
     srcPath : abs( 'proto/wtools' ),
+    verbosity : o.verbosity >= 2 ? o.verbosity : 0,
+  });
+
+}
+
+//
+
+function metaFilesRename( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  if( fileProvider.fileExists( abs( 'README.md' ) ) )
+  fileProvider.fileRename
+  ({
+    dstPath : abs( 'Readme.md' ),
+    srcPath : abs( 'README.md' ),
+    verbosity : o.verbosity >= 2 ? o.verbosity : 0,
+  });
+
+  if( fileProvider.fileExists( abs( 'LICENSE' ) ) )
+  fileProvider.fileRename
+  ({
+    dstPath : abs( 'License' ),
+    srcPath : abs( 'LICENSE' ),
     verbosity : o.verbosity >= 2 ? o.verbosity : 0,
   });
 
@@ -1263,7 +1299,7 @@ function readmeToAddRemove( context )
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `## To add
 \`\`\`
-npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
+npm add '${context.module.about.values[ 'npm.name' ]}@delta'
 \`\`\``;
   let sub = '';
 
@@ -1288,7 +1324,7 @@ npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
 
 //
 
-function readmeToAddAdjust( context )
+function readmeInstructionsAdjust( context )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -1305,7 +1341,6 @@ function readmeToAddAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   let config = _.censor.configRead();
   if( !config )
   return null;
@@ -1313,57 +1348,84 @@ function readmeToAddAdjust( context )
   return null;
   if( !config.about.user )
   return null;
-  debugger;
+
   if( !context.module.about.values[ 'npm.name' ] )
   return null;
 
-  let moduleName = context.module.about.name; debugger;
+  let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins1 = `### Try out from the repository`;
-  let ins2 = `### To add to your project`;
+  let ins1 = `Try out from the repository`;
+  let ins2 = `To add to your project`;
   let ins3 = `@delta'`;
+  let ins4 = `node sample/trivial/Sample.s`;
 
   if( !_.strHas( read, ins1 ) )
-  return console.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  return skip();
   if( !_.strHas( read, ins2 ) )
-  return console.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  return skip();
   if( !_.strHas( read, ins3 ) )
-  return console.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  return skip();
+  if( !_.strHas( read, ins4 ) )
+  return skip();
 
-// ### Try out from the repository
-//
-// ```
-// git clone https://github.com/Wandalen/wVocabulary
-// cd wVocabulary
-// will .npm.install
-// node sample/trivial/Sample.s
-// ```
-//
-// Make sure you have utility `willbe` installed. To install willbe: `npm i -g willbe@delta`. Willbe is required to build of the module.
-//
-// ### To add to your project
-// ```
-// npm add 'wvocabulary@delta'
-// ```
-//
-// `Willbe` is not required to use the module in your project as submodule.
+  let tryOutSection =
+`### Try out from the repository
 
-  // debugger;
-  // if( !_.strHas( read, ins ) )
-  // return;
+\`\`\`
+git clone https://github.com/${config.about.user}/${context.module.about.name}
+cd ${context.module.about.name}
+will .npm.install
+node sample/trivial/Sample.s
+\`\`\`
 
-  logger.log( `Adding "To add" for ${context.junction.nameWithLocationGet()}` );
+Make sure you have utility \`willbe\` installed. To install willbe: \`npm i -g willbe@delta\`. Willbe is required to build of the module.
+
+`
+
+  let toAddSection =
+`### To add to your project
+
+\`\`\`
+npm add '${context.module.about.values[ 'npm.name' ]}@delta'
+\`\`\`
+
+\`Willbe\` is not required to use the module in your project as submodule.
+
+`
+
+  logger.log( `Patching readme of ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
 
+  // logger.log( _.censor.fileReplace
+  // ({
+  //   filePath : abs( 'README.md' ),
+  //   ins : sectionOf( read, ins1 ),
+  //   sub : tryOutSection,
+  //   verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  // }).log );
+
   logger.log( _.censor.fileReplace
   ({
     filePath : abs( 'README.md' ),
-    ins,
-    sub,
+    ins : sectionOf( read, ins2 ),
+    sub : toAddSection,
     verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
   }).log );
+
+  function sectionOf( read, key )
+  {
+    let parsed = _.md.parse( read );
+    if( !parsed.sectionMap[ key ] )
+    return null;
+    return parsed.sectionMap[ key ][ 0 ].text;
+  }
+
+  function skip()
+  {
+    return logger.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  }
 
 }
 

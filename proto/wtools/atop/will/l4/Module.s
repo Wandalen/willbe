@@ -2751,7 +2751,7 @@ function modulesEach_head( routine, args )
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
   o = _.routine.options( routine, o );
-  _.assert( args.length === 0 || args.length === 1 );
+  _.assert( args.length === 0 || args.length === 1, () => `Expects optional argument, but got ${args.length} arguments` );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) )
 
   return o;

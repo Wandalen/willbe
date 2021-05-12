@@ -2152,7 +2152,7 @@ function modulesEach_head( routine, args )
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
   o = _.routine.options_( routine, o );
-  _.assert( args.length === 0 || args.length === 1 );
+  _.assert( args.length === 0 || args.length === 1, () => `Expects optional argument, but got ${args.length} arguments` );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) ) /* xxx : add '* / junction' */
 
   return o;
@@ -4979,8 +4979,6 @@ function hookCall( o )
   _.assert( path.isAbsolute( o.execPath ) );
   _.assert( _.strDefined( o.interpreterName ) );
 
-  if( o.interpreterName === 'js' )
-  debugger;
   if( o.interpreterName === 'js' )
   return jsCall();
   else if( o.interpreterName === 'os' )
