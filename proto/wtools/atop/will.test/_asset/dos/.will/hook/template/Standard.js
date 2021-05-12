@@ -1279,7 +1279,7 @@ node sample/trivial/Sample.s
 
 ## To install
 \`\`\`
-npm add '{:package/lowName:}@delta'
+npm add '{:package/lowName:}@stable'
 \`\`\`
 
 `,

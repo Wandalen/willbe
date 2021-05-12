@@ -1299,7 +1299,7 @@ function readmeToAddRemove( context )
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `## To add
 \`\`\`
-npm add '${context.module.about.values[ 'npm.name' ]}@delta'
+npm add '${context.module.about.values[ 'npm.name' ]}@stable'
 \`\`\``;
   let sub = '';
 
@@ -1356,7 +1356,7 @@ function readmeInstructionsAdjust( context )
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins1 = `Try out from the repository`;
   let ins2 = `To add to your project`;
-  let ins3 = `@delta'`;
+  let ins3 = `@stable'`;
   let ins4 = `node sample/trivial/Sample.s`;
 
   if( !_.strHas( read, ins1 ) )
@@ -1378,7 +1378,7 @@ will .npm.install
 node sample/trivial/Sample.s
 \`\`\`
 
-Make sure you have utility \`willbe\` installed. To install willbe: \`npm i -g willbe@delta\`. Willbe is required to build of the module.
+Make sure you have utility \`willbe\` installed. To install willbe: \`npm i -g willbe@stable\`. Willbe is required to build of the module.
 
 `
 
@@ -1386,7 +1386,7 @@ Make sure you have utility \`willbe\` installed. To install willbe: \`npm i -g w
 `### To add to your project
 
 \`\`\`
-npm add '${context.module.about.values[ 'npm.name' ]}@delta'
+npm add '${context.module.about.values[ 'npm.name' ]}@stable'
 \`\`\`
 
 \`Willbe\` is not required to use the module in your project as submodule.
