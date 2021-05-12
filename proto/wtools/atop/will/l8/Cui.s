@@ -3511,6 +3511,7 @@ function commandHookCall( e )
   function handleEach( it )
   {
     let it2 = _.mapOnly_( null, it, cui.hookContextFrom.defaults );
+    debugger;
     it2.execPath = path.join( cui.hooksPath, execPath );
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
@@ -3859,30 +3860,30 @@ command.subjectHint = 'A name of export scenario.';
 // {
 //   let cui = this.form();
 //   let path = cui.fileProvider.path;
-
+//
 //   cui._command_head
 //   ({
 //     routine : commandWith,
 //     args : arguments,
 //     // usingImpliedMap : 0
 //   });
-
+//
 //   // if( cui.currentOpener )
 //   // {
 //   //   cui.currentOpener.finit();
 //   //   cui.currentOpenerChange( null );
 //   // }
-
+//
 //   if( cui.currentOpeners )
 //   cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
 //   cui.currentOpeners = null;
-
+//
 //   _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
 //   _.assert( arguments.length === 1 );
-
+//
 //   if( !e.instructionArgument )
 //   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
-
+//
 //   if( process.platform === 'linux' )
 //   {
 //     let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
@@ -3904,13 +3905,13 @@ command.subjectHint = 'A name of export scenario.';
 //       }
 //     }
 //   }
-
+//
 //   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
 //   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
-
+//
 //   cui.implied = _.props.extend( cui.implied, { withPath } );
 //   cui._transactionExtend( commandWith, cui.implied );
-
+//
 //   return cui.modulesFindWithAt
 //   ({
 //     selector : _.strUnquote( e.instructionArgument ),
@@ -3919,7 +3920,7 @@ command.subjectHint = 'A name of export scenario.';
 //   .then( function( it )
 //   {
 //     cui.currentOpeners = it.sortedOpeners;
-
+//
 //     if( !cui.currentOpeners.length )
 //     {
 //       let equalizer = ( parsed, command ) => parsed.commandName === command;
@@ -3932,15 +3933,15 @@ command.subjectHint = 'A name of export scenario.';
 //       else
 //       cui.currentOpeners = null;
 //     }
-
+//
 //     _.assert( cui.transaction instanceof _.will.Transaction );
 //     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
 //     // cui.transaction.finit();
 //     // cui.transaction = null;
-
+//
 //     return it;
 //   })
-
+//
 // }
 
 //
@@ -3995,10 +3996,7 @@ function commandWith( e )
   cui.transaction.finit();
   cui.transactionOld = cui.transaction;
   cui.transaction = null;
-
 }
-
-// commandWith.defaults = _.props.extend( null, commandImply.defaults );
 
 var command = commandWith.command = Object.create( null );
 command.hint = 'Select a module to execute command.';
