@@ -4947,10 +4947,10 @@ function hookCall( o )
   _.sure( o.withPath === null || _.strIs( o.withPath ) || _.strsAreAll( o.withPath ), 'Current path should be string if defined' );
 
   if( o.module && o.withPath )
-  o.withPath = path.s.join( o.module.inPath, o.withPath );
+  o.withPath = path.s.join( o.module.inPath, path.fromGlob( o.withPath ) );
   else
   // o.withPath = path.s.join( o.will.withPath, o.withPath );
-  o.withPath = path.s.join( o.will.transaction.withPath, o.withPath );
+  o.withPath = path.s.join( o.will.transaction.withPath, path.fromGlob( o.withPath ) );
 
   /* */
 
@@ -4979,8 +4979,6 @@ function hookCall( o )
   _.assert( path.isAbsolute( o.execPath ) );
   _.assert( _.strDefined( o.interpreterName ) );
 
-  if( o.interpreterName === 'js' )
-  debugger;
   if( o.interpreterName === 'js' )
   return jsCall();
   else if( o.interpreterName === 'os' )
