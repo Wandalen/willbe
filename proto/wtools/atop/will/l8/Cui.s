@@ -2237,7 +2237,6 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
-
   return cui._commandCleanLike
   ({
     event : e,
