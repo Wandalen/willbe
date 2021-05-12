@@ -9469,8 +9469,10 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  logger.log( module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
-  logger.log( got.status );
+  logger.log( `\n` + module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
+  logger.up();
+  logger.log( _.ct.format( got.status, 'pipe.neutral' ) );
+  logger.down();
   return got;
 }
 

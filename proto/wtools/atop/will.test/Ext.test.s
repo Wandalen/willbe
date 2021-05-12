@@ -28194,7 +28194,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28213,7 +28213,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28232,7 +28232,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28251,7 +28251,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28318,7 +28318,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28337,7 +28337,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28380,7 +28380,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -28399,7 +28399,7 @@ function commandImplyPropertyWithEnabled( test )
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
-   
+
       return null;
     })
 
@@ -32118,6 +32118,57 @@ function commandModulesGitStatus( test )
 
 commandModulesGitStatus.rapidity = -1;
 commandModulesGitStatus.timeOut = 500000;
+
+//
+
+function commandModulesGitStatusOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
 
 //
 
@@ -42820,6 +42871,7 @@ const Proto =
     commandModulesGitDiff,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
+    commandModulesGitStatusOutputFormat,
     commandModulesGitSync,
     commandModulesGitSyncRestoreHardLinksInModuleWithSuccess,
     commandModulesGitSyncRestoreHardLinksInModuleWithFail,
