@@ -10729,6 +10729,9 @@ function modulesFor( test )
   }
 }
 
+modulesFor.rapidity = -2;
+modulesFor.routineTimeOut = 1500000;
+
 //
 
 function modulesForWithSubmodules( test )
