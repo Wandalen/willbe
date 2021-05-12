@@ -534,17 +534,38 @@ function pathIsRemote( remotePath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( arguments.length === 1, 'Expects no arguments' );
+  _.assert( arguments.length === 1, 'Expects exactly one argument {-remotePath-}' );
   _.assert( _.strIs( remotePath ) );
 
   // if( remotePath === undefined )
   // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
-  let remoteProvider = fileProvider.providerForPath( remotePath );
+  // let remoteProvider = fileProvider.providerForPath( remotePath );
+
+  let remoteProvider = _.repo.providerForPath({ remotePath });
 
   _.assert( !!remoteProvider );
 
-  return !!remoteProvider.isVcs;
+  return !_.longHasAny( [ 'hd', 'file' ], remoteProvider.name );
+  // return !!remoteProvider.isVcs;
 }
+
+// function pathIsRemote( remotePath )
+// {
+//   let will = this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( arguments.length === 1, 'Expects no arguments' );
+//   _.assert( _.strIs( remotePath ) );
+//
+//   // if( remotePath === undefined )
+//   // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+//   let remoteProvider = fileProvider.providerForPath( remotePath );
+//
+//   _.assert( !!remoteProvider );
+//
+//   return !!remoteProvider.isVcs;
+// }
 
 //
 
@@ -4958,6 +4979,8 @@ function hookCall( o )
   _.assert( path.isAbsolute( o.execPath ) );
   _.assert( _.strDefined( o.interpreterName ) );
 
+  if( o.interpreterName === 'js' )
+  debugger;
   if( o.interpreterName === 'js' )
   return jsCall();
   else if( o.interpreterName === 'os' )
