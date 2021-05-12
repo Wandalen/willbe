@@ -31416,6 +31416,61 @@ commandModulesGitDiff.rapidity = -1;
 
 //
 
+function commandModulesGitDiffOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git diff has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.diff' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Status:' ), 2 );
+    test.identical( _.strCount( op.output, '  Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '    modifiedFiles:' ), 2 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/Include.s b/proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/Integration.test.ss b/proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    +testData' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandModulesGitStatusWithOnlyRoot( test )
 {
   let context = this;
@@ -32141,8 +32196,8 @@ function commandModulesGitStatusOutputFormat( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting1 at' ), 1 );
-    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting2 at' ), 1 );
     test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
     test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
     test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
@@ -42869,6 +42924,7 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
+    commandModulesGitDiffOutputFormat,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
     commandModulesGitStatusOutputFormat,

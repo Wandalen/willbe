@@ -9079,7 +9079,7 @@ function gitDiff( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Diff ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nDiff of ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let result = _.git.diff
   ({
@@ -9095,8 +9095,19 @@ function gitDiff( o )
   if( !result.status && !result.patch )
   return null;
 
-  logger.log( `Status:\n${ result.status }` );
-  logger.log( `Patch:\n${ result.patch }` );
+  logger.up();
+
+  logger.log( _.ct.format( `Status:`, 'entity' ) );
+  logger.up();
+  logger.log( result.status );
+  logger.down();
+
+  logger.log( _.ct.format( `Patch:`, 'entity' ) );
+  logger.up();
+  logger.log( result.patch );
+  logger.down();
+
+  logger.down();
 
   return true;
 }
@@ -9469,7 +9480,7 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  logger.log( `\n` + module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
+  logger.log( `\nStatus of ${module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() )}` );
   logger.up();
   logger.log( _.ct.format( got.status, 'pipe.neutral' ) );
   logger.down();
