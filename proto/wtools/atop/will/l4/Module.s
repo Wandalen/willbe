@@ -6939,13 +6939,22 @@ function structureExportOut( o )
         + `\nLocal path is ${junction.localPath}`
       );
     }
-    let c = 0;
+    // let c = 0;
     if( _.longHas( found.ownedObjects, module2 ) )
     {
       modules.push( module2 );
-      c += 1;
+      // c += 1;
     }
-    _.assert( c === 1 ); /* xxx */
+    // _.assert( c === 1 ); /* xxx */
+    /* Dmytro : this check is not valid for complex submodules structures which have dependencies on the same layer :
+    module X depends on Y and Z, and Z depends on module Y
+
+    X->Z
+    |  |
+    Y<-|
+    The utility does not resolve this graph. And the export of Z contains modules A, but it not owned this module
+    We export only owned modules.
+    */
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
