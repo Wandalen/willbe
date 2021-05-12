@@ -2806,6 +2806,18 @@ function modulesDownload_body( o )
       }
     }
 
+    if( !junction.relation )
+    {
+      let junction2 = will.junctionMap[ junction.remotePath ];
+      if( junction2 && junction2 !== junction )
+      throw _.err
+      (
+        'Different versions of the same submodule are not allowed.',
+        `\n${junction.name} -> ${junction.remotePath}`,
+        `\n${junction2.name} -> ${junction2.remotePath}`
+      )
+    }
+
     _.assert( !!junction.relation && !!junction.relation.opener );
     let opener = junction.relation.opener;
 
