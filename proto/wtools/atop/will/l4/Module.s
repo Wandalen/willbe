@@ -9274,13 +9274,15 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   if( status.uncommitted )
   throw _.errBrief
   (
     `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
   );
+
+  logger.up();
 
   /* */
 
@@ -9290,9 +9292,15 @@ function gitPull( o )
     debugger;
     /* qqq : for Dmytro : ? */
     // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
-    provider = module._providerArchiveMake({ dirPath : module.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
@@ -9302,6 +9310,7 @@ function gitPull( o )
   ({
     localPath : o.dirPath,
     sync : 0,
+    logger,
     throwing : 1,
   });
 
@@ -9309,6 +9318,7 @@ function gitPull( o )
   {
     if( o.restoringHardLinks )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
