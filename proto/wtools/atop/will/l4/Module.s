@@ -9610,16 +9610,22 @@ function gitSync( o )
     let start = _.process.starter
     ({
       currentPath : o.dirPath,
+      logger : logger,
       ready : con,
     });
+
     if( o.verbosity )
-    logger.log( `Committing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.log( `\nCommitting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+    logger.up();
 
     start( `git add --all` );
     if( o.commit )
     start( `git commit ${ o.commit }` );
     else
     start( 'git commit -am "."' );
+
+    con.tap( () => logger.down() )
 
     return con;
   }
