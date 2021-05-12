@@ -14,9 +14,9 @@ submodule:
   wTemplateTreeEnvironment:
     path: 'npm:///wtemplatetreeenvironment'
     enabled: 0
-  wTemplateFileWriter:
-    path: 'npm:///wtemplatefilewriter'
-    enabled: 0
+  # wTemplateFileWriter:
+  #   path: 'npm:///wtemplatefilewriter'
+  #   enabled: 0
   wProcess:
     path: 'npm:///wprocess'
     enabled: 0

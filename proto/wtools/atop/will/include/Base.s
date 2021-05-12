@@ -27,7 +27,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wFilesEncoders' );
 
   _.include( 'wNameMapper' );
-  _.include( 'wTemplateFileWriter' );
+  // _.include( 'wTemplateFileWriter' );
   _.include( 'wCensorBasic' );
 
   module[ 'exports' ] = _global_.wTools;
