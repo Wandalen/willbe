@@ -137,7 +137,7 @@ function stepRoutineReflect( frame )
 
   return _.Consequence.Try( () =>
   {
-    // debugger;
+    debugger;
     return _.will.Predefined.filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
