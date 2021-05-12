@@ -9682,9 +9682,13 @@ function gitTag( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Creating tag ${ o.name }` );
+  {
+    logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.up();
+    logger.log( `Creating tag ${ _.ct.format( o.name, 'entity' ) }` );
+  }
 
-  return _.git.tagMake
+  let result = _.git.tagMake
   ({
     localPath,
     tag : o.name,
@@ -9693,7 +9697,13 @@ function gitTag( o )
     light : o.light,
     force : 1,
     sync : 1,
+    logger
   });
+
+  if( o.verbosity )
+  logger.down();
+
+  return result;
 }
 
 gitTag.defaults =
