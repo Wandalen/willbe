@@ -2,12 +2,9 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  ../.ex.will.yml: &ref_0
-    hash: fd9115e082204dc96496882797909fba
-    size: 2605
-  ../.im.will.yml: &ref_1
-    hash: c9c7f71385264c3dde96a49679a679bd
-    size: 6973
+  ../will.yml: &ref_0
+    hash: 639b1b5df049ae2c602b357574a26042
+    size: 9043
 module:
   willbe.out:
     about:
@@ -16,35 +13,33 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: &ref_2
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords: &ref_3
-        - wTools
       license: MIT
+      npm.name: willbe
+      npm.bin: &ref_1
+        single-process-will: proto/wtools/atop/will/entry/Exec
+        debug-will: proto/wtools/atop/will/entry/ExecDebug
+        will: proto/wtools/atop/will/entry/ExecUnrestricted
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      keywords: &ref_2
+        - wTools
+      contributors: &ref_3
         - Kostiantyn Wandalen <wanalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
-      npm.name: willbe
+      interpreters: &ref_4
+        - njs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
       npm.scripts: &ref_5
         test: 'wtest .run proto/** rapidity:-1'
         docgen: wdocgen .build proto
         single-process-will: node proto/wtools/atop/will/entry/Exec
         debug-will: node proto/wtools/atop/will/entry/ExecDebug
-        unrestricted-will: node proto/wtools/atop/will/entry/ExecUnrestricted
         will: node proto/wtools/atop/will/entry/ExecUnrestricted
         docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin: &ref_6
-        single-process-will: proto/wtools/atop/will/entry/Exec
-        debug-will: proto/wtools/atop/will/entry/ExecDebug
-        unrestricted-will: proto/wtools/atop/will/entry/ExecUnrestricted
-        will: proto/wtools/atop/will/entry/ExecUnrestricted
     path:
       module.willfiles:
         criterion:
@@ -57,15 +52,11 @@ module:
       module.original.willfiles:
         criterion:
           predefined: 1
-        path:
-          - ../.ex.will.yml
-          - ../.im.will.yml
+        path: ../will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path:
-          - ../.ex.will.yml
-          - ../.im.will.yml
+        path: ../will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -3854,15 +3845,15 @@ module:
         path: 'npm:///wLogger'
         autoExporting: 0
         enabled: 0
-      wVerbal:
+      wverbal:
         path: 'npm:///wverbal'
         autoExporting: 0
         enabled: 0
-      wTemplateTreeEnvironment:
+      wtemplatetreeenvironment:
         path: 'npm:///wtemplatetreeenvironment'
         autoExporting: 0
         enabled: 0
-      wProcess:
+      wprocess:
         path: 'npm:///wprocess'
         autoExporting: 0
         enabled: 0
@@ -3870,75 +3861,71 @@ module:
         path: 'npm:///wgraphbasic'
         autoExporting: 0
         enabled: 0
-      wGraphExtra:
-        path: 'npm:///wgraphbasic'
-        autoExporting: 0
-        enabled: 0
       wFiles:
         path: 'npm:///wFiles'
         autoExporting: 0
         enabled: 0
-      wFilesArchive:
+      wfilesarchive:
         path: 'npm:///wfilesarchive'
         autoExporting: 0
         enabled: 0
-      wGitTools:
+      wgittools:
         path: 'npm:///wgittools'
         autoExporting: 0
         enabled: 0
-      wNpmTools:
+      wnpmtools:
         path: 'npm:///wnpmtools'
         autoExporting: 0
         enabled: 0
-      wYamlTools:
+      wyamltools:
         path: 'npm:///wyamltools'
         autoExporting: 0
         enabled: 0
-      wFilesEncoders:
+      wfilesencoders:
         path: 'npm:///wfilesencoders'
         autoExporting: 0
         enabled: 0
-      wStateStorage:
+      wstatestorage:
         path: 'npm:///wstatestorage'
         autoExporting: 0
         enabled: 0
-      wStateSession:
+      wstatesession:
         path: 'npm:///wstatesession'
         autoExporting: 0
         enabled: 0
-      wStager:
+      wstager:
         path: 'npm:///wstager'
         autoExporting: 0
         enabled: 0
-      wSelector:
+      wselector:
         path: 'npm:///wselector'
         autoExporting: 0
         enabled: 0
-      wResolver:
+      wresolver:
         path: 'npm:///wresolver'
         autoExporting: 0
         enabled: 0
-      wResolverExtra:
+      wresolverextra:
         path: 'npm:///wresolverextra'
         autoExporting: 0
         enabled: 0
-      wCommandsAggregator:
+      wcommandsaggregator:
         path: 'npm:///wcommandsaggregator'
         autoExporting: 0
         enabled: 0
-      wCommandsConfig:
+      wcommandsconfig:
         path: 'npm:///wcommandsconfig'
         autoExporting: 0
         enabled: 0
-      wNameMapper:
+      wnamemapper:
         path: 'npm:///wnamemapper'
         autoExporting: 0
         enabled: 0
-      wTranspile:
+      wtranspile:
         path: 'npm:///wtranspile'
         autoExporting: 0
         enabled: 0
-      wCensorBasic:
+      wcensorbasic:
         path: 'npm:///wcensorbasic'
         autoExporting: 0
         enabled: 0
@@ -3947,7 +3934,7 @@ module:
         autoExporting: 0
         enabled: 0
         criterion:
-          debug: 1
+          development: 1
       wTesting:
         path: 'npm:///wTesting'
         autoExporting: 0
@@ -4492,6 +4479,12 @@ module:
         inherit:
           - files.transpile
     build:
+      test.docker.dock:
+        steps:
+          - 'step::test.docker.dock'
+      test.docker.run:
+        steps:
+          - 'step::test.docker.run'
       proto.export:
         steps:
           - 'step::proto.export'
@@ -4516,12 +4509,6 @@ module:
         criterion:
           default: 1
           export: 1
-      test.docker.dock:
-        steps:
-          - 'step::test.docker.dock'
-      test.docker.run:
-        steps:
-          - 'step::test.docker.run'
       debug:
         steps:
           - 'step::clean.out*=2'
@@ -4585,8 +4572,7 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      ../will.yml: *ref_0
   ../:
     about:
       name: willbe
@@ -4594,27 +4580,23 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: *ref_2
-      keywords: *ref_3
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
       npm.name: willbe
+      npm.bin: *ref_1
+      author: Kostiantyn Wandalen <wanalen@01.school>
+      keywords: *ref_2
+      contributors: *ref_3
+      interpreters: *ref_4
       npm.scripts: *ref_5
-      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: will.yml
       module.original.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
@@ -4728,15 +4710,15 @@ module:
         path: 'npm:///wLogger'
         autoExporting: 0
         enabled: 0
-      wVerbal:
+      wverbal:
         path: 'npm:///wverbal'
         autoExporting: 0
         enabled: 0
-      wTemplateTreeEnvironment:
+      wtemplatetreeenvironment:
         path: 'npm:///wtemplatetreeenvironment'
         autoExporting: 0
         enabled: 0
-      wProcess:
+      wprocess:
         path: 'npm:///wprocess'
         autoExporting: 0
         enabled: 0
@@ -4744,75 +4726,71 @@ module:
         path: 'npm:///wgraphbasic'
         autoExporting: 0
         enabled: 0
-      wGraphExtra:
-        path: 'npm:///wgraphbasic'
-        autoExporting: 0
-        enabled: 0
       wFiles:
         path: 'npm:///wFiles'
         autoExporting: 0
         enabled: 0
-      wFilesArchive:
+      wfilesarchive:
         path: 'npm:///wfilesarchive'
         autoExporting: 0
         enabled: 0
-      wGitTools:
+      wgittools:
         path: 'npm:///wgittools'
         autoExporting: 0
         enabled: 0
-      wNpmTools:
+      wnpmtools:
         path: 'npm:///wnpmtools'
         autoExporting: 0
         enabled: 0
-      wYamlTools:
+      wyamltools:
         path: 'npm:///wyamltools'
         autoExporting: 0
         enabled: 0
-      wFilesEncoders:
+      wfilesencoders:
         path: 'npm:///wfilesencoders'
         autoExporting: 0
         enabled: 0
-      wStateStorage:
+      wstatestorage:
         path: 'npm:///wstatestorage'
         autoExporting: 0
         enabled: 0
-      wStateSession:
+      wstatesession:
         path: 'npm:///wstatesession'
         autoExporting: 0
         enabled: 0
-      wStager:
+      wstager:
         path: 'npm:///wstager'
         autoExporting: 0
         enabled: 0
-      wSelector:
+      wselector:
         path: 'npm:///wselector'
         autoExporting: 0
         enabled: 0
-      wResolver:
+      wresolver:
         path: 'npm:///wresolver'
         autoExporting: 0
         enabled: 0
-      wResolverExtra:
+      wresolverextra:
         path: 'npm:///wresolverextra'
         autoExporting: 0
         enabled: 0
-      wCommandsAggregator:
+      wcommandsaggregator:
         path: 'npm:///wcommandsaggregator'
         autoExporting: 0
         enabled: 0
-      wCommandsConfig:
+      wcommandsconfig:
         path: 'npm:///wcommandsconfig'
         autoExporting: 0
         enabled: 0
-      wNameMapper:
+      wnamemapper:
         path: 'npm:///wnamemapper'
         autoExporting: 0
         enabled: 0
-      wTranspile:
+      wtranspile:
         path: 'npm:///wtranspile'
         autoExporting: 0
         enabled: 0
-      wCensorBasic:
+      wcensorbasic:
         path: 'npm:///wcensorbasic'
         autoExporting: 0
         enabled: 0
@@ -4821,7 +4799,7 @@ module:
         autoExporting: 0
         enabled: 0
         criterion:
-          debug: 1
+          development: 1
       wTesting:
         path: 'npm:///wTesting'
         autoExporting: 0
@@ -5315,6 +5293,12 @@ module:
         inherit:
           - files.transpile
     build:
+      test.docker.dock:
+        steps:
+          - 'step::test.docker.dock'
+      test.docker.run:
+        steps:
+          - 'step::test.docker.run'
       proto.export:
         steps:
           - 'step::proto.export'
@@ -5339,12 +5323,6 @@ module:
         criterion:
           default: 1
           export: 1
-      test.docker.dock:
-        steps:
-          - 'step::test.docker.dock'
-      test.docker.run:
-        steps:
-          - 'step::test.docker.run'
       debug:
         steps:
           - 'step::clean.out*=2'
@@ -5395,9 +5373,6 @@ module:
           - 'build::release'
           - 'build::npm'
     consistency:
-      ../.ex.will.yml:
-        hash: fd9115e082204dc96496882797909fba
-        size: 2605
-      ../.im.will.yml:
-        hash: c9c7f71385264c3dde96a49679a679bd
-        size: 6973
+      ../will.yml:
+        hash: 639b1b5df049ae2c602b357574a26042
+        size: 9043
