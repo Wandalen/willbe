@@ -1,0 +1,27 @@
+about :
+
+  name : commandModulesGitStatusOutputFormat
+
+submodule :
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/
+
+path :
+
+  git : '.'
+
+step :
+
+  push.with.dir :
+    inherit : git.push
+    dirPath : 'path::git'
+
+build :
+
+  git.push :
+    steps :
+      - git.push
+
+  push.with.dir :
+    steps :
+      - push.with.dir

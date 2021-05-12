@@ -28168,48 +28168,76 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
+    a.ready.then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28264,24 +28292,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28312,24 +28354,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -31346,6 +31402,61 @@ commandModulesGitDiff.rapidity = -1;
 
 //
 
+function commandModulesGitDiffOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git diff has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.diff' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Status:' ), 2 );
+    test.identical( _.strCount( op.output, '  Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '    modifiedFiles:' ), 2 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/Include.s b/proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/Integration.test.ss b/proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    +testData' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandModulesGitStatusWithOnlyRoot( test )
 {
   let context = this;
@@ -32048,6 +32159,57 @@ function commandModulesGitStatus( test )
 
 commandModulesGitStatus.rapidity = -1;
 commandModulesGitStatus.timeOut = 500000;
+
+//
+
+function commandModulesGitStatusOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
 
 //
 
@@ -42748,8 +42910,10 @@ const Proto =
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
+    commandModulesGitDiffOutputFormat,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
+    commandModulesGitStatusOutputFormat,
     commandModulesGitSync,
     commandModulesGitSyncRestoreHardLinksInModuleWithSuccess,
     commandModulesGitSyncRestoreHardLinksInModuleWithFail,
