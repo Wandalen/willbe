@@ -9378,7 +9378,9 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   let ready = _.git.push
   ({
@@ -9389,7 +9391,13 @@ function gitPush( o )
     dry : o.dry,
     sync : 0,
     throwing : 1,
+    logger,
   });
+
+  ready.tap( () =>
+  {
+    logger.down();
+  })
 
   ready.catch( ( err ) =>
   {
