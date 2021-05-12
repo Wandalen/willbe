@@ -9008,25 +9008,34 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
+  logger.up();
 
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake({ dirPath : o.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
   let ready = _.take( null );
 
+
   _.process.start
   ({
     execPath : `git ${ o.command }`,
     currentPath : o.dirPath,
+    logger,
     ready,
   });
 
@@ -9034,6 +9043,7 @@ function gitExecCommand( o )
   {
     if( o.hardLinkMaybe )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9222,6 +9232,9 @@ function _providerArchiveMake( o )
   provider.archive.fileMapAutosaving = 1;
   provider.archive.allowingMissed = 1;
   provider.archive.allowingCycled = 1;
+
+  if( o.logger )
+  provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );
 
   return provider;
 }
