@@ -8757,7 +8757,7 @@ function willfileMergeIntoSingle( o )
     for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
     {
       let oldName = unnamedWillfiles[ i ].absolute;
-      let newName = path.join( unnamedWillfiles[ i ].dir, 'Old' + unnamedWillfiles[ i ].fullName );
+      let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
       fileProvider.fileRename( newName, oldName );
     }
 
