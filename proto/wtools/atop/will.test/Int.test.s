@@ -10199,6 +10199,131 @@ function modulesFor( test )
 
   /* - */
 
+  return a.ready;
+
+
+  /* - */
+
+  function onEachModule( module, op )
+  {
+    onEachModules.push( module );
+    return null;
+  }
+
+  /* - */
+
+  function onEachJunction( junction, op )
+  {
+    onEachJunctions.push( junction );
+    return null;
+  }
+
+  /* - */
+
+  function onEachVisitedObject( object, op )
+  {
+    onEachVisitedObjects.push( object );
+    return null;
+  }
+
+  /* - */
+
+  function onBegin( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function onEnd( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function clean()
+  {
+    onEachModules = [];
+    onEachJunctions = [];
+    onEachVisitedObjects = [];
+  }
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      clean();
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      if( o2.tracing === undefined )
+      o2.tracing = a.path.isGlob( o2.selector );
+
+      return a.will.modulesFindWithAt( o2 )
+      .then( ( it ) =>
+      {
+        openers = it.openers;
+        return null;
+      })
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
+}
+
+//
+
+function modulesForWithOptionsWith( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesFor' );
+  let onEachModules, onEachJunctions, onEachVisitedObjects;
+  let openers;
+
+  let defaults =
+  {
+    withBranches : 1,
+    withDisabledModules : 0,
+    withDisabledStem : null,
+    withDisabledSubmodules : 0,
+    withEnabledModules : 1,
+    withEnabledSubmodules : 1,
+    withIn : 1,
+    withInvalid : 1,
+    withKnown : 1,
+    withMandatorySubmodules : 1,
+    withOptionalSubmodules : 1,
+    withOut : 1,
+    withPeers : 1,
+    withStem : 1,
+    withTerminals : 1,
+    withUnknown : 0,
+    withValid : 1,
+    withoutDuplicates : 0,
+
+    onEachModule : onEachModule,
+    onEachJunction : onEachJunction,
+    onEachVisitedObject : onEachVisitedObject,
+    onBegin : onBegin,
+    onEnd : onEnd,
+  }
+
+  /* - */
+
   begin({ selector : a.abs( './a' ) })
   .then( () =>
   {
@@ -13081,6 +13206,7 @@ const Proto =
     modulesFindEachAt,
     modulesForOpeners,
     modulesFor,
+    modulesForWithOptionsWith,
     modulesForWithSubmodules,
 
     // submodule
