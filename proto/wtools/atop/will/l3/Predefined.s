@@ -137,7 +137,6 @@ function stepRoutineReflect( frame )
 
   return _.Consequence.Try( () =>
   {
-    // debugger;
     return _.will.Predefined.filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
@@ -147,7 +146,6 @@ function stepRoutineReflect( frame )
   })
   .catch( ( err ) =>
   {
-    debugger;
     err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportString(), '  ' ), '\n' );
     throw _.err( err );
     // throw _.errBrief( err );
@@ -268,7 +266,6 @@ function stepRoutineJs( frame )
   }
   catch( err )
   {
-    debugger;
     throw _.err( err, '\nFailed to open JS file', _.strQuote( opts.js ) );
   }
 
@@ -325,7 +322,6 @@ function stepRoutineEcho( frame )
   }
   catch( err )
   {
-    debugger;
     throw _.err( err, '\nFailed to resolve echo output', _.strQuote( opts.echo ) );
   }
 

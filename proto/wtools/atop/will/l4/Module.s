@@ -6939,13 +6939,22 @@ function structureExportOut( o )
         + `\nLocal path is ${junction.localPath}`
       );
     }
-    let c = 0;
+    // let c = 0;
     if( _.longHas( found.ownedObjects, module2 ) )
     {
       modules.push( module2 );
-      c += 1;
+      // c += 1;
     }
-    _.assert( c === 1 ); /* xxx */
+    // _.assert( c === 1 ); /* xxx */
+    /* Dmytro : this check is not valid for complex submodules structures which have dependencies on the same layer :
+    module X depends on Y and Z, and Z depends on module Y
+
+    X->Z
+    |  |
+    Y<-|
+    The utility does not resolve this graph. And the export of Z contains modules A, but it not owned this module
+    We export only owned modules.
+    */
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
@@ -6983,8 +6992,6 @@ function structureExportForModuleExport( o )
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
   let structure = module2.structureExportOut();
 
-  if( !module2.isUsedManually() )
-  debugger;
   if( !module2.isUsedManually() )
   module2.finit();
 
@@ -7159,8 +7166,6 @@ function resourceImport( o )
 
   if( o.srcResource.pathsRebase )
   {
-    if( o.srcResource.original )
-    debugger;
     if( o.srcResource.original )
     o.srcResource = o.srcResource.original;
 
@@ -7724,6 +7729,10 @@ function willfileExtendWillfile( o )
   let request = opts.request.split( /\s+/ );
   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
+  o.dirPath = o.dirPath ? o.dirPath : will.inPath;
+  if( !o.dirPath )
+  o.dirPath = path.current();
+
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
 
@@ -7806,7 +7815,7 @@ function willfileExtendWillfile( o )
     if( path.isGlob( dstPath ) )
     throw _.err( 'Path to destination file should have not globs.' );
 
-    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+    dstPath = path.join( o.dirPath, dstPath );
 
     if( fileProvider.isDir( dstPath ) )
     dstPath = path.join( dstPath, './' );
@@ -7835,7 +7844,7 @@ function willfileExtendWillfile( o )
     }
     else
     {
-      let willPath = will.inPath ? will.inPath : path.current();
+      let willPath = o.dirPath;
       let firstExt = ext === 'yaml' ? 'yml' : ext;
       let secondExt = opts.format === 'json' ? '.' : '.will.';
 
@@ -7862,7 +7871,7 @@ function willfileExtendWillfile( o )
   {
     let filePath = selector;
     if( !path.isAbsolute( filePath ) )
-    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+    filePath = path.join( o.dirPath, selector );
 
     if( fileProvider.isTerminal( filePath ) )
     {
@@ -8124,6 +8133,7 @@ willfileExtendWillfile.defaults =
   'npm.name' : 1,
   'npm.scripts' : 1,
 
+  'dirPath' : null,
   'request' : null,
   'onSection' : null,
   'submodulesDisabling' : 0,
@@ -8556,6 +8566,218 @@ willfileExtendProperty.defaults =
   verbosity : 3,
   // v : 3,
 }
+
+//
+
+/* qqq : for Dmytro : bad, refactor, rewrite */
+
+function willfileMergeIntoSingle( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+
+  _.routine.options( willfileMergeIntoSingle, o );
+
+  let primaryWillfilePath = o.primaryPath || 'CommandWillfileMergeIntoSingle';
+
+  let o2 =
+  {
+    request : primaryWillfilePath + ' ./',
+    onSection : _.props.supplement.bind( _.props ),
+    dirPath : module.dirPath,
+  };
+  willfileExtendWillfile.call( will, o2 );
+
+  if( o.secondaryPath )
+  {
+    let o3 =
+    {
+      request : `${ primaryWillfilePath } ${ o.secondaryPath }`,
+      name : 0,
+      onSection : _.props.extend.bind( _.props ),
+      dirPath : module.dirPath,
+    };
+    module.willfileExtendWillfile( o3 );
+  }
+
+  let dstPath = filesFind( primaryWillfilePath, 1 );
+  _.assert( dstPath.length === 1 );
+  dstPath = dstPath[ 0 ];
+
+  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+
+  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
+  filterAboutNpmFields();
+  filterSubmodulesCriterions();
+  if( o.filterSameSubmodules )
+  filterSameSubmodules()
+  if( o.submodulesDisabling )
+  submodulesDisable();
+  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger });
+
+  /* */
+
+  renameFiles();
+
+  return null;
+
+  /* */
+
+  function filesFind( srcPath, dst )
+  {
+    if( dst && path.isGlob( srcPath ) )
+    throw _.err( 'Path to destination file should have not globs.' );
+
+    srcPath = path.join( module.dirPath, srcPath );
+
+    if( fileProvider.isDir( srcPath ) )
+    srcPath = path.join( srcPath, './' );
+
+    return will.willfilesFind
+    ({
+      commonPath : srcPath,
+      withIn : 1,
+      withOut : 0,
+    });
+  }
+
+  /* */
+
+  function filterSubmodulesCriterions()
+  {
+    let submodules = config.submodule;
+    for( let name in submodules )
+    {
+      let criterions = submodules[ name ].criterion;
+      if( criterions )
+      if( criterions.debug )
+      if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
+      {
+        delete criterions.debug;
+        criterions.development = 1;
+      }
+    }
+  }
+
+  /* */
+
+  function filterAboutNpmFields()
+  {
+    let about = config.about;
+    for( let name in about )
+    {
+      if( !_.strBegins( name, 'npm.' ) )
+      continue;
+
+      if( _.arrayIs( about[ name ] ) )
+      {
+        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
+      }
+      else if( _.aux.is( about[ name ] ) )
+      {
+        let npmMap = about[ name ];
+        let reversedMap = Object.create( null );
+
+        for( let property in npmMap )
+        if( npmMap[ property ] in reversedMap )
+        filterPropertyByName( npmMap, reversedMap, property )
+        else
+        reversedMap[ npmMap[ property ] ] = property;
+      }
+    }
+  }
+
+  /* */
+
+  function filterPropertyByName( srcMap, butMap, property )
+  {
+    if( _.strHas( property, '-' ) )
+    delete srcMap[ property ];
+    else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
+    delete srcMap[ butMap[ srcMap[ property ] ] ];
+    else if( !_.strHasAny( property, [ '.', '-' ] ) )
+    {
+      if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
+      delete srcMap[ butMap[ srcMap[ property ] ] ];
+    }
+  }
+
+  /* */
+
+  function filterSameSubmodules()
+  {
+    let submodules = config.submodule;
+    let regularPaths = new Set();
+    let mergedSubmodules = Object.create( null );
+    for( let name in submodules )
+    {
+      let parsed = _.uri.parse( submodules[ name ].path );
+
+      let parsedModuleName;
+      if( _.longHas( parsed.protocols, 'npm' ) )
+      {
+        parsedModuleName = _.npm.path.parse( submodules[ name ].path ).host;
+      }
+      else if( _.longHas( parsed.protocols, 'git' ) )
+      {
+        parsedModuleName = _.npm.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
+      }
+      else
+      {
+        if( regularPaths.has( submodules[ name ].path ) )
+        continue;
+
+        regularPaths.add( submodules[ name ].path );
+        parsedModuleName = name;
+      }
+
+      if( !( parsedModuleName in mergedSubmodules ) )
+      mergedSubmodules[ parsedModuleName ] = submodules[ name ];
+    }
+    config.submodule = mergedSubmodules;
+  }
+
+  /* */
+
+  function submodulesDisable()
+  {
+    // if( !config )
+    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
+    for( let dependency in config.submodule )
+    config.submodule[ dependency ].enabled = 0;
+  }
+
+  /* */
+
+  function renameFiles()
+  {
+    let unnamedWillfiles = filesFind( './.*' );
+    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+    {
+      let oldName = unnamedWillfiles[ i ].absolute;
+      let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
+      fileProvider.fileRename( newName, oldName );
+    }
+
+    if( !o.primaryPath )
+    {
+      let oldName = dstPath.absolute;
+      let newName = path.join( dstPath.dir, 'will.yml' );
+      fileProvider.fileRename( newName, oldName );
+    }
+  }
+}
+
+willfileMergeIntoSingle.defaults =
+{
+  logger : 3,
+  primaryPath : null,
+  secondaryPath : null,
+  submodulesDisabling : 1,
+  filterSameSubmodules : 1,
+};
 
 //
 
@@ -9008,25 +9230,34 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
+  logger.up();
 
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake({ dirPath : o.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
   let ready = _.take( null );
 
+
   _.process.start
   ({
     execPath : `git ${ o.command }`,
     currentPath : o.dirPath,
+    logger,
     ready,
   });
 
@@ -9034,6 +9265,7 @@ function gitExecCommand( o )
   {
     if( o.hardLinkMaybe )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9079,7 +9311,7 @@ function gitDiff( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Diff ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nDiff of ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let result = _.git.diff
   ({
@@ -9095,8 +9327,19 @@ function gitDiff( o )
   if( !result.status && !result.patch )
   return null;
 
-  logger.log( `Status:\n${ result.status }` );
-  logger.log( `Patch:\n${ result.patch }` );
+  logger.up();
+
+  logger.log( _.ct.format( `Status:`, 'entity' ) );
+  logger.up();
+  logger.log( result.status );
+  logger.down();
+
+  logger.log( _.ct.format( `Patch:`, 'entity' ) );
+  logger.up();
+  logger.log( result.patch );
+  logger.down();
+
+  logger.down();
 
   return true;
 }
@@ -9212,6 +9455,9 @@ function _providerArchiveMake( o )
   provider.archive.allowingMissed = 1;
   provider.archive.allowingCycled = 1;
 
+  if( o.logger )
+  provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );
+
   return provider;
 }
 
@@ -9250,13 +9496,15 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   if( status.uncommitted )
   throw _.errBrief
   (
     `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
   );
+
+  logger.up();
 
   /* */
 
@@ -9266,9 +9514,15 @@ function gitPull( o )
     debugger;
     /* qqq : for Dmytro : ? */
     // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
-    provider = module._providerArchiveMake({ dirPath : module.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
@@ -9278,6 +9532,7 @@ function gitPull( o )
   ({
     localPath : o.dirPath,
     sync : 0,
+    logger,
     throwing : 1,
   });
 
@@ -9285,6 +9540,7 @@ function gitPull( o )
   {
     if( o.restoringHardLinks )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9344,7 +9600,9 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   let ready = _.git.push
   ({
@@ -9355,7 +9613,13 @@ function gitPush( o )
     dry : o.dry,
     sync : 0,
     throwing : 1,
+    logger,
   });
+
+  ready.tap( () =>
+  {
+    logger.down();
+  })
 
   ready.catch( ( err ) =>
   {
@@ -9401,7 +9665,9 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nResetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   _.git.reset
   ({
@@ -9411,7 +9677,10 @@ function gitReset( o )
     removingSubrepositories : o.removingSubrepositories,
     dry : o.dry,
     sync : 1,
+    logger
   });
+
+  logger.down();
 
   return null;
 }
@@ -9469,8 +9738,10 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  logger.log( module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
-  logger.log( got.status );
+  logger.log( `\nStatus of ${module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() )}` );
+  logger.up();
+  logger.log( _.ct.format( got.status, 'pipe.neutral' ) );
+  logger.down();
   return got;
 }
 
@@ -9561,16 +9832,22 @@ function gitSync( o )
     let start = _.process.starter
     ({
       currentPath : o.dirPath,
+      logger : logger,
       ready : con,
     });
+
     if( o.verbosity )
-    logger.log( `Committing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.log( `\nCommitting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+    logger.up();
 
     start( `git add --all` );
     if( o.commit )
     start( `git commit ${ o.commit }` );
     else
     start( 'git commit -am "."' );
+
+    con.tap( () => logger.down() )
 
     return con;
   }
@@ -9627,9 +9904,13 @@ function gitTag( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Creating tag ${ o.name }` );
+  {
+    logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.up();
+    logger.log( `Creating tag ${ _.ct.format( o.name, 'entity' ) }` );
+  }
 
-  return _.git.tagMake
+  let result = _.git.tagMake
   ({
     localPath,
     tag : o.name,
@@ -9638,7 +9919,13 @@ function gitTag( o )
     light : o.light,
     force : 1,
     sync : 1,
+    logger
   });
+
+  if( o.verbosity )
+  logger.down();
+
+  return result;
 }
 
 gitTag.defaults =
@@ -10314,6 +10601,8 @@ let Extension =
   willfileSetProperty,
   willfileDeleteProperty,
   willfileExtendProperty,
+
+  willfileMergeIntoSingle,
 
   willfileVersionBump,
   npmModulePublish,

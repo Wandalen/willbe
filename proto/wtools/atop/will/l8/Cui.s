@@ -2237,7 +2237,6 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
-
   return cui._commandCleanLike
   ({
     event : e,
@@ -3558,53 +3557,52 @@ function commandClean( e )
   e.optionsMap.fast = !e.optionsMap.dry;
   e.optionsMap.fast = 0; /* xxx : implement */
 
-  // return cui._commandCleanLike
-  // ({
-  //   event : e,
-  //   name : 'clean',
-  //   onAll : handleAll,
-  //   commandRoutine : commandClean,
-  // });
-
-  return cui._commandModuleOrientedLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'clean',
-    onEachModule : handleEach,
-    commandRoutine : commandGit,
+    onAll : handleAll,
+    commandRoutine : commandClean,
   });
 
-  function handleEach( module )
-  {
-    // let o2 = cui.filterImplied();
-    let o2 = { ... cui.RelationFilterOn };
-    o2 = _.props.extend( o2, e.optionsMap );
-    delete o2.withSubmodules;
-    o2.modules = [ module ];
-    _.routine.options_( cui.modulesClean, o2 );
-    if( o2.recursive === 2 )
-    o2.modules = cui.modulesOnlyRoots( o2.modules )
-    o2.asCommand = 1;
-
-    return cui.modulesClean( o2 );
-  }
-
-  // function handleAll( it )
+  // return cui._commandModuleOrientedLike
+  // ({
+  //   event : e,
+  //   name : 'clean',
+  //   onEachModule : handleEach,
+  //   commandRoutine : commandClean,
+  // });
+  //
+  // function handleEach( module )
   // {
-  //   _.assert( _.arrayIs( it.openers ) );
-
   //   // let o2 = cui.filterImplied();
   //   let o2 = { ... cui.RelationFilterOn };
   //   o2 = _.props.extend( o2, e.optionsMap );
   //   delete o2.withSubmodules;
-  //   o2.modules = it.openers;
-  //   _.routineOptions( cui.modulesClean, o2 );
+  //   o2.modules = [ module ];
+  //   _.routine.options_( cui.modulesClean, o2 );
   //   if( o2.recursive === 2 )
-  //   o2.modules = it.roots;
+  //   o2.modules = cui.modulesOnlyRoots( o2.modules )
   //   o2.asCommand = 1;
-
+  //
   //   return cui.modulesClean( o2 );
   // }
+
+  function handleAll( it )
+  {
+    _.assert( _.arrayIs( it.openers ) );
+
+    let o2 = { ... cui.RelationFilterOn };
+    o2 = _.props.extend( o2, e.optionsMap );
+    delete o2.withSubmodules;
+    o2.modules = it.openers;
+    _.routine.options_( cui.modulesClean, o2 );
+    if( o2.recursive === 2 )
+    o2.modules = it.roots;
+    o2.asCommand = 1;
+
+    return cui.modulesClean( o2 );
+  }
 }
 
 commandClean.defaults =
@@ -3859,30 +3857,30 @@ command.subjectHint = 'A name of export scenario.';
 // {
 //   let cui = this.form();
 //   let path = cui.fileProvider.path;
-
+//
 //   cui._command_head
 //   ({
 //     routine : commandWith,
 //     args : arguments,
 //     // usingImpliedMap : 0
 //   });
-
+//
 //   // if( cui.currentOpener )
 //   // {
 //   //   cui.currentOpener.finit();
 //   //   cui.currentOpenerChange( null );
 //   // }
-
+//
 //   if( cui.currentOpeners )
 //   cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
 //   cui.currentOpeners = null;
-
+//
 //   _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
 //   _.assert( arguments.length === 1 );
-
+//
 //   if( !e.instructionArgument )
 //   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
-
+//
 //   if( process.platform === 'linux' )
 //   {
 //     let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
@@ -3904,13 +3902,13 @@ command.subjectHint = 'A name of export scenario.';
 //       }
 //     }
 //   }
-
+//
 //   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
 //   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
-
+//
 //   cui.implied = _.props.extend( cui.implied, { withPath } );
 //   cui._transactionExtend( commandWith, cui.implied );
-
+//
 //   return cui.modulesFindWithAt
 //   ({
 //     selector : _.strUnquote( e.instructionArgument ),
@@ -3919,7 +3917,7 @@ command.subjectHint = 'A name of export scenario.';
 //   .then( function( it )
 //   {
 //     cui.currentOpeners = it.sortedOpeners;
-
+//
 //     if( !cui.currentOpeners.length )
 //     {
 //       let equalizer = ( parsed, command ) => parsed.commandName === command;
@@ -3932,15 +3930,15 @@ command.subjectHint = 'A name of export scenario.';
 //       else
 //       cui.currentOpeners = null;
 //     }
-
+//
 //     _.assert( cui.transaction instanceof _.will.Transaction );
 //     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
 //     // cui.transaction.finit();
 //     // cui.transaction = null;
-
+//
 //     return it;
 //   })
-
+//
 // }
 
 //
@@ -3995,10 +3993,7 @@ function commandWith( e )
   cui.transaction.finit();
   cui.transactionOld = cui.transaction;
   cui.transaction = null;
-
 }
-
-// commandWith.defaults = _.props.extend( null, commandImply.defaults );
 
 var command = commandWith.command = Object.create( null );
 command.hint = 'Select a module to execute command.';
@@ -4846,209 +4841,30 @@ command.properties = _.props.extend( null, commandWillfileExtendWillfile.command
 /* qqq : for Dmytro : mess! */
 function commandWillfileMergeIntoSingle( e )
 {
-  /*
-   * Dmytro : this strange command is temporary script.
-   * The command contains of all main logic. If it needs
-   * then command will be divided into separate reusable parts
-  */
   let cui = this;
-  let fileProvider = cui.fileProvider;
-  let path = cui.fileProvider.path;
-  let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
-  // _.routine.options_( commandWillfileMergeIntoSingle, e.propertiesMap );
 
-  let willfileName = e.optionsMap.primaryPath || 'CommandWillfileMergeIntoSingle';
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile merge into single',
+    onEach : handleEach,
+    commandRoutine : commandWillfileMergeIntoSingle,
+  });
 
-  let o =
+  function handleEach( it )
   {
-    request : willfileName + ' ./',
-    onSection : _.props.supplement.bind( _.props ),
-  };
-  _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
-
-  if( e.optionsMap.secondaryPath )
-  {
-    let o2 =
-    {
-      request : `${ willfileName } ${ e.optionsMap.secondaryPath }`,
-      name : 0,
-      onSection : _.props.extend.bind( _.props ),
-    };
-    _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
-  }
-
-  let dstPath = filesFind( willfileName, 1 );
-  _.assert( dstPath.length === 1 );
-  dstPath = dstPath[ 0 ];
-
-  let logger = _.logger.relativeMaybe( cui.transaction.logger, cui.fileProviderVerbosityDelta );
-
-  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
-  filterAboutNpmFields();
-  filterSubmodulesCriterions();
-  if( e.optionsMap.filterSameSubmodules )
-  filterSameSubmodules()
-  if( e.optionsMap.submodulesDisabling )
-  submodulesDisable();
-  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger });
-
-  /* */
-
-  renameFiles();
-
-  return null;
-
-  /* */
-
-  function filesFind( srcPath, dst )
-  {
-    if( dst && path.isGlob( srcPath ) )
-    throw _.err( 'Path to destination file should have not globs.' );
-
-    srcPath = path.join( inPath, srcPath );
-
-    if( fileProvider.isDir( srcPath ) )
-    srcPath = path.join( srcPath, './' );
-
-    return cui.willfilesFind
+    return it.opener.openedModule.willfileMergeIntoSingle
     ({
-      commonPath : srcPath,
-      withIn : 1,
-      withOut : 0,
+      ... e.optionsMap,
+      primaryPath : e.optionsMap.primaryPath,
     });
-  }
-
-  /* */
-
-  function filterSubmodulesCriterions()
-  {
-    let submodules = config.submodule;
-    for( let name in submodules )
-    {
-      let criterions = submodules[ name ].criterion;
-      if( criterions )
-      if( criterions.debug )
-      if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
-      {
-        delete criterions.debug;
-        criterions.development = 1;
-      }
-    }
-  }
-
-  /* */
-
-  function filterAboutNpmFields()
-  {
-    let about = config.about;
-    for( let name in about )
-    {
-      if( !_.strBegins( name, 'npm.' ) )
-      continue;
-
-      if( _.arrayIs( about[ name ] ) )
-      {
-        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
-      }
-      else if( _.aux.is( about[ name ] ) )
-      {
-        let npmMap = about[ name ];
-        let reversedMap = Object.create( null );
-
-        for( let property in npmMap )
-        if( npmMap[ property ] in reversedMap )
-        filterPropertyByName( npmMap, reversedMap, property )
-        else
-        reversedMap[ npmMap[ property ] ] = property;
-      }
-    }
-  }
-
-  /* */
-
-  function filterPropertyByName( srcMap, butMap, property )
-  {
-    if( _.strHas( property, '-' ) )
-    delete srcMap[ property ];
-    else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
-    delete srcMap[ butMap[ srcMap[ property ] ] ];
-    else if( !_.strHasAny( property, [ '.', '-' ] ) )
-    {
-      if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
-      delete srcMap[ butMap[ srcMap[ property ] ] ];
-    }
-  }
-
-  /* */
-
-  function filterSameSubmodules()
-  {
-    let submodules = config.submodule;
-    let regularPaths = new Set();
-    let mergedSubmodules = Object.create( null );
-    for( let name in submodules )
-    {
-      let parsed = _.uri.parse( submodules[ name ].path );
-
-      let parsedModuleName;
-      if( _.longHas( parsed.protocols, 'npm' ) )
-      {
-        parsedModuleName = _.npm.path.parse( submodules[ name ].path ).host;
-      }
-      else if( _.longHas( parsed.protocols, 'git' ) )
-      {
-        parsedModuleName = _.npm.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
-      }
-      else
-      {
-        if( regularPaths.has( submodules[ name ].path ) )
-        continue;
-
-        regularPaths.add( submodules[ name ].path );
-        parsedModuleName = name;
-      }
-
-      if( !( parsedModuleName in mergedSubmodules ) )
-      mergedSubmodules[ parsedModuleName ] = submodules[ name ];
-    }
-    config.submodule = mergedSubmodules;
-  }
-
-  /* */
-
-  function submodulesDisable()
-  {
-    // if( !config )
-    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
-    for( let dependency in config.submodule )
-    config.submodule[ dependency ].enabled = 0;
-  }
-
-  /* */
-
-  function renameFiles()
-  {
-    let unnamedWillfiles = filesFind( './.*' );
-    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
-    {
-      let oldName = unnamedWillfiles[ i ].absolute;
-      let newName = path.join( unnamedWillfiles[ i ].dir, 'Old' + unnamedWillfiles[ i ].fullName );
-      fileProvider.fileRename( newName, oldName );
-    }
-
-    if( !e.optionsMap.primaryPath )
-    {
-      let oldName = dstPath.absolute;
-      let newName = path.join( dstPath.dir, 'will.yml' );
-      fileProvider.fileRename( newName, oldName );
-    }
   }
 }
 
 commandWillfileMergeIntoSingle.defaults =
 {
-  verbosity : 3,
+  logger : 3,
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
@@ -5195,8 +5011,8 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  let pathsContainer = [];
-  let ready = _.Consequence();
+  let modules = [];
+  let ready = _.take( null );
   let provider;
 
   // return cui._commandBuildLike
@@ -5212,19 +5028,7 @@ function commandGitPull( e )
 
   function handleEach( module )
   {
-    pathsContainer.push( module.dirPath );
-
-    ready.then( () =>
-    {
-      return module.gitPull
-      ({
-        dirPath : module.dirPath,
-        verbosity : cui.transaction.verbosity,
-        profile : e.optionsMap.profile,
-        restoringHardLinks : 0
-      });
-    })
-
+    modules.push( module );
     return null;
   }
   // function handleEach( it )
@@ -5239,25 +5043,50 @@ function commandGitPull( e )
 
   function handleCommandEnd()
   {
-    let openers = cui.currentOpeners;
-    provider = openers[ 0 ].openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    let severalModules = modules.length > 1;
+    if( severalModules )
+    {
+      let openers = cui.currentOpeners;
+      let paths = _.select( modules, '*/dirPath' );
+      provider = openers[ 0 ].openedModule._providerArchiveMake
+      ({
+        dirPath : cui.fileProvider.path.common( paths ),
+        verbosity : cui.transaction.verbosity,
+        logger : cui.transaction.logger,
+        profile : e.optionsMap.profile,
+      });
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+      if( cui.transaction.verbosity )
+      {
+        // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+        logger.log( `\nRestoring hardlinks in directory(s) :` );
+        logger.up();
+        logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+        logger.down();
+      }
+      provider.archive.restoreLinksBegin();
+    }
 
+    modules.forEach( ( module ) =>
+    {
+      ready.then( () =>
+      {
+        return module.gitPull
+        ({
+          dirPath : module.dirPath,
+          verbosity : cui.transaction.verbosity,
+          profile : e.optionsMap.profile,
+          restoringHardLinks : !severalModules
+        });
+      })
+    })
+
+    if( severalModules )
     ready.tap( () =>
     {
       provider.archive.restoreLinksEnd();
       return null;
     });
-
-    ready.take( null );
 
     return ready;
   }
@@ -5461,8 +5290,8 @@ function commandGitSync( e )
 {
   let cui = this;
   cui._command_head( commandGitSync, arguments );
-  let pathsContainer = [];
-  let ready = _.Consequence();
+  let modules = [];
+  let ready = _.take( null );
   let provider;
 
   // return cui._commandBuildLike
@@ -5479,17 +5308,7 @@ function commandGitSync( e )
 
   function handleEach( module )
   {
-    pathsContainer.push( module.dirPath );
-
-    ready.then( () =>
-    {
-      return module.gitSync
-      ({
-        commit : e.subject,
-        ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-        restoringHardLinks : 0
-      });
-    })
+    modules.push( module );
     return null;
   }
   // function handleEach( it )
@@ -5503,25 +5322,49 @@ function commandGitSync( e )
 
   function handleCommandEnd()
   {
-    let openers = cui.currentOpeners;
-    provider = openers[ 0 ].openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    let severalModules = modules.length > 1;
+    if( severalModules )
+    {
+      let openers = cui.currentOpeners;
+      let paths = _.select( modules, '*/dirPath' );
+      provider = openers[ 0 ].openedModule._providerArchiveMake
+      ({
+        dirPath : cui.fileProvider.path.common( paths ),
+        verbosity : cui.transaction.verbosity,
+        logger : cui.transaction.logger,
+        profile : e.optionsMap.profile,
+      });
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+      if( cui.transaction.verbosity )
+      {
+        // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+        logger.log( `\nRestoring hardlinks in directory(s) :` );
+        logger.up();
+        logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+        logger.down();
+      }
+      provider.archive.restoreLinksBegin();
+    }
 
+    modules.forEach( ( module ) =>
+    {
+      ready.then( () =>
+      {
+        return module.gitSync
+        ({
+          commit : e.subject,
+          ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+          restoringHardLinks : !severalModules
+        });
+      })
+    })
+
+    if( severalModules )
     ready.tap( () =>
     {
       provider.archive.restoreLinksEnd();
       return null;
     });
-
-    ready.take( null );
 
     return ready;
   }

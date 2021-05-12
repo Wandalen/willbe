@@ -2546,7 +2546,7 @@ function eachBrokenCommand( test )
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Unknown command ".resource.list"' ), 1 );
+    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
     // test.identical( _.strCount( op.output, 'Module at' ), 3 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
@@ -5532,7 +5532,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( op.output, 'local :' ), 7 );
+    test.identical( _.strCount( op.output, 'local :' ), 4 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -12351,68 +12351,57 @@ function exportImportMultiple( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'export submodule';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-
     return null;
   })
 
-  a.appStart({ execPath : '.with . .export debug:0' })
-  a.appStart({ execPath : '.with . .export debug:1' })
+  a.appStart({ execPath : '.with . .export debug:0' });
+  a.appStart({ execPath : '.with . .export debug:1' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .export debug:0';
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export debug:0' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean dry:1' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
@@ -12420,48 +12409,43 @@ function exportImportMultiple( test )
     test.true( _.strHas( op.output, 'Clean will delete 5 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 5 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .export debug:0 ; .with super .export debug:1';
-
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-
     return null;
-  })
+  });
 
+  a.appStart({ execPath : '.with . .export debug:0' })
+  a.appStart({ execPath : '.with . .export debug:1' })
   a.appStart({ execPath : '.with super .export debug:0' })
   a.appStart({ execPath : '.with super .export debug:1' })
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
@@ -12470,20 +12454,17 @@ function exportImportMultiple( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean dry:1' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
@@ -12491,29 +12472,26 @@ function exportImportMultiple( test )
     test.true( _.strHas( op.output, 'Clean will delete 8 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 8 file(s)' ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -14355,24 +14333,32 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/group10/out/a0.out.will.yml',
       './group1/group10/out/debug',
       './group1/group10/out/debug/Integration.test.ss',
+      './group1/group10/out/debug/node_modules',
+      './group1/group10/out/debug/node_modules/wmodulefortesting1',
+      './group1/group10/out/debug/node_modules/wmodulefortesting1b',
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
       './group1/group10/out/debug/wtools/testing/Basic.s',
+      './group1/group10/out/debug/wtools/testing/l1',
+      './group1/group10/out/debug/wtools/testing/l1/Include.s',
+      './group1/group10/out/debug/wtools/testing/l1/ModuleForTesting1.s',
+      './group1/group10/out/debug/wtools/testing/l1.test',
+      './group1/group10/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
       './group1/group10/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/group10/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a/Include.s',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './group1/group10/out/debug/wtools/testing/l3.test',
       './group1/group10/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './group1/group10/out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/b.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/Integration.test.ss',
+      './group1/out/debug/node_modules',
+      './group1/out/debug/node_modules/wmodulefortesting1',
+      './group1/out/debug/node_modules/wmodulefortesting12',
+      './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/Basic.s',
@@ -14388,13 +14374,9 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/out/debug/wtools/testing/l3/testing1b',
       './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3/testing2a',
-      './group1/out/debug/wtools/testing/l3/testing2a/Include.s',
-      './group1/out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './group1/out/debug/wtools/testing/l3.test',
       './group1/out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './group2',
       './group2/c.will.yml',
       './group2/.module',
@@ -14402,19 +14384,24 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group2/out/c.out.will.yml',
       './group2/out/debug',
       './group2/out/debug/Integration.test.ss',
+      './group2/out/debug/node_modules',
+      './group2/out/debug/node_modules/wmodulefortesting1',
+      './group2/out/debug/node_modules/wmodulefortesting12ab',
+      './group2/out/debug/node_modules/wmodulefortesting1b',
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
       './group2/out/debug/wtools/testing/Basic.s',
+      './group2/out/debug/wtools/testing/l1',
+      './group2/out/debug/wtools/testing/l1/Include.s',
+      './group2/out/debug/wtools/testing/l1/ModuleForTesting1.s',
+      './group2/out/debug/wtools/testing/l1.test',
+      './group2/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
       './group2/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group2/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group2/out/debug/wtools/testing/l3/testing2a',
-      './group2/out/debug/wtools/testing/l3/testing2a/Include.s',
-      './group2/out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './group2/out/debug/wtools/testing/l3.test',
       './group2/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './group2/out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
       './group2/out/debug/wtools/testing/l4/testing12ab/Include.s',
@@ -14425,6 +14412,11 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/Integration.test.ss',
+      './out/debug/node_modules',
+      './out/debug/node_modules/wmodulefortesting1',
+      './out/debug/node_modules/wmodulefortesting12',
+      './out/debug/node_modules/wmodulefortesting12ab',
+      './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/Basic.s',
@@ -14440,13 +14432,9 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/debug/wtools/testing/l3/testing1b',
       './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3/testing2a',
-      './out/debug/wtools/testing/l3/testing2a/Include.s',
-      './out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
       './out/debug/wtools/testing/l4/testing12ab/Include.s',
@@ -17382,9 +17370,7 @@ function cleanDisabledModule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.clean';
     a.reflect();
@@ -20132,7 +20118,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
@@ -20151,7 +20137,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
@@ -21768,7 +21754,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to update module' ) );
 
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
@@ -21788,7 +21774,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to update module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
@@ -28134,7 +28120,7 @@ function commandImplyPropertyWithDisabled( test )
   }
 }
 
-commandImplyPropertyWithDisabled.timeOut = 1200000;
+commandImplyPropertyWithDisabled.timeOut = 1400000;
 
 //
 
@@ -28182,48 +28168,76 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
+    a.ready.then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28278,24 +28292,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28326,24 +28354,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -30870,6 +30912,58 @@ commandModulesGit.rapidity = -1;
 
 //
 
+function commandModulesGitOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git status hardLinkMaybe:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Restoring hardlinks in directory(s) :' ), 2 );
+    test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting1' )}` ), 1 );
+    test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting2' )}` ), 1 );
+    test.identical( _.strCount( op.output, '  On branch master' ), 2 );
+    test.identical( _.strCount( op.output, ' + Restored 0 hardlinks' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandModulesGitRemoteSubmodules( test )
 {
   let context = this;
@@ -31357,6 +31451,61 @@ function commandModulesGitDiff( test )
 }
 
 commandModulesGitDiff.rapidity = -1;
+
+//
+
+function commandModulesGitDiffOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git diff has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.diff' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Status:' ), 2 );
+    test.identical( _.strCount( op.output, '  Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '    modifiedFiles:' ), 2 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/Include.s b/proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/Integration.test.ss b/proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    +testData' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
 
 //
 
@@ -32062,6 +32211,57 @@ function commandModulesGitStatus( test )
 
 commandModulesGitStatus.rapidity = -1;
 commandModulesGitStatus.timeOut = 500000;
+
+//
+
+function commandModulesGitStatusOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
 
 //
 
@@ -39747,8 +39947,8 @@ function commandWillfileMergeIntoSingle( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39763,14 +39963,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39797,8 +39997,8 @@ function commandWillfileMergeIntoSingle( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39813,14 +40013,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39850,8 +40050,8 @@ function commandWillfileMergeIntoSingle( test )
     });
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39866,14 +40066,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39927,8 +40127,8 @@ function commandWillfileMergeIntoSingle( test )
     });
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39943,14 +40143,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40004,8 +40204,8 @@ function commandWillfileMergeIntoSingle( test )
     });
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40020,14 +40220,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40077,6 +40277,68 @@ function commandWillfileMergeIntoSingle( test )
 
 //
 
+function commandWillfileMergeIntoSingleRunWith( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.with . .willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without options';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    delete config.about.interpreters;
+    delete partEx.about.interpreters;
+    test.contains( config, partEx );
+    test.identical( config.submodule.eslint.criterion.development, 1 );
+    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
+    delete config.submodule.eslint.criterion.development;
+    delete partIm.submodule.eslint.criterion.debug;
+    test.contains( config, partIm );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 {
   let context = this;
@@ -40089,8 +40351,8 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40105,14 +40367,14 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40138,8 +40400,8 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40154,14 +40416,14 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40201,8 +40463,8 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40216,12 +40478,12 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
     let submoduleConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.submodule );
@@ -40258,8 +40520,8 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40273,12 +40535,12 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
     let submoduleConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.submodule );
@@ -40352,8 +40614,8 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40367,12 +40629,12 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    let exWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let exWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
     let npmScriptsConfig = a.fileProvider.fileRead({ filePath : a.abs( 'NpmScripts.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.about[ 'npm.scripts' ] );
@@ -42759,11 +43021,14 @@ const Proto =
     commandModulesUpdate,
     commandModulesShell,
     commandModulesGit,
+    commandModulesGitOutputFormat,
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
+    commandModulesGitDiffOutputFormat,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
+    commandModulesGitStatusOutputFormat,
     commandModulesGitSync,
     commandModulesGitSyncRestoreHardLinksInModuleWithSuccess,
     commandModulesGitSyncRestoreHardLinksInModuleWithFail,
@@ -42809,6 +43074,7 @@ const Proto =
     commandWillfileSupplementWillfileDstIsJson,
     commandWillfileSupplementWillfileWithOptions,
     commandWillfileMergeIntoSingle,
+    commandWillfileMergeIntoSingleRunWith,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
     commandWillfileMergeIntoSingleFilterNpmFields,
