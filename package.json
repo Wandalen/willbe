@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.412",
+  "version" : "0.5.413",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -48,7 +48,6 @@
     "wLogger" : "stable",
     "wverbal" : "stable",
     "wtemplatetreeenvironment" : "stable",
-    "wtemplatefilewriter" : "stable",
     "wprocess" : "stable",
     "wgraphbasic" : "stable",
     "wFiles" : "stable",

@@ -6,8 +6,8 @@ consistency:
     hash: fd9115e082204dc96496882797909fba
     size: 2605
   ../.im.will.yml: &ref_1
-    hash: c826f313edb63a2504c6530f032d30e2
-    size: 6967
+    hash: c9c7f71385264c3dde96a49679a679bd
+    size: 6973
 module:
   willbe.out:
     about:
@@ -3862,10 +3862,6 @@ module:
         path: 'npm:///wtemplatetreeenvironment'
         autoExporting: 0
         enabled: 0
-      wTemplateFileWriter:
-        path: 'npm:///wtemplatefilewriter'
-        autoExporting: 0
-        enabled: 0
       wProcess:
         path: 'npm:///wprocess'
         autoExporting: 0
@@ -4740,10 +4736,6 @@ module:
         path: 'npm:///wtemplatetreeenvironment'
         autoExporting: 0
         enabled: 0
-      wTemplateFileWriter:
-        path: 'npm:///wtemplatefilewriter'
-        autoExporting: 0
-        enabled: 0
       wProcess:
         path: 'npm:///wprocess'
         autoExporting: 0
@@ -5407,5 +5399,5 @@ module:
         hash: fd9115e082204dc96496882797909fba
         size: 2605
       ../.im.will.yml:
-        hash: c826f313edb63a2504c6530f032d30e2
-        size: 6967
+        hash: c9c7f71385264c3dde96a49679a679bd
+        size: 6973
