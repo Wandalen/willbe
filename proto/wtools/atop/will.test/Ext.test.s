@@ -2546,7 +2546,7 @@ function eachBrokenCommand( test )
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Unknown command ".resource.list"' ), 1 );
+    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
     // test.identical( _.strCount( op.output, 'Module at' ), 3 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
