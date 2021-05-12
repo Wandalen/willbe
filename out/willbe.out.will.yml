@@ -1751,6 +1751,10 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/commandImplyProperties/disabled/.will.yml
           - >-
+            ../proto/wtools/atop/will.test/_asset/commandModulesGitStatusOutputFormat
+          - >-
+            ../proto/wtools/atop/will.test/_asset/commandModulesGitStatusOutputFormat/will.yml
+          - >-
             ../proto/wtools/atop/will.test/_asset/commandsSequenceProceduresTermination
           - >-
             ../proto/wtools/atop/will.test/_asset/commandsSequenceProceduresTermination/.will.yml
