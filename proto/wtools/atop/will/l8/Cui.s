@@ -3511,7 +3511,6 @@ function commandHookCall( e )
   function handleEach( it )
   {
     let it2 = _.mapOnly_( null, it, cui.hookContextFrom.defaults );
-    debugger;
     it2.execPath = path.join( cui.hooksPath, execPath );
     it2 = cui.hookContextFrom( it2 );
     return cui.hookCall( it2 );
@@ -3559,53 +3558,52 @@ function commandClean( e )
   e.optionsMap.fast = !e.optionsMap.dry;
   e.optionsMap.fast = 0; /* xxx : implement */
 
-  // return cui._commandCleanLike
-  // ({
-  //   event : e,
-  //   name : 'clean',
-  //   onAll : handleAll,
-  //   commandRoutine : commandClean,
-  // });
-
-  return cui._commandModuleOrientedLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'clean',
-    onEachModule : handleEach,
-    commandRoutine : commandGit,
+    onAll : handleAll,
+    commandRoutine : commandClean,
   });
 
-  function handleEach( module )
-  {
-    // let o2 = cui.filterImplied();
-    let o2 = { ... cui.RelationFilterOn };
-    o2 = _.props.extend( o2, e.optionsMap );
-    delete o2.withSubmodules;
-    o2.modules = [ module ];
-    _.routine.options_( cui.modulesClean, o2 );
-    if( o2.recursive === 2 )
-    o2.modules = cui.modulesOnlyRoots( o2.modules )
-    o2.asCommand = 1;
-
-    return cui.modulesClean( o2 );
-  }
-
-  // function handleAll( it )
+  // return cui._commandModuleOrientedLike
+  // ({
+  //   event : e,
+  //   name : 'clean',
+  //   onEachModule : handleEach,
+  //   commandRoutine : commandClean,
+  // });
+  //
+  // function handleEach( module )
   // {
-  //   _.assert( _.arrayIs( it.openers ) );
-
   //   // let o2 = cui.filterImplied();
   //   let o2 = { ... cui.RelationFilterOn };
   //   o2 = _.props.extend( o2, e.optionsMap );
   //   delete o2.withSubmodules;
-  //   o2.modules = it.openers;
-  //   _.routineOptions( cui.modulesClean, o2 );
+  //   o2.modules = [ module ];
+  //   _.routine.options_( cui.modulesClean, o2 );
   //   if( o2.recursive === 2 )
-  //   o2.modules = it.roots;
+  //   o2.modules = cui.modulesOnlyRoots( o2.modules )
   //   o2.asCommand = 1;
-
+  //
   //   return cui.modulesClean( o2 );
   // }
+
+  function handleAll( it )
+  {
+    _.assert( _.arrayIs( it.openers ) );
+
+    let o2 = { ... cui.RelationFilterOn };
+    o2 = _.props.extend( o2, e.optionsMap );
+    delete o2.withSubmodules;
+    o2.modules = it.openers;
+    _.routine.options_( cui.modulesClean, o2 );
+    if( o2.recursive === 2 )
+    o2.modules = it.roots;
+    o2.asCommand = 1;
+
+    return cui.modulesClean( o2 );
+  }
 }
 
 commandClean.defaults =

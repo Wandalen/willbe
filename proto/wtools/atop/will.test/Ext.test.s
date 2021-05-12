@@ -17360,9 +17360,7 @@ function cleanDisabledModule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.clean';
     a.reflect();
