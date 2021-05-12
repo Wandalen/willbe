@@ -9017,25 +9017,34 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
+  logger.up();
 
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake({ dirPath : o.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
 
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
   let ready = _.take( null );
 
+
   _.process.start
   ({
     execPath : `git ${ o.command }`,
     currentPath : o.dirPath,
+    logger,
     ready,
   });
 
@@ -9043,6 +9052,7 @@ function gitExecCommand( o )
   {
     if( o.hardLinkMaybe )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9232,6 +9242,9 @@ function _providerArchiveMake( o )
   provider.archive.allowingMissed = 1;
   provider.archive.allowingCycled = 1;
 
+  if( o.logger )
+  provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );
+
   return provider;
 }
 
@@ -9270,13 +9283,15 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   if( status.uncommitted )
   throw _.errBrief
   (
     `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
   );
+
+  logger.up();
 
   /* */
 
@@ -9286,9 +9301,15 @@ function gitPull( o )
     debugger;
     /* qqq : for Dmytro : ? */
     // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
-    provider = module._providerArchiveMake({ dirPath : module.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
@@ -9298,6 +9319,7 @@ function gitPull( o )
   ({
     localPath : o.dirPath,
     sync : 0,
+    logger,
     throwing : 1,
   });
 
@@ -9305,6 +9327,7 @@ function gitPull( o )
   {
     if( o.restoringHardLinks )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9364,7 +9387,9 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   let ready = _.git.push
   ({
@@ -9375,7 +9400,13 @@ function gitPush( o )
     dry : o.dry,
     sync : 0,
     throwing : 1,
+    logger,
   });
+
+  ready.tap( () =>
+  {
+    logger.down();
+  })
 
   ready.catch( ( err ) =>
   {
@@ -9421,7 +9452,9 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nResetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   _.git.reset
   ({
@@ -9431,7 +9464,10 @@ function gitReset( o )
     removingSubrepositories : o.removingSubrepositories,
     dry : o.dry,
     sync : 1,
+    logger
   });
+
+  logger.down();
 
   return null;
 }
@@ -9583,16 +9619,22 @@ function gitSync( o )
     let start = _.process.starter
     ({
       currentPath : o.dirPath,
+      logger : logger,
       ready : con,
     });
+
     if( o.verbosity )
-    logger.log( `Committing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.log( `\nCommitting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+    logger.up();
 
     start( `git add --all` );
     if( o.commit )
     start( `git commit ${ o.commit }` );
     else
     start( 'git commit -am "."' );
+
+    con.tap( () => logger.down() )
 
     return con;
   }
@@ -9649,9 +9691,13 @@ function gitTag( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Creating tag ${ o.name }` );
+  {
+    logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.up();
+    logger.log( `Creating tag ${ _.ct.format( o.name, 'entity' ) }` );
+  }
 
-  return _.git.tagMake
+  let result = _.git.tagMake
   ({
     localPath,
     tag : o.name,
@@ -9660,7 +9706,13 @@ function gitTag( o )
     light : o.light,
     force : 1,
     sync : 1,
+    logger
   });
+
+  if( o.verbosity )
+  logger.down();
+
+  return result;
 }
 
 gitTag.defaults =

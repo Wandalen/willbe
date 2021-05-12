@@ -30912,6 +30912,58 @@ commandModulesGit.rapidity = -1;
 
 //
 
+function commandModulesGitOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git status hardLinkMaybe:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Restoring hardlinks in directory(s) :' ), 2 );
+    test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting1' )}` ), 1 );
+    test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting2' )}` ), 1 );
+    test.identical( _.strCount( op.output, '  On branch master' ), 2 );
+    test.identical( _.strCount( op.output, ' + Restored 0 hardlinks' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandModulesGitRemoteSubmodules( test )
 {
   let context = this;
@@ -42907,6 +42959,7 @@ const Proto =
     commandModulesUpdate,
     commandModulesShell,
     commandModulesGit,
+    commandModulesGitOutputFormat,
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
