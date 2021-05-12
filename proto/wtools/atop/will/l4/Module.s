@@ -9443,7 +9443,9 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nResetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   _.git.reset
   ({
@@ -9453,7 +9455,10 @@ function gitReset( o )
     removingSubrepositories : o.removingSubrepositories,
     dry : o.dry,
     sync : 1,
+    logger
   });
+
+  logger.down();
 
   return null;
 }
