@@ -5190,8 +5190,8 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  let pathsContainer = [];
-  let ready = _.Consequence();
+  let modules = [];
+  let ready = _.take( null );
   let provider;
 
   // return cui._commandBuildLike
@@ -5207,19 +5207,7 @@ function commandGitPull( e )
 
   function handleEach( module )
   {
-    pathsContainer.push( module.dirPath );
-
-    ready.then( () =>
-    {
-      return module.gitPull
-      ({
-        dirPath : module.dirPath,
-        verbosity : cui.transaction.verbosity,
-        profile : e.optionsMap.profile,
-        restoringHardLinks : 0
-      });
-    })
-
+    modules.push( module );
     return null;
   }
   // function handleEach( it )
@@ -5234,25 +5222,50 @@ function commandGitPull( e )
 
   function handleCommandEnd()
   {
-    let openers = cui.currentOpeners;
-    provider = openers[ 0 ].openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    let severalModules = modules.length > 1;
+    if( severalModules )
+    {
+      let openers = cui.currentOpeners;
+      let paths = _.select( modules, '*/dirPath' );
+      provider = openers[ 0 ].openedModule._providerArchiveMake
+      ({
+        dirPath : cui.fileProvider.path.common( paths ),
+        verbosity : cui.transaction.verbosity,
+        logger : cui.transaction.logger,
+        profile : e.optionsMap.profile,
+      });
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+      if( cui.transaction.verbosity )
+      {
+        // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+        logger.log( `\nRestoring hardlinks in directory(s) :` );
+        logger.up();
+        logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+        logger.down();
+      }
+      provider.archive.restoreLinksBegin();
+    }
 
+    modules.forEach( ( module ) =>
+    {
+      ready.then( () =>
+      {
+        return module.gitPull
+        ({
+          dirPath : module.dirPath,
+          verbosity : cui.transaction.verbosity,
+          profile : e.optionsMap.profile,
+          restoringHardLinks : !severalModules
+        });
+      })
+    })
+
+    if( severalModules )
     ready.tap( () =>
     {
       provider.archive.restoreLinksEnd();
       return null;
     });
-
-    ready.take( null );
 
     return ready;
   }
