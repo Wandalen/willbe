@@ -155,6 +155,7 @@ function assetFor( test, name )
     return null
   }
 
+  /* qqq : for Dmytro : ? */
   a.reflectMinimal = function reflectMinimal()
   {
     a.fileProvider.filesDelete( a.routinePath );
@@ -3983,7 +3984,6 @@ function reflectWithOptionDstRewriting( test )
     return null;
   })
 
-  /* xxx for Vova : adjust styles aaa: adjusted */
   /* - */
 
   a.ready.then( () =>
@@ -5655,7 +5655,7 @@ hookGitMake.timeOut = 300000;
 
 //
 
-function hookPrepare( test ) /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
+function hookPrepare( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5835,24 +5835,6 @@ function hookHlink( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
-
-  // let originalShell = _.process.starter /* aaa : for Dmytro : ? */ /* Dmytro : improved */
-  // ({
-  //   currentPath : a.abs( 'original' ),
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
-  //
-  // let cloneShell = _.process.starter /* aaa : for Dmytro : ? */ /* Dmytro : not used */
-  // ({
-  //   currentPath : a.abs( 'clone' ),
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
 
   /* - */
 
@@ -15247,7 +15229,7 @@ exportAuto.description =
 function exportOutdated2( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* aaa xxx : assets naming transition is required. ask */ /* Dmytro : Yevgen renamed assets */
+  let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' );
 
   /* - */
 
@@ -24904,7 +24886,7 @@ function stepGitPull( test )
     return null;
   });
 
-  /* */ /* aaa : for Dmytro : bad! carelessly. */ /* Dmytro : improved */
+  /* */
 
   begin().then( ( op ) =>
   {
@@ -25056,7 +25038,6 @@ ${ mergeEnd }
 
   function begin()
   {
-    /* */ /* aaa : for Dmytro : ?? */ /* Dmytro : improved */
     a.ready.then( () => a.reflectMinimal() );
     // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
@@ -42975,7 +42956,7 @@ const Proto =
     stepBuild,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
-    stepGitPull, /* aaa : for Dmytro : bad! */ /* Dmytro : improved */
+    stepGitPull,
     stepGitPush,
     stepGitReset,
     stepGitSync,
@@ -43037,7 +43018,7 @@ const Proto =
     commandModules,
     commandSubmodules,
 
-    commandModulesRepoPullOpen, /* xxx: Vova: removed?, */ /* Dmytro : maybe, I lost this routine */
+    commandModulesRepoPullOpen,
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,

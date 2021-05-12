@@ -47,6 +47,7 @@ function fileClassify( filePath )
 
 //
 
+/* qqq for Dmytro : bad : ? */
 function _fileAtClassifyTerminals( o )
 {
   _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
@@ -100,10 +101,10 @@ function fileAt_body( o )
 
   let isTrailed = path.isTrailed( o.commonPath );
 
-  if( !isTrailed ) /* aaa : cover */ /* Dmytro : covered */
-  if( fileProvider.isTerminal( o.commonPath ) )  /* aaa : cover */ /* Dmytro : covered */
+  if( !isTrailed )
+  if( fileProvider.isTerminal( o.commonPath ) )
   {
-    result.push( _.will._fileAtClassifyTerminals( o ) );
+    result.push( _.will._fileAtClassifyTerminals( o ) ); /* qqq for Dmytro : bad : ?? */
     return result;
   }
 
@@ -526,6 +527,7 @@ function fileReadResource_body( o )
     return;
   }
 
+  /* qqq : for Dmytro : ? */
   for( let i = 0 ; i < found.length ; i++ )
   {
     let read = o.fileProvider.fileReadUnknown({ filePath : found[ i ].filePath });
@@ -741,20 +743,20 @@ const FileExtension = [ 'yml', 'json' ];
 let Extension =
 {
 
-  fileClassify, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
+  fileClassify,
 
   _fileAtClassifyTerminals,
-  fileAt, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
+  fileAt,
   _filesAtFindTerminals,
-  filesAt, /* Dmytro : implemented, covered */
+  filesAt,
 
   filePathIs,
   filePathIsOut,
 
-  fileReadResource, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
-  fileReadPath, /* aaa : for Dmytro : light coverage */ /* Dmytro : covered */
-  fileWriteResource, /* aaa : for Dmytro : cover */ /* Dmytro : covered */
-  fileWritePath, /* aaa : for Dmytro : light coverage */ /* Dmytro : covered */
+  fileReadResource,
+  fileReadPath,
+  fileWriteResource,
+  fileWritePath,
 
   environmentPathFind,
 

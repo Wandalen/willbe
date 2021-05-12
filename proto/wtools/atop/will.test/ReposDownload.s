@@ -50,7 +50,6 @@ module.exports = reposRedownload;
 //   clone( 'ModuleForTesting12', '2da1d0de20bd23f6f32c11bda090569edd90da55' ); // Proto
 //   clone( 'ModuleForTesting12ab', 'a19813c715fa9ef8bb6a7c89adfa170e0e185971' ); // UriBasic
 //
-//   /* aaa : for Dmytro : extend Remake. discuss */ /* Dmytro : Remake remakes assets, but it should not download repositories for local testing, I rewrite this script to download and setup repository automatically using tags */
 //
 //   return ready;
 // }
@@ -61,8 +60,8 @@ module.exports = reposRedownload;
 // {
 //
 //   if( !_.fileProvider.isDir( _.path.join( repoDirPath, name ) ) )
-//   start( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name ); /* aaa : for Dmytro : use routine _.git.* */ /* Dmytro : used in new routine */
-//   start({ execPath : 'git checkout ' + version, currentPath : _.path.join( repoDirPath, name ) }); /* aaa : for Dmytro : use routine _.git.* */ /* Dmytro : used in new routine */
+//   start( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
+//   start({ execPath : 'git checkout ' + version, currentPath : _.path.join( repoDirPath, name ) });
 //   ready.then( () => _.git.reset({ localPath : _.path.join( repoDirPath, name ) }) )
 // }
 

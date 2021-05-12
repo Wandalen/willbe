@@ -17,10 +17,6 @@ if( typeof module !== 'undefined' )
 const _global = _global_;
 const _ = _global_.wTools;
 
-/*
-
-*/
-
 // --
 // context
 // --
@@ -5564,7 +5560,6 @@ function moduleResolve( test )
   return a.ready;
 }
 
-/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
 moduleResolve.description =
 `
 Test routine checks that module resolves the own export resources.
@@ -5620,7 +5615,6 @@ function moduleResolveWithFunctionThisInSelector( test )
   return a.ready;
 }
 
-/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
 moduleResolveWithFunctionThisInSelector.description =
 `
 Test routine checks that module resolves resources when the selector contains part f::this.

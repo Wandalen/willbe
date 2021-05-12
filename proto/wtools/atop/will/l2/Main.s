@@ -5136,8 +5136,6 @@ function hooksGet()
 // npm
 // --
 
-/* aaa : for Dmytro : move to npm tools. leave wrap here */ /* Dmytro : moved, not me */
-
 function npmDepAdd( o )
 {
   let will = this;
@@ -5157,8 +5155,6 @@ function npmDepAdd( o )
   if( parsed.protocol === 'hd' )
   o.depPath = path.join( path.current(), o.depPath );
 
-  // if( !o.as )
-  // o.as = _.npm.fileReadName({ localPath : path.current() });
   if( !o.as )
   if( parsed.protocol === 'hd' )
   o.as = _.npm.fileReadName({ localPath : path.localsFromGlobals( o.depPath ) });
@@ -5175,26 +5171,6 @@ function npmDepAdd( o )
   delete o.verbosity;
 
   return _.npm.depAdd( o );
-
-  // let nodeModulesPath = _.npm.pathDownloadFromLocal( o.localPath );
-  //
-  // _.sure( fileProvider.fileExists( _.npm.pathLocalFromDownload( nodeModulesPath ) ), `nodeModulesPath:${nodeModulesPath} does not exist` );
-  // _.sure( fileProvider.fileExists( o.depPath ), `depPath:${o.depPath} does not exist` );
-  // _.sure( _.strDefined( o.as ), '`as` is not specified' )
-  //
-  // let dstPath = path.join( nodeModulesPath, o.as );
-  // if( o.verbosity )
-  // logger.log( `Linking ${_.ct.format( o.depPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
-  // if( !o.dry )
-  // fileProvider.softLink
-  // ({
-  //   dstPath : dstPath,
-  //   srcPath : o.depPath,
-  //   makingDirectory : 1,
-  //   rewritingDirs : 1,
-  // });
-  //
-  // return true;
 }
 
 npmDepAdd.defaults =

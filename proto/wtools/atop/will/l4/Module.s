@@ -8743,8 +8743,6 @@ function willfileMergeIntoSingle( o )
 
   function submodulesDisable()
   {
-    // if( !config )
-    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
     for( let dependency in config.submodule )
     config.submodule[ dependency ].enabled = 0;
   }
@@ -9031,7 +9029,6 @@ npmModulePublish.defaults =
   tag : '',
   force : 0,
   dry : 0,
-  // v : 1, /* qqq : for Dmytro : bad : ! */
   verbosity : 1,
 };
 

@@ -337,7 +337,6 @@ function _command_head( o )
   _.routine.options_( o.routine, e.optionsMap );
 
   // if( o.routine.command.properties && o.routine.command.properties.v )
-  /* aaa : for Dmytro : design good solution instead of this workaround. before implementing discuss! */ /* Dmytro : fixed, not me */
   // if( o.routine.command.properties && o.routine.command.properties.v )
   // if( e.propertiesMap.v !== undefined )
   // {
@@ -1332,7 +1331,6 @@ defaults.onModulesEnd = null;
 defaults.commandRoutine = null;
 defaults.name = null;
 defaults.withStem = 1;
-// defaults.withStem = 1; /* aaa : for Dmytro : ?? */ /* Dmytro : replaced for all module */
 
 //
 
@@ -1420,7 +1418,6 @@ function _commandModuleOrientedLike( o )
   return ready;
 }
 
-/* qqq : for Dmytro : bad : discuss modulesFor */
 var defaults = _commandModuleOrientedLike.defaults =
 {
   ... Parent.prototype.modulesFor.defaults,
@@ -4838,7 +4835,6 @@ command.properties = _.props.extend( null, commandWillfileExtendWillfile.command
 
 //
 
-/* qqq : for Dmytro : mess! */
 function commandWillfileMergeIntoSingle( e )
 {
   let cui = this;
@@ -5760,17 +5756,8 @@ command.properties =
   dry : 'dry run',
   verbosity : 'verbosity',
 };
-/* qqq : for Dmytro : bad : break of pattern */
 
 //
-
-/* aaa : for Dmytro : first cover
-will .npm.dep.add . dry:1 editing:0
-*/
-
-/* Dmytro : covered */
-
-/* aaa : for Dmytro : write full coverage */ /* Dmytro : covered behavior that was implemented before, no additional features are tested */
 
 function commandNpmDepAdd( e )
 {
@@ -5852,14 +5839,6 @@ commandNpmInstall.defaults =
   verbosity : 2,
 };
 
-/* aaa2 : for Dmytro : write test routines
-- make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
-- duplicate tests in NpmTools and willbe
-*/
-/* Dmytro : covered
-- first requirements is actual for routine `commandNpmDepAdd`, the case is covered
-- duplicated
-*/
 var command = commandNpmInstall.command = Object.create( null );
 command.hint = 'Install NPM dependencies for the module.';
 command.propertiesAliases =
@@ -5877,6 +5856,7 @@ command.properties =
 
 //
 
+/* qqq : for Dmytro : cover, please */
 function commandNpmClean( e )
 {
   let cui = this;
@@ -5893,8 +5873,7 @@ function commandNpmClean( e )
   _.routine.options_( commandNpmClean, o );
   _.sure( !e.subject );
 
-  // o.logger = new _.Logger({ output : logger });
-  o.logger = new _.Logger({ output : cui.transaction.logger });
+  o.logger = new _.Logger({ output : logger });
   o.logger.verbosity = o.verbosity;
   delete o.verbosity;
   o.localPath = path.resolve( o.to || '.' );
@@ -6611,7 +6590,7 @@ let Extension =
   _commandCleanLike,
   _commandNewLike,
   _commandTreeLike,
-  _commandModulesLike, /* qqq : for Dmytro : remove */
+  _commandModulesLike, /* qqq : for Dmytro : use _commandModuleOrientedLike instaed of _commandModulesLike */
   _commandModuleOrientedLike,
 
   // command
@@ -6762,4 +6741,3 @@ if( !module.parent )
 Self.Exec();
 
 })();
-
