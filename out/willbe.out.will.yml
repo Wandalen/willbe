@@ -175,7 +175,6 @@ module:
           - ../proto/wtools/atop/will/entry/Exec
           - ../proto/wtools/atop/will/entry/ExecDebug
           - ../proto/wtools/atop/will/entry/ExecUnrestricted
-          - ../proto/wtools/atop/will/entry/Include.s
           - ../proto/wtools/atop/will/include
           - ../proto/wtools/atop/will/include/Base.s
           - ../proto/wtools/atop/will/include/Mid.s
