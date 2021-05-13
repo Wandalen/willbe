@@ -8094,7 +8094,7 @@ function willfileExtendWillfile( o )
       filePath : path,
       data,
       encoding,
-      verbosity : opts.verbosity,
+      logger,
     });
 
   }
@@ -8138,7 +8138,7 @@ willfileExtendWillfile.defaults =
   'onSection' : null,
   'submodulesDisabling' : 0,
   'format' : 'willfile',
-  'verbosity' : 3,
+  'logger' : 3,
   // 'v' : null,
 }
 
@@ -8621,14 +8621,14 @@ function willfileMergeIntoSingle( o )
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
 
-  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
+  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger : 0 });
   filterAboutNpmFields();
   filterSubmodulesCriterions();
   if( o.filterSameSubmodules )
   filterSameSubmodules()
   if( o.submodulesDisabling )
   submodulesDisable();
-  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger });
+  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
 
   /* */
 
@@ -8735,7 +8735,7 @@ function willfileMergeIntoSingle( o )
       }
       else if( _.longHas( parsed.protocols, 'git' ) )
       {
-        parsedModuleName = _.npm.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
+        parsedModuleName = _.git.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
       }
       else
       {
@@ -8779,12 +8779,17 @@ function willfileMergeIntoSingle( o )
       try
       {
         fileProvider.fileRename( newName, oldName );
+        logger.log( `  + writing {- Map.pure -} to ${ newName }` )
       }
       catch( err )
       {
         logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
         fileProvider.filesDelete( oldName );
       }
+    }
+    else
+    {
+      logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
     }
   }
 }
