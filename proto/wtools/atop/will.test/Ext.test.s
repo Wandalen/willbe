@@ -33838,7 +33838,7 @@ ${ mergeEnd }
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -34014,7 +34014,7 @@ function commandGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 1 );
     return null;
   });
 
@@ -34032,7 +34032,7 @@ function commandGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 0 );
     return null;
   });
 
@@ -34052,7 +34052,7 @@ function commandGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -34084,7 +34084,7 @@ function commandGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -34107,7 +34107,7 @@ function commandGitDiff( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git config core.autocrlf input' });
