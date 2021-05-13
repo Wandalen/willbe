@@ -1187,150 +1187,150 @@ _commandTreeLike.defaults =
 
 //
 
-function _commandModulesLike( o )
-{
-  let will = this;
-  let logger = will.transaction.logger;
-  let ready = _.take( null );
-
-  _.routine.options_( _commandModulesLike, arguments );
-  _.mapSupplementNulls( o, will.filterImplied() );
-  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
-
-  _.all
-  (
-    _.Will.ModuleFilterNulls,
-    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
-  );
-  _.assert( _.routineIs( o.commandRoutine ) );
-  _.assert( _.routineIs( o.onEach ) );
-  _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
-  _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
-  _.assert( _.strIs( o.name ) );
-  _.assert( _.object.isBasic( o.event ) );
-
-  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
-
-  // if( will.currentOpeners === null && will.currentOpener === null )
-  if( will.currentOpeners === null )
-  ready.then( () => will.openersFind() )
-  .then( () => filter() );
-
-  let openers = will.currentOpeners;
-  will.currentOpeners = null;
-
-  for( let i = 0 ; i < openers.length ; i++ )
-  ready.then( () => openersEach( openers[ i ] ) );
-
-  return ready.finally( ( err, arg ) =>
-  {
-    will.currentOpeners = openers;
-    will._commandsEnd( o.event );
-    if( err )
-    logger.error( _.errOnce( err ) );
-    if( err )
-    throw err;
-    return arg;
-  })
-
-  /* */
-
-  function filter()
-  {
-    if( will.currentOpeners )
-    {
-      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
-      if( openers2.length )
-      will.currentOpeners = openers2;
-    }
-    return null;
-  }
-
-  /* */
-
-  function openersEach( opener )
-  {
-    let ready2 = will.modulesFindEachAt
-    ({
-      selector : _.strUnquote( 'submodule::*' ),
-      currentOpener : opener,
-    })
-    .then( function( it )
-    {
-      if( o.withStem )
-      _.arrayPrependOnce( it.sortedOpeners, opener );
-      else
-      _.arrayRemove( it.sortedOpeners, opener );
-
-      will.currentOpeners = it.sortedOpeners;
-      return it;
-    })
-
-    if( o.onModulesBegin )
-    ready2.then( () =>
-    {
-      o.onModulesBegin.call( will, will.currentOpeners, opener );
-      return null;
-    });
-
-    ready2.then( () => will.openersCurrentEach( forSingle ) )
-
-    if( o.onModulesEnd )
-    ready2.finally( ( err, arg ) =>
-    {
-      o.onModulesEnd.call( will, will.currentOpeners, opener );
-
-      if( err )
-      throw _.err( err );
-
-      return null;
-    });
-
-    return ready2;
-  }
-
-  /* */
-
-  function forSingle( it )
-  {
-    let ready3 = _.take( null );
-    let it2 = _.props.extend( null, o, it );
-
-    ready3.then( () =>
-    {
-      will.mainOpener = it.opener;
-      return null;
-      // return will.currentOpenerChange( it.opener );
-    });
-
-    ready3.then( () =>
-    {
-      will.readingEnd();
-      return o.onEach.call( will, it2 );
-    });
-
-    ready3.finally( ( err, arg ) =>
-    {
-      // will.currentOpenerChange( null );
-      if( err )
-      throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
-      return arg;
-    });
-
-    return ready3;
-  }
-
-}
-
-/* qqq : for Dmytro : bad : discuss modulesFor */
-var defaults = _commandModulesLike.defaults = _.props.extend( null, _.Will.ModuleFilterNulls );
-defaults.event = null;
-defaults.onEach = null;
-defaults.onModulesBegin = null;
-defaults.onModulesEnd = null;
-defaults.commandRoutine = null;
-defaults.name = null;
-defaults.withStem = 1;
+// function _commandModulesLike( o )
+// {
+//   let will = this;
+//   let logger = will.transaction.logger;
+//   let ready = _.take( null );
+//
+//   _.routine.options_( _commandModulesLike, arguments );
+//   _.mapSupplementNulls( o, will.filterImplied() );
+//   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+//
+//   _.all
+//   (
+//     _.Will.ModuleFilterNulls,
+//     ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
+//   );
+//   _.assert( _.routineIs( o.commandRoutine ) );
+//   _.assert( _.routineIs( o.onEach ) );
+//   _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
+//   _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
+//   _.assert( _.strIs( o.name ) );
+//   _.assert( _.object.isBasic( o.event ) );
+//
+//   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
+//
+//   // if( will.currentOpeners === null && will.currentOpener === null )
+//   if( will.currentOpeners === null )
+//   ready.then( () => will.openersFind() )
+//   .then( () => filter() );
+//
+//   let openers = will.currentOpeners;
+//   will.currentOpeners = null;
+//
+//   for( let i = 0 ; i < openers.length ; i++ )
+//   ready.then( () => openersEach( openers[ i ] ) );
+//
+//   return ready.finally( ( err, arg ) =>
+//   {
+//     will.currentOpeners = openers;
+//     will._commandsEnd( o.event );
+//     if( err )
+//     logger.error( _.errOnce( err ) );
+//     if( err )
+//     throw err;
+//     return arg;
+//   })
+//
+//   /* */
+//
+//   function filter()
+//   {
+//     if( will.currentOpeners )
+//     {
+//       let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
+//       if( openers2.length )
+//       will.currentOpeners = openers2;
+//     }
+//     return null;
+//   }
+//
+//   /* */
+//
+//   function openersEach( opener )
+//   {
+//     let ready2 = will.modulesFindEachAt
+//     ({
+//       selector : _.strUnquote( 'submodule::*' ),
+//       currentOpener : opener,
+//     })
+//     .then( function( it )
+//     {
+//       if( o.withStem )
+//       _.arrayPrependOnce( it.sortedOpeners, opener );
+//       else
+//       _.arrayRemove( it.sortedOpeners, opener );
+//
+//       will.currentOpeners = it.sortedOpeners;
+//       return it;
+//     })
+//
+//     if( o.onModulesBegin )
+//     ready2.then( () =>
+//     {
+//       o.onModulesBegin.call( will, will.currentOpeners, opener );
+//       return null;
+//     });
+//
+//     ready2.then( () => will.openersCurrentEach( forSingle ) )
+//
+//     if( o.onModulesEnd )
+//     ready2.finally( ( err, arg ) =>
+//     {
+//       o.onModulesEnd.call( will, will.currentOpeners, opener );
+//
+//       if( err )
+//       throw _.err( err );
+//
+//       return null;
+//     });
+//
+//     return ready2;
+//   }
+//
+//   /* */
+//
+//   function forSingle( it )
+//   {
+//     let ready3 = _.take( null );
+//     let it2 = _.props.extend( null, o, it );
+//
+//     ready3.then( () =>
+//     {
+//       will.mainOpener = it.opener;
+//       return null;
+//       // return will.currentOpenerChange( it.opener );
+//     });
+//
+//     ready3.then( () =>
+//     {
+//       will.readingEnd();
+//       return o.onEach.call( will, it2 );
+//     });
+//
+//     ready3.finally( ( err, arg ) =>
+//     {
+//       // will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return ready3;
+//   }
+//
+// }
+//
+// /* aaa : for Dmytro : bad : discuss modulesFor */ /* Dmytro : is not used */
+// var defaults = _commandModulesLike.defaults = _.props.extend( null, _.Will.ModuleFilterNulls );
+// defaults.event = null;
+// defaults.onEach = null;
+// defaults.onModulesBegin = null;
+// defaults.onModulesEnd = null;
+// defaults.commandRoutine = null;
+// defaults.name = null;
+// defaults.withStem = 1;
 
 //
 
@@ -6590,7 +6590,7 @@ let Extension =
   _commandCleanLike,
   _commandNewLike,
   _commandTreeLike,
-  _commandModulesLike, /* qqq : for Dmytro : use _commandModuleOrientedLike instaed of _commandModulesLike */
+  // _commandModulesLike, /* aaa : for Dmytro : use _commandModuleOrientedLike instaed of _commandModulesLike */ /* Dmytro : is not used */
   _commandModuleOrientedLike,
 
   // command

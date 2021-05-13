@@ -20390,9 +20390,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
