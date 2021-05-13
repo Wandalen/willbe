@@ -10849,6 +10849,9 @@ function modulesForWithOptionsWith( test )
   }
 }
 
+modulesFor.rapidity = -1;
+modulesFor.routineTimeOut = 1500000;
+
 //
 
 function modulesForWithSubmodules( test )

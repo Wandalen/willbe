@@ -7,7 +7,7 @@ about :
 submodule :
 
   ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!alpha
   ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
   ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/
 
