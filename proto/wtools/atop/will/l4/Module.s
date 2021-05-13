@@ -8588,7 +8588,14 @@ function willfileMergeIntoSingle( o )
     onSection : _.props.supplement.bind( _.props ),
     dirPath : module.dirPath,
   };
-  willfileExtendWillfile.call( will, o2 );
+  try
+  {
+    willfileExtendWillfile.call( will, o2 );
+  }
+  catch( err )
+  {
+    _.error.attend( err );
+  }
 
   if( o.secondaryPath )
   {
@@ -8602,11 +8609,17 @@ function willfileMergeIntoSingle( o )
     module.willfileExtendWillfile( o3 );
   }
 
+  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+
   let dstPath = filesFind( primaryWillfilePath, 1 );
+  if( dstPath.length === 0 )
+  {
+    if( logger.verbosity >= 2 )
+    logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
+    return null;
+  }
   _.assert( dstPath.length === 1 );
   dstPath = dstPath[ 0 ];
-
-  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
   let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
   filterAboutNpmFields();
@@ -8763,7 +8776,15 @@ function willfileMergeIntoSingle( o )
     {
       let oldName = dstPath.absolute;
       let newName = path.join( dstPath.dir, 'will.yml' );
-      fileProvider.fileRename( newName, oldName );
+      try
+      {
+        fileProvider.fileRename( newName, oldName );
+      }
+      catch( err )
+      {
+        logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
+        fileProvider.filesDelete( oldName );
+      }
     }
   }
 }

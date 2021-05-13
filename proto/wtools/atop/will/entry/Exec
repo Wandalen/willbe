@@ -1,6 +1,28 @@
 #! /usr/bin/env node
 
-require( '../include/Top.s' );
+// require( '../include/Top.s' );
+// if( typeof module !== 'undefined' )
+// module[ 'exports' ] = _global_.wTools;
+// _global_.wTools.WillCli.Exec();
+
+( function _Exec_s_()
+{
+
+'use strict';
+
+/**
+ * Utility to manage modules of complex modular systems.
+  @module Tools/Willbe
+*/
+
 if( typeof module !== 'undefined' )
-module[ 'exports' ] = _global_.wTools;
-_global_.wTools.WillCli.Exec();
+{
+  debugger;
+  const _ = require( '../include/Top.s' );
+  debugger;
+  module[ 'exports' ] = _global_.wTools;
+  _global_.wTools.WillCli.Exec();
+  debugger;
+}
+
+})();
