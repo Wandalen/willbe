@@ -30992,7 +30992,7 @@ function commandModulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 1 );
+    test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
@@ -31089,7 +31089,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 1 );
+    test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
