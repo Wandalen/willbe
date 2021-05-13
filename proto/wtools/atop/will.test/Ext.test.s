@@ -20898,19 +20898,17 @@ function submodulesDownloadHierarchyDuplicate( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .submodules.download';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with z .submodules.download' )
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -20930,10 +20928,9 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .submodules.download' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
@@ -20948,30 +20945,28 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 5 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .submodules.download recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with z .submodules.download recursive:2' )
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -20991,10 +20986,9 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .submodules.download recursive:2' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
@@ -21018,11 +21012,9 @@ function submodulesDownloadHierarchyDuplicate( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .submodules.download recursive:2';
     a.reflect();
@@ -21085,7 +21077,7 @@ function submodulesDownloadHierarchyDuplicate( test )
 
   return a.ready;
 
-} /* end of function submodulesDownloadHierarchyDuplicate */
+}
 
 submodulesDownloadHierarchyDuplicate.rapidity = -1;
 submodulesDownloadHierarchyDuplicate.timeOut = 300000;
