@@ -10729,7 +10729,7 @@ function modulesFor( test )
   }
 }
 
-modulesFor.rapidity = -2;
+modulesFor.rapidity = -1;
 modulesFor.routineTimeOut = 1500000;
 
 //
