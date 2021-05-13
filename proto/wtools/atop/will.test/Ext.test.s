@@ -155,7 +155,7 @@ function assetFor( test, name )
     return null
   }
 
-  /* qqq : for Dmytro : ? */
+  /* aaa : for Dmytro : ? */ /* Dmytro : this method reduces running time of single test routine that needs no local testing submodules in 3-4 times */
   a.reflectMinimal = function reflectMinimal()
   {
     a.fileProvider.filesDelete( a.routinePath );
