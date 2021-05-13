@@ -53,17 +53,6 @@ function exec()
       program : _.strUnquote( appArgs.original ),
       withParsed : 1,
     });
-    // return ca.appArgsPerform({ appArgs });
-    /* aaa2 : make use of
-    return ca.programPerform({ program : appArgs.original });
-
-    - commands like .with and .imply should set some field
-    - field set by .with should be reset to null after command which use the field
-    - field set by .imply should not be reset to null after command which use the field, but should be reset to null bu another .imply command
-    - we drop support of `.command1 ; .command2` syntax. we support only `.command1 .commadn2` syntax
-
-    Dmytro : done
-  */
   })
   .then( ( arg ) =>
   {
@@ -3628,7 +3617,6 @@ command.properties =
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   ... commandImply.command.properties,
-  /* aaa2 : should have verbosity and other common options */ /* Dmytro : appended to the property command.properties */
 }
 
 //
@@ -3929,7 +3917,6 @@ command.subjectHint = 'A name of export scenario.';
 //     }
 //
 //     _.assert( cui.transaction instanceof _.will.Transaction );
-//     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
 //     // cui.transaction.finit();
 //     // cui.transaction = null;
 //
@@ -4730,6 +4717,20 @@ command.properties =
 };
 
 //
+
+/* aaa2 :
+will .willfile.extend dst/ src1 dir/src2 src/
+will .willfile.extend dst src1 dir/src2 src/
+will .willfile.extend dst 'src1/**' dir/src2 src/
+
+will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
+
+algorithm similar to mapExtendAppending
+
+if anon then will.yml
+else then name.will.yml
+
+*/
 
 function commandWillfileExtendWillfile( e )
 {
@@ -5693,20 +5694,6 @@ command.properties = _.props.extend( null,
 // --
 // npm
 // --
-
-/* aaa2 :
-will .willfile.extend dst/ src1 dir/src2 src/
-will .willfile.extend dst src1 dir/src2 src/
-will .willfile.extend dst 'src1/**' dir/src2 src/
-
-will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
-
-algorithm similar to mapExtendAppending
-
-if anon then will.yml
-else then name.will.yml
-
-*/
 
 function commandNpmPublish( e )
 {
@@ -6691,7 +6678,7 @@ let Extension =
   commandGitTag,
   commandGitHookPreservingHardLinks,
 
-  commandRepoPullOpen, /* aaa : cover */ /* Dmytro : covered */
+  commandRepoPullOpen,
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,
