@@ -40320,6 +40320,46 @@ function commandWillfileMergeIntoSingleRunWith( test )
 
 //
 
+function commandWillfileMergeIntoSingleWithSeveralRuns( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart({ args : '.with . .willfile.merge.into.single' });
+  a.appStart({ args : '.with . .willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    test.identical( _.strCount( op.output, 'Destination file `will.yml` already exists. Please, rename or delete file before merge' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 {
   let context = this;
@@ -43056,6 +43096,7 @@ const Proto =
     commandWillfileSupplementWillfileWithOptions,
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSingleRunWith,
+    commandWillfileMergeIntoSingleWithSeveralRuns,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
     commandWillfileMergeIntoSingleFilterNpmFields,
