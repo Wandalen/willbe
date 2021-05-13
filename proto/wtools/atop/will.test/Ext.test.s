@@ -42585,7 +42585,7 @@ function commandsSequenceProceduresTermination( test )
 }
 
 commandsSequenceProceduresTermination.rapidity = 1;
-commandsSequenceProceduresTermination.routineTimeOut = 30000;
+commandsSequenceProceduresTermination.routineTimeOut = 60000;
 commandsSequenceProceduresTermination.description =
 `
 Runs two commands in sequence.
