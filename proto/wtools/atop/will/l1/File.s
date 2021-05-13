@@ -47,23 +47,23 @@ function fileClassify( filePath )
 
 //
 
-/* qqq for Dmytro : bad : ? */
-function _fileAtClassifyTerminals( o )
-{
-  _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
-
-  let r = _.will.fileClassify( o.commonPath );
-  if( r.out )
-  {
-    if( o.withOut )
-    return r;
-  }
-  else
-  {
-    if( o.withIn )
-    return r;
-  }
-}
+/* aaa for Dmytro : bad : ? */ /* Dmytro : removed */
+// function _fileAtClassifyTerminals( o )
+// {
+//   _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
+//
+//   let r = _.will.fileClassify( o.commonPath );
+//   if( r.out )
+//   {
+//     if( o.withOut )
+//     return r;
+//   }
+//   else
+//   {
+//     if( o.withIn )
+//     return r;
+//   }
+// }
 
 //
 
@@ -101,31 +101,32 @@ function fileAt_body( o )
 
   let isTrailed = path.isTrailed( o.commonPath );
 
-  if( !isTrailed )
-  if( fileProvider.isTerminal( o.commonPath ) )
-  {
-    result.push( _.will._fileAtClassifyTerminals( o ) ); /* qqq for Dmytro : bad : ?? */
-    return result;
-  }
-
   // if( !isTrailed )
   // if( fileProvider.isTerminal( o.commonPath ) )
   // {
-  //   _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
-  //   let r = _.will.fileClassify( o.commonPath );
-  //   if( r.out )
-  //   {
-  //     if( o.withOut )
-  //     result.push( r );
-  //     return result;
-  //   }
-  //   else
-  //   {
-  //     if( o.withIn )
-  //     result.push( r );
-  //     return result;
-  //   }
+  //   let r = _.will._fileAtClassifyTerminals( o );
+  //   if( r )
+  //   result.push( r ); /* aaa for Dmytro : bad : ?? */ /* Dmytro : the previous realization is moved back */
+  //   return result;
   // }
+
+  if( !isTrailed )
+  if( fileProvider.isTerminal( o.commonPath ) )
+  {
+    _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
+    let r = _.will.fileClassify( o.commonPath );
+    if( r.out )
+    {
+      if( o.withOut )
+      result.push( r );
+    }
+    else
+    {
+      if( o.withIn )
+      result.push( r );
+    }
+    return result;
+  }
 
   if( !path.isSafe( o.commonPath, o.safe ) )
   return result;
@@ -308,10 +309,30 @@ function filesAt_body( o )
   let isTrailed = path.isTrailed( o.commonPath );
   let commonPathIsGlob = path.isGlob( o.commonPath );
 
+  // if( !isTrailed && !commonPathIsGlob )
+  // if( fileProvider.isTerminal( o.commonPath ) )
+  // {
+  //   let r = _.will._fileAtClassifyTerminals( o );
+  //   if( r )
+  //   result.push( r );
+  //   return result;
+  // }
+
   if( !isTrailed && !commonPathIsGlob )
   if( fileProvider.isTerminal( o.commonPath ) )
   {
-    result.push( _.will._fileAtClassifyTerminals( o ) );
+    _.assert( _.will.filePathIs( o.commonPath ), 'Expects path to willfile' );
+    let r = _.will.fileClassify( o.commonPath );
+    if( r.out )
+    {
+      if( o.withOut )
+      result.push( r );
+    }
+    else
+    {
+      if( o.withIn )
+      result.push( r );
+    }
     return result;
   }
 
@@ -385,8 +406,20 @@ function filesAt_body( o )
       }
       else
       {
-        o3.commonPath = record.absolute;
-        return _.will._fileAtClassifyTerminals( o3 );
+        _.assert( _.will.filePathIs( record.absolute ), 'Expects path to willfile' );
+        let r = _.will.fileClassify( record.absolute );
+        if( r.out )
+        {
+          if( o.withOut )
+          return r;
+        }
+        else
+        {
+          if( o.withIn )
+          return r;
+        }
+        return undefined;
+        // return _.will._fileAtClassifyTerminals( o3 );
       }
     };
     _.filter_( terminals, terminals, onRecord );
@@ -527,7 +560,16 @@ function fileReadResource_body( o )
     return;
   }
 
-  /* qqq : for Dmytro : ? */
+  /* aaa : for Dmytro : ? */
+  /* Dmytro : this realization handles undefines, but routine `any` does not.
+     Example:
+     about :
+       enabled : 0
+
+     `has` returns undefined
+     cycle `for` returns 0
+  */
+
   for( let i = 0 ; i < found.length ; i++ )
   {
     let read = o.fileProvider.fileReadUnknown({ filePath : found[ i ].filePath });
@@ -537,7 +579,7 @@ function fileReadResource_body( o )
   // return _.any( found, ( file ) => /* Dmytro : routine not handle undefines */
   // {
   //   let read = o.fileProvider.fileReadUnknown({ filePath : file.filePath });
-  //   if( read[ o.resourceKind ] && _.property.has( read[ o.resourceKind ], o.resourceName ) )
+  //   if( read[ o.resourceKind ] && _.props.has( read[ o.resourceKind ], o.resourceName ) )
   //   return read[ o.resourceKind ][ o.resourceName ];
   // });
 
@@ -745,7 +787,7 @@ let Extension =
 
   fileClassify,
 
-  _fileAtClassifyTerminals,
+  // _fileAtClassifyTerminals,
   fileAt,
   _filesAtFindTerminals,
   filesAt,
