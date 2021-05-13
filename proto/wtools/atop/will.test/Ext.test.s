@@ -42548,7 +42548,7 @@ function commandSubmodulesUpdateOptionTo( test )
   return a.ready;
 }
 commandSubmodulesUpdateOptionTo.rapidity = 1;
-commandSubmodulesUpdateOptionTo.routineTimeOut = 120000;
+commandSubmodulesUpdateOptionTo.routineTimeOut = 300000;
 commandSubmodulesUpdateOptionTo.description =
 `
 Checks if command tag:
