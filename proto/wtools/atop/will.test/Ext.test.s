@@ -155,7 +155,7 @@ function assetFor( test, name )
     return null
   }
 
-  /* qqq : for Dmytro : ? */
+  /* aaa : for Dmytro : ? */ /* Dmytro : this method reduces running time of single test routine that needs no local testing submodules in 3-4 times */
   a.reflectMinimal = function reflectMinimal()
   {
     a.fileProvider.filesDelete( a.routinePath );
@@ -20390,9 +20390,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
@@ -20439,7 +20437,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 14 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20465,7 +20463,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -20474,10 +20472,10 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 6 );
-    test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 29 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -20489,7 +20487,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -20501,7 +20499,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( op.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
