@@ -40536,6 +40536,69 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
 //
 
+function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+
+    var exp =
+    {
+      wModuleForTesting1 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+        enabled : 0,
+      },
+      wModuleForTesting2 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        enabled : 0,
+      },
+    };
+    test.identical( willConfig.submodule, exp );
+    var exp =
+    {
+      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+    };
+    test.identical( imWillConfig.submodule, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandWillfileMergeIntoSingleFilterNpmFields( test )
 {
   let context = this;
@@ -43009,6 +43072,7 @@ const Proto =
     commandWillfileMergeIntoSingleWithSeveralRuns,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
+    commandWillfileMergeIntoSingleWithDiffSubmoduleRecord,
     commandWillfileMergeIntoSingleFilterNpmFields,
 
     commandNpmPublish,
