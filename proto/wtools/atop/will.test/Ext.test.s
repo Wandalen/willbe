@@ -16395,6 +16395,189 @@ function cleanSingleModule( test )
 
 //
 
+function cleanItself( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'cleanItself' );
+
+  /* - */
+
+  begin( 'ImplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitTempAndOut .clean' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.out.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ImplicitOut' ).then( () =>
+  {
+    test.case = 'clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitOut .clean' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.out.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ExplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'clean with explicit declaration of path::out in directory path::in';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ExplicitTempAndOut .clean' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.out.will.yml',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ImplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'dry - 1, clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitTempAndOut .clean dry:1' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.out.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ImplicitOut' ).then( () =>
+  {
+    test.case = 'dry - 1, clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitOut .clean dry:1' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.out.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ExplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'dry - 1, clean with explicit declaration of path::out in directory path::in';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ExplicitTempAndOut .clean dry:1' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.out.will.yml',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin( name )
+  {
+    a.ready.then( () => { a.reflectMinimal(); return null } );
+    a.appStart( `.with ${ name } .export` );
+    return a.ready;
+  }
+}
+
+//
+
 function cleanBroken1( test )
 {
   let context = this;
@@ -42960,6 +43143,7 @@ const Proto =
     clean,
     cleanOptionWithSubmodules,
     cleanSingleModule,
+    cleanItself,
     cleanBroken1,
     cleanBroken2,
     cleanBrokenSubmodules,
