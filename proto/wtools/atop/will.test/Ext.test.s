@@ -16412,7 +16412,7 @@ function cleanItself( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    test.identical( _.strCount( op.output, 'module::ImplicitTempAndOut should not delete itself' ), 1 );
     var files = a.fileProvider.dirRead( a.abs( '.' ) );
     var exp =
     [
@@ -16439,7 +16439,7 @@ function cleanItself( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    test.identical( _.strCount( op.output, 'module::ImplicitOut should not delete itself' ), 1 );
     var files = a.fileProvider.dirRead( a.abs( '.' ) );
     var exp =
     [
@@ -16466,7 +16466,7 @@ function cleanItself( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    test.identical( _.strCount( op.output, 'module::ExplicitTempAndOut should not delete itself' ), 1 );
     var files = a.fileProvider.dirRead( a.abs( '.' ) );
     var exp =
     [
@@ -16493,7 +16493,7 @@ function cleanItself( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    test.identical( _.strCount( op.output, 'module::ImplicitTempAndOut should not delete itself' ), 1 );
     var files = a.fileProvider.dirRead( a.abs( '.' ) );
     var exp =
     [
@@ -16520,7 +16520,7 @@ function cleanItself( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    test.identical( _.strCount( op.output, 'module::ImplicitOut should not delete itself' ), 1 );
     var files = a.fileProvider.dirRead( a.abs( '.' ) );
     var exp =
     [
@@ -16547,7 +16547,7 @@ function cleanItself( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Module should not delete itself' ), 1 );
+    test.identical( _.strCount( op.output, 'module::ExplicitTempAndOut should not delete itself' ), 1 );
     var files = a.fileProvider.dirRead( a.abs( '.' ) );
     var exp =
     [
