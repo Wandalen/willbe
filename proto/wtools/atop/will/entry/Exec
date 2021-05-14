@@ -17,12 +17,9 @@
 
 if( typeof module !== 'undefined' )
 {
-  debugger;
   const _ = require( '../include/Top.s' );
-  debugger;
   module[ 'exports' ] = _global_.wTools;
   _global_.wTools.WillCli.Exec();
-  debugger;
 }
 
 })();

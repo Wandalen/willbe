@@ -5,15 +5,14 @@
 
 let Tar, Open;
 const _ = _global_.wTools;
-const Self = Object.create( null );
+const Self = _.will.Predefined = _.will.Predefined || Object.create( null );
 
 // --
 // implementation
 // --
 
-let filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
-let defaults = filesReflect.defaults;
-
+let _filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
+let defaults = _filesReflect.defaults;
 defaults.linking = 'hardLinkMaybe';
 defaults.mandatory = 1;
 defaults.dstRewritingOnlyPreserving = 1;
@@ -121,8 +120,8 @@ function stepRoutineReflect( frame )
 
   let reflector = step.reflectorResolve( opts.filePath );
 
-  _.sure( reflector instanceof _.will.Reflector, 'Step "reflect" expects reflector, but got', _.entity.strType( reflector ) )
-  _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
+  _.sure( reflector instanceof _.will.Reflector, () => `Step "reflect" expects reflector, but got ${_.entity.strType( reflector )}` )
+  _.assert( reflector.formed === 3, () => `${reflector.qualifiedName} is not formed` );
 
   beginLog();
 
@@ -130,14 +129,17 @@ function stepRoutineReflect( frame )
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
-  // _.props.supplement( opts, reflectorOptions );
   _.props.extend( opts, reflectorOptions );
 
   opts.verbosity = 0;
 
   return _.Consequence.Try( () =>
   {
-    return _.will.Predefined.filesReflect.call( fileProvider, opts );
+
+    debugger;
+    // _.will.Predefined._filesReflect.head.call( fileProvider, _.will.Predefined._filesReflect, opts );
+
+    return _.will.Predefined._filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
   {
@@ -148,7 +150,6 @@ function stepRoutineReflect( frame )
   {
     err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportString(), '  ' ), '\n' );
     throw _.err( err );
-    // throw _.errBrief( err );
   })
 
   /* */
@@ -157,7 +158,6 @@ function stepRoutineReflect( frame )
   {
     if( verbosity < 3 )
     return;
-
     logger.log( ' : ' + reflector.decoratedQualifiedName + '' );
   }
 
@@ -1239,7 +1239,7 @@ stepRoutineWillfileVersionBump.uniqueOptions =
 let Extension =
 {
 
-  filesReflect,
+  _filesReflect,
 
   stepRoutineDelete,
   stepRoutineReflect,
@@ -1280,7 +1280,6 @@ let Extension =
   stepRoutineWillfileVersionBump,
 }
 
-_.props.extend( Self, Extension );
-_.will[ 'Predefined' ] = Self;
+_.props.extend( _.will.Predefined, Extension );
 
 })()

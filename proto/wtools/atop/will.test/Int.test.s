@@ -17,6 +17,22 @@ if( typeof module !== 'undefined' )
 const _global = _global_;
 const _ = _global_.wTools;
 
+/* xxx2 : qqq2 :
+
+should throw error instead of deleting itself!
+
+> will .clean
+
+willfile :
+
+  path :
+    proto : proto
+    temp :
+      - '{path::out}'
+      - '{path::proto}'
+
+*/
+
 // --
 // context
 // --
