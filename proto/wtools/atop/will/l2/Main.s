@@ -244,7 +244,6 @@ function formAssociates()
     _.FileProvider.Http().providerRegisterTo( hub );
 
     let defaultProvider = _.FileProvider.Default();
-    debugger;
     let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
     let archive = new _.FilesGraphArchive({ imageFileProvider : image });
     image.providerRegisterTo( hub );

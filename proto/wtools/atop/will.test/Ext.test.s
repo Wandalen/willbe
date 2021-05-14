@@ -32427,10 +32427,10 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ hardLink' ), 3 );
+    test.identical( _.strCount( op.output, '+ Restored 3 hardlinks' ), 1 );
 
-    test.false( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
@@ -33392,11 +33392,11 @@ function commandModulesRepoPullOpen( test )
 
 //
 
-function commandGitCheckHardLinkRestoring( test )
+function commandGitCheckHardLinkRestoringThrowing( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
+  a.reflectMinimal();
 
   let config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
@@ -41939,11 +41939,6 @@ function commandsSubmoduleSafety( test )
       return null;
     });
 
-    a.ready.then( () =>
-    {
-      debugger;
-      return null;
-    });
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
 
@@ -41970,7 +41965,6 @@ function commandsSubmoduleSafety( test )
     if( env.error )
     a.ready.finally( ( err, op ) =>
     {
-      debugger;
       if( err )
       {
         _.errAttend( err );
@@ -43021,6 +43015,7 @@ const Proto =
 
     commandModulesRepoPullOpen,
 
+    commandGitCheckHardLinkRestoringThrowing,
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitDiff,
