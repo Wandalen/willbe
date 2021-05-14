@@ -244,10 +244,16 @@ function formAssociates()
     _.FileProvider.Http().providerRegisterTo( hub );
 
     let defaultProvider = _.FileProvider.Default();
-    let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
-    let archive = new _.FilesGraphArchive({ imageFileProvider : image });
-    image.providerRegisterTo( hub );
-    hub.defaultProvider = image;
+    defaultProvider.onCallBegin = null; /* Dmytro : maybe, the constructors of some providers should be extended. It will provide common interface */
+    defaultProvider.onCallEnd = null;
+    defaultProvider.archive = null;
+    let archive = new _.FilesGraphArchive({ imageFileProvider : defaultProvider });
+    defaultProvider.providerRegisterTo( hub );
+    hub.defaultProvider = defaultProvider;
+    // let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
+    // let archive = new _.FilesGraphArchive({ imageFileProvider : image });
+    // image.providerRegisterTo( hub );
+    // hub.defaultProvider = image;
 
     will.fileProvider = hub;
 
