@@ -5347,7 +5347,7 @@ function withDoStatus( test )
   {
     test.case = 'no changes';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 13 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     return null;
@@ -5358,9 +5358,9 @@ function withDoStatus( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'changes';
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/README.md' ), '\n' );
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/README.md' ), '\n' );
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/LICENSE' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/Readme.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/Readme.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/License' ), '\n' );
     return null;
   });
 
@@ -5368,7 +5368,7 @@ function withDoStatus( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 13 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, /module::\w+ at / ), 3 );
