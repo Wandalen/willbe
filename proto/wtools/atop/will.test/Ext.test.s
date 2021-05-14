@@ -17146,16 +17146,13 @@ function cleanGlobMin( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
-
-  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
-  a.fileProvider.filesDelete( a.routinePath );
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  a.reflectMinimal();
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = 'export first'
+    test.case = 'export first';
     return null;
   });
 
@@ -17167,7 +17164,7 @@ function cleanGlobMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -17240,7 +17237,7 @@ function cleanGlobMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
