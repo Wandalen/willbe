@@ -4769,7 +4769,7 @@ commandWillfileExtendWillfile.defaults =
 
   'submodulesDisabling' : 0,
   'format' : 'willfile',
-  'verbosity' : 3,
+  'logger' : 3,
 };
 
 var command = commandWillfileExtendWillfile.command = Object.create( null );
