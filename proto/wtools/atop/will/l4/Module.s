@@ -8726,23 +8726,24 @@ function willfileMergeIntoSingle( o )
     let mergedSubmodules = Object.create( null );
     for( let name in submodules )
     {
-      let parsed = _.uri.parse( submodules[ name ].path );
+      let path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
+      let parsed = _.uri.parse( path );
 
       let parsedModuleName;
       if( _.longHas( parsed.protocols, 'npm' ) )
       {
-        parsedModuleName = _.npm.path.parse( submodules[ name ].path ).host;
+        parsedModuleName = _.npm.path.parse( path ).host;
       }
       else if( _.longHas( parsed.protocols, 'git' ) )
       {
-        parsedModuleName = _.git.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
+        parsedModuleName = _.git.path.parse({ remotePath : path, full : 0, atomic : 0, objects : 1 }).repo;
       }
       else
       {
-        if( regularPaths.has( submodules[ name ].path ) )
+        if( regularPaths.has( path ) )
         continue;
 
-        regularPaths.add( submodules[ name ].path );
+        regularPaths.add( path );
         parsedModuleName = name;
       }
 
@@ -8757,7 +8758,19 @@ function willfileMergeIntoSingle( o )
   function submodulesDisable()
   {
     for( let dependency in config.submodule )
-    config.submodule[ dependency ].enabled = 0;
+    {
+      if( _.aux.is( dependency ) )
+      {
+        config.submodule[ dependency ].enabled = 0;
+      }
+      else if( _.str.is( dependency ) )
+      {
+        let dependencyMap = Object.create( null );
+        dependencyMap.path = config.submodule[ dependency ];
+        dependencyMap.enabled = 0;
+        config.submodule[ dependency ] = dependencyMap;
+      }
+    }
   }
 
   /* */
