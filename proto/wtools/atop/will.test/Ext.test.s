@@ -15531,22 +15531,16 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   let context = this;
   let a = context.assetFor( test );
 
-  a.reflect();
-
-  var exp = [ '.', './will.yml' ];
-  var got = a.find( a.abs( '.' ) );
-  test.identical( got, exp );
-
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export';
+    a.reflectMinimal();
     return null;
   });
 
   a.appStart( '.export' );
-
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15563,9 +15557,9 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/.gitattributes',
       './.module/ModuleForTesting12/.gitignore',
       './.module/ModuleForTesting12/.im.will.yml',
-      './.module/ModuleForTesting12/LICENSE',
+      './.module/ModuleForTesting12/License',
       './.module/ModuleForTesting12/package.json',
-      './.module/ModuleForTesting12/README.md',
+      './.module/ModuleForTesting12/Readme.md',
       './.module/ModuleForTesting12/was.package.json',
       './.module/ModuleForTesting12/.circleci',
       './.module/ModuleForTesting12/.circleci/config.yml',
