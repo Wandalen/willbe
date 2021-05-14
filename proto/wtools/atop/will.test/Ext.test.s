@@ -14558,14 +14558,14 @@ function exportHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
@@ -14581,10 +14581,10 @@ function exportHierarchyRemote( test )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 38 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
-    test.identical( _.strCount( op.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 4/8 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, 'module::z were downloaded' ), 2 );
     test.identical( _.strCount( op.output, 'were downloaded' ), 6 );
 
@@ -14616,14 +14616,14 @@ function exportHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
@@ -14639,11 +14639,11 @@ function exportHierarchyRemote( test )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 38 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( op.output, 'module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, 'were downloaded' ), 9 );
+    test.identical( _.strCount( op.output, 'were downloaded' ), 8 );
 
     return null;
   })
