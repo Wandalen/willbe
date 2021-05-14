@@ -15690,43 +15690,32 @@ function exportTwoFirstIsDepOfSecond( test ) /* xxx : for Kos */
 {
   let context = this;
   let a = context.assetFor( test, 'exportTwoFirstIsDepOfSecond' );
+  a.reflectMinimal();
 
-  a.shellSync = _.process.starter
-  ({
-    currentPath : a.abs( '.' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  })
+  /* - */
 
-  a.reflect();
-
-  a.shellSync( 'git clone https://github.com/Wandalen/wModuleForTesting1.git')
-  a.shellSync( 'git clone https://github.com/Wandalen/wModuleForTesting3.git')
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git' );
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting3.git' );
 
   a.appStart({ args : `.with "*/*" .export` })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Out-willfile is inconsistent with its in-willfiles' ), 0 );
 
-    test.will = 'ModuleForTesting3 should not download copy of ModuleForTesting1, but reuse already opened'
+    test.will = 'ModuleForTesting3 should not download copy of ModuleForTesting1, but reuse already opened';
     let modulesOfTesting3 = a.fileProvider.dirRead( a.abs( 'wModuleForTesting3/.module' ) );
     test.identical( modulesOfTesting3, null );
 
-    test.will = 'consistency of ModuleForTesting3 contains updated values for ModuleForTesting1'
-    let ModuleForTesting1Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) )
-    let ModuleForTesting3Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting3/out/wModuleForTesting3.out.will.yml' ) )
+    test.will = 'consistency of ModuleForTesting3 contains updated values for ModuleForTesting1';
+    let ModuleForTesting1Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
+    let ModuleForTesting3Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting3/out/wModuleForTesting3.out.will.yml' ) );
     let expectedModule1Im = ModuleForTesting1Out.consistency[ '../.im.will.yml' ];
     let expectedModule1Ex = ModuleForTesting1Out.consistency[ '../.ex.will.yml' ];
     let gotModule1Im = ModuleForTesting3Out.consistency[ '../.module/ModuleForTesting1/.im.will.yml' ];
     let gotModule1Ex = ModuleForTesting3Out.consistency[ '../.module/ModuleForTesting1/.ex.will.yml' ];
-    test.identical( gotModule1Im, expectedModule1Im )
-    test.identical( gotModule1Ex, expectedModule1Ex )
+    test.identical( gotModule1Im, expectedModule1Im );
+    test.identical( gotModule1Ex, expectedModule1Ex );
 
     return null;
   })
