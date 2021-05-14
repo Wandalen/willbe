@@ -19624,398 +19624,312 @@ function submodulesDownloadUpdateWithSubmodulesDefault( test )
 submodulesDownloadUpdateWithSubmodulesDefault.rapidity = 1;
 submodulesDownloadUpdateWithSubmodulesDefault.timeOut = 300000;
 
-// //
 //
-// function submodulesDownloadRecursive( test )
-// {
-//   let context = this;
-//   let a = context.assetFor( test, 'hierarchyRemote' );
-//
-//   // let a = context.assetFor( test, 'hierarchyDiffDownloadPathsRegular' );
-//   // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'hierarchyRemote' );
-//   // let routinePath = _.path.join( context.suiteTempPath, test.name );
-//   // let abs = context.abs_functor( routinePath );
-//   // let rel = context.rel_functor( routinePath );
-//   // let submodulesPath = _.path.join( routinePath, '.module' );
-//   //
-//   // let ready = _.take( null );
-//   //
-//   // let start = _.process.starter
-//   // ({
-//   //   execPath : 'node ' + context.appJsPath,
-//   //   currentPath : routinePath,
-//   //   outputCollecting : 1,
-//   //   outputGraying : 1,
-//   //   outputGraying : 1,
-//   //   mode : 'spawn',
-//   //   ready : ready,
-//   // })
-//   //
-//   // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with * .submodules.download recursive:2';
-//     a.reflect();
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = null;
-//     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded in' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 26 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with ** .submodules.download recursive:2';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 26 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting1b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting12 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting2b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with * .submodules.download recursive:1';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 20 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded in' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with ** .submodules.download recursive:1';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 5 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 1/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 5 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 20 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting1b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting12 were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting2b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 10 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting1b / module::wModuleForTesting1b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab / module::wModuleForTesting12ab were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12 / module::wModuleForTesting12 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting2b / module::wModuleForTesting2b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, 'submodule(s)' ), 10 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with * .submodules.download recursive:0';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:0' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = null;
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-//     test.identical( _.strCount( op.output, '. Read 5 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with ** .submodules.download recursive:0';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:0' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = null;
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-//     test.identical( _.strCount( op.output, '. Read 5 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of' ), 5 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 5 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   return a.ready;
-// } /* end of function submodulesDownloadRecursive */
-//
-// submodulesDownloadRecursive.timeOut = 500000;
+
+function submodulesDownloadRecursive( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'hierarchyDiffDownloadPathsRegular' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:2';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with c .submodules.download recursive:2';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:1';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with c .submodules.download recursive:1';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:0';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with c .submodules.download recursive:0';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+  /* - */
+
+  return a.ready;
+}
+
+submodulesDownloadRecursive.timeOut = 500000;
 // xxx
 
 //
@@ -20353,7 +20267,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -20377,7 +20291,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -20394,11 +20308,9 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download recursive:2';
     a.reflect();
@@ -20412,17 +20324,17 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 29 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -20436,11 +20348,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -20456,8 +20368,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   /* - */
 
   return a.ready;
-
-} /* end of function submodulesDownloadDiffDownloadPathsRegular */
+}
 
 submodulesDownloadDiffDownloadPathsRegular.timeOut = 300000;
 
@@ -42936,7 +42847,7 @@ const Proto =
     submodulesDownloadWithSubmodulesDefault,
     submodulesDownloadUpdateWithSubmodulesDefault,
 
-    // submodulesDownloadRecursive, /* qqq : for Dmytro : uncomment, normalize and fix */
+    submodulesDownloadRecursive, /* aaa : for Dmytro : uncomment, normalize and fix */ /* Dmytro : done */
     submodulesDownloadThrowing,
     submodulesDownloadInvalidUrl,
     submodulesDownloadStepAndCommand,
