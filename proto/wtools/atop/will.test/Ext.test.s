@@ -8496,7 +8496,7 @@ function modulesTreeHierarchyRemote( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
   let submodulesZ = a.fileProvider.fileReadUnknown( a.abs( 'z.will.yml' ) ).submodule;
   let submodulesA = a.fileProvider.fileReadUnknown( a.abs( 'group1/a.will.yml' ) ).submodule;
@@ -8544,9 +8544,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8561,25 +8560,24 @@ function modulesTreeHierarchyRemote( test )
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
-    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
    +-- module::${ keysZ[ 0 ] }
-   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
-   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    | +-- module::${ keysA[ 2 ] }
-   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 1 ] }
-   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
-   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 2 ] }
    | +-- module::${ keysC[ 0 ] }
-   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
-   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
-   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ].replace( /\/(!.*$)/, '$1' ) }
 `;
 
     test.identical( _.strCount( op.output, exp ), 1 );
@@ -8589,9 +8587,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8612,9 +8609,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8656,9 +8652,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8673,25 +8668,24 @@ function modulesTreeHierarchyRemote( test )
     test.case = '.with ** .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
-    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
    +-- module::${ keysZ[ 0 ] }
-   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
-   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    | +-- module::${ keysA[ 2 ] }
-   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 1 ] }
-   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
-   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 2 ] }
    | +-- module::${ keysC[ 0 ] }
-   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
-   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
-   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ].replace( /\/(!.*$)/, '$1' ) }
 `;
 
     test.identical( _.strCount( op.output, exp ), 1 );
@@ -8701,9 +8695,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8724,9 +8717,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8853,25 +8845,16 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
 
   /* - */
 
-  a.appStart({ execPath : '.with group1/group10/a0 .export' })
-  a.appStart({ execPath : '.with group1/a .export' })
-  a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' })
+  a.appStart({ execPath : '.with group1/group10/a0 .export' });
+  a.appStart({ execPath : '.with group1/a .export' });
+  a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
