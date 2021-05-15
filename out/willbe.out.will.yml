@@ -1423,6 +1423,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyRemoteMin/group1/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/hlinksPreserving1
+          - ../proto/wtools/atop/will.test/_asset/hlinksPreserving1/will.yml
           - ../proto/wtools/atop/will.test/_asset/import-auto
           - ../proto/wtools/atop/will.test/_asset/import-auto/module
           - ../proto/wtools/atop/will.test/_asset/import-auto/module/.module

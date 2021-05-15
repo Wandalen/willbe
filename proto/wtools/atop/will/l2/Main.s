@@ -243,11 +243,16 @@ function formAssociates()
     _.FileProvider.Npm().providerRegisterTo( hub );
     _.FileProvider.Http().providerRegisterTo( hub );
 
+    /* xxx : qqq : remove _.FileFilter.Image, use HD provider directly */
+    // let defaultProvider = _.FileProvider.Default();
+    // let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
+    // let archive = new _.FilesGraphArchive({ imageFileProvider : image });
+    // image.providerRegisterTo( hub );
+    // hub.defaultProvider = image;
+
     let defaultProvider = _.FileProvider.Default();
-    let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
-    let archive = new _.FilesGraphArchive({ imageFileProvider : image });
-    image.providerRegisterTo( hub );
-    hub.defaultProvider = image;
+    defaultProvider.providerRegisterTo( hub );
+    hub.defaultProvider = defaultProvider;
 
     will.fileProvider = hub;
 
@@ -4431,7 +4436,7 @@ function willfilesSelectPaired( record, records )
   let commonPathMap = Object.create( null );
 
   _.assert( arguments.length === 2 );
-  _.assert( record instanceof _.FileRecord );
+  _.assert( record instanceof _.files.FileRecord );
   _.assert( _.arrayIs( records ) );
 
   records.forEach( ( record ) =>
