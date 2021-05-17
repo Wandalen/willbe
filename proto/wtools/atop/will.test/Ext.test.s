@@ -2263,9 +2263,12 @@ function withList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
-  a.reflect();
 
   /* - */
+
+  begin();
+
+  /* */
 
   a.appStart({ args : '.with . .resources.list about::name' })
   .finally( ( err, op ) =>
@@ -2278,9 +2281,9 @@ function withList( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ args : '.with . .resources.list about::description' })
   .finally( ( err, op ) =>
@@ -2293,9 +2296,9 @@ function withList( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ args : '.with . .resources.list path::module.dir' })
   .finally( ( err, op ) =>
@@ -2308,11 +2311,23 @@ function withList( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
@@ -4946,14 +4961,12 @@ function reflectComplexInherit( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  begin().then( () =>
   {
     test.case = '.with ab/ .build';
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with a .export' })
   a.appStart({ execPath : '.with b .export' })
@@ -4981,23 +4994,21 @@ function reflectComplexInherit( test )
       './ab/files/b/File2.release.js',
       './ab/files/dir3.test',
       './ab/files/dir3.test/File.js',
-      './ab/files/dir3.test/File.test.js'
-    ]
+      './ab/files/dir3.test/File.test.js',
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  begin().then( () =>
   {
     test.case = '.with abac/ .build';
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with a .export' })
   a.appStart({ execPath : '.with b .export' })
@@ -5032,17 +5043,29 @@ function reflectComplexInherit( test )
       './abac/files/c/File.js',
       './abac/files/dir3.test',
       './abac/files/dir3.test/File.js',
-      './abac/files/dir3.test/File.test.js'
-    ]
+      './abac/files/dir3.test/File.test.js',
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function reflectComplexInherit */
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 reflectComplexInherit.rapidity = -1;
 reflectComplexInherit.timeOut = 300000;
@@ -8452,29 +8475,16 @@ function modulesTreeLocal( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  begin().then( () =>
   {
     test.case = '.imply v:1 ; .with */* .modules.tree';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.imply v:1 ; .with */* .modules.tree' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -8511,12 +8521,24 @@ Command ".imply v:1 ; .with */* .modules.tree"
     test.equivalent( op.output, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeLocal */
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 //
 
@@ -13386,14 +13408,17 @@ function exportRecursiveLocal( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
-  a.reflect();
 
   /* - */
 
-  a.appStart({ execPath : '.with */* .clean' })
-  a.appStart({ execPath : '.with */* .export' })
+  begin();
 
-  .finally( ( err, op ) =>
+  /* */
+
+  a.appStart({ execPath : '.with */* .clean' });
+  a.appStart({ execPath : '.with */* .export' });
+
+  a.ready.finally( ( err, op ) =>
   {
     test.case = 'first';
 
@@ -13403,7 +13428,7 @@ function exportRecursiveLocal( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 9 );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, op ) =>
@@ -13418,9 +13443,9 @@ function exportRecursiveLocal( test )
     test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with */* .export' })
   .finally( ( err, op ) =>
@@ -13432,7 +13457,7 @@ function exportRecursiveLocal( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 9 );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, op ) =>
@@ -13447,12 +13472,24 @@ function exportRecursiveLocal( test )
     test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursiveLocal */
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 exportRecursiveLocal.rapidity = -1;
 exportRecursiveLocal.timeOut = 300000;
@@ -15961,21 +15998,18 @@ function importOutWithDeletedSource( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  begin().then( ( op ) =>
   {
     test.case = 'export first';
-    a.reflect();
-
     return null;
-  })
+  });
 
-  a.appStart({ args : '.clean' })
-  a.appStart({ args : '.with a .export' })
-  a.appStart({ args : '.with b .export' })
-  a.appStart({ args : '.with ab-named .export' })
+  a.appStart({ args : '.clean' });
+  a.appStart({ args : '.with a .export' });
+  a.appStart({ args : '.with b .export' });
+  a.appStart({ args : '.with ab-named .export' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -15989,10 +16023,9 @@ function importOutWithDeletedSource( test )
     a.fileProvider.filesDelete( a.abs( 'ab-named.will.yml' ) );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with out/module-ab-named .modules.list' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16005,11 +16038,23 @@ function importOutWithDeletedSource( test )
     test.identical( _.strCount( op.output, 'module::' ), 9 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
