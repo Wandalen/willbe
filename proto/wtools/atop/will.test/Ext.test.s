@@ -17835,7 +17835,8 @@ submodule :
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    // var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17844,8 +17845,10 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
@@ -17880,7 +17883,8 @@ submodule :
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    // var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17889,8 +17893,10 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
@@ -17924,7 +17930,8 @@ submodule :
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    // var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17933,8 +17940,10 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 6 );
     test.identical( _.strCount( op.output, ' at ' ), 8 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
@@ -17977,10 +17986,14 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -17998,34 +18011,38 @@ submodule :
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean recursive:1' )
+  a.appStartNonThrowing( '.with ** .clean recursive:1' )
 
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
+    test.notIdentical( op.exitCode, 0 );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
-    test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 0 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting1 should not delete itself' ), 1 );
 
     return null;
   })
@@ -18065,10 +18082,14 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -18116,7 +18137,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18125,8 +18146,10 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
@@ -18160,7 +18183,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18169,8 +18192,10 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
@@ -18204,7 +18229,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18213,8 +18238,10 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 6 );
     test.identical( _.strCount( op.output, ' at ' ), 8 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
@@ -18248,7 +18275,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18257,10 +18284,14 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -18278,11 +18309,11 @@ function cleanHierarchyRemoteDry( test )
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean recursive:1 dry:1' )
+  a.appStartNonThrowing( '.with ** .clean recursive:1 dry:1' )
 
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
+    test.notIdentical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
@@ -18292,7 +18323,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18301,11 +18332,15 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
-    test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 0 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting1 should not delete itself' ), 1 );
 
     return null;
   })
@@ -18336,7 +18371,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18345,10 +18380,14 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -18478,7 +18517,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18672,7 +18711,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18716,7 +18755,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18760,7 +18799,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18804,7 +18843,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18848,7 +18887,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18892,7 +18931,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
