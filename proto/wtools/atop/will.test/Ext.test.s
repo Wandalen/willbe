@@ -38840,7 +38840,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -38900,7 +38900,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
@@ -38937,7 +38937,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
