@@ -16407,19 +16407,15 @@ function cleanBroken1( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.clean ';
+    test.case = '.clean dry:1';
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     return null;
   })
 
-  /* - */
-
   a.appStart({ execPath : '.clean dry:1' })
   .then( ( op ) =>
   {
-    test.case = '.clean dry:1';
-
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( op.exitCode, 0 );
@@ -16431,12 +16427,18 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* */
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    return null;
+  })
 
   a.appStart({ execPath : '.clean' })
   .then( ( op ) =>
   {
-    test.case = '.clean';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
@@ -16444,13 +16446,19 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* */
+  /* - */
 
+  a.ready.then( () =>
+  {
+    test.case = '.clean then .export';
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
-    test.case = '.export';
-
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -16463,21 +16471,20 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* */
+  /* - */
 
-  a.ready.then( ( op ) =>
+  a.ready.then( () =>
   {
+    test.case = '.clean then .export twice';
     a.reflect();
     return null;
-  });
+  })
 
-  /* */
-
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
-    test.case = '.export';
-
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -16501,7 +16508,6 @@ function cleanBroken2( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesBroken2' );
-  a.reflect();
 
   test.description = 'should handle currputed willfile properly';
 
@@ -16511,14 +16517,13 @@ function cleanBroken2( test )
 
   .then( ( op ) =>
   {
-    test.case = '.clean ';
+    test.case = '.clean dry ';
+    a.reflect();
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
 
     return null;
   })
-
-  /* - */
 
   a.appStart({ execPath : '.clean dry:1' })
 
@@ -16538,6 +16543,16 @@ function cleanBroken2( test )
 
   /* - */
 
+  .then( ( op ) =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    var files = a.find( a.abs( '.module' ) );
+    test.identical( files.length, 4 );
+
+    return null;
+  })
+
   a.appStart({ execPath : '.clean' })
 
   .then( ( op ) =>
@@ -16550,8 +16565,19 @@ function cleanBroken2( test )
     return null;
   })
 
-  /* */
+  /* - */
 
+  .then( ( op ) =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    var files = a.find( a.abs( '.module' ) );
+    test.identical( files.length, 4 );
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
@@ -16574,22 +16600,22 @@ function cleanBroken2( test )
   a.ready
   .then( ( op ) =>
   {
+    test.case = '.export';
+    test.will = 'update should throw error if submodule is not downloaded but download path exists';
     a.reflect();
     return null;
   });
 
-  /* */
-
   a.appStart({ execPath : '.export', throwingExitCode : 0 })
   .then( ( op ) =>
   {
-    test.case = '.export';
-
-    test.will = 'update should throw error if submodule is not downloaded but download path exists';
 
     test.notIdentical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
     var expected = `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository`;
+    test.false( _.strHas( op.output, expected ) );
+
+    var expected = `Out-willfile should not have section(s) : "brokenFile"`
     test.true( _.strHas( op.output, expected ) );
 
     // var files = a.find( a.abs( 'out/debug' ) );
@@ -16607,29 +16633,27 @@ function cleanBroken2( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.ready
   .then( ( op ) =>
   {
+    test.case = '.export agree1';
+    test.will = 'export should not throw error because submodule was updated by agree';
     a.reflect();
     return null;
   });
 
-  a.appStart({ execPath : '.submodules.versions.agree' })
-  a.appStart({ execPath : '.export', throwingExitCode : 0 })
+  a.appStart({ execPath : '.imply withOut:0 .submodules.versions.agree .export', throwingExitCode : 0 })
   .then( ( op ) =>
   {
-    test.case = '.export agree1';
-    test.will = 'update should not throw error because submodule was updated by agree';
-
     test.identical( op.exitCode, 0 );
 
     /* agree/update/download should not count as update of module if no change was done */
     test.identical( _.strCount( op.output, 'was updated' ), 0 );
     test.identical( _.strCount( op.output, 'to version' ), 0 );
     test.true( !_.strHas( op.output, /Module module::submodules \/ opener::ModuleForTesting2 is not downloaded, but file at .*/ ) );
-    test.true( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed' ) );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
