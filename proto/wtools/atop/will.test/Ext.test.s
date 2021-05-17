@@ -414,17 +414,20 @@ function transpile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpile' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-  .then( () =>
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
   {
     test.case = '.build debug'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build debug' })
   .then( ( op ) =>
   {
@@ -448,21 +451,20 @@ function transpile( test )
     test.identical( files, exp );
     a.fileProvider.isTerminal( a.abs( 'out/debug/dir3.test/File.js' ) );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build compiled.debug'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build compiled.debug' })
   .then( ( op ) =>
   {
-
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     var exp =
@@ -496,17 +498,17 @@ function transpile( test )
     test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build raw.release'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build raw.release' })
   .then( ( op ) =>
   {
@@ -530,17 +532,17 @@ function transpile( test )
     test.identical( files, exp );
     a.fileProvider.isTerminal( a.abs( 'out/raw.release/dir3.test/File.test.js' ) );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build release';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build release' })
   .then( ( op ) =>
   {
@@ -566,17 +568,17 @@ function transpile( test )
     test.true( _.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build all'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build all' })
   .then( ( op ) =>
   {
@@ -618,11 +620,23 @@ function transpile( test )
     ];
     test.identical( files, exp );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/dir2/-Excluded.js' ), 'console.log( \'dir2/-Ecluded.js\' );' )
+      return null;
+    });
+  }
 }
 
 //
