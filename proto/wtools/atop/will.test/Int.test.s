@@ -5211,17 +5211,16 @@ function customLogger( test )
 function moduleIsNotValid( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesDownloadErrors' );
+  let a = context.assetFor( test, 'submoduleIsValid' );
   let opener;
 
   a.ready.then( () =>
   {
     test.case = 'download submodule';
     a.reflect();
+
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
-
     a.will.prefer({ allOfSub : 1 });
-
     return opener.open({ all : 1, resourcesFormed : 0 });
   });
 
@@ -5229,7 +5228,6 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'change out will-file';
-
     opener.close();
 
     let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
@@ -5238,17 +5236,17 @@ function moduleIsNotValid( test )
     a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
 
     return null;
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'repopen module';
     let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
     opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     test.case = 'check if module is valid';
     if( err )
@@ -5258,7 +5256,9 @@ function moduleIsNotValid( test )
     test.identical( opener.openedModule.isValid(), false );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
