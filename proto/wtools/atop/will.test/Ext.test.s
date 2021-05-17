@@ -14448,7 +14448,7 @@ check there is no annoying information about lack of remote submodules of submod
 function exportDiffDownloadPathsRegular( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'hierarchyDiffDownloadPathsRegular' );
+  let a = context.assetFor( test, 'exportDiffDownloadPathsRegular' );
 
   /* - */
 
@@ -14468,12 +14468,12 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     // var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14482,11 +14482,11 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 36 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 6 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
-    test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 37 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -14498,11 +14498,11 @@ function exportDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14511,7 +14511,7 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 10 );

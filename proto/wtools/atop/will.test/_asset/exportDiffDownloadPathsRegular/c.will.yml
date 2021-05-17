@@ -1,0 +1,55 @@
+
+about :
+
+  name : c
+  version : '0.0.0'
+
+submodule :
+
+  a : a/
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/
+  ModuleForTesting2b : git+https:///github.com/Wandalen/wModuleForTesting2b.git/
+
+path :
+
+  out : out
+  out.debug :
+    path : '{path::out}/debug'
+    criterion :
+      debug : 1
+  temp : '{path::out}'
+
+reflector :
+
+  reflect.submodules :
+    # inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    inherit : submodule::*/reflector::exported.files*=1
+    criterion :
+      debug : 1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+    dstRewritingOnlyPreserving : 0
+
+step :
+
+  export :
+    inherit : module.export
+    export : "{path::out.*=1}/**"
+    tar : 0
+    criterion :
+      debug : 1
+
+build :
+
+  export :
+    steps :
+      # - submodules.download
+      - reflect.submodules
+      - export
+    criterion :
+      debug : 1
+      default : 1
+      export : 1
