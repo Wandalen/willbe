@@ -18454,7 +18454,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18463,7 +18463,7 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 3 );
     test.identical( _.strCount( op.output, ' at ' ), 5 );
@@ -18472,23 +18472,19 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  return a.ready;
+  /* */
 
-  /* - */
-
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .clean.submodules recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .submodules.download recursive:2' )
-  a.appStart( '.with * .clean.submodules recursive:2' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with * .clean.submodules recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18516,23 +18512,21 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .clean.submodules recursive:1';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean.submodules recursive:1' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with ** .clean.submodules recursive:1' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18560,23 +18554,21 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .clean.submodules recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean.submodules recursive:2' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with ** .clean.submodules recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18609,7 +18601,6 @@ function cleanSubmodulesHierarchyRemote( test )
   /* - */
 
   return a.ready;
-
 }
 
 cleanSubmodulesHierarchyRemote.rapidity = -1;
@@ -40786,6 +40777,60 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     var exp =
     {
       ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+    };
+    test.identical( imWillConfig.submodule, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    var config = a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) );
+    config.submodule[ 'ModuleForTesting1' ] = { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 };
+    a.fileProvider.fileWrite({ filePath : a.abs( '.im.will.yml' ), data : config, encoding : 'yaml' });
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+
+    var exp =
+    {
+      wModuleForTesting1 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git',
+        enabled : 0,
+      },
+      wModuleForTesting2 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        enabled : 0,
+      },
+    };
+    test.identical( willConfig.submodule, exp );
+    var exp =
+    {
+      ModuleForTesting1 : { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 },
       ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
     };
     test.identical( imWillConfig.submodule, exp );

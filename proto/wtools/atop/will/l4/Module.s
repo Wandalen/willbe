@@ -8759,11 +8759,11 @@ function willfileMergeIntoSingle( o )
   {
     for( let dependency in config.submodule )
     {
-      if( _.aux.is( dependency ) )
+      if( _.aux.is( config.submodule[ dependency ] ) )
       {
         config.submodule[ dependency ].enabled = 0;
       }
-      else if( _.str.is( dependency ) )
+      else if( _.str.is( config.submodule[ dependency ] ) )
       {
         let dependencyMap = Object.create( null );
         dependencyMap.path = config.submodule[ dependency ];
