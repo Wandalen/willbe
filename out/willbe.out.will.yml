@@ -602,8 +602,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/compositeReflector/proto/dir1/for-git.txt
           - ../proto/wtools/atop/will.test/_asset/compositeReflector/proto/dir2
           - >-
-            ../proto/wtools/atop/will.test/_asset/compositeReflector/proto/dir2/-Excluded.js
-          - >-
             ../proto/wtools/atop/will.test/_asset/compositeReflector/proto/dir2/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/compositeReflector/proto/dir2/File.test.js
@@ -765,26 +763,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/a
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/a/File.js
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/-Excluded.js
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/File.test.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/File1.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/File1.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/File2.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/b/File2.release.js
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/c
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/c/File.js
           - ../proto/wtools/atop/will.test/_asset/eachBroken/proto/dir3.test
           - >-
             ../proto/wtools/atop/will.test/_asset/eachBroken/proto/dir3.test/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachBroken/proto/dir3.test/File.test.js
           - ../proto/wtools/atop/will.test/_asset/eachList
           - ../proto/wtools/atop/will.test/_asset/eachList/.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachList/a.will.yml
@@ -792,8 +776,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/eachList/b.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachList/bc-named.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachList/c.will.yml
-          - ../proto/wtools/atop/will.test/_asset/eachList/-aab
-          - ../proto/wtools/atop/will.test/_asset/eachList/-aab/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/eachList/aab
+          - ../proto/wtools/atop/will.test/_asset/eachList/aab/.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachList/aabc
           - ../proto/wtools/atop/will.test/_asset/eachList/aabc/.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachList/ab
@@ -804,32 +788,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/a
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/a/File.js
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/b
-          - ../proto/wtools/atop/will.test/_asset/eachList/proto/b/-Excluded.js
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/b/File.js
-          - ../proto/wtools/atop/will.test/_asset/eachList/proto/b/File.test.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachList/proto/b/File1.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachList/proto/b/File1.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachList/proto/b/File2.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachList/proto/b/File2.release.js
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/c
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/c/File.js
           - ../proto/wtools/atop/will.test/_asset/eachList/proto/dir3.test
           - >-
             ../proto/wtools/atop/will.test/_asset/eachList/proto/dir3.test/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/eachList/proto/dir3.test/File.test.js
-          - ../proto/wtools/atop/will.test/_asset/experiment
-          - ../proto/wtools/atop/will.test/_asset/experiment/.will.yml
-          - ../proto/wtools/atop/will.test/_asset/experiment/proto
-          - ../proto/wtools/atop/will.test/_asset/experiment/proto/-File.js
-          - ../proto/wtools/atop/will.test/_asset/experiment/proto/File.debug.js
-          - ../proto/wtools/atop/will.test/_asset/experiment/proto/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/experiment/proto/File.release.js
           - ../proto/wtools/atop/will.test/_asset/exportAuto
           - ../proto/wtools/atop/will.test/_asset/exportAuto/auto.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportAuto/manual.will.yml
@@ -897,12 +861,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportItself
           - ../proto/wtools/atop/will.test/_asset/exportItself/v1.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportItself/proto
-          - ../proto/wtools/atop/will.test/_asset/exportItself/proto/-File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.debug.js
           - ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportItself/proto/File.release.js
           - ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository
           - >-
             ../proto/wtools/atop/will.test/_asset/exportMainIsGitRepository/module
@@ -1062,11 +1021,11 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportSecond/doc
           - ../proto/wtools/atop/will.test/_asset/exportSecond/doc/File.md
           - ../proto/wtools/atop/will.test/_asset/exportSecond/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportSecond/proto/-NotExecluded.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportSecond/proto/.NotExecluded.js
           - ../proto/wtools/atop/will.test/_asset/exportSecond/proto/File.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportSecond/proto/NotExecluded1.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportSecond/proto/NotExecluded2.js
           - ../proto/wtools/atop/will.test/_asset/exportStepOpts
           - ../proto/wtools/atop/will.test/_asset/exportStepOpts/a.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportToRoot
@@ -1133,8 +1092,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/proto/a/File.js
           - ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/proto/b
           - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/proto/b/-Excluded.js
-          - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/proto/b/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodules/proto/b/File.test.js
@@ -1170,19 +1127,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b
           - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/-Excluded.js
-          - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/File.test.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/File1.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/File1.release.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/File2.debug.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/b/File2.release.js
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/c
           - >-
@@ -1191,8 +1136,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test/File.js
-          - >-
-            ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesFew/proto/dir3.test/File.test.js
           - ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithSubmodulesResolve/a.will.yml
@@ -1904,8 +1847,6 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported/proto/b
           - >-
-            ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported/proto/b/-Excluded.js
-          - >-
             ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported/proto/b/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported/proto/b/File.test.js
@@ -2289,8 +2230,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/transpile/proto/dir1
           - ../proto/wtools/atop/will.test/_asset/transpile/proto/dir1/Text.txt
           - ../proto/wtools/atop/will.test/_asset/transpile/proto/dir2
-          - >-
-            ../proto/wtools/atop/will.test/_asset/transpile/proto/dir2/-Excluded.js
           - ../proto/wtools/atop/will.test/_asset/transpile/proto/dir2/File.js
           - >-
             ../proto/wtools/atop/will.test/_asset/transpile/proto/dir2/File.test.js
