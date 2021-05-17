@@ -8891,7 +8891,7 @@ function npmModulePublish( o )
   if( !module.about.enabled )
   return;
 
-  let ready = moduleSync( o.commit );
+  let ready = moduleSync( o.message );
   ready.deasync();
   let diff = moduleDiffsGet();
 
@@ -8946,11 +8946,11 @@ function npmModulePublish( o )
 
   /* */
 
-  function moduleSync( commit )
+  function moduleSync( message )
   {
     return module.gitSync
     ({
-      commit,
+      message,
       restoringHardLinks : 1,
       verbosity : 0,
     });
@@ -9064,7 +9064,7 @@ function npmModulePublish( o )
 
 npmModulePublish.defaults =
 {
-  commit : '-am "."',
+  message : '-am "."',
   tag : '',
   force : 0,
   dry : 0,
@@ -9848,13 +9848,13 @@ function gitSync( o )
   .then( () =>
   {
     if( status.remote )
-    return module.gitPull.call( module, _.mapBut_( null, o, { commit : '.', dry : '.' } ) );
+    return module.gitPull.call( module, _.mapBut_( null, o, { message : '.', dry : '.' } ) );
     return null;
   })
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut_( null, o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
+    return module.gitPush.call( module, _.mapBut_( null, o, { message : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
     return null;
   });
 
@@ -9875,15 +9875,11 @@ function gitSync( o )
     if( o.verbosity )
     logger.log( `\nCommitting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
-    logger.up();
-
     start( `git add --all` );
-    if( o.commit )
-    start( `git commit ${ o.commit }` );
+    if( o.message )
+    start( `git commit ${ o.message }` );
     else
     start( 'git commit -am "."' );
-
-    con.tap( () => logger.down() )
 
     return con;
   }
@@ -9891,14 +9887,13 @@ function gitSync( o )
 
 gitSync.defaults =
 {
-  commit : '.',
+  message : '.',
   profile : 'default',
   dirPath : null,
   restoringHardLinks : 1,
   dry : 0,
-  // v : null,
   verbosity : 1,
-}
+};
 
 //
 

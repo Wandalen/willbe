@@ -5349,7 +5349,7 @@ function commandGitSync( e )
       {
         return module.gitSync
         ({
-          commit : e.subject,
+          message : e.subject,
           ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
           restoringHardLinks : !severalModules
         });
@@ -5713,14 +5713,14 @@ function commandNpmPublish( e )
     return it.opener.openedModule.npmModulePublish
     ({
       ... e.optionsMap,
-      commit : e.subject,
+      message : e.subject,
     });
   }
 }
 
 commandNpmPublish.defaults =
 {
-  commit : null,
+  message : null,
   tag : null,
 
   force : 0,
@@ -5733,15 +5733,15 @@ command.hint = 'Publish in NPM.';
 command.subjectHint = 'A commit message for uncommitted changes. Default is ".".';
 command.propertiesAliases =
 {
-  verbosity : [ 'v' ]
-}
+  verbosity : [ 'v' ],
+};
 command.properties =
 {
-  commit : 'message', /* qqq : for Dmytro : bad : bad name */
-  tag : 'tag',
-  force : 'forces diff',
-  dry : 'dry run',
-  verbosity : 'verbosity',
+  message : 'Commit message', /* aaa : for Dmytro : bad : bad name */ /* Dmytro : renamed */
+  tag : 'Tag for NPM module',
+  force : 'Forces diff.',
+  dry : 'Dry run.',
+  verbosity : 'Change verbosity of output.',
 };
 
 //
