@@ -3,12 +3,7 @@
 
 'use strict';
 
-let _;
-if( typeof module !== 'undefined' )
-{
-  require( '../../Basic.s' );
-  _ = require( 'wmodulefortesting2' );
-}
+let _ = require( 'wmodulefortesting2' );
 
 // --
 // Routines
