@@ -3601,11 +3601,11 @@ commandClean.defaults =
   cleaningTemp : 1,
   recursive : 0,
   fast : 0
-}
+};
 
 var command = commandClean.command = Object.create( null );
 command.hint = 'Clean current module.';
-command.longHint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
+command.longHint = 'Clean current module. Delete generated artifacts, temp files and downloaded submodules.';
 command.subjectHint = false;
 command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 command.properties =
@@ -3617,7 +3617,7 @@ command.properties =
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   ... commandImply.command.properties,
-}
+};
 
 //
 
@@ -3634,7 +3634,7 @@ function commandCleanSubmodules( e )
   return cui._commandCleanLike
   ({
     event : e,
-    name : 'clean',
+    name : 'clean submodules',
     onAll : handleAll,
     commandRoutine : commandCleanSubmodules,
   });
@@ -3643,46 +3643,44 @@ function commandCleanSubmodules( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.props.extend( o2, e.optionsMap );
-    o2.modules = it.openers;
     delete o2.withSubmodules;
+    o2.modules = it.openers;
     _.routine.options_( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
-    o2.asCommand = 1;
     o2.cleaningSubmodules = 1;
+    o2.asCommand = 1;
     o2.cleaningOut = 0;
     o2.cleaningTemp = 0;
 
     return cui.modulesClean( o2 );
   }
-
 }
 
 commandCleanSubmodules.defaults =
 {
+  withOut : 1,
+  force : 0,
   dry : 0,
   recursive : 0,
-  fast : 0,
-  force : 0,
-  withSubmodules : 0
-}
+  fast : 0
+};
 
 var command = commandCleanSubmodules.command = Object.create( null );
-command.hint = 'Delete all downloaded submodules.';
+command.hint = 'Clean downloaded submodules of current module.';
+command.longHint = 'Clean downloaded submodules of current module.';
 command.subjectHint = false;
 command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 command.properties =
 {
-  ... commandImply.command.properties,
-
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   force : 'Force cleaning. force:0 - checks submodules for local changes before cleanup, force:1 - removes submodules without any checks.',
-}
+  ... commandImply.command.properties,
+};
 
 //
 
