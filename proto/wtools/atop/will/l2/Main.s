@@ -3074,6 +3074,7 @@ function modulesClean( o )
   {
     let o2 = _.mapOnly_( null, o, will.cleanDelete.defaults );
     o2.files = files;
+    verifyNotDeleteItself();
     return will.cleanDelete( o2 );
   })
   .finally( ( err, arg ) =>
@@ -3103,6 +3104,23 @@ function modulesClean( o )
     return module.cleanWhatSingle( o3 );
   }
 
+  /* */
+
+  function verifyNotDeleteItself()
+  {
+    let willfilesPath;
+
+    _.each( o.modules, ( opener ) =>
+    {
+      const module = opener.openedModule;
+      const willfilesPath = _.arrayAs( module.willfilesPath );
+      if( _.longHasAny( files[ '/' ], willfilesPath ) )
+      {
+        const msg = `${ module.qualifiedName } should not delete itself. Please, set correct {-path::out-} and {-path::temp-}`;
+        throw _.errBrief( msg );
+      }
+    });
+  }
 }
 
 var defaults = modulesClean.defaults = _.props.extend( null, modulesFor.defaults );
