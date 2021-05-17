@@ -1,0 +1,5 @@
+about :
+  name : submodulesDownloadErrorsLocalGood
+
+submodule :
+  ModuleForTesting2a : git+hd://../-repo/ModuleForTesting2a/
