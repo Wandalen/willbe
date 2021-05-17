@@ -5770,18 +5770,15 @@ function reflectorResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  begin().then( () =>
   {
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
-
     test.case = 'reflector::reflect.proto.0.debug formed:1';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.0.debug' )
     var expected =
@@ -5798,7 +5795,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5816,7 +5813,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 0 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     resolved.form();
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5841,7 +5838,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe'
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5859,7 +5856,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 1 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
 
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5884,7 +5881,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5902,7 +5899,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 2 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5926,7 +5923,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5944,7 +5941,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 3 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5968,7 +5965,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5988,7 +5985,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 4 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6014,7 +6011,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6036,7 +6033,7 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : '{path::out.*=1}/{path::dir1}' },
       'criterion' : { 'debug' : 1, 'variant' : 5 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6056,7 +6053,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6079,7 +6076,7 @@ function reflectorResolve( test )
         'prefixPath' : '{path::out.*=1}/{path::dir1}/{path::testFile}'
       },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6103,7 +6100,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6125,7 +6122,7 @@ function reflectorResolve( test )
         }
       },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6149,6 +6146,18 @@ function reflectorResolve( test )
   });
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/dir2/-Excluded.js' ), 'console.log( \'dir2/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //

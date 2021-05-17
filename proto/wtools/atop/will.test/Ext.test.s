@@ -3529,7 +3529,10 @@ function reflectComposite( test )
 {
   let context = this;
   let a = context.assetFor( test, 'compositeReflector' );
-  a.reflect();
+
+  /* - */
+
+  begin();
 
   /* */
 
@@ -3538,7 +3541,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:0'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:0' })
   .then( ( arg ) =>
@@ -3554,13 +3557,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3569,7 +3572,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:1'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:1' })
   .then( ( arg ) =>
@@ -3585,13 +3588,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3600,7 +3603,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:2'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:2' })
   .then( ( arg ) =>
@@ -3616,13 +3619,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3631,7 +3634,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:3'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:3' })
   .then( ( arg ) =>
@@ -3647,13 +3650,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3662,7 +3665,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:4'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:4' })
   .then( ( arg ) =>
@@ -3674,7 +3677,7 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3683,7 +3686,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:5'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:5' })
   .then( ( arg ) =>
@@ -3694,7 +3697,7 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3703,7 +3706,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:6'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:6' })
   .then( ( arg ) =>
@@ -3713,7 +3716,7 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3722,7 +3725,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:7'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:7' })
   .then( ( arg ) =>
@@ -3732,9 +3735,21 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/dir2/-Excluded.js' ), 'console.log( \'dir2/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 reflectComposite.rapidity = -1;
@@ -34293,7 +34308,7 @@ clone
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -34418,7 +34433,7 @@ ${ mergeEnd }
   {
     a.ready.then( ( op ) =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
       return null;
     });
@@ -43105,6 +43120,6 @@ const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-/* qqq : for Dmytro : remove -assets. disuss before removing! */
+/* aaa : for Dmytro : remove -assets. disuss before removing! */ /* Dmytro : files with dash are generated in tests */
 
 })();
