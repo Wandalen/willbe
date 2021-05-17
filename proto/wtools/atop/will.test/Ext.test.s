@@ -2476,10 +2476,9 @@ function eachBrokenIll( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Failed to resolve' ), 0 );
-    // test.identical( _.strCount( op.output, 'eachBrokenIll/' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -2489,7 +2488,7 @@ function eachBrokenIll( test )
 eachBrokenIll.description =
 `
 if one or several willfiles are broken .each should pass it and output error
-`
+`;
 
 //
 
@@ -19420,7 +19419,7 @@ function submodulesDownloadSwitchBranch( test )
 
   /* - */
 
-  a.ready.then( () =>
+  a.ready .then( () =>
   {
     test.case = 'setup repo';
 
