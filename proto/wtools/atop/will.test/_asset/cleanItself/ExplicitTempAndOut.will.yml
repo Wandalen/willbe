@@ -1,0 +1,26 @@
+
+about :
+  name : 'ExplicitTempAndOut'
+
+path :
+  proto : proto/*
+  out : .
+  temp :
+    - '{path::out}'
+    - '{path::proto}'
+
+submodule :
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git!delta
+
+step :
+  export.default :
+    export : path::proto
+
+build :
+  export :
+    criterion :
+      export : 1
+      default : 1
+    steps :
+      - export.default
+
