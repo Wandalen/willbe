@@ -285,6 +285,15 @@ module:
           - ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanBrokenSubmodules/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/cleanItself
+          - >-
+            ../proto/wtools/atop/will.test/_asset/cleanItself/ExplicitTempAndOut.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/cleanItself/ImplicitOut.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/cleanItself/ImplicitTempAndOut.will.yml
+          - ../proto/wtools/atop/will.test/_asset/cleanItself/proto
+          - ../proto/wtools/atop/will.test/_asset/cleanItself/proto/file.txt
           - ../proto/wtools/atop/will.test/_asset/cleanSpecial
           - ../proto/wtools/atop/will.test/_asset/cleanSpecial/.will.yml
           - ../proto/wtools/atop/will.test/_asset/cleanSpecial/out
@@ -858,6 +867,13 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportDefaultPath/path.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/exportDefaultPath/reflector.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportDiffDownloadPathsRegular
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportDiffDownloadPathsRegular/c.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportDiffDownloadPathsRegular/a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportDiffDownloadPathsRegular/a/will.yml
           - ../proto/wtools/atop/will.test/_asset/exportDisabledModule
           - ../proto/wtools/atop/will.test/_asset/exportDisabledModule/will.yml
           - ../proto/wtools/atop/will.test/_asset/exportImplicit
