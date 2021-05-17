@@ -2321,9 +2321,12 @@ function eachList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'eachList' );
-  a.reflect();
 
   /* - */
+
+  begin();
+
+  /* */
 
   a.appStart({ args : '.clean' })
 
@@ -2467,6 +2470,18 @@ function eachList( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileRename({ srcPath : a.abs( 'aab' ), dstPath : a.abs( '-aab' ) });
+      return null;
+    });
+  }
 }
 
 eachList.timeOut = 300000;
