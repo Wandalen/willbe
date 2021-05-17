@@ -424,6 +424,7 @@ function CommonPathFor( willfilesPath )
 function CommonPathNormalize( commonPath )
 {
   let commonPath2 = commonPath;
+  _.assert( !!commonPath && !!commonPath.replace );
   commonPath2 = commonPath.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.\w+)?$/, '' );
   return commonPath2;
 }

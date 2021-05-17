@@ -43,7 +43,7 @@ function onModule( context )
   // integrationTestRename( context );
   // samplesRename( context );
   // dwtoolsRename( context );
-  metaFilesRename( context );
+  // metaFilesRename( context );
 
   // badgeGithubReplace( context );
   // badgesSwap( context );
@@ -60,6 +60,7 @@ function onModule( context )
   // willProtoEntryPathOrder( context );
   // willProtoEntryPathAdjustTools( context );
   // willDisableIfEmpty( context );
+  willFixDmytrosFuckup( context );
   // deleteIfDisabled( context );
 
   // readmeModuleNameAdjust( context );
@@ -1086,6 +1087,72 @@ function willDisableIfEmpty( context )
     resourceName : 'enabled',
     val : 0,
   });
+
+}
+
+//
+
+function willFixDmytrosFuckup( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  debugger;
+  if( !context.module )
+  return;
+
+  // debugger; xxx
+
+// submodule:
+//   wTools:
+//     path:
+//       path: 'npm:///wTools'
+//       enabled: 0
+//     enabled: 0
+
+  debugger;
+  let filePath = _.arrayAs( context.junction.module.willfilesPath )[ 0 ];
+  let config = fileProvider.fileReadUnknown( filePath );
+  debugger;
+
+  let edited = false;
+  for( let k in config.submodule )
+  {
+    let submodule = config.submodule[ k ];
+    if( _.mapIs( submodule.path ) )
+    {
+      _.props.extend( submodule, submodule.path );
+      edited = true;
+    }
+  }
+
+  if( !edited )
+  return;
+
+  // let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  // if( !protoEntryPath )
+  // return;
+  //
+  // let any = _.any( protoEntryPath, ( entryPath ) =>
+  // {
+  //   if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
+  //   return true;
+  // });
+  //
+  // if( !any )
+  // return;
+
+  logger.log( `Fixing ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.fileWriteUnknown( filePath, config );
 
 }
 
