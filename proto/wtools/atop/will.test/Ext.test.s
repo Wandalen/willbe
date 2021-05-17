@@ -13144,14 +13144,16 @@ function exportRecursive( test )
 {
   let context = this;
   let a = context.assetFor( test, 'resolvePathOfSubmodulesExported' );
-  a.reflect();
-  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
   /* - */
 
+  begin();
+
+  /* */
+
   a.ready.then( () =>
   {
-    test.case = '.with ab/ .export.recursive -- first'
+    test.case = '.with ab/ .export.recursive -- first';
     return null;
   });
 
@@ -13176,7 +13178,7 @@ function exportRecursive( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with ab/ .export.recursive -- second'
+    test.case = '.with ab/ .export.recursive -- second';
     return null;
   });
 
@@ -13200,6 +13202,19 @@ function exportRecursive( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      a.fileProvider.filesDelete( a.abs( 'out' ) );
+      return null;
+    });
+  }
 }
 
 //

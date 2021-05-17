@@ -3681,10 +3681,9 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'export debug';
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'ab/' ) });
     return opener.open();
@@ -3741,7 +3740,18 @@ function exportRecursive( test )
 
   return a.ready;
 
-} /* end of function exportRecursive */
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 //
 
@@ -7981,9 +7991,8 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
   });
@@ -8010,7 +8019,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
       'proto/b/File2.debug.js/**',
       'proto/b/File2.release.js/**',
       'proto/dir3.test/**'
-    ]
+    ];
     test.identical( a.rel( resolved ), expected );
 
     return null;
@@ -8028,6 +8037,18 @@ function pathsResolveOfSubmodulesAndOwn( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
