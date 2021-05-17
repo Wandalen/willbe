@@ -19420,8 +19420,7 @@ function submodulesDownloadSwitchBranch( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup repo';
 
