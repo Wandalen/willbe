@@ -4811,13 +4811,23 @@ function commandWillfileSupplementWillfile( e )
   let cui = this;
   cui._command_head( commandWillfileSupplementWillfile, arguments );
 
-  let o =
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile extend willfile',
+    onEach : handleEach,
+    commandRoutine : commandWillfileExtendWillfile,
+  });
+
+  function handleEach( it )
   {
-    request : e.subject,
-    onSection : _.props.supplement.bind( _.props ),
-    ... e.optionsMap,
-  };
-  return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
+    return it.opener.openedModule.willfileExtendWillfile
+    ({
+      request : e.subject,
+      onSection : _.props.supplement.bind( _.props ),
+      ... e.optionsMap,
+    });
+  }
 }
 
 commandWillfileSupplementWillfile.defaults =
