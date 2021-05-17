@@ -5048,7 +5048,6 @@ function commandGitPull( e )
       provider = openers[ 0 ].openedModule._providerArchiveMake
       ({
         dirPath : cui.fileProvider.path.common( paths ),
-        verbosity : cui.transaction.verbosity,
         logger : cui.transaction.logger,
         profile : e.optionsMap.profile,
       });
@@ -5327,7 +5326,6 @@ function commandGitSync( e )
       provider = openers[ 0 ].openedModule._providerArchiveMake
       ({
         dirPath : cui.fileProvider.path.common( paths ),
-        verbosity : cui.transaction.verbosity,
         logger : cui.transaction.logger,
         profile : e.optionsMap.profile,
       });

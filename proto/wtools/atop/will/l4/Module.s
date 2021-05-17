@@ -9273,7 +9273,7 @@ function gitExecCommand( o )
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake({ dirPath : o.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, logger, profile : o.profile });
 
     if( o.verbosity )
     {
@@ -9470,10 +9470,9 @@ function _providerArchiveMake( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
 
+  _.routine.options( _providerArchiveMake, o );
+
   let config = _.censor.configRead({ profileDir : o.profile });
-  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  // if( !config )
-  // config = fileProvider.configUserRead();
 
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = o.dirPath;
@@ -9482,7 +9481,10 @@ function _providerArchiveMake( o )
   if( config && config.path && config.path.hlink )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
 
-  if( o.verbosity )
+  if( o.logger )
+  provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );
+
+  if( o.logger.verbosity )
   provider.archive.logger.verbosity = 2;
   else
   provider.archive.logger.verbosity = 0;
@@ -9491,13 +9493,17 @@ function _providerArchiveMake( o )
   provider.archive.allowingMissed = 1;
   provider.archive.allowingCycled = 1;
 
-  if( o.logger )
-  provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );
-
   return provider;
 }
 
-/* qqq : for Dmytro : bad : defaults? */
+_providerArchiveMake.defaults =
+{
+  dirPath : null,
+  profile : null,
+  logger : 2,
+};
+
+/* aaa : for Dmytro : bad : defaults? */ /* Dmytro : added */
 
 //
 
@@ -9550,7 +9556,7 @@ function gitPull( o )
     debugger;
     /* aaa : for Dmytro : ? */ /* Dmytro : done */
     // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
-    provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, profile : o.profile });
     if( o.verbosity )
     {
       // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
