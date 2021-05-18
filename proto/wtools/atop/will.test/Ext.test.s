@@ -14107,25 +14107,25 @@ function exportWithRemoteSubmodules( test )
 
   a.ready.then( () =>
   {
-    test.case = 'export'
+    test.case = 'export';
     return null;
   });
 
-  a.appStart( '.with group1/group10/a0 .clean' )
-  a.appStart( '.with group1/a .clean' )
-  a.appStart( '.with group1/b .clean' )
-  a.appStart( '.with group2/c .clean' )
-  a.appStart( '.with group1/group10/a0 .export' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with group1/b .export' )
-  a.appStart( '.with group2/c .export' )
-  a.appStart( '.with z .export' )
+  a.appStart( '.with group1/group10/a0 .clean' );
+  a.appStart( '.with group1/a .clean' );
+  a.appStart( '.with group1/b .clean' );
+  a.appStart( '.with group2/c .clean' );
+  a.appStart( '.with group1/group10/a0 .export' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with group1/b .export' );
+  a.appStart( '.with group2/c .export' );
+  a.appStart( '.with z .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 24 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -14145,7 +14145,6 @@ function exportWithRemoteSubmodules( test )
       './.module/ModuleForTesting1b/proto/wtools/testing',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
-      './.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting1b/sample',
       './.module/ModuleForTesting1b/sample/trivial',
       './group1',
@@ -14161,7 +14160,6 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/proto/wtools',
       './group1/.module/ModuleForTesting1/proto/wtools/testing',
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1',
-      './group1/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
       './group1/.module/ModuleForTesting1/sample',
       './group1/.module/ModuleForTesting1/sample/trivial',
       './group1/.module/ModuleForTesting12',
@@ -14176,7 +14174,6 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting12/proto/wtools/testing',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3/testing12',
-      './group1/.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting12/sample',
       './group1/.module/ModuleForTesting12/sample/trivial',
       './group1/.module/ModuleForTesting1b',
@@ -14191,7 +14188,6 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/proto/wtools/testing',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
-      './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting1b/sample',
       './group1/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10',
@@ -14207,7 +14203,6 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1/proto/wtools',
       './group1/group10/.module/ModuleForTesting1/proto/wtools/testing',
       './group1/group10/.module/ModuleForTesting1/proto/wtools/testing/l1',
-      './group1/group10/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
       './group1/group10/.module/ModuleForTesting1/sample',
       './group1/group10/.module/ModuleForTesting1/sample/trivial',
       './group1/group10/.module/ModuleForTesting1b',
@@ -14222,7 +14217,6 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
-      './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
       './group1/group10/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10/out',
@@ -14231,21 +14225,17 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
       './group1/group10/out/debug/wtools/testing/l1',
-      './group1/group10/out/debug/wtools/testing/l1.test',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
-      './group1/group10/out/debug/wtools/testing/l3.test',
       './group1/out',
       './group1/out/debug',
       './group1/out/debug/node_modules',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1.test',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing12',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3.test',
       './group2',
       './group2/.module',
       './group2/.module/ModuleForTesting12ab',
@@ -14260,7 +14250,6 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4/testing12ab',
-      './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4.test',
       './group2/.module/ModuleForTesting12ab/sample',
       './group2/.module/ModuleForTesting12ab/sample/trivial',
       './group2/out',
@@ -14269,38 +14258,32 @@ function exportWithRemoteSubmodules( test )
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
       './group2/out/debug/wtools/testing/l1',
-      './group2/out/debug/wtools/testing/l1.test',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
-      './group2/out/debug/wtools/testing/l3.test',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
-      './group2/out/debug/wtools/testing/l4.test',
       './out',
       './out/debug',
       './out/debug/node_modules',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1.test',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing12',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
-      './out/debug/wtools/testing/l4.test',
     ];
     var files = a.findDirs( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportWithRemoteSubmodules */
+}
 
 exportWithRemoteSubmodules.rapidity = -1;
 exportWithRemoteSubmodules.timeOut = 400000;
@@ -14333,7 +14316,7 @@ function exportWithRemoteSubmodulesRecursive( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z ' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -14352,86 +14335,59 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/group10/out',
       './group1/group10/out/a0.out.will.yml',
       './group1/group10/out/debug',
-      './group1/group10/out/debug/Integration.test.ss',
       './group1/group10/out/debug/node_modules',
       './group1/group10/out/debug/node_modules/wmodulefortesting1',
       './group1/group10/out/debug/node_modules/wmodulefortesting1b',
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
-      './group1/group10/out/debug/wtools/testing/Basic.s',
+      './group1/group10/out/debug/wtools/testing/Common.s',
       './group1/group10/out/debug/wtools/testing/l1',
-      './group1/group10/out/debug/wtools/testing/l1/Include.s',
       './group1/group10/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/group10/out/debug/wtools/testing/l1.test',
-      './group1/group10/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
-      './group1/group10/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/group10/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/group10/out/debug/wtools/testing/l3.test',
-      './group1/group10/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/b.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting12',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing12',
-      './group1/out/debug/wtools/testing/l3/testing12/Include.s',
       './group1/out/debug/wtools/testing/l3/testing12/ModuleForTesting12.s',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './group2',
       './group2/c.will.yml',
       './group2/.module',
       './group2/out',
       './group2/out/c.out.will.yml',
       './group2/out/debug',
-      './group2/out/debug/Integration.test.ss',
       './group2/out/debug/node_modules',
       './group2/out/debug/node_modules/wmodulefortesting1',
       './group2/out/debug/node_modules/wmodulefortesting12ab',
       './group2/out/debug/node_modules/wmodulefortesting1b',
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
-      './group2/out/debug/wtools/testing/Basic.s',
+      './group2/out/debug/wtools/testing/Common.s',
       './group2/out/debug/wtools/testing/l1',
-      './group2/out/debug/wtools/testing/l1/Include.s',
       './group2/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group2/out/debug/wtools/testing/l1.test',
-      './group2/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
-      './group2/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group2/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group2/out/debug/wtools/testing/l3.test',
-      './group2/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
-      './group2/out/debug/wtools/testing/l4/testing12ab/Include.s',
       './group2/out/debug/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
-      './group2/out/debug/wtools/testing/l4.test',
-      './group2/out/debug/wtools/testing/l4.test/ModuleForTesting12ab.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting12',
@@ -14439,35 +14395,23 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing12',
-      './out/debug/wtools/testing/l3/testing12/Include.s',
       './out/debug/wtools/testing/l3/testing12/ModuleForTesting12.s',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
-      './out/debug/wtools/testing/l4/testing12ab/Include.s',
       './out/debug/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
-      './out/debug/wtools/testing/l4.test',
-      './out/debug/wtools/testing/l4.test/ModuleForTesting12ab.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
-
+  });
 
   /* - */
 
