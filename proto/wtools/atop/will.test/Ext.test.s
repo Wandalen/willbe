@@ -20283,7 +20283,7 @@ function submodulesDownloadThrowing( test )
   a.appStartNonThrowing({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
-    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/will.yml' );
     let inWillFile = a.fileProvider.fileReadUnknown( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
@@ -20439,7 +20439,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -20459,7 +20459,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20483,7 +20483,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20496,7 +20496,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   a.ready.then( () =>
   {
     test.case = '.with c .submodules.download recursive:2';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -20516,7 +20516,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
@@ -20540,13 +20540,13 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
