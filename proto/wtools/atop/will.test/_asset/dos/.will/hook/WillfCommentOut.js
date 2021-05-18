@@ -6,7 +6,7 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let willfPath = _.arrayAs( context.opener.willfilesPath );
+  let willfPath = _.array.as( context.opener.willfilesPath );
 
   willfPath.forEach( ( willfPath ) =>
   {

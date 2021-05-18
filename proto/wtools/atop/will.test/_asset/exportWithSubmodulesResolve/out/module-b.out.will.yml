@@ -85,7 +85,7 @@ module:
           prefixPath: ../proto/b
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1

@@ -5794,7 +5794,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5837,7 +5837,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe'
+      'linkingAction' : 'hardLinkMaybe'
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5880,7 +5880,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5922,7 +5922,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5964,7 +5964,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6010,7 +6010,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6052,7 +6052,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6099,7 +6099,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6204,7 +6204,7 @@ function reflectorInheritedResolve( test )
       'dst' : { 'prefixPath' : 'out/debug1' },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6226,7 +6226,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6248,7 +6248,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6270,7 +6270,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6292,7 +6292,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6319,7 +6319,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'not.test', 'only.js' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6342,7 +6342,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6365,7 +6365,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6388,7 +6388,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });

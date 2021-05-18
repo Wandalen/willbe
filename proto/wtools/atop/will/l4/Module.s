@@ -3493,7 +3493,7 @@ function moduleFixateAct( o )
   _.assert( _.strIs( o.originalPath ) );
   _.assert( !o.fixatedPath || _.strIs( o.fixatedPath ) );
 
-  o.willfilePath = _.arrayAs( o.willfilePath );
+  o.willfilePath = _.array.as( o.willfilePath );
   o.report = o.report || Object.create( null );
 
   if( !o.fixatedPath )
@@ -4402,7 +4402,7 @@ function peerWillfilesPathFromWillfiles( willfilesArray )
   let will = module.will;
 
   willfilesArray = willfilesArray || module.willfilesArray;
-  willfilesArray = _.arrayAs( willfilesArray );
+  willfilesArray = _.array.as( willfilesArray );
 
   let peerWillfilesPath = module.willfilesArray.map( ( willf ) =>
   {
@@ -4986,7 +4986,7 @@ function cleanWhatSingle( o )
       let filePath = resource.path;
       if( !filePath )
       filePath = [];
-      filePath = _.arrayAs( path.s.join( module.inPath, filePath ) );
+      filePath = _.array.as( path.s.join( module.inPath, filePath ) );
       find( filePath );
     }
 
@@ -7132,7 +7132,7 @@ function structureExportConsistency( o )
   willfiles.forEach( ( willf ) =>
   {
 
-    _.arrayAs( willf.filePath ).forEach( ( filePath ) =>
+    _.array.as( willf.filePath ).forEach( ( filePath ) =>
     {
       let r = willf.hashDescriptorGet( filePath );
       let relativePath = path.relative( o.exportModule.inPath, filePath );
@@ -7266,7 +7266,7 @@ function _npmGenerateFromWillfile( o )
 
     if( o.srcConfig.about.interpreters )
     {
-      let interpreters = _.arrayAs( o.srcConfig.about.interpreters );
+      let interpreters = _.array.as( o.srcConfig.about.interpreters );
       interpreters.forEach( ( interpreter ) =>
       {
         if( _.strHas( interpreter, 'njs' ) )
@@ -8836,7 +8836,7 @@ function willfileVersionBump( o )
   if( _.strIs( o.versionDelta ) )
   deltaArray = o.versionDelta.split( '.' );
   else if( _.numberIs( o.versionDelta ) )
-  deltaArray = _.arrayAs( o.versionDelta );
+  deltaArray = _.array.as( o.versionDelta );
   else
   _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
 
@@ -9479,7 +9479,7 @@ function _providerArchiveMake( o )
   /* qqq : for Dmyto : bad! */
 
   if( config && config.path && config.path.hlink )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.array.as( provider.archive.basePath ), _.array.as( config.path.hlink ) );
 
   if( o.logger )
   provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );

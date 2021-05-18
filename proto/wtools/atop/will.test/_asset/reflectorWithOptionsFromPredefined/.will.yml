@@ -20,7 +20,7 @@ reflector :
   reflect.proto1 :
     filePath :
       path::file2 : '{path::out}/debug/File.js'
-    linking : fileCopy
+    linkingAction : fileCopy
     dstRewritingOnlyPreserving : 0
     breakingDstHardLink : 1
 
@@ -28,7 +28,7 @@ reflector :
     inherit : predefined.*
     filePath :
       path::file2 : '{path::out}/debug/File.js'
-    linking : fileCopy
+    linkingAction : fileCopy
     dstRewritingOnlyPreserving : 0
     breakingDstHardLink : 1
 

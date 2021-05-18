@@ -55,7 +55,7 @@ function onModule( context )
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
-      linking : 'hardLink',
+      linkingAction : 'hardLink',
       verbosity
     });
   }
@@ -69,7 +69,7 @@ function onModule( context )
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
-      linking : 'hardLink',
+      linkingAction : 'hardLink',
       verbosity
     });
   }
@@ -83,7 +83,7 @@ function onModule( context )
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
-      linking : 'hardLink',
+      linkingAction : 'hardLink',
       verbosity
     });
   }
@@ -97,7 +97,7 @@ function onModule( context )
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
-      linking : 'hardLink',
+      linkingAction : 'hardLink',
       verbosity
     });
   }

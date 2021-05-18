@@ -127,7 +127,7 @@ module:
           prefixPath: 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 0
       reflect.submodules.debug:
@@ -139,7 +139,7 @@ module:
           prefixPath: 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 1
       exported.export.:
@@ -149,7 +149,7 @@ module:
           prefixPath: release
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -166,7 +166,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -180,7 +180,7 @@ module:
           prefixPath: debug
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -197,7 +197,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -389,7 +389,7 @@ module:
           prefixPath: 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 0
       reflect.submodules.debug:
@@ -401,7 +401,7 @@ module:
           prefixPath: 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 1
     step:
@@ -536,7 +536,7 @@ module:
             'path::proto': 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 0
         inherit:
@@ -547,7 +547,7 @@ module:
             'path::proto': 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 1
         inherit:
@@ -734,7 +734,7 @@ module:
             'path::proto': 'path::out.*=1'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 0
         inherit:
@@ -748,7 +748,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           debug: 1
         inherit:
@@ -760,7 +760,7 @@ module:
           prefixPath: release
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -777,7 +777,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -791,7 +791,7 @@ module:
           prefixPath: debug
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -808,7 +808,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1

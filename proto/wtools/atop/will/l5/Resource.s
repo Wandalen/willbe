@@ -812,7 +812,7 @@ function criterionVariable( criterionMaps, criterion )
 function CriterionVariable( criterionMaps, criterion )
 {
 
-  criterionMaps = _.arrayAs( criterionMaps );
+  criterionMaps = _.array.as( criterionMaps );
   criterionMaps = criterionMaps.map( ( e ) => _.mapIs( e ) ? e : e.criterion );
 
   if( Config.debug )

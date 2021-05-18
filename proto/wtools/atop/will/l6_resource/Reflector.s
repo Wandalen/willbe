@@ -330,16 +330,16 @@ function form2( o )
   reflector.mandatory = 1;
   if( reflector.dstRewritingOnlyPreserving === null )
   reflector.dstRewritingOnlyPreserving = 1;
-  if( reflector.linking === null )
-  reflector.linking = 'hardLinkMaybe';
+  if( reflector.linkingAction === null )
+  reflector.linkingAction = 'hardLinkMaybe';
 
   _.assert( _.boolLike( reflector.mandatory ) );
   _.assert( _.boolLike( reflector.dstRewritingOnlyPreserving ) );
-  _.assert( _.strIs( reflector.linking ) );
+  _.assert( _.strIs( reflector.linkingAction ) );
 
   // mandatory : null,
   // dstRewritingOnlyPreserving : null,
-  // linking : null,
+  // linkingAction : null,
 
   return result;
 }
@@ -1780,7 +1780,7 @@ function optionsForReflectExport( o )
 
   result.mandatory = reflector.mandatory;
   result.dstRewritingOnlyPreserving = reflector.dstRewritingOnlyPreserving;
-  result.linking = reflector.linking;
+  result.linkingAction = reflector.linkingAction;
   result.breakingDstHardLink = reflector.breakingDstHardLink;
 
   /* */
@@ -1953,7 +1953,7 @@ let Composes =
   recursive : null,
   mandatory : null,
   dstRewritingOnlyPreserving : null,
-  linking : null,
+  linkingAction : null,
   breakingDstHardLink : null
 
 }

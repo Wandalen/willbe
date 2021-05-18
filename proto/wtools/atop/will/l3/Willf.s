@@ -394,7 +394,7 @@ function _read()
       _.bufferBytesIs( willf.data ) || willf.filePath !== willf.storagePath,
       `Something wrong with content of willfile ${willf.filePath}`
     );
-    _.assert( willf.dirPath === path.detrail( path.dir( _.arrayAs( willf.filePath )[ 0 ] ) ) );
+    _.assert( willf.dirPath === path.detrail( path.dir( _.array.as( willf.filePath )[ 0 ] ) ) );
 
     willf._readLog( 1, 0 );
 
@@ -557,7 +557,7 @@ function _open()
       willf.isConsistent();
       inconsistent = 1;
       let peerWillfilesPath = willf.peerWillfilesPathGet();
-      peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+      peerWillfilesPath = _.array.as( peerWillfilesPath );
       if( willf.openedModule && willf.openedModule.peerModule )
       willf.openedModule.peerModule.peerModuleIsOutdated = true;
       throw _.errBrief
@@ -675,11 +675,11 @@ function _readLog( reading, failed )
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( willf.storagePath ) );
 
-  let filePath = _.color.strFormat( _.arrayAs( willf.filePath ), 'path' );
+  let filePath = _.color.strFormat( _.array.as( willf.filePath ), 'path' );
 
   if( willf.storagePath && willf.storagePath !== willf.filePath )
   {
-    let storagePath = _.color.strFormat( path.s.relative( _.arrayAs( willf.filePath ), willf.storagePath ), 'path' );
+    let storagePath = _.color.strFormat( path.s.relative( _.array.as( willf.filePath ), willf.storagePath ), 'path' );
     for( let f = 0 ; f < filePath.length ; f++ )
     {
       if( failed === 2 )
@@ -909,7 +909,7 @@ function peerWillfilesOpen()
   peerWillfiles = willf.peerWillfiles = [];
 
   let peerWillfilesPath = willf.peerWillfilesPathGet();
-  peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+  peerWillfilesPath = _.array.as( peerWillfilesPath );
   peerWillfilesPath.forEach( ( peerWillfilePath ) =>
   {
     let got = will.willfileFor({ willf : { filePath : peerWillfilePath }, combining : 'supplement' });
@@ -1224,7 +1224,7 @@ function isConsistent( opening )
   {
 
     let peerWillfilesPath = willf.peerWillfilesPathGet();
-    peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+    peerWillfilesPath = _.array.as( peerWillfilesPath );
     result = peerWillfilesPath.every( ( peerWillfilePath ) =>
     {
       return willf.isConsistentWith( peerWillfilePath, 0 );
