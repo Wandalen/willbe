@@ -3261,16 +3261,12 @@ function reflectGetPath( test )
     [
       '.',
       './debug',
-      './debug/Integration.test.ss',
       './debug/wtools',
       './debug/wtools/testing',
-      './debug/wtools/testing/Basic.s',
+      './debug/wtools/testing/Common.s',
       './debug/wtools/testing/l3',
       './debug/wtools/testing/l3/testing12',
-      './debug/wtools/testing/l3/testing12/Include.s',
       './debug/wtools/testing/l3/testing12/ModuleForTesting12.s',
-      './debug/wtools/testing/l3.test',
-      './debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
     ];
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
@@ -5257,7 +5253,7 @@ function withDoInfo( test )
   {
     test.case = '.hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5272,7 +5268,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5287,7 +5283,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5302,7 +5298,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     // test.identical( _.strCount( op.output, 'local :' ), 7 );
@@ -5317,7 +5313,7 @@ function withDoInfo( test )
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 7 );
@@ -5412,7 +5408,7 @@ function withDoStatus( test )
   {
     test.case = 'no changes';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     return null;
@@ -5433,7 +5429,7 @@ function withDoStatus( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, /module::\w+ at / ), 3 );
@@ -5549,7 +5545,7 @@ function hookCallInfo( test )
   {
     test.case = '.hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5564,7 +5560,7 @@ function hookCallInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5579,7 +5575,7 @@ function hookCallInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5594,7 +5590,7 @@ function hookCallInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 4 );
@@ -5609,7 +5605,7 @@ function hookCallInfo( test )
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 7 );
@@ -7460,9 +7456,9 @@ function hookWasPackageExtendWillfile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 3 );
+    test.identical( _.strCount( op.output, '+ writing' ), 0 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, 'willfilefromnpm' );
@@ -9081,7 +9077,7 @@ function modulesTreeDisabledAndCorrupted( test )
 {
   let context = this;
   let a = context.assetFor( test, 'manyFew' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -9095,27 +9091,25 @@ function modulesTreeDisabledAndCorrupted( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) );
 
-    let exp =
-`
+/*
  +-- module::many
- | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
- | | +-- module::Testing - path::remote:=npm:///wTesting
- | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
- | | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
- | | +-- module::Testing - path::remote:=npm:///wTesting
- | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting12 - path::remote:=${ config.submodule.ModuleForTesting12.replace( /\/(!\S+)$/, '$1' ) }
- |   +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
- |   +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
- |   +-- module::Testing - path::remote:=npm:///wTesting
- |   +-- module::eslint - path::remote:=npm:///eslint#7.1.0
+ | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+ | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
+ | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+ | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/!delta
+ |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+ |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
  |
  +-- module::corrupted
-`;
+*/
 
-    test.identical( _.strStripCount( op.output, exp ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::' ), 14 );
+    test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git' ), 3 );
+    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git!delta' ), 1 );
+    test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git' ), 2 );
+    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git!delta' ), 1 );
+    test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' ), 1 );
+    test.identical( _.strCount( op.output, '+-- module::' ), 8 );
+    test.identical( _.strCount( op.output, /\+-- module::.* - path::remote:=/ ), 6 );
 
     return null;
   });
@@ -9123,7 +9117,7 @@ function modulesTreeDisabledAndCorrupted( test )
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeDisabledAndCorrupted */
+}
 
 modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
@@ -9944,39 +9938,37 @@ function buildSubmodules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodules' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'build withoud submodules'
+    test.case = 'build withoud submodules';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
   .finally( ( err, op ) =>
   {
     test.true( !err );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 10 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.submodules.update' })
   .then( () =>
   {
-    test.case = '.build'
+    test.case = '.build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
   .then( ( op ) =>
@@ -9987,23 +9979,21 @@ function buildSubmodules( test )
     test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     var files = a.find( a.abs( 'out' ) );
-    test.gt( files.length, 15 );
-
+    test.gt( files.length, 10 );
     return null;
-  })
+  });
 
   /* - */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.build wrong'
+    test.case = '.build wrong';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
-
     var o =
     {
       execPath : 'node ' + context.appJsPath,
@@ -10011,7 +10001,7 @@ function buildSubmodules( test )
       outputCollecting : 1,
       outputGraying : 1,
       args : [ '.build wrong' ]
-    }
+    };
 
     return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
     .then( ( op ) =>
@@ -10021,11 +10011,11 @@ function buildSubmodules( test )
       test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
       test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
       test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
-
       return null;
-    })
-
+    });
   });
+
+  /* - */
 
   return a.ready;
 }
@@ -13958,7 +13948,7 @@ function exportWithRemoteSubmodulesMin( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -13973,52 +13963,35 @@ function exportWithRemoteSubmodulesMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting1a',
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l2',
       './out/debug/wtools/testing/l2/testing1a',
-      './out/debug/wtools/testing/l2/testing1a/Include.s',
       './out/debug/wtools/testing/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/wtools/testing/l2.test',
-      './out/debug/wtools/testing/l2.test/ModuleForTesting1a.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -14060,7 +14033,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::z / module::a were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
@@ -14076,52 +14049,35 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting1a',
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l2',
       './out/debug/wtools/testing/l2/testing1a',
-      './out/debug/wtools/testing/l2/testing1a/Include.s',
       './out/debug/wtools/testing/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/wtools/testing/l2.test',
-      './out/debug/wtools/testing/l2.test/ModuleForTesting1a.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -14151,25 +14107,25 @@ function exportWithRemoteSubmodules( test )
 
   a.ready.then( () =>
   {
-    test.case = 'export'
+    test.case = 'export';
     return null;
   });
 
-  a.appStart( '.with group1/group10/a0 .clean' )
-  a.appStart( '.with group1/a .clean' )
-  a.appStart( '.with group1/b .clean' )
-  a.appStart( '.with group2/c .clean' )
-  a.appStart( '.with group1/group10/a0 .export' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with group1/b .export' )
-  a.appStart( '.with group2/c .export' )
-  a.appStart( '.with z .export' )
+  a.appStart( '.with group1/group10/a0 .clean' );
+  a.appStart( '.with group1/a .clean' );
+  a.appStart( '.with group1/b .clean' );
+  a.appStart( '.with group2/c .clean' );
+  a.appStart( '.with group1/group10/a0 .export' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with group1/b .export' );
+  a.appStart( '.with group2/c .export' );
+  a.appStart( '.with z .export' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 24 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -14189,7 +14145,6 @@ function exportWithRemoteSubmodules( test )
       './.module/ModuleForTesting1b/proto/wtools/testing',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3',
       './.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
-      './.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting1b/sample',
       './.module/ModuleForTesting1b/sample/trivial',
       './group1',
@@ -14205,7 +14160,6 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/proto/wtools',
       './group1/.module/ModuleForTesting1/proto/wtools/testing',
       './group1/.module/ModuleForTesting1/proto/wtools/testing/l1',
-      './group1/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
       './group1/.module/ModuleForTesting1/sample',
       './group1/.module/ModuleForTesting1/sample/trivial',
       './group1/.module/ModuleForTesting12',
@@ -14220,7 +14174,6 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting12/proto/wtools/testing',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3',
       './group1/.module/ModuleForTesting12/proto/wtools/testing/l3/testing12',
-      './group1/.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting12/sample',
       './group1/.module/ModuleForTesting12/sample/trivial',
       './group1/.module/ModuleForTesting1b',
@@ -14235,7 +14188,6 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/proto/wtools/testing',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3',
       './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
-      './group1/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/.module/ModuleForTesting1b/sample',
       './group1/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10',
@@ -14251,7 +14203,6 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1/proto/wtools',
       './group1/group10/.module/ModuleForTesting1/proto/wtools/testing',
       './group1/group10/.module/ModuleForTesting1/proto/wtools/testing/l1',
-      './group1/group10/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
       './group1/group10/.module/ModuleForTesting1/sample',
       './group1/group10/.module/ModuleForTesting1/sample/trivial',
       './group1/group10/.module/ModuleForTesting1b',
@@ -14266,7 +14217,6 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3',
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3/testing1b',
-      './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
       './group1/group10/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10/out',
@@ -14275,21 +14225,17 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
       './group1/group10/out/debug/wtools/testing/l1',
-      './group1/group10/out/debug/wtools/testing/l1.test',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
-      './group1/group10/out/debug/wtools/testing/l3.test',
       './group1/out',
       './group1/out/debug',
       './group1/out/debug/node_modules',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1.test',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing12',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3.test',
       './group2',
       './group2/.module',
       './group2/.module/ModuleForTesting12ab',
@@ -14304,7 +14250,6 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4',
       './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4/testing12ab',
-      './group2/.module/ModuleForTesting12ab/proto/wtools/testing/l4.test',
       './group2/.module/ModuleForTesting12ab/sample',
       './group2/.module/ModuleForTesting12ab/sample/trivial',
       './group2/out',
@@ -14313,38 +14258,32 @@ function exportWithRemoteSubmodules( test )
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
       './group2/out/debug/wtools/testing/l1',
-      './group2/out/debug/wtools/testing/l1.test',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
-      './group2/out/debug/wtools/testing/l3.test',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
-      './group2/out/debug/wtools/testing/l4.test',
       './out',
       './out/debug',
       './out/debug/node_modules',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1.test',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing12',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
-      './out/debug/wtools/testing/l4.test',
     ];
     var files = a.findDirs( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportWithRemoteSubmodules */
+}
 
 exportWithRemoteSubmodules.rapidity = -1;
 exportWithRemoteSubmodules.timeOut = 400000;
@@ -14377,7 +14316,7 @@ function exportWithRemoteSubmodulesRecursive( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z ' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -14396,86 +14335,59 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/group10/out',
       './group1/group10/out/a0.out.will.yml',
       './group1/group10/out/debug',
-      './group1/group10/out/debug/Integration.test.ss',
       './group1/group10/out/debug/node_modules',
       './group1/group10/out/debug/node_modules/wmodulefortesting1',
       './group1/group10/out/debug/node_modules/wmodulefortesting1b',
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
-      './group1/group10/out/debug/wtools/testing/Basic.s',
+      './group1/group10/out/debug/wtools/testing/Common.s',
       './group1/group10/out/debug/wtools/testing/l1',
-      './group1/group10/out/debug/wtools/testing/l1/Include.s',
       './group1/group10/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/group10/out/debug/wtools/testing/l1.test',
-      './group1/group10/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
-      './group1/group10/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/group10/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/group10/out/debug/wtools/testing/l3.test',
-      './group1/group10/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/b.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting12',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing12',
-      './group1/out/debug/wtools/testing/l3/testing12/Include.s',
       './group1/out/debug/wtools/testing/l3/testing12/ModuleForTesting12.s',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './group2',
       './group2/c.will.yml',
       './group2/.module',
       './group2/out',
       './group2/out/c.out.will.yml',
       './group2/out/debug',
-      './group2/out/debug/Integration.test.ss',
       './group2/out/debug/node_modules',
       './group2/out/debug/node_modules/wmodulefortesting1',
       './group2/out/debug/node_modules/wmodulefortesting12ab',
       './group2/out/debug/node_modules/wmodulefortesting1b',
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
-      './group2/out/debug/wtools/testing/Basic.s',
+      './group2/out/debug/wtools/testing/Common.s',
       './group2/out/debug/wtools/testing/l1',
-      './group2/out/debug/wtools/testing/l1/Include.s',
       './group2/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group2/out/debug/wtools/testing/l1.test',
-      './group2/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
-      './group2/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group2/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group2/out/debug/wtools/testing/l3.test',
-      './group2/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
-      './group2/out/debug/wtools/testing/l4/testing12ab/Include.s',
       './group2/out/debug/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
-      './group2/out/debug/wtools/testing/l4.test',
-      './group2/out/debug/wtools/testing/l4.test/ModuleForTesting12ab.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting12',
@@ -14483,35 +14395,23 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing12',
-      './out/debug/wtools/testing/l3/testing12/Include.s',
       './out/debug/wtools/testing/l3/testing12/ModuleForTesting12.s',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
-      './out/debug/wtools/testing/l4/testing12ab/Include.s',
       './out/debug/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
-      './out/debug/wtools/testing/l4.test',
-      './out/debug/wtools/testing/l4.test/ModuleForTesting12ab.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
-
+  });
 
   /* - */
 
@@ -14537,7 +14437,7 @@ function exportDiffDownloadPathsRegular( test )
   a.ready.then( () =>
   {
     test.case = '.with c .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
@@ -14548,11 +14448,11 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14561,10 +14461,10 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 36 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 37 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
@@ -14576,11 +14476,11 @@ function exportDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14657,7 +14557,7 @@ function exportHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
@@ -14668,11 +14568,9 @@ function exportHierarchyRemote( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .export.recursive';
     a.reflect();
@@ -14701,21 +14599,21 @@ function exportHierarchyRemote( test )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) );
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/out' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) );
     test.identical( files, exp );
     var exp = [ 'c.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/out' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
@@ -14723,13 +14621,13 @@ function exportHierarchyRemote( test )
     test.identical( _.strCount( op.output, 'were downloaded' ), 8 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 
-} /* end of function exportHierarchyRemote */
+}
 
 exportHierarchyRemote.rapidity = -1;
 exportHierarchyRemote.timeOut = 300000;
@@ -15630,39 +15528,34 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module',
       './.module/ModuleForTesting12',
       './.module/ModuleForTesting12/.eslintrc.yml',
-      './.module/ModuleForTesting12/.ex.will.yml',
       './.module/ModuleForTesting12/.gitattributes',
       './.module/ModuleForTesting12/.gitignore',
-      './.module/ModuleForTesting12/.im.will.yml',
       './.module/ModuleForTesting12/License',
       './.module/ModuleForTesting12/package.json',
       './.module/ModuleForTesting12/Readme.md',
       './.module/ModuleForTesting12/was.package.json',
+      './.module/ModuleForTesting12/will.yml',
       './.module/ModuleForTesting12/.circleci',
       './.module/ModuleForTesting12/.circleci/config.yml',
       './.module/ModuleForTesting12/.github',
       './.module/ModuleForTesting12/.github/workflows',
-      './.module/ModuleForTesting12/.github/workflows/StandardPublish.yml',
-      './.module/ModuleForTesting12/.github/workflows/StandardPullRequest.yml',
-      './.module/ModuleForTesting12/.github/workflows/StandardPush.yml',
+      './.module/ModuleForTesting12/.github/workflows/TestAssetPublish.yml',
+      './.module/ModuleForTesting12/.github/workflows/TestAssetPullRequest.yml',
+      './.module/ModuleForTesting12/.github/workflows/TestAssetPush.yml',
       './.module/ModuleForTesting12/doc',
       './.module/ModuleForTesting12/doc/ModuleForTesting12.md',
       './.module/ModuleForTesting12/doc/README.md',
       './.module/ModuleForTesting12/out',
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
-      './.module/ModuleForTesting12/proto/Integration.test.ss',
       './.module/ModuleForTesting12/proto/node_modules',
       './.module/ModuleForTesting12/proto/node_modules/wmodulefortesting12',
       './.module/ModuleForTesting12/proto/wtools',
       './.module/ModuleForTesting12/proto/wtools/testing',
-      './.module/ModuleForTesting12/proto/wtools/testing/Basic.s',
+      './.module/ModuleForTesting12/proto/wtools/testing/Common.s',
       './.module/ModuleForTesting12/proto/wtools/testing/l3',
       './.module/ModuleForTesting12/proto/wtools/testing/l3/testing12',
-      './.module/ModuleForTesting12/proto/wtools/testing/l3/testing12/Include.s',
       './.module/ModuleForTesting12/proto/wtools/testing/l3/testing12/ModuleForTesting12.s',
-      './.module/ModuleForTesting12/proto/wtools/testing/l3.test',
-      './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
       './.module/ModuleForTesting12/sample/trivial',
       './.module/ModuleForTesting12/sample/trivial/Sample.s',
@@ -15836,25 +15729,21 @@ function importPathLocal( test )
     [
       '.',
       './debug',
-      './debug/Integration.test.ss',
       './debug/WithSubmodules.s',
       './debug/node_modules',
       './debug/node_modules/wmodulefortesting1',
       './debug/wtools',
       './debug/wtools/testing',
-      './debug/wtools/testing/Basic.s',
+      './debug/wtools/testing/Common.s',
       './debug/wtools/testing/l1',
-      './debug/wtools/testing/l1/Include.s',
       './debug/wtools/testing/l1/ModuleForTesting1.s',
-      './debug/wtools/testing/l1.test',
-      './debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
     ];
     test.contains( files, exp );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -16285,7 +16174,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -16309,7 +16198,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -16357,7 +16246,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -16381,7 +16270,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
@@ -16399,7 +16288,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
@@ -16412,7 +16301,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
@@ -17102,37 +16991,35 @@ function cleanDry( test )
 {
   let context = this;
   let a = context.assetFor( test, 'clean' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
   a.appStart({ args : [ '.with NoTemp .submodules.update' ] })
-
   .then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
-  })
+  });
 
   a.appStart({ args : [ '.with NoTemp .build' ] })
   .then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
     return op;
-  })
+  });
 
   var wasFiles;
 
   a.appStart({ execPath : '.with NoTemp .clean dry:1' })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1';
 
     var files = a.findAll( a.abs( 'out' ) );
-    test.gt( files.length, 15 );
+    test.gt( files.length, 10 );
     var files = wasFiles = a.findAll( a.abs( '.module' ) );
     test.gt( files.length, 50 );
 
@@ -17323,7 +17210,7 @@ function cleanRecursiveMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -17338,52 +17225,35 @@ function cleanRecursiveMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting1a',
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l2',
       './out/debug/wtools/testing/l2/testing1a',
-      './out/debug/wtools/testing/l2/testing1a/Include.s',
       './out/debug/wtools/testing/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/wtools/testing/l2.test',
-      './out/debug/wtools/testing/l2.test/ModuleForTesting1a.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -17396,7 +17266,7 @@ function cleanRecursiveMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
@@ -17436,7 +17306,7 @@ function cleanGlobMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -17451,52 +17321,35 @@ function cleanGlobMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting1a',
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l2',
       './out/debug/wtools/testing/l2/testing1a',
-      './out/debug/wtools/testing/l2/testing1a/Include.s',
       './out/debug/wtools/testing/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/wtools/testing/l2.test',
-      './out/debug/wtools/testing/l2.test/ModuleForTesting1a.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -17504,12 +17357,12 @@ function cleanGlobMin( test )
     return null;
   });
 
-  a.appStart( '.with "**" .clean' );
+  a.appStart( '.with ** .clean recursive:2' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
@@ -17535,56 +17388,42 @@ function cleanRecursive( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
-  a.fileProvider.filesDelete( a.routinePath );
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export first'
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with group1/group10/a0 .export' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with group1/b .export' )
-  a.appStart( '.with group2/c .export' )
+  a.appStart( '.with ** .clean' );
+  a.appStart( '.with group1/group10/a0 .export' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with group1/b .export' );
+  a.appStart( '.with group2/c .export' );
   a.appStart( '.with z .export' )
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 24 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .clean recursive:2' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 24 );
 
     var exp =
     [
@@ -17597,17 +17436,17 @@ function cleanRecursive( test )
       './group1/group10/a0.will.yml',
       './group2',
       './group2/c.will.yml'
-    ]
+    ];
     var files = a.findAll( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function cleanRecursive */
+}
 
 cleanRecursive.rapidity = -1;
 cleanRecursive.timeOut = 500000;
@@ -20022,7 +19861,7 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 10 willfile(s) in' ), 1 );
     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
 
     test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
@@ -20079,7 +19918,7 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 10 willfile(s) in' ), 1 );
     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
 
     test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
@@ -20136,7 +19975,7 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 10 willfile(s) in' ), 1 );
     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
 
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20193,7 +20032,7 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 10 willfile(s) in' ), 1 );
     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
 
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20444,7 +20283,7 @@ function submodulesDownloadThrowing( test )
   a.appStartNonThrowing({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
-    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/will.yml' );
     let inWillFile = a.fileProvider.fileReadUnknown( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
@@ -20600,7 +20439,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -20620,7 +20459,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20644,7 +20483,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20657,7 +20496,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   a.ready.then( () =>
   {
     test.case = '.with c .submodules.download recursive:2';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -20677,7 +20516,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
@@ -20701,13 +20540,13 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -20741,17 +20580,17 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -20765,16 +20604,16 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 11 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20800,17 +20639,17 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -20824,16 +20663,16 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20890,7 +20729,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20921,7 +20760,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20962,7 +20801,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20993,7 +20832,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -21034,7 +20873,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/8 submodule(s) of module::z were downloaded' ), 1 );
@@ -21066,7 +20905,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/8 submodule(s) of module::z were downloaded' ), 1 );
@@ -38903,7 +38742,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -38963,7 +38802,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
@@ -39000,7 +38839,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -39042,7 +38881,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39102,7 +38941,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39135,7 +38974,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39162,7 +39001,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39255,10 +39094,10 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile Author ForExtension v:1' })
+  a.appStart({ args : '.willfile.extend.willfile Author ForExtension v:0' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'option verbosity < 2';
+    test.case = 'option verbosity === 0';
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, '+ writing' ) );
 
