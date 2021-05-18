@@ -9077,7 +9077,7 @@ function modulesTreeDisabledAndCorrupted( test )
 {
   let context = this;
   let a = context.assetFor( test, 'manyFew' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -9091,27 +9091,27 @@ function modulesTreeDisabledAndCorrupted( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) );
 
-    let exp =
+/*
 `
  +-- module::many
- | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
- | | +-- module::Testing - path::remote:=npm:///wTesting
- | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
- | | +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
- | | +-- module::Testing - path::remote:=npm:///wTesting
- | | +-- module::eslint - path::remote:=npm:///eslint#7.1.0
- | +-- module::wModuleForTesting12 - path::remote:=${ config.submodule.ModuleForTesting12.replace( /\/(!\S+)$/, '$1' ) }
- |   +-- module::wModuleForTesting1 - path::remote:=${ config.submodule.ModuleForTesting1.replace( /\/(!\S+)$/, '$1' ) }
- |   +-- module::wModuleForTesting2 - path::remote:=${ config.submodule.ModuleForTesting2.replace( /\/(!\S+)$/, '$1' ) }
- |   +-- module::Testing - path::remote:=npm:///wTesting
- |   +-- module::eslint - path::remote:=npm:///eslint#7.1.0
+ | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+ | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
+ | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+ | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/!delta
+ |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
+ |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
  |
  +-- module::corrupted
-`;
+`
+*/
 
-    test.identical( _.strStripCount( op.output, exp ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::' ), 14 );
+    test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git' ), 3 );
+    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git!delta' ), 1 );
+    test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git' ), 2 );
+    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git!delta' ), 1 );
+    test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' ), 1 );
+    test.identical( _.strCount( op.output, '+-- module::' ), 8 );
+    test.identical( _.strCount( op.output, /\+-- module::.* - path::remote:=/ ), 6 );
 
     return null;
   });
@@ -9119,7 +9119,7 @@ function modulesTreeDisabledAndCorrupted( test )
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeDisabledAndCorrupted */
+}
 
 modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
