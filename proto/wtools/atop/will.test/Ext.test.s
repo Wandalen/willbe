@@ -7456,9 +7456,9 @@ function hookWasPackageExtendWillfile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 3 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 3 );
+    test.identical( _.strCount( op.output, '+ writing' ), 0 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, 'willfilefromnpm' );
@@ -39024,7 +39024,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39084,7 +39084,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39117,7 +39117,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39144,7 +39144,7 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39237,10 +39237,10 @@ function commandWillfileExtendWillfileWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile Author ForExtension v:1' })
+  a.appStart({ args : '.willfile.extend.willfile Author ForExtension v:0' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'option verbosity < 2';
+    test.case = 'option verbosity === 0';
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, '+ writing' ) );
 
