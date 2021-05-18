@@ -14437,7 +14437,7 @@ function exportDiffDownloadPathsRegular( test )
   a.ready.then( () =>
   {
     test.case = '.with c .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
@@ -14448,11 +14448,11 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14461,10 +14461,10 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 36 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 37 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
@@ -14476,11 +14476,11 @@ function exportDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14557,7 +14557,7 @@ function exportHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
@@ -14568,11 +14568,9 @@ function exportHierarchyRemote( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .export.recursive';
     a.reflect();
@@ -14601,21 +14599,21 @@ function exportHierarchyRemote( test )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) );
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/out' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) );
     test.identical( files, exp );
     var exp = [ 'c.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/out' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
@@ -14623,13 +14621,13 @@ function exportHierarchyRemote( test )
     test.identical( _.strCount( op.output, 'were downloaded' ), 8 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 
-} /* end of function exportHierarchyRemote */
+}
 
 exportHierarchyRemote.rapidity = -1;
 exportHierarchyRemote.timeOut = 300000;
