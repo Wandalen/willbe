@@ -20729,7 +20729,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20760,7 +20760,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20801,7 +20801,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20832,7 +20832,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -20873,7 +20873,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/8 submodule(s) of module::z were downloaded' ), 1 );
@@ -20905,7 +20905,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/8 submodule(s) of module::z were downloaded' ), 1 );
