@@ -17531,56 +17531,42 @@ function cleanRecursive( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
-  a.fileProvider.filesDelete( a.routinePath );
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export first'
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with group1/group10/a0 .export' )
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with group1/b .export' )
-  a.appStart( '.with group2/c .export' )
+  a.appStart( '.with ** .clean' );
+  a.appStart( '.with group1/group10/a0 .export' );
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.with group1/b .export' );
+  a.appStart( '.with group2/c .export' );
   a.appStart( '.with z .export' )
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 24 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .clean recursive:2' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 24 );
 
     var exp =
     [
@@ -17593,17 +17579,17 @@ function cleanRecursive( test )
       './group1/group10/a0.will.yml',
       './group2',
       './group2/c.will.yml'
-    ]
+    ];
     var files = a.findAll( a.routinePath );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function cleanRecursive */
+}
 
 cleanRecursive.rapidity = -1;
 cleanRecursive.timeOut = 500000;
