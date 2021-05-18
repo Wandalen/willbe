@@ -9092,7 +9092,6 @@ function modulesTreeDisabledAndCorrupted( test )
     let config = a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) );
 
 /*
-`
  +-- module::many
  | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
  | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
@@ -9102,7 +9101,6 @@ function modulesTreeDisabledAndCorrupted( test )
  |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
  |
  +-- module::corrupted
-`
 */
 
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git' ), 3 );
@@ -9940,39 +9938,37 @@ function buildSubmodules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodules' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'build withoud submodules'
+    test.case = 'build withoud submodules';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
   .finally( ( err, op ) =>
   {
     test.true( !err );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 10 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.submodules.update' })
   .then( () =>
   {
-    test.case = '.build'
+    test.case = '.build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build' })
   .then( ( op ) =>
@@ -9983,23 +9979,21 @@ function buildSubmodules( test )
     test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     var files = a.find( a.abs( 'out' ) );
-    test.gt( files.length, 15 );
-
+    test.gt( files.length, 10 );
     return null;
-  })
+  });
 
   /* - */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.build wrong'
+    test.case = '.build wrong';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
-
     var o =
     {
       execPath : 'node ' + context.appJsPath,
@@ -10007,7 +10001,7 @@ function buildSubmodules( test )
       outputCollecting : 1,
       outputGraying : 1,
       args : [ '.build wrong' ]
-    }
+    };
 
     return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
     .then( ( op ) =>
@@ -10017,11 +10011,11 @@ function buildSubmodules( test )
       test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
       test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
       test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
-
       return null;
-    })
-
+    });
   });
+
+  /* - */
 
   return a.ready;
 }
