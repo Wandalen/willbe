@@ -5,8 +5,8 @@ about :
 
 submodule :
 
-  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
+  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/!delta
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out.will.yml!delta
 
 path :
 

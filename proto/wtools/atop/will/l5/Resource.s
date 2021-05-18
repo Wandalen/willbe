@@ -128,7 +128,7 @@ function MakeForEachCriterion( o )
     _.assert( args.length === 1 );
     _.assert( _.mapIs( o ) );
     _.assert( _.mapIs( o.resource ) );
-    _.assert( _.objectIs( o.resource.module ) );
+    _.assert( _.object.isBasic( o.resource.module ) );
     _.assert( _.strDefined( o.resource.name ) );
 
     if( o.resource.criterion )
@@ -139,7 +139,7 @@ function MakeForEachCriterion( o )
 
     if( o.resource.criterion && _.props.keys( o.resource.criterion ).length > 0 )
     {
-      let samples = _.eachSample_({ sets : o.resource.criterion });
+      let samples = _.permutation.eachSample({ sets : o.resource.criterion });
       if( samples.length > 1 )
       for( let index = 0 ; index < samples.length ; index++ )
       {
@@ -324,7 +324,7 @@ function init( o )
 function copy( o )
 {
   let resource = this;
-  _.assert( _.objectIs( o ) );
+  _.assert( _.object.isBasic( o ) );
   _.assert( arguments.length === 1 );
 
   if( o.name !== undefined )

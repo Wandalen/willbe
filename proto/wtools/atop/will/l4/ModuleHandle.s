@@ -78,7 +78,7 @@ function From( object, will )
   if( will )
   o.will = will;
 
-  _.assert( _.objectIs( o.object ) );
+  _.assert( _.object.isBasic( o.object ) );
   _.assert( o.will instanceof _.Will );
 
   return cls.Self( o );

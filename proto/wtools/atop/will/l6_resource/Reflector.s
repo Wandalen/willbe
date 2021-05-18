@@ -387,12 +387,12 @@ function form3()
   _.assert
   (
     reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.entity.exportStringDiagnosticShallow( reflector.src.prefixPath )
   );
   _.assert
   (
     reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ),
-    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringShallow( reflector.src.prefixPath )
+    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.entity.exportStringDiagnosticShallow( reflector.src.prefixPath )
   );
 
   /* end */
@@ -482,10 +482,10 @@ function _inheritSingle( o )
   _.assert( reflector.formed === 1 );
   _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.entity.strType( reflector2 ) );
   _.assert( !!reflector2.formed );
-  _.assert( reflector.src instanceof _.FileRecordFilter );
-  _.assert( reflector.dst instanceof _.FileRecordFilter );
-  _.assert( reflector2.src instanceof _.FileRecordFilter );
-  _.assert( reflector2.dst instanceof _.FileRecordFilter );
+  _.assert( reflector.src instanceof _.files.FileRecordFilter );
+  _.assert( reflector.dst instanceof _.files.FileRecordFilter );
+  _.assert( reflector2.src instanceof _.files.FileRecordFilter );
+  _.assert( reflector2.dst instanceof _.files.FileRecordFilter );
   // _.assert( _.entityIdentical( reflector.src.filePath, reflector.filePath ) );
   // _.assert( _.entityIdentical( reflector2.src.filePath, reflector2.filePath ) );
   _.assert( _.path.map.identical( reflector.src.filePath, reflector.filePath ) );
@@ -506,8 +506,9 @@ function _inheritSingle( o )
 
   _.assert( reflector2.formed === 3 );
 
-  let only = _.mapOnlyNulls( reflector );
-  only = _.mapOnly_( null, reflector, reflector.Composes );
+  // let only = _.mapOnlyNulls( reflector );
+  // only = _.mapOnly_( null, reflector, reflector.Composes );
+  let only = _.mapOnly_( null, reflector, reflector.Composes );
   let extend = _.mapOnly_( null, reflector2, only );
 
   delete extend.src;
@@ -1025,8 +1026,8 @@ function sureRelativeOrGlobal( o )
   let reflector = this;
 
   o = _.routine.options_( sureRelativeOrGlobal, arguments );
-  _.assert( reflector.src instanceof _.FileRecordFilter );
-  _.assert( reflector.dst instanceof _.FileRecordFilter );
+  _.assert( reflector.src instanceof _.files.FileRecordFilter );
+  _.assert( reflector.dst instanceof _.files.FileRecordFilter );
   _.assert( reflector.src.filePath === reflector.filePath );
 
   try
@@ -1065,8 +1066,8 @@ function isRelativeOrGlobal( o )
 
   o = _.routine.options_( isRelativeOrGlobal, arguments );
 
-  _.assert( reflector.src instanceof _.FileRecordFilter );
-  _.assert( reflector.dst instanceof _.FileRecordFilter );
+  _.assert( reflector.src instanceof _.files.FileRecordFilter );
+  _.assert( reflector.dst instanceof _.files.FileRecordFilter );
   _.assert( reflector.src.filePath === reflector.filePath );
 
   if( !reflector.src.isRelativeOrGlobal( o ) )
@@ -1297,7 +1298,7 @@ function pathsResolve( o )
 
     reflector.src.filePath = null;
 
-    if( r instanceof _.FileRecordFilter )
+    if( r instanceof _.files.FileRecordFilter )
     {
       reflector.src.pathsSupplementJoining( r );
     }
@@ -1323,7 +1324,7 @@ function pathsResolve( o )
   //   _.assert( paired );
   //   let r = resolve( reflector.dst.filePath, 1, 'dst' );
   //   reflector.dst.filePath = null;
-  //   if( r instanceof _.FileRecordFilter )
+  //   if( r instanceof _.files.FileRecordFilter )
   //   {
   //     debugger;
   //     reflector.dst.pathsSupplementJoining( r );
@@ -1817,7 +1818,7 @@ function exportStructure()
   let path = fileProvider.path;
   let o = _.routine.options_( exportStructure, arguments );
 
-  _.assert( reflector.src instanceof _.FileRecordFilter );
+  _.assert( reflector.src instanceof _.files.FileRecordFilter );
 
   let result = Parent.prototype.exportStructure.apply( this, arguments );
 
@@ -1910,7 +1911,7 @@ function filePathSet( src )
   let reflector = this;
   if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  _.assert( _.object.isBasic( reflector.src ), 'Reflector should have src to set filePath' );
   reflector.src.filePath = reflector.dst.filePath = _.entity.make( src );
   return reflector.src.filePath;
 }
@@ -1932,7 +1933,7 @@ function recursiveSet( src )
   let reflector = this;
   if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  _.assert( _.object.isBasic( reflector.src ), 'Reflector should have src to set filePath' );
   reflector.src.recursive = src;
   return reflector.src.recursive;
 }
@@ -1993,11 +1994,11 @@ let Accessors =
 {
   filePath : { set : filePathSet, get : filePathGet },
   recursive : { set : recursiveSet, get : recursiveGet },
-  src : { set : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
-  dst : { set : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
+  src : { set : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.files.FileRecordFilter, _.files.FileRecordFilter.Clone ) }) },
+  dst : { set : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.files.FileRecordFilter, _.files.FileRecordFilter.Clone ) }) },
 }
 
-_.assert( _.routineIs( _.FileRecordFilter ) );
+_.assert( _.routineIs( _.files.FileRecordFilter ) );
 
 // --
 // declare

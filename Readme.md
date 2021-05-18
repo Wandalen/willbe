@@ -1,5 +1,5 @@
 
-# utility::willbe [![status](https://github.com/Wandalen/willbe/workflows/publish/badge.svg)](https://github.com/Wandalen/willbe/actions?query=workflow%3Apublish) [![unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
+# utility::willbe [![status](https://github.com/Wandalen/willbe/actions/workflows/StandardPublish.yml/badge.svg)](https://github.com/Wandalen/willbe/actions/workflows/StandardPublish.yml) [![unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
 
 Utility for development which helps to manage modularity of complex modular systems.
 
@@ -21,11 +21,9 @@ Declarative programming paradigm is heavily used in `will-files`.
 
 Utility willbe is not a replacement of Git, NPM or other utilities with narrow purpose. It aggregates functionality of all that utilities in the single utility and under the single philosophy.
 
-
-
-## Try out
+### Try out
 ```
-npm install -g willbe
+npm install -g willbe@stable
 cd sample/submodules
 will .build
 ```

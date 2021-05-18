@@ -78,7 +78,7 @@ function nothingIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.nothingIs( new Map( [] ) );
+  var got = _.nothingIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -189,7 +189,7 @@ function definedIs( test )
   test.identical( got, true );
 
   test.case = 'check empty Map';
-  var got = _.definedIs( new Map( [] ) );
+  var got = _.definedIs( new HashMap( [] ) );
   test.identical( got, true );
 
   test.case = 'check empty BufferRaw';
@@ -300,7 +300,7 @@ function primitiveIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.primitiveIs( new Map( [] ) );
+  var got = _.primitiveIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -411,7 +411,7 @@ function symbolIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.symbolIs( new Map( [] ) );
+  var got = _.symbolIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -522,7 +522,7 @@ function bigIntIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.bigIntIs( new Map( [] ) );
+  var got = _.bigIntIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -635,7 +635,7 @@ function vectorAdapterIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.vectorAdapterIs( new Map( [] ) );
+  var got = _.vectorAdapterIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -904,7 +904,7 @@ function matrixIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.matrixIs( new Map( [] ) );
+  var got = _.matrixIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -1028,7 +1028,7 @@ function constructorIsMatrix( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.constructorIsMatrix( new Map( [] ) );
+  var got = _.constructorIsMatrix( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -1152,7 +1152,7 @@ function consequenceIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.consequenceIs( new Map( [] ) );
+  var got = _.consequenceIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -1281,7 +1281,7 @@ function consequenceLike( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.consequenceLike( new Map( [] ) );
+  var got = _.consequenceLike( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -1410,7 +1410,7 @@ function promiseIs( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.promiseIs( new Map( [] ) );
+  var got = _.promiseIs( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -1543,7 +1543,7 @@ function promiseLike( test )
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.promiseLike( new Map( [] ) );
+  var got = _.promiseLike( new HashMap( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
@@ -1682,7 +1682,7 @@ function typeOf( test )
   test.identical( got.name, 'Set' );
 
   test.case = 'check HashMap';
-  var src = new Map( [ [ 1, 1 ] ] );
+  var src = new HashMap( [ [ 1, 1 ] ] );
   var got = _.typeOf( src );
   test.identical( got, src.constructor );
   test.identical( got.name, 'Map' );
@@ -1801,8 +1801,8 @@ function typeOf( test )
   test.identical( got, true );
 
   test.case = 'check HashMap';
-  var src = new Map( [ [ 1, 1 ] ] );
-  var src1 = new Map();
+  var src = new HashMap( [ [ 1, 1 ] ] );
+  var src1 = new HashMap();
   var got = _.typeOf( src, src1.constructor );
   test.identical( got, true );
 

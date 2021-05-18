@@ -1953,7 +1953,7 @@ function isFull( o )
   o.only = module.optionsFormingForward( o.only );
 
   let states = module.stager.stagesState( 'performed' )
-  _.props.supplement( o.only, _.map_( null, states, () => true ) );
+  _.props.supplement( o.only, _.container.map_( null, states, () => true ) );
   states = _.only( states, o.only ); /* xxx : review mapOnly / mapBut */
 
   return _.all( states );
@@ -2293,7 +2293,7 @@ function _willfilesExport()
 
   function handeWillFile( willfile )
   {
-    _.assert( _.objectIs( willfile.data ) );
+    _.assert( _.object.isBasic( willfile.data ) );
     result[ willfile.filePath ] = willfile.data;
   }
 
@@ -2751,7 +2751,7 @@ function modulesEach_head( routine, args )
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
   o = _.routine.options( routine, o );
-  _.assert( args.length === 0 || args.length === 1 );
+  _.assert( args.length === 0 || args.length === 1, () => `Expects optional argument, but got ${args.length} arguments` );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) )
 
   return o;
@@ -2917,7 +2917,8 @@ function rootModuleSetAct( src )
   let will = module.will;
 
   _.assert( src === null || src instanceof _.will.Module );
-  _.assert( src === null || src.rootModule === src || src.rootModule === null );
+  // _.assert( src === null || src.rootModule === src || src.rootModule === null );
+  _.assert( src === null || src.rootModule === null || src.rootModule instanceof _.will.Module );
 
   let oldRootModule = module.rootModule;
 
@@ -2971,7 +2972,7 @@ function superRelationsAppend( src )
 
   if( _.arrayIs( src ) )
   {
-    return _.map_( null, src, ( src ) => module.supeRelationsAppend( src ) );
+    return _.container.map_( null, src, ( src ) => module.supeRelationsAppend( src ) );
   }
 
   _.assert( src instanceof _.will.ModulesRelation );
@@ -2992,7 +2993,7 @@ function superRelationsRemove( src )
 
   if( _.arrayIs( src ) )
   {
-    return _.map_( null, src, ( src ) => module.superRelationsRemove( src ) );
+    return _.container.map_( null, src, ( src ) => module.superRelationsRemove( src ) );
   }
 
   _.assert( src instanceof _.will.ModulesRelation );
@@ -3021,7 +3022,7 @@ function submodulesAreDownloaded( o )
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/commonPath' );
 
-  return _.map_( null, relations, ( relation ) =>
+  return _.container.map_( null, relations, ( relation ) =>
   {
     if( relation === null )
     return true;
@@ -3089,7 +3090,7 @@ function submodulesAreValid( o )
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/absoluteName' );
 
-  return _.map_( null, relations, ( relation ) =>
+  return _.container.map_( null, relations, ( relation ) =>
   {
     if( relation === null )
     return true;
@@ -4644,7 +4645,7 @@ function resourceMapForKind( resourceKind )
   result = module[ will.ResourceKindToMapName.forKey( resourceKind ) ];
 
   _.assert( arguments.length === 1 );
-  _.sure( _.objectIs( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
+  _.sure( _.object.isBasic( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
 
   return result;
 }
@@ -5468,16 +5469,16 @@ function _buildsResolve_body( o )
     elements = _.props.vals( elements );
   }
 
-  let hasMapFilter = _.objectIs( o.criterion ) && Object.keys( o.criterion ).length > 0;
+  let hasMapFilter = _.object.isBasic( o.criterion ) && Object.keys( o.criterion ).length > 0;
   if( _.routineIs( o.criterion ) || hasMapFilter )
   {
 
-    _.assert( _.objectIs( o.criterion ), 'not tested' );
+    _.assert( _.object.isBasic( o.criterion ), 'not tested' );
 
     elements = filterWith( elements, o.criterion );
 
   }
-  else if( _.objectIs( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
+  else if( _.object.isBasic( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
   {
 
     elements = filterWith( elements, { default : 1 } );
@@ -5496,9 +5497,9 @@ function _buildsResolve_body( o )
   function filterWith( elements, filter )
   {
 
-    _.assert( _.objectIs( filter ), 'not tested' );
+    _.assert( _.object.isBasic( filter ), 'not tested' );
 
-    if( _.objectIs( filter ) && Object.keys( filter ).length > 0 )
+    if( _.object.isBasic( filter ) && Object.keys( filter ).length > 0 )
     {
 
       let template = filter;
@@ -6939,13 +6940,22 @@ function structureExportOut( o )
         + `\nLocal path is ${junction.localPath}`
       );
     }
-    let c = 0;
+    // let c = 0;
     if( _.longHas( found.ownedObjects, module2 ) )
     {
       modules.push( module2 );
-      c += 1;
+      // c += 1;
     }
-    _.assert( c === 1 ); /* xxx */
+    // _.assert( c === 1 ); /* xxx */
+    /* Dmytro : this check is not valid for complex submodules structures which have dependencies on the same layer :
+    module X depends on Y and Z, and Z depends on module Y
+
+    X->Z
+    |  |
+    Y<-|
+    The utility does not resolve this graph. And the export of Z contains modules A, but it not owned this module
+    We export only owned modules.
+    */
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
@@ -6983,8 +6993,6 @@ function structureExportForModuleExport( o )
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
   let structure = module2.structureExportOut();
 
-  if( !module2.isUsedManually() )
-  debugger;
   if( !module2.isUsedManually() )
   module2.finit();
 
@@ -7159,8 +7167,6 @@ function resourceImport( o )
 
   if( o.srcResource.pathsRebase )
   {
-    if( o.srcResource.original )
-    debugger;
     if( o.srcResource.original )
     o.srcResource = o.srcResource.original;
 
@@ -7383,7 +7389,7 @@ function npmGenerateFromWillfile( o )
   let verbosity = o.verbosity;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let currentContext = o.currentContext ? o.currentContext : module;
   opts.packagePath = module.pathResolve
@@ -7654,7 +7660,7 @@ function willfileGenerateFromNpm( o )
   let verbosity = o.verbosity;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
   let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
@@ -7724,8 +7730,12 @@ function willfileExtendWillfile( o )
   let request = opts.request.split( /\s+/ );
   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
+  o.dirPath = o.dirPath ? o.dirPath : will.inPath;
+  if( !o.dirPath )
+  o.dirPath = path.current();
+
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let dstWillfiles = dstFilesFind( request[ 0 ] );
   if( dstWillfiles.length > 2 )
@@ -7806,7 +7816,7 @@ function willfileExtendWillfile( o )
     if( path.isGlob( dstPath ) )
     throw _.err( 'Path to destination file should have not globs.' );
 
-    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+    dstPath = path.join( o.dirPath, dstPath );
 
     if( fileProvider.isDir( dstPath ) )
     dstPath = path.join( dstPath, './' );
@@ -7835,7 +7845,7 @@ function willfileExtendWillfile( o )
     }
     else
     {
-      let willPath = will.inPath ? will.inPath : path.current();
+      let willPath = o.dirPath;
       let firstExt = ext === 'yaml' ? 'yml' : ext;
       let secondExt = opts.format === 'json' ? '.' : '.will.';
 
@@ -7862,7 +7872,7 @@ function willfileExtendWillfile( o )
   {
     let filePath = selector;
     if( !path.isAbsolute( filePath ) )
-    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+    filePath = path.join( o.dirPath, selector );
 
     if( fileProvider.isTerminal( filePath ) )
     {
@@ -8085,7 +8095,7 @@ function willfileExtendWillfile( o )
       filePath : path,
       data,
       encoding,
-      verbosity : opts.verbosity,
+      logger,
     });
 
   }
@@ -8124,11 +8134,12 @@ willfileExtendWillfile.defaults =
   'npm.name' : 1,
   'npm.scripts' : 1,
 
+  'dirPath' : null,
   'request' : null,
   'onSection' : null,
   'submodulesDisabling' : 0,
   'format' : 'willfile',
-  'verbosity' : 3,
+  'logger' : 3,
   // 'v' : null,
 }
 
@@ -8144,7 +8155,7 @@ function _willfileOnPropertyAct( o )
 
   _.routine.options( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( o ) );
+  _.assert( _.object.isBasic( o ) );
 
   let dstWillfileRecords = dstRecordsFind( o.request );
   _.assert
@@ -8559,6 +8570,255 @@ willfileExtendProperty.defaults =
 
 //
 
+/* qqq : for Dmytro : bad, refactor, rewrite */
+
+function willfileMergeIntoSingle( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+
+  _.routine.options( willfileMergeIntoSingle, o );
+
+  let primaryWillfilePath = o.primaryPath || 'CommandWillfileMergeIntoSingle';
+
+  let o2 =
+  {
+    request : primaryWillfilePath + ' ./',
+    onSection : _.props.supplement.bind( _.props ),
+    dirPath : module.dirPath,
+  };
+  try
+  {
+    willfileExtendWillfile.call( will, o2 );
+  }
+  catch( err )
+  {
+    _.error.attend( err );
+  }
+
+  if( o.secondaryPath )
+  {
+    let o3 =
+    {
+      request : `${ primaryWillfilePath } ${ o.secondaryPath }`,
+      name : 0,
+      onSection : _.props.extend.bind( _.props ),
+      dirPath : module.dirPath,
+    };
+    module.willfileExtendWillfile( o3 );
+  }
+
+  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+
+  let dstPath = filesFind( primaryWillfilePath, 1 );
+  if( dstPath.length === 0 )
+  {
+    if( logger.verbosity >= 2 )
+    logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
+    return null;
+  }
+  _.assert( dstPath.length === 1 );
+  dstPath = dstPath[ 0 ];
+
+  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger : 0 });
+  filterAboutNpmFields();
+  filterSubmodulesCriterions();
+  if( o.filterSameSubmodules )
+  filterSameSubmodules()
+  if( o.submodulesDisabling )
+  submodulesDisable();
+  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
+
+  /* */
+
+  renameFiles();
+
+  return null;
+
+  /* */
+
+  function filesFind( srcPath, dst )
+  {
+    if( dst && path.isGlob( srcPath ) )
+    throw _.err( 'Path to destination file should have not globs.' );
+
+    srcPath = path.join( module.dirPath, srcPath );
+
+    if( fileProvider.isDir( srcPath ) )
+    srcPath = path.join( srcPath, './' );
+
+    return will.willfilesFind
+    ({
+      commonPath : srcPath,
+      withIn : 1,
+      withOut : 0,
+    });
+  }
+
+  /* */
+
+  function filterSubmodulesCriterions()
+  {
+    let submodules = config.submodule;
+    for( let name in submodules )
+    {
+      let criterions = submodules[ name ].criterion;
+      if( criterions )
+      if( criterions.debug )
+      if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
+      {
+        delete criterions.debug;
+        criterions.development = 1;
+      }
+    }
+  }
+
+  /* */
+
+  function filterAboutNpmFields()
+  {
+    let about = config.about;
+    for( let name in about )
+    {
+      if( !_.strBegins( name, 'npm.' ) )
+      continue;
+
+      if( _.arrayIs( about[ name ] ) )
+      {
+        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
+      }
+      else if( _.aux.is( about[ name ] ) )
+      {
+        let npmMap = about[ name ];
+        let reversedMap = Object.create( null );
+
+        for( let property in npmMap )
+        if( npmMap[ property ] in reversedMap )
+        filterPropertyByName( npmMap, reversedMap, property )
+        else
+        reversedMap[ npmMap[ property ] ] = property;
+      }
+    }
+  }
+
+  /* */
+
+  function filterPropertyByName( srcMap, butMap, property )
+  {
+    if( _.strHas( property, '-' ) )
+    delete srcMap[ property ];
+    else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
+    delete srcMap[ butMap[ srcMap[ property ] ] ];
+    else if( !_.strHasAny( property, [ '.', '-' ] ) )
+    {
+      if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
+      delete srcMap[ butMap[ srcMap[ property ] ] ];
+    }
+  }
+
+  /* */
+
+  function filterSameSubmodules()
+  {
+    let submodules = config.submodule;
+    let regularPaths = new Set();
+    let mergedSubmodules = Object.create( null );
+    for( let name in submodules )
+    {
+      let path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
+      let parsed = _.uri.parse( path );
+
+      let parsedModuleName;
+      if( _.longHas( parsed.protocols, 'npm' ) )
+      {
+        parsedModuleName = _.npm.path.parse( path ).host;
+      }
+      else if( _.longHas( parsed.protocols, 'git' ) )
+      {
+        parsedModuleName = _.git.path.parse({ remotePath : path, full : 0, atomic : 0, objects : 1 }).repo;
+      }
+      else
+      {
+        if( regularPaths.has( path ) )
+        continue;
+
+        regularPaths.add( path );
+        parsedModuleName = name;
+      }
+
+      if( !( parsedModuleName in mergedSubmodules ) )
+      mergedSubmodules[ parsedModuleName ] = submodules[ name ];
+    }
+    config.submodule = mergedSubmodules;
+  }
+
+  /* */
+
+  function submodulesDisable()
+  {
+    for( let dependency in config.submodule )
+    {
+      if( _.aux.is( config.submodule[ dependency ] ) )
+      {
+        config.submodule[ dependency ].enabled = 0;
+      }
+      else if( _.str.is( config.submodule[ dependency ] ) )
+      {
+        let dependencyMap = Object.create( null );
+        dependencyMap.path = config.submodule[ dependency ];
+        dependencyMap.enabled = 0;
+        config.submodule[ dependency ] = dependencyMap;
+      }
+    }
+  }
+
+  /* */
+
+  function renameFiles()
+  {
+    let unnamedWillfiles = filesFind( './.*' );
+    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+    {
+      let oldName = unnamedWillfiles[ i ].absolute;
+      let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
+      fileProvider.fileRename( newName, oldName );
+    }
+
+    if( !o.primaryPath )
+    {
+      let oldName = dstPath.absolute;
+      let newName = path.join( dstPath.dir, 'will.yml' );
+      try
+      {
+        fileProvider.fileRename( newName, oldName );
+        logger.log( `  + writing {- Map.pure -} to ${ newName }` )
+      }
+      catch( err )
+      {
+        logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
+        fileProvider.filesDelete( oldName );
+      }
+    }
+    else
+    {
+      logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
+    }
+  }
+}
+
+willfileMergeIntoSingle.defaults =
+{
+  logger : 3,
+  primaryPath : null,
+  secondaryPath : null,
+  submodulesDisabling : 1,
+  filterSameSubmodules : 1,
+};
+
+//
+
 function willfileVersionBump( o )
 {
   let module = this;
@@ -8632,7 +8892,7 @@ function npmModulePublish( o )
   if( !module.about.enabled )
   return;
 
-  let ready = moduleSync( o.commit );
+  let ready = moduleSync( o.message );
   ready.deasync();
   let diff = moduleDiffsGet();
 
@@ -8687,11 +8947,11 @@ function npmModulePublish( o )
 
   /* */
 
-  function moduleSync( commit )
+  function moduleSync( message )
   {
     return module.gitSync
     ({
-      commit,
+      message,
       restoringHardLinks : 1,
       verbosity : 0,
     });
@@ -8805,11 +9065,10 @@ function npmModulePublish( o )
 
 npmModulePublish.defaults =
 {
-  commit : '-am "."',
+  message : '-am "."',
   tag : '',
   force : 0,
   dry : 0,
-  // v : 1, /* qqq : for Dmytro : bad : ! */
   verbosity : 1,
 };
 
@@ -8906,14 +9165,28 @@ function _remoteChanged()
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
     // let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
-    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, logger : 1 });
+    let opts =
+    {
+      localPath : module.downloadPath,
+      // logger : 1
+    }
+    if( _.longHas( _.git.protocols, remoteProvider.protocol ) )
+    opts.detailing = 1;
+
+    let result = remoteProvider.versionLocalRetrive( opts );
     if( result.version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
       if( result.isBranch )
-      remotePath.tag = result.version;
+      {
+        remotePath.tag = result.version;
+      }
       else
-      remotePath.hash = result.version;
+      {
+        remotePath.hash = result.version;
+        delete remotePath.tag; /* Dmytro : tag and hash should not exist simultaneously */
+      }
+
       module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
     }
   }
@@ -8994,25 +9267,34 @@ function gitExecCommand( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
+  logger.up();
 
   let provider;
   if( o.hardLinkMaybe )
   {
-    provider = module._providerArchiveMake({ dirPath : o.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : o.dirPath, logger, profile : o.profile });
 
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
   let ready = _.take( null );
 
+
   _.process.start
   ({
     execPath : `git ${ o.command }`,
     currentPath : o.dirPath,
+    logger,
     ready,
   });
 
@@ -9020,6 +9302,7 @@ function gitExecCommand( o )
   {
     if( o.hardLinkMaybe )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9065,7 +9348,7 @@ function gitDiff( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Diff ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nDiff of ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   let result = _.git.diff
   ({
@@ -9081,8 +9364,19 @@ function gitDiff( o )
   if( !result.status && !result.patch )
   return null;
 
-  logger.log( `Status:\n${ result.status }` );
-  logger.log( `Patch:\n${ result.patch }` );
+  logger.up();
+
+  logger.log( _.ct.format( `Status:`, 'entity' ) );
+  logger.up();
+  logger.log( result.status );
+  logger.down();
+
+  logger.log( _.ct.format( `Patch:`, 'entity' ) );
+  logger.up();
+  logger.log( result.patch );
+  logger.down();
+
+  logger.down();
 
   return true;
 }
@@ -9177,10 +9471,9 @@ function _providerArchiveMake( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
 
+  _.routine.options( _providerArchiveMake, o );
+
   let config = _.censor.configRead({ profileDir : o.profile });
-  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-  // if( !config )
-  // config = fileProvider.configUserRead();
 
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = o.dirPath;
@@ -9189,7 +9482,10 @@ function _providerArchiveMake( o )
   if( config && config.path && config.path.hlink )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
 
-  if( o.verbosity )
+  if( o.logger )
+  provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );
+
+  if( o.logger.verbosity )
   provider.archive.logger.verbosity = 2;
   else
   provider.archive.logger.verbosity = 0;
@@ -9201,7 +9497,14 @@ function _providerArchiveMake( o )
   return provider;
 }
 
-/* qqq : for Dmytro : bad : defaults? */
+_providerArchiveMake.defaults =
+{
+  dirPath : null,
+  profile : null,
+  logger : 2,
+};
+
+/* aaa : for Dmytro : bad : defaults? */ /* Dmytro : added */
 
 //
 
@@ -9236,7 +9539,7 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPulling ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
   if( status.uncommitted )
   throw _.errBrief
@@ -9244,17 +9547,25 @@ function gitPull( o )
     `${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) } has local changes!`
   );
 
+  logger.up();
+
   /* */
 
   let provider;
   if( o.restoringHardLinks )
   {
     debugger;
-    /* qqq : for Dmytro : ? */
+    /* aaa : for Dmytro : ? */ /* Dmytro : done */
     // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
-    provider = module._providerArchiveMake({ dirPath : module.dirPath, verbosity : o.verbosity, profile : o.profile });
+    provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, profile : o.profile });
     if( o.verbosity )
-    logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+    {
+      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+      logger.log( `Restoring hardlinks in directory(s) :` );
+      logger.up();
+      logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+      logger.down();
+    }
     provider.archive.restoreLinksBegin();
   }
 
@@ -9264,6 +9575,7 @@ function gitPull( o )
   ({
     localPath : o.dirPath,
     sync : 0,
+    logger,
     throwing : 1,
   });
 
@@ -9271,6 +9583,7 @@ function gitPull( o )
   {
     if( o.restoringHardLinks )
     provider.archive.restoreLinksEnd();
+    logger.down();
   });
 
   ready.catch( ( err ) =>
@@ -9330,7 +9643,9 @@ function gitPush( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nPushing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   let ready = _.git.push
   ({
@@ -9341,7 +9656,13 @@ function gitPush( o )
     dry : o.dry,
     sync : 0,
     throwing : 1,
+    logger,
   });
+
+  ready.tap( () =>
+  {
+    logger.down();
+  })
 
   ready.catch( ( err ) =>
   {
@@ -9387,7 +9708,9 @@ function gitReset( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Resetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+  logger.log( `\nResetting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+
+  logger.up();
 
   _.git.reset
   ({
@@ -9397,7 +9720,10 @@ function gitReset( o )
     removingSubrepositories : o.removingSubrepositories,
     dry : o.dry,
     sync : 1,
+    logger
   });
+
+  logger.down();
 
   return null;
 }
@@ -9455,8 +9781,10 @@ function gitStatus( o )
   if( !got.status )
   return null;
 
-  logger.log( module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) );
-  logger.log( got.status );
+  logger.log( `\nStatus of ${module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() )}` );
+  logger.up();
+  logger.log( _.ct.format( got.status, 'pipe.neutral' ) );
+  logger.down();
   return got;
 }
 
@@ -9527,15 +9855,15 @@ function gitSync( o )
   .then( () =>
   {
     if( status.remote )
-    return module.gitPull.call( module, _.mapBut_( null, o, { commit : '.', dry : '.' } ) );
+    return module.gitPull.call( module, _.mapBut_( null, o, { message : '.', dry : '.' } ) );
     return null;
   })
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut_( null, o, { commit : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
+    return module.gitPush.call( module, _.mapBut_( null, o, { message : '.', dry : '.', restoringHardLinks : '.', profile : '.' } ) );
     return null;
-  })
+  });
 
   return ready;
 
@@ -9547,14 +9875,16 @@ function gitSync( o )
     let start = _.process.starter
     ({
       currentPath : o.dirPath,
+      logger : logger,
       ready : con,
     });
+
     if( o.verbosity )
-    logger.log( `Committing ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.log( `\nCommitting ${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
 
     start( `git add --all` );
-    if( o.commit )
-    start( `git commit ${ o.commit }` );
+    if( o.message )
+    start( `git commit ${ o.message }` );
     else
     start( 'git commit -am "."' );
 
@@ -9564,14 +9894,13 @@ function gitSync( o )
 
 gitSync.defaults =
 {
-  commit : '.',
+  message : '.',
   profile : 'default',
   dirPath : null,
   restoringHardLinks : 1,
   dry : 0,
-  // v : null,
   verbosity : 1,
-}
+};
 
 //
 
@@ -9613,9 +9942,13 @@ function gitTag( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Creating tag ${ o.name }` );
+  {
+    logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
+    logger.up();
+    logger.log( `Creating tag ${ _.ct.format( o.name, 'entity' ) }` );
+  }
 
-  return _.git.tagMake
+  let result = _.git.tagMake
   ({
     localPath,
     tag : o.name,
@@ -9624,7 +9957,13 @@ function gitTag( o )
     light : o.light,
     force : 1,
     sync : 1,
+    logger
   });
+
+  if( o.verbosity )
+  logger.down();
+
+  return result;
 }
 
 gitTag.defaults =
@@ -10300,6 +10639,8 @@ let Extension =
   willfileSetProperty,
   willfileDeleteProperty,
   willfileExtendProperty,
+
+  willfileMergeIntoSingle,
 
   willfileVersionBump,
   npmModulePublish,

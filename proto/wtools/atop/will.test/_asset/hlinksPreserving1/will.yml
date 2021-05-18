@@ -1,0 +1,30 @@
+
+submodule :
+
+  # ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!stable
+  # ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!stable
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1!stable
+  ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2!stable
+
+path :
+
+  proto : proto
+  temp :
+    - '{path::proto}'
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/reflector::exported.files*=1
+    dst :
+      prefixPath : path::proto
+
+build :
+
+  build :
+    steps :
+      - submodules.download
+      - reflect.submodules
+    criterion :
+      default : 1
+      build : 1

@@ -43,6 +43,7 @@ function onModule( context )
   // integrationTestRename( context );
   // samplesRename( context );
   // dwtoolsRename( context );
+  // metaFilesRename( context );
 
   // badgeGithubReplace( context );
   // badgesSwap( context );
@@ -59,12 +60,13 @@ function onModule( context )
   // willProtoEntryPathOrder( context );
   // willProtoEntryPathAdjustTools( context );
   // willDisableIfEmpty( context );
+  willFixDmytrosFuckup( context );
   // deleteIfDisabled( context );
 
   // readmeModuleNameAdjust( context );
   // readmeTryOutAdjust( context );
   // readmeToAddRemove( context );
-  // readmeToAddAdjust( context );
+  // readmeInstructionsAdjust( context );
   // readmeSampleRename( context );
 
   // sourceNodeModulesEntryAdd( context );
@@ -411,6 +413,41 @@ function dwtoolsRename( context )
 
 //
 
+function metaFilesRename( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  if( fileProvider.fileExists( abs( 'README.md' ) ) )
+  fileProvider.fileRename
+  ({
+    dstPath : abs( 'Readme.md' ),
+    srcPath : abs( 'README.md' ),
+    verbosity : o.verbosity >= 2 ? o.verbosity : 0,
+  });
+
+  if( fileProvider.fileExists( abs( 'LICENSE' ) ) )
+  fileProvider.fileRename
+  ({
+    dstPath : abs( 'License' ),
+    srcPath : abs( 'LICENSE' ),
+    verbosity : o.verbosity >= 2 ? o.verbosity : 0,
+  });
+
+}
+
+//
+
 function badgeGithubReplace( context )
 {
   let o = context.request.map;
@@ -442,7 +479,7 @@ function badgeGithubReplace( context )
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3Apublish)`;
+  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions/workflows/StandardPublish.yml)`;
 
   if( !_.strHas( read, ins ) )
   return false;
@@ -990,7 +1027,7 @@ function willProtoEntryPathAdjustTools( context )
   if( !protoEntryPath )
   return;
 
-  protoEntryPath = _.map_( protoEntryPath, ( entryPath ) =>
+  protoEntryPath = _.container.map_( protoEntryPath, ( entryPath ) =>
   {
     if( abs( entryPath ) !== abs( 'proto/node_modules/Tools' ) )
     return entryPath;
@@ -1050,6 +1087,70 @@ function willDisableIfEmpty( context )
     resourceName : 'enabled',
     val : 0,
   });
+
+}
+
+//
+
+function willFixDmytrosFuckup( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  debugger;
+  if( !context.module )
+  return;
+
+  // debugger; xxx
+
+// submodule:
+//   wTools:
+//     path:
+//       path: 'npm:///wTools'
+//       enabled: 0
+//     enabled: 0
+
+  let filePath = _.arrayAs( context.junction.module.willfilesPath )[ 0 ];
+  let config = fileProvider.fileReadUnknown( filePath );
+
+  let edited = false;
+  for( let k in config.submodule )
+  {
+    let submodule = config.submodule[ k ];
+    if( _.mapIs( submodule.path ) )
+    {
+      _.props.extend( submodule, submodule.path );
+      edited = true;
+    }
+  }
+
+  if( !edited )
+  return;
+
+  // let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
+  // if( !protoEntryPath )
+  // return;
+  //
+  // let any = _.any( protoEntryPath, ( entryPath ) =>
+  // {
+  //   if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
+  //   return true;
+  // });
+  //
+  // if( !any )
+  // return;
+
+  logger.log( `Fixing ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.fileWriteUnknown( filePath, config );
 
 }
 
@@ -1263,7 +1364,7 @@ function readmeToAddRemove( context )
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `## To add
 \`\`\`
-npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
+npm add '${context.module.about.values[ 'npm.name' ]}@stable'
 \`\`\``;
   let sub = '';
 
@@ -1288,7 +1389,7 @@ npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
 
 //
 
-function readmeToAddAdjust( context )
+function readmeInstructionsAdjust( context )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -1305,7 +1406,6 @@ function readmeToAddAdjust( context )
   if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
-  // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   let config = _.censor.configRead();
   if( !config )
   return null;
@@ -1313,39 +1413,84 @@ function readmeToAddAdjust( context )
   return null;
   if( !config.about.user )
   return null;
-  debugger;
+
   if( !context.module.about.values[ 'npm.name' ] )
   return null;
 
-  let moduleName = context.module.about.name; debugger;
+  let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `node sample/trivial/Sample.s
-\`\`\``;
-  let sub = `node sample/trivial/Sample.s
+  let ins1 = `Try out from the repository`;
+  let ins2 = `To add to your project`;
+  let ins3 = `@stable'`;
+  let ins4 = `node sample/trivial/Sample.s`;
+
+  if( !_.strHas( read, ins1 ) )
+  return skip();
+  if( !_.strHas( read, ins2 ) )
+  return skip();
+  if( !_.strHas( read, ins3 ) )
+  return skip();
+  if( !_.strHas( read, ins4 ) )
+  return skip();
+
+  let tryOutSection =
+`### Try out from the repository
+
+\`\`\`
+git clone https://github.com/${config.about.user}/${context.module.about.name}
+cd ${context.module.about.name}
+will .npm.install
+node sample/trivial/Sample.s
 \`\`\`
 
-## To add to your project
-\`\`\`
-npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
-\`\`\`
-`;
+Make sure you have utility \`willbe\` installed. To install willbe: \`npm i -g willbe@stable\`. Willbe is required to build of the module.
 
-  debugger;
-  if( !_.strHas( read, ins ) )
-  return;
+`
 
-  logger.log( `Adding "To add" for ${context.junction.nameWithLocationGet()}` );
+  let toAddSection =
+`### To add to your project
+
+\`\`\`
+npm add '${context.module.about.values[ 'npm.name' ]}@stable'
+\`\`\`
+
+\`Willbe\` is not required to use the module in your project as submodule.
+
+`
+
+  logger.log( `Patching readme of ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
-  return console.log( filePath );
+  return;
+
+  // logger.log( _.censor.fileReplace
+  // ({
+  //   filePath : abs( 'README.md' ),
+  //   ins : sectionOf( read, ins1 ),
+  //   sub : tryOutSection,
+  //   verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  // }).log );
 
   logger.log( _.censor.fileReplace
   ({
     filePath : abs( 'README.md' ),
-    ins,
-    sub,
+    ins : sectionOf( read, ins2 ),
+    sub : toAddSection,
     verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
   }).log );
+
+  function sectionOf( read, key )
+  {
+    let parsed = _.md.parse( read );
+    if( !parsed.sectionMap[ key ] )
+    return null;
+    return parsed.sectionMap[ key ][ 0 ].text;
+  }
+
+  function skip()
+  {
+    return logger.log( `Skipping ${context.junction.nameWithLocationGet()}` );
+  }
 
 }
 

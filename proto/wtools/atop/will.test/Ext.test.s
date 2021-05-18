@@ -155,6 +155,14 @@ function assetFor( test, name )
     return null
   }
 
+  /* aaa : for Dmytro : ? */ /* Dmytro : this method reduces running time of single test routine that needs no local testing submodules in 3-4 times */
+  a.reflectMinimal = function reflectMinimal()
+  {
+    a.fileProvider.filesDelete( a.routinePath );
+    a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+    return null;
+  }
+
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
 
   return a;
@@ -406,17 +414,20 @@ function transpile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpile' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-  .then( () =>
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
   {
     test.case = '.build debug'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build debug' })
   .then( ( op ) =>
   {
@@ -440,21 +451,20 @@ function transpile( test )
     test.identical( files, exp );
     a.fileProvider.isTerminal( a.abs( 'out/debug/dir3.test/File.js' ) );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build compiled.debug'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build compiled.debug' })
   .then( ( op ) =>
   {
-
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     var exp =
@@ -488,17 +498,17 @@ function transpile( test )
     test.true( !_.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build raw.release'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build raw.release' })
   .then( ( op ) =>
   {
@@ -522,17 +532,17 @@ function transpile( test )
     test.identical( files, exp );
     a.fileProvider.isTerminal( a.abs( 'out/raw.release/dir3.test/File.test.js' ) );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build release';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build release' })
   .then( ( op ) =>
   {
@@ -558,17 +568,17 @@ function transpile( test )
     test.true( _.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build all'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
+
   a.appStart({ execPath : '.build all' })
   .then( ( op ) =>
   {
@@ -610,11 +620,23 @@ function transpile( test )
     ];
     test.identical( files, exp );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/dir2/-Excluded.js' ), 'console.log( \'dir2/-Ecluded.js\' );' )
+      return null;
+    });
+  }
 }
 
 //
@@ -2241,9 +2263,12 @@ function withList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
-  a.reflect();
 
   /* - */
+
+  begin();
+
+  /* */
 
   a.appStart({ args : '.with . .resources.list about::name' })
   .finally( ( err, op ) =>
@@ -2256,9 +2281,9 @@ function withList( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ args : '.with . .resources.list about::description' })
   .finally( ( err, op ) =>
@@ -2271,9 +2296,9 @@ function withList( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ args : '.with . .resources.list path::module.dir' })
   .finally( ( err, op ) =>
@@ -2286,11 +2311,23 @@ function withList( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
@@ -2299,9 +2336,12 @@ function eachList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'eachList' );
-  a.reflect();
 
   /* - */
+
+  begin();
+
+  /* */
 
   a.appStart({ args : '.clean' })
 
@@ -2445,6 +2485,18 @@ function eachList( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileRename({ srcPath : a.abs( 'aab' ), dstPath : a.abs( '-aab' ) });
+      return null;
+    });
+  }
 }
 
 eachList.timeOut = 300000;
@@ -2468,10 +2520,9 @@ function eachBrokenIll( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Failed to resolve' ), 0 );
-    // test.identical( _.strCount( op.output, 'eachBrokenIll/' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -2481,7 +2532,7 @@ function eachBrokenIll( test )
 eachBrokenIll.description =
 `
 if one or several willfiles are broken .each should pass it and output error
-`
+`;
 
 //
 
@@ -2539,8 +2590,7 @@ function eachBrokenCommand( test )
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Unknown command ".resource.list"' ), 1 );
-    // test.identical( _.strCount( op.output, 'Module at' ), 3 );
+    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
   });
@@ -3479,7 +3529,10 @@ function reflectComposite( test )
 {
   let context = this;
   let a = context.assetFor( test, 'compositeReflector' );
-  a.reflect();
+
+  /* - */
+
+  begin();
 
   /* */
 
@@ -3488,7 +3541,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:0'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:0' })
   .then( ( arg ) =>
@@ -3504,13 +3557,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3519,7 +3572,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:1'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:1' })
   .then( ( arg ) =>
@@ -3535,13 +3588,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3550,7 +3603,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:2'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:2' })
   .then( ( arg ) =>
@@ -3566,13 +3619,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3581,7 +3634,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:3'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:3' })
   .then( ( arg ) =>
@@ -3597,13 +3650,13 @@ function reflectComposite( test )
       './debug/dir2/File.test.js',
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.true( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3612,7 +3665,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:4'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:4' })
   .then( ( arg ) =>
@@ -3624,7 +3677,7 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3633,7 +3686,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:5'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:5' })
   .then( ( arg ) =>
@@ -3644,7 +3697,7 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3653,7 +3706,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:6'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:6' })
   .then( ( arg ) =>
@@ -3663,7 +3716,7 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -3672,7 +3725,7 @@ function reflectComposite( test )
     test.case = '.build out* variant:7'
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build out* variant:7' })
   .then( ( arg ) =>
@@ -3682,9 +3735,21 @@ function reflectComposite( test )
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
-  })
+  });
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/dir2/-Excluded.js' ), 'console.log( \'dir2/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 reflectComposite.rapidity = -1;
@@ -3976,7 +4041,6 @@ function reflectWithOptionDstRewriting( test )
     return null;
   })
 
-  /* xxx for Vova : adjust styles aaa: adjusted */
   /* - */
 
   a.ready.then( () =>
@@ -4911,14 +4975,12 @@ function reflectComplexInherit( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  begin().then( () =>
   {
     test.case = '.with ab/ .build';
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with a .export' })
   a.appStart({ execPath : '.with b .export' })
@@ -4946,23 +5008,21 @@ function reflectComplexInherit( test )
       './ab/files/b/File2.release.js',
       './ab/files/dir3.test',
       './ab/files/dir3.test/File.js',
-      './ab/files/dir3.test/File.test.js'
-    ]
+      './ab/files/dir3.test/File.test.js',
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  begin().then( () =>
   {
     test.case = '.with abac/ .build';
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with a .export' })
   a.appStart({ execPath : '.with b .export' })
@@ -4997,17 +5057,29 @@ function reflectComplexInherit( test )
       './abac/files/c/File.js',
       './abac/files/dir3.test',
       './abac/files/dir3.test/File.js',
-      './abac/files/dir3.test/File.test.js'
-    ]
+      './abac/files/dir3.test/File.test.js',
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function reflectComplexInherit */
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 reflectComplexInherit.rapidity = -1;
 reflectComplexInherit.timeOut = 300000;
@@ -5185,7 +5257,7 @@ function withDoInfo( test )
   {
     test.case = '.hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5200,7 +5272,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5215,7 +5287,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5230,10 +5302,10 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 11 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( op.output, 'local :' ), 7 );
+    // test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
   });
@@ -5245,7 +5317,7 @@ function withDoInfo( test )
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 7 );
@@ -5340,7 +5412,7 @@ function withDoStatus( test )
   {
     test.case = 'no changes';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 13 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     return null;
@@ -5351,9 +5423,9 @@ function withDoStatus( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'changes';
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/README.md' ), '\n' );
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/README.md' ), '\n' );
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/LICENSE' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/Readme.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/Readme.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/License' ), '\n' );
     return null;
   });
 
@@ -5361,7 +5433,7 @@ function withDoStatus( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 13 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, /module::\w+ at / ), 3 );
@@ -5525,7 +5597,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( op.output, 'local :' ), 7 );
+    test.identical( _.strCount( op.output, 'local :' ), 4 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -5648,7 +5720,7 @@ hookGitMake.timeOut = 300000;
 
 //
 
-function hookPrepare( test ) /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
+function hookPrepare( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5828,24 +5900,6 @@ function hookHlink( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitConflict' );
-
-  // let originalShell = _.process.starter /* aaa : for Dmytro : ? */ /* Dmytro : improved */
-  // ({
-  //   currentPath : a.abs( 'original' ),
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
-  //
-  // let cloneShell = _.process.starter /* aaa : for Dmytro : ? */ /* Dmytro : not used */
-  // ({
-  //   currentPath : a.abs( 'clone' ),
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : a.ready,
-  //   mode : 'shell',
-  // })
 
   /* - */
 
@@ -6067,7 +6121,11 @@ function hookGitPullConflict( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   a.ready.then( ( op ) =>
   {
@@ -6224,11 +6282,11 @@ copy
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -6238,11 +6296,11 @@ original
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -6832,7 +6890,11 @@ function hookGitSyncConflict( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -6926,11 +6988,11 @@ copy
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -6940,11 +7002,11 @@ original
 `
 original/f.txt
 copy
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -7006,6 +7068,8 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -7015,10 +7079,13 @@ function hookGitSyncRestoreHardLinksWithShared( test )
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
-
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -7073,11 +7140,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -7473,187 +7540,187 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
-function hookPublish2( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
-    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\s\./ ), 1 );
-    return null;
-  })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am third' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
-    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am fourth' });
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* */
-
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
-  .then( ( op ) =>
-  {
-    test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '> git pull' ), 0 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 0 );
-    test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
-    test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
-    test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
-    test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
-    return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/ .call publish2' )
-  .then( ( op ) =>
-  {
-    test.case = 'without option `tag`, should throw error';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( 'original' );
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    a.shell( 'git clone repo/ clone' );
-    return a.ready;
-  }
-}
+// function hookPublish2( test )
+// {
+//   let context = this;
+//   let a = context.assetFor( test, 'gitPush' );
+//
+//   /* */
+//
+//   begin().then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - committing and pushing';
+//     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, /\s\./ ), 1 );
+//     return null;
+//   })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - only pulling';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - pulling, committing and pushing';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am third' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 1 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.ready.then( () =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 force:1 - forced pulling, committing and pushing';
+//     a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+//     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add --all' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am fourth' });
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   .then( ( op ) =>
+//   {
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 1 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 1 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* */
+//
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   a.appStart( '.with original/ .call publish2 tag:alpha dry:1 force:1' )
+//   .then( ( op ) =>
+//   {
+//     test.case = '.with original/ .call publish2 tag:alpha dry:1 - nothing to publish';
+//     test.identical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+//     test.identical( _.strCount( op.output, '> git pull' ), 0 );
+//     test.identical( _.strCount( op.output, '> git add --all' ), 0 );
+//     test.identical( _.strCount( op.output, '> git commit -am "."' ), 0 );
+//     test.identical( _.strCount( op.output, '> git push -u origin --all' ), 0 );
+//     test.identical( _.strCount( op.output, '+ Publishing module::clone at' ), 1 );
+//     test.identical( _.strCount( op.output, '{- Symbol maybe -}' ), 0 );
+//     test.identical( _.strCount( op.output, ' x Nothing to publish in clone' ), 0 );
+//     test.identical( _.strCount( op.output, 'Done hook::publish2 tag:alpha dry:1' ), 1 );
+//     return null;
+//   })
+//   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+//
+//   /* - */
+//
+//   a.appStartNonThrowing( '.with original/ .call publish2' )
+//   .then( ( op ) =>
+//   {
+//     test.case = 'without option `tag`, should throw error';
+//     test.notIdentical( op.exitCode, 0 );
+//     test.identical( _.strCount( op.output, 'Expects option {-tag-}' ), 1 );
+//
+//     return null;
+//   });
+//
+//   /* - */
+//
+//   return a.ready;
+//
+//   /* */
+//
+//   function begin()
+//   {
+//     a.ready.then( () =>
+//     {
+//       a.reflect();
+//       a.fileProvider.dirMake( a.abs( 'repo' ) );
+//       return null;
+//     });
+//     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+//     let currentPath = a.abs( 'original' );
+//     a.shell({ currentPath, execPath : 'git init' });
+//     a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+//     a.shell({ currentPath, execPath : 'git add --all' });
+//     a.shell({ currentPath, execPath : 'git commit -am first' });
+//     a.shell({ currentPath, execPath : 'git push -u origin --all' });
+//     a.shell( 'git clone repo/ clone' );
+//     return a.ready;
+//   }
+// }
 
 //
 
@@ -8422,29 +8489,16 @@ function modulesTreeLocal( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  begin().then( () =>
   {
     test.case = '.imply v:1 ; .with */* .modules.tree';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.imply v:1 ; .with */* .modules.tree' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -8481,12 +8535,24 @@ Command ".imply v:1 ; .with */* .modules.tree"
     test.equivalent( op.output, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeLocal */
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 //
 
@@ -8494,7 +8560,7 @@ function modulesTreeHierarchyRemote( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
   let submodulesZ = a.fileProvider.fileReadUnknown( a.abs( 'z.will.yml' ) ).submodule;
   let submodulesA = a.fileProvider.fileReadUnknown( a.abs( 'group1/a.will.yml' ) ).submodule;
@@ -8542,9 +8608,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8559,25 +8624,24 @@ function modulesTreeHierarchyRemote( test )
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
-    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
    +-- module::${ keysZ[ 0 ] }
-   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
-   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    | +-- module::${ keysA[ 2 ] }
-   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 1 ] }
-   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
-   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 2 ] }
    | +-- module::${ keysC[ 0 ] }
-   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
-   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
-   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ].replace( /\/(!.*$)/, '$1' ) }
 `;
 
     test.identical( _.strCount( op.output, exp ), 1 );
@@ -8587,9 +8651,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8610,9 +8673,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8654,9 +8716,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8671,25 +8732,24 @@ function modulesTreeHierarchyRemote( test )
     test.case = '.with ** .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
-    let submodulesAReplaced = submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' );
     let exp =
 `
  +-- module::z
    +-- module::${ keysZ[ 0 ] }
-   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesAReplaced }
-   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ] }
+   | +-- module::${ keysA[ 0 ] } - path::remote:=${ submodulesA[ keysA[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysA[ 1 ] } - path::remote:=${ submodulesA[ keysA[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    | +-- module::${ keysA[ 2 ] }
-   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
+   |   +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   |   +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 1 ] }
-   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ] }
-   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ] }
+   | +-- module::${ keysB[ 0 ] } - path::remote:=${ submodulesB[ keysB[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysB[ 1 ] } - path::remote:=${ submodulesB[ keysB[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
    +-- module::${ keysZ[ 2 ] }
    | +-- module::${ keysC[ 0 ] }
-   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ] }
-   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ] }
-   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ] }
-   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ] }
+   | | +-- module::${ keysA0[ 0 ] } - path::remote:=${ submodulesA0[ keysA0[ 0 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | | +-- module::${ keysA0[ 1 ] } - path::remote:=${ submodulesA0[ keysA0[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   | +-- module::${ keysC[ 1 ] } - path::remote:=${ submodulesC[ keysC[ 1 ] ].replace( /\/(!.*$)/, '$1' ) }
+   +-- module::${ keysZ[ 3 ] } - path::remote:=${ submodulesZ[ keysZ[ 3 ] ].replace( /\/(!.*$)/, '$1' ) }
 `;
 
     test.identical( _.strCount( op.output, exp ), 1 );
@@ -8699,9 +8759,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8722,9 +8781,8 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 10 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
@@ -8851,25 +8909,16 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
 
   /* - */
 
-  a.appStart({ execPath : '.with group1/group10/a0 .export' })
-  a.appStart({ execPath : '.with group1/a .export' })
-  a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' })
+  a.appStart({ execPath : '.with group1/group10/a0 .export' });
+  a.appStart({ execPath : '.with group1/a .export' });
+  a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
@@ -11327,21 +11376,230 @@ function exportSecond( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportSecond' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  begin();
+
+  /* */
+
+  a.ready.then( ( op ) =>
   {
     test.case = '.export';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.export' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, '+ Write out willfile' ), 2 );
+    test.identical( _.strCount( op.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
+
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
+
+    var files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
+
+    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportSecond.out.will.yml' ) );
+
+    outfile = outfile.module[ 'ExportSecond.out' ];
+
+    var expected =
+    {
+      'reflect.proto.' :
+      {
+        'src' :
+        {
+          'filePath' : { 'path::proto' : 'path::out.*=1' },
+          'prefixPath' : ''
+        },
+        'dst' : { 'prefixPath' : '' },
+        'criterion' : { 'debug' : 0 },
+        'inherit' : [ 'predefined.*' ],
+      },
+      'reflect.proto.debug' :
+      {
+        'src' :
+        {
+          'filePath' : { 'path::proto' : 'path::out.*=1' }
+        },
+        'criterion' : { 'debug' : 1 },
+        'inherit' : [ 'predefined.*' ],
+      },
+      'exported.doc.export' :
+      {
+        'src' :
+        {
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../doc'
+        },
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
+      },
+      'exported.files.doc.export' :
+      {
+        'src' :
+        {
+          'filePath' : { 'path::exported.files.doc.export' : '' },
+          'basePath' : '.',
+          'prefixPath' : 'path::exported.dir.doc.export',
+          'recursive' : 0
+        },
+        'recursive' : 0,
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+      },
+      'exported.proto.export' :
+      {
+        'src' :
+        {
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../proto'
+        },
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
+      },
+      'exported.files.proto.export' :
+      {
+        'src' :
+        {
+          'filePath' : { 'path::exported.files.proto.export' : '' },
+          'basePath' : '.',
+          'prefixPath' : 'path::exported.dir.proto.export',
+          'recursive' : 0
+        },
+        'recursive' : 0,
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+      }
+    };
+    test.identical( outfile.reflector, expected );
+
+    var expected =
+    {
+      'module.willfiles' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : 'ExportSecond.out.will.yml'
+      },
+      'module.common' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : 'ExportSecond.out'
+      },
+      'module.original.willfiles' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
+      },
+      'module.peer.willfiles' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
+      },
+      'download' :
+      {
+        'criterion' : { 'predefined' : 1 }
+      },
+      'in' :
+      {
+        'path' : '.'
+      },
+      'temp' : { 'path' : '.' },
+      'out' :
+      {
+        'path' : '.'
+      },
+      'out.debug' :
+      {
+        'criterion' : { 'debug' : 1 },
+        'path' : 'debug/*'
+      },
+      'out.release' :
+      {
+        'criterion' : { 'debug' : 0 },
+        'path' : 'release/*'
+      },
+      'proto' : { 'path' : '../proto/**' },
+      'doc' : { 'path' : '../doc/**' },
+      'exported.dir.doc.export' :
+      {
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : '../doc'
+      },
+      'exported.files.doc.export' :
+      {
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : [ '../doc', '../doc/File.md' ]
+      },
+      'exported.dir.proto.export' :
+      {
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : '../proto'
+      },
+      'exported.files.proto.export' :
+      {
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : [ '../proto', '../proto/-NotExecluded.js', '../proto/.NotExecluded.js', '../proto/File.js' ]
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
+      }
+    };
+    test.identical( outfile.path, expected );
+
+    var expected =
+    {
+      'doc.export' :
+      {
+        version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
+        criterion : { doc : 1, export : 1 },
+        exportedReflector : 'reflector::exported.doc.export',
+        exportedFilesReflector : 'reflector::exported.files.doc.export',
+        exportedDirPath : 'path::exported.dir.doc.export',
+        exportedFilesPath : 'path::exported.files.doc.export',
+      },
+      'proto.export' :
+      {
+        version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
+        criterion : { proto : 1, export : 1 },
+        exportedReflector : 'reflector::exported.proto.export',
+        exportedFilesReflector : 'reflector::exported.files.proto.export',
+        exportedDirPath : 'path::exported.dir.proto.export',
+        exportedFilesPath : 'path::exported.files.proto.export',
+      }
+    };
+    test.identical( outfile.exported, expected );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = '.export';
+    return null;
+  });
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.export' });
+
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -11427,7 +11685,7 @@ function exportSecond( test )
         'recursive' : 0,
         'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
       }
-    }
+    };
     test.identical( outfile.reflector, expected );
 
     var expected =
@@ -11456,10 +11714,6 @@ function exportSecond( test )
       {
         'criterion' : { 'predefined' : 1 }
       },
-      // 'remote' :
-      // {
-      //   'criterion' : { 'predefined' : 1 }
-      // },
       'in' :
       {
         'path' : '.'
@@ -11506,7 +11760,7 @@ function exportSecond( test )
         'criterion' : { 'predefined' : 1 },
         'path' : '..'
       }
-    }
+    };
     test.identical( outfile.path, expected );
 
     var expected =
@@ -11535,227 +11789,28 @@ function exportSecond( test )
         exportedDirPath : 'path::exported.dir.proto.export',
         exportedFilesPath : 'path::exported.files.proto.export',
       }
-    }
+    };
     test.identical( outfile.exported, expected );
 
     return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    test.case = '.export';
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( op.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
-
-    test.true( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
-
-    var files = a.find( a.abs( 'out' ) );
-    test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
-
-    var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/ExportSecond.out.will.yml' ) );
-
-    outfile = outfile.module[ 'ExportSecond.out' ]
-
-    var expected =
-    {
-      'reflect.proto.' :
-      {
-        'src' :
-        {
-          'filePath' : { 'path::proto' : 'path::out.*=1' },
-          'prefixPath' : ''
-        },
-        'dst' : { 'prefixPath' : '' },
-        'criterion' : { 'debug' : 0 },
-        'inherit' : [ 'predefined.*' ],
-      },
-      'reflect.proto.debug' :
-      {
-        'src' :
-        {
-          'filePath' : { 'path::proto' : 'path::out.*=1' }
-        },
-        'criterion' : { 'debug' : 1 },
-        'inherit' : [ 'predefined.*' ],
-      },
-      'exported.doc.export' :
-      {
-        'src' :
-        {
-          'filePath' : { '**' : '' },
-          'prefixPath' : '../doc'
-        },
-        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
-        'mandatory' : 1,
-        'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
-      },
-      'exported.files.doc.export' :
-      {
-        'src' :
-        {
-          'filePath' : { 'path::exported.files.doc.export' : '' },
-          'basePath' : '.',
-          'prefixPath' : 'path::exported.dir.doc.export',
-          'recursive' : 0
-        },
-        'recursive' : 0,
-        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
-      },
-      'exported.proto.export' :
-      {
-        'src' :
-        {
-          'filePath' : { '**' : '' },
-          'prefixPath' : '../proto'
-        },
-        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
-        'mandatory' : 1,
-        'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
-      },
-      'exported.files.proto.export' :
-      {
-        'src' :
-        {
-          'filePath' : { 'path::exported.files.proto.export' : '' },
-          'basePath' : '.',
-          'prefixPath' : 'path::exported.dir.proto.export',
-          'recursive' : 0
-        },
-        'recursive' : 0,
-        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
-      }
-    }
-    test.identical( outfile.reflector, expected );
-
-    var expected =
-    {
-      'module.willfiles' :
-      {
-        'criterion' : { 'predefined' : 1 },
-        'path' : 'ExportSecond.out.will.yml'
-      },
-      'module.common' :
-      {
-        'criterion' : { 'predefined' : 1 },
-        'path' : 'ExportSecond.out'
-      },
-      'module.original.willfiles' :
-      {
-        'criterion' : { 'predefined' : 1 },
-        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
-      },
-      'module.peer.willfiles' :
-      {
-        'criterion' : { 'predefined' : 1 },
-        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
-      },
-      'download' :
-      {
-        'criterion' : { 'predefined' : 1 }
-      },
-      // 'remote' :
-      // {
-      //   'criterion' : { 'predefined' : 1 }
-      // },
-      'in' :
-      {
-        'path' : '.'
-      },
-      'temp' : { 'path' : '.' },
-      'out' :
-      {
-        'path' : '.'
-      },
-      'out.debug' :
-      {
-        'criterion' : { 'debug' : 1 },
-        'path' : 'debug/*'
-      },
-      'out.release' :
-      {
-        'criterion' : { 'debug' : 0 },
-        'path' : 'release/*'
-      },
-      'proto' : { 'path' : '../proto/**' },
-      'doc' : { 'path' : '../doc/**' },
-      'exported.dir.doc.export' :
-      {
-        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
-        'path' : '../doc'
-      },
-      'exported.files.doc.export' :
-      {
-        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
-        'path' : [ '../doc', '../doc/File.md' ]
-      },
-      'exported.dir.proto.export' :
-      {
-        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
-        'path' : '../proto'
-      },
-      'exported.files.proto.export' :
-      {
-        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
-        'path' : [ '../proto', '../proto/-NotExecluded.js', '../proto/.NotExecluded.js', '../proto/File.js' ]
-      },
-      'module.peer.in' :
-      {
-        'criterion' : { 'predefined' : 1 },
-        'path' : '..'
-      }
-    }
-    test.identical( outfile.path, expected );
-
-    var expected =
-    {
-      'doc.export' :
-      {
-        version : '0.0.0',
-        recursive : 0,
-        withIntegrated : 2,
-        tar : 0,
-        criterion : { doc : 1, export : 1 },
-        exportedReflector : 'reflector::exported.doc.export',
-        exportedFilesReflector : 'reflector::exported.files.doc.export',
-        exportedDirPath : 'path::exported.dir.doc.export',
-        exportedFilesPath : 'path::exported.files.doc.export',
-      },
-      'proto.export' :
-      {
-        version : '0.0.0',
-        recursive : 0,
-        withIntegrated : 2,
-        tar : 0,
-        criterion : { proto : 1, export : 1 },
-        exportedReflector : 'reflector::exported.proto.export',
-        exportedFilesReflector : 'reflector::exported.files.proto.export',
-        exportedDirPath : 'path::exported.dir.proto.export',
-        exportedFilesPath : 'path::exported.files.proto.export',
-      }
-    }
-    test.identical( outfile.exported, expected );
-
-    return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileRename({ srcPath : a.abs( 'proto/NotExecluded1.js' ), dstPath : a.abs( 'proto/-NotExecluded.js' ) });
+      a.fileProvider.fileRename({ srcPath : a.abs( 'proto/NotExecluded2.js' ), dstPath : a.abs( 'proto/.NotExecluded.js' ) });
+      return null;
+    });
+  }
 }
 
 exportSecond.timeOut = 300000;
@@ -12331,68 +12386,57 @@ function exportImportMultiple( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'export submodule';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-
     return null;
   })
 
-  a.appStart({ execPath : '.with . .export debug:0' })
-  a.appStart({ execPath : '.with . .export debug:1' })
+  a.appStart({ execPath : '.with . .export debug:0' });
+  a.appStart({ execPath : '.with . .export debug:1' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .export debug:0';
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .export debug:0' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean dry:1' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
@@ -12400,48 +12444,43 @@ function exportImportMultiple( test )
     test.true( _.strHas( op.output, 'Clean will delete 5 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 5 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .export debug:0 ; .with super .export debug:1';
-
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-
     return null;
-  })
+  });
 
+  a.appStart({ execPath : '.with . .export debug:0' })
+  a.appStart({ execPath : '.with . .export debug:1' })
   a.appStart({ execPath : '.with super .export debug:0' })
   a.appStart({ execPath : '.with super .export debug:1' })
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
@@ -12450,20 +12489,17 @@ function exportImportMultiple( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean dry:1' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( op.exitCode, 0 );
@@ -12471,29 +12507,26 @@ function exportImportMultiple( test )
     test.true( _.strHas( op.output, 'Clean will delete 8 file(s)' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with super .clean';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with super .clean' })
-
   .then( ( op ) =>
   {
-
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 8 file(s)' ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -13126,14 +13159,16 @@ function exportRecursive( test )
 {
   let context = this;
   let a = context.assetFor( test, 'resolvePathOfSubmodulesExported' );
-  a.reflect();
-  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
   /* - */
 
+  begin();
+
+  /* */
+
   a.ready.then( () =>
   {
-    test.case = '.with ab/ .export.recursive -- first'
+    test.case = '.with ab/ .export.recursive -- first';
     return null;
   });
 
@@ -13158,7 +13193,7 @@ function exportRecursive( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with ab/ .export.recursive -- second'
+    test.case = '.with ab/ .export.recursive -- second';
     return null;
   });
 
@@ -13182,6 +13217,19 @@ function exportRecursive( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      a.fileProvider.filesDelete( a.abs( 'out' ) );
+      return null;
+    });
+  }
 }
 
 //
@@ -13395,14 +13443,17 @@ function exportRecursiveLocal( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
-  a.reflect();
 
   /* - */
 
-  a.appStart({ execPath : '.with */* .clean' })
-  a.appStart({ execPath : '.with */* .export' })
+  begin();
 
-  .finally( ( err, op ) =>
+  /* */
+
+  a.appStart({ execPath : '.with */* .clean' });
+  a.appStart({ execPath : '.with */* .export' });
+
+  a.ready.finally( ( err, op ) =>
   {
     test.case = 'first';
 
@@ -13412,7 +13463,7 @@ function exportRecursiveLocal( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 9 );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, op ) =>
@@ -13427,9 +13478,9 @@ function exportRecursiveLocal( test )
     test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.with */* .export' })
   .finally( ( err, op ) =>
@@ -13441,7 +13492,7 @@ function exportRecursiveLocal( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 9 );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, op ) =>
@@ -13456,12 +13507,24 @@ function exportRecursiveLocal( test )
     test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportRecursiveLocal */
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 exportRecursiveLocal.rapidity = -1;
 exportRecursiveLocal.timeOut = 300000;
@@ -13755,11 +13818,34 @@ function exportTracing( test )
 
   .finally( ( err, op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    // test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
-    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
-    _.errAttend( err );
+    test.identical( op.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
+
     return null;
   })
 
@@ -13872,7 +13958,7 @@ function exportWithRemoteSubmodulesMin( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -14154,6 +14240,20 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/sample/trivial',
       './group1/group10',
       './group1/group10/.module',
+      './group1/group10/.module/ModuleForTesting1',
+      './group1/group10/.module/ModuleForTesting1/.circleci',
+      './group1/group10/.module/ModuleForTesting1/.github',
+      './group1/group10/.module/ModuleForTesting1/.github/workflows',
+      './group1/group10/.module/ModuleForTesting1/doc',
+      './group1/group10/.module/ModuleForTesting1/out',
+      './group1/group10/.module/ModuleForTesting1/proto',
+      './group1/group10/.module/ModuleForTesting1/proto/node_modules',
+      './group1/group10/.module/ModuleForTesting1/proto/wtools',
+      './group1/group10/.module/ModuleForTesting1/proto/wtools/testing',
+      './group1/group10/.module/ModuleForTesting1/proto/wtools/testing/l1',
+      './group1/group10/.module/ModuleForTesting1/proto/wtools/testing/l1.test',
+      './group1/group10/.module/ModuleForTesting1/sample',
+      './group1/group10/.module/ModuleForTesting1/sample/trivial',
       './group1/group10/.module/ModuleForTesting1b',
       './group1/group10/.module/ModuleForTesting1b/.circleci',
       './group1/group10/.module/ModuleForTesting1b/.github',
@@ -14169,29 +14269,15 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/proto/wtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
       './group1/group10/.module/ModuleForTesting1b/sample/trivial',
-      './group1/group10/.module/ModuleForTesting2a',
-      './group1/group10/.module/ModuleForTesting2a/.circleci',
-      './group1/group10/.module/ModuleForTesting2a/.github',
-      './group1/group10/.module/ModuleForTesting2a/.github/workflows',
-      './group1/group10/.module/ModuleForTesting2a/doc',
-      './group1/group10/.module/ModuleForTesting2a/out',
-      './group1/group10/.module/ModuleForTesting2a/proto',
-      './group1/group10/.module/ModuleForTesting2a/proto/node_modules',
-      './group1/group10/.module/ModuleForTesting2a/proto/wtools',
-      './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing',
-      './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3',
-      './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3/testing2a',
-      './group1/group10/.module/ModuleForTesting2a/proto/wtools/testing/l3.test',
-      './group1/group10/.module/ModuleForTesting2a/sample',
-      './group1/group10/.module/ModuleForTesting2a/sample/trivial',
       './group1/group10/out',
       './group1/group10/out/debug',
       './group1/group10/out/debug/node_modules',
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
+      './group1/group10/out/debug/wtools/testing/l1',
+      './group1/group10/out/debug/wtools/testing/l1.test',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a',
       './group1/group10/out/debug/wtools/testing/l3.test',
       './group1/out',
       './group1/out/debug',
@@ -14203,7 +14289,6 @@ function exportWithRemoteSubmodules( test )
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing12',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing2a',
       './group1/out/debug/wtools/testing/l3.test',
       './group2',
       './group2/.module',
@@ -14227,9 +14312,10 @@ function exportWithRemoteSubmodules( test )
       './group2/out/debug/node_modules',
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
+      './group2/out/debug/wtools/testing/l1',
+      './group2/out/debug/wtools/testing/l1.test',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
-      './group2/out/debug/wtools/testing/l3/testing2a',
       './group2/out/debug/wtools/testing/l3.test',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
@@ -14244,7 +14330,6 @@ function exportWithRemoteSubmodules( test )
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing12',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing2a',
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
@@ -14312,24 +14397,32 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/group10/out/a0.out.will.yml',
       './group1/group10/out/debug',
       './group1/group10/out/debug/Integration.test.ss',
+      './group1/group10/out/debug/node_modules',
+      './group1/group10/out/debug/node_modules/wmodulefortesting1',
+      './group1/group10/out/debug/node_modules/wmodulefortesting1b',
       './group1/group10/out/debug/wtools',
       './group1/group10/out/debug/wtools/testing',
       './group1/group10/out/debug/wtools/testing/Basic.s',
+      './group1/group10/out/debug/wtools/testing/l1',
+      './group1/group10/out/debug/wtools/testing/l1/Include.s',
+      './group1/group10/out/debug/wtools/testing/l1/ModuleForTesting1.s',
+      './group1/group10/out/debug/wtools/testing/l1.test',
+      './group1/group10/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/group10/out/debug/wtools/testing/l3',
       './group1/group10/out/debug/wtools/testing/l3/testing1b',
       './group1/group10/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/group10/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a/Include.s',
-      './group1/group10/out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './group1/group10/out/debug/wtools/testing/l3.test',
       './group1/group10/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './group1/group10/out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/b.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/Integration.test.ss',
+      './group1/out/debug/node_modules',
+      './group1/out/debug/node_modules/wmodulefortesting1',
+      './group1/out/debug/node_modules/wmodulefortesting12',
+      './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
       './group1/out/debug/wtools/testing/Basic.s',
@@ -14345,13 +14438,9 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/out/debug/wtools/testing/l3/testing1b',
       './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3/testing2a',
-      './group1/out/debug/wtools/testing/l3/testing2a/Include.s',
-      './group1/out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './group1/out/debug/wtools/testing/l3.test',
       './group1/out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './group2',
       './group2/c.will.yml',
       './group2/.module',
@@ -14359,19 +14448,24 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group2/out/c.out.will.yml',
       './group2/out/debug',
       './group2/out/debug/Integration.test.ss',
+      './group2/out/debug/node_modules',
+      './group2/out/debug/node_modules/wmodulefortesting1',
+      './group2/out/debug/node_modules/wmodulefortesting12ab',
+      './group2/out/debug/node_modules/wmodulefortesting1b',
       './group2/out/debug/wtools',
       './group2/out/debug/wtools/testing',
       './group2/out/debug/wtools/testing/Basic.s',
+      './group2/out/debug/wtools/testing/l1',
+      './group2/out/debug/wtools/testing/l1/Include.s',
+      './group2/out/debug/wtools/testing/l1/ModuleForTesting1.s',
+      './group2/out/debug/wtools/testing/l1.test',
+      './group2/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group2/out/debug/wtools/testing/l3',
       './group2/out/debug/wtools/testing/l3/testing1b',
       './group2/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group2/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group2/out/debug/wtools/testing/l3/testing2a',
-      './group2/out/debug/wtools/testing/l3/testing2a/Include.s',
-      './group2/out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './group2/out/debug/wtools/testing/l3.test',
       './group2/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './group2/out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './group2/out/debug/wtools/testing/l4',
       './group2/out/debug/wtools/testing/l4/testing12ab',
       './group2/out/debug/wtools/testing/l4/testing12ab/Include.s',
@@ -14382,6 +14476,11 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/Integration.test.ss',
+      './out/debug/node_modules',
+      './out/debug/node_modules/wmodulefortesting1',
+      './out/debug/node_modules/wmodulefortesting12',
+      './out/debug/node_modules/wmodulefortesting12ab',
+      './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
       './out/debug/wtools/testing/Basic.s',
@@ -14397,13 +14496,9 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/debug/wtools/testing/l3/testing1b',
       './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3/testing2a',
-      './out/debug/wtools/testing/l3/testing2a/Include.s',
-      './out/debug/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './out/debug/wtools/testing/l3.test',
       './out/debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting2a.test.s',
       './out/debug/wtools/testing/l4',
       './out/debug/wtools/testing/l4/testing12ab',
       './out/debug/wtools/testing/l4/testing12ab/Include.s',
@@ -14435,32 +14530,29 @@ check there is no annoying information about lack of remote submodules of submod
 function exportDiffDownloadPathsRegular( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'hierarchyDiffDownloadPathsRegular' );
+  let a = context.assetFor( test, 'exportDiffDownloadPathsRegular' );
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with c .clean recursive:2' )
-  a.appStart( '.with c .export.recursive' )
+  a.appStart( '.with c .clean recursive:2' );
+  a.appStart( '.with c .export.recursive' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
-    // var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14470,26 +14562,25 @@ function exportDiffDownloadPathsRegular( test )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
     test.identical( _.strCount( op.output, '. Opened .' ), 36 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 6 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
-    test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with c .export.recursive' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14498,20 +14589,19 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
     test.identical( _.strCount( op.output, 'submodule(s) of' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportDiffDownloadPathsRegular */
+}
 
 exportDiffDownloadPathsRegular.timeOut = 300000;
 
@@ -14545,14 +14635,14 @@ function exportHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
@@ -14568,10 +14658,10 @@ function exportHierarchyRemote( test )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 38 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
-    test.identical( _.strCount( op.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 4/8 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, 'module::z were downloaded' ), 2 );
     test.identical( _.strCount( op.output, 'were downloaded' ), 6 );
 
@@ -14603,14 +14693,14 @@ function exportHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
@@ -14626,11 +14716,11 @@ function exportHierarchyRemote( test )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 38 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( op.output, 'module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, 'were downloaded' ), 9 );
+    test.identical( _.strCount( op.output, 'were downloaded' ), 8 );
 
     return null;
   })
@@ -15216,7 +15306,7 @@ exportAuto.description =
 function exportOutdated2( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* aaa xxx : assets naming transition is required. ask */ /* Dmytro : Yevgen renamed assets */
+  let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' );
 
   /* - */
 
@@ -15518,22 +15608,16 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   let context = this;
   let a = context.assetFor( test );
 
-  a.reflect();
-
-  var exp = [ '.', './will.yml' ];
-  var got = a.find( a.abs( '.' ) );
-  test.identical( got, exp );
-
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export';
+    a.reflectMinimal();
     return null;
   });
 
   a.appStart( '.export' );
-
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15550,9 +15634,9 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/.gitattributes',
       './.module/ModuleForTesting12/.gitignore',
       './.module/ModuleForTesting12/.im.will.yml',
-      './.module/ModuleForTesting12/LICENSE',
+      './.module/ModuleForTesting12/License',
       './.module/ModuleForTesting12/package.json',
-      './.module/ModuleForTesting12/README.md',
+      './.module/ModuleForTesting12/Readme.md',
       './.module/ModuleForTesting12/was.package.json',
       './.module/ModuleForTesting12/.circleci',
       './.module/ModuleForTesting12/.circleci/config.yml',
@@ -15677,43 +15761,32 @@ function exportTwoFirstIsDepOfSecond( test ) /* xxx : for Kos */
 {
   let context = this;
   let a = context.assetFor( test, 'exportTwoFirstIsDepOfSecond' );
+  a.reflectMinimal();
 
-  a.shellSync = _.process.starter
-  ({
-    currentPath : a.abs( '.' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  })
+  /* - */
 
-  a.reflect();
-
-  a.shellSync( 'git clone https://github.com/Wandalen/wModuleForTesting1.git')
-  a.shellSync( 'git clone https://github.com/Wandalen/wModuleForTesting3.git')
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting1.git' );
+  a.shell( 'git clone https://github.com/Wandalen/wModuleForTesting3.git' );
 
   a.appStart({ args : `.with "*/*" .export` })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Out-willfile is inconsistent with its in-willfiles' ), 0 );
 
-    test.will = 'ModuleForTesting3 should not download copy of ModuleForTesting1, but reuse already opened'
+    test.will = 'ModuleForTesting3 should not download copy of ModuleForTesting1, but reuse already opened';
     let modulesOfTesting3 = a.fileProvider.dirRead( a.abs( 'wModuleForTesting3/.module' ) );
     test.identical( modulesOfTesting3, null );
 
-    test.will = 'consistency of ModuleForTesting3 contains updated values for ModuleForTesting1'
-    let ModuleForTesting1Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) )
-    let ModuleForTesting3Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting3/out/wModuleForTesting3.out.will.yml' ) )
+    test.will = 'consistency of ModuleForTesting3 contains updated values for ModuleForTesting1';
+    let ModuleForTesting1Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
+    let ModuleForTesting3Out = a.fileProvider.fileReadUnknown( a.abs( 'wModuleForTesting3/out/wModuleForTesting3.out.will.yml' ) );
     let expectedModule1Im = ModuleForTesting1Out.consistency[ '../.im.will.yml' ];
     let expectedModule1Ex = ModuleForTesting1Out.consistency[ '../.ex.will.yml' ];
     let gotModule1Im = ModuleForTesting3Out.consistency[ '../.module/ModuleForTesting1/.im.will.yml' ];
     let gotModule1Ex = ModuleForTesting3Out.consistency[ '../.module/ModuleForTesting1/.ex.will.yml' ];
-    test.identical( gotModule1Im, expectedModule1Im )
-    test.identical( gotModule1Ex, expectedModule1Ex )
+    test.identical( gotModule1Im, expectedModule1Im );
+    test.identical( gotModule1Ex, expectedModule1Ex );
 
     return null;
   })
@@ -15960,21 +16033,18 @@ function importOutWithDeletedSource( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  begin().then( ( op ) =>
   {
     test.case = 'export first';
-    a.reflect();
-
     return null;
-  })
+  });
 
-  a.appStart({ args : '.clean' })
-  a.appStart({ args : '.with a .export' })
-  a.appStart({ args : '.with b .export' })
-  a.appStart({ args : '.with ab-named .export' })
+  a.appStart({ args : '.clean' });
+  a.appStart({ args : '.with a .export' });
+  a.appStart({ args : '.with b .export' });
+  a.appStart({ args : '.with ab-named .export' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -15988,10 +16058,9 @@ function importOutWithDeletedSource( test )
     a.fileProvider.filesDelete( a.abs( 'ab-named.will.yml' ) );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with out/module-ab-named .modules.list' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16004,11 +16073,23 @@ function importOutWithDeletedSource( test )
     test.identical( _.strCount( op.output, 'module::' ), 9 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
@@ -16382,6 +16463,189 @@ function cleanSingleModule( test )
 
 //
 
+function cleanItself( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'cleanItself' );
+
+  /* - */
+
+  begin( 'ImplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitTempAndOut .clean' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::ImplicitTempAndOut should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.out.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ImplicitOut' ).then( () =>
+  {
+    test.case = 'clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitOut .clean' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::ImplicitOut should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.out.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ExplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'clean with explicit declaration of path::out in directory path::in';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ExplicitTempAndOut .clean' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::ExplicitTempAndOut should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.out.will.yml',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ImplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'dry - 1, clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitTempAndOut .clean dry:1' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::ImplicitTempAndOut should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.out.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ImplicitOut' ).then( () =>
+  {
+    test.case = 'dry - 1, clean with implicit declaration of path::out';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ImplicitOut .clean dry:1' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::ImplicitOut should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.out.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  begin( 'ExplicitTempAndOut' ).then( () =>
+  {
+    test.case = 'dry - 1, clean with explicit declaration of path::out in directory path::in';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ExplicitTempAndOut .clean dry:1' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::ExplicitTempAndOut should not delete itself' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.' ) );
+    var exp =
+    [
+      '.module',
+      'ExplicitTempAndOut.out.will.yml',
+      'ExplicitTempAndOut.will.yml',
+      'ImplicitOut.will.yml',
+      'ImplicitTempAndOut.will.yml',
+      'proto'
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin( name )
+  {
+    a.ready.then( () => { a.reflectMinimal(); return null } );
+    a.appStart( `.with ${ name } .export` );
+    return a.ready;
+  }
+}
+
+//
+
 function cleanBroken1( test )
 {
   let context = this;
@@ -16394,19 +16658,15 @@ function cleanBroken1( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.clean ';
+    test.case = '.clean dry:1';
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     return null;
   })
 
-  /* - */
-
   a.appStart({ execPath : '.clean dry:1' })
   .then( ( op ) =>
   {
-    test.case = '.clean dry:1';
-
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( op.exitCode, 0 );
@@ -16418,12 +16678,18 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* */
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    return null;
+  })
 
   a.appStart({ execPath : '.clean' })
   .then( ( op ) =>
   {
-    test.case = '.clean';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
@@ -16431,13 +16697,19 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* */
+  /* - */
 
+  a.ready.then( () =>
+  {
+    test.case = '.clean then .export';
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
-    test.case = '.export';
-
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -16450,21 +16722,20 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* */
+  /* - */
 
-  a.ready.then( ( op ) =>
+  a.ready.then( () =>
   {
+    test.case = '.clean then .export twice';
     a.reflect();
     return null;
-  });
+  })
 
-  /* */
-
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
-    test.case = '.export';
-
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -16488,7 +16759,6 @@ function cleanBroken2( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesBroken2' );
-  a.reflect();
 
   test.description = 'should handle currputed willfile properly';
 
@@ -16498,14 +16768,13 @@ function cleanBroken2( test )
 
   .then( ( op ) =>
   {
-    test.case = '.clean ';
+    test.case = '.clean dry ';
+    a.reflect();
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
 
     return null;
   })
-
-  /* - */
 
   a.appStart({ execPath : '.clean dry:1' })
 
@@ -16525,6 +16794,16 @@ function cleanBroken2( test )
 
   /* - */
 
+  .then( ( op ) =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    var files = a.find( a.abs( '.module' ) );
+    test.identical( files.length, 4 );
+
+    return null;
+  })
+
   a.appStart({ execPath : '.clean' })
 
   .then( ( op ) =>
@@ -16537,8 +16816,19 @@ function cleanBroken2( test )
     return null;
   })
 
-  /* */
+  /* - */
 
+  .then( ( op ) =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    var files = a.find( a.abs( '.module' ) );
+    test.identical( files.length, 4 );
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
   .then( ( op ) =>
   {
@@ -16561,22 +16851,22 @@ function cleanBroken2( test )
   a.ready
   .then( ( op ) =>
   {
+    test.case = '.export';
+    test.will = 'update should throw error if submodule is not downloaded but download path exists';
     a.reflect();
     return null;
   });
 
-  /* */
-
   a.appStart({ execPath : '.export', throwingExitCode : 0 })
   .then( ( op ) =>
   {
-    test.case = '.export';
-
-    test.will = 'update should throw error if submodule is not downloaded but download path exists';
 
     test.notIdentical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
     var expected = `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository`;
+    test.false( _.strHas( op.output, expected ) );
+
+    var expected = `Out-willfile should not have section(s) : "brokenFile"`
     test.true( _.strHas( op.output, expected ) );
 
     // var files = a.find( a.abs( 'out/debug' ) );
@@ -16594,29 +16884,27 @@ function cleanBroken2( test )
     return null;
   })
 
-  /* */
+  /* - */
 
   a.ready
   .then( ( op ) =>
   {
+    test.case = '.export agree1';
+    test.will = 'export should not throw error because submodule was updated by agree';
     a.reflect();
     return null;
   });
 
-  a.appStart({ execPath : '.submodules.versions.agree' })
-  a.appStart({ execPath : '.export', throwingExitCode : 0 })
+  a.appStart({ execPath : '.imply withOut:0 .submodules.versions.agree .export', throwingExitCode : 0 })
   .then( ( op ) =>
   {
-    test.case = '.export agree1';
-    test.will = 'update should not throw error because submodule was updated by agree';
-
     test.identical( op.exitCode, 0 );
 
     /* agree/update/download should not count as update of module if no change was done */
     test.identical( _.strCount( op.output, 'was updated' ), 0 );
     test.identical( _.strCount( op.output, 'to version' ), 0 );
     test.true( !_.strHas( op.output, /Module module::submodules \/ opener::ModuleForTesting2 is not downloaded, but file at .*/ ) );
-    test.true( _.strHas( op.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
+    test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules were agreed' ) );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = a.find( a.abs( 'out/debug' ) );
@@ -17017,16 +17305,13 @@ function cleanRecursiveMin( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
-
-  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
-  a.fileProvider.filesDelete( a.routinePath );
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  a.reflectMinimal();
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = 'export first'
+    test.case = 'export first';
     return null;
   });
 
@@ -17038,7 +17323,7 @@ function cleanRecursiveMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -17111,7 +17396,7 @@ function cleanRecursiveMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
@@ -17133,16 +17418,13 @@ function cleanGlobMin( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
-
-  /* Dmytro : new implementation of assetFor().reflect copies -repo, it affects results */
-  a.fileProvider.filesDelete( a.routinePath );
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  a.reflectMinimal();
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = 'export first'
+    test.case = 'export first';
     return null;
   });
 
@@ -17154,7 +17436,7 @@ function cleanGlobMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -17227,7 +17509,7 @@ function cleanGlobMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
@@ -17339,9 +17621,7 @@ function cleanDisabledModule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.clean';
     a.reflect();
@@ -17555,7 +17835,8 @@ submodule :
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    // var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17564,8 +17845,10 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
@@ -17600,7 +17883,8 @@ submodule :
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    // var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17609,8 +17893,10 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
@@ -17644,7 +17930,8 @@ submodule :
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    // var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17653,8 +17940,10 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 6 );
     test.identical( _.strCount( op.output, ' at ' ), 8 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
@@ -17697,10 +17986,14 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -17718,34 +18011,38 @@ submodule :
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean recursive:1' )
+  a.appStartNonThrowing( '.with ** .clean recursive:1' )
 
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
+    test.notIdentical( op.exitCode, 0 );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = null;
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
-    test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 0 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting1 should not delete itself' ), 1 );
 
     return null;
   })
@@ -17785,10 +18082,14 @@ submodule :
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -17836,7 +18137,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17845,8 +18146,10 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
@@ -17880,7 +18183,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17889,8 +18192,10 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
@@ -17924,7 +18229,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17933,8 +18238,10 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 6 );
     test.identical( _.strCount( op.output, ' at ' ), 8 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
@@ -17968,7 +18275,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -17977,10 +18284,14 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -17998,11 +18309,11 @@ function cleanHierarchyRemoteDry( test )
   })
 
   a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean recursive:1 dry:1' )
+  a.appStartNonThrowing( '.with ** .clean recursive:1 dry:1' )
 
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
+    test.notIdentical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
@@ -18012,7 +18323,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18021,11 +18332,15 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
-    test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 0 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 0 );
+    test.identical( _.strCount( op.output, 'module::wModuleForTesting1 should not delete itself' ), 1 );
 
     return null;
   })
@@ -18056,7 +18371,7 @@ function cleanHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18065,10 +18380,14 @@ function cleanHierarchyRemoteDry( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 19 );
-    test.identical( _.strCount( op.output, ' at ' ), 21 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
+    // test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 19 willfile(s)' ), 1 );
+    // test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at .' ), 16 );
+    // test.identical( _.strCount( op.output, ' at ' ), 21 );
+    test.identical( _.strCount( op.output, ' at ' ), 18 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -18092,19 +18411,17 @@ function cleanSubmodulesHierarchyRemote( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .clean.submodules';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with z .clean.submodules' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with z .clean.submodules' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18116,7 +18433,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18125,31 +18442,28 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
-    test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .clean.submodules';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
+  a.appStart( '.with z .submodules.download recursive:2' )
   a.appStart( '.with * .clean.submodules' )
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18161,7 +18475,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18170,30 +18484,28 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .clean.submodules recursive:1';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .clean.submodules recursive:1' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with * .clean.submodules recursive:1' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18205,7 +18517,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18214,30 +18526,28 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 19 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, ' at .' ), 3 );
     test.identical( _.strCount( op.output, ' at ' ), 5 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .clean.submodules recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .clean.submodules recursive:2' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with * .clean.submodules recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18265,23 +18575,21 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .clean.submodules recursive:1';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean.submodules recursive:1' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with ** .clean.submodules recursive:1' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18309,23 +18617,21 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .clean.submodules recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with ** .clean.submodules recursive:2' )
+  a.appStart( '.with z .submodules.download recursive:2' );
+  a.appStart( '.with ** .clean.submodules recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -18353,13 +18659,12 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function cleanSubmodulesHierarchyRemote */
+}
 
 cleanSubmodulesHierarchyRemote.rapidity = -1;
 cleanSubmodulesHierarchyRemote.timeOut = 1000000;
@@ -18397,7 +18702,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18441,7 +18746,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18485,7 +18790,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18529,7 +18834,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18573,7 +18878,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -18617,7 +18922,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -19460,8 +19765,7 @@ function submodulesDownloadSwitchBranch( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready .then( () =>
   {
     test.case = 'setup repo';
 
@@ -19664,398 +19968,312 @@ function submodulesDownloadUpdateWithSubmodulesDefault( test )
 submodulesDownloadUpdateWithSubmodulesDefault.rapidity = 1;
 submodulesDownloadUpdateWithSubmodulesDefault.timeOut = 300000;
 
-// //
 //
-// function submodulesDownloadRecursive( test )
-// {
-//   let context = this;
-//   let a = context.assetFor( test, 'hierarchyRemote' );
-//
-//   // let a = context.assetFor( test, 'hierarchyDiffDownloadPathsRegular' );
-//   // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'hierarchyRemote' );
-//   // let routinePath = _.path.join( context.suiteTempPath, test.name );
-//   // let abs = context.abs_functor( routinePath );
-//   // let rel = context.rel_functor( routinePath );
-//   // let submodulesPath = _.path.join( routinePath, '.module' );
-//   //
-//   // let ready = _.take( null );
-//   //
-//   // let start = _.process.starter
-//   // ({
-//   //   execPath : 'node ' + context.appJsPath,
-//   //   currentPath : routinePath,
-//   //   outputCollecting : 1,
-//   //   outputGraying : 1,
-//   //   outputGraying : 1,
-//   //   mode : 'spawn',
-//   //   ready : ready,
-//   // })
-//   //
-//   // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with * .submodules.download recursive:2';
-//     a.reflect();
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = null;
-//     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded in' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 26 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with ** .submodules.download recursive:2';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:2' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 26 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting1b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting12 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting2b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with * .submodules.download recursive:1';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 20 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded in' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with ** .submodules.download recursive:1';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-//     test.identical( _.strCount( op.output, '. Read 5 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 1/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 5 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:1' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-//     test.identical( _.strCount( op.output, '. Read 20 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting1b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting12 were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting2b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 10 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting1b / module::wModuleForTesting1b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab / module::wModuleForTesting12ab were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting12 / module::wModuleForTesting12 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::wModuleForTesting2b / module::wModuleForTesting2b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-//     // test.identical( _.strCount( op.output, 'submodule(s)' ), 10 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with * .submodules.download recursive:0';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with * .submodules.download recursive:0' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = null;
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-//     test.identical( _.strCount( op.output, '. Read 5 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::z were downloaded' ), 1 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   a.ready
-//
-//   .then( () =>
-//   {
-//     test.case = '.with ** .submodules.download recursive:0';
-//     // a.fileProvider.filesDelete( a.abs( '.module' ) );
-//     a.reflect();
-//     return null;
-//   })
-//
-//   a.appStart({ execPath : '.with ** .submodules.download recursive:0' })
-//
-//   .then( ( op ) =>
-//   {
-//     test.identical( op.exitCode, 0 );
-//
-//     var exp = null;
-//     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-//     test.identical( files, exp )
-//
-//     var exp = [ 'ModuleForTesting2b' ];
-//     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
-//     test.identical( files, exp )
-//
-//     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-//     test.identical( _.strCount( op.output, '. Read 5 willfile(s) in' ), 1 );
-//     test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
-//
-//     test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of' ), 5 );
-//     test.identical( _.strCount( op.output, 'submodule(s)' ), 5 );
-//     test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   return a.ready;
-// } /* end of function submodulesDownloadRecursive */
-//
-// submodulesDownloadRecursive.timeOut = 500000;
+
+function submodulesDownloadRecursive( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'hierarchyDiffDownloadPathsRegular' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:2';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with c .submodules.download recursive:2';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:1';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with c .submodules.download recursive:1';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 14 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:0';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with * .submodules.download recursive:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with c .submodules.download recursive:0';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart({ execPath : '.with c .submodules.download recursive:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, exp )
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
+    test.identical( _.strCount( op.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::c were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+
+    return null;
+  });
+  /* - */
+
+  return a.ready;
+}
+
+submodulesDownloadRecursive.timeOut = 500000;
 // xxx
 
 //
@@ -20089,7 +20307,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
@@ -20108,7 +20326,7 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to download module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
@@ -20273,20 +20491,20 @@ function submodulesDownloadInvalidUrl( test )
   a.appStartNonThrowing({ execPath : '.with badProtocol .submodules.download' })
   .then( ( op ) =>
   {
-    // test.notIdentical( op.exitCode, 0 );
-    test.identical( op.exitCode, 0 ); /* Dmytro : peer modules forms and throw no error because private routine _peerModulesForm use option `throwing : 0`. If broken path is not recognized as remote path, then utility handle submodule as local submodule and throw no error too */
+    test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".with badProtocol .submodules.download"' ), 1 );
     test.identical( _.strCount( op.output, /\. Opened \. .*badProtocol\.will\.yml/ ), 1 );
-    test.identical( _.strCount( op.output, '! Failed to open module::submodulesDownloadErrorsBadProtocol' ), 1 );
-    var exp =
-    'Error looking for will files for opener::ModuleForTesting2a at "git+bad:///github.com/Wandalen/wModuleForTesting2a.git/"';
+    var exp = 'No repo provider for path::git+bad:///github.com/Wandalen/wModuleForTesting2a.git/';
     test.identical( _.strCount( op.output, exp ), 1 );
+    var exp = 'Failed to make module at git+bad:///github.com/Wandalen/wModuleForTesting2a.git/';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource relation::ModuleForTesting2a' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant form relation::ModuleForTesting2a' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to import willfile' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module at' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module::submodulesDownloadErrorsBadProtocol / relation::ModuleForTesting2a' ), 2 );
 
     test.identical( _.strCount( op.output, '. Read 1 willfile(s) in' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/1 submodule(s) of module::submodulesDownloadErrorsBadProtocol were downloaded in' ), 1 );
-    // test.true( _.strHas( op.output, 'Failed to download module' ) );
+    test.identical( _.strCount( op.output, '+ 0/1 submodule(s) of module::submodulesDownloadErrorsBadProtocol were downloaded in' ), 0 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
   });
@@ -20379,9 +20597,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
@@ -20395,7 +20611,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -20419,7 +20635,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -20428,7 +20644,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 14 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -20436,11 +20652,9 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download recursive:2';
     a.reflect();
@@ -20454,19 +20668,19 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 6 );
-    test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -20478,11 +20692,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -20490,7 +20704,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( op.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -20498,8 +20712,7 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   /* - */
 
   return a.ready;
-
-} /* end of function submodulesDownloadDiffDownloadPathsRegular */
+}
 
 submodulesDownloadDiffDownloadPathsRegular.timeOut = 300000;
 
@@ -20646,19 +20859,17 @@ function submodulesDownloadHierarchyRemote( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .submodules.download';
     a.reflect();
     return null;
   })
 
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with z .submodules.download' )
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -20670,7 +20881,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b' ];
+    var exp = null;
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -20679,16 +20890,15 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 14 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .submodules.download' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
@@ -20702,7 +20912,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b' ];
+    var exp = null;
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -20711,29 +20921,99 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
+  a.ready.then( () =>
+  {
+    test.case = '.with z .submodules.download recursive:1';
+    a.reflect();
+    return null;
+  });
 
-  .then( () =>
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download recursive:1' );
+
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'ModuleForTesting1b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  });
+
+  a.appStart( '.with z .submodules.download recursive:1' )
+  .then( ( op ) =>
+  {
+    test.case = 'second';
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'ModuleForTesting1b' ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'ModuleForTesting1b' ];
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
   {
     test.case = '.with z .submodules.download recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with z .submodules.download recursive:2' )
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -20745,7 +21025,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -20755,16 +21035,16 @@ function submodulesDownloadHierarchyRemote( test )
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( op.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
+    test.identical( _.strCount( op.output, '+ 4/8 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
-  a.appStart( '.with z .submodules.download recursive:2' )
+  a.appStart( '.with z .submodules.download recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
@@ -20777,7 +21057,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -20789,91 +21069,16 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( op.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/8 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.with ** .submodules.download recursive:2';
-    a.reflect();
-    return null;
-  })
-
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with ** .submodules.download recursive:2' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    var exp = [ 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
-    test.identical( files, exp );
-
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-    test.identical( files, exp );
-
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-    test.identical( files, exp );
-
-    var exp = [ 'ModuleForTesting12ab' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( op.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
-
-    return null;
-  })
-
-  a.appStart( '.with z .submodules.download recursive:2' )
-
-  .then( ( op ) =>
-  {
-    test.case = 'second';
-    test.identical( op.exitCode, 0 );
-
-    var exp = [ 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
-    test.identical( files, exp );
-
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-    test.identical( files, exp );
-
-    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-    test.identical( files, exp );
-
-    var exp = [ 'ModuleForTesting12ab' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
-    test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( op.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-
-    return null;
-  })
-
-  /* - */
+  /* */
 
   return a.ready;
 
-} /* end of function submodulesDownloadHierarchyRemote */
+}
 
 submodulesDownloadHierarchyRemote.rapidity = -1;
 submodulesDownloadHierarchyRemote.timeOut = 400000;
@@ -20887,19 +21092,17 @@ function submodulesDownloadHierarchyDuplicate( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .submodules.download';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with z .submodules.download' )
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -20912,17 +21115,16 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .submodules.download' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
@@ -20937,30 +21139,28 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .submodules.download recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with z .clean recursive:2' )
-  a.appStart( '.with z .submodules.download recursive:2' )
+  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.with z .submodules.download recursive:2' );
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -20973,17 +21173,16 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with z .submodules.download recursive:2' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
@@ -20998,7 +21197,7 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
@@ -21007,11 +21206,9 @@ function submodulesDownloadHierarchyDuplicate( test )
     return null;
   })
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with ** .submodules.download recursive:2';
     a.reflect();
@@ -21035,7 +21232,7 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/2 submodule(s) of module::z were downloaded' ), 1 );
@@ -21061,7 +21258,7 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
@@ -21074,7 +21271,7 @@ function submodulesDownloadHierarchyDuplicate( test )
 
   return a.ready;
 
-} /* end of function submodulesDownloadHierarchyDuplicate */
+}
 
 submodulesDownloadHierarchyDuplicate.rapidity = -1;
 submodulesDownloadHierarchyDuplicate.timeOut = 300000;
@@ -21725,7 +21922,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to update module' ) );
 
     test.true( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
@@ -21745,7 +21942,7 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
+    test.true( _.strHas( op.output, /fatal:.*https:\/\/abc.com\/Wandalen\/wModuleForTesting2a\.git/ ) );
     test.true( _.strHas( op.output, 'Failed to update module' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
@@ -21883,7 +22080,8 @@ function submodulesUpdateThrowing( test )
   return a.ready;
 }
 
-submodulesUpdateThrowing.timeOut = 300000;
+submodulesUpdateThrowing.timeOut = 600000;
+submodulesUpdateThrowing.rapidity = -2;
 
 //
 
@@ -22882,9 +23080,7 @@ function versionsAgreeNpm( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
@@ -22893,12 +23089,11 @@ function versionsAgreeNpm( test )
     a.reflect();
 
     return null;
-  })
+  });
 
   /* */
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'agree npm modules';
@@ -22935,11 +23130,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, '!alpha', '!beta' );
@@ -22950,10 +23145,9 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
 
     return null;
-  })
+  });
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'second run of .submodules.versions.agree';
@@ -22989,12 +23183,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
@@ -23030,11 +23223,11 @@ function versionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
-  })
+  });
 
   /*  */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
 
@@ -23045,10 +23238,9 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting2b' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
-  })
+  });
 
   a.appStart( '.submodules.versions.agree' )
-
   .then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
@@ -23086,13 +23278,15 @@ function versionsAgreeNpm( test )
     var exp =
     [
       '.',
+      './node_modules',
+      './node_modules/wmodulefortesting2b',
       './wtools',
       './wtools/testing',
       './wtools/testing/Basic.s',
       './wtools/testing/l4',
       './wtools/testing/l4/testing2b',
       './wtools/testing/l4/testing2b/Include.s',
-      './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
+      './wtools/testing/l4/testing2b/ModuleForTesting2b.s',
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );
@@ -24374,7 +24568,11 @@ function stepGitCheckHardLinkRestoring( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -24578,11 +24776,11 @@ copy
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 copy
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -24591,11 +24789,11 @@ copy
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 copy
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -24641,7 +24839,8 @@ copy
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -24797,7 +24996,11 @@ function stepGitPull( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -24869,7 +25072,7 @@ function stepGitPull( test )
     return null;
   });
 
-  /* */ /* aaa : for Dmytro : bad! carelessly. */ /* Dmytro : improved */
+  /* */
 
   begin().then( ( op ) =>
   {
@@ -24979,11 +25182,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -24992,11 +25195,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -25021,8 +25224,8 @@ original
 
   function begin()
   {
-    /* */ /* aaa : for Dmytro : ?? */ /* Dmytro : improved */
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -25545,7 +25748,8 @@ File.txt
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'clone' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -25569,6 +25773,7 @@ function stepGitStatus( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
+  a.reflect();
 
   /* */
 
@@ -25772,7 +25977,7 @@ function stepGitStatus( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
@@ -25990,7 +26195,8 @@ function stepGitSync( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
@@ -26122,7 +26328,8 @@ function stepGitTag( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
+    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -28080,7 +28287,7 @@ function commandImplyPropertyWithDisabled( test )
   }
 }
 
-commandImplyPropertyWithDisabled.timeOut = 600000;
+commandImplyPropertyWithDisabled.timeOut = 1400000;
 
 //
 
@@ -28128,48 +28335,76 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
+    a.ready.then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28224,24 +28459,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28272,24 +28521,38 @@ function commandImplyPropertyWithEnabled( test )
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
     /* */
 
     clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( ( op ) =>
     {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
+      let expected = null
       test.identical( modules, expected );
+
       return null;
     })
 
@@ -28332,7 +28595,7 @@ function commandImplyPropertyWithEnabled( test )
   }
 }
 
-commandImplyPropertyWithEnabled.timeOut = 600000;
+commandImplyPropertyWithEnabled.timeOut = 1200000;
 
 //
 
@@ -28764,9 +29027,9 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
-  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
+  a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 1'
@@ -28777,9 +29040,9 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* FAILS */
+  /* OK */
 
-  a.appStart( '.clean.submodules ; .submodules.update recursive:2' )
+  a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
@@ -29255,8 +29518,8 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
 
     return null;
   });
@@ -29277,12 +29540,10 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
-    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
 
     return null;
   });
@@ -29304,7 +29565,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 0 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 0 );
     test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
@@ -29316,7 +29577,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+another new line' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
 
     return null;
   });
@@ -29336,10 +29597,9 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
-    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 0 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 0 );
     test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
@@ -29351,8 +29611,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+another new line' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
 
     return null;
   });
@@ -29374,7 +29633,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -29386,7 +29645,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
 
     return null;
   });
@@ -29406,10 +29665,9 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
-    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -29421,8 +29679,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
 
     return null;
   });
@@ -29444,7 +29701,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
@@ -29453,7 +29710,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+new line' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
@@ -29476,10 +29733,9 @@ function commandSubmodulesGitDiff( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
-    // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.identical( _.strCount( op.output, 'f1.txt' ), 0 );
@@ -29488,8 +29744,7 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 0 );
     test.identical( _.strCount( op.output, '+new line' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
@@ -29507,7 +29762,7 @@ function commandSubmodulesGitDiff( test )
   {
     a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.dirMake( a.abs( 'repo' ) );
       a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
       return null;
@@ -30311,7 +30566,7 @@ function commandSubmodulesGitSync( test )
 
 commandSubmodulesGitSync.rapidity = -1;
 
-//
+
 
 function commandSubmodulesRepoPullOpen( test )
 {
@@ -30600,7 +30855,7 @@ function commandModulesShell( test )
   {
     test.case = '.with ./* .modules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 4 );
     test.identical( _.strCount( op.output, 'Named.will.yml' ), 3 );
@@ -30816,6 +31071,58 @@ commandModulesGit.rapidity = -1;
 
 //
 
+function commandModulesGitOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git status hardLinkMaybe:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Restoring hardlinks in directory(s) :' ), 2 );
+    test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting1' )}` ), 1 );
+    test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting2' )}` ), 1 );
+    test.identical( _.strCount( op.output, '  On branch master' ), 2 );
+    test.identical( _.strCount( op.output, ' + Restored 0 hardlinks' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandModulesGitRemoteSubmodules( test )
 {
   let context = this;
@@ -30871,7 +31178,7 @@ function commandModulesGitRemoteSubmodules( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 1 );
+    test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
@@ -30968,7 +31275,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
-    test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 1 );
+    test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
     test.identical( _.strCount( op.output, 'modified:   f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting12' ), 1 );
     test.identical( _.strCount( op.output, '> git status' ), 2 );
@@ -31031,8 +31338,8 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
 
     return null;
   });
@@ -31054,10 +31361,8 @@ function commandModulesGitDiff( test )
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
 
     return null;
   });
@@ -31079,7 +31384,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -31091,7 +31396,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
 
     return null;
   });
@@ -31112,8 +31417,7 @@ function commandModulesGitDiff( test )
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -31125,8 +31429,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
 
     return null;
   });
@@ -31148,7 +31451,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -31160,7 +31463,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
 
     return null;
   });
@@ -31181,8 +31484,7 @@ function commandModulesGitDiff( test )
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -31194,8 +31496,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
 
     return null;
   });
@@ -31217,7 +31518,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".modules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 2 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 2 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -31226,7 +31527,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '+new line' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
@@ -31250,8 +31551,7 @@ function commandModulesGitDiff( test )
     // test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    // test.identical( _.strCount( op.output, 'Diff module::super at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::super at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 2 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 2 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -31260,8 +31560,7 @@ function commandModulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '+new line' ), 1 );
-    // test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 1 );
-    test.identical( _.strCount( op.output, 'Diff module::GitSync at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
@@ -31279,7 +31578,7 @@ function commandModulesGitDiff( test )
   {
     a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.dirMake( a.abs( 'repo' ) );
       a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
       return null;
@@ -31303,6 +31602,61 @@ function commandModulesGitDiff( test )
 }
 
 commandModulesGitDiff.rapidity = -1;
+
+//
+
+function commandModulesGitDiffOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git diff has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.diff' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  Status:' ), 2 );
+    test.identical( _.strCount( op.output, '  Patch:' ), 2 );
+    test.identical( _.strCount( op.output, '    modifiedFiles:' ), 2 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/Include.s b/proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/Integration.test.ss b/proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    +testData' ), 2 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
 
 //
 
@@ -32011,6 +32365,57 @@ commandModulesGitStatus.timeOut = 500000;
 
 //
 
+function commandModulesGitStatusOutputFormat( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandModulesGitStatusOutputFormat' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    return null;
+  });
+
+  a.appStart( '.modules .git.status' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting1 at' ), 1 );
+    test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting2 at' ), 1 );
+    test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      return null;
+    });
+
+    a.appStart( '.submodules.download' );
+
+    return a.ready;
+  }
+}
+
+//
+
 function commandModulesGitSync( test )
 {
   let context = this;
@@ -32231,10 +32636,10 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink' ), 2 );
-    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ hardLink' ), 3 );
+    test.identical( _.strCount( op.output, '+ Restored 3 hardlinks' ), 1 );
 
-    test.false( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
@@ -32332,6 +32737,8 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32340,7 +32747,11 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -32412,11 +32823,11 @@ original/f2.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -32492,6 +32903,8 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32499,6 +32912,10 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
   let linkPath = config.path.hlink;
+
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
 
   /* */
 
@@ -32564,11 +32981,11 @@ original/f2.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 super
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'super/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -32643,6 +33060,8 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -32651,7 +33070,11 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -32717,11 +33140,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -33110,11 +33533,79 @@ commandSubmodules.rapidity = -1;
 
 //
 
-function commandGitCheckHardLinkRestoring( test )
+function commandModulesRepoPullOpen( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
+
+  let config;
+  if( _.censor )
+  config = _.censor.configRead();
+  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  return test.true( true );
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/Git.* .submodules.download' );
+  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandGitCheckHardLinkRestoringThrowing( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+  a.reflectMinimal();
 
   let config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
@@ -33191,7 +33682,11 @@ function commandGitCheckHardLinkRestoring( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -33207,8 +33702,8 @@ function commandGitCheckHardLinkRestoring( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
@@ -33425,11 +33920,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -33438,11 +33933,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -33513,7 +34008,7 @@ original
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -33560,8 +34055,9 @@ function commandGitDifferentCommands( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    // test.identical( _.strCount( op.output, 'Failed to open' ), 0 ); /* Dmytro : changed default value of withSubmodules in routine */
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
@@ -33606,8 +34102,8 @@ function commandGitDifferentCommands( test )
     test.case = '.git log hardLinkMaybe:1';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, 'commit' ), 1 );
     test.identical( _.strCount( op.output, 'Author:' ), 1 );
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
@@ -33631,8 +34127,8 @@ function commandGitDifferentCommands( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
@@ -33687,8 +34183,8 @@ function commandGitDiff( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 1 );
     return null;
   });
 
@@ -33706,7 +34202,7 @@ function commandGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 0 );
     return null;
   });
 
@@ -33725,8 +34221,8 @@ function commandGitDiff( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 1 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -33758,7 +34254,7 @@ function commandGitDiff( test )
     test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, 'Diff module::clone at' ), 0 );
+    test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 0 );
     test.identical( _.strCount( op.output, 'Status:' ), 1 );
     test.identical( _.strCount( op.output, 'modifiedFiles:' ), 1 );
     test.ge( _.strCount( op.output, 'f1.txt' ), 5 );
@@ -33781,7 +34277,7 @@ function commandGitDiff( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git config core.autocrlf input' });
@@ -34049,7 +34545,7 @@ clone
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -34088,7 +34584,11 @@ function commandGitPullRestoreHardlinkOnFail( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin();
   a.appStartNonThrowing( `.with clone/ .git.pull v:5 profile:${ profile }` )
@@ -34125,11 +34625,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -34138,11 +34638,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -34170,7 +34670,7 @@ original
   {
     a.ready.then( ( op ) =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
       return null;
     });
@@ -34300,7 +34800,8 @@ function commandGitPush( test )
   {
     test.case = '.with original/ .git.push v:0 - succefull pushing of tag';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
@@ -35286,7 +35787,8 @@ function commandGitSync( test )
   {
     test.case = '.with original/ .git.sync -am seventh v:0 - checking of option verbosity';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
@@ -35370,7 +35872,11 @@ function commandGitSyncRestoringHardlinks( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   a.ready.then( ( op ) => a.reflect() );
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
@@ -35471,11 +35977,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -35484,11 +35990,11 @@ original
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -35523,6 +36029,8 @@ function commandGitSyncRestoreHardLinksWithShared( test )
   if( !_.censor )
   return test.true( true );
 
+  /* */
+
   let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
   let profile = 'test-profile';
   let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
@@ -35531,7 +36039,11 @@ function commandGitSyncRestoreHardLinksWithShared( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  let mergeMid = _.strDup( '=', 7 )
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+
+  /* - */
 
   begin().then( () =>
   {
@@ -35590,11 +36102,11 @@ original/f.txt
     var exp =
 `
 original/f.txt
- <<<<<<< HEAD
+${ mergeStart }
 clone
-=======
+${ mergeMid }
 original
- >>>>>>>
+${ mergeEnd }
 `;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -35747,7 +36259,8 @@ function commandGitTag( test )
   {
     test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
     return null;
   })
@@ -39585,8 +40098,8 @@ function commandWillfileMergeIntoSingle( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39601,14 +40114,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39635,8 +40148,8 @@ function commandWillfileMergeIntoSingle( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39651,14 +40164,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39688,8 +40201,8 @@ function commandWillfileMergeIntoSingle( test )
     });
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39704,14 +40217,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39765,8 +40278,8 @@ function commandWillfileMergeIntoSingle( test )
     });
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39781,14 +40294,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39842,8 +40355,8 @@ function commandWillfileMergeIntoSingle( test )
     });
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39858,14 +40371,14 @@ function commandWillfileMergeIntoSingle( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39915,6 +40428,108 @@ function commandWillfileMergeIntoSingle( test )
 
 //
 
+function commandWillfileMergeIntoSingleRunWith( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ args : '.with . .willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without options';
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
+    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+
+    test.identical( partEx, oldEx );
+    test.identical( partIm, oldIm );
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    delete config.about.interpreters;
+    delete partEx.about.interpreters;
+    test.contains( config, partEx );
+    test.identical( config.submodule.eslint.criterion.development, 1 );
+    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
+    delete config.submodule.eslint.criterion.development;
+    delete partIm.submodule.eslint.criterion.debug;
+    test.contains( config, partIm );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileMergeIntoSingleWithSeveralRuns( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart({ args : '.with . .willfile.merge.into.single' });
+  a.appStart({ args : '.with . .willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    test.identical( _.strCount( op.output, 'Destination file `will.yml` already exists. Please, rename or delete file before merge' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 {
   let context = this;
@@ -39927,8 +40542,8 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39943,14 +40558,14 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -39976,8 +40591,8 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     a.reflect();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -39992,14 +40607,14 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40039,8 +40654,8 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40054,12 +40669,12 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
     let submoduleConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.submodule );
@@ -40096,8 +40711,8 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40111,12 +40726,12 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.im.will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
     let submoduleConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Submodule.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.submodule );
@@ -40176,6 +40791,123 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
 //
 
+function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+
+    var exp =
+    {
+      wModuleForTesting1 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+        enabled : 0,
+      },
+      wModuleForTesting2 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        enabled : 0,
+      },
+    };
+    test.identical( willConfig.submodule, exp );
+    var exp =
+    {
+      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+    };
+    test.identical( imWillConfig.submodule, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    var config = a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) );
+    config.submodule[ 'ModuleForTesting1' ] = { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 };
+    a.fileProvider.fileWrite({ filePath : a.abs( '.im.will.yml' ), data : config, encoding : 'yaml' });
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+    return null;
+  });
+
+  a.appStart({ args : '.willfile.merge.into.single' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
+
+    let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let imWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+
+    var exp =
+    {
+      wModuleForTesting1 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git',
+        enabled : 0,
+      },
+      wModuleForTesting2 :
+      {
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        enabled : 0,
+      },
+    };
+    test.identical( willConfig.submodule, exp );
+    var exp =
+    {
+      ModuleForTesting1 : { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 },
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+    };
+    test.identical( imWillConfig.submodule, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandWillfileMergeIntoSingleFilterNpmFields( test )
 {
   let context = this;
@@ -40190,8 +40922,8 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
@@ -40205,12 +40937,12 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
 
     test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'Old.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
     let willConfig = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    let exWillConfig = a.fileProvider.fileRead({ filePath : a.abs( 'Old.ex.will.yml' ), encoding : 'yaml' });
+    let exWillConfig = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
     let npmScriptsConfig = a.fileProvider.fileRead({ filePath : a.abs( 'NpmScripts.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.about[ 'npm.scripts' ] );
@@ -41237,32 +41969,11 @@ function commandNpmInstall( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    let configPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    let configWasPackage = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'was.package.json' ), encoding : 'json' });
-    test.identical( configPackage.name, configWasPackage.name );
-    test.notIdentical( configPackage.version, configWasPackage.version );
-    test.notIdentical( configPackage.enabled, configWasPackage.enabled );
-    test.notIdentical( configPackage.engine, configWasPackage.engine );
-    test.identical( configPackage.description, configWasPackage.description );
-    test.identical( configPackage.keywords, configWasPackage.keywords );
-    test.identical( configPackage.license, configWasPackage.license );
-    test.identical( configPackage.author, configWasPackage.author );
-    test.identical( configPackage.contributors.length, 2 );
-    test.identical( configWasPackage.contributors, undefined );
-    test.identical( configPackage.bin, configWasPackage.bin );
-    test.notIdentical( configPackage.repository, configWasPackage.repository );
-    test.notIdentical( configPackage.bugs, configWasPackage.bugs );
-    test.identical( configPackage.main, configWasPackage.main );
-    test.identical( configPackage.files, configWasPackage.files );
-    let packageDepKeys = _.props.keys( configPackage.dependencies );
-    let wasPackageDepKeys = _.props.keys( configWasPackage.dependencies );
-    test.true( _.longHasAll( packageDepKeys, wasPackageDepKeys ) );
-    test.false( 'wgittools' in configWasPackage.dependencies );
-    test.identical( packageDepKeys.length, 4 );
-    test.identical( wasPackageDepKeys.length, 4 );
-    let packageDevDepKeys = _.props.keys( configPackage.devDependencies );
-    let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
-    test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
+    var files = find( 'node_modules' );
+    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
+    test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
+    test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
 
     test.identical( _.strCount( op.output, 'Command ".npm.install locked:1 linkingSelf:0"' ), 1 );
     test.identical( _.strCount( op.output, '> npm ci' ), 1 );
@@ -41363,8 +42074,8 @@ function commandsSubmoduleSafety( test )
   a.rooWillFilePath = a.abs( '.will.yml' );
   a.localPath = a.abs( '.module/ModuleForTesting1' );
 
-  a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath })
-  a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data })
+  a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath });
+  a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data });
   a.moduleGitStatusGet = () =>
   {
     return _.git.statusLocal
@@ -41374,7 +42085,7 @@ function commandsSubmoduleSafety( test )
       detailing : 1,
       sync : 1,
     });
-  }
+  };
   a.moduleFilesGet = () =>
   {
     return a.fileProvider.filesFind
@@ -41384,13 +42095,13 @@ function commandsSubmoduleSafety( test )
       maskPreset : 0,
       outputFormat : 'absolute'
     });
-  }
+  };
   a.moduleFixateTag = ( tag ) =>
   {
     let data = a.rootWillFileRead();
     data = _.strReplace( data, '/!master', `/!${tag}` );
     a.rootWillFileWrite( data );
-  }
+  };
   a.moduleShell = _.process.starter
   ({
     currentPath : a.localPath,
@@ -41400,7 +42111,7 @@ function commandsSubmoduleSafety( test )
     sync : 1,
     deasync : 0,
     ready : null
-  })
+  });
 
   let routinesPre = Object.create( null );
   let routinesPost = Object.create( null );
@@ -41409,105 +42120,111 @@ function commandsSubmoduleSafety( test )
 
   /* - */
 
-  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 1 })
-  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
-  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 })
-  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 })
+  run({ command : 'download', case : 'missing/tag', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'download', case : 'invalid/url', downloaded : 1, error : 1 });
+  run({ command : 'download', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'download', case : 'local/untracked', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/unstaged', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/staged', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/commit', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/branch', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/tag', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'local/conflict', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 });
+  run({ command : 'download', case : 'different/origin', downloaded : 1, error : 0 });
+  run({ command : 'download', case : 'different/branch', downloaded : 1, error : 0 });
 
   /* - */
 
-  run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'local/commit', downloaded : 1, error : 0 })
-  run({ command : 'update', case : 'local/branch', downloaded : 1, error : 0 })
-  run({ command : 'update', case : 'local/tag', downloaded : 1, error : 0 })
-  run({ command : 'update', case : 'local/conflict', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'different/origin', downloaded : 1, error : 1 })
-  run({ command : 'update', case : 'different/branch', downloaded : 1, error : 0 })
+  run({ command : 'update', case : 'missing/tag', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'update', case : 'invalid/url', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'update', case : 'local/untracked', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'local/unstaged', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'local/staged', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'local/commit', downloaded : 1, error : 0 });
+  run({ command : 'update', case : 'local/branch', downloaded : 1, error : 0 });
+  run({ command : 'update', case : 'local/tag', downloaded : 1, error : 0 });
+  run({ command : 'update', case : 'local/conflict', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'different/origin', downloaded : 1, error : 1 });
+  run({ command : 'update', case : 'different/branch', downloaded : 1, error : 0 });
 
   /* - */
 
-  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 })//qqq: Vova: fails, error is ignored
-  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 })//qqq: Vova: fails, error is ignored
-  run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/commit', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/branch', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/tag', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'local/conflict', downloaded : 1, error : 0 })
-  run({ command : 'versions.verify', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'different/origin', downloaded : 1, error : 1 })
-  run({ command : 'versions.verify', case : 'different/branch', downloaded : 1, error : 1 })
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 1, error : 1 });
+  run({ command : 'versions.verify', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  // run({ command : 'versions.verify', case : 'invalid/url', downloaded : 1, error : 1 }); // aaa: Vova: fails, error is ignored /* Dmytro : fixed, routine commandSubmodulesVersionsVerify use routine _commandCleanLike that allows invalid submodules */
+  // run({ command : 'versions.verify', case : 'invalid/url', downloaded : 0, error : 1 }); // aaa: Vova: fails, error is ignored /* Dmytro : fixed, routine commandSubmodulesVersionsVerify use routine _commandCleanLike that allows invalid submodules */
+  run({ command : 'versions.verify', case : 'local/untracked', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/unstaged', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/staged', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/commit', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/branch', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/tag', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'local/conflict', downloaded : 1, error : 0 });
+  run({ command : 'versions.verify', case : 'notGitReporOrNpmModule', downloaded : 1, error : 1 });
+  run({ command : 'versions.verify', case : 'different/origin', downloaded : 1, error : 1 });
+  run({ command : 'versions.verify', case : 'different/branch', downloaded : 1, error : 1 });
 
   /* - */
 
-  run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  // run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
+  // run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/commit', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/branch', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/tag', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'clean', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 })
-  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 })
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
+  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
-  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 })
-  run({ command : 'versions.agree', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 0, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 0, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 0, deleted : 0 })
-  run({ command : 'versions.agree', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 })
-  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, redownloaded : 1 })
-  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, redownloaded : 1 })
-  run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 })
+  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'missing/tag', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
+  run({ command : 'versions.agree', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/commit', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/branch', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/tag', downloaded : 1, error : 0, deleted : 0 });
+  run({ command : 'versions.agree', case : 'local/conflict', downloaded : 1, error : 1, deleted : 0 });
+  run({ command : 'versions.agree', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, redownloaded : 1 });
+  run({ command : 'versions.agree', case : 'different/origin', downloaded : 1, error : 0, redownloaded : 1 });
+  run({ command : 'versions.agree', case : 'different/branch', downloaded : 1, error : 0, deleted : 0 });
 
   /* - */
 
@@ -41551,7 +42268,7 @@ function commandsSubmoduleSafety( test )
     let op = { args : `.submodules.${env.command}` };
     a.appStart( op );
 
-    a.ready.tap( () =>
+    a.ready.tap( ( err, arg ) =>
     {
       let isGitModuleInCurrentState = _.git.isRepository({ localPath : a.localPath });
       if( _.longHas( [ 'update', 'versions.agree' ], env.command ) && isGitModuleInCurrentState )
@@ -41591,7 +42308,7 @@ function commandsSubmoduleSafety( test )
       test.identical( op.exitCode, 0 );
 
       var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
-      if( _.objectIs( expectedOutput ) )
+      if( _.object.isBasic( expectedOutput ) )
       expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
       if( expectedOutput )
       _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
@@ -41818,54 +42535,153 @@ commandsSubmoduleSafety.description =
 `
 Checks if .submodules.* commands are safe to use in different situations.
 It means that utility doesn't modify the data of the module if it's not required.
-`
+`;
 
 //
 
-function commandsSubmoduleSafetyInvalidUrl( test ) /* xxx : for Kos */
+function commandsSubmoduleSafetyDownloadInvalidUrl( test ) /* xxx : for Kos */ /* Dmytro : used namespace `repo` for classifying of repo paths, test routine works fine */
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesSafety' );
-  a.reflect();
 
   /* - */
 
+  a.ready.then( () =>
+  {
+    test.case = 'downloaded submodules';
+    a.reflect();
+    return null;
+  });
   a.appStart({ args : `.submodules.download` });
-
   a.ready.then( () =>
   {
     let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
     data = _.strReplace( data, 'git+https', 'test+https' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
     return null;
-  })
+  });
 
-  let op = { args : `.submodules.download` }
+  var op = { args : `.submodules.download` };
   a.appStart( op );
-
   a.ready.finally( ( err, got ) =>
   {
     if( err )
-    {
-      _.errAttend( err );
-      _.errLogOnce( err );
-    }
+    _.errAttend( err );
 
     test.true( _.errIs( err ) );
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'not downloaded submodules';
+    a.reflect();
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  });
+
+  var op = { args : `.submodules.download` };
+  a.appStart( op );
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    _.errAttend( err );
+
+    test.true( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  });
 
   /* - */
 
   return a.ready;
 }
 
-commandsSubmoduleSafetyInvalidUrl.description =
+commandsSubmoduleSafetyDownloadInvalidUrl.description =
 `
 Should throw error about invalid protocol in remote path.
+`;
+
+//
+
+function commandsSubmoduleSafetyVerifyInvalidUrl( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesSafety' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'downloaded submodules';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ args : `.submodules.download` });
+  a.ready.then( () =>
+  {
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  });
+
+  var op = { args : `.submodules.versions.verify` };
+  a.appStart( op );
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    _.errAttend( err );
+
+    test.false( _.errIs( err ) );
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'not downloaded submodules';
+    a.reflect();
+    let data = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ) })
+    data = _.strReplace( data, 'git+https', 'test+https' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data })
+    return null;
+  });
+
+  var op = { args : `.submodules.versions.verify` };
+  a.appStart( op );
+  a.ready.finally( ( err, got ) =>
+  {
+    if( err )
+    _.errAttend( err );
+
+    test.false( _.errIs( err ) );
+    test.identical( op.exitCode, 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+commandsSubmoduleSafetyVerifyInvalidUrl.description =
 `
+Should not throw error about invalid protocol
+because command routine use routine _commandCleanLike
+that allows invalid submodules.
+`;
 
 //
 
@@ -42031,7 +42847,7 @@ function commandSubmodulesUpdateOptionTo( test )
     a.moduleDownloadedShellSync( 'git fetch --tags' )
     a.moduleShellSync( 'git tag -d dev1' )
     return null;
-  })
+  });
   a.appStart( '.submodules.update to:!dev1' )
   .then( ( op ) =>
   {
@@ -42046,20 +42862,56 @@ function commandSubmodulesUpdateOptionTo( test )
     let willFileAftet = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     test.identical( willFileAftet, a.willFileBefore );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 }
 commandSubmodulesUpdateOptionTo.rapidity = 1;
-commandSubmodulesUpdateOptionTo.routineTimeOut = 120000;
+commandSubmodulesUpdateOptionTo.routineTimeOut = 300000;
 commandSubmodulesUpdateOptionTo.description =
 `
 Checks if command tag:
  - Downloads new tags from the remote
  - Updates existing tag
  - Checkouts selected submodules to specific tag
+`;
+
+//
+
+function commandsSequenceProceduresTermination( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandsSequenceProceduresTermination' );
+
+  a.reflect();
+
+  /* */
+
+  a.appStart( '.submodules.update .build' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, `procedure::` ) );
+    test.false( _.strHas( op.output, /Waiting for .* procedure\(s\)/ ) );
+    test.true( _.strHas( op.output, `step::start` ) );
+    test.true( _.strHas( op.output, `step::end` ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+commandsSequenceProceduresTermination.rapidity = 1;
+commandsSequenceProceduresTermination.routineTimeOut = 60000;
+commandsSequenceProceduresTermination.description =
+`
+Runs two commands in sequence.
+Second command executes long running step.
+Routine checks that procedures termination begins after last command.
 `
 
 //
@@ -42257,7 +43109,7 @@ const Proto =
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
-    hookPublish2,
+    // hookPublish2, /* Dmytro : hook was commented out */
 
     implyWithDot,
     implyWithAsterisk,
@@ -42352,6 +43204,7 @@ const Proto =
     clean,
     cleanOptionWithSubmodules,
     cleanSingleModule,
+    cleanItself,
     cleanBroken1,
     cleanBroken2,
     cleanBrokenSubmodules,
@@ -42393,7 +43246,7 @@ const Proto =
     submodulesDownloadWithSubmodulesDefault,
     submodulesDownloadUpdateWithSubmodulesDefault,
 
-    // submodulesDownloadRecursive, /* qqq : for Dmytro : uncomment, normalize and fix */
+    submodulesDownloadRecursive, /* aaa : for Dmytro : uncomment, normalize and fix */ /* Dmytro : done */
     submodulesDownloadThrowing,
     submodulesDownloadInvalidUrl,
     submodulesDownloadStepAndCommand,
@@ -42425,7 +43278,7 @@ const Proto =
     stepBuild,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
-    stepGitPull, /* aaa : for Dmytro : bad! */ /* Dmytro : improved */
+    stepGitPull,
     stepGitPush,
     stepGitReset,
     stepGitSync,
@@ -42471,11 +43324,14 @@ const Proto =
     commandModulesUpdate,
     commandModulesShell,
     commandModulesGit,
+    commandModulesGitOutputFormat,
     commandModulesGitRemoteSubmodules,
     commandModulesGitRemoteSubmodulesRecursive,
     commandModulesGitDiff,
+    commandModulesGitDiffOutputFormat,
     commandModulesGitStatusWithOnlyRoot,
     commandModulesGitStatus,
+    commandModulesGitStatusOutputFormat,
     commandModulesGitSync,
     commandModulesGitSyncRestoreHardLinksInModuleWithSuccess,
     commandModulesGitSyncRestoreHardLinksInModuleWithFail,
@@ -42486,6 +43342,7 @@ const Proto =
 
     commandModulesRepoPullOpen,
 
+    commandGitCheckHardLinkRestoringThrowing,
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitDiff,
@@ -42521,8 +43378,11 @@ const Proto =
     commandWillfileSupplementWillfileDstIsJson,
     commandWillfileSupplementWillfileWithOptions,
     commandWillfileMergeIntoSingle,
+    commandWillfileMergeIntoSingleRunWith,
+    commandWillfileMergeIntoSingleWithSeveralRuns,
     commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
+    commandWillfileMergeIntoSingleWithDiffSubmoduleRecord,
     commandWillfileMergeIntoSingleFilterNpmFields,
 
     commandNpmPublish,
@@ -42532,8 +43392,11 @@ const Proto =
     commandNpmInstall,
 
     commandsSubmoduleSafety,
-    commandsSubmoduleSafetyInvalidUrl,
+    commandsSubmoduleSafetyDownloadInvalidUrl,
+    commandsSubmoduleSafetyVerifyInvalidUrl,
     commandSubmodulesUpdateOptionTo,
+
+    commandsSequenceProceduresTermination,
 
     willFilterFieldsOverwrite,
 
@@ -42549,6 +43412,6 @@ const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-/* qqq : for Dmytro : remove -assets. disuss before removing! */
+/* aaa : for Dmytro : remove -assets. disuss before removing! */ /* Dmytro : files with dash are generated in tests */
 
 })();

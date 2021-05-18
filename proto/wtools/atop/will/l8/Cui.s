@@ -53,17 +53,6 @@ function exec()
       program : _.strUnquote( appArgs.original ),
       withParsed : 1,
     });
-    // return ca.appArgsPerform({ appArgs });
-    /* aaa2 : make use of
-    return ca.programPerform({ program : appArgs.original });
-
-    - commands like .with and .imply should set some field
-    - field set by .with should be reset to null after command which use the field
-    - field set by .imply should not be reset to null after command which use the field, but should be reset to null bu another .imply command
-    - we drop support of `.command1 ; .command2` syntax. we support only `.command1 .commadn2` syntax
-
-    Dmytro : done
-  */
   })
   .then( ( arg ) =>
   {
@@ -210,7 +199,6 @@ function openersFind( o )
 
     if( !will.currentOpeners.length )
     {
-      debugger;
       if( !o.allowNoOpeners )
       throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
       else
@@ -288,7 +276,7 @@ function _command_head( o )
   //   _.props.extend( e.propertiesMap, cui.implied );
   // }
 
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringShallow( e.propertiesMap ) );
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.entity.exportStringDiagnosticShallow( e.propertiesMap ) );
   if( o.routine.command.properties )
   _.map.sureHasOnly( e.propertiesMap, o.routine.command.properties, `Command does not expect options:` );
 
@@ -338,7 +326,6 @@ function _command_head( o )
   _.routine.options_( o.routine, e.optionsMap );
 
   // if( o.routine.command.properties && o.routine.command.properties.v )
-  /* aaa : for Dmytro : design good solution instead of this workaround. before implementing discuss! */ /* Dmytro : fixed, not me */
   // if( o.routine.command.properties && o.routine.command.properties.v )
   // if( e.propertiesMap.v !== undefined )
   // {
@@ -637,9 +624,6 @@ function _commandsBegin( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.aux.is( o.properties ) );
 
-  if( will.topCommand === null )
-  will.topCommand = o.commandRoutine;
-
   _.assert( will.transaction instanceof _.will.Transaction )
 
 }
@@ -652,7 +636,7 @@ _commandsBegin.defaults =
 
 //
 
-function _commandsEnd( command )
+function _commandsEnd( commandEvent )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -660,11 +644,11 @@ function _commandsEnd( command )
   let logger = will.transaction.logger;
 
   _.assert( will.transaction instanceof _.will.Transaction );
-  _.assert( _.routineIs( command ) );
+  _.assert( _.objectIs( commandEvent ) );
 
   let beeping = will.transaction.beeping;
 
-  if( will.topCommand !== command )
+  if( commandEvent.index !== commandEvent.parsedCommands.length - 1 )
   {
     // will.transaction.finit();
     // will.transaction = null;
@@ -673,8 +657,6 @@ function _commandsEnd( command )
 
   try
   {
-
-    will.topCommand = null;
 
     // if( will.currentOpener )
     // will.currentOpener.finit();
@@ -717,7 +699,7 @@ function _commandListLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.resourceKind !== undefined );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -798,7 +780,7 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -838,7 +820,7 @@ function _commandBuildLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -902,7 +884,7 @@ function _commandBuildLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -939,7 +921,7 @@ function _commandCleanLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -999,7 +981,7 @@ function _commandCleanLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1037,7 +1019,7 @@ function _commandNewLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   // withIn : 1,
   // withOut : 1,
@@ -1097,7 +1079,7 @@ function _commandNewLike( o )
 
   function end( err, arg )
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     logger.error( _.errOnce( err ) );
     if( err )
@@ -1139,7 +1121,7 @@ function _commandTreeLike( o )
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
 
@@ -1171,7 +1153,7 @@ function _commandTreeLike( o )
   })
   .finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     err = _.err( err, `\nFailed to ${o.name}` );
     if( err )
@@ -1194,151 +1176,150 @@ _commandTreeLike.defaults =
 
 //
 
-function _commandModulesLike( o )
-{
-  let will = this;
-  let logger = will.transaction.logger;
-  let ready = _.take( null );
-
-  _.routine.options_( _commandModulesLike, arguments );
-  _.mapSupplementNulls( o, will.filterImplied() );
-  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
-
-  _.all
-  (
-    _.Will.ModuleFilterNulls,
-    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
-  );
-  _.assert( _.routineIs( o.commandRoutine ) );
-  _.assert( _.routineIs( o.onEach ) );
-  _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
-  _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
-  _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
-
-  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
-
-  // if( will.currentOpeners === null && will.currentOpener === null )
-  if( will.currentOpeners === null )
-  ready.then( () => will.openersFind() )
-  .then( () => filter() );
-
-  let openers = will.currentOpeners;
-  will.currentOpeners = null;
-
-  for( let i = 0 ; i < openers.length ; i++ )
-  ready.then( () => openersEach( openers[ i ] ) );
-
-  return ready.finally( ( err, arg ) =>
-  {
-    will.currentOpeners = openers;
-    will._commandsEnd( o.commandRoutine );
-    if( err )
-    logger.error( _.errOnce( err ) );
-    if( err )
-    throw err;
-    return arg;
-  })
-
-  /* */
-
-  function filter()
-  {
-    if( will.currentOpeners )
-    {
-      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
-      if( openers2.length )
-      will.currentOpeners = openers2;
-    }
-    return null;
-  }
-
-  /* */
-
-  function openersEach( opener )
-  {
-    let ready2 = will.modulesFindEachAt
-    ({
-      selector : _.strUnquote( 'submodule::*' ),
-      currentOpener : opener,
-    })
-    .then( function( it )
-    {
-      if( o.withStem )
-      _.arrayPrependOnce( it.sortedOpeners, opener );
-      else
-      _.arrayRemove( it.sortedOpeners, opener );
-
-      will.currentOpeners = it.sortedOpeners;
-      return it;
-    })
-
-    if( o.onModulesBegin )
-    ready2.then( () =>
-    {
-      o.onModulesBegin.call( will, will.currentOpeners, opener );
-      return null;
-    });
-
-    ready2.then( () => will.openersCurrentEach( forSingle ) )
-
-    if( o.onModulesEnd )
-    ready2.finally( ( err, arg ) =>
-    {
-      o.onModulesEnd.call( will, will.currentOpeners, opener );
-
-      if( err )
-      throw _.err( err );
-
-      return null;
-    });
-
-    return ready2;
-  }
-
-  /* */
-
-  function forSingle( it )
-  {
-    let ready3 = _.take( null );
-    let it2 = _.props.extend( null, o, it );
-
-    ready3.then( () =>
-    {
-      will.mainOpener = it.opener;
-      return null;
-      // return will.currentOpenerChange( it.opener );
-    });
-
-    ready3.then( () =>
-    {
-      will.readingEnd();
-      return o.onEach.call( will, it2 );
-    });
-
-    ready3.finally( ( err, arg ) =>
-    {
-      // will.currentOpenerChange( null );
-      if( err )
-      throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
-      return arg;
-    });
-
-    return ready3;
-  }
-
-}
-
-/* qqq : for Dmytro : bad : discuss modulesFor */
-var defaults = _commandModulesLike.defaults = _.props.extend( null, _.Will.ModuleFilterNulls );
-defaults.event = null;
-defaults.onEach = null;
-defaults.onModulesBegin = null;
-defaults.onModulesEnd = null;
-defaults.commandRoutine = null;
-defaults.name = null;
-defaults.withStem = 1;
-// defaults.withStem = 1; /* aaa : for Dmytro : ?? */ /* Dmytro : replaced for all module */
+// function _commandModulesLike( o )
+// {
+//   let will = this;
+//   let logger = will.transaction.logger;
+//   let ready = _.take( null );
+//
+//   _.routine.options_( _commandModulesLike, arguments );
+//   _.mapSupplementNulls( o, will.filterImplied() );
+//   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+//
+//   _.all
+//   (
+//     _.Will.ModuleFilterNulls,
+//     ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
+//   );
+//   _.assert( _.routineIs( o.commandRoutine ) );
+//   _.assert( _.routineIs( o.onEach ) );
+//   _.assert( o.onModulesBegin === null || _.routineIs( o.onModulesBegin ) );
+//   _.assert( o.onModulesEnd === null || _.routineIs( o.onModulesEnd ) );
+//   _.assert( _.strIs( o.name ) );
+//   _.assert( _.object.isBasic( o.event ) );
+//
+//   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
+//
+//   // if( will.currentOpeners === null && will.currentOpener === null )
+//   if( will.currentOpeners === null )
+//   ready.then( () => will.openersFind() )
+//   .then( () => filter() );
+//
+//   let openers = will.currentOpeners;
+//   will.currentOpeners = null;
+//
+//   for( let i = 0 ; i < openers.length ; i++ )
+//   ready.then( () => openersEach( openers[ i ] ) );
+//
+//   return ready.finally( ( err, arg ) =>
+//   {
+//     will.currentOpeners = openers;
+//     will._commandsEnd( o.event );
+//     if( err )
+//     logger.error( _.errOnce( err ) );
+//     if( err )
+//     throw err;
+//     return arg;
+//   })
+//
+//   /* */
+//
+//   function filter()
+//   {
+//     if( will.currentOpeners )
+//     {
+//       let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
+//       if( openers2.length )
+//       will.currentOpeners = openers2;
+//     }
+//     return null;
+//   }
+//
+//   /* */
+//
+//   function openersEach( opener )
+//   {
+//     let ready2 = will.modulesFindEachAt
+//     ({
+//       selector : _.strUnquote( 'submodule::*' ),
+//       currentOpener : opener,
+//     })
+//     .then( function( it )
+//     {
+//       if( o.withStem )
+//       _.arrayPrependOnce( it.sortedOpeners, opener );
+//       else
+//       _.arrayRemove( it.sortedOpeners, opener );
+//
+//       will.currentOpeners = it.sortedOpeners;
+//       return it;
+//     })
+//
+//     if( o.onModulesBegin )
+//     ready2.then( () =>
+//     {
+//       o.onModulesBegin.call( will, will.currentOpeners, opener );
+//       return null;
+//     });
+//
+//     ready2.then( () => will.openersCurrentEach( forSingle ) )
+//
+//     if( o.onModulesEnd )
+//     ready2.finally( ( err, arg ) =>
+//     {
+//       o.onModulesEnd.call( will, will.currentOpeners, opener );
+//
+//       if( err )
+//       throw _.err( err );
+//
+//       return null;
+//     });
+//
+//     return ready2;
+//   }
+//
+//   /* */
+//
+//   function forSingle( it )
+//   {
+//     let ready3 = _.take( null );
+//     let it2 = _.props.extend( null, o, it );
+//
+//     ready3.then( () =>
+//     {
+//       will.mainOpener = it.opener;
+//       return null;
+//       // return will.currentOpenerChange( it.opener );
+//     });
+//
+//     ready3.then( () =>
+//     {
+//       will.readingEnd();
+//       return o.onEach.call( will, it2 );
+//     });
+//
+//     ready3.finally( ( err, arg ) =>
+//     {
+//       // will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return ready3;
+//   }
+//
+// }
+//
+// /* aaa : for Dmytro : bad : discuss modulesFor */ /* Dmytro : is not used */
+// var defaults = _commandModulesLike.defaults = _.props.extend( null, _.Will.ModuleFilterNulls );
+// defaults.event = null;
+// defaults.onEach = null;
+// defaults.onModulesBegin = null;
+// defaults.onModulesEnd = null;
+// defaults.commandRoutine = null;
+// defaults.name = null;
+// defaults.withStem = 1;
 
 //
 
@@ -1382,7 +1363,7 @@ function _commandModuleOrientedLike( o )
   );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.strIs( o.name ) );
-  _.assert( _.objectIs( o.event ) );
+  _.assert( _.object.isBasic( o.event ) );
   _.assert( o.onCommandEnd === null || _.routineIs( o.onCommandEnd ) );
 
   will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
@@ -1409,7 +1390,7 @@ function _commandModuleOrientedLike( o )
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
     o2.recursive = 2;
-    return will.modulesFor( o2 )
+    return will.modulesFor( o2 );
   })
 
   if( o.onCommandEnd )
@@ -1417,7 +1398,7 @@ function _commandModuleOrientedLike( o )
 
   ready.finally( ( err, arg ) =>
   {
-    will._commandsEnd( o.commandRoutine );
+    will._commandsEnd( o.event );
     if( err )
     throw _.err( err, `\nFailed to ${o.name}` );
     return arg;
@@ -1426,7 +1407,6 @@ function _commandModuleOrientedLike( o )
   return ready;
 }
 
-/* qqq : for Dmytro : bad : discuss modulesFor */
 var defaults = _commandModuleOrientedLike.defaults =
 {
   ... Parent.prototype.modulesFor.defaults,
@@ -2243,7 +2223,6 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_head( commandSubmodulesVersionsDownload, arguments );
 
-
   return cui._commandCleanLike
   ({
     event : e,
@@ -2447,7 +2426,6 @@ command.properties =
 //   }
 //   // function handleEach( it )
 //   // {
-//   //   debugger;
 //   //   return it.opener.openedModule.shell
 //   //   ({
 //   //     execPath : e.instructionArgument,
@@ -3565,53 +3543,52 @@ function commandClean( e )
   e.optionsMap.fast = !e.optionsMap.dry;
   e.optionsMap.fast = 0; /* xxx : implement */
 
-  // return cui._commandCleanLike
-  // ({
-  //   event : e,
-  //   name : 'clean',
-  //   onAll : handleAll,
-  //   commandRoutine : commandClean,
-  // });
-
-  return cui._commandModuleOrientedLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'clean',
-    onEachModule : handleEach,
-    commandRoutine : commandGit,
+    onAll : handleAll,
+    commandRoutine : commandClean,
   });
 
-  function handleEach( module )
-  {
-    // let o2 = cui.filterImplied();
-    let o2 = { ... cui.RelationFilterOn };
-    o2 = _.props.extend( o2, e.optionsMap );
-    delete o2.withSubmodules;
-    o2.modules = [ module ];
-    _.routine.options_( cui.modulesClean, o2 );
-    if( o2.recursive === 2 )
-    o2.modules = cui.modulesOnlyRoots( o2.modules )
-    o2.asCommand = 1;
-
-    return cui.modulesClean( o2 );
-  }
-
-  // function handleAll( it )
+  // return cui._commandModuleOrientedLike
+  // ({
+  //   event : e,
+  //   name : 'clean',
+  //   onEachModule : handleEach,
+  //   commandRoutine : commandClean,
+  // });
+  //
+  // function handleEach( module )
   // {
-  //   _.assert( _.arrayIs( it.openers ) );
-
   //   // let o2 = cui.filterImplied();
   //   let o2 = { ... cui.RelationFilterOn };
   //   o2 = _.props.extend( o2, e.optionsMap );
   //   delete o2.withSubmodules;
-  //   o2.modules = it.openers;
-  //   _.routineOptions( cui.modulesClean, o2 );
+  //   o2.modules = [ module ];
+  //   _.routine.options_( cui.modulesClean, o2 );
   //   if( o2.recursive === 2 )
-  //   o2.modules = it.roots;
+  //   o2.modules = cui.modulesOnlyRoots( o2.modules )
   //   o2.asCommand = 1;
-
+  //
   //   return cui.modulesClean( o2 );
   // }
+
+  function handleAll( it )
+  {
+    _.assert( _.arrayIs( it.openers ) );
+
+    let o2 = { ... cui.RelationFilterOn };
+    o2 = _.props.extend( o2, e.optionsMap );
+    delete o2.withSubmodules;
+    o2.modules = it.openers;
+    _.routine.options_( cui.modulesClean, o2 );
+    if( o2.recursive === 2 )
+    o2.modules = it.roots;
+    o2.asCommand = 1;
+
+    return cui.modulesClean( o2 );
+  }
 }
 
 commandClean.defaults =
@@ -3624,11 +3601,11 @@ commandClean.defaults =
   cleaningTemp : 1,
   recursive : 0,
   fast : 0
-}
+};
 
 var command = commandClean.command = Object.create( null );
 command.hint = 'Clean current module.';
-command.longHint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
+command.longHint = 'Clean current module. Delete generated artifacts, temp files and downloaded submodules.';
 command.subjectHint = false;
 command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 command.properties =
@@ -3640,8 +3617,7 @@ command.properties =
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   ... commandImply.command.properties,
-  /* aaa2 : should have verbosity and other common options */ /* Dmytro : appended to the property command.properties */
-}
+};
 
 //
 
@@ -3658,7 +3634,7 @@ function commandCleanSubmodules( e )
   return cui._commandCleanLike
   ({
     event : e,
-    name : 'clean',
+    name : 'clean submodules',
     onAll : handleAll,
     commandRoutine : commandCleanSubmodules,
   });
@@ -3667,46 +3643,44 @@ function commandCleanSubmodules( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    // let o2 = cui.filterImplied();
     let o2 = { ... cui.RelationFilterOn };
     o2 = _.props.extend( o2, e.optionsMap );
-    o2.modules = it.openers;
     delete o2.withSubmodules;
+    o2.modules = it.openers;
     _.routine.options_( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
-    o2.asCommand = 1;
     o2.cleaningSubmodules = 1;
+    o2.asCommand = 1;
     o2.cleaningOut = 0;
     o2.cleaningTemp = 0;
 
     return cui.modulesClean( o2 );
   }
-
 }
 
 commandCleanSubmodules.defaults =
 {
+  withOut : 1,
+  force : 0,
   dry : 0,
   recursive : 0,
-  fast : 0,
-  force : 0,
-  withSubmodules : 0
-}
+  fast : 0
+};
 
 var command = commandCleanSubmodules.command = Object.create( null );
-command.hint = 'Delete all downloaded submodules.';
+command.hint = 'Clean downloaded submodules of current module.';
+command.longHint = 'Clean downloaded submodules of current module.';
 command.subjectHint = false;
 command.propertiesAliases = _.props.extend( null, commandImply.command.propertiesAliases );
 command.properties =
 {
-  ... commandImply.command.properties,
-
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
   force : 'Force cleaning. force:0 - checks submodules for local changes before cleanup, force:1 - removes submodules without any checks.',
-}
+  ... commandImply.command.properties,
+};
 
 //
 
@@ -3866,30 +3840,30 @@ command.subjectHint = 'A name of export scenario.';
 // {
 //   let cui = this.form();
 //   let path = cui.fileProvider.path;
-
+//
 //   cui._command_head
 //   ({
 //     routine : commandWith,
 //     args : arguments,
 //     // usingImpliedMap : 0
 //   });
-
+//
 //   // if( cui.currentOpener )
 //   // {
 //   //   cui.currentOpener.finit();
 //   //   cui.currentOpenerChange( null );
 //   // }
-
+//
 //   if( cui.currentOpeners )
 //   cui.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
 //   cui.currentOpeners = null;
-
+//
 //   _.sure( _.strDefined( e.instructionArgument ), 'Expects path to module' );
 //   _.assert( arguments.length === 1 );
-
+//
 //   if( !e.instructionArgument )
 //   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
-
+//
 //   if( process.platform === 'linux' )
 //   {
 //     let quoteRanges = _.strQuoteAnalyze({ src : e.instructionArgument, quote : [ '"' ] }).ranges;
@@ -3911,13 +3885,13 @@ command.subjectHint = 'A name of export scenario.';
 //       }
 //     }
 //   }
-
+//
 //   // cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.instructionArgument ) );
 //   let withPath = path.join( path.current(), cui.transaction.withPath, path.fromGlob( e.instructionArgument ) );
-
+//
 //   cui.implied = _.props.extend( cui.implied, { withPath } );
 //   cui._transactionExtend( commandWith, cui.implied );
-
+//
 //   return cui.modulesFindWithAt
 //   ({
 //     selector : _.strUnquote( e.instructionArgument ),
@@ -3926,7 +3900,7 @@ command.subjectHint = 'A name of export scenario.';
 //   .then( function( it )
 //   {
 //     cui.currentOpeners = it.sortedOpeners;
-
+//
 //     if( !cui.currentOpeners.length )
 //     {
 //       let equalizer = ( parsed, command ) => parsed.commandName === command;
@@ -3939,15 +3913,14 @@ command.subjectHint = 'A name of export scenario.';
 //       else
 //       cui.currentOpeners = null;
 //     }
-
+//
 //     _.assert( cui.transaction instanceof _.will.Transaction );
-//     // qqq : for Vova : why was it here ? aaa: removes transaction object at the end of the command execution
 //     // cui.transaction.finit();
 //     // cui.transaction = null;
-
+//
 //     return it;
 //   })
-
+//
 // }
 
 //
@@ -4002,10 +3975,7 @@ function commandWith( e )
   cui.transaction.finit();
   cui.transactionOld = cui.transaction;
   cui.transaction = null;
-
 }
-
-// commandWith.defaults = _.props.extend( null, commandImply.defaults );
 
 var command = commandWith.command = Object.create( null );
 command.hint = 'Select a module to execute command.';
@@ -4435,7 +4405,8 @@ function commandWillfileSet( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
@@ -4506,7 +4477,8 @@ function commandWillfileDel( e )
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   subjectNormalize();
@@ -4573,7 +4545,8 @@ function commandWillfileDel( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './';
+    // e.subject = './';
+    e.subject = cui.transaction.withPath;
   }
 }
 
@@ -4607,14 +4580,15 @@ function commandWillfileExtend( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.props.keys( willfilePropertiesMap ).length > 0 )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
     let o =
     {
       request : e.subject,
-      onProperty : _.props.extend,
+      onProperty : _.props.extend.bind( _.property ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4679,14 +4653,15 @@ function commandWillfileSupplement( e )
   cui._command_head( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
+  // e.subject = './';
+  e.subject = cui.transaction.withPath;
 
   if( e.subject )
   {
     let o =
     {
       request : e.subject,
-      onProperty : _.props.supplement,
+      onProperty : _.props.supplement.bind( _.props ),
       willfilePropertiesMap,
       ... e.optionsMap,
     };
@@ -4741,6 +4716,20 @@ command.properties =
 
 //
 
+/* aaa2 :
+will .willfile.extend dst/ src1 dir/src2 src/
+will .willfile.extend dst src1 dir/src2 src/
+will .willfile.extend dst 'src1/**' dir/src2 src/
+
+will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
+
+algorithm similar to mapExtendAppending
+
+if anon then will.yml
+else then name.will.yml
+
+*/
+
 function commandWillfileExtendWillfile( e )
 {
   let cui = this;
@@ -4749,7 +4738,7 @@ function commandWillfileExtendWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.extend,
+    onSection : _.props.extend.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4778,7 +4767,7 @@ commandWillfileExtendWillfile.defaults =
 
   'submodulesDisabling' : 0,
   'format' : 'willfile',
-  'verbosity' : 3,
+  'logger' : 3,
 };
 
 var command = commandWillfileExtendWillfile.command = Object.create( null );
@@ -4825,7 +4814,7 @@ function commandWillfileSupplementWillfile( e )
   let o =
   {
     request : e.subject,
-    onSection : _.props.supplement,
+    onSection : _.props.supplement.bind( _.props ),
     ... e.optionsMap,
   };
   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
@@ -4845,212 +4834,32 @@ command.properties = _.props.extend( null, commandWillfileExtendWillfile.command
 
 //
 
-/* qqq : for Dmytro : mess! */
 function commandWillfileMergeIntoSingle( e )
 {
-  /*
-   * Dmytro : this strange command is temporary script.
-   * The command contains of all main logic. If it needs
-   * then command will be divided into separate reusable parts
-  */
   let cui = this;
-  let fileProvider = cui.fileProvider;
-  let path = cui.fileProvider.path;
-  let inPath = cui.inPath ? cui.inPath : path.current();
   cui._command_head( commandWillfileMergeIntoSingle, arguments );
-  // _.routine.options_( commandWillfileMergeIntoSingle, e.propertiesMap );
 
-  let willfileName = e.optionsMap.primaryPath || 'CommandWillfileMergeIntoSingle';
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile merge into single',
+    onEach : handleEach,
+    commandRoutine : commandWillfileMergeIntoSingle,
+  });
 
-  let o =
+  function handleEach( it )
   {
-    request : willfileName + ' ./',
-    onSection : _.props.supplement,
-  };
-  _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
-
-  if( e.optionsMap.secondaryPath )
-  {
-    let o2 =
-    {
-      request : `${ willfileName } ${ e.optionsMap.secondaryPath }`,
-      name : 0,
-      onSection : _.props.extend,
-    };
-    _.will.Module.prototype.willfileExtendWillfile.call( cui, o2 );
-  }
-
-  let dstPath = filesFind( willfileName, 1 );
-  _.assert( dstPath.length === 1 );
-  dstPath = dstPath[ 0 ];
-
-  let logger = _.logger.relativeMaybe( cui.transaction.logger, cui.fileProviderVerbosityDelta );
-
-  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger });
-  filterAboutNpmFields();
-  filterSubmodulesCriterions();
-  if( e.optionsMap.filterSameSubmodules )
-  filterSameSubmodules()
-  if( e.optionsMap.submodulesDisabling )
-  submodulesDisable();
-  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger });
-
-  /* */
-
-  renameFiles();
-
-  return null;
-
-  /* */
-
-  function filesFind( srcPath, dst )
-  {
-    if( dst && path.isGlob( srcPath ) )
-    throw _.err( 'Path to destination file should have not globs.' );
-
-    srcPath = path.join( inPath, srcPath );
-
-    if( fileProvider.isDir( srcPath ) )
-    srcPath = path.join( srcPath, './' );
-
-    return cui.willfilesFind
+    return it.opener.openedModule.willfileMergeIntoSingle
     ({
-      commonPath : srcPath,
-      withIn : 1,
-      withOut : 0,
+      ... e.optionsMap,
+      primaryPath : e.optionsMap.primaryPath,
     });
-  }
-
-  /* */
-
-  function filterSubmodulesCriterions()
-  {
-    let submodules = config.submodule;
-    for( let name in submodules )
-    {
-      let criterions = submodules[ name ].criterion;
-      if( criterions )
-      if( criterions.debug )
-      if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
-      {
-        delete criterions.debug;
-        criterions.development = 1;
-      }
-    }
-  }
-
-  /* */
-
-  function filterAboutNpmFields()
-  {
-    let about = config.about;
-    for( let name in about )
-    {
-      if( !_.strBegins( name, 'npm.' ) )
-      continue;
-
-      if( _.arrayIs( about[ name ] ) )
-      {
-        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
-      }
-      else if( _.aux.is( about[ name ] ) )
-      {
-        let npmMap = about[ name ];
-        let reversedMap = Object.create( null );
-
-        for( let property in npmMap )
-        if( npmMap[ property ] in reversedMap )
-        filterPropertyByName( npmMap, reversedMap, property )
-        else
-        reversedMap[ npmMap[ property ] ] = property;
-      }
-    }
-  }
-
-  /* */
-
-  function filterPropertyByName( srcMap, butMap, property )
-  {
-    if( _.strHas( property, '-' ) )
-    delete srcMap[ property ];
-    else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
-    delete srcMap[ butMap[ srcMap[ property ] ] ];
-    else if( !_.strHasAny( property, [ '.', '-' ] ) )
-    {
-      if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
-      delete srcMap[ butMap[ srcMap[ property ] ] ];
-    }
-  }
-
-  /* */
-
-  function filterSameSubmodules()
-  {
-    let submodules = config.submodule;
-    let regularPaths = new Set();
-    let mergedSubmodules = Object.create( null );
-    for( let name in submodules )
-    {
-      let parsed = _.uri.parse( submodules[ name ].path );
-
-      let parsedModuleName;
-      if( _.longHas( parsed.protocols, 'npm' ) )
-      {
-        parsedModuleName = _.npm.path.parse( submodules[ name ].path ).host;
-      }
-      else if( _.longHas( parsed.protocols, 'git' ) )
-      {
-        parsedModuleName = _.npm.path.parse({ remotePath : submodules[ name ].path, full : 0, atomic : 0, objects : 1 }).repo;
-      }
-      else
-      {
-        if( regularPaths.has( submodules[ name ].path ) )
-        continue;
-
-        regularPaths.add( submodules[ name ].path );
-        parsedModuleName = name;
-      }
-
-      if( !( parsedModuleName in mergedSubmodules ) )
-      mergedSubmodules[ parsedModuleName ] = submodules[ name ];
-    }
-    config.submodule = mergedSubmodules;
-  }
-
-  /* */
-
-  function submodulesDisable()
-  {
-    // if( !config )
-    // config = configRead( dstPath.absolute ); /* aaa : for Dmytro : ?? */ /* Dmytro : artifact, code above will be improved */
-    for( let dependency in config.submodule )
-    config.submodule[ dependency ].enabled = 0;
-  }
-
-  /* */
-
-  function renameFiles()
-  {
-    let unnamedWillfiles = filesFind( './.*' );
-    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
-    {
-      let oldName = unnamedWillfiles[ i ].absolute;
-      let newName = path.join( unnamedWillfiles[ i ].dir, 'Old' + unnamedWillfiles[ i ].fullName );
-      fileProvider.fileRename( newName, oldName );
-    }
-
-    if( !e.optionsMap.primaryPath )
-    {
-      let oldName = dstPath.absolute;
-      let newName = path.join( dstPath.dir, 'will.yml' );
-      fileProvider.fileRename( newName, oldName );
-    }
   }
 }
 
 commandWillfileMergeIntoSingle.defaults =
 {
-  verbosity : 3,
+  logger : 3,
   primaryPath : null,
   secondaryPath : null,
   submodulesDisabling : 1,
@@ -5197,8 +5006,8 @@ function commandGitPull( e )
   // if( 'profile' in e.propertiesMap )
   // delete e.propertiesMap.profile;
 
-  let pathsContainer = [];
-  let ready = _.Consequence();
+  let modules = [];
+  let ready = _.take( null );
   let provider;
 
   // return cui._commandBuildLike
@@ -5214,19 +5023,7 @@ function commandGitPull( e )
 
   function handleEach( module )
   {
-    pathsContainer.push( module.dirPath );
-
-    ready.then( () =>
-    {
-      return module.gitPull
-      ({
-        dirPath : module.dirPath,
-        verbosity : cui.transaction.verbosity,
-        profile : e.optionsMap.profile,
-        restoringHardLinks : 0
-      });
-    })
-
+    modules.push( module );
     return null;
   }
   // function handleEach( it )
@@ -5241,25 +5038,49 @@ function commandGitPull( e )
 
   function handleCommandEnd()
   {
-    let openers = cui.currentOpeners;
-    provider = openers[ 0 ].openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    let severalModules = modules.length > 1;
+    if( severalModules )
+    {
+      let openers = cui.currentOpeners;
+      let paths = _.select( modules, '*/dirPath' );
+      provider = openers[ 0 ].openedModule._providerArchiveMake
+      ({
+        dirPath : cui.fileProvider.path.common( paths ),
+        logger : cui.transaction.logger,
+        profile : e.optionsMap.profile,
+      });
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+      if( cui.transaction.verbosity )
+      {
+        // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+        logger.log( `\nRestoring hardlinks in directory(s) :` );
+        logger.up();
+        logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+        logger.down();
+      }
+      provider.archive.restoreLinksBegin();
+    }
 
+    modules.forEach( ( module ) =>
+    {
+      ready.then( () =>
+      {
+        return module.gitPull
+        ({
+          dirPath : module.dirPath,
+          verbosity : cui.transaction.verbosity,
+          profile : e.optionsMap.profile,
+          restoringHardLinks : !severalModules
+        });
+      })
+    })
+
+    if( severalModules )
     ready.tap( () =>
     {
       provider.archive.restoreLinksEnd();
       return null;
     });
-
-    ready.take( null );
 
     return ready;
   }
@@ -5463,8 +5284,8 @@ function commandGitSync( e )
 {
   let cui = this;
   cui._command_head( commandGitSync, arguments );
-  let pathsContainer = [];
-  let ready = _.Consequence();
+  let modules = [];
+  let ready = _.take( null );
   let provider;
 
   // return cui._commandBuildLike
@@ -5481,17 +5302,7 @@ function commandGitSync( e )
 
   function handleEach( module )
   {
-    pathsContainer.push( module.dirPath );
-
-    ready.then( () =>
-    {
-      return module.gitSync
-      ({
-        commit : e.subject,
-        ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
-        restoringHardLinks : 0
-      });
-    })
+    modules.push( module );
     return null;
   }
   // function handleEach( it )
@@ -5505,25 +5316,48 @@ function commandGitSync( e )
 
   function handleCommandEnd()
   {
-    let openers = cui.currentOpeners;
-    provider = openers[ 0 ].openedModule._providerArchiveMake
-    ({
-      dirPath : cui.fileProvider.path.common( pathsContainer ),
-      verbosity : cui.transaction.verbosity,
-      profile : e.optionsMap.profile,
-    });
+    let severalModules = modules.length > 1;
+    if( severalModules )
+    {
+      let openers = cui.currentOpeners;
+      let paths = _.select( modules, '*/dirPath' );
+      provider = openers[ 0 ].openedModule._providerArchiveMake
+      ({
+        dirPath : cui.fileProvider.path.common( paths ),
+        logger : cui.transaction.logger,
+        profile : e.optionsMap.profile,
+      });
 
-    if( cui.transaction.verbosity )
-    cui.transaction.logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
-    provider.archive.restoreLinksBegin();
+      if( cui.transaction.verbosity )
+      {
+        // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
+        logger.log( `\nRestoring hardlinks in directory(s) :` );
+        logger.up();
+        logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
+        logger.down();
+      }
+      provider.archive.restoreLinksBegin();
+    }
 
+    modules.forEach( ( module ) =>
+    {
+      ready.then( () =>
+      {
+        return module.gitSync
+        ({
+          message : e.subject,
+          ... _.mapOnly_( null, e.optionsMap, module.gitSync.defaults ),
+          restoringHardLinks : !severalModules
+        });
+      })
+    })
+
+    if( severalModules )
     ready.tap( () =>
     {
       provider.archive.restoreLinksEnd();
       return null;
     });
-
-    ready.take( null );
 
     return ready;
   }
@@ -5857,20 +5691,6 @@ command.properties = _.props.extend( null,
 // npm
 // --
 
-/* aaa2 :
-will .willfile.extend dst/ src1 dir/src2 src/
-will .willfile.extend dst src1 dir/src2 src/
-will .willfile.extend dst 'src1/**' dir/src2 src/
-
-will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
-
-algorithm similar to mapExtendAppending
-
-if anon then will.yml
-else then name.will.yml
-
-*/
-
 function commandNpmPublish( e )
 {
   let cui = this;
@@ -5889,14 +5709,14 @@ function commandNpmPublish( e )
     return it.opener.openedModule.npmModulePublish
     ({
       ... e.optionsMap,
-      commit : e.subject,
+      message : e.subject,
     });
   }
 }
 
 commandNpmPublish.defaults =
 {
-  commit : null,
+  message : null,
   tag : null,
 
   force : 0,
@@ -5909,27 +5729,18 @@ command.hint = 'Publish in NPM.';
 command.subjectHint = 'A commit message for uncommitted changes. Default is ".".';
 command.propertiesAliases =
 {
-  verbosity : [ 'v' ]
-}
+  verbosity : [ 'v' ],
+};
 command.properties =
 {
-  commit : 'message', /* qqq : for Dmytro : bad : bad name */
-  tag : 'tag',
-  force : 'forces diff',
-  dry : 'dry run',
-  verbosity : 'verbosity',
+  message : 'Commit message', /* aaa : for Dmytro : bad : bad name */ /* Dmytro : renamed */
+  tag : 'Tag for NPM module',
+  force : 'Forces diff.',
+  dry : 'Dry run.',
+  verbosity : 'Change verbosity of output.',
 };
-/* qqq : for Dmytro : bad : break of pattern */
 
 //
-
-/* aaa : for Dmytro : first cover
-will .npm.dep.add . dry:1 editing:0
-*/
-
-/* Dmytro : covered */
-
-/* aaa : for Dmytro : write full coverage */ /* Dmytro : covered behavior that was implemented before, no additional features are tested */
 
 function commandNpmDepAdd( e )
 {
@@ -6011,14 +5822,6 @@ commandNpmInstall.defaults =
   verbosity : 2,
 };
 
-/* aaa2 : for Dmytro : write test routines
-- make sure there is test wich delete submodule which already has a link. files which are referred by the link should not be deleted
-- duplicate tests in NpmTools and willbe
-*/
-/* Dmytro : covered
-- first requirements is actual for routine `commandNpmDepAdd`, the case is covered
-- duplicated
-*/
 var command = commandNpmInstall.command = Object.create( null );
 command.hint = 'Install NPM dependencies for the module.';
 command.propertiesAliases =
@@ -6036,6 +5839,7 @@ command.properties =
 
 //
 
+/* qqq : for Dmytro : cover, please */
 function commandNpmClean( e )
 {
   let cui = this;
@@ -6052,8 +5856,7 @@ function commandNpmClean( e )
   _.routine.options_( commandNpmClean, o );
   _.sure( !e.subject );
 
-  // o.logger = new _.Logger({ output : logger });
-  o.logger = new _.Logger({ output : cui.transaction.logger });
+  o.logger = new _.Logger({ output : logger });
   o.logger.verbosity = o.verbosity;
   delete o.verbosity;
   o.localPath = path.resolve( o.to || '.' );
@@ -6705,7 +6508,6 @@ let Associates =
 
 let Restricts =
 {
-  topCommand : null,
   will : null,
   implied : _.define.own( {} ),
   transactionOld : null
@@ -6719,7 +6521,7 @@ let Statics =
 let Forbids =
 {
   currentPath : 'currentPath',
-  currentOpenerPath : 'currentOpenerPath',
+  currentOpenerPath : 'currentOpenerPath'
 }
 
 let Accessors =
@@ -6771,7 +6573,7 @@ let Extension =
   _commandCleanLike,
   _commandNewLike,
   _commandTreeLike,
-  _commandModulesLike, /* qqq : for Dmytro : remove */
+  // _commandModulesLike, /* aaa : for Dmytro : use _commandModuleOrientedLike instaed of _commandModulesLike */ /* Dmytro : is not used */
   _commandModuleOrientedLike,
 
   // command
@@ -6872,7 +6674,7 @@ let Extension =
   commandGitTag,
   commandGitHookPreservingHardLinks,
 
-  commandRepoPullOpen, /* aaa : cover */ /* Dmytro : covered */
+  commandRepoPullOpen,
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,
@@ -6922,4 +6724,3 @@ if( !module.parent )
 Self.Exec();
 
 })();
-

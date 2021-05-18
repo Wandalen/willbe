@@ -17,7 +17,19 @@ if( typeof module !== 'undefined' )
 const _global = _global_;
 const _ = _global_.wTools;
 
-/*
+/* xxx2 : qqq2 :
+
+should throw error instead of deleting itself!
+
+> will .clean
+
+willfile :
+
+  path :
+    proto : proto
+    temp :
+      - '{path::out}'
+      - '{path::proto}'
 
 */
 
@@ -3669,10 +3681,9 @@ function exportRecursive( test )
 
   /* - */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.case = 'export debug';
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'ab/' ) });
     return opener.open();
@@ -3729,7 +3740,18 @@ function exportRecursive( test )
 
   return a.ready;
 
-} /* end of function exportRecursive */
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
 //
 
@@ -5192,23 +5214,18 @@ function moduleIsNotValid( test )
   let a = context.assetFor( test, 'submodulesDownloadErrors' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'download submodule';
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
 
-    a.will.prefer
-    ({
-      allOfSub : 1,
-    });
+    a.will.prefer({ allOfSub : 1 });
 
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
-
+  a.ready.then( () => opener.openedModule.subModulesDownload() )
   .then( () =>
   {
     test.case = 'change out will-file';
@@ -5569,7 +5586,6 @@ function moduleResolve( test )
   return a.ready;
 }
 
-/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
 moduleResolve.description =
 `
 Test routine checks that module resolves the own export resources.
@@ -5613,6 +5629,7 @@ function moduleResolveWithFunctionThisInSelector( test )
 
   /* - */
 
+
   a.ready.finally( ( err, arg ) =>
   {
     if( err )
@@ -5625,7 +5642,6 @@ function moduleResolveWithFunctionThisInSelector( test )
   return a.ready;
 }
 
-/* aaa for Dmytro : write test for resolving of export resources in supermodule and submodule */
 moduleResolveWithFunctionThisInSelector.description =
 `
 Test routine checks that module resolves resources when the selector contains part f::this.
@@ -5754,18 +5770,15 @@ function reflectorResolve( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  begin().then( () =>
   {
-    a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
-
     test.case = 'reflector::reflect.proto.0.debug formed:1';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.0.debug' )
     var expected =
@@ -5782,7 +5795,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5800,7 +5813,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 0 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     resolved.form();
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5825,7 +5838,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe'
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5843,7 +5856,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 1 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
 
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5868,7 +5881,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5886,7 +5899,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 2 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5910,7 +5923,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5928,7 +5941,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 3 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5952,7 +5965,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5972,7 +5985,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 4 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -5998,7 +6011,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6020,7 +6033,7 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : '{path::out.*=1}/{path::dir1}' },
       'criterion' : { 'debug' : 1, 'variant' : 5 },
       'inherit' : [ 'predefined.*' ],
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6040,7 +6053,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6063,7 +6076,7 @@ function reflectorResolve( test )
         'prefixPath' : '{path::out.*=1}/{path::dir1}/{path::testFile}'
       },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6087,7 +6100,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
-    }
+    };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6109,7 +6122,7 @@ function reflectorResolve( test )
         }
       },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
-    }
+    };
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -6133,6 +6146,18 @@ function reflectorResolve( test )
   });
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/dir2/-Excluded.js' ), 'console.log( \'dir2/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
@@ -7975,9 +8000,8 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  a.ready.then( () =>
+  begin().then( () =>
   {
-    a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
   });
@@ -8004,7 +8028,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
       'proto/b/File2.debug.js/**',
       'proto/b/File2.release.js/**',
       'proto/dir3.test/**'
-    ]
+    ];
     test.identical( a.rel( resolved ), expected );
 
     return null;
@@ -8022,6 +8046,18 @@ function pathsResolveOfSubmodulesAndOwn( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
 }
 
 //
@@ -10204,6 +10240,131 @@ function modulesFor( test )
 
   /* - */
 
+  return a.ready;
+
+
+  /* - */
+
+  function onEachModule( module, op )
+  {
+    onEachModules.push( module );
+    return null;
+  }
+
+  /* - */
+
+  function onEachJunction( junction, op )
+  {
+    onEachJunctions.push( junction );
+    return null;
+  }
+
+  /* - */
+
+  function onEachVisitedObject( object, op )
+  {
+    onEachVisitedObjects.push( object );
+    return null;
+  }
+
+  /* - */
+
+  function onBegin( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function onEnd( object, op )
+  {
+    return null;
+  }
+
+  /* - */
+
+  function clean()
+  {
+    onEachModules = [];
+    onEachJunctions = [];
+    onEachVisitedObjects = [];
+  }
+
+  /* - */
+
+  function begin( o2 )
+  {
+    a.ready.then( () =>
+    {
+      clean();
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      if( o2.tracing === undefined )
+      o2.tracing = a.path.isGlob( o2.selector );
+
+      return a.will.modulesFindWithAt( o2 )
+      .then( ( it ) =>
+      {
+        openers = it.openers;
+        return null;
+      })
+    })
+
+    return a.ready;
+  }
+
+  /* - */
+
+  function end()
+  {
+    return a.ready.then( () =>
+    {
+      _.each( openers, ( opener ) => opener.finit() )
+      return null;
+    });
+  }
+}
+
+//
+
+function modulesForWithOptionsWith( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'modulesFor' );
+  let onEachModules, onEachJunctions, onEachVisitedObjects;
+  let openers;
+
+  let defaults =
+  {
+    withBranches : 1,
+    withDisabledModules : 0,
+    withDisabledStem : null,
+    withDisabledSubmodules : 0,
+    withEnabledModules : 1,
+    withEnabledSubmodules : 1,
+    withIn : 1,
+    withInvalid : 1,
+    withKnown : 1,
+    withMandatorySubmodules : 1,
+    withOptionalSubmodules : 1,
+    withOut : 1,
+    withPeers : 1,
+    withStem : 1,
+    withTerminals : 1,
+    withUnknown : 0,
+    withValid : 1,
+    withoutDuplicates : 0,
+
+    onEachModule : onEachModule,
+    onEachJunction : onEachJunction,
+    onEachVisitedObject : onEachVisitedObject,
+    onBegin : onBegin,
+    onEnd : onEnd,
+  }
+
+  /* - */
+
   begin({ selector : a.abs( './a' ) })
   .then( () =>
   {
@@ -10734,6 +10895,9 @@ function modulesFor( test )
   }
 }
 
+modulesFor.rapidity = -1;
+modulesFor.routineTimeOut = 1500000;
+
 //
 
 function modulesForWithSubmodules( test )
@@ -11066,7 +11230,8 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
-    test.identical( submodule.opener.openedModule.currentRemotePath, null );
+    test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will#.*/ ) );
+    // test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
@@ -11262,7 +11427,8 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( `../-repo` ), `git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!${ tag }` ) );
-    test.identical( submodule.opener.openedModule.currentRemotePath, null );
+    test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+hd:\/\/\/.*\/ModuleForTesting1\?out=out\/wModuleForTesting1\.out\.will#.*/ ) );
+    // test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
@@ -13084,6 +13250,7 @@ const Proto =
     modulesFindEachAt,
     modulesForOpeners,
     modulesFor,
+    modulesForWithOptionsWith,
     modulesForWithSubmodules,
 
     // submodule

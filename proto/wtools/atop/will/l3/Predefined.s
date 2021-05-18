@@ -5,15 +5,14 @@
 
 let Tar, Open;
 const _ = _global_.wTools;
-const Self = Object.create( null );
+const Self = _.will.Predefined = _.will.Predefined || Object.create( null );
 
 // --
 // implementation
 // --
 
-let filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
-let defaults = filesReflect.defaults;
-
+let _filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
+let defaults = _filesReflect.defaults;
 defaults.linking = 'hardLinkMaybe';
 defaults.mandatory = 1;
 defaults.dstRewritingOnlyPreserving = 1;
@@ -36,7 +35,7 @@ function stepRoutineDelete( frame )
   beginLog();
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   let filePath = step.inPathResolve( opts.filePath );
 
@@ -121,8 +120,8 @@ function stepRoutineReflect( frame )
 
   let reflector = step.reflectorResolve( opts.filePath );
 
-  _.sure( reflector instanceof _.will.Reflector, 'Step "reflect" expects reflector, but got', _.entity.strType( reflector ) )
-  _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
+  _.sure( reflector instanceof _.will.Reflector, () => `Step "reflect" expects reflector, but got ${_.entity.strType( reflector )}` )
+  _.assert( reflector.formed === 3, () => `${reflector.qualifiedName} is not formed` );
 
   beginLog();
 
@@ -130,15 +129,17 @@ function stepRoutineReflect( frame )
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
-  // _.props.supplement( opts, reflectorOptions );
   _.props.extend( opts, reflectorOptions );
 
   opts.verbosity = 0;
 
   return _.Consequence.Try( () =>
   {
-    // debugger;
-    return _.will.Predefined.filesReflect.call( fileProvider, opts );
+
+    debugger;
+    // _.will.Predefined._filesReflect.head.call( fileProvider, _.will.Predefined._filesReflect, opts );
+
+    return _.will.Predefined._filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
   {
@@ -147,10 +148,8 @@ function stepRoutineReflect( frame )
   })
   .catch( ( err ) =>
   {
-    debugger;
     err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportString(), '  ' ), '\n' );
     throw _.err( err );
-    // throw _.errBrief( err );
   })
 
   /* */
@@ -159,7 +158,6 @@ function stepRoutineReflect( frame )
   {
     if( verbosity < 3 )
     return;
-
     logger.log( ' : ' + reflector.decoratedQualifiedName + '' );
   }
 
@@ -268,7 +266,6 @@ function stepRoutineJs( frame )
   }
   catch( err )
   {
-    debugger;
     throw _.err( err, '\nFailed to open JS file', _.strQuote( opts.js ) );
   }
 
@@ -325,7 +322,6 @@ function stepRoutineEcho( frame )
   }
   catch( err )
   {
-    debugger;
     throw _.err( err, '\nFailed to resolve echo output', _.strQuote( opts.echo ) );
   }
 
@@ -565,7 +561,7 @@ function stepRoutineView( frame )
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   debugger;
   let filePath = module.pathResolve
@@ -639,7 +635,7 @@ function stepRoutineNpmGenerate( frame )
   opts.currentContext = step;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.npmGenerateFromWillfile( opts );
 }
@@ -667,7 +663,7 @@ function stepRoutineWillfileFromNpm( frame )
   opts.currentContext = step;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.willfileGenerateFromNpm( opts );
 }
@@ -693,7 +689,7 @@ function stepRoutineGitExecCommand( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitExecCommand( opts );
 }
@@ -721,7 +717,7 @@ function stepRoutineGitPull( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitPull( opts );
 }
@@ -747,7 +743,7 @@ function stepRoutineGitPush( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitPush( opts );
 }
@@ -774,7 +770,7 @@ function stepRoutineGitReset( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitReset( opts );
 }
@@ -806,7 +802,7 @@ function stepRoutineGitStatus( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitStatus( opts );
 }
@@ -840,7 +836,7 @@ function stepRoutineGitSync( frame )
   opts.verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitSync( opts );
 }
@@ -873,7 +869,7 @@ function stepRoutineGitTag( frame )
   delete opts[ 'tag.description' ];
 
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   return module.gitTag( opts );
 }
@@ -902,7 +898,7 @@ function stepRoutineModulesUpdate( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   for( let opt in opts )
   {
@@ -985,7 +981,7 @@ function stepRoutineSubmodulesUpdate( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
-  _.assert( _.objectIs( opts ) );
+  _.assert( _.object.isBasic( opts ) );
 
   for( let opt in opts )
   {
@@ -1243,7 +1239,7 @@ stepRoutineWillfileVersionBump.uniqueOptions =
 let Extension =
 {
 
-  filesReflect,
+  _filesReflect,
 
   stepRoutineDelete,
   stepRoutineReflect,
@@ -1284,7 +1280,6 @@ let Extension =
   stepRoutineWillfileVersionBump,
 }
 
-_.props.extend( Self, Extension );
-_.will[ 'Predefined' ] = Self;
+_.props.extend( _.will.Predefined, Extension );
 
 })()

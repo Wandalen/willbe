@@ -243,11 +243,16 @@ function formAssociates()
     _.FileProvider.Npm().providerRegisterTo( hub );
     _.FileProvider.Http().providerRegisterTo( hub );
 
+    /* xxx : qqq : remove _.FileFilter.Image, use HD provider directly */
+    // let defaultProvider = _.FileProvider.Default();
+    // let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
+    // let archive = new _.FilesGraphArchive({ imageFileProvider : image });
+    // image.providerRegisterTo( hub );
+    // hub.defaultProvider = image;
+
     let defaultProvider = _.FileProvider.Default();
-    let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
-    let archive = new _.FilesGraphArchive({ imageFileProvider : image });
-    image.providerRegisterTo( hub );
-    hub.defaultProvider = image;
+    defaultProvider.providerRegisterTo( hub );
+    hub.defaultProvider = defaultProvider;
 
     will.fileProvider = hub;
 
@@ -368,7 +373,7 @@ function PathToRole( filePath )
   let role = null;
 
   if( _.argumentsArray.like( filePath ) )
-  return _.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
+  return _.container.map_( null, filePath, ( filePath ) => this.PathToRole( filePath ) );
 
   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
   let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
@@ -419,6 +424,7 @@ function CommonPathFor( willfilesPath )
 function CommonPathNormalize( commonPath )
 {
   let commonPath2 = commonPath;
+  _.assert( !!commonPath && !!commonPath.replace );
   commonPath2 = commonPath.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.\w+)?$/, '' );
   return commonPath2;
 }
@@ -533,17 +539,38 @@ function pathIsRemote( remotePath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( arguments.length === 1, 'Expects no arguments' );
+  _.assert( arguments.length === 1, 'Expects exactly one argument {-remotePath-}' );
   _.assert( _.strIs( remotePath ) );
 
   // if( remotePath === undefined )
   // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
-  let remoteProvider = fileProvider.providerForPath( remotePath );
+  // let remoteProvider = fileProvider.providerForPath( remotePath );
+
+  let remoteProvider = _.repo.providerForPath({ remotePath });
 
   _.assert( !!remoteProvider );
 
-  return !!remoteProvider.isVcs;
+  return !_.longHasAny( [ 'hd', 'file' ], remoteProvider.name );
+  // return !!remoteProvider.isVcs;
 }
+
+// function pathIsRemote( remotePath )
+// {
+//   let will = this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( arguments.length === 1, 'Expects no arguments' );
+//   _.assert( _.strIs( remotePath ) );
+//
+//   // if( remotePath === undefined )
+//   // remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+//   let remoteProvider = fileProvider.providerForPath( remotePath );
+//
+//   _.assert( !!remoteProvider );
+//
+//   return !!remoteProvider.isVcs;
+// }
 
 //
 
@@ -2117,7 +2144,7 @@ function modulesEach_head( routine, args )
   if( _.routineIs( args[ 0 ] ) )
   o = { onUp : args[ 0 ] };
   o = _.routine.options_( routine, o );
-  _.assert( args.length === 0 || args.length === 1 );
+  _.assert( args.length === 0 || args.length === 1, () => `Expects optional argument, but got ${args.length} arguments` );
   _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) ) /* xxx : add '* / junction' */
 
   return o;
@@ -2767,6 +2794,18 @@ function modulesDownload_body( o )
       }
     }
 
+    if( !junction.relation )
+    {
+      let junction2 = will.junctionMap[ junction.remotePath ];
+      if( junction2 && junction2 !== junction )
+      throw _.err
+      (
+        'Different versions of the same submodule are not allowed.',
+        `\n${junction.name} -> ${junction.remotePath}`,
+        `\n${junction2.name} -> ${junction2.remotePath}`
+      )
+    }
+
     _.assert( !!junction.relation && !!junction.relation.opener );
     let opener = junction.relation.opener;
 
@@ -3015,6 +3054,7 @@ function modulesClean( o )
   {
     let o2 = _.mapOnly_( null, o, will.cleanDelete.defaults );
     o2.files = files;
+    verifyNotDeleteItself();
     return will.cleanDelete( o2 );
   })
   .finally( ( err, arg ) =>
@@ -3044,6 +3084,27 @@ function modulesClean( o )
     return module.cleanWhatSingle( o3 );
   }
 
+  /* */
+
+  function verifyNotDeleteItself()
+  {
+    let willfilesPath;
+
+    _.each( o.modules, ( object ) =>
+    {
+      let module = object;
+
+      if( object instanceof _.will.ModuleOpener )
+      module = object.openedModule;
+
+      const willfilesPath = _.arrayAs( module.willfilesPath );
+      if( _.longHasAny( files[ '/' ], willfilesPath ) )
+      {
+        const msg = `${ module.qualifiedName } should not delete itself. Please, set correct {-path::out-} and {-path::temp-}`;
+        throw _.errBrief( msg );
+      }
+    });
+  }
 }
 
 var defaults = modulesClean.defaults = _.props.extend( null, modulesFor.defaults );
@@ -3596,7 +3657,7 @@ function junctionsInfoExport( junctions )
     // });
   }
 
-  return _.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
+  return _.container.map_( null, junctions, ( junction ) => junction.exportString() ).join( '\n' );
 }
 
 // --
@@ -4638,7 +4699,7 @@ function willfilesSelectPaired( record, records )
   let commonPathMap = Object.create( null );
 
   _.assert( arguments.length === 2 );
-  _.assert( record instanceof _.FileRecord );
+  _.assert( record instanceof _.files.FileRecord );
   _.assert( _.arrayIs( records ) );
 
   records.forEach( ( record ) =>
@@ -5162,10 +5223,10 @@ function hookCall( o )
   _.sure( o.withPath === null || _.strIs( o.withPath ) || _.strsAreAll( o.withPath ), 'Current path should be string if defined' );
 
   if( o.module && o.withPath )
-  o.withPath = path.s.join( o.module.inPath, o.withPath );
+  o.withPath = path.s.join( o.module.inPath, path.fromGlob( o.withPath ) );
   else
   // o.withPath = path.s.join( o.will.withPath, o.withPath );
-  o.withPath = path.s.join( o.will.transaction.withPath, o.withPath );
+  o.withPath = path.s.join( o.will.transaction.withPath, path.fromGlob( o.withPath ) );
 
   /* */
 
@@ -5350,8 +5411,6 @@ function hooksGet()
 // npm
 // --
 
-/* aaa : for Dmytro : move to npm tools. leave wrap here */ /* Dmytro : moved, not me */
-
 function npmDepAdd( o )
 {
   let will = this;
@@ -5371,8 +5430,6 @@ function npmDepAdd( o )
   if( parsed.protocol === 'hd' )
   o.depPath = path.join( path.current(), o.depPath );
 
-  // if( !o.as )
-  // o.as = _.npm.fileReadName({ localPath : path.current() });
   if( !o.as )
   if( parsed.protocol === 'hd' )
   o.as = _.npm.fileReadName({ localPath : path.localsFromGlobals( o.depPath ) });
@@ -5389,26 +5446,6 @@ function npmDepAdd( o )
   delete o.verbosity;
 
   return _.npm.depAdd( o );
-
-  // let nodeModulesPath = _.npm.pathDownloadFromLocal( o.localPath );
-  //
-  // _.sure( fileProvider.fileExists( _.npm.pathLocalFromDownload( nodeModulesPath ) ), `nodeModulesPath:${nodeModulesPath} does not exist` );
-  // _.sure( fileProvider.fileExists( o.depPath ), `depPath:${o.depPath} does not exist` );
-  // _.sure( _.strDefined( o.as ), '`as` is not specified' )
-  //
-  // let dstPath = path.join( nodeModulesPath, o.as );
-  // if( o.verbosity )
-  // logger.log( `Linking ${_.ct.format( o.depPath, 'path' )} to ${_.ct.format( dstPath, 'path' )}` );
-  // if( !o.dry )
-  // fileProvider.softLink
-  // ({
-  //   dstPath : dstPath,
-  //   srcPath : o.depPath,
-  //   makingDirectory : 1,
-  //   rewritingDirs : 1,
-  // });
-  //
-  // return true;
 }
 
 npmDepAdd.defaults =

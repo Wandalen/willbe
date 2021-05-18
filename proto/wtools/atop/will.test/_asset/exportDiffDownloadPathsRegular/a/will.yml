@@ -1,17 +1,19 @@
 
 about :
 
-  name : a0
+  name : a
   version : '0.0.0'
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
-  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/!delta
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!alpha
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/
 
 path :
 
-  out : out
+  out : ../out
   out.debug :
     path : '{path::out}/debug'
     criterion :
@@ -27,6 +29,7 @@ reflector :
     dst :
       basePath : .
       prefixPath : path::out.debug
+    dstRewritingOnlyPreserving : 0
 
 step :
 
@@ -41,7 +44,7 @@ build :
 
   export :
     steps :
-      - submodules.download
+      # - submodules.download
       - reflect.submodules
       - export
     criterion :

@@ -8,7 +8,7 @@ submodule :
   a : group1/a
   b : group1/b
   c : group2/c
-  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/!delta
 
 path :
 
