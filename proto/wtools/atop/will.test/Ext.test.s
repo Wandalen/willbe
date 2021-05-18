@@ -3261,16 +3261,12 @@ function reflectGetPath( test )
     [
       '.',
       './debug',
-      './debug/Integration.test.ss',
       './debug/wtools',
       './debug/wtools/testing',
-      './debug/wtools/testing/Basic.s',
+      './debug/wtools/testing/Common.s',
       './debug/wtools/testing/l3',
       './debug/wtools/testing/l3/testing12',
-      './debug/wtools/testing/l3/testing12/Include.s',
       './debug/wtools/testing/l3/testing12/ModuleForTesting12.s',
-      './debug/wtools/testing/l3.test',
-      './debug/wtools/testing/l3.test/ModuleForTesting12.test.s',
     ];
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
