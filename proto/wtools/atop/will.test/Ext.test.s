@@ -5253,7 +5253,7 @@ function withDoInfo( test )
   {
     test.case = '.hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5268,7 +5268,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5283,7 +5283,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5298,7 +5298,7 @@ function withDoInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     // test.identical( _.strCount( op.output, 'local :' ), 7 );
@@ -5313,7 +5313,7 @@ function withDoInfo( test )
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, 'local :' ), 7 );
