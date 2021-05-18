@@ -3111,9 +3111,13 @@ function modulesClean( o )
   {
     let willfilesPath;
 
-    _.each( o.modules, ( opener ) =>
+    _.each( o.modules, ( object ) =>
     {
-      const module = opener.openedModule;
+      let module = object;
+
+      if( object instanceof _.will.ModuleOpener )
+      module = object.openedModule;
+
       const willfilesPath = _.arrayAs( module.willfilesPath );
       if( _.longHasAny( files[ '/' ], willfilesPath ) )
       {
