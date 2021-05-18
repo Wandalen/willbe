@@ -7793,8 +7793,9 @@ function willfileExtendWillfile( o )
 
   if( opts.submodulesDisabling )
   {
-    for( let dependency in willfile.submodule )
-    willfile.submodule[ dependency ].enabled = 0;
+    _.will.transform.submodulesSwitch( willfile, 0 );
+    // for( let dependency in willfile.submodule )
+    // willfile.submodule[ dependency ].enabled = 0;
   }
 
   for( let sectionName in sectionMap )
@@ -8628,7 +8629,7 @@ function willfileMergeIntoSingle( o )
   if( o.filterSameSubmodules )
   filterSameSubmodules()
   if( o.submodulesDisabling )
-  submodulesDisable();
+  _.will.transform.submodulesSwitch( config, 0 );
   fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
 
   /* */
@@ -8756,23 +8757,23 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function submodulesDisable()
-  {
-    for( let dependency in config.submodule )
-    {
-      if( _.aux.is( config.submodule[ dependency ] ) )
-      {
-        config.submodule[ dependency ].enabled = 0;
-      }
-      else if( _.str.is( config.submodule[ dependency ] ) )
-      {
-        let dependencyMap = Object.create( null );
-        dependencyMap.path = config.submodule[ dependency ];
-        dependencyMap.enabled = 0;
-        config.submodule[ dependency ] = dependencyMap;
-      }
-    }
-  }
+  // function submodulesDisable()
+  // {
+  //   for( let dependency in config.submodule )
+  //   {
+  //     if( _.aux.is( config.submodule[ dependency ] ) )
+  //     {
+  //       config.submodule[ dependency ].enabled = 0;
+  //     }
+  //     else if( _.str.is( config.submodule[ dependency ] ) )
+  //     {
+  //       let dependencyMap = Object.create( null );
+  //       dependencyMap.path = config.submodule[ dependency ];
+  //       dependencyMap.enabled = 0;
+  //       config.submodule[ dependency ] = dependencyMap;
+  //     }
+  //   }
+  // }
 
   /* */
 
