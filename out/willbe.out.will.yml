@@ -1949,6 +1949,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck
           - >-
             ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck/.will.yaml
+          - ../proto/wtools/atop/will.test/_asset/submoduleIsValid
+          - ../proto/wtools/atop/will.test/_asset/submoduleIsValid/good.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules
           - ../proto/wtools/atop/will.test/_asset/submodules/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules/.im.will.yml
@@ -2162,6 +2164,14 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesReflectWithNotExisting/module/moduleB/proto/amid
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesReflectWithNotExisting/module/moduleB/proto/amid/File.txt
+          - ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/.ex.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/proto/WithSubmodules.s
           - ../proto/wtools/atop/will.test/_asset/submodulesRemoteRepos
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesRemoteRepos/.ex.will.yml
@@ -2869,7 +2879,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
