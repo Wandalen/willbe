@@ -15729,25 +15729,21 @@ function importPathLocal( test )
     [
       '.',
       './debug',
-      './debug/Integration.test.ss',
       './debug/WithSubmodules.s',
       './debug/node_modules',
       './debug/node_modules/wmodulefortesting1',
       './debug/wtools',
       './debug/wtools/testing',
-      './debug/wtools/testing/Basic.s',
+      './debug/wtools/testing/Common.s',
       './debug/wtools/testing/l1',
-      './debug/wtools/testing/l1/Include.s',
       './debug/wtools/testing/l1/ModuleForTesting1.s',
-      './debug/wtools/testing/l1.test',
-      './debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
     ];
     test.contains( files, exp );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
