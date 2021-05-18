@@ -4288,6 +4288,8 @@ function WillfilesFind( o )
       if( !_.will.filePathIsOut( record.filePath ) )
       result.push( record );
     });
+    return result;
+  }
 
   /* */
 
