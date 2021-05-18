@@ -2917,7 +2917,8 @@ function rootModuleSetAct( src )
   let will = module.will;
 
   _.assert( src === null || src instanceof _.will.Module );
-  _.assert( src === null || src.rootModule === src || src.rootModule === null );
+  // _.assert( src === null || src.rootModule === src || src.rootModule === null );
+  _.assert( src === null || src.rootModule === null || src.rootModule instanceof _.will.Module );
 
   let oldRootModule = module.rootModule;
 
