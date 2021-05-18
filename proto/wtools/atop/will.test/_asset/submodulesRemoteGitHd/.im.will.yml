@@ -1,0 +1,58 @@
+
+submodule :
+
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta
+  ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will!delta
+
+path :
+
+  temp : out
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+    criterion :
+      debug : 1
+
+step :
+
+  delete.out.debug :
+    inherit : files.delete
+    filePath : path::out.debug
+    criterion :
+      debug : 1
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.download
+      - delete.out.debug
+      - reflect.proto.*=1
+      - reflect.submodules*=1

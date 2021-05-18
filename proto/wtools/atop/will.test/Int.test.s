@@ -5211,17 +5211,16 @@ function customLogger( test )
 function moduleIsNotValid( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesDownloadErrors' );
+  let a = context.assetFor( test, 'submoduleIsValid' );
   let opener;
 
   a.ready.then( () =>
   {
     test.case = 'download submodule';
     a.reflect();
+
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
-
     a.will.prefer({ allOfSub : 1 });
-
     return opener.open({ all : 1, resourcesFormed : 0 });
   });
 
@@ -5229,7 +5228,6 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'change out will-file';
-
     opener.close();
 
     let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
@@ -5238,17 +5236,17 @@ function moduleIsNotValid( test )
     a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
 
     return null;
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'repopen module';
     let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
     opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
-  })
+  });
 
-  .finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     test.case = 'check if module is valid';
     if( err )
@@ -5258,7 +5256,9 @@ function moduleIsNotValid( test )
     test.identical( opener.openedModule.isValid(), false );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -11152,7 +11152,7 @@ function modulesForWithSubmodules( test )
 function submodulesRemoteResolve( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener, config;
 
   /* - */
@@ -11184,8 +11184,8 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
-    test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.true( !submodule.opener.repo.hasFiles );
     test.true( !submodule.opener.openedModule );
@@ -11220,7 +11220,8 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -11229,9 +11230,9 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
-    test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will#.*/ ) );
-    // test.identical( submodule.opener.openedModule.currentRemotePath, null );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
+    test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+hd:\/\/.*\/-repo\/ModuleForTesting1\?out=out\/wModuleForTesting1\.out\.will#.*/ ) );
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
@@ -11462,19 +11463,16 @@ function submodulesDeleteAndDownload( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-
     let builds = opener.openedModule.buildsResolve({ name : 'build' });
     test.identical( builds.length, 1 );
 
@@ -11488,9 +11486,9 @@ function submodulesDeleteAndDownload( test )
       test.true( _.longHas( files, './ModuleForTesting12ab' ) );
       test.ge( files.length, 54 );
       return arg;
-    })
+    });
 
-    con.then( () => build.perform() )
+    con.then( () => build.perform() );
 
     con.then( ( arg ) =>
     {
@@ -11499,11 +11497,10 @@ function submodulesDeleteAndDownload( test )
       test.true( _.longHas( files, './ModuleForTesting12ab' ) );
       test.ge( files.length, 54 );
       return arg;
-    })
+    });
 
     con.finally( ( err, arg ) =>
     {
-
       var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ];
       test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
       test.identical( _.setFrom( a.rel( _.props.keys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
@@ -11513,31 +11510,35 @@ function submodulesDeleteAndDownload( test )
       [
         '.will.yml',
         '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
-        [
-          '.module/ModuleForTesting1/.ex.will.yml',
-          '.module/ModuleForTesting1/.im.will.yml'
-        ],
+        '.module/ModuleForTesting1/will.yml',
+        // [
+        //   '.module/ModuleForTesting1/.ex.will.yml',
+        //   '.module/ModuleForTesting1/.im.will.yml'
+        // ],
         '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
-        [
-          '.module/ModuleForTesting12ab/.ex.will.yml',
-          '.module/ModuleForTesting12ab/.im.will.yml'
-        ]
-      ]
+        '.module/ModuleForTesting12ab/will.yml',
+        // [
+        //   '.module/ModuleForTesting12ab/.ex.will.yml',
+        //   '.module/ModuleForTesting12ab/.im.will.yml'
+        // ]
+      ];
       test.identical( _.select( a.will.willfilesArray, '*/filePath' ), a.abs( willfilesArray ) );
 
       var exp =
       [
         '.will.yml',
         '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
-        '.module/ModuleForTesting1/.ex.will.yml',
-        '.module/ModuleForTesting1/.im.will.yml',
+        '.module/ModuleForTesting1/will.yml',
+        // '.module/ModuleForTesting1/.ex.will.yml',
+        // '.module/ModuleForTesting1/.im.will.yml',
         '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
-        '.module/ModuleForTesting12ab/.ex.will.yml',
-        '.module/ModuleForTesting12ab/.im.will.yml'
-      ]
+        '.module/ModuleForTesting12ab/will.yml',
+        // '.module/ModuleForTesting12ab/.ex.will.yml',
+        // '.module/ModuleForTesting12ab/.im.will.yml'
+      ];
       test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
       test.identical( _.props.keys( a.will.willfileWithFilePathPathMap ), a.abs( exp ) );
-      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ]
+      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ];
       test.identical( a.rel( _.props.keys( a.will.willfileWithCommonPathMap ) ), exp );
 
       opener.finit();
@@ -11556,10 +11557,10 @@ function submodulesDeleteAndDownload( test )
       if( err )
       throw err;
       return arg;
-    })
+    });
 
     return con;
-  })
+  });
 
   /* - */
 
@@ -12927,55 +12928,54 @@ function repoStatusLocalChanges( test )
 function repoStatusLocalUncommittedChanges( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   /*  */
 
-  .tap( () => test.open( 'repo has local uncommitted changes' ) )
+  a.ready.tap( () => test.open( 'repo has local uncommitted changes' ) );
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local uncommitted changes'
+    test.description = 'repo::ModuleForTesting1 has local uncommitted changes';
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
       var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-      return repo1.status({ all : 1, invalidating : 1 })
+      return repo1.status({ all : 1, invalidating : 1 });
     })
     con.then( () =>
     {
-      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' });
       return null;
-    })
+    });
     _.process.start
     ({
       execPath : 'git add sample/Sample.s',
       currentPath : a.abs( '.module/ModuleForTesting1' ),
       outputPiping : 0,
       ready : con,
-    })
+    });
     return con;
-  })
+  });
 
-  //
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local uncommitted changes, all:1, invalidating:0'
+    test.description = 'repo::ModuleForTesting1 has local uncommitted changes, all:1, invalidating:0';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 1, invalidating : 0 })
-  })
-  .then( ( status ) =>
+    return repo1.status({ all : 1, invalidating : 0 });
+  });
+  a.ready.then( ( status ) =>
   {
     var exp =
     {
@@ -12990,61 +12990,62 @@ function repoStatusLocalUncommittedChanges( test )
       'downloadRequired' : false,
       'updateRequired' : false,
       'agreeRequired' : false
-    }
+    };
     test.identical( status, exp );
 
     return null;
-  })
+  });
 
-  //
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'invalidating:0, check only for uncommitted changes'
+    test.description = 'invalidating:0, check only for uncommitted changes';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 0, invalidating : 0, hasLocalUncommittedChanges : 1 })
-  })
-  .then( ( status ) =>
+    return repo1.status({ all : 0, invalidating : 0, hasLocalUncommittedChanges : 1 });
+  });
+
+  a.ready.then( ( status ) =>
   {
     var exp =
     {
       'isRepository' : true,
       'hasLocalUncommittedChanges' : false
-    }
+    };
     test.identical( status, exp );
 
     return null;
-  })
+  });
 
-  //
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'invalidating:1, check only for uncommitted changes'
+    test.description = 'invalidating:1, check only for uncommitted changes';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 0, invalidating : 1, hasLocalUncommittedChanges : 1 })
-  })
-  .then( ( status ) =>
+    return repo1.status({ all : 0, invalidating : 1, hasLocalUncommittedChanges : 1 });
+  });
+  a.ready.then( ( status ) =>
   {
     var exp =
     {
       'isRepository' : true,
       'hasLocalUncommittedChanges' : true
-    }
+    };
     test.identical( status, exp );
 
     return null;
-  })
+  });
 
-  //
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local uncommitted changes, all:1, invalidating:1'
+    test.description = 'repo::ModuleForTesting1 has local uncommitted changes, all:1, invalidating:1';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 1, invalidating : 1 })
-  })
-  .then( ( status ) =>
+    return repo1.status({ all : 1, invalidating : 1 });
+  });
+  a.ready.then( ( status ) =>
   {
     var exp =
     {
@@ -13059,38 +13060,40 @@ function repoStatusLocalUncommittedChanges( test )
       'downloadRequired' : false,
       'updateRequired' : false,
       'agreeRequired' : false
-    }
+    };
     test.identical( status, exp );
 
     return null;
-  })
-
-  //
-
-  .then( () =>
-  {
-    test.description = 'all : 0, invalidating : 0'
-    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 0, invalidating : 0 })
-  })
-  .then( ( status ) =>
-  {
-    var exp = {}
-    test.identical( status, exp );
-
-    return null;
-  })
-
-  .tap( () => test.close( 'repo has local uncommitted changes' ) )
+  });
 
   /* */
 
-  .finally( ( err, arg ) =>
+  a.ready.then( () =>
+  {
+    test.description = 'all : 0, invalidating : 0';
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0 });
+  });
+  a.ready.then( ( status ) =>
+  {
+    var exp = {};
+    test.identical( status, exp );
+
+    return null;
+  });
+
+  a.ready.tap( () => test.close( 'repo has local uncommitted changes' ) );
+
+  /* */
+
+  a.ready.finally( ( err, arg ) =>
   {
     test.identical( err, undefined );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
