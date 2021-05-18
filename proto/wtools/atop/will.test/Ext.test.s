@@ -17225,52 +17225,35 @@ function cleanRecursiveMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting1a',
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l2',
       './out/debug/wtools/testing/l2/testing1a',
-      './out/debug/wtools/testing/l2/testing1a/Include.s',
       './out/debug/wtools/testing/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/wtools/testing/l2.test',
-      './out/debug/wtools/testing/l2.test/ModuleForTesting1a.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -17283,7 +17266,7 @@ function cleanRecursiveMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
@@ -17323,7 +17306,7 @@ function cleanGlobMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
@@ -17338,52 +17321,35 @@ function cleanGlobMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
-      './group1/out/debug/Integration.test.ss',
       './group1/out/debug/node_modules',
       './group1/out/debug/node_modules/wmodulefortesting1',
       './group1/out/debug/node_modules/wmodulefortesting1b',
       './group1/out/debug/wtools',
       './group1/out/debug/wtools/testing',
-      './group1/out/debug/wtools/testing/Basic.s',
+      './group1/out/debug/wtools/testing/Common.s',
       './group1/out/debug/wtools/testing/l1',
-      './group1/out/debug/wtools/testing/l1/Include.s',
       './group1/out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './group1/out/debug/wtools/testing/l1.test',
-      './group1/out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './group1/out/debug/wtools/testing/l3',
       './group1/out/debug/wtools/testing/l3/testing1b',
-      './group1/out/debug/wtools/testing/l3/testing1b/Include.s',
       './group1/out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/wtools/testing/l3.test',
-      './group1/out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
-      './out/debug/Integration.test.ss',
       './out/debug/node_modules',
       './out/debug/node_modules/wmodulefortesting1',
       './out/debug/node_modules/wmodulefortesting1a',
       './out/debug/node_modules/wmodulefortesting1b',
       './out/debug/wtools',
       './out/debug/wtools/testing',
-      './out/debug/wtools/testing/Basic.s',
+      './out/debug/wtools/testing/Common.s',
       './out/debug/wtools/testing/l1',
-      './out/debug/wtools/testing/l1/Include.s',
       './out/debug/wtools/testing/l1/ModuleForTesting1.s',
-      './out/debug/wtools/testing/l1.test',
-      './out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s',
       './out/debug/wtools/testing/l2',
       './out/debug/wtools/testing/l2/testing1a',
-      './out/debug/wtools/testing/l2/testing1a/Include.s',
       './out/debug/wtools/testing/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/wtools/testing/l2.test',
-      './out/debug/wtools/testing/l2.test/ModuleForTesting1a.test.s',
       './out/debug/wtools/testing/l3',
       './out/debug/wtools/testing/l3/testing1b',
-      './out/debug/wtools/testing/l3/testing1b/Include.s',
       './out/debug/wtools/testing/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/wtools/testing/l3.test',
-      './out/debug/wtools/testing/l3.test/ModuleForTesting1b.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -17391,12 +17357,12 @@ function cleanGlobMin( test )
     return null;
   });
 
-  a.appStart( '.with "**" .clean' );
+  a.appStart( '.with ** .clean recursive:2' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = a.findAll( a.routinePath );
