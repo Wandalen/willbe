@@ -11463,19 +11463,16 @@ function submodulesDeleteAndDownload( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-
     let builds = opener.openedModule.buildsResolve({ name : 'build' });
     test.identical( builds.length, 1 );
 
@@ -11489,9 +11486,9 @@ function submodulesDeleteAndDownload( test )
       test.true( _.longHas( files, './ModuleForTesting12ab' ) );
       test.ge( files.length, 54 );
       return arg;
-    })
+    });
 
-    con.then( () => build.perform() )
+    con.then( () => build.perform() );
 
     con.then( ( arg ) =>
     {
@@ -11500,11 +11497,10 @@ function submodulesDeleteAndDownload( test )
       test.true( _.longHas( files, './ModuleForTesting12ab' ) );
       test.ge( files.length, 54 );
       return arg;
-    })
+    });
 
     con.finally( ( err, arg ) =>
     {
-
       var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ];
       test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
       test.identical( _.setFrom( a.rel( _.props.keys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
@@ -11514,31 +11510,35 @@ function submodulesDeleteAndDownload( test )
       [
         '.will.yml',
         '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
-        [
-          '.module/ModuleForTesting1/.ex.will.yml',
-          '.module/ModuleForTesting1/.im.will.yml'
-        ],
+        '.module/ModuleForTesting1/will.yml',
+        // [
+        //   '.module/ModuleForTesting1/.ex.will.yml',
+        //   '.module/ModuleForTesting1/.im.will.yml'
+        // ],
         '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
-        [
-          '.module/ModuleForTesting12ab/.ex.will.yml',
-          '.module/ModuleForTesting12ab/.im.will.yml'
-        ]
-      ]
+        '.module/ModuleForTesting12ab/will.yml',
+        // [
+        //   '.module/ModuleForTesting12ab/.ex.will.yml',
+        //   '.module/ModuleForTesting12ab/.im.will.yml'
+        // ]
+      ];
       test.identical( _.select( a.will.willfilesArray, '*/filePath' ), a.abs( willfilesArray ) );
 
       var exp =
       [
         '.will.yml',
         '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
-        '.module/ModuleForTesting1/.ex.will.yml',
-        '.module/ModuleForTesting1/.im.will.yml',
+        '.module/ModuleForTesting1/will.yml',
+        // '.module/ModuleForTesting1/.ex.will.yml',
+        // '.module/ModuleForTesting1/.im.will.yml',
         '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
-        '.module/ModuleForTesting12ab/.ex.will.yml',
-        '.module/ModuleForTesting12ab/.im.will.yml'
-      ]
+        '.module/ModuleForTesting12ab/will.yml',
+        // '.module/ModuleForTesting12ab/.ex.will.yml',
+        // '.module/ModuleForTesting12ab/.im.will.yml'
+      ];
       test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
       test.identical( _.props.keys( a.will.willfileWithFilePathPathMap ), a.abs( exp ) );
-      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ]
+      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ];
       test.identical( a.rel( _.props.keys( a.will.willfileWithCommonPathMap ) ), exp );
 
       opener.finit();
@@ -11557,10 +11557,10 @@ function submodulesDeleteAndDownload( test )
       if( err )
       throw err;
       return arg;
-    })
+    });
 
     return con;
-  })
+  });
 
   /* - */
 
