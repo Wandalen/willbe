@@ -726,11 +726,11 @@ stepRoutineGitPull.stepOptions =
 {
   dirPath : null,
   profile : 'default',
-}
+};
 
 stepRoutineGitPull.uniqueOptions =
 {
-}
+};
 
 //
 
@@ -843,16 +843,16 @@ function stepRoutineGitSync( frame )
 
 stepRoutineGitSync.stepOptions =
 {
-  commit : '-am "."',
+  message : '-am "."',
   dirPath : null,
   profile : 'default',
   dry : 0,
-}
+};
 
 stepRoutineGitSync.uniqueOptions =
 {
-  commit : '-am "."',
-}
+  message : '-am "."',
+};
 
 //
 
