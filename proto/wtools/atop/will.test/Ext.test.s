@@ -5408,7 +5408,7 @@ function withDoStatus( test )
   {
     test.case = 'no changes';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     return null;
@@ -5429,7 +5429,7 @@ function withDoStatus( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '! Outdated' ), 0 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( op.output, /module::\w+ at / ), 3 );
