@@ -16174,7 +16174,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -16198,7 +16198,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -16246,7 +16246,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
@@ -16270,7 +16270,7 @@ function cleanOptionWithSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
@@ -16288,7 +16288,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
@@ -16301,7 +16301,7 @@ function cleanOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
@@ -16991,37 +16991,35 @@ function cleanDry( test )
 {
   let context = this;
   let a = context.assetFor( test, 'clean' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
   a.appStart({ args : [ '.with NoTemp .submodules.update' ] })
-
   .then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
-  })
+  });
 
   a.appStart({ args : [ '.with NoTemp .build' ] })
   .then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
     return op;
-  })
+  });
 
   var wasFiles;
 
   a.appStart({ execPath : '.with NoTemp .clean dry:1' })
-
   .then( ( op ) =>
   {
     test.case = '.clean dry:1';
 
     var files = a.findAll( a.abs( 'out' ) );
-    test.gt( files.length, 15 );
+    test.gt( files.length, 10 );
     var files = wasFiles = a.findAll( a.abs( '.module' ) );
     test.gt( files.length, 50 );
 
@@ -17212,7 +17210,7 @@ function cleanRecursiveMin( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 15 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
