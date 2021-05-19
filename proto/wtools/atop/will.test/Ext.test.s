@@ -21893,7 +21893,7 @@ function submodulesUpdateThrowing( test )
   a.appStart({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
-    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/will.yml' );
     let inWillFile = a.fileProvider.fileReadUnknown( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
