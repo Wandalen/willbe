@@ -29321,7 +29321,7 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   {
     test.case = '.submodules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 0 );
     test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
