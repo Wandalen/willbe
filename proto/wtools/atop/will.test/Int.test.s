@@ -9352,8 +9352,7 @@ function resourcePathRemote( test )
   let a = context.assetFor( test, 'exportInformal' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './module/' ) });
@@ -9394,8 +9393,9 @@ function resourcePathRemote( test )
     // test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' );
 
     return null;
-  })
+  });
 
+  /* - */
 
   return a.ready;
 }
