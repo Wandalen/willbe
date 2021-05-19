@@ -30694,7 +30694,7 @@ function commandModulesShell( test )
   {
     test.case = '.with ./* .modules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 4 );
     test.identical( _.strCount( op.output, 'Named.will.yml' ), 3 );
