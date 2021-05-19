@@ -10322,6 +10322,9 @@ function modulesFor( test )
   }
 }
 
+modulesFor.rapidity = -1;
+modulesFor.routineTimeOut = 1500000;
+
 //
 
 function modulesForWithOptionsWith( test )
@@ -10357,7 +10360,7 @@ function modulesForWithOptionsWith( test )
     onEachVisitedObject : onEachVisitedObject,
     onBegin : onBegin,
     onEnd : onEnd,
-  }
+  };
 
   /* - */
 
@@ -10371,7 +10374,7 @@ function modulesForWithOptionsWith( test )
       recursive : 2,
       withEnabledSubmodules : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10382,15 +10385,9 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( './a' ),
-      ];
+      var exp = [ a.abs( './a' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::a )',
-      ]
+      var exp = [ 'junction::( module::a )' ];
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
@@ -10891,9 +10888,6 @@ function modulesForWithOptionsWith( test )
   }
 }
 
-modulesFor.rapidity = -1;
-modulesFor.routineTimeOut = 1500000;
-
 //
 
 function modulesForWithSubmodules( test )
@@ -10929,7 +10923,7 @@ function modulesForWithSubmodules( test )
     onEachVisitedObject : onEachVisitedObject,
     onBegin : onBegin,
     onEnd : onEnd,
-  }
+  };
 
   /* - */
 
@@ -10941,7 +10935,7 @@ function modulesForWithSubmodules( test )
     {
       ... defaults,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10962,7 +10956,7 @@ function modulesForWithSubmodules( test )
       [
         'junction::( module::b )',
         'junction::( module::b / opener::ModuleForTesting1 )'
-      ]
+      ];
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
@@ -10981,8 +10975,8 @@ function modulesForWithSubmodules( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
   /* - */
 
@@ -10994,7 +10988,7 @@ function modulesForWithSubmodules( test )
     {
       ... defaults,
       modules : openers,
-    }
+    };
 
     return a.will.moduleWithNameMap.b.subModulesDownload()
     .then( () => a.will.modulesFor( o2 ) )
