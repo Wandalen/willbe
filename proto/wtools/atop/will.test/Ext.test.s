@@ -32214,8 +32214,8 @@ function commandModulesGitStatusOutputFormat( test )
   begin().then( () =>
   {
     test.case = 'output of git status has indentation, there is an empty line before output of each module'
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/wtools/testing/Common.s' ), 'testData' );
     return null;
   });
 
@@ -32227,8 +32227,8 @@ function commandModulesGitStatusOutputFormat( test )
     test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting1 at' ), 1 );
     test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting2 at' ), 1 );
     test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
-    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
-    test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/Common.s' ), 1 );
 
     return null;
   });
@@ -32241,14 +32241,8 @@ function commandModulesGitStatusOutputFormat( test )
 
   function begin()
   {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      return null;
-    });
-
+    a.ready.then( () => a.reflect() );
     a.appStart( '.submodules.download' );
-
     return a.ready;
   }
 }
