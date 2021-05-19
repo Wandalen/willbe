@@ -195,12 +195,15 @@ function onModule( context )
     {
       let isOwner = false;
 
-      if( about.org && _.strIs( about.org ) && _.longHasAny( _.array.as( o.org ), about.org ) )
-      isOwner = true;
+      if( about.org )
+      {
+        if( _.longHasAny( _.array.as( o.org ), about.org ) )
+        isOwner = true;
+      }
       else if( about._npmUser && about._npmUser.name === o.npmUserName )
-      isOwner = true;
-      else if( about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
-      isOwner = true;
+      {
+        isOwner = true;
+      }
 
       if( isOwner )
       {
