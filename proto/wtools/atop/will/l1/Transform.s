@@ -98,30 +98,24 @@ function authorRecordNormalize( src )
 function submodulesSwitch( src, enabled )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.aux.is( src ), 'Expects aux like config' );
+  _.assert( _.aux.is( src ), 'Expects aux map with submodules' );
   _.assert( _.bool.like( enabled ), 'Expects bool value to switch submodule' );
 
-  if( !src.submodule )
-  return null;
-
-  const submodules = src.submodule;
-
-  _.assert( _.aux.is( submodules ), 'Expects aux map with submodules' );
-
-  for( let dependencyName in submodules )
+  for( let dependencyName in src )
   {
-    if( _.aux.is( submodules[ dependencyName ] ) )
+    if( _.aux.is( src[ dependencyName ] ) )
     {
-      submodules[ dependencyName ].enabled = enabled;
+      src[ dependencyName ].enabled = enabled;
     }
-    else if( _.str.is( submodules[ dependencyName ] ) )
+    else if( _.str.is( src[ dependencyName ] ) )
     {
       let dependencyMap = Object.create( null );
-      dependencyMap.path = submodules[ dependencyName ];
+      dependencyMap.path = src[ dependencyName ];
       dependencyMap.enabled = enabled;
-      submodules[ dependencyName ] = dependencyMap;
+      src[ dependencyName ] = dependencyMap;
     }
   }
+  return src;
 }
 
 // --
@@ -134,7 +128,7 @@ let Extension =
   submodulesSwitch,
   authorRecordNormalize,
 
-}
+};
 
 _.props.extend( Self, Extension );
 

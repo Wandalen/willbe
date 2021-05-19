@@ -207,6 +207,139 @@ function authorRecordNormalize( test )
   test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name ()https://github.com/user' ) );
 }
 
+//
+
+function submodulesSwitch( test )
+{
+  test.case = 'empty map, enabled - 0';
+  var src = {};
+  var got = _.will.transform.submodulesSwitch( src, 0 );
+  test.identical( got, {} );
+  test.true( got === src );
+
+  test.case = 'empty map, enabled - 1';
+  var src = {};
+  var got = _.will.transform.submodulesSwitch( src, 1 );
+  test.identical( got, {} );
+  test.true( got === src );
+
+  /* */
+
+  test.case = 'map with only string submodules, enabled - 0';
+  var src =
+  {
+    Module1 : '/local/Module/',
+    Module2 : 'git+https:///github.com/user/Remote.git',
+  };
+  var got = _.will.transform.submodulesSwitch( src, 0 );
+  var exp =
+  {
+    Module1 : { path : '/local/Module/', enabled : 0 },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  test.identical( got, exp );
+  test.true( got === src );
+
+  test.case = 'map with only string submodules, enabled - 1';
+  var src =
+  {
+    Module1 : '/local/Module/',
+    Module2 : 'git+https:///github.com/user/Remote.git',
+  };
+  var got = _.will.transform.submodulesSwitch( src, 1 );
+  var exp =
+  {
+    Module1 : { path : '/local/Module/', enabled : 1 },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 1 },
+  };
+  test.identical( got, exp );
+  test.true( got === src );
+
+  /* */
+
+  test.case = 'map with only map submodules, enabled - 0';
+  var src =
+  {
+    Module1 : { path : '/local/Module/', enabled : 1, criterion : { default : 1 } },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  var got = _.will.transform.submodulesSwitch( src, 0 );
+  var exp =
+  {
+    Module1 : { path : '/local/Module/', enabled : 0, criterion : { default : 1 } },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  test.identical( got, exp );
+  test.true( got === src );
+
+  test.case = 'map with only string submodules, enabled - 1';
+  var src =
+  {
+    Module1 : { path : '/local/Module/', enabled : 1, criterion : { default : 1 } },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  var got = _.will.transform.submodulesSwitch( src, 1 );
+  var exp =
+  {
+    Module1 : { path : '/local/Module/', enabled : 1, criterion : { default : 1 } },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 1 },
+  };
+  test.identical( got, exp );
+  test.true( got === src );
+
+  /* */
+
+  test.case = 'map with mixed submodules, enabled - 0';
+  var src =
+  {
+    Module1 : '/local/Module/',
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  var got = _.will.transform.submodulesSwitch( src, 0 );
+  var exp =
+  {
+    Module1 : { path : '/local/Module/', enabled : 0 },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  test.identical( got, exp );
+  test.true( got === src );
+
+  test.case = 'map with only string submodules, enabled - 1';
+  var src =
+  {
+    Module1 : '/local/Module/',
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 0 },
+  };
+  var got = _.will.transform.submodulesSwitch( src, 1 );
+  var exp =
+  {
+    Module1 : { path : '/local/Module/', enabled : 1 },
+    Module2 : { path : 'git+https:///github.com/user/Remote.git', enabled : 1 },
+  };
+  test.identical( got, exp );
+  test.true( got === src );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.submodulesSwitch() );
+
+  test.case = 'not enough arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.submodulesSwitch( {} ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.submodulesSwitch( {}, 0, 'extra' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.will.transform.submodulesSwitch( [], 0 ) );
+
+  test.case = 'wrong type of enabled';
+  test.shouldThrowErrorSync( () => _.will.transform.submodulesSwitch( {}, [] ) );
+}
+
 // --
 // declare
 // --
@@ -234,6 +367,7 @@ let Self =
   {
 
     authorRecordNormalize,
+    submodulesSwitch,
 
   }
 

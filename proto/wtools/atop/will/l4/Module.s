@@ -7793,7 +7793,7 @@ function willfileExtendWillfile( o )
 
   if( opts.submodulesDisabling )
   {
-    _.will.transform.submodulesSwitch( willfile, 0 );
+    _.will.transform.submodulesSwitch( willfile.submodule, 0 );
     // for( let dependency in willfile.submodule )
     // willfile.submodule[ dependency ].enabled = 0;
   }
@@ -8629,7 +8629,7 @@ function willfileMergeIntoSingle( o )
   if( o.filterSameSubmodules )
   filterSameSubmodules()
   if( o.submodulesDisabling )
-  _.will.transform.submodulesSwitch( config, 0 );
+  _.will.transform.submodulesSwitch( config.submodule, 0 );
   fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
 
   /* */
