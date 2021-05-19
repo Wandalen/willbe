@@ -11174,7 +11174,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    test.true( _.strHas( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!' ) ) );
     // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.true( !submodule.opener.repo.hasFiles );
@@ -11210,7 +11210,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    test.true( _.strHas( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!' ) ) );
     // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
@@ -11220,7 +11220,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    test.true( _.strHas( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!' ) ) );
     // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
     test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+hd:\/\/.*\/-repo\/ModuleForTesting1\?out=out\/wModuleForTesting1\.out\.will#.*/ ) );
 
