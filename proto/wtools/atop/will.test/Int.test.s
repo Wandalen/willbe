@@ -9683,8 +9683,10 @@ function modulesEachDuplicates( test )
 function modulesFindEachAt( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener, o;
+
+  /* - */
 
   a.ready.then( () =>
   {
@@ -9693,8 +9695,6 @@ function modulesFindEachAt( test )
     a.will.prefer({ allOfSub : 1, });
     return opener.open({ all : 1, resourcesFormed : 0 });
   });
-
-  /* - */
 
   a.ready.then( () =>
   {
@@ -9706,6 +9706,7 @@ function modulesFindEachAt( test )
     };
     return a.will.modulesFindEachAt( o );
   });
+
   a.ready.then( ( op ) =>
   {
     test.true( true );
@@ -9722,8 +9723,6 @@ function modulesFindEachAt( test )
 
   a.ready.then( () => opener.openedModule.subModulesDownload() );
 
-  /* */
-
   a.ready.then( () =>
   {
     test.case = 'select all submodules from module with downloaded submodules';
@@ -9734,6 +9733,7 @@ function modulesFindEachAt( test )
     };
     return a.will.modulesFindEachAt( o );
   });
+
   a.ready.then( ( op ) =>
   {
     test.true( op.options === o );
@@ -9763,6 +9763,7 @@ function modulesFindEachAt( test )
     };
     return a.will.modulesFindEachAt( o );
   });
+
   a.ready.then( ( op ) =>
   {
     test.true( op.options === o );
