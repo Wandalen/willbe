@@ -51,7 +51,7 @@ function authorRecordNormalize( src )
       splits = split( splits[ 0 ] );
 
       if( splits[ 1 ] === undefined )
-      recordIsValid = authorVerify( splits[ 0 ] );
+      recordIsValid = authorVerify( splits[ 2 ] );
       else if( emailIs( splits[ 2 ] ) )
       recordIsValid = authorVerify( splits[ 0 ] );
       else
@@ -89,7 +89,7 @@ function authorRecordNormalize( src )
 
   function authorVerify( author )
   {
-    return !/(<|>|\(|\))/.test( author ) && author !== '';
+    return author !== '' && !/(<|>|\(|\))/.test( author );
   }
 }
 
