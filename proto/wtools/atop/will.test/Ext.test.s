@@ -2880,19 +2880,19 @@ function reflectorOptionsCheck( test )
     var reflector = outfile.reflector[ 'reflect.withoutOptions' ];
     test.identical( reflector.mandatory, undefined );
     test.identical( reflector.dstRewritingOnlyPreserving, undefined );
-    test.identical( reflector.linking, undefined );
+    test.identical( reflector.linkingAction, undefined );
 
     test.case = 'reflector with default options';
     var reflector = outfile.reflector[ 'reflect.defaultOptions' ];
     test.identical( reflector.mandatory, 1 );
     test.identical( reflector.dstRewritingOnlyPreserving, 1 );
-    test.identical( reflector.linking, 'hardLinkMaybe' );
+    test.identical( reflector.linkingAction, 'hardLinkMaybe' );
 
     test.case = 'reflector with not default options';
     var reflector = outfile.reflector[ 'reflect.notDefaultOptions' ];
     test.identical( reflector.mandatory, 0 );
     test.identical( reflector.dstRewritingOnlyPreserving, 0 );
-    test.identical( reflector.linking, 'fileCopy' );
+    test.identical( reflector.linkingAction, 'fileCopy' );
 
     return null;
   });
@@ -3187,7 +3187,7 @@ function reflectNothingFromSubmodules( test )
         'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
         'mandatory' : 1,
         'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
+        'linkingAction' : 'hardLinkMaybe',
       },
       'exported.files.proto.export' :
       {
@@ -4137,7 +4137,7 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy, other options default, should not throw error';
+    test.case = 'linkingAction : fileCopy, other options default, should not throw error';
     return null;
   })
 
@@ -4159,7 +4159,7 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy, dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
+    test.case = 'linkingAction : fileCopy, dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
     return null;
   })
 
@@ -11430,7 +11430,7 @@ function exportSecond( test )
         'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
         'mandatory' : 1,
         'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
+        'linkingAction' : 'hardLinkMaybe',
       },
       'exported.files.doc.export' :
       {
@@ -11454,7 +11454,7 @@ function exportSecond( test )
         'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
         'mandatory' : 1,
         'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
+        'linkingAction' : 'hardLinkMaybe',
       },
       'exported.files.proto.export' :
       {
@@ -11637,7 +11637,7 @@ function exportSecond( test )
         'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
         'mandatory' : 1,
         'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
+        'linkingAction' : 'hardLinkMaybe',
       },
       'exported.files.doc.export' :
       {
@@ -11661,7 +11661,7 @@ function exportSecond( test )
         'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
         'mandatory' : 1,
         'dstRewritingOnlyPreserving' : 1,
-        'linking' : 'hardLinkMaybe',
+        'linkingAction' : 'hardLinkMaybe',
       },
       'exported.files.proto.export' :
       {
@@ -11926,7 +11926,7 @@ function exportMultiple( test )
         generated : 1,
       },
       dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
+      linkingAction : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.entity.exportJson( outfile.reflector ) );
@@ -11951,7 +11951,7 @@ function exportMultiple( test )
         generated : 1,
       },
       // dstRewritingOnlyPreserving : 1,
-      // linking : 'hardLinkMaybe',
+      // linkingAction : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12150,7 +12150,7 @@ function exportMultiple( test )
         generated : 1,
       },
       dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
+      linkingAction : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.entity.exportJson( outfile.reflector[ 'exported.export.debug' ] ) );
@@ -12173,7 +12173,7 @@ function exportMultiple( test )
         generated : 1,
       },
       dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
+      linkingAction : 'hardLinkMaybe',
     }
     // logger.log( _.entity.exportJson( outfile.reflector[ 'exported.export.' ] ) );
     test.identical( outfile.reflector[ 'exported.export.' ], exportedReflector );
@@ -12198,7 +12198,7 @@ function exportMultiple( test )
         generated : 1,
       },
       // dstRewritingOnlyPreserving : 1,
-      // linking : 'hardLinkMaybe',
+      // linkingAction : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12223,7 +12223,7 @@ function exportMultiple( test )
         generated : 1,
       },
       // dstRewritingOnlyPreserving : 1,
-      // linking : 'hardLinkMaybe',
+      // linkingAction : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.' ], exportedReflectorFiles );
@@ -12598,7 +12598,7 @@ function exportBroken( test )
         export : 1
       },
       dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
+      linkingAction : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
 
@@ -21893,7 +21893,7 @@ function submodulesUpdateThrowing( test )
   a.appStart({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
-    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/will.yml' );
     let inWillFile = a.fileProvider.fileReadUnknown( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
@@ -30694,7 +30694,7 @@ function commandModulesShell( test )
   {
     test.case = '.with ./* .modules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 4 );
     test.identical( _.strCount( op.output, 'Named.will.yml' ), 3 );
@@ -31014,7 +31014,7 @@ function commandModulesGitRemoteSubmodules( test )
   {
     test.case = '.modules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
     test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
@@ -31111,7 +31111,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   {
     test.case = '.modules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
     test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
@@ -42150,7 +42150,7 @@ function commandsSubmoduleSafety( test )
       if( _.object.isBasic( expectedOutput ) )
       expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
       if( expectedOutput )
-      _.each( _.arrayAs( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
+      _.each( _.array.as( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
 
       let moduleDirExists = a.fileProvider.isDir( a.localPath );
 

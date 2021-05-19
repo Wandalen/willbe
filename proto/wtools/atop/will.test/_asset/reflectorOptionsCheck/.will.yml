@@ -21,7 +21,7 @@ reflector :
   reflect.defaultOptions :
     filePath :
       path::file2 : '{path::out}/debug/File.js'
-    linking : hardLinkMaybe
+    linkingAction : hardLinkMaybe
     dstRewritingOnlyPreserving : 1
     mandatory : 1
 
@@ -29,7 +29,7 @@ reflector :
     inherit : predefined.*
     filePath :
       path::file2 : '{path::out}/debug/File.js'
-    linking : fileCopy
+    linkingAction : fileCopy
     dstRewritingOnlyPreserving : 0
     mandatory : 0
 

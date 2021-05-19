@@ -5794,7 +5794,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5837,7 +5837,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe'
+      'linkingAction' : 'hardLinkMaybe'
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5880,7 +5880,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5922,7 +5922,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5964,7 +5964,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6010,7 +6010,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6052,7 +6052,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6099,7 +6099,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     };
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -6204,7 +6204,7 @@ function reflectorInheritedResolve( test )
       'dst' : { 'prefixPath' : 'out/debug1' },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6226,7 +6226,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6248,7 +6248,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6270,7 +6270,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6292,7 +6292,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6319,7 +6319,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'not.test', 'only.js' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6342,7 +6342,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6365,7 +6365,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -6388,7 +6388,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
+      'linkingAction' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -7912,25 +7912,24 @@ function pathsResolveOfSubmodulesLocal( test )
 function pathsResolveOfSubmodulesRemote( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open({ all : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
     let module = opener.openedModule;
     return module.modulesBuild({ criterion : { debug : 1 }, downloading : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
@@ -7969,7 +7968,7 @@ function pathsResolveOfSubmodulesRemote( test )
     test.identical( resolved, expected );
 
     return null;
-  })
+  });
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -7978,7 +7977,7 @@ function pathsResolveOfSubmodulesRemote( test )
     test.true( err === undefined );
     opener.finit();
     return arg;
-  })
+  });
 
   /* - */
 
@@ -9353,8 +9352,7 @@ function resourcePathRemote( test )
   let a = context.assetFor( test, 'exportInformal' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './module/' ) });
@@ -9395,8 +9393,9 @@ function resourcePathRemote( test )
     // test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' );
 
     return null;
-  })
+  });
 
+  /* - */
 
   return a.ready;
 }
@@ -9594,33 +9593,28 @@ function modulesEach( test )
 function modulesEachDuplicates( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'hierarchyDuplicate' );
-  let opener;
+  let a = context.assetFor( test, 'hierarchyDuplicateGitHd' );
+  let opener, ups;
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './z' ) });
     return opener.open();
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     return a.will.modulesDownload({ modules : [ opener ], recursive : 2 })
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
-
-    /* */
-
     test.description = 'root, recursive:1';
 
-    var ups = [];
+    ups = [];
     var o2 = Object.create( null );
     o2.recursive = 1;
     o2.withStem = 1;
@@ -9638,7 +9632,7 @@ function modulesEachDuplicates( test )
       'group1/a',
       '.module/ModuleForTesting1/',
       '.module/ModuleForTesting1/out/wModuleForTesting1.out',
-    ]
+    ];
     var got = _.select( got, '*/localPath' );
     test.identical( got, a.abs( exp ) );
 
@@ -9646,7 +9640,7 @@ function modulesEachDuplicates( test )
 
     test.description = 'submodule, recursive:1';
 
-    var ups = [];
+    ups = [];
     var o2 = Object.create( null );
     o2.recursive = 1;
     o2.withStem = 1;
@@ -9662,7 +9656,7 @@ function modulesEachDuplicates( test )
       'group1/a',
       'group1/.module/ModuleForTesting1/',
       'group1/.module/ModuleForTesting1/out/wModuleForTesting1.out',
-    ]
+    ];
     var got = _.select( got, '*/localPath' );
     test.identical( got, a.abs( exp ) );
 
@@ -9670,26 +9664,29 @@ function modulesEachDuplicates( test )
 
     opener.finit();
     return null;
-
-    function handleUp( object, it )
-    {
-      ups.push( object );
-    }
-
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesEachDuplicates */
+
+  /* */
+
+  function handleUp( object, it )
+  {
+    ups.push( object );
+  }
+}
 
 //
 
 function modulesFindEachAt( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener, o;
+
+  /* - */
 
   a.ready.then( () =>
   {
@@ -9698,8 +9695,6 @@ function modulesFindEachAt( test )
     a.will.prefer({ allOfSub : 1, });
     return opener.open({ all : 1, resourcesFormed : 0 });
   });
-
-  /* - */
 
   a.ready.then( () =>
   {
@@ -9711,6 +9706,7 @@ function modulesFindEachAt( test )
     };
     return a.will.modulesFindEachAt( o );
   });
+
   a.ready.then( ( op ) =>
   {
     test.true( true );
@@ -9727,8 +9723,6 @@ function modulesFindEachAt( test )
 
   a.ready.then( () => opener.openedModule.subModulesDownload() );
 
-  /* */
-
   a.ready.then( () =>
   {
     test.case = 'select all submodules from module with downloaded submodules';
@@ -9739,6 +9733,7 @@ function modulesFindEachAt( test )
     };
     return a.will.modulesFindEachAt( o );
   });
+
   a.ready.then( ( op ) =>
   {
     test.true( op.options === o );
@@ -9768,6 +9763,7 @@ function modulesFindEachAt( test )
     };
     return a.will.modulesFindEachAt( o );
   });
+
   a.ready.then( ( op ) =>
   {
     test.true( op.options === o );
@@ -10326,6 +10322,9 @@ function modulesFor( test )
   }
 }
 
+modulesFor.rapidity = -1;
+modulesFor.routineTimeOut = 1500000;
+
 //
 
 function modulesForWithOptionsWith( test )
@@ -10361,7 +10360,7 @@ function modulesForWithOptionsWith( test )
     onEachVisitedObject : onEachVisitedObject,
     onBegin : onBegin,
     onEnd : onEnd,
-  }
+  };
 
   /* - */
 
@@ -10375,7 +10374,7 @@ function modulesForWithOptionsWith( test )
       recursive : 2,
       withEnabledSubmodules : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10386,15 +10385,9 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( './a' ),
-      ];
+      var exp = [ a.abs( './a' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::a )',
-      ]
+      var exp = [ 'junction::( module::a )' ];
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
@@ -10895,9 +10888,6 @@ function modulesForWithOptionsWith( test )
   }
 }
 
-modulesFor.rapidity = -1;
-modulesFor.routineTimeOut = 1500000;
-
 //
 
 function modulesForWithSubmodules( test )
@@ -10933,7 +10923,7 @@ function modulesForWithSubmodules( test )
     onEachVisitedObject : onEachVisitedObject,
     onBegin : onBegin,
     onEnd : onEnd,
-  }
+  };
 
   /* - */
 
@@ -10945,7 +10935,7 @@ function modulesForWithSubmodules( test )
     {
       ... defaults,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10966,7 +10956,7 @@ function modulesForWithSubmodules( test )
       [
         'junction::( module::b )',
         'junction::( module::b / opener::ModuleForTesting1 )'
-      ]
+      ];
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
@@ -10985,8 +10975,8 @@ function modulesForWithSubmodules( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
   /* - */
 
@@ -10998,7 +10988,7 @@ function modulesForWithSubmodules( test )
     {
       ... defaults,
       modules : openers,
-    }
+    };
 
     return a.will.moduleWithNameMap.b.subModulesDownload()
     .then( () => a.will.modulesFor( o2 ) )
@@ -11184,7 +11174,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    test.true( _.strHas( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!' ) ) );
     // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.true( !submodule.opener.repo.hasFiles );
@@ -11220,7 +11210,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    test.true( _.strHas( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!' ) ) );
     // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
@@ -11230,7 +11220,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta' ) );
+    test.true( _.strHas( submodule.opener.remotePath, _.uri.join( a.abs( '../-repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!' ) ) );
     // test.identical( submodule.opener.remotePath, `${ config.submodule.ModuleForTesting1 }` );
     test.true( _.strHas( submodule.opener.openedModule.currentRemotePath, /git\+hd:\/\/.*\/-repo\/ModuleForTesting1\?out=out\/wModuleForTesting1\.out\.will#.*/ ) );
 
@@ -11574,22 +11564,21 @@ function submodulesDeleteAndDownload( test )
 function isRepositoryReformSeveralTimes( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
+  a.ready.then( () => opener.openedModule.subModulesDownload() )
 
   .then( () =>
   {
-    var repo = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting2.opener.repo;
     return repo.status({ all : 1, invalidating : 0 });
   })
 
@@ -11616,12 +11605,14 @@ function isRepositoryReformSeveralTimes( test )
     return null;
   })
 
-  .finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     test.identical( err, undefined );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -11631,18 +11622,17 @@ function isRepositoryReformSeveralTimes( test )
 function repoStatus( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
+  a.ready.then( () => opener.openedModule.subModulesDownload() )
 
   /* status after donwloading repo::ModuleForTesting1 */
 
@@ -11901,7 +11891,7 @@ function repoStatus( test )
   .then( () =>
   {
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
-    var exp = [ 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     return null;
@@ -12204,24 +12194,23 @@ function repoStatus( test )
 function repoStatusForDeletedRepo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
+  a.ready.then( () => opener.openedModule.subModulesDownload() );
 
   /*  */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'delete repo::ModuleForTesting1 and call status with invalidating:0'
+    test.description = 'delete repo::ModuleForTesting1 and call status with invalidating:0';
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
 
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
@@ -12238,7 +12227,7 @@ function repoStatusForDeletedRepo( test )
       'downloadRequired' :  repo1._.downloadRequired,
       'updateRequired' :  repo1._.updateRequired,
       'agreeRequired' :  repo1._.agreeRequired
-    }
+    };
     var expected =
     {
       'dirExists' : true,
@@ -12253,7 +12242,7 @@ function repoStatusForDeletedRepo( test )
       'updateRequired' : null,
       'agreeRequired' : null
     };
-    test.identical( status, expected )
+    test.identical( status, expected );
 
     return repo1.status({ all : 1, invalidating : 0 })
     .then( ( status ) =>
@@ -12271,35 +12260,35 @@ function repoStatusForDeletedRepo( test )
         'downloadRequired' : true,
         'updateRequired' : true,
         'agreeRequired' : true
-      }
+      };
       test.identical( status, exp );
 
       return null;
-    })
-  })
+    });
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'delete repo::ModuleForTesting2a and call status with invalidating:1'
-    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
+    test.description = 'delete repo::ModuleForTesting2 and call status with invalidating:1';
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2' ) );
 
-    var repo1a = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
+    var repo2 = opener.openedModule.submoduleMap.ModuleForTesting2.opener.repo;
     var status =
     {
-      'dirExists' : repo1a._.dirExists,
-      'hasFiles' : repo1a._.hasFiles,
-      'isRepository' :  repo1a._.isRepository,
-      'hasLocalChanges' :  repo1a._.hasLocalChanges,
-      'hasLocalUncommittedChanges' :  repo1a._.hasLocalUncommittedChanges,
-      'isUpToDate' :  repo1a._.isUpToDate,
-      'remoteIsValid' :  repo1a._.remoteIsValid,
-      'safeToDelete' :  repo1a._.safeToDelete,
-      'downloadRequired' :  repo1a._.downloadRequired,
-      'updateRequired' :  repo1a._.updateRequired,
-      'agreeRequired' :  repo1a._.agreeRequired
-    }
+      'dirExists' : repo2._.dirExists,
+      'hasFiles' : repo2._.hasFiles,
+      'isRepository' :  repo2._.isRepository,
+      'hasLocalChanges' :  repo2._.hasLocalChanges,
+      'hasLocalUncommittedChanges' :  repo2._.hasLocalUncommittedChanges,
+      'isUpToDate' :  repo2._.isUpToDate,
+      'remoteIsValid' :  repo2._.remoteIsValid,
+      'safeToDelete' :  repo2._.safeToDelete,
+      'downloadRequired' :  repo2._.downloadRequired,
+      'updateRequired' :  repo2._.updateRequired,
+      'agreeRequired' :  repo2._.agreeRequired
+    };
     var expected =
     {
       'dirExists' : true,
@@ -12314,9 +12303,9 @@ function repoStatusForDeletedRepo( test )
       'updateRequired' : null,
       'agreeRequired' : null
     };
-    test.identical( status, expected )
+    test.identical( status, expected );
 
-    return repo1a.status({ all : 1, invalidating : 1 })
+    return repo2.status({ all : 1, invalidating : 1 })
     .then( ( status ) =>
     {
       var exp =
@@ -12332,21 +12321,23 @@ function repoStatusForDeletedRepo( test )
         'downloadRequired' : true,
         'updateRequired' : true,
         'agreeRequired' : true
-      }
+      };
       test.identical( status, exp );
 
       return null;
-    })
-  })
+    });
+  });
 
   /* */
 
-  .finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     test.identical( err, undefined );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -12356,22 +12347,21 @@ function repoStatusForDeletedRepo( test )
 function repoStatusForOutdatedRepo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   /* remote path refers to master, local repo is in detached state */
 
-  .tap( () => test.open( 'repo is not up to date' ) )
+  a.ready.tap( () => test.open( 'repo is not up to date' ) );
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not up to date'
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
@@ -12533,7 +12523,7 @@ function repoStatusForOutdatedRepo( test )
 function repoStatusForInvalidRepo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
   a.ready
@@ -12710,48 +12700,47 @@ function repoStatusForInvalidRepo( test )
 function repoStatusLocalChanges( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   /* remote path refers to master, repo has local changes */
 
-  .tap( () => test.open( 'repo has local changes' ) )
+  a.ready.tap( () => test.open( 'repo has local changes' ) );
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local changes'
+    test.description = 'repo::ModuleForTesting1 has local changes';
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
       var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-      return repo1.status({ all : 1, invalidating : 1 })
-    })
+      return repo1.status({ all : 1, invalidating : 1 });
+    });
     con.then( () =>
     {
-      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' });
       return null;
     });
     return con;
-  })
+  });
 
   //
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:0'
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:0';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 1, invalidating : 0 })
-  })
-  .then( ( status ) =>
+    return repo1.status({ all : 1, invalidating : 0 });
+  });
+  a.ready.then( ( status ) =>
   {
     var exp =
     {
@@ -12766,17 +12755,17 @@ function repoStatusLocalChanges( test )
       'downloadRequired' : false,
       'updateRequired' : false,
       'agreeRequired' : false
-    }
+    };
     test.identical( status, exp );
 
     return null;
-  })
+  });
 
   //
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:1'
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:1';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
     return repo1.status({ all : 1, invalidating : 1 })
   })

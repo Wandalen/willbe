@@ -1,9 +1,9 @@
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!delta
-  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/!delta
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!gamma
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/!gamma
   # ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/!master
   # ModuleForTesting2b : git+https:///github.com/Wandalen/wModuleForTesting2b.git/!master
   # ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/!master

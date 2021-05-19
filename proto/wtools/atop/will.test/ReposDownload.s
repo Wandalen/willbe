@@ -70,7 +70,7 @@ module.exports = reposRedownload;
 function reposRedownload( tag )
 {
 
-  tag = tag || 'delta';
+  tag = tag || 'gamma';
 
   ready.then( () =>
   {

@@ -404,7 +404,7 @@ function _willfilesFindAct( o )
 
   if( opener.searching === 'exact' )
   {
-    o.willfilesPath = _.arrayAs( o.willfilesPath );
+    o.willfilesPath = _.array.as( o.willfilesPath );
     records = o.willfilesPath.map( ( willfilePath ) => fileProvider.record( willfilePath ) );
   }
   else
@@ -1778,7 +1778,7 @@ function _repoDownload( o )
       if( will.transaction.verbosity >= 3 )
       logger.log( ` + Reflected ${path.moveTextualReport( opener2.downloadPath, opener.downloadPath )}` );
       let filter = { filePath : { [ opener.downloadPath ] : opener2.downloadPath } }
-      return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linking : 'hardLink' });
+      return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linkingAction : 'hardLink' });
     });
   }
 

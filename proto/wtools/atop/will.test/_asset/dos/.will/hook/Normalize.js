@@ -1115,7 +1115,7 @@ function willFixDmytrosFuckup( context )
 //       enabled: 0
 //     enabled: 0
 
-  let filePath = _.arrayAs( context.junction.module.willfilesPath )[ 0 ];
+  let filePath = _.array.as( context.junction.module.willfilesPath )[ 0 ];
   let config = fileProvider.fileReadUnknown( filePath );
 
   let edited = false;

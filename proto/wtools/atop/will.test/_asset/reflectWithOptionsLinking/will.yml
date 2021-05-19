@@ -16,12 +16,12 @@ reflector :
   reflect.proto2 :
     filePath :
       'path::proto' : 'path::out.debug'
-    linking : fileCopy
+    linkingAction : fileCopy
 
   reflect.proto3 :
     filePath :
       'path::proto' : 'path::out.debug'
-    linking : fileCopy
+    linkingAction : fileCopy
     dstRewritingOnlyPreserving : 0
     breakingDstHardLink : 1
 

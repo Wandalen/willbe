@@ -46,7 +46,7 @@ function onModule( context )
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = context.opener.dirPath;
   if( config && config.path && config.path.hlink )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.array.as( provider.archive.basePath ), _.array.as( config.path.hlink ) );
   provider.archive.fileMapAutosaving = 1;
   if( o.verbosity )
   provider.archive.logger.verbosity = 2;
