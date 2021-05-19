@@ -22925,7 +22925,7 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
-    a.reflect();
+    a.reflectMinimal();
 
     return null;
   });
@@ -22939,7 +22939,15 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -22958,15 +22966,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting1' ] )
+    test.identical( version, versions[ 'ModuleForTesting1' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     return null;
   });
@@ -22981,7 +22989,7 @@ function versionsAgreeNpm( test )
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
-    versions[ 'ModuleForTesting12ab' ] = '0.0.34'
+    versions[ 'ModuleForTesting12ab' ] = '0.0.34';
 
     return null;
   });
@@ -22993,8 +23001,16 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -23011,15 +23027,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting1' ] )
+    test.identical( version, versions[ 'ModuleForTesting1' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     return null;
   });
@@ -23033,8 +23049,16 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -23051,15 +23075,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting1' ] )
+    test.identical( version, versions[ 'ModuleForTesting1' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     return null;
   });
@@ -23086,8 +23110,16 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -23104,15 +23136,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
+    test.identical( version, versions[ 'ModuleForTesting2b' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     var exp =
     [
@@ -23121,17 +23153,15 @@ function versionsAgreeNpm( test )
       './node_modules/wmodulefortesting2b',
       './wtools',
       './wtools/testing',
-      './wtools/testing/Basic.s',
       './wtools/testing/l4',
       './wtools/testing/l4/testing2b',
-      './wtools/testing/l4/testing2b/Include.s',
       './wtools/testing/l4/testing2b/ModuleForTesting2b.s',
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /*  */
 
