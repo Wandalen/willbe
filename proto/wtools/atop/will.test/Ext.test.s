@@ -21893,7 +21893,7 @@ function submodulesUpdateThrowing( test )
   a.appStart({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
-    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/will.yml' );
     let inWillFile = a.fileProvider.fileReadUnknown( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
@@ -30694,7 +30694,7 @@ function commandModulesShell( test )
   {
     test.case = '.with ./* .modules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 4 );
     test.identical( _.strCount( op.output, 'Named.will.yml' ), 3 );
@@ -31014,7 +31014,7 @@ function commandModulesGitRemoteSubmodules( test )
   {
     test.case = '.modules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
     test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
@@ -31111,7 +31111,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   {
     test.case = '.modules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 1 );
     test.identical( _.strCount( op.output, /On branch master\n\s*Changes not staged for commit:/ ), 1 );
