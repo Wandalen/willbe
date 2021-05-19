@@ -47,6 +47,8 @@ function onModule( context )
     delete context2.request.map.dry;
     delete context2.request.map.submodulesUpdating;
     delete context2.request.map.force;
+    delete context2.request.map.org;
+    delete context2.request.map.npmUserName;
     _.assert( context2.request.map !== context.request.map );
     context2.will.hooks.GitSync.call( context2 );
   }
@@ -140,6 +142,8 @@ function onModule( context )
     delete context2.request.map.dry;
     delete context2.request.map.submodulesUpdating;
     delete context2.request.map.force;
+    delete context2.request.map.org;
+    delete context2.request.map.npmUserName;
     context2.will.hooks.GitSync.call( context2 );
   }
 
