@@ -9104,9 +9104,9 @@ function modulesTreeDisabledAndCorrupted( test )
 */
 
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git' ), 3 );
-    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git!delta' ), 1 );
+    test.ge( _.strCount( op.output, /git\+https\:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git!\w+/ ), 1 );
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git' ), 2 );
-    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git!delta' ), 1 );
+    test.ge( _.strCount( op.output, /git\+https\:\/\/\/github\.com\/Wandalen\/wModuleForTesting2\.git!\w+/ ), 1 );
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 8 );
     test.identical( _.strCount( op.output, /\+-- module::.* - path::remote:=/ ), 6 );

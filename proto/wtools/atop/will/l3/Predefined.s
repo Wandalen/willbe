@@ -136,7 +136,6 @@ function stepRoutineReflect( frame )
   return _.Consequence.Try( () =>
   {
 
-    debugger;
     // _.will.Predefined._filesReflect.head.call( fileProvider, _.will.Predefined._filesReflect, opts );
 
     return _.will.Predefined._filesReflect.call( fileProvider, opts );
@@ -513,7 +512,6 @@ function stepRoutineTranspile( frame )
   return multiple.form().perform()
   .finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw _.err( err );
     // throw _.errLogOnce( err );
@@ -563,7 +561,6 @@ function stepRoutineView( frame )
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
 
-  debugger;
   let filePath = module.pathResolve
   ({
     selector : opts.filePath,
@@ -580,7 +577,6 @@ function stepRoutineView( frame )
   //   prefixlessAction : 'resolved',
   //   pathNativizing : 1,
   // });
-  // debugger;
 
   // filePath = _.strReplace( filePath, '///', '//' );
 
@@ -603,11 +599,9 @@ function stepRoutineView( frame )
 
   function view( filePath )
   {
-    debugger;
     if( verbosity >= 1 )
     logger.log( 'View ' + filePath );
     let result = Open( filePath );
-    debugger;
     return result;
   }
 
