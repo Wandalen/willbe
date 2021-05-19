@@ -12346,22 +12346,21 @@ function repoStatusForDeletedRepo( test )
 function repoStatusForOutdatedRepo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   /* remote path refers to master, local repo is in detached state */
 
-  .tap( () => test.open( 'repo is not up to date' ) )
+  a.ready.tap( () => test.open( 'repo is not up to date' ) );
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not up to date'
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
