@@ -11621,18 +11621,17 @@ function isRepositoryReformSeveralTimes( test )
 function repoStatus( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
+  a.ready.then( () => opener.openedModule.subModulesDownload() )
 
   /* status after donwloading repo::ModuleForTesting1 */
 
@@ -11891,7 +11890,7 @@ function repoStatus( test )
   .then( () =>
   {
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
-    var exp = [ 'ModuleForTesting2a' ];
+    var exp = [ 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     return null;
