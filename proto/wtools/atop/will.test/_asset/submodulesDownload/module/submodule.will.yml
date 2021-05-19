@@ -1,6 +1,6 @@
 submodule :
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta
-  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/!delta
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma
+  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma
 
 about :
 

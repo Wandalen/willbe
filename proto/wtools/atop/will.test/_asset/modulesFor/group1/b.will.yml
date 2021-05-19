@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  ModuleForTesting1 : git+hd://../../-repo/ModuleForTesting1/!delta
+  ModuleForTesting1 : git+hd://../../-repo/ModuleForTesting1/!gamma
   # ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
 
 path :

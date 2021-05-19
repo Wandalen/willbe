@@ -243,11 +243,11 @@ module:
           - ../.module/ModuleForTesting2a/sample/trivial/Sample.s
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!delta'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
         autoExporting: 0
         enabled: 1
     reflector:
@@ -340,11 +340,11 @@ module:
         path: out
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!delta'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!delta'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
         autoExporting: 0
         enabled: 1
     reflector: {}
