@@ -9593,33 +9593,28 @@ function modulesEach( test )
 function modulesEachDuplicates( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'hierarchyDuplicate' );
-  let opener;
+  let a = context.assetFor( test, 'hierarchyDuplicateGitHd' );
+  let opener, ups;
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './z' ) });
     return opener.open();
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
     return a.will.modulesDownload({ modules : [ opener ], recursive : 2 })
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
-
-    /* */
-
     test.description = 'root, recursive:1';
 
-    var ups = [];
+    ups = [];
     var o2 = Object.create( null );
     o2.recursive = 1;
     o2.withStem = 1;
@@ -9637,7 +9632,7 @@ function modulesEachDuplicates( test )
       'group1/a',
       '.module/ModuleForTesting1/',
       '.module/ModuleForTesting1/out/wModuleForTesting1.out',
-    ]
+    ];
     var got = _.select( got, '*/localPath' );
     test.identical( got, a.abs( exp ) );
 
@@ -9645,7 +9640,7 @@ function modulesEachDuplicates( test )
 
     test.description = 'submodule, recursive:1';
 
-    var ups = [];
+    ups = [];
     var o2 = Object.create( null );
     o2.recursive = 1;
     o2.withStem = 1;
@@ -9661,7 +9656,7 @@ function modulesEachDuplicates( test )
       'group1/a',
       'group1/.module/ModuleForTesting1/',
       'group1/.module/ModuleForTesting1/out/wModuleForTesting1.out',
-    ]
+    ];
     var got = _.select( got, '*/localPath' );
     test.identical( got, a.abs( exp ) );
 
@@ -9669,18 +9664,19 @@ function modulesEachDuplicates( test )
 
     opener.finit();
     return null;
-
-    function handleUp( object, it )
-    {
-      ups.push( object );
-    }
-
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesEachDuplicates */
+
+  /* */
+
+  function handleUp( object, it )
+  {
+    ups.push( object );
+  }
+}
 
 //
 
