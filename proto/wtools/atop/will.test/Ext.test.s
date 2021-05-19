@@ -79,6 +79,16 @@ function onSuiteEnd()
 
 //
 
+function onRoutineEnd( test )
+{
+  const context = this;
+  const routineTempPath = _.fileProvider.path.join( context.suiteTempPath, test.routine.name );
+  _.fileProvider.filesDelete( routineTempPath );
+  _.assert( !_.fileProvider.fileExists( routineTempPath ) );
+}
+
+//
+
 function assetFor( test, name )
 {
   let context = this;
@@ -42881,6 +42891,7 @@ const Proto =
 
   onSuiteBegin,
   onSuiteEnd,
+  onRoutineEnd, /* Dmytro : should reduce time of hardlinking for all suite test run */
   routineTimeOut : 300000,
 
   context :
