@@ -12523,7 +12523,7 @@ function repoStatusForOutdatedRepo( test )
 function repoStatusForInvalidRepo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
   a.ready
