@@ -25,6 +25,12 @@ function onModule( context )
   if( !o.tag )
   throw _.errBrief( 'Expects option {-tag-}' );
 
+  if( !o.org )
+  throw _.errBrief( 'Expects option {-org-}' );
+
+  if( !o.npmUserName )
+  throw _.errBrief( 'Expects option {-npmUserName-}' );
+
   if( !fileProvider.fileExists( wasСonfigPath ) )
   throw _.errBrief( `Does not have ${wasСonfigPath}` );
 
