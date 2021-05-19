@@ -12700,48 +12700,47 @@ function repoStatusForInvalidRepo( test )
 function repoStatusLocalChanges( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   /* remote path refers to master, repo has local changes */
 
-  .tap( () => test.open( 'repo has local changes' ) )
+  a.ready.tap( () => test.open( 'repo has local changes' ) );
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local changes'
+    test.description = 'repo::ModuleForTesting1 has local changes';
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
       var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-      return repo1.status({ all : 1, invalidating : 1 })
-    })
+      return repo1.status({ all : 1, invalidating : 1 });
+    });
     con.then( () =>
     {
-      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' });
       return null;
     });
     return con;
-  })
+  });
 
   //
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:0'
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:0';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
-    return repo1.status({ all : 1, invalidating : 0 })
-  })
-  .then( ( status ) =>
+    return repo1.status({ all : 1, invalidating : 0 });
+  });
+  a.ready.then( ( status ) =>
   {
     var exp =
     {
@@ -12756,17 +12755,17 @@ function repoStatusLocalChanges( test )
       'downloadRequired' : false,
       'updateRequired' : false,
       'agreeRequired' : false
-    }
+    };
     test.identical( status, exp );
 
     return null;
-  })
+  });
 
   //
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:1'
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:1';
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
     return repo1.status({ all : 1, invalidating : 1 })
   })
