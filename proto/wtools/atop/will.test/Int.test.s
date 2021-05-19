@@ -11564,22 +11564,21 @@ function submodulesDeleteAndDownload( test )
 function isRepositoryReformSeveralTimes( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
+  a.ready.then( () => opener.openedModule.subModulesDownload() )
 
   .then( () =>
   {
-    var repo = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting2.opener.repo;
     return repo.status({ all : 1, invalidating : 0 });
   })
 
@@ -11606,12 +11605,14 @@ function isRepositoryReformSeveralTimes( test )
     return null;
   })
 
-  .finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     test.identical( err, undefined );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
