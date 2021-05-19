@@ -1298,6 +1298,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/hierarchyDuplicate/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyDuplicate/group1/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd
+          - >-
+            ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd/z.will.yml
+          - ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd/group1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd/group1/a.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/z.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/+
