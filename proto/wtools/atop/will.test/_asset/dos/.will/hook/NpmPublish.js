@@ -208,12 +208,6 @@ function onModule( context )
         return;
       }
 
-      // if( about && )
-      // {
-      //   dep.version = o.tag;
-      //   return;
-      // }
-
       if( about.version )
       {
         dep.version = about.version;
