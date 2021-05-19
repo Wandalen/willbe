@@ -7912,25 +7912,24 @@ function pathsResolveOfSubmodulesLocal( test )
 function pathsResolveOfSubmodulesRemote( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesRemoteRepos' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open({ all : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
     let module = opener.openedModule;
     return module.modulesBuild({ criterion : { debug : 1 }, downloading : 1 });
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
@@ -7969,7 +7968,7 @@ function pathsResolveOfSubmodulesRemote( test )
     test.identical( resolved, expected );
 
     return null;
-  })
+  });
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -7978,7 +7977,7 @@ function pathsResolveOfSubmodulesRemote( test )
     test.true( err === undefined );
     opener.finit();
     return arg;
-  })
+  });
 
   /* - */
 
