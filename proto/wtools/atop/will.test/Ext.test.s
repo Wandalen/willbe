@@ -28959,7 +28959,7 @@ function commandSubmodulesShell( test )
   {
     test.case = '.with ./* .submodules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 2 );
     test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 1 );
