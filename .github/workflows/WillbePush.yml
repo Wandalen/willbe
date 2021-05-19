@@ -15,6 +15,18 @@ jobs :
       matrix :
         os : [ ubuntu-latest, windows-latest, macos-latest ]
         node-version : [ 14.x ]
+        test-job :
+          - 'Int.test.s'
+          - 'Ext.test.s r:"[ pre*, single*, build*, transpile*, open*, with*, each* ]"'
+          - 'Ext.test.s r:"reflect*"'
+          - 'Ext.test.s r:"module*"'
+          - 'Ext.test.s r:"[ export*, import* ]"'
+          - 'Ext.test.s r:"clean*"'
+          - 'Ext.test.s r:"submodules*"'
+          - 'Ext.test.s r:"step*"'
+          - 'Ext.test.s r:"command*"'
+          - 'Ext.test.s r:"[ withDo*, hook*, imply*, verbosity*, list*, shell*, function* ]"'
+          - 'Normal run'
     if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
     runs-on : ${{ matrix.os }}
     steps :
@@ -43,4 +55,8 @@ jobs :
       run : env
     - run : npm list
       continue-on-error : true
-    - run : npm test
+    - name : ${{ matrix.test-job }}
+      if : "${{ matrix.test-job != 'Normal run' }}"
+      run : node proto/wtools/atop/will.test/${{ matrix.test-job }} rapidity:-1
+    - if : "${{ matrix.test-job == 'Normal run' }}"
+      run : npm test
