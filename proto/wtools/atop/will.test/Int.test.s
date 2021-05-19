@@ -12194,24 +12194,23 @@ function repoStatus( test )
 function repoStatusForDeletedRepo( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodules' );
+  let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
-  .then( () => opener.openedModule.subModulesDownload() )
+  a.ready.then( () => opener.openedModule.subModulesDownload() );
 
   /*  */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'delete repo::ModuleForTesting1 and call status with invalidating:0'
+    test.description = 'delete repo::ModuleForTesting1 and call status with invalidating:0';
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
 
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
@@ -12228,7 +12227,7 @@ function repoStatusForDeletedRepo( test )
       'downloadRequired' :  repo1._.downloadRequired,
       'updateRequired' :  repo1._.updateRequired,
       'agreeRequired' :  repo1._.agreeRequired
-    }
+    };
     var expected =
     {
       'dirExists' : true,
@@ -12243,7 +12242,7 @@ function repoStatusForDeletedRepo( test )
       'updateRequired' : null,
       'agreeRequired' : null
     };
-    test.identical( status, expected )
+    test.identical( status, expected );
 
     return repo1.status({ all : 1, invalidating : 0 })
     .then( ( status ) =>
@@ -12261,35 +12260,35 @@ function repoStatusForDeletedRepo( test )
         'downloadRequired' : true,
         'updateRequired' : true,
         'agreeRequired' : true
-      }
+      };
       test.identical( status, exp );
 
       return null;
-    })
-  })
+    });
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.description = 'delete repo::ModuleForTesting2a and call status with invalidating:1'
-    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
+    test.description = 'delete repo::ModuleForTesting2 and call status with invalidating:1';
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2' ) );
 
-    var repo1a = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
+    var repo2 = opener.openedModule.submoduleMap.ModuleForTesting2.opener.repo;
     var status =
     {
-      'dirExists' : repo1a._.dirExists,
-      'hasFiles' : repo1a._.hasFiles,
-      'isRepository' :  repo1a._.isRepository,
-      'hasLocalChanges' :  repo1a._.hasLocalChanges,
-      'hasLocalUncommittedChanges' :  repo1a._.hasLocalUncommittedChanges,
-      'isUpToDate' :  repo1a._.isUpToDate,
-      'remoteIsValid' :  repo1a._.remoteIsValid,
-      'safeToDelete' :  repo1a._.safeToDelete,
-      'downloadRequired' :  repo1a._.downloadRequired,
-      'updateRequired' :  repo1a._.updateRequired,
-      'agreeRequired' :  repo1a._.agreeRequired
-    }
+      'dirExists' : repo2._.dirExists,
+      'hasFiles' : repo2._.hasFiles,
+      'isRepository' :  repo2._.isRepository,
+      'hasLocalChanges' :  repo2._.hasLocalChanges,
+      'hasLocalUncommittedChanges' :  repo2._.hasLocalUncommittedChanges,
+      'isUpToDate' :  repo2._.isUpToDate,
+      'remoteIsValid' :  repo2._.remoteIsValid,
+      'safeToDelete' :  repo2._.safeToDelete,
+      'downloadRequired' :  repo2._.downloadRequired,
+      'updateRequired' :  repo2._.updateRequired,
+      'agreeRequired' :  repo2._.agreeRequired
+    };
     var expected =
     {
       'dirExists' : true,
@@ -12304,9 +12303,9 @@ function repoStatusForDeletedRepo( test )
       'updateRequired' : null,
       'agreeRequired' : null
     };
-    test.identical( status, expected )
+    test.identical( status, expected );
 
-    return repo1a.status({ all : 1, invalidating : 1 })
+    return repo2.status({ all : 1, invalidating : 1 })
     .then( ( status ) =>
     {
       var exp =
@@ -12322,21 +12321,23 @@ function repoStatusForDeletedRepo( test )
         'downloadRequired' : true,
         'updateRequired' : true,
         'agreeRequired' : true
-      }
+      };
       test.identical( status, exp );
 
       return null;
-    })
-  })
+    });
+  });
 
   /* */
 
-  .finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     test.identical( err, undefined );
     opener.close();
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
