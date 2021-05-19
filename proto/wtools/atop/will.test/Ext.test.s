@@ -31454,8 +31454,8 @@ function commandModulesGitDiffOutputFormat( test )
   begin().then( () =>
   {
     test.case = 'output of git diff has indentation, there is an empty line before output of each module'
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/wtools/testing/Common.s' ), 'testData' );
     return null;
   });
 
@@ -31468,10 +31468,10 @@ function commandModulesGitDiffOutputFormat( test )
     test.identical( _.strCount( op.output, '  Status:' ), 2 );
     test.identical( _.strCount( op.output, '  Patch:' ), 2 );
     test.identical( _.strCount( op.output, '    modifiedFiles:' ), 2 );
-    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/Include.s' ), 1 );
-    test.identical( _.strCount( op.output, '      proto/Integration.test.ss' ), 1 );
-    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/Include.s b/proto/wtools/testing/l1/Include.s' ), 1 );
-    test.identical( _.strCount( op.output, '    diff --git a/proto/Integration.test.ss b/proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/Common.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/ModuleForTesting1.s b/proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/Common.s b/proto/wtools/testing/Common.s' ), 1 );
     test.identical( _.strCount( op.output, '    +testData' ), 2 );
 
     return null;
