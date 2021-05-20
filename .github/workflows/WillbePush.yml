@@ -13,7 +13,7 @@ jobs :
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest, windows-latest, macos-latest ]
+        os : [ ubuntu, windows, macos ]
         node-version : [ 14.x ]
         test-job :
           - 'Int.test.s'
@@ -28,7 +28,7 @@ jobs :
           - 'Ext.test.s r:"command*"'
           - 'Ext.test.s r:"[ hook*, verbosity*, list*, shell*, function*, etc* ]"'
     if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
-    runs-on : ${{ matrix.os }}
+    runs-on : ${{ matrix.os }}-latest
     name : ${{ matrix.os }} ${{ matrix.test-job }}
     steps :
     - name : Setup git
@@ -68,10 +68,11 @@ jobs :
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest ]
+        os : [ ubuntu ]
         node-version : [ 14.x ]
     if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
-    runs-on : ${{ matrix.os }}
+    runs-on : ${{ matrix.os }}-latest
+    name : ${{ matrix.os }} Ext
     steps :
     - name : Setup git
       run : |
@@ -109,10 +110,11 @@ jobs :
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest, windows-latest, macos-latest ]
+        os : [ ubuntu, windows, macos ]
         node-version : [ 14.x ]
     if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
-    runs-on : ${{ matrix.os }}
+    runs-on : ${{ matrix.os }}-latest
+    name : ${{ matrix.os }} Integration
     steps :
     - name : Setup git
       run : |

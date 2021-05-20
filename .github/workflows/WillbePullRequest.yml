@@ -6,7 +6,7 @@ jobs :
 
   Cancel :
     name : 'Cancel Previous Runs'
-    runs-on : ubuntu-latest
+    runs-on : ubuntu
     timeout-minutes : 1
     steps :
       - uses : styfle/cancel-workflow-action@0.4.0
@@ -23,7 +23,7 @@ jobs :
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest, windows-latest, macos-latest ]
+        os : [ ubuntu, windows, macos ]
         node-version : [ 14.x ]
         test-job :
           - 'Int.test.s'
@@ -31,15 +31,14 @@ jobs :
           - 'File.test.s'
           - 'Ext.test.s r:"build*"'
           - 'Ext.test.s r:"reflect*"'
-          - 'Ext.test.s r:"module*"'
           - 'Ext.test.s r:"[ export*, import*, open* ]"'
           - 'Ext.test.s r:"clean*"'
-          - 'Ext.test.s r:"[ submodule*, subModule* ]"'
+          - 'Ext.test.s r:"[ module*, submodule*, subModule* ]"'
           - 'Ext.test.s r:"step*"'
           - 'Ext.test.s r:"command*"'
-          - 'Ext.test.s r:"[ hook*, verbosity*, list*, shell*, function* ]"'
-          - 'Ext.test.s r:"etc*"'
-    runs-on : ${{ matrix.os }}
+          - 'Ext.test.s r:"[ hook*, verbosity*, list*, shell*, function*, etc* ]"'
+    runs-on : ${{ matrix.os }}-latest
+    name : ${{ matrix.os }} ${{ matrix.test-job }}
     steps :
     - name : Setup git
       run : |
@@ -79,9 +78,10 @@ jobs :
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest ]
+        os : [ ubuntu ]
         node-version : [ 14.x ]
-    runs-on : ${{ matrix.os }}
+    runs-on : ${{ matrix.os }}-latest
+    name : ${{ matrix.os }} Ext
     steps :
     - name : Setup git
       run : |
@@ -120,9 +120,10 @@ jobs :
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest, windows-latest, macos-latest ]
+        os : [ ubuntu, windows, macos ]
         node-version : [ 14.x ]
-    runs-on : ${{ matrix.os }}
+    runs-on : ${{ matrix.os }}-latest
+    name : ${{ matrix.os }} Integration
     steps :
     - name : Setup git
       run : |
