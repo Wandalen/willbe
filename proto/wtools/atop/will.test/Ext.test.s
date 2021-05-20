@@ -759,7 +759,7 @@ function commandModuleNewDotless( test )
 
     test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::moduleNewDotless at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotless at' ), 1 );
     test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( op.output, 'already exists!' ), 1 );
 
