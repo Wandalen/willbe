@@ -844,6 +844,8 @@ function _From( o )
 
     [ localPath, remotePath ] = cls.PathsOf( o.object );
 
+    if( localPath === null )
+    debugger;
     if( junctionMap && junctionMap[ localPath ] )
     junction = junctionMap[ localPath ];
     else if( junctionMap && remotePath && junctionMap[ remotePath ] )

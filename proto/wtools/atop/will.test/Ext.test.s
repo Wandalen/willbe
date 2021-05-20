@@ -42063,20 +42063,20 @@ function commandsSubmoduleSafety( test )
 
   /* - */
 
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
@@ -42135,6 +42135,9 @@ function commandsSubmoduleSafety( test )
     });
 
     let op = { args : `.submodules.${env.command}` };
+    if( env.command === 'clean' )
+    op = { args : `.clean.submodules ${ env.options ? env.options : '' }` };
+
     a.appStart( op );
 
     a.ready.tap( ( err, arg ) =>
@@ -42263,7 +42266,7 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/unstaged' ] = ( env ) =>
     {
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
