@@ -58,7 +58,6 @@ jobs :
     - run : npm list
       continue-on-error : true
     - name : ${{ matrix.test-job }}
-      if : "${{ matrix.test-job != 'Integration' }}"
       run : node proto/wtools/atop/will.test/${{ matrix.test-job }} rapidity:-1
 
   Ext :
