@@ -40700,20 +40700,20 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     {
       wModuleForTesting1 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma',
         enabled : 0,
       },
       wModuleForTesting2 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
         enabled : 0,
       },
     };
     test.identical( willConfig.submodule, exp );
     var exp =
     {
-      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
-      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
     };
     test.identical( imWillConfig.submodule, exp );
 
@@ -40759,7 +40759,7 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
       },
       wModuleForTesting2 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
         enabled : 0,
       },
     };
@@ -40767,7 +40767,7 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     var exp =
     {
       ModuleForTesting1 : { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 },
-      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
     };
     test.identical( imWillConfig.submodule, exp );
 
