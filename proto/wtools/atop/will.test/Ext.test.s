@@ -42772,8 +42772,8 @@ function commandSubmodulesUpdateSwitchToOutdatedBranch( test )
   /* - */
 
   begin()
-  a.appStart( '.submodules.download' )
-  a.shell( 'git -C .module/testrepo reset --hard HEAD~1' )
+  a.shell( 'git clone repo .module/testrepo' )
+  a.shell( 'git -C repo commit --allow-empty -m test2' )
   a.shell( 'git -C .module/testrepo checkout second' )
   .then( () =>
   {
@@ -42821,6 +42821,7 @@ function commandSubmodulesUpdateSwitchToOutdatedBranch( test )
       a.shellSync({ execPath : 'git commit --allow-empty -m init', currentPath : repoPath })
       a.shellSync({ execPath : 'git commit --allow-empty -m test', currentPath : repoPath })
       a.shellSync({ execPath : 'git branch second', currentPath : repoPath })
+      a.shellSync({ execPath : 'git checkout master', currentPath : repoPath })
 
       return null;
     })
