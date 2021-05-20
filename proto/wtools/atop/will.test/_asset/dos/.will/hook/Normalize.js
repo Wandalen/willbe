@@ -26,7 +26,7 @@ function onModule( context )
 
   // hardLinkFromProto( context, '.eslintrc.yml', '.eslintrc.yml' );
   // hardLinkFromProto( context, 'proto/Integration.test.s', 'Integration.test.s' );
-  // hardLinkFromProto( context, '.github/workflows/Test.yml', 'common/.github/workflows/Test.yml' );
+  // hardLinkFromProto( context, '.github/workflows/Test.yml', 'common/github/workflows/Test.yml' );
   // hardLinkFromProto( context, '.circleci/config.yml', 'common/.circleci/config.yml' );
 
   // repoProgramsNormalize( context );
@@ -173,8 +173,8 @@ function repoProgramsNormalize( context )
 
   function programHlink( nameOfFile )
   {
-    if( fileProvider.isTerminal( pabs( `common/.github/workflows/${nameOfCollection}${nameOfFile}.yml` ) ) )
-    hardLinkFromProto( context, `.github/workflows/${nameOfCollection}${nameOfFile}.yml`, `common/.github/workflows/${nameOfCollection}${nameOfFile}.yml` );
+    if( fileProvider.isTerminal( pabs( `common/github/workflows/${nameOfCollection}${nameOfFile}.yml` ) ) )
+    hardLinkFromProto( context, `.github/workflows/${nameOfCollection}${nameOfFile}.yml`, `common/github/workflows/${nameOfCollection}${nameOfFile}.yml` );
   }
 
   function nameOfCollectionGet()
@@ -215,9 +215,9 @@ function repoProgramsReplace( context )
 
   logger.log( `Replacing workflows of ${context.junction.nameWithLocationGet()}` );
 
-  hardLinkFromProto( context, '.github/workflows/Publish.yml', 'common/.github/workflows/Publish.yml' );
-  hardLinkFromProto( context, '.github/workflows/PullRequest.yml', 'common/.github/workflows/PullRequest.yml' );
-  hardLinkFromProto( context, '.github/workflows/Push.yml', 'common/.github/workflows/Push.yml' );
+  hardLinkFromProto( context, '.github/workflows/Publish.yml', 'common/github/workflows/Publish.yml' );
+  hardLinkFromProto( context, '.github/workflows/PullRequest.yml', 'common/github/workflows/PullRequest.yml' );
+  hardLinkFromProto( context, '.github/workflows/Push.yml', 'common/github/workflows/Push.yml' );
 
   fileProvider.fileDelete( abs( '.github/workflows/Test.yml' ) );
 
