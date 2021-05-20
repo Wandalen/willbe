@@ -483,7 +483,6 @@ function RemotePathAdjust( remotePath, relativePath )
 
   if( !remotePathParsed.query.out )
   {
-    debugger;
     return _.uri.join( remotePath, relativePath );
   }
 
@@ -820,7 +819,6 @@ function _pathChanged( o )
   if( o.propName === 'currentRemotePath' || o.propName === 'currentRemote' )
   {
     logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
-    debugger;
   }
 
   // if( o.val )
@@ -1027,8 +1025,6 @@ versionIsUpToDate.defaults =
 
 //   if( _.boolIs( src ) )
 //   src = src ? 1 : 0;
-
-//   // debugger;
 
 //   will._.withSubmodules = src;
 
@@ -1405,14 +1401,12 @@ function moduleFit_body( object, opts )
   if( !opts.withValid && junction.object )
   if( junction.object.isValid() )
   {
-    debugger;
     return false;
   }
 
   if( !opts.withInvalid && junction.object )
   if( !junction.object.isValid() )
   {
-    debugger;
     return false;
   }
 
@@ -1926,7 +1920,6 @@ function modulesFindWithAt( o )
     context.opener.find();
     // if( _.boolLike( will.transaction.withSubmodules ) && context.opener.openedModule )
     // {
-    //   debugger;
     //   context.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.transaction.withSubmodules );
     // }
     context.opener.open();
@@ -1975,7 +1968,6 @@ function modulesFindWithAt( o )
 
     if( err )
     {
-      debugger;
       _.arrayAppendOnce( op.errs, err );
       throw err;
     }
@@ -1991,10 +1983,8 @@ function modulesFindWithAt( o )
     // op.sortedJunctions = will.graphTopSort( op.junctions );
     // op.sortedJunctions.reverse();
 
-    // debugger;
     // op.sortedOpeners = op.openers.slice();
     // op.sortedOpeners.forEach( ( opener ) => _.assert( opener instanceof _.will.ModuleOpener ) );
-    // debugger;
 
     op.sortedOpeners = will.graphTopSort( op.openers );
     op.sortedOpeners.reverse();
@@ -2007,7 +1997,6 @@ function modulesFindWithAt( o )
       if( _.longHas( op.openers, object ) )
       return object;
     });
-    // debugger;
 
     op.sortedOpeners.forEach( ( opener ) =>
     {
@@ -2101,9 +2090,7 @@ function modulesOnlyRoots( modules )
     nodesGroup,
   }
 
-  // debugger;
   // let sourcesHasObjects = will.modulesEach( o3 );
-  // debugger;
   // let sourcesHasVariants = will.objectsToVariants( sourcesHasObjects );
   // sourcesHasObjects = will.objectsAllVariants( sourcesHasObjects );
 
@@ -2111,7 +2098,6 @@ function modulesOnlyRoots( modules )
   */
 
   sources = _.longOnce( sources, ( object ) => will.junctionFrom( object ) );
-  // debugger;
   sources = sources.filter( ( object ) =>
   {
     let junction = will.junctionFrom( object );
@@ -2128,7 +2114,6 @@ function modulesOnlyRoots( modules )
     // }
     return true;
   });
-  // debugger;
 
   // sources = sources.filter( ( junction ) =>
   // {
@@ -2514,7 +2499,7 @@ function modulesFor_body( o )
     return null;
     let ready = _.take( null );
     visitedJunctionsSet.add( junction );
-    let isRoot = _.longHas( rootJunctions, junction ); debugger;
+    let isRoot = _.longHas( rootJunctions, junction );
 
     if( o.onEachJunction )
     {
@@ -2618,12 +2603,9 @@ function modulesDownload_body( o )
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ] : null;
   let rootJunctions = _.array.as( will.junctionsFrom( o.modules ) );
 
-  // debugger;
   return objectsUpformAndDownload( o.modules )
   .finally( ( err, arg ) =>
   {
-    if( err )
-    debugger;
     if( err )
     throw _.err( err, '\nFailed to', ( o.mode ), 'submodules' );
     log();
@@ -2899,9 +2881,6 @@ function modulesDownload_body( o )
 
     if( junction.peer && junction.peer.object && junction.peer.isRemote )
     return junctionRemote( junction );
-
-    if( junction.object.root === junction.object )
-    debugger;
 
     junctionLocal( junction );
   }
@@ -3204,7 +3183,6 @@ function modulesBuild_body( o )
     {
       if( recursive === null )
       {
-        debugger;
         o2.recursive = 0;
       }
       else
@@ -3219,7 +3197,6 @@ function modulesBuild_body( o )
     o2.peerModulesFormed = 1;
     o2.withOut = 0;
     o2.withIn = 1;
-    debugger;
     return will.modulesUpform( o2 );
   })
 
@@ -3235,8 +3212,6 @@ function modulesBuild_body( o )
 
   ready.finally( ( err, arg ) =>
   {
-    if( err )
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to ${o.kind}` );
     return arg;
@@ -3327,15 +3302,11 @@ function modulesVerify_body( o )
   {
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.onEachVisitedObject = moduleVerify;
-    debugger;
     return will.modulesFor( o2 );
   })
 
   ready.finally( ( err, arg ) =>
   {
-    debugger;
-    if( err )
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to verify` );
 
@@ -3362,7 +3333,6 @@ function modulesVerify_body( o )
 
   function moduleVerify( object, op )
   {
-    debugger;
     if( object instanceof _.will.ModulesRelation )
     if( object.opener )
     object = object.opener;
@@ -3371,11 +3341,10 @@ function modulesVerify_body( o )
     if( object instanceof _.will.ModuleOpener )
     if( object.openedModule )
     object = object.openedModule;
-    let o3 = _.mapOnly_( null, o, object.repoVerify.defaults ); debugger;
+    let o3 = _.mapOnly_( null, o, object.repoVerify.defaults );
     _.assert( object instanceof _.will.Module || object instanceof _.will.ModuleOpener );
     return object.repoVerify( o3 ).then( ( verified ) =>
     {
-      debugger;
       totalNumber += 1;
       if( verified )
       verifiedNumber += 1;
@@ -3960,8 +3929,6 @@ function _openerMake_body( o )
   }
   catch( err )
   {
-    debugger;
-
     if( o.throwing )
     throw _.err( err, `\nFailed to make module at ${o.opener.willfilesPath}` );
 
@@ -4025,7 +3992,6 @@ function openersAdoptModule( module )
 
     // if( !opener.repo.isDownloaded )
     // {
-    //   debugger;
     //   opener.repo.isDownloaded = true;
     // }
 
@@ -4073,7 +4039,6 @@ function openersErrorsRemoveOf( opener )
   {
     if( r.opener === opener )
     {
-      debugger;
       delete will.openersErrorsMap[ r.localPath ];
       return false;
     }

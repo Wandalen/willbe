@@ -28880,7 +28880,7 @@ function commandSubmodulesClean( test )
   let a = context.assetFor( test, 'submodulesClean' );
   a.reflect();
 
-  /* OK */
+  /* - */
 
   a.appStart( '.build clean.and.update.recursive.1' )
   .then( ( op ) =>
@@ -28893,20 +28893,20 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* OK */
+  /* */
 
-  a.appStart( '.build clean.and.update.recursive.2' )
-  .then( ( op ) =>
-  {
-    test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
-    return null;
-  });
+  // a.appStart( '.build clean.and.update.recursive.2' )
+  // .then( ( op ) =>
+  // {
+  //   test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
+  //   test.identical( op.exitCode, 0 );
+  //   test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+  //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
+  //   return null;
+  // });
 
-  /* OK */
+  /* */
 
   a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
@@ -28919,7 +28919,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* OK */
+  /* */
 
   a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
@@ -28932,7 +28932,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -29237,7 +29237,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 0 );
     test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
@@ -40700,20 +40700,20 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     {
       wModuleForTesting1 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma',
         enabled : 0,
       },
       wModuleForTesting2 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
         enabled : 0,
       },
     };
     test.identical( willConfig.submodule, exp );
     var exp =
     {
-      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
-      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
     };
     test.identical( imWillConfig.submodule, exp );
 
@@ -40759,7 +40759,7 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
       },
       wModuleForTesting2 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
         enabled : 0,
       },
     };
@@ -40767,7 +40767,7 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     var exp =
     {
       ModuleForTesting1 : { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 },
-      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
     };
     test.identical( imWillConfig.submodule, exp );
 
@@ -42050,8 +42050,6 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
   run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
   run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  // run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
-  // run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
   run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
   run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
   run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
@@ -42065,22 +42063,20 @@ function commandsSubmoduleSafety( test )
 
   /* - */
 
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
-  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
@@ -42139,6 +42135,9 @@ function commandsSubmoduleSafety( test )
     });
 
     let op = { args : `.submodules.${env.command}` };
+    if( env.command === 'clean' )
+    op = { args : `.clean.submodules ${ env.options ? env.options : '' }` };
+
     a.appStart( op );
 
     a.ready.tap( ( err, arg ) =>
@@ -42267,7 +42266,7 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/unstaged' ] = ( env ) =>
     {
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
@@ -42280,9 +42279,9 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/staged' ] = ( env ) =>
     {
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
-      a.moduleShell( 'git add README.md' );
+      a.moduleShell( 'git add Readme.md' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
@@ -42313,7 +42312,7 @@ function commandsSubmoduleSafety( test )
     routinesPre[ 'local/conflict' ] = ( env ) =>
     {
       a.moduleShell( 'git branch dev1' );
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       let data = a.fileProvider.fileRead({ filePath });
 
       a.moduleShell( 'git checkout dev1' );
