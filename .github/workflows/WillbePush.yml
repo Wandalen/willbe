@@ -17,16 +17,19 @@ jobs :
         node-version : [ 14.x ]
         test-job :
           - 'Int.test.s'
-          - 'Ext.test.s r:"[ pre*, single*, build*, transpile*, open*, with*, each* ]"'
+          - 'Ext.Package.test.s'
+          - 'File.test.s'
+          - 'Ext.test.s r:"build*"'
           - 'Ext.test.s r:"reflect*"'
           - 'Ext.test.s r:"module*"'
-          - 'Ext.test.s r:"[ export*, import* ]"'
+          - 'Ext.test.s r:"[ export*, import*, open* ]"'
           - 'Ext.test.s r:"clean*"'
-          - 'Ext.test.s r:"submodules*"'
+          - 'Ext.test.s r:"[ submodule*, subModule* ]"'
           - 'Ext.test.s r:"step*"'
           - 'Ext.test.s r:"command*"'
-          - 'Ext.test.s r:"[ withDo*, hook*, imply*, verbosity*, list*, shell*, function* ]"'
-          - 'Normal run'
+          - 'Ext.test.s r:"[ hook*, verbosity*, list*, shell*, function* ]"'
+          - 'Ext.test.s r:"etc*"'
+          - 'Integration'
     if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
     runs-on : ${{ matrix.os }}
     steps :
@@ -56,7 +59,49 @@ jobs :
     - run : npm list
       continue-on-error : true
     - name : ${{ matrix.test-job }}
-      if : "${{ matrix.test-job != 'Normal run' }}"
+      if : "${{ matrix.test-job == 'Integration' }}"
+      run : node proto/Integration.test.ss rapidity:-1
+    - name : ${{ matrix.test-job }}
+      if : "${{ matrix.test-job != 'Integration' }}"
       run : node proto/wtools/atop/will.test/${{ matrix.test-job }} rapidity:-1
-    - if : "${{ matrix.test-job == 'Normal run' }}"
-      run : npm test
+
+  Ext :
+    env :
+      PRIVATE_WTOOLS_BOT_TOKEN : ${{ secrets.PRIVATE_WTOOLS_BOT_TOKEN }}
+      PRIVATE_WTOOLS_BOT_SSH_KEY : ${{ secrets.PRIVATE_WTOOLS_BOT_SSH_KEY }}
+      PRIVATE_WTOOLS_BOT_NPM_PASS : ${{ secrets.PRIVATE_WTOOLS_BOT_NPM_PASS }}
+      PRIVATE_WTOOLS_BOT_EMAIL : ${{ secrets.PRIVATE_WTOOLS_BOT_EMAIL }}
+    strategy :
+      fail-fast : false
+      matrix :
+        os : [ ubuntu-latest ]
+        node-version : [ 14.x ]
+    if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
+    runs-on : ${{ matrix.os }}
+    steps :
+    - name : Setup git
+      run : |
+        git config --global core.autocrlf input
+        git config --global user.email "testing@testing.com"
+        git config --global user.name "Testing"
+    - uses : actions/checkout@v2
+      with :
+        fetch-depth: 2
+    - name : ${{ matrix.node-version }}
+      uses : actions/setup-node@v1
+      with :
+        node-version : ${{ matrix.node-version }}
+    - name : Save npm version
+      id : getnpmver
+      run : |
+        echo "::set-output name=npmver::$(npm -v)"
+    - name : Update npm if current version is 6
+      if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
+      run : npm install -g npm@latest-6
+    - run : npm -g i willbe@stable
+    - run : will .npm.install
+    - name : Environment
+      run : env
+    - run : npm list
+      continue-on-error : true
+    - run : node proto/wtools/atop/will.test/Ext.test.s rapidity:-1

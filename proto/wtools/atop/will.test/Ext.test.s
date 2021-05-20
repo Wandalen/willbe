@@ -182,7 +182,7 @@ function assetFor( test, name )
 // tests
 // --
 
-function preCloneRepos( test )
+function etcPreCloneRepos( test )
 {
   let context = this;
   let a = context.assetFor( test, '-repo' );
@@ -198,7 +198,7 @@ function preCloneRepos( test )
 
 //
 
-function singleModuleWithSpaceTrivial( test )
+function etcSingleModuleWithSpaceTrivial( test )
 {
   let context = this;
   let a = context.assetFor( test, 'single with space' );
@@ -420,10 +420,10 @@ build.rapidity = -1;
 Test transpilation of JS files.
 */
 
-function transpile( test )
+function buildTranspile( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'transpile' );
+  let a = context.assetFor( test, 'buildTranspile' );
 
   /* - */
 
@@ -651,7 +651,7 @@ function transpile( test )
 
 //
 
-function transpileWithOptions( test )
+function buildTranspileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpileOptions' );
@@ -693,7 +693,7 @@ function transpileWithOptions( test )
 
 //
 
-function transpileExperiment( test )
+function buildTranspileExperiment( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpile' );
@@ -718,11 +718,11 @@ function transpileExperiment( test )
   return a.ready;
 }
 
-transpileExperiment.experimental = 1;
+buildTranspileExperiment.experimental = 1;
 
 //
 
-function moduleNewDotless( test )
+function commandModuleNewDotless( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessExported' );
@@ -928,7 +928,7 @@ function moduleNewDotless( test )
 
 //
 
-function moduleNewDotlessSingle( test )
+function commandModuleNewDotlessSingle( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessSingleExported' );
@@ -1129,7 +1129,7 @@ function moduleNewDotlessSingle( test )
 
 //
 
-function moduleNewNamed( test )
+function commandModuleNewNamed( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoExported' )
@@ -1591,7 +1591,7 @@ function moduleNewNamed( test )
   return a.ready;
 }
 
-moduleNewNamed.rapidity = -1;
+commandModuleNewNamed.rapidity = -1;
 
 //
 
@@ -2133,7 +2133,7 @@ openEach.timeOut = 300000;
 
 //
 
-function withMixed( test )
+function commandWithMixed( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesMixed' );
@@ -2180,11 +2180,11 @@ function withMixed( test )
   return a.ready;
 }
 
-withMixed.timeOut = 300000;
+commandWithMixed.timeOut = 300000;
 
 //
 
-function eachMixed( test )
+function commandEachMixed( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesGit' );
@@ -2265,11 +2265,11 @@ function eachMixed( test )
   return a.ready;
 }
 
-eachMixed.timeOut = 300000;
+commandEachMixed.timeOut = 300000;
 
 //
 
-function withList( test )
+function commandWithList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
@@ -2342,7 +2342,7 @@ function withList( test )
 
 //
 
-function eachList( test )
+function commandEachList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'eachList' );
@@ -2509,11 +2509,11 @@ function eachList( test )
   }
 }
 
-eachList.timeOut = 300000;
+commandEachList.timeOut = 300000;
 
 //
 
-function eachBrokenIll( test )
+function commandEachBrokenIll( test )
 {
   let context = this;
   let a = context.assetFor( test, 'eachBroken' );
@@ -2539,7 +2539,7 @@ function eachBrokenIll( test )
   return a.ready;
 }
 
-eachBrokenIll.description =
+commandEachBrokenIll.description =
 `
 if one or several willfiles are broken .each should pass it and output error
 `;
@@ -2550,7 +2550,7 @@ if one or several willfiles are broken .each should pass it and output error
 utility should not try to open non-willfiles
 */
 
-function eachBrokenNon( test )
+function commandEachBrokenNon( test )
 {
   let context = this;
   let a = context.assetFor( test, 'openNonWillfile' );
@@ -2584,7 +2584,7 @@ utility should handle properly illformed second command
 tab should not be accumulated in the output
 */
 
-function eachBrokenCommand( test )
+function commandEachBrokenCommand( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodulesFew' );
@@ -2612,7 +2612,7 @@ function eachBrokenCommand( test )
 
 //
 
-function commandsSeveral( test )
+function etcCommandsSeveral( test )
 {
   let context = this;
   let a = context.assetFor( test, 'open' );
@@ -2656,9 +2656,9 @@ function commandsSeveral( test )
   /* - */
 
   return a.ready;
-} /* end of function commandsSeveral */
+} /* end of function etcCommandsSeveral */
 
-commandsSeveral.description =
+etcCommandsSeveral.description =
 `
 - check internal stat of will
 - several commands separated with ";"" should works
@@ -2666,7 +2666,7 @@ commandsSeveral.description =
 
 //
 
-function implyWithSubmodulesModulesList( test )
+function commandImplyWithSubmodulesModulesList( test )
 {
   let context = this;
   let a = context.assetFor( test, '4LevelsLocal' );
@@ -2852,8 +2852,8 @@ function implyWithSubmodulesModulesList( test )
   return a.ready;
 }
 
-implyWithSubmodulesModulesList.rapidity = -1;
-implyWithSubmodulesModulesList.description =
+commandImplyWithSubmodulesModulesList.rapidity = -1;
+commandImplyWithSubmodulesModulesList.description =
 `
 - imply withSubmodules:0 cause to open no submodules
 - imply withSubmodules:1 cause to open only submodules of the main module
@@ -5232,7 +5232,7 @@ function reflectorOptionStepThrowing( test )
 // with do
 // --
 
-function withDoInfo( test )
+function commandWithDoInfo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5352,9 +5352,9 @@ function withDoInfo( test )
   return a.ready;
 }
 
-withDoInfo.rapidity = -1;
-withDoInfo.timeOut = 300000;
-withDoInfo.description =
+commandWithDoInfo.rapidity = -1;
+commandWithDoInfo.timeOut = 300000;
+commandWithDoInfo.description =
 `
 - do execute js script
 - filtering option withIn works
@@ -5366,7 +5366,7 @@ withDoInfo.description =
 
 //
 
-function withDoStatus( test )
+function commandWithDoStatus( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5454,9 +5454,9 @@ function withDoStatus( test )
   return a.ready;
 }
 
-withDoStatus.rapidity = -1;
-withDoStatus.timeOut = 300000;
-withDoStatus.description =
+commandWithDoStatus.rapidity = -1;
+commandWithDoStatus.timeOut = 300000;
+commandWithDoStatus.description =
 `
 - it.shell exposed for action
 - it.shell has proper current path
@@ -5465,7 +5465,7 @@ withDoStatus.description =
 
 //
 
-function withDoCommentOut( test )
+function commandWithDoCommentOut( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5513,8 +5513,8 @@ function withDoCommentOut( test )
   return a.ready;
 }
 
-withDoCommentOut.timeOut = 300000;
-withDoCommentOut.description =
+commandWithDoCommentOut.timeOut = 300000;
+commandWithDoCommentOut.description =
 `
 - commenting out works
 - arguments passing to action works
@@ -7730,7 +7730,7 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
-function implyWithDot( test )
+function commandImplyWithDot( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -7782,7 +7782,7 @@ function implyWithDot( test )
 
 //
 
-function implyWithAsterisk( test )
+function commandImplyWithAsterisk( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -9133,7 +9133,7 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
 //
 
-function help( test )
+function etcHelp( test )
 {
   let context = this;
   let a = context.assetFor( test, 'single' ); /* Dmytro : uses real asset to prevent exception */
@@ -22784,7 +22784,7 @@ function submodulesVerify( test )
 
 //
 
-function versionsAgree( test )
+function submodulesVersionsAgree( test )
 {
   let context = this;
   let a = context.assetFor( test, 'commandVersionsAgree' );
@@ -22920,7 +22920,7 @@ function versionsAgree( test )
 
 //
 
-function versionsAgreeNpm( test )
+function submodulesVersionsAgreeNpm( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDownloadNpm' );
@@ -23178,8 +23178,8 @@ function versionsAgreeNpm( test )
   return a.ready;
 }
 
-versionsAgreeNpm.rapidity = -1;
-versionsAgreeNpm.timeOut = 300000;
+submodulesVersionsAgreeNpm.rapidity = -1;
+submodulesVersionsAgreeNpm.timeOut = 300000;
 
 //
 
@@ -26221,7 +26221,7 @@ stepGitTag.rapidity = -1;
 
 //
 
-function upgradeDryDetached( test )
+function submodulesUpgradeDryDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -26449,11 +26449,11 @@ function upgradeDryDetached( test )
   return a.ready;
 }
 
-upgradeDryDetached.timeOut = 500000;
+submodulesUpgradeDryDetached.timeOut = 500000;
 
 //
 
-function upgradeDetached( test )
+function submodulesUpgradeDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -26810,11 +26810,11 @@ function upgradeDetached( test )
   return a.ready;
 }
 
-upgradeDetached.timeOut = 500000;
+submodulesUpgradeDetached.timeOut = 500000;
 
 //
 
-function upgradeDetachedExperiment( test )
+function submodulesUpgradeDetachedExperiment( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetachedSingle' );
@@ -26849,11 +26849,11 @@ function upgradeDetachedExperiment( test )
   return a.ready;
 }
 
-upgradeDetachedExperiment.experimental = 1;
+submodulesUpgradeDetachedExperiment.experimental = 1;
 
 //
 
-function fixateDryDetached( test )
+function submodulesFixateDryDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -27082,11 +27082,11 @@ function fixateDryDetached( test )
   return a.ready;
 }
 
-fixateDryDetached.timeOut = 500000;
+submodulesFixateDryDetached.timeOut = 500000;
 
 //
 
-function fixateDetached( test )
+function submodulesFixateDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -27443,15 +27443,15 @@ function fixateDetached( test )
   return a.ready;
 }
 
-fixateDetached.timeOut = 500000;
+submodulesFixateDetached.timeOut = 500000;
 
 //
 
 /*
-  runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
+  etcRunWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
 
-function runWillbe( test )
+function etcRunWillbe( test )
 {
 
   let context = this;
@@ -27570,7 +27570,7 @@ function runWillbe( test )
 
 //
 
-function killWillbe( test )
+function etcKillWillbe( test )
 {
   let context = this;
   let a = context.assetFor( test, 'simple' );
@@ -27736,7 +27736,7 @@ function killWillbe( test )
 
 //
 
-function runDebugWill( test )
+function etcRunDebugWill( test )
 {
   let context = this;
   let a = context.assetFor( test, 'simple' );
@@ -27801,7 +27801,7 @@ Disappeared as mystically as appeared.
 
 */
 
-function resourcesFormReflectorsExperiment( test )
+function etcResourcesFormReflectorsExperiment( test )
 {
   let context = this;
   let a = context.assetFor( test, 'performance' );
@@ -42789,7 +42789,7 @@ Routine checks that procedures termination begins after last command.
 
 //
 
-function willFilterFieldsOverwrite( test )
+function etcWillFilterFieldsOverwrite( test )
 {
   let context = this;
   let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
@@ -42812,8 +42812,8 @@ function willFilterFieldsOverwrite( test )
   return a.ready;
 }
 
-willFilterFieldsOverwrite.rapidity = 1;
-willFilterFieldsOverwrite.description =
+etcWillFilterFieldsOverwrite.rapidity = 1;
+etcWillFilterFieldsOverwrite.description =
 
 `
 Filter fields overwrite problem:
@@ -42823,7 +42823,7 @@ This test runs two commands with different filtering options in the sequence to 
 
 //
 
-function oldImportFileAdapt( test )
+function etcOldImportFileAdapt( test )
 {
   let context = this;
   let a = context.assetFor( test, 'oldImportFileAdapt' );
@@ -42873,8 +42873,8 @@ function oldImportFileAdapt( test )
   return a.ready;
 }
 
-oldImportFileAdapt.rapidity = 1;
-oldImportFileAdapt.description =
+etcOldImportFileAdapt.rapidity = 1;
+etcOldImportFileAdapt.description =
 `
   Checks if old format of import file is converted to new format if feature is enabled via option.
 `
@@ -42905,33 +42905,46 @@ const Proto =
 
   tests :
   {
+    // etc
 
-    preCloneRepos,
-    singleModuleWithSpaceTrivial,
+    etcPreCloneRepos,
+    etcSingleModuleWithSpaceTrivial,
+
+    // build
+
     build,
-    transpile,
-    transpileWithOptions,
-    transpileExperiment,
-    moduleNewDotless,
-    moduleNewDotlessSingle,
-    moduleNewNamed,
+    buildTranspile,
+    buildTranspileWithOptions,
+    buildTranspileExperiment,
+
+    //command
+
+    commandModuleNewDotless,
+    commandModuleNewDotlessSingle,
+    commandModuleNewNamed,
+
+    //open
 
     openModuleWithLostSubmodule,
 
     openWith,
     openEach,
-    // withMixed, /* xxx : later */
-    // eachMixed, // xxx : later
-    withList,
-    // eachList, // xxx : later
-    eachBrokenIll,
-    eachBrokenNon,
-    eachBrokenCommand,
+
+    //command
+
+    // commandWithMixed, /* xxx : later */
+    commandWithList,
+
+    // commandEachMixed, // xxx : later
+    // commandEachList, // xxx : later
+    commandEachBrokenIll,
+    commandEachBrokenNon,
+    commandEachBrokenCommand,
 
     // CUI
 
-    commandsSeveral,
-    implyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
+    etcCommandsSeveral,
+    commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     // reflect
 
@@ -42966,9 +42979,9 @@ const Proto =
 
     // with do
 
-    withDoInfo,
-    withDoStatus,
-    withDoCommentOut,
+    commandWithDoInfo,
+    commandWithDoStatus,
+    commandWithDoCommentOut,
 
     hookCallInfo,
     hookGitMake,
@@ -42985,8 +42998,8 @@ const Proto =
     hookWasPackageExtendWillfile,
     // hookPublish2, /* Dmytro : hook was commented out */
 
-    implyWithDot,
-    implyWithAsterisk,
+    commandImplyWithDot,
+    commandImplyWithAsterisk,
 
     // output
 
@@ -43000,7 +43013,7 @@ const Proto =
     // modulesTreeHierarchyRemotePartiallyDownloaded, /* xxx : later */
     modulesTreeDisabledAndCorrupted,
 
-    help,
+    etcHelp,
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
@@ -43140,8 +43153,8 @@ const Proto =
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     submodulesVerify,
-    versionsAgree,
-    versionsAgreeNpm,
+    submodulesVersionsAgree,
+    submodulesVersionsAgreeNpm,
 
     stepSubmodulesDownload,
     stepSubmodulesUpdate,
@@ -43162,17 +43175,17 @@ const Proto =
 
     /* xxx : cover "will .module.new.with prepare" */
 
-    // upgradeDryDetached, // xxx : look later
-    // upgradeDetached, // xxx : look later
-    // upgradeDetachedExperiment, // xxx : look later
-    // fixateDryDetached, // xxx : look later
-    // fixateDetached, // xxx : look later
+    // submodulesUpgradeDryDetached, // xxx : look later
+    // submodulesUpgradeDetached, // xxx : look later
+    // submodulesUpgradeDetachedExperiment, // xxx : look later
+    // submodulesFixateDryDetached, // xxx : look later
+    // submodulesFixateDetached, // xxx : look later
 
-    // runWillbe, // zzz : help to fix, please
-    killWillbe,
-    runDebugWill,
+    // etcRunWillbe, // zzz : help to fix, please
+    etcKillWillbe,
+    etcRunDebugWill,
 
-    // resourcesFormReflectorsExperiment, // xxx : look
+    // etcResourcesFormReflectorsExperiment, // xxx : look
 
     // commands
 
@@ -43272,9 +43285,9 @@ const Proto =
 
     commandsSequenceProceduresTermination,
 
-    willFilterFieldsOverwrite,
+    etcWillFilterFieldsOverwrite,
 
-    oldImportFileAdapt
+    etcOldImportFileAdapt
 
   }
 
