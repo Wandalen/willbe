@@ -14,6 +14,7 @@ const Self = _.will.Predefined = _.will.Predefined || Object.create( null );
 let _filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
 let defaults = _filesReflect.defaults;
 defaults.linkingAction = 'hardLinkMaybe';
+defaults.outputFormat = 'record';
 defaults.mandatory = 1;
 defaults.dstRewritingOnlyPreserving = 1;
 
