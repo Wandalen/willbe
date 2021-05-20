@@ -2286,7 +2286,7 @@ function commandWithList( test )
     test.case = '.with . .resources.list about::name';
     test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'module-' ), 1 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2301,7 +2301,7 @@ function commandWithList( test )
     test.case = '.with . .resources.list about::description';
     test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'Module for testing' ), 1 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2316,7 +2316,7 @@ function commandWithList( test )
     test.case = '.with . .resources.list path::module.dir';
     test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, a.routinePath ), 2 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2333,7 +2333,7 @@ function commandWithList( test )
   {
     return a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
       return null;
     });
