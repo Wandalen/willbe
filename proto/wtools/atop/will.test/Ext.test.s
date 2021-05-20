@@ -963,7 +963,7 @@ function commandModuleNewDotlessSingle( test )
 
     test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::moduleNewDotlessSingle at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotlessSingle at' ), 1 );
     test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( op.output, 'already exists!' ), 1 );
 
