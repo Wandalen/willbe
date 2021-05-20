@@ -28880,7 +28880,7 @@ function commandSubmodulesClean( test )
   let a = context.assetFor( test, 'submodulesClean' );
   a.reflect();
 
-  /* OK */
+  /* - */
 
   a.appStart( '.build clean.and.update.recursive.1' )
   .then( ( op ) =>
@@ -28893,20 +28893,20 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* OK */
+  /* */
 
-  a.appStart( '.build clean.and.update.recursive.2' )
-  .then( ( op ) =>
-  {
-    test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
-    return null;
-  });
+  // a.appStart( '.build clean.and.update.recursive.2' )
+  // .then( ( op ) =>
+  // {
+  //   test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
+  //   test.identical( op.exitCode, 0 );
+  //   test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+  //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
+  //   return null;
+  // });
 
-  /* OK */
+  /* */
 
   a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
@@ -28919,7 +28919,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* OK */
+  /* */
 
   a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
@@ -28932,7 +28932,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -42050,8 +42050,6 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
   run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
   run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  // run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
-  // run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
   run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
   run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
   run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
@@ -42069,8 +42067,6 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
   run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
   run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
-  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
   run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
   run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
   run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
@@ -42280,9 +42276,9 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/staged' ] = ( env ) =>
     {
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
-      a.moduleShell( 'git add README.md' );
+      a.moduleShell( 'git add Readme.md' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
@@ -42313,7 +42309,7 @@ function commandsSubmoduleSafety( test )
     routinesPre[ 'local/conflict' ] = ( env ) =>
     {
       a.moduleShell( 'git branch dev1' );
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       let data = a.fileProvider.fileRead({ filePath });
 
       a.moduleShell( 'git checkout dev1' );
