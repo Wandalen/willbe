@@ -1,0 +1,21 @@
+
+about :
+
+  name : testrepo
+  version : '0.0.0'
+
+path :
+
+  in : '.'
+  out : 'out'
+  export : '{path::in}/**'
+  temp : out
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::module.export

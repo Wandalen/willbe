@@ -42752,6 +42752,107 @@ Checks if command tag:
 
 //
 
+function commandSubmodulesUpdateSwitchToOutdatedBranch( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesUpdateSwitchToOutdatedBranch' );
+
+  a.shellSync = _.process.starter
+  ({
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  })
+
+  a.ready
+
+  /* - */
+
+  begin()
+  a.appStart( '.submodules.download' )
+  a.shell( 'git -C .module/testrepo reset --hard HEAD~1' )
+  a.shell( 'git -C .module/testrepo checkout second' )
+  .then( () =>
+  {
+    let currentBranch = _.git.localVersion( a.abs( '.module/testrepo' ) );
+    return test.identical( currentBranch, 'second' );
+  })
+  a.appStart( '.submodules.update' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.true( _.strHas( op.output, 'module::testrepo was updated to version master' ) );
+
+    let currentBranch = _.git.localVersion( a.abs( '.module/testrepo' ) );
+    test.identical( currentBranch, 'master' );
+
+    let remoteVersion = getHead( a.abs( 'repo' ) );
+    let cloneVersion = getHead( a.abs( '.module/testrepo' ) );
+
+    console.log( 'remote:', remoteVersion )
+    console.log( 'updated clone:', cloneVersion )
+
+    test.identical( remoteVersion, cloneVersion );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  function begin( testCase )
+  {
+    a.ready.then( () =>
+    {
+      if( testCase )
+      test.case = testCase;
+
+      a.reflect();
+
+      let repoPath = a.abs( 'repo' );
+
+      a.shellSync({ execPath : 'git init', currentPath : repoPath })
+      a.shellSync({ execPath : 'git add -fA .', currentPath : repoPath })
+      a.shellSync({ execPath : 'git commit --allow-empty -m init', currentPath : repoPath })
+      a.shellSync({ execPath : 'git commit --allow-empty -m test', currentPath : repoPath })
+      a.shellSync({ execPath : 'git branch second', currentPath : repoPath })
+
+      return null;
+    })
+  }
+
+  function getHead( localPath, branch )
+  {
+    if( !branch )
+    branch = 'master';
+
+    let result = a.shellSync
+    ({
+      execPath : `git show-ref refs/heads/${branch} --hash`,
+      currentPath : localPath,
+      outputPiping : 0,
+      inputMirroring : 0,
+      outputCollecting : 1
+    })
+    return result.output.trim();
+  }
+}
+
+commandSubmodulesUpdateSwitchToOutdatedBranch.rapidity = 1;
+commandSubmodulesUpdateSwitchToOutdatedBranch.routineTimeOut = 300000;
+commandSubmodulesUpdateSwitchToOutdatedBranch.description =
+`
+Command switches submodule from second branch to outdated master.
+Routine checks if master branch is updated after switch.
+`;
+
+//
+
 function commandsSequenceProceduresTermination( test )
 {
   let context = this;
@@ -43281,6 +43382,7 @@ const Proto =
     commandsSubmoduleSafetyDownloadInvalidUrl,
     commandsSubmoduleSafetyVerifyInvalidUrl,
     commandSubmodulesUpdateOptionTo,
+    commandSubmodulesUpdateSwitchToOutdatedBranch,
 
     commandsSequenceProceduresTermination,
 
