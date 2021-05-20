@@ -423,7 +423,7 @@ Test transpilation of JS files.
 function buildTranspile( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'buildTranspile' );
+  let a = context.assetFor( test, 'transpile' );
 
   /* - */
 
