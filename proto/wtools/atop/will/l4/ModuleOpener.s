@@ -1690,7 +1690,10 @@ function _repoDownload( o )
 
       _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
-      o2.extra.fetchingTags = 1;
+      {
+        o2.extra.fetching = 1;
+        o2.extra.fetchingTags = 1;
+      }
     }
 
     if( downloading && !o.dry )

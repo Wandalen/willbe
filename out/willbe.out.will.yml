@@ -2211,6 +2211,18 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/src/out
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/src/out/experiment.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo/out/testrepo.out.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/module
