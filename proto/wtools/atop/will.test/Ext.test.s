@@ -38344,7 +38344,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 

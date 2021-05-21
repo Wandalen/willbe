@@ -7941,10 +7941,13 @@ function willfileExtendWillfile( o )
 
     if( opts.author && src.about.author )
     {
-      if( _.strIs( src.about.author ) )
-      opts.onSection( dst.about, { author : src.about.author } );
-      else
-      opts.onSection( dst.about, { author : `${ src.about.author.name } <${ src.about.author.email }>` } );
+      const authorRecord = _.will.transform.authorRecordNormalize( src.about.author );
+      opts.onSection( dst.about, { author : authorRecord } );
+
+      // if( _.strIs( src.about.author ) )
+      // opts.onSection( dst.about, { author : src.about.author } );
+      // else
+      // opts.onSection( dst.about, { author : `${ src.about.author.name } <${ src.about.author.email }>` } );
     }
     if( opts.keywords && src.about.keywords )
     {
@@ -7952,9 +7955,47 @@ function willfileExtendWillfile( o )
     }
     if( opts.contributors && src.about.contributors )
     {
-      dst.about.contributors = arrayPropertyParse( dst.about.contributors, _.strIsolateRightOrAll );
-      src.about.contributors = arrayPropertyParse( src.about.contributors, _.strIsolateRightOrAll );
-      opts.onSection( dst.about.contributors, src.about.contributors );
+      _.assert( _.array.is( src.about.contributors ), 'Expexts array of source contributors.' );
+
+      const srcContributors = _.array.make( src.about.contributors.length );
+      _.each( src.about.contributors, ( record, k ) => /* Dmytro : the `each` is used because the `map` does not exist at now */
+      {
+        srcContributors[ k ] = _.will.transform.authorRecordParse( record );
+      });
+
+      let dstContributors;
+      if( dst.about.contributors )
+      {
+        _.assert( _.array.is( dst.about.contributors ), 'Expexts array of destination contributors.' );
+
+        dstContributors = _.array.make( dst.about.contributors.length );
+        _.each( dst.about.contributors, ( record, k ) =>
+        {
+          dstContributors[ k ] = _.will.transform.authorRecordParse( record );
+        });
+        _.each( srcContributors, ( record ) =>
+        {
+          const index = _.long.leftIndex( dstContributors, record, ( r ) => r.name );
+          if( index !== -1 )
+          dstContributors[ index ] = opts.onSection( dstContributors[ index ], record )
+          else
+          dstContributors.push( record );
+        });
+      }
+      else
+      {
+        dst.about.contributors = _.array.make( srcContributors.length );
+        dstContributors = srcContributors;
+      }
+
+      _.each( dstContributors, ( record, k ) =>
+      {
+        dst.about.contributors[ k ] = _.will.transform.authorRecordNormalize( record );
+      });
+
+      // dst.about.contributors = arrayPropertyParse( dst.about.contributors, _.strIsolateRightOrAll );
+      // src.about.contributors = arrayPropertyParse( src.about.contributors, _.strIsolateRightOrAll );
+      // opts.onSection( dst.about.contributors, src.about.contributors );
     }
     if( opts.interpreters && src.about.interpreters )
     {
@@ -8074,8 +8115,8 @@ function willfileExtendWillfile( o )
   {
     if( data.about )
     {
-      if( data.about.contributors )
-      data.about.contributors = mapToArrayOfStrings( data.about.contributors );
+      // if( data.about.contributors )
+      // data.about.contributors = mapToArrayOfStrings( data.about.contributors );
       if( data.about.interpreters )
       data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
     }
