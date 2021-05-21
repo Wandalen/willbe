@@ -7730,6 +7730,8 @@ function willfileExtendWillfile( o )
   let request = opts.request.split( /\s+/ );
   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
+  let inPath = will.inPath ? will.inPath : path.current();
+
   o.dirPath = o.dirPath ? o.dirPath : will.inPath;
   if( !o.dirPath )
   o.dirPath = path.current();
@@ -7772,6 +7774,7 @@ function willfileExtendWillfile( o )
   for( let i = 1 ; i < request.length ; i++ )
   {
     let files = configFilesFind( request[ i ] );
+    // let files = _.will.filesAt( path.join( inPath, request[ i ] ) ); /* Dmytro : need to be discussed */
 
     if( files.length === 0 )
     throw _.errBrief( 'Source configuration files does not exist.' )
@@ -7814,8 +7817,9 @@ function willfileExtendWillfile( o )
 
   function dstFilesFind( dstPath )
   {
-    if( path.isGlob( dstPath ) )
-    throw _.err( 'Path to destination file should have not globs.' );
+    // if( path.isGlob( dstPath ) )
+    // throw _.err( 'Path to destination file should have not globs.' );
+    _.assert( !path.isGlob( dstPath ), 'Path to destination file should have not globs.' );
 
     dstPath = path.join( o.dirPath, dstPath );
 
@@ -7859,11 +7863,6 @@ function willfileExtendWillfile( o )
       return path.join( willPath, splits[ 0 ], opts.format === 'json' ? 'package.json' : 'will.yml' );
       else
       return path.join( willPath, splits[ 0 ], path.name( splits[ 2 ] ) + secondExt + firstExt );
-
-      // if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
-      // return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
-      // else
-      // return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
     }
   }
 
@@ -7890,9 +7889,9 @@ function willfileExtendWillfile( o )
     if( !path.isGlob( filePath ) )
     {
       if( fileProvider.isDir( filePath ) )
-      filePath = path.join( filePath, '*.will.(yml|yaml|json)' );
+      filePath = path.join( filePath, '*(.will).(yml|yaml|json)' );
       else
-      filePath = filePath + '*.will.(yml|yaml|json)';
+      filePath = filePath + '*(.will).(yml|yaml|json)';
     }
 
     let filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
@@ -7999,11 +7998,32 @@ function willfileExtendWillfile( o )
     }
     if( opts.interpreters && src.about.interpreters )
     {
-      dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
-      propertyReplace( dst.about.interpreters, 'njs', 'nodejs' );
-      src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
-      propertyReplace( src.about.interpreters, 'njs', 'nodejs' );
-      opts.onSection( dst.about.interpreters, src.about.interpreters );
+      const srcInterpreters = Object.create( null );
+      _.each( src.about.interpreters, ( e ) =>
+      {
+        opts.onSection( srcInterpreters, _.will.transform.interpreterParse( e ) );
+      });
+
+      let dstInterpreters = Object.create( null );
+      if( dst.about.interpreters )
+      {
+        _.each( dst.about.interpreters, ( e ) =>
+        {
+          opts.onSection( dstInterpreters, _.will.transform.interpreterParse( e ) );
+        });
+      }
+
+      opts.onSection( dstInterpreters, srcInterpreters );
+      propertyReplace( dstInterpreters, 'njs', 'nodejs' );
+
+      dst.about.interpreters = [];
+      _.each( dstInterpreters, ( e, k ) => dst.about.interpreters.push( `${ k } ${ e }` ) );
+
+      // dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
+      // propertyReplace( dst.about.interpreters, 'njs', 'nodejs' );
+      // src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
+      // propertyReplace( src.about.interpreters, 'njs', 'nodejs' );
+      // opts.onSection( dst.about.interpreters, src.about.interpreters );
     }
     if( opts[ 'npm.scripts' ] && src.about[ 'npm.scripts' ] )
     {
@@ -8015,35 +8035,35 @@ function willfileExtendWillfile( o )
 
   /* */
 
-  function arrayPropertyParse( src, parser )
-  {
-    let result = Object.create( null );
-
-    if( _.strIs( src ) )
-    src = [ src ];
-
-    if( _.longIs( src ) )
-    {
-      for( let i = 0 ; i < src.length ; i++ )
-      {
-        if( _.mapIs( src[ i ] ) )
-        {
-          result[ src[ i ].name ] = `<${ src[ i ].email }>`;
-        }
-        else
-        {
-          let splits = parser({ src : src[ i ] });
-          result[ splits[ 0 ] ] = splits[ 2 ];
-        }
-      }
-      return result;
-    }
-    else if( src === undefined )
-    {
-      return result;
-    }
-    return src;
-  }
+  // function arrayPropertyParse( src, parser )
+  // {
+  //   let result = Object.create( null );
+  //
+  //   if( _.strIs( src ) )
+  //   src = [ src ];
+  //
+  //   if( _.longIs( src ) )
+  //   {
+  //     for( let i = 0 ; i < src.length ; i++ )
+  //     {
+  //       if( _.mapIs( src[ i ] ) )
+  //       {
+  //         result[ src[ i ].name ] = `<${ src[ i ].email }>`;
+  //       }
+  //       else
+  //       {
+  //         let splits = parser({ src : src[ i ] });
+  //         result[ splits[ 0 ] ] = splits[ 2 ];
+  //       }
+  //     }
+  //     return result;
+  //   }
+  //   else if( src === undefined )
+  //   {
+  //     return result;
+  //   }
+  //   return src;
+  // }
 
   /* */
 
@@ -8113,13 +8133,13 @@ function willfileExtendWillfile( o )
 
   function willfileWrite( path, data, encoding )
   {
-    if( data.about )
-    {
-      // if( data.about.contributors )
-      // data.about.contributors = mapToArrayOfStrings( data.about.contributors );
-      if( data.about.interpreters )
-      data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
-    }
+    // if( data.about )
+    // {
+    //   // if( data.about.contributors )
+    //   // data.about.contributors = mapToArrayOfStrings( data.about.contributors );
+    //   // if( data.about.interpreters )
+    //   // data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
+    // }
 
 
     if( opts.format === 'json' )

@@ -38348,7 +38348,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend.willfile ./ Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile ./ Author.will Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -38360,14 +38360,14 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config.about.contributors.length, 2 );
     test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 6.0.0' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile NewFile Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile Author.will Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named willfile, unical data in each file';
@@ -38553,8 +38553,8 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
         [
           'chrome >= 60.0.0',
           'firefox >= 67.0.0',
-          'njs = 6.0.0',
-          'chromium >= 67.0.0'
+          'chromium >= 67.0.0',
+          'njs >= 6.0.0',
         ],
         'keywords' :
         [
@@ -38786,7 +38786,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend.willfile package.json Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.appStart({ args : '.willfile.extend.willfile package.json Author* Contributors.will Description* Interpreters.will.yml format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -38804,7 +38804,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile Author.will Contributors Description* Interpreters format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named json file, unical data in each file';
@@ -39057,7 +39057,7 @@ function commandWillfileExtendWillfileWithOptions( test )
       'description' : 'To check the extension',
       'version' : '1.1.1',
       'enabled' : 0,
-      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ],
+      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0', 'njs >= 6.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'GPL',
       'author' : 'Author <author1@dot.com>',
