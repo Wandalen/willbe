@@ -94,6 +94,12 @@ will( `.with ${asset}/ .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
+var asset = `submodulesDownload`;
+del( `${asset}/module/.module/**` );
+del( `${asset}/module/out/**` );
+will( `.with ${asset}/module/submodule .export` );
+copy( `${asset}/+module`, `${asset}/module` );
+
 function del( filePath )
 {
   return _.fileProvider.filesDelete( _.path.join( assetsOriginalPath, filePath ) ) || null;

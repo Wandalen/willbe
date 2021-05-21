@@ -79,6 +79,16 @@ function onSuiteEnd()
 
 //
 
+function onRoutineEnd( test )
+{
+  const context = this;
+  const routineTempPath = _.fileProvider.path.join( context.suiteTempPath, test.routine.name );
+  _.fileProvider.filesDelete( routineTempPath );
+  _.assert( !_.fileProvider.fileExists( routineTempPath ) );
+}
+
+//
+
 function assetFor( test, name )
 {
   let context = this;
@@ -172,7 +182,7 @@ function assetFor( test, name )
 // tests
 // --
 
-function preCloneRepos( test )
+function etcPreCloneRepos( test )
 {
   let context = this;
   let a = context.assetFor( test, '-repo' );
@@ -188,7 +198,7 @@ function preCloneRepos( test )
 
 //
 
-function singleModuleWithSpaceTrivial( test )
+function etcSingleModuleWithSpaceTrivial( test )
 {
   let context = this;
   let a = context.assetFor( test, 'single with space' );
@@ -410,7 +420,7 @@ build.rapidity = -1;
 Test transpilation of JS files.
 */
 
-function transpile( test )
+function buildTranspile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpile' );
@@ -641,7 +651,7 @@ function transpile( test )
 
 //
 
-function transpileWithOptions( test )
+function buildTranspileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpileOptions' );
@@ -683,7 +693,7 @@ function transpileWithOptions( test )
 
 //
 
-function transpileExperiment( test )
+function buildTranspileExperiment( test )
 {
   let context = this;
   let a = context.assetFor( test, 'transpile' );
@@ -708,11 +718,11 @@ function transpileExperiment( test )
   return a.ready;
 }
 
-transpileExperiment.experimental = 1;
+buildTranspileExperiment.experimental = 1;
 
 //
 
-function moduleNewDotless( test )
+function commandModuleNewDotless( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessExported' );
@@ -749,7 +759,7 @@ function moduleNewDotless( test )
 
     test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::moduleNewDotless at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotless at' ), 1 );
     test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( op.output, 'already exists!' ), 1 );
 
@@ -918,7 +928,7 @@ function moduleNewDotless( test )
 
 //
 
-function moduleNewDotlessSingle( test )
+function commandModuleNewDotlessSingle( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessSingleExported' );
@@ -953,7 +963,7 @@ function moduleNewDotlessSingle( test )
 
     test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::moduleNewDotlessSingle at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotlessSingle at' ), 1 );
     test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( op.output, 'already exists!' ), 1 );
 
@@ -1119,22 +1129,22 @@ function moduleNewDotlessSingle( test )
 
 //
 
-function moduleNewNamed( test )
+function commandModuleNewNamed( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoExported' )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.module.new super'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new super' })
   .then( ( op ) =>
   {
@@ -1149,7 +1159,7 @@ function moduleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1160,19 +1170,18 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'already exists!' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with some .module.new'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.with some .module.new' })
   .then( ( op ) =>
   {
@@ -1188,7 +1197,7 @@ function moduleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1199,7 +1208,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some .about.list' })
   .then( ( op ) =>
   {
@@ -1210,19 +1220,18 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with some/ .module.new'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.with some/ .module.new' })
   .then( ( op ) =>
   {
@@ -1239,7 +1248,7 @@ function moduleNewNamed( test )
       './proto/File.release.js',
       './some',
       './some/will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1250,7 +1259,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
   .then( ( op ) =>
   {
@@ -1261,19 +1271,19 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with some .module.new some2'
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some .module.new some2' })
   .then( ( op ) =>
   {
@@ -1290,7 +1300,7 @@ function moduleNewNamed( test )
       './proto/File.release.js',
       './some',
       './some/some2.will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1301,7 +1311,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some2 at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some/some2 .about.list' })
   .then( ( op ) =>
   {
@@ -1312,19 +1323,19 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some2'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.module.new'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new' })
   .then( ( op ) =>
   {
@@ -1340,7 +1351,7 @@ function moduleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1348,10 +1359,11 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::moduleNewNamed at' ), 1 );
+    test.identical( _.strCount( op.output, 'Create module::commandModuleNewNamed at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with . .about.list' })
   .then( ( op ) =>
   {
@@ -1359,22 +1371,22 @@ function moduleNewNamed( test )
 
     test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'moduleNewNamed'` ), 1 );
+    test.identical( _.strCount( op.output, `name : 'commandModuleNewNamed'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.module.new super/'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new super/' })
   .then( ( op ) =>
   {
@@ -1391,7 +1403,7 @@ function moduleNewNamed( test )
       './proto/File.release.js',
       './super',
       './super/will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1402,7 +1414,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::super at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with super/ .about.list' })
   .then( ( op ) =>
   {
@@ -1413,19 +1426,19 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'super'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new some'
+    test.case = '.module.new some';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new some' })
   .then( ( op ) =>
   {
@@ -1441,7 +1454,7 @@ function moduleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1452,7 +1465,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some .about.list' })
   .then( ( op ) =>
   {
@@ -1463,19 +1477,18 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new some/'
-    a.reflect();
+    test.case = '.module.new some/';
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.module.new some/' })
   .then( ( op ) =>
   {
@@ -1492,7 +1505,7 @@ function moduleNewNamed( test )
       './proto/File.release.js',
       './some',
       './some/will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1503,7 +1516,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
   .then( ( op ) =>
   {
@@ -1514,19 +1528,20 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   a.ready
   .then( () =>
   {
-    test.case = '.module.new ../dir1/dir2/some/'
-    a.reflect();
+    test.case = '.module.new ../dir1/dir2/some/';
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( op ) =>
   {
@@ -1541,7 +1556,7 @@ function moduleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1551,7 +1566,7 @@ function moduleNewNamed( test )
       './dir2',
       './dir2/some',
       './dir2/some/will.yml'
-    ]
+    ];
     var files = a.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
@@ -1562,7 +1577,8 @@ function moduleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( op ) =>
   {
@@ -1574,14 +1590,14 @@ function moduleNewNamed( test )
 
     a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 }
 
-moduleNewNamed.rapidity = -1;
+commandModuleNewNamed.rapidity = -1;
 
 //
 
@@ -2123,7 +2139,7 @@ openEach.timeOut = 300000;
 
 //
 
-function withMixed( test )
+function commandWithMixed( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesMixed' );
@@ -2170,11 +2186,11 @@ function withMixed( test )
   return a.ready;
 }
 
-withMixed.timeOut = 300000;
+commandWithMixed.timeOut = 300000;
 
 //
 
-function eachMixed( test )
+function commandEachMixed( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesGit' );
@@ -2255,11 +2271,11 @@ function eachMixed( test )
   return a.ready;
 }
 
-eachMixed.timeOut = 300000;
+commandEachMixed.timeOut = 300000;
 
 //
 
-function withList( test )
+function commandWithList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodules' );
@@ -2276,7 +2292,7 @@ function withList( test )
     test.case = '.with . .resources.list about::name';
     test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'module-' ), 1 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2291,7 +2307,7 @@ function withList( test )
     test.case = '.with . .resources.list about::description';
     test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'Module for testing' ), 1 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2306,7 +2322,7 @@ function withList( test )
     test.case = '.with . .resources.list path::module.dir';
     test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
     test.identical( _.strCount( op.output, a.routinePath ), 2 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
@@ -2323,7 +2339,7 @@ function withList( test )
   {
     return a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
       return null;
     });
@@ -2332,7 +2348,7 @@ function withList( test )
 
 //
 
-function eachList( test )
+function commandEachList( test )
 {
   let context = this;
   let a = context.assetFor( test, 'eachList' );
@@ -2499,11 +2515,11 @@ function eachList( test )
   }
 }
 
-eachList.timeOut = 300000;
+commandEachList.timeOut = 300000;
 
 //
 
-function eachBrokenIll( test )
+function commandEachBrokenIll( test )
 {
   let context = this;
   let a = context.assetFor( test, 'eachBroken' );
@@ -2529,7 +2545,7 @@ function eachBrokenIll( test )
   return a.ready;
 }
 
-eachBrokenIll.description =
+commandEachBrokenIll.description =
 `
 if one or several willfiles are broken .each should pass it and output error
 `;
@@ -2540,7 +2556,7 @@ if one or several willfiles are broken .each should pass it and output error
 utility should not try to open non-willfiles
 */
 
-function eachBrokenNon( test )
+function commandEachBrokenNon( test )
 {
   let context = this;
   let a = context.assetFor( test, 'openNonWillfile' );
@@ -2574,7 +2590,7 @@ utility should handle properly illformed second command
 tab should not be accumulated in the output
 */
 
-function eachBrokenCommand( test )
+function commandEachBrokenCommand( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmodulesFew' );
@@ -2602,7 +2618,7 @@ function eachBrokenCommand( test )
 
 //
 
-function commandsSeveral( test )
+function etcCommandsSeveral( test )
 {
   let context = this;
   let a = context.assetFor( test, 'open' );
@@ -2646,9 +2662,9 @@ function commandsSeveral( test )
   /* - */
 
   return a.ready;
-} /* end of function commandsSeveral */
+} /* end of function etcCommandsSeveral */
 
-commandsSeveral.description =
+etcCommandsSeveral.description =
 `
 - check internal stat of will
 - several commands separated with ";"" should works
@@ -2656,7 +2672,7 @@ commandsSeveral.description =
 
 //
 
-function implyWithSubmodulesModulesList( test )
+function commandImplyWithSubmodulesModulesList( test )
 {
   let context = this;
   let a = context.assetFor( test, '4LevelsLocal' );
@@ -2842,8 +2858,8 @@ function implyWithSubmodulesModulesList( test )
   return a.ready;
 }
 
-implyWithSubmodulesModulesList.rapidity = -1;
-implyWithSubmodulesModulesList.description =
+commandImplyWithSubmodulesModulesList.rapidity = -1;
+commandImplyWithSubmodulesModulesList.description =
 `
 - imply withSubmodules:0 cause to open no submodules
 - imply withSubmodules:1 cause to open only submodules of the main module
@@ -5222,7 +5238,7 @@ function reflectorOptionStepThrowing( test )
 // with do
 // --
 
-function withDoInfo( test )
+function commandWithDoInfo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5342,9 +5358,9 @@ function withDoInfo( test )
   return a.ready;
 }
 
-withDoInfo.rapidity = -1;
-withDoInfo.timeOut = 300000;
-withDoInfo.description =
+commandWithDoInfo.rapidity = -1;
+commandWithDoInfo.timeOut = 300000;
+commandWithDoInfo.description =
 `
 - do execute js script
 - filtering option withIn works
@@ -5356,7 +5372,7 @@ withDoInfo.description =
 
 //
 
-function withDoStatus( test )
+function commandWithDoStatus( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5444,9 +5460,9 @@ function withDoStatus( test )
   return a.ready;
 }
 
-withDoStatus.rapidity = -1;
-withDoStatus.timeOut = 300000;
-withDoStatus.description =
+commandWithDoStatus.rapidity = -1;
+commandWithDoStatus.timeOut = 300000;
+commandWithDoStatus.description =
 `
 - it.shell exposed for action
 - it.shell has proper current path
@@ -5455,7 +5471,7 @@ withDoStatus.description =
 
 //
 
-function withDoCommentOut( test )
+function commandWithDoCommentOut( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5503,8 +5519,8 @@ function withDoCommentOut( test )
   return a.ready;
 }
 
-withDoCommentOut.timeOut = 300000;
-withDoCommentOut.description =
+commandWithDoCommentOut.timeOut = 300000;
+commandWithDoCommentOut.description =
 `
 - commenting out works
 - arguments passing to action works
@@ -7720,7 +7736,7 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
-function implyWithDot( test )
+function commandImplyWithDot( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -7772,7 +7788,7 @@ function implyWithDot( test )
 
 //
 
-function implyWithAsterisk( test )
+function commandImplyWithAsterisk( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
@@ -9104,9 +9120,9 @@ function modulesTreeDisabledAndCorrupted( test )
 */
 
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git' ), 3 );
-    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting1.git!delta' ), 1 );
+    test.ge( _.strCount( op.output, /git\+https\:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git!\w+/ ), 1 );
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git' ), 2 );
-    test.ge( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting2.git!delta' ), 1 );
+    test.ge( _.strCount( op.output, /git\+https\:\/\/\/github\.com\/Wandalen\/wModuleForTesting2\.git!\w+/ ), 1 );
     test.identical( _.strCount( op.output, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 8 );
     test.identical( _.strCount( op.output, /\+-- module::.* - path::remote:=/ ), 6 );
@@ -9123,7 +9139,7 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
 //
 
-function help( test )
+function etcHelp( test )
 {
   let context = this;
   let a = context.assetFor( test, 'single' ); /* Dmytro : uses real asset to prevent exception */
@@ -14448,11 +14464,11 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14461,10 +14477,10 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 37 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 28 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
@@ -14476,11 +14492,11 @@ function exportDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -14489,7 +14505,7 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 30 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
@@ -22774,7 +22790,7 @@ function submodulesVerify( test )
 
 //
 
-function versionsAgree( test )
+function submodulesVersionsAgree( test )
 {
   let context = this;
   let a = context.assetFor( test, 'commandVersionsAgree' );
@@ -22910,7 +22926,7 @@ function versionsAgree( test )
 
 //
 
-function versionsAgreeNpm( test )
+function submodulesVersionsAgreeNpm( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDownloadNpm' );
@@ -22925,7 +22941,7 @@ function versionsAgreeNpm( test )
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
 
-    a.reflect();
+    a.reflectMinimal();
 
     return null;
   });
@@ -22939,7 +22955,15 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -22958,15 +22982,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting1' ] )
+    test.identical( version, versions[ 'ModuleForTesting1' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     return null;
   });
@@ -22981,7 +23005,7 @@ function versionsAgreeNpm( test )
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
-    versions[ 'ModuleForTesting12ab' ] = '0.0.34'
+    versions[ 'ModuleForTesting12ab' ] = '0.0.34';
 
     return null;
   });
@@ -22993,8 +23017,16 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -23011,15 +23043,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting1' ] )
+    test.identical( version, versions[ 'ModuleForTesting1' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     return null;
   });
@@ -23033,8 +23065,16 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -23051,15 +23091,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting1' ] )
+    test.identical( version, versions[ 'ModuleForTesting1' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     return null;
   });
@@ -23086,8 +23126,16 @@ function versionsAgreeNpm( test )
 
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1.will.yml',
+      'ModuleForTesting12ab',
+      'ModuleForTesting12ab.will.yml',
+      'ModuleForTesting2a',
+      'ModuleForTesting2a.will.yml'
+    ];
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -23104,15 +23152,15 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
+    test.identical( version, versions[ 'ModuleForTesting2b' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting12ab' ) );
-    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] );
     var version = _.npm.localVersion( a.abs( '.module/ModuleForTesting2a' ) );
-    test.identical( version, versions[ 'ModuleForTesting2a' ] )
+    test.identical( version, versions[ 'ModuleForTesting2a' ] );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
 
     var exp =
     [
@@ -23121,25 +23169,23 @@ function versionsAgreeNpm( test )
       './node_modules/wmodulefortesting2b',
       './wtools',
       './wtools/testing',
-      './wtools/testing/Basic.s',
       './wtools/testing/l4',
       './wtools/testing/l4/testing2b',
-      './wtools/testing/l4/testing2b/Include.s',
       './wtools/testing/l4/testing2b/ModuleForTesting2b.s',
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /*  */
 
   return a.ready;
 }
 
-versionsAgreeNpm.rapidity = -1;
-versionsAgreeNpm.timeOut = 300000;
+submodulesVersionsAgreeNpm.rapidity = -1;
+submodulesVersionsAgreeNpm.timeOut = 300000;
 
 //
 
@@ -26181,7 +26227,7 @@ stepGitTag.rapidity = -1;
 
 //
 
-function upgradeDryDetached( test )
+function submodulesUpgradeDryDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -26409,11 +26455,11 @@ function upgradeDryDetached( test )
   return a.ready;
 }
 
-upgradeDryDetached.timeOut = 500000;
+submodulesUpgradeDryDetached.timeOut = 500000;
 
 //
 
-function upgradeDetached( test )
+function submodulesUpgradeDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -26770,11 +26816,11 @@ function upgradeDetached( test )
   return a.ready;
 }
 
-upgradeDetached.timeOut = 500000;
+submodulesUpgradeDetached.timeOut = 500000;
 
 //
 
-function upgradeDetachedExperiment( test )
+function submodulesUpgradeDetachedExperiment( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetachedSingle' );
@@ -26809,11 +26855,11 @@ function upgradeDetachedExperiment( test )
   return a.ready;
 }
 
-upgradeDetachedExperiment.experimental = 1;
+submodulesUpgradeDetachedExperiment.experimental = 1;
 
 //
 
-function fixateDryDetached( test )
+function submodulesFixateDryDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -27042,11 +27088,11 @@ function fixateDryDetached( test )
   return a.ready;
 }
 
-fixateDryDetached.timeOut = 500000;
+submodulesFixateDryDetached.timeOut = 500000;
 
 //
 
-function fixateDetached( test )
+function submodulesFixateDetached( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesDetached' );
@@ -27403,15 +27449,15 @@ function fixateDetached( test )
   return a.ready;
 }
 
-fixateDetached.timeOut = 500000;
+submodulesFixateDetached.timeOut = 500000;
 
 //
 
 /*
-  runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
+  etcRunWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
 
-function runWillbe( test )
+function etcRunWillbe( test )
 {
 
   let context = this;
@@ -27530,7 +27576,7 @@ function runWillbe( test )
 
 //
 
-function killWillbe( test )
+function etcKillWillbe( test )
 {
   let context = this;
   let a = context.assetFor( test, 'simple' );
@@ -27696,7 +27742,7 @@ function killWillbe( test )
 
 //
 
-function runDebugWill( test )
+function etcRunDebugWill( test )
 {
   let context = this;
   let a = context.assetFor( test, 'simple' );
@@ -27761,7 +27807,7 @@ Disappeared as mystically as appeared.
 
 */
 
-function resourcesFormReflectorsExperiment( test )
+function etcResourcesFormReflectorsExperiment( test )
 {
   let context = this;
   let a = context.assetFor( test, 'performance' );
@@ -28840,7 +28886,7 @@ function commandSubmodulesClean( test )
   let a = context.assetFor( test, 'submodulesClean' );
   a.reflect();
 
-  /* OK */
+  /* - */
 
   a.appStart( '.build clean.and.update.recursive.1' )
   .then( ( op ) =>
@@ -28853,20 +28899,20 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* OK */
+  /* */
 
-  a.appStart( '.build clean.and.update.recursive.2' )
-  .then( ( op ) =>
-  {
-    test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
-    return null;
-  });
+  // a.appStart( '.build clean.and.update.recursive.2' )
+  // .then( ( op ) =>
+  // {
+  //   test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
+  //   test.identical( op.exitCode, 0 );
+  //   test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+  //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+  //   test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
+  //   return null;
+  // });
 
-  /* OK */
+  /* */
 
   a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
@@ -28879,7 +28925,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* OK */
+  /* */
 
   a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
@@ -28892,7 +28938,7 @@ function commandSubmodulesClean( test )
     return null;
   });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -28929,7 +28975,7 @@ function commandSubmodulesShell( test )
   {
     test.case = '.with ./* .submodules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '> ls' ), 2 );
     test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 1 );
@@ -29197,7 +29243,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 0 );
     test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
@@ -29291,7 +29337,7 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   {
     test.case = '.submodules .git status - with remote git submodule';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'module::modulesGit' ), 0 );
     test.identical( _.strCount( op.output, 'On branch master\nChanges not staged for commit:' ), 0 );
@@ -31454,8 +31500,8 @@ function commandModulesGitDiffOutputFormat( test )
   begin().then( () =>
   {
     test.case = 'output of git diff has indentation, there is an empty line before output of each module'
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/wtools/testing/Common.s' ), 'testData' );
     return null;
   });
 
@@ -31468,10 +31514,10 @@ function commandModulesGitDiffOutputFormat( test )
     test.identical( _.strCount( op.output, '  Status:' ), 2 );
     test.identical( _.strCount( op.output, '  Patch:' ), 2 );
     test.identical( _.strCount( op.output, '    modifiedFiles:' ), 2 );
-    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/Include.s' ), 1 );
-    test.identical( _.strCount( op.output, '      proto/Integration.test.ss' ), 1 );
-    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/Include.s b/proto/wtools/testing/l1/Include.s' ), 1 );
-    test.identical( _.strCount( op.output, '    diff --git a/proto/Integration.test.ss b/proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
+    test.identical( _.strCount( op.output, '      proto/wtools/testing/Common.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/ModuleForTesting1.s b/proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
+    test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/Common.s b/proto/wtools/testing/Common.s' ), 1 );
     test.identical( _.strCount( op.output, '    +testData' ), 2 );
 
     return null;
@@ -32214,8 +32260,8 @@ function commandModulesGitStatusOutputFormat( test )
   begin().then( () =>
   {
     test.case = 'output of git status has indentation, there is an empty line before output of each module'
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s' ), 'testData' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/wtools/testing/Common.s' ), 'testData' );
     return null;
   });
 
@@ -32227,8 +32273,8 @@ function commandModulesGitStatusOutputFormat( test )
     test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting1 at' ), 1 );
     test.identical( _.strCount( op.output, '\nStatus of module::wModuleForTesting2 at' ), 1 );
     test.identical( _.strCount( op.output, '  List of uncommited changes in files:' ), 2 );
-    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/Include.s' ), 1 );
-    test.identical( _.strCount( op.output, '    M proto/Integration.test.ss' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
+    test.identical( _.strCount( op.output, '    M proto/wtools/testing/Common.s' ), 1 );
 
     return null;
   });
@@ -32241,14 +32287,8 @@ function commandModulesGitStatusOutputFormat( test )
 
   function begin()
   {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      return null;
-    });
-
+    a.ready.then( () => a.reflect() );
     a.appStart( '.submodules.download' );
-
     return a.ready;
   }
 }
@@ -40666,20 +40706,20 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     {
       wModuleForTesting1 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma',
         enabled : 0,
       },
       wModuleForTesting2 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
         enabled : 0,
       },
     };
     test.identical( willConfig.submodule, exp );
     var exp =
     {
-      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta',
-      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+      ModuleForTesting1 : 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
     };
     test.identical( imWillConfig.submodule, exp );
 
@@ -40725,7 +40765,7 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
       },
       wModuleForTesting2 :
       {
-        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+        path : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
         enabled : 0,
       },
     };
@@ -40733,7 +40773,7 @@ function commandWillfileMergeIntoSingleWithDiffSubmoduleRecord( test )
     var exp =
     {
       ModuleForTesting1 : { path : 'git+https:///github.com/Wandalen/wModuleForTesting1.git', enabled : 1 },
-      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta',
+      ModuleForTesting2 : 'git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma',
     };
     test.identical( imWillConfig.submodule, exp );
 
@@ -42016,8 +42056,6 @@ function commandsSubmoduleSafety( test )
   run({ command : 'clean', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
   run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
   run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  // run({ command : 'clean', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
-  // run({ command : 'clean', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
   run({ command : 'clean', case : 'local/untracked', downloaded : 1, error : 1, deleted : 0 });
   run({ command : 'clean', case : 'local/unstaged', downloaded : 1, error : 1, deleted : 0 });
   run({ command : 'clean', case : 'local/staged', downloaded : 1, error : 1, deleted : 0 });
@@ -42031,22 +42069,20 @@ function commandsSubmoduleSafety( test )
 
   /* - */
 
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
-  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 1, error : 1, deleted : 0 });
-  // run({ command : 'clean force:1', case : 'invalid/url', downloaded : 0, error : 1, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
-  run({ command : 'clean force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'missing/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'missing/tag', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'invalid/url', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'invalid/url', downloaded : 0, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/untracked', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/unstaged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/staged', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/commit', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/branch', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/tag', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'local/conflict', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'notGitReporOrNpmModule', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'different/origin', downloaded : 1, error : 0, deleted : 1 });
+  run({ command : 'clean', options : 'force:1', case : 'different/branch', downloaded : 1, error : 0, deleted : 1 });
 
   /* - */
 
@@ -42105,6 +42141,9 @@ function commandsSubmoduleSafety( test )
     });
 
     let op = { args : `.submodules.${env.command}` };
+    if( env.command === 'clean' )
+    op = { args : `.clean.submodules ${ env.options ? env.options : '' }` };
+
     a.appStart( op );
 
     a.ready.tap( ( err, arg ) =>
@@ -42233,7 +42272,7 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/unstaged' ] = ( env ) =>
     {
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
@@ -42246,9 +42285,9 @@ function commandsSubmoduleSafety( test )
 
     routinesPre[ 'local/staged' ] = ( env ) =>
     {
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       a.fileProvider.fileWrite({ filePath, data : ' ' });
-      a.moduleShell( 'git add README.md' );
+      a.moduleShell( 'git add Readme.md' );
       env.moduleGitStatusBefore = a.moduleGitStatusGet();
     }
     _.select
@@ -42279,7 +42318,7 @@ function commandsSubmoduleSafety( test )
     routinesPre[ 'local/conflict' ] = ( env ) =>
     {
       a.moduleShell( 'git branch dev1' );
-      let filePath = a.path.join( a.localPath, 'README.md');
+      let filePath = a.path.join( a.localPath, 'Readme.md');
       let data = a.fileProvider.fileRead({ filePath });
 
       a.moduleShell( 'git checkout dev1' );
@@ -42755,7 +42794,7 @@ Routine checks that procedures termination begins after last command.
 
 //
 
-function willFilterFieldsOverwrite( test )
+function etcWillFilterFieldsOverwrite( test )
 {
   let context = this;
   let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
@@ -42778,8 +42817,8 @@ function willFilterFieldsOverwrite( test )
   return a.ready;
 }
 
-willFilterFieldsOverwrite.rapidity = 1;
-willFilterFieldsOverwrite.description =
+etcWillFilterFieldsOverwrite.rapidity = 1;
+etcWillFilterFieldsOverwrite.description =
 
 `
 Filter fields overwrite problem:
@@ -42789,7 +42828,7 @@ This test runs two commands with different filtering options in the sequence to 
 
 //
 
-function oldImportFileAdapt( test )
+function etcOldImportFileAdapt( test )
 {
   let context = this;
   let a = context.assetFor( test, 'oldImportFileAdapt' );
@@ -42839,8 +42878,8 @@ function oldImportFileAdapt( test )
   return a.ready;
 }
 
-oldImportFileAdapt.rapidity = 1;
-oldImportFileAdapt.description =
+etcOldImportFileAdapt.rapidity = 1;
+etcOldImportFileAdapt.description =
 `
   Checks if old format of import file is converted to new format if feature is enabled via option.
 `
@@ -42857,6 +42896,7 @@ const Proto =
 
   onSuiteBegin,
   onSuiteEnd,
+  onRoutineEnd, /* Dmytro : should reduce time of hardlinking for all suite test run */
   routineTimeOut : 300000,
 
   context :
@@ -42870,33 +42910,46 @@ const Proto =
 
   tests :
   {
+    // etc
 
-    preCloneRepos,
-    singleModuleWithSpaceTrivial,
+    etcPreCloneRepos,
+    etcSingleModuleWithSpaceTrivial,
+
+    // build
+
     build,
-    transpile,
-    transpileWithOptions,
-    transpileExperiment,
-    moduleNewDotless,
-    moduleNewDotlessSingle,
-    moduleNewNamed,
+    buildTranspile,
+    buildTranspileWithOptions,
+    buildTranspileExperiment,
+
+    //command
+
+    commandModuleNewDotless,
+    commandModuleNewDotlessSingle,
+    commandModuleNewNamed,
+
+    //open
 
     openModuleWithLostSubmodule,
 
     openWith,
     openEach,
-    // withMixed, /* xxx : later */
-    // eachMixed, // xxx : later
-    withList,
-    // eachList, // xxx : later
-    eachBrokenIll,
-    eachBrokenNon,
-    eachBrokenCommand,
+
+    //command
+
+    // commandWithMixed, /* xxx : later */
+    commandWithList,
+
+    // commandEachMixed, // xxx : later
+    // commandEachList, // xxx : later
+    commandEachBrokenIll,
+    commandEachBrokenNon,
+    commandEachBrokenCommand,
 
     // CUI
 
-    commandsSeveral,
-    implyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
+    etcCommandsSeveral,
+    commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     // reflect
 
@@ -42931,9 +42984,9 @@ const Proto =
 
     // with do
 
-    withDoInfo,
-    withDoStatus,
-    withDoCommentOut,
+    commandWithDoInfo,
+    commandWithDoStatus,
+    commandWithDoCommentOut,
 
     hookCallInfo,
     hookGitMake,
@@ -42950,8 +43003,8 @@ const Proto =
     hookWasPackageExtendWillfile,
     // hookPublish2, /* Dmytro : hook was commented out */
 
-    implyWithDot,
-    implyWithAsterisk,
+    commandImplyWithDot,
+    commandImplyWithAsterisk,
 
     // output
 
@@ -42965,7 +43018,7 @@ const Proto =
     // modulesTreeHierarchyRemotePartiallyDownloaded, /* xxx : later */
     modulesTreeDisabledAndCorrupted,
 
-    help,
+    etcHelp,
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
@@ -43105,8 +43158,8 @@ const Proto =
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     submodulesVerify,
-    versionsAgree,
-    versionsAgreeNpm,
+    submodulesVersionsAgree,
+    submodulesVersionsAgreeNpm,
 
     stepSubmodulesDownload,
     stepSubmodulesUpdate,
@@ -43127,17 +43180,17 @@ const Proto =
 
     /* xxx : cover "will .module.new.with prepare" */
 
-    // upgradeDryDetached, // xxx : look later
-    // upgradeDetached, // xxx : look later
-    // upgradeDetachedExperiment, // xxx : look later
-    // fixateDryDetached, // xxx : look later
-    // fixateDetached, // xxx : look later
+    // submodulesUpgradeDryDetached, // xxx : look later
+    // submodulesUpgradeDetached, // xxx : look later
+    // submodulesUpgradeDetachedExperiment, // xxx : look later
+    // submodulesFixateDryDetached, // xxx : look later
+    // submodulesFixateDetached, // xxx : look later
 
-    // runWillbe, // zzz : help to fix, please
-    killWillbe,
-    runDebugWill,
+    // etcRunWillbe, // zzz : help to fix, please
+    etcKillWillbe,
+    etcRunDebugWill,
 
-    // resourcesFormReflectorsExperiment, // xxx : look
+    // etcResourcesFormReflectorsExperiment, // xxx : look
 
     // commands
 
@@ -43237,9 +43290,9 @@ const Proto =
 
     commandsSequenceProceduresTermination,
 
-    willFilterFieldsOverwrite,
+    etcWillFilterFieldsOverwrite,
 
-    oldImportFileAdapt
+    etcOldImportFileAdapt
 
   }
 

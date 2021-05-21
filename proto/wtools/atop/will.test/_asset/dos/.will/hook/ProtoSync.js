@@ -79,7 +79,7 @@ function onModule( context )
   {
     fileProvider.filesReflect
     ({
-      filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'common/.github/workflows' ) }, maskAll },
+      filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'common/github/workflows' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
@@ -93,7 +93,7 @@ function onModule( context )
   {
     fileProvider.filesReflect
     ({
-      filter : { filePath : { [ circleciPath ] : path.join( protoPath, 'common/.circleci' ) }, maskAll },
+      filter : { filePath : { [ circleciPath ] : path.join( protoPath, 'common/circleci' ) }, maskAll },
       dstRewritingOnlyPreserving : 1,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
