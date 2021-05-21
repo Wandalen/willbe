@@ -1,0 +1,6 @@
+about :
+  name : submodulesUpdateSwitchToOutdatedBranch
+
+submodule :
+
+  testrepo : git+hd://./repo/!master
