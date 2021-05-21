@@ -14,55 +14,76 @@ function authorRecordNormalize( src )
 {
   _.assert( arguments.length === 1, 'Expects exactly one argument' );
 
+  let nameIsValid;
   let result = src;
+
   if( _.str.is( src ) )
   {
-    let validAuthorString = authorRecordVerify( src );
-    if( !validAuthorString )
-    throw _.err( `Author record::${ src } is not valid` );
+    const parsed = _.will.transform.authorRecordParse( src );
+    nameIsValid = nameVerify( parsed.name );
   }
   else if( _.aux.is( src ) )
   {
-    result = src.name;
-    if( src.email )
-    result += ` <${ src.email }>`;
-    if( src.url )
-    result += ` (${ src.url })`;
-    return result;
+    nameIsValid = nameVerify( src.name );
+    result = _.will.transform.authorRecordStr( src );
   }
   else
   {
     _.assert( 0, 'Unexpected type of record' );
   }
 
+  if( !nameIsValid )
+  throw _.err( `Author record::${_.entity.exportStringSolo( src ) } is not valid` );
+
   return result;
 
   /* */
 
-  function authorRecordVerify()
+  function nameVerify( name )
   {
-    let recordIsValid = false;
-    let splits = split( src );
-    if( splits[ 1 ] !== undefined )
-    {
-      _.assert( splits[ 0 ] !== '', 'Expects author' );
-
-      if( uriIs( splits[ 2 ] ) )
-      splits = split( splits[ 0 ] );
-
-      if( splits[ 1 ] === undefined )
-      recordIsValid = authorVerify( splits[ 2 ] );
-      else if( emailIs( splits[ 2 ] ) )
-      recordIsValid = authorVerify( splits[ 0 ] );
-      else
-      recordIsValid = authorVerify( splits.join( ' ' ) );
-    }
-    else
-    {
-      recordIsValid = authorVerify( src );
-    }
-    return recordIsValid;
+    return name !== '' && !/(<|>|\(|\))/.test( name );
   }
+}
+
+//
+
+function authorRecordParse( src )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
+
+  if( _.aux.is( src ) )
+  return src;
+
+  _.assert( _.str.is( src ), 'Expects string {-src-}' );
+
+  /* */
+
+  let result = Object.create( null );
+
+  let splits = split( src );
+  if( splits[ 1 ] === undefined )
+  {
+    result.name = src;
+  }
+  else
+  {
+    _.assert( splits[ 0 ] !== '', 'Expects author name' );
+
+    if( uriIs( splits[ 2 ] ) )
+    {
+      result.url = splits[ 2 ];
+      splits = split( splits[ 0 ] );
+    }
+
+    if( splits[ 1 ] === undefined )
+    result.name = splits[ 2 ];
+    else if( emailIs( splits[ 2 ] ) )
+    result.email = splits[ 0 ];
+    else
+    result.name = splits.join( ' ' );
+  }
+
+  return result;
 
   /* */
 
@@ -84,13 +105,25 @@ function authorRecordNormalize( src )
   {
     return /\<\S+\>/.test( email );
   }
+}
 
-  /* */
+//
 
-  function authorVerify( author )
-  {
-    return author !== '' && !/(<|>|\(|\))/.test( author );
-  }
+function authorRecordStr( src )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
+
+  if( _.str.is( src ) )
+  return src;
+
+  _.map.assertHasOnly( src, [ 'name', 'email', 'url' ], 'Expects valid map with author fields' );
+
+  let result = src.name;
+  if( src.email )
+  result += ` <${ src.email }>`;
+  if( src.url )
+  result += ` (${ src.url })`;
+  return result;
 }
 
 //
@@ -127,6 +160,8 @@ let Extension =
 
   submodulesSwitch,
   authorRecordNormalize,
+  authorRecordParse,
+  authorRecordStr,
 
 };
 
