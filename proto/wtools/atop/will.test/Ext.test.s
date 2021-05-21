@@ -28884,10 +28884,10 @@ function commandSubmodulesClean( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesClean' );
-  a.reflect();
 
   /* - */
 
+  begin();
   a.appStart( '.build clean.and.update.recursive.1' )
   .then( ( op ) =>
   {
@@ -28895,25 +28895,27 @@ function commandSubmodulesClean( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     return null;
   });
 
   /* */
 
-  // a.appStart( '.build clean.and.update.recursive.2' )
-  // .then( ( op ) =>
-  // {
-  //   test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
-  //   test.identical( op.exitCode, 0 );
-  //   test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
-  //   let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-  //   test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
-  //   return null;
-  // });
+  begin();
+  a.appStart( '.build clean.and.update.recursive.2' )
+  .then( ( op ) =>
+  {
+    test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    return null;
+  });
 
   /* */
 
+  begin();
   a.appStart( '.clean.submodules .submodules.update recursive:1' )
   .then( ( op ) =>
   {
@@ -28921,12 +28923,13 @@ function commandSubmodulesClean( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     return null;
   });
 
   /* */
 
+  begin();
   a.appStart( '.clean.submodules .submodules.update recursive:2' )
   .then( ( op ) =>
   {
@@ -28934,13 +28937,33 @@ function commandSubmodulesClean( test )
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting1', 'ModuleForTesting3' ] );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
     return null;
   });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    const modulePath = a.abs( '../-repo/ModuleForTesting2/' );
+    a.ready.then( () => a.reflect() );
+    a.shell({ currentPath : modulePath, execPath : 'git checkout master' });
+    a.ready.then( () =>
+    {
+      const configPath = a.abs( modulePath, 'will.yml' );
+      const config = a.fileProvider.fileReadUnknown( configPath );
+      config.submodule.wModuleForTesting1.enabled = 1;
+      a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+      return null;
+    });
+    a.shell({ currentPath : modulePath, execPath : 'git add .' });
+    a.shell({ currentPath : modulePath, execPath : 'git commit -am enabled' });
+    return a.ready;
+  }
 }
 
 //
