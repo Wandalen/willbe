@@ -34,16 +34,23 @@ function authorRecordParse( src )
 
     if( uriIs( splits[ 2 ] ) )
     {
-      result.url = splits[ 2 ];
+      result.url = _.strInsideOf_( splits[ 2 ], '(', ')' )[ 1 ];
       splits = split( splits[ 0 ] );
     }
 
     if( splits[ 1 ] === undefined )
-    result.name = splits[ 2 ];
+    {
+      result.name = splits[ 2 ];
+    }
     else if( emailIs( splits[ 2 ] ) )
-    result.email = splits[ 0 ];
+    {
+      result.name = splits[ 0 ];
+      result.email = _.strInsideOf_( splits[ 2 ], '<', '>' )[ 1 ];
+    }
     else
-    result.name = splits.join( ' ' );
+    {
+      result.name = splits.join( '' );
+    }
   }
 
   return result;

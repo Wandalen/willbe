@@ -44,88 +44,6 @@ function onSuiteEnd()
   _.path.tempClose( context.suiteTempPath );
 }
 
-//
-
-function assetFor( test, name )
-{
-  let context = this;
-
-  if( !name )
-  name = test.name;
-
-  let a = test.assetFor( name );
-
-  a.will = new _.Will;
-
-  a.find = a.fileProvider.filesFinder
-  ({
-    withTerminals : 1,
-    withDirs : 1,
-    withStem : 1,
-    allowingMissed : 1,
-    maskPreset : 0,
-    outputFormat : 'relative',
-    filter :
-    {
-      recursive : 2,
-      maskAll :
-      {
-        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
-      },
-      maskTransientAll :
-      {
-        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
-      },
-    },
-  });
-
-
-  a.findNoModules = a.fileProvider.filesFinder
-  ({
-    withTerminals : 1,
-    withDirs : 1,
-    withStem : 1,
-    allowingMissed : 1,
-    maskPreset : 0,
-    outputFormat : 'relative',
-    filter :
-    {
-      recursive : 2,
-      maskAll :
-      {
-        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/, /(^|\/)\.module\/.*/ ],
-      },
-      maskTransientAll :
-      {
-        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/, /(^|\/)\.module\/.*/ ],
-      },
-    },
-  });
-
-  a.reflect = function reflect()
-  {
-    a.fileProvider.filesDelete( a.routinePath );
-    a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-    try
-    {
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
-    }
-    catch( err )
-    {
-      _.errAttend( err );
-      _.Consequence().take( null )
-      .delay( 3000 )
-      .deasync();
-      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
-    }
-  }
-
-  _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
-
-  return a;
-}
-
 // --
 // tests
 // --
@@ -209,6 +127,80 @@ function authorRecordNormalize( test )
 
 //
 
+function authorRecordParse( test )
+{
+  test.case = 'empty map';
+  var src = {};
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, {} );
+  test.true( got === src );
+
+  test.case = 'map with valid fields';
+  var src = { name : 'name', email : 'email' };
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name', email : 'email' } );
+  test.true( got === src );
+
+  test.case = 'map with invalid fields';
+  var src = { unknown : 'unknown', wrong : 'wrong' };
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { unknown : 'unknown', wrong : 'wrong' } );
+  test.true( got === src );
+
+  /* */
+
+  test.case = 'empty string';
+  var src = '';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : '' } );
+
+  test.case = 'string with valid name';
+  var src = 'name';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name' } );
+
+  test.case = 'string with invalid name';
+  var src = 'name <';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name <' } );
+
+  test.case = 'string with name and email';
+  var src = 'name <email>';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name', email : 'email' } );
+
+  test.case = 'string with name and url';
+  var src = 'name (url)';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name', url : 'url' } );
+
+  test.case = 'string with name and url';
+  var src = 'name (url)';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name', url : 'url' } );
+
+  test.case = 'string with name, email and url';
+  var src = 'name <email> (url)';
+  var got = _.will.transform.authorRecordParse( src );
+  test.identical( got, { name : 'name', email : 'email', url : 'url' } );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordParse() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordParse( { name : 'name' }, { email : 'email' } ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordParse([ 'name', 'email' ]) );
+}
+
+//
+
 function authorRecordStr( test )
 {
   test.case = 'empty string';
@@ -263,6 +255,9 @@ function authorRecordStr( test )
 
   test.case = 'extra arguments';
   test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr( 'name', 'email' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr([ 'name <email>' ]) );
 
   test.case = 'src map has unknown fields';
   test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr({ name : 'name', unknown : 'unknown' }) );
@@ -421,13 +416,14 @@ let Self =
     assetsOriginalPath : null,
     appJsPath : null,
     repoDirPath : null,
-    assetFor,
   },
 
   tests :
   {
 
     submodulesSwitch,
+
+    authorRecordParse,
     authorRecordStr,
     authorRecordNormalize,
 
