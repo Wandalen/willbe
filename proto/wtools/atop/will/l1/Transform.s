@@ -135,6 +135,22 @@ function authorRecordNormalize( src )
 
 //
 
+function interpreterParse( src )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
+
+  if( _.aux.is( src ) )
+  return src;
+
+  _.assert( _.str.is( src ) );
+
+  let splits = _.strIsolateLeftOrAll( src, ' ' );
+  _.assert( splits[ 1 ] !== undefined );
+  return { [ splits[ 0 ] ] : splits[ 2 ] };
+}
+
+//
+
 function submodulesSwitch( src, enabled )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -165,11 +181,13 @@ function submodulesSwitch( src, enabled )
 let Extension =
 {
 
-  submodulesSwitch,
-
   authorRecordParse,
   authorRecordStr,
   authorRecordNormalize,
+
+  interpreterParse,
+
+  submodulesSwitch,
 
 };
 
