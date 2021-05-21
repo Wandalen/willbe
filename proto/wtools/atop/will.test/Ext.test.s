@@ -1136,15 +1136,15 @@ function commandModuleNewNamed( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.module.new super'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new super' })
   .then( ( op ) =>
   {
@@ -1159,7 +1159,7 @@ function commandModuleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1170,19 +1170,18 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'already exists!' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with some .module.new'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.with some .module.new' })
   .then( ( op ) =>
   {
@@ -1198,7 +1197,7 @@ function commandModuleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1209,7 +1208,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some .about.list' })
   .then( ( op ) =>
   {
@@ -1220,19 +1220,18 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with some/ .module.new'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.with some/ .module.new' })
   .then( ( op ) =>
   {
@@ -1249,7 +1248,7 @@ function commandModuleNewNamed( test )
       './proto/File.release.js',
       './some',
       './some/will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1260,7 +1259,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
   .then( ( op ) =>
   {
@@ -1271,19 +1271,19 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with some .module.new some2'
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some .module.new some2' })
   .then( ( op ) =>
   {
@@ -1300,7 +1300,7 @@ function commandModuleNewNamed( test )
       './proto/File.release.js',
       './some',
       './some/some2.will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1311,7 +1311,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some2 at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some/some2 .about.list' })
   .then( ( op ) =>
   {
@@ -1322,19 +1323,19 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some2'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.module.new'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new' })
   .then( ( op ) =>
   {
@@ -1350,7 +1351,7 @@ function commandModuleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1358,10 +1359,11 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::moduleNewNamed at' ), 1 );
+    test.identical( _.strCount( op.output, 'Create module::commandModuleNewNamed at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with . .about.list' })
   .then( ( op ) =>
   {
@@ -1369,22 +1371,22 @@ function commandModuleNewNamed( test )
 
     test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'moduleNewNamed'` ), 1 );
+    test.identical( _.strCount( op.output, `name : 'commandModuleNewNamed'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.module.new super/'
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new super/' })
   .then( ( op ) =>
   {
@@ -1401,7 +1403,7 @@ function commandModuleNewNamed( test )
       './proto/File.release.js',
       './super',
       './super/will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1412,7 +1414,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::super at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with super/ .about.list' })
   .then( ( op ) =>
   {
@@ -1423,19 +1426,19 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'super'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new some'
+    test.case = '.module.new some';
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new some' })
   .then( ( op ) =>
   {
@@ -1451,7 +1454,7 @@ function commandModuleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1462,7 +1465,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some .about.list' })
   .then( ( op ) =>
   {
@@ -1473,19 +1477,18 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new some/'
-    a.reflect();
+    test.case = '.module.new some/';
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
   a.appStartNonThrowing({ execPath : '.module.new some/' })
   .then( ( op ) =>
   {
@@ -1502,7 +1505,7 @@ function commandModuleNewNamed( test )
       './proto/File.release.js',
       './some',
       './some/will.yml'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1513,7 +1516,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
   .then( ( op ) =>
   {
@@ -1524,19 +1528,20 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   a.ready
   .then( () =>
   {
-    test.case = '.module.new ../dir1/dir2/some/'
-    a.reflect();
+    test.case = '.module.new ../dir1/dir2/some/';
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( op ) =>
   {
@@ -1551,7 +1556,7 @@ function commandModuleNewNamed( test )
       './proto',
       './proto/File.debug.js',
       './proto/File.release.js'
-    ]
+    ];
     var files = a.find( a.routinePath );
     test.identical( files, exp );
 
@@ -1561,7 +1566,7 @@ function commandModuleNewNamed( test )
       './dir2',
       './dir2/some',
       './dir2/some/will.yml'
-    ]
+    ];
     var files = a.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
@@ -1572,7 +1577,8 @@ function commandModuleNewNamed( test )
     test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
 
     return null;
-  })
+  });
+
   a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( op ) =>
   {
@@ -1584,7 +1590,7 @@ function commandModuleNewNamed( test )
 
     a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
-  })
+  });
 
   /* - */
 
