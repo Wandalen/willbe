@@ -10,43 +10,6 @@ const Self = _.will.transform = _.will.transform || Object.create( null );
 // implementation
 // --
 
-function authorRecordNormalize( src )
-{
-  _.assert( arguments.length === 1, 'Expects exactly one argument' );
-
-  let nameIsValid;
-  let result = src;
-
-  if( _.str.is( src ) )
-  {
-    const parsed = _.will.transform.authorRecordParse( src );
-    nameIsValid = nameVerify( parsed.name );
-  }
-  else if( _.aux.is( src ) )
-  {
-    nameIsValid = nameVerify( src.name );
-    result = _.will.transform.authorRecordStr( src );
-  }
-  else
-  {
-    _.assert( 0, 'Unexpected type of record' );
-  }
-
-  if( !nameIsValid )
-  throw _.err( `Author record::${_.entity.exportStringSolo( src ) } is not valid` );
-
-  return result;
-
-  /* */
-
-  function nameVerify( name )
-  {
-    return name !== '' && !/(<|>|\(|\))/.test( name );
-  }
-}
-
-//
-
 function authorRecordParse( src )
 {
   _.assert( arguments.length === 1, 'Expects exactly one argument' );
@@ -128,6 +91,43 @@ function authorRecordStr( src )
 
 //
 
+function authorRecordNormalize( src )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
+
+  let nameIsValid;
+  let result = src;
+
+  if( _.str.is( src ) )
+  {
+    const parsed = _.will.transform.authorRecordParse( src );
+    nameIsValid = nameVerify( parsed.name );
+  }
+  else if( _.aux.is( src ) )
+  {
+    nameIsValid = nameVerify( src.name );
+    result = _.will.transform.authorRecordStr( src );
+  }
+  else
+  {
+    _.assert( 0, 'Unexpected type of record' );
+  }
+
+  if( !nameIsValid )
+  throw _.err( `Author record::${_.entity.exportStringSolo( src ) } is not valid` );
+
+  return result;
+
+  /* */
+
+  function nameVerify( name )
+  {
+    return name !== '' && !/(<|>|\(|\))/.test( name );
+  }
+}
+
+//
+
 function submodulesSwitch( src, enabled )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -159,9 +159,10 @@ let Extension =
 {
 
   submodulesSwitch,
-  authorRecordNormalize,
+
   authorRecordParse,
   authorRecordStr,
+  authorRecordNormalize,
 
 };
 

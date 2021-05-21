@@ -209,6 +209,67 @@ function authorRecordNormalize( test )
 
 //
 
+function authorRecordStr( test )
+{
+  test.case = 'empty string';
+  var src = '';
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, '' );
+
+  test.case = 'string with valid format';
+  var src = 'name <email> (url)';
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name <email> (url)' );
+
+  test.case = 'string with invalid format';
+  var src = 'name <email url)';
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name <email url)' );
+
+  /* */
+
+  test.case = 'map with only name';
+  var src = { name : 'name' };
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name' );
+
+  test.case = 'map with name and email';
+  var src = { name : 'name', email : 'email' };
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name <email>' );
+
+  test.case = 'map with name and url';
+  var src = { name : 'name', url : 'url' };
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name (url)' );
+
+  test.case = 'map with name, email and url';
+  var src = { name : 'name', email: 'email', url : 'url' };
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name <email> (url)' );
+
+  test.case = 'map with invalid name';
+  var src = { name : 'name <' };
+  var got = _.will.transform.authorRecordStr( src );
+  test.identical( got, 'name <' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr( 'name', 'email' ) );
+
+  test.case = 'src map has unknown fields';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr({ name : 'name', unknown : 'unknown' }) );
+}
+
+//
+
 function submodulesSwitch( test )
 {
   test.case = 'empty map, enabled - 0';
@@ -366,8 +427,9 @@ let Self =
   tests :
   {
 
-    authorRecordNormalize,
     submodulesSwitch,
+    authorRecordStr,
+    authorRecordNormalize,
 
   }
 
