@@ -6,7 +6,8 @@ about :
 
 submodule :
 
-  ModuleForTesting3 : git+https:///github.com/Wandalen/wModuleForTesting3.git/out/wModuleForTesting3.out.will!master
+  ModuleForTesting2 : git+hd://../../-repo/ModuleForTesting2/!master
+  # ModuleForTesting3 : git+https:///github.com/Wandalen/wModuleForTesting3.git/out/wModuleForTesting3.out.will!master
 
 path :
 
