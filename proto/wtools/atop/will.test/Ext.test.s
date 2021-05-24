@@ -219,8 +219,550 @@ function etcSingleModuleWithSpaceTrivial( test )
   return a.ready;
 }
 
+//
+
+function etcWillFilterFieldsOverwrite( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, [ 'ModuleForTesting3' ] );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcWillFilterFieldsOverwrite.rapidity = 1;
+etcWillFilterFieldsOverwrite.description =
+
+`
+Filter fields overwrite problem:
+Command can modify filter fields of main( will ). It can break behavior of other commands that may be executed in the sequence.
+This test runs two commands with different filtering options in the sequence to check if problem is fixed.
+`
+
+//
+
+function etcOldImportFileAdapt( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'oldImportFileAdapt' );
+  a.reflect();
+
+  /* - */
+
+  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Failed to download submodules' ) );
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( modules, null );
+    return null;
+  });
+
+  /* - */
+
+  a.appStart( '.imply willFileAdapting:1 .submodules.download' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 )
+
+    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+    let expectedModules =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1a',
+      'ModuleForTesting1b',
+      'ModuleForTesting2'
+    ]
+    test.identical( modules, expectedModules );
+
+    _.each( expectedModules, ( moduleName ) =>
+    {
+      test.true( _.git.isRepository({ localPath : a.abs( `.module/${moduleName}` ) }) );
+    })
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcOldImportFileAdapt.rapidity = 1;
+etcOldImportFileAdapt.description =
+`
+  Checks if old format of import file is converted to new format if feature is enabled via option.
+`
+
+//
+
+/*
+  etcRunWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
+*/
+
+function etcRunWillbe( test )
+{
+
+  let context = this;
+  let a = context.assetFor( test, 'runWillbe' );
+
+  a.fork = _.process.starter
+  ({
+    // execPath : 'node',
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'fork',
+  });
+  a.appStart = _.process.starter
+  ({
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'execUnrestricted: terminate utility during heavy load of will files, should be terminated';
+    let o = { args : [ a.path.nativize( a.abs( __dirname, '../will/ExecUnrestricted' ) ), '.submodules.list' ], ready : null };
+
+    let con = a.fork( o );
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.bufferAnyIs( data ) )
+      data = _.bufferToStr( data );
+      if( _.strHas( data, 'wTools.out.will.yml' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        o.pnd.kill( 'SIGINT' )
+        // o.pnd.stdin.write( '\x03\n' ); /* CTRL+C */
+        // o.pnd.stdin.write( '~^C\n' ); /* CTRL+C */
+      }
+    });
+
+    return test.shouldThrowErrorAsync( con )
+    .then( () =>
+    {
+      if( process.platform === 'win32' )
+      test.identical( o.exitCode, null );
+      else
+      test.identical( o.exitCode, 255 );
+      test.identical( o.exitSignal, 'SIGINT' );
+      test.true( _.strHas( o.output, 'wTools.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wLogger.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wConsequence.out.will.yml' ) );
+      test.true( !_.strHas( o.output, 'wInstancing.out.will.yml' ) );
+
+      return null;
+    })
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'Exec: terminate utility during heavy load of will files, should fail'
+    let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
+    let con = a.appStart( o );
+
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      if( _.bufferAnyIs( data ) )
+      data = _.bufferToStr( data );
+      if( _.strHas( data, 'wTools.out.will.yml' ) )
+      {
+        console.log( 'Terminating willbe...' );
+        // o.pnd.kill( 'SIGTERM' );
+        // o.pnd.kill( 'SIGINT' );
+        o.pnd.kill( 'SIGINT' );
+        // o.pnd.kill( 'SIGKILL' );
+      }
+    });
+
+    return test.shouldThrowErrorAsync( con )
+    .then( () =>
+    {
+      if( process.platform === 'win32' )
+      test.identical( o.exitCode, null );
+      else
+      test.identical( o.exitCode, 255 );
+      test.identical( o.exitSignal, 'SIGINT' );
+      test.true( _.strHas( o.output, 'module::runWillbe / submodule::Tools' ) );
+      test.true( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
+      test.true( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
+      return null;
+    })
+
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
+function etcKillWillbe( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+  let con = _.take( null );
+  a.reflect();
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe without signal';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe... SIGTERM' );
+      _.time.out( 1000, () => o.pnd.kill() );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      if( !process.platform === 'win32' )
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe with signal SIGTERM';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe... SIGTERM' );
+      _.time.out( 1000, () => o.pnd.kill( 'SIGTERM') );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGTERM' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      if( !process.platform === 'win32' )
+      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe with signal SIGKILL';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe... SIGKILL' );
+      o.pnd.kill( 'SIGKILL' );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGKILL' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
+      if( !process.platform === 'win32' )
+      test.ge( _.strCount( op.output, 'SIGKILL' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'kill willbe with signal SIGINT';
+    var o =
+    {
+      execPath : _.Will.WillPathGet() + ' .build',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    var result = _.process.start( o );
+    o.pnd.stdout.on( 'data', ( data ) =>
+    {
+      console.log( 'Terminating willbe... SIGINT' );
+      _.time.out( 1000, () => o.pnd.kill( 'SIGINT' ) );
+    });
+
+    return a.ready.then( ( op ) =>
+    {
+      test.notIdentical( op.exitCode, 0 );
+      test.identical( op.exitReason, 'signal' );
+      test.identical( op.exitSignal, 'SIGINT' );
+
+      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      if( !process.platform === 'win32' )
+      test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
+
+      return null;
+    });
+  });
+
+  /* - */
+
+  return con;
+}
+
+//
+
+function etcRunDebugWill( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+  let con = _.take( null );
+  a.reflect();
+
+  /* */
+
+  con.then( () =>
+  {
+    test.case = 'debug-will .help';
+
+    var debugWillPath = a.abs( a.path.dir( _.Will.WillPathGet() ), 'ExecDebug' );
+    var o =
+    {
+      execPath : debugWillPath + ' .help',
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      throwingExitCode : 0,
+      outputGraying : 1,
+      ready : a.ready,
+      mode : 'fork',
+    };
+    _.process.start( o );
+
+    return a.ready.then( ( op ) =>
+    {
+      if( op.exitCode === 0 )
+      {
+        test.description = 'utility debugnode exists';
+        // test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
+        // test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
+        test.identical( _.strCount( op.output, 'Command ".help"' ), 1 );
+        test.identical( _.strCount( op.output, '.help - Get help.' ), 1 );
+        test.identical( _.strCount( op.output, '.imply - Change state or imply value of a variable.' ), 1 );
+      }
+      else
+      {
+        test.description = 'utility debugnode not exists';
+        test.identical( _.strCount( op.output, 'spawn debugnode ENOENT' ), 1 );
+        test.identical( _.strCount( op.output, 'code : \'ENOENT\'' ), 1 );
+        test.identical( _.strCount( op.output, 'syscall : \'spawn debugnode\'' ), 1 );
+        test.identical( _.strCount( op.output, 'path : \'debugnode\'' ), 1 );
+        test.identical( _.strCount( op.output, 'spawnargs' ), 1 );
+        test.identical( _.strCount( op.output, 'Error starting the process' ), 1 );
+      }
+      return null;
+    });
+  });
+
+  return con;
+}
+
+//
+
+/*
+
+Performance issue. Related with
+- path map handling
+- file filter forming
+Disappeared as mystically as appeared.
+
+*/
+
+function etcResourcesFormReflectorsExperiment( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'performance' );
+  a.reflect()
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    /* This case uses out file of Starter that cause slow forming of reflector reflect.submodules from supermode */
+
+    test.case = 'old version of out file from Starter module, works really slow';
+    let o2 =
+    {
+      execPath,
+      currentPath : a.abs( './old-out-file/' ),
+      args : [ '.submodules.list' ],
+      mode : 'fork',
+      outputCollecting : 1
+    };
+
+    let con = _.process.start( o2 );
+    let t = _.time.out( 10000, () =>
+    {
+      o2.pnd.kill( 'SIGKILL' );
+      throw _.err( 'TimeOut:10000, resources forming takes too long' );
+    });
+
+    return _.Consequence.Or( con, t );
+    // return con.orKeepingSplit( t );
+  })
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'module::old-out-file / submodule::Starter' ) );
+    test.true( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
+    test.true( _.strHas( op.output, 'autoExporting : 0' ) );
+    test.true( _.strHas( op.output, 'enabled : 1' ) );
+    test.true( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
+    test.true( _.strHas( op.output, 'isDownloaded : false' ) );
+    test.true( _.strHas( op.output, 'isAvailable : false' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    /* This case uses new out file of Starter forming of reflector reflect.submodules from supermode is fast */
+
+    test.case = 'new version of out file from Starter module, works fast';
+
+    let o2 =
+    {
+      execPath,
+      currentPath : a.abs( './new-out-file/' ),
+      args : [ '.submodules.list' ],
+      mode : 'fork',
+      outputCollecting : 1
+    };
+
+    let con = _.process.start( o2 );
+    let t = _.time.out( 10000, () =>
+    {
+      o2.pnd.kill( 'SIGKILL' );
+      throw _.err( 'TimeOut : 10000, resources forming takes too long' );
+    });
+
+    return _.Consequence.Or( con, t );
+    // return con.orKeepingSplit( t );
+  })
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'module::new-out-file / submodule::Starter' ) );
+    test.true( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
+    test.true( _.strHas( op.output, 'autoExporting : 0' ) );
+    test.true( _.strHas( op.output, 'enabled : 1' ) );
+    test.true( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
+    test.true( _.strHas( op.output, 'isDownloaded : false' ) );
+    test.true( _.strHas( op.output, 'isAvailable : false' ) );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
 // --
-// tests
+// build
 // --
 
 function build( test )
@@ -722,95 +1264,81 @@ buildTranspileExperiment.experimental = 1;
 
 //
 
-function commandModuleNewDotless( test )
+function buildSingleModule( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'twoDotlessExported' );
+  let a = context.assetFor( test, 'single' );
+  a.reflect();
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.build'
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
-  });
-  a.appStartNonThrowing({ execPath : '.module.new', currentPath : a.routinePath })
+  })
+
+  a.appStart({ execPath : '.build' })
+
   .then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './ex.will.yml',
-      './im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub',
-      './sub/ex.will.yml',
-      './sub/im.will.yml'
-    ]
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotless at' ), 1 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 1 );
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
+
+    var files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './Single.s' ] );
 
     return null;
   })
 
   /* - */
-  a.ready
+
   .then( () =>
   {
-    test.case = '.module.new some'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.build debug.raw'
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
-  a.appStartNonThrowing({ execPath : '.module.new some' })
+
+  a.appStart({ execPath : '.build debug.raw' })
+
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './ex.will.yml',
-      './im.will.yml',
-      './some.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub',
-      './sub/ex.will.yml',
-      './sub/im.will.yml'
-    ]
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
+    test.true( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+    var files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './Single.s' ] );
 
     return null;
   })
-  a.appStartNonThrowing({ execPath : '.with some .about.list' })
+
+  /* - */
+
+  .then( () =>
+  {
+    test.case = '.build release.raw'
+    a.fileProvider.filesDelete( a.abs( 'out/release' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.build release.raw' })
+
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+    test.true( _.strHas( op.output, /Building .*module::single \/ build::release\.raw.*/ ) );
+    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
+    test.true( _.strHas( op.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
+
+    var files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './Single.s' ] );
 
     return null;
   })
@@ -820,104 +1348,76 @@ function commandModuleNewDotless( test )
   a.ready
   .then( () =>
   {
-    test.case = '.module.new some/'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.build wrong'
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/release' ) );
+    var o =
+    {
+      args : [ '.build wrong' ],
+      ready : null,
+    }
+    return test.shouldThrowErrorOfAnyKind( () => a.appStart( o ) )
+    .then( ( op ) =>
+    {
+      test.true( o.exitCode !== 0 );
+      test.true( o.output.length >= 1 );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) )
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) )
+
+      return null;
+    })
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function buildSingleStep( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShell' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.build debug1'
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
-  a.appStartNonThrowing({ execPath : '.module.new some/' })
+
+  a.appStart({ execPath : '.build debug1' })
+
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './ex.will.yml',
-      './im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './some',
-      './some/will.yml',
-      './sub',
-      './sub/ex.will.yml',
-      './sub/im.will.yml'
-    ]
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  })
-
-  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
     return null;
   })
 
   /* - */
 
   a.ready
+
   .then( () =>
   {
-    test.case = '.module.new ../dir1/dir2/some/'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.build debug2'
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
-  a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
+
+  a.appStart({ execPath : '.build debug2' })
+
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './ex.will.yml',
-      './im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub',
-      './sub/ex.will.yml',
-      './sub/im.will.yml'
-    ]
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = a.find( a.abs( '../dir1' ) );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  })
-  a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
   })
 
@@ -928,676 +1428,573 @@ function commandModuleNewDotless( test )
 
 //
 
-function commandModuleNewDotlessSingle( test )
+function buildSubmodules( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'twoDotlessSingleExported' );
+  let a = context.assetFor( test, 'submodules' );
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
+  a.ready.then( () =>
+  {
+    test.case = 'build withoud submodules';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+
+  a.appStart({ execPath : '.build' })
+  .finally( ( err, op ) =>
+  {
+    test.true( !err );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    var files = a.find( a.abs( 'out' ) );
+    test.gt( files.length, 10 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.submodules.update' })
   .then( () =>
   {
-    test.case = '.module.new'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.build';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
-  a.appStartNonThrowing({ execPath : '.module.new' })
+  });
+
+  a.appStart({ execPath : '.build' })
   .then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub',
-      './sub/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
+    test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotlessSingle at' ), 1 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 1 );
+    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
+    var files = a.find( a.abs( 'out' ) );
+    test.gt( files.length, 10 );
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new some'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.build wrong';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
-  a.appStartNonThrowing({ execPath : '.module.new some' })
-  .then( ( op ) =>
+  });
+
+  a.ready.then( () =>
   {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './some.will.yml',
-      './will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub',
-      './sub/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
+    var o =
+    {
+      execPath : 'node ' + context.appJsPath,
+      currentPath : a.routinePath,
+      outputCollecting : 1,
+      outputGraying : 1,
+      args : [ '.build wrong' ]
+    };
 
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  })
-  a.appStartNonThrowing({ execPath : '.with some .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.module.new some/'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  })
-  a.appStartNonThrowing({ execPath : '.module.new some/' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './some',
-      './some/will.yml',
-      './sub',
-      './sub/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  })
-  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.module.new ../dir1/dir2/some/'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  })
-  a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub',
-      './sub/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = a.find( a.abs( '../dir1' ) );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  })
-  a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
-    return null;
-  })
+    return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
+    .then( ( op ) =>
+    {
+      test.true( o.exitCode !== 0 );
+      test.true( o.output.length >= 1 );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
+      test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
+      return null;
+    });
+  });
 
   /* - */
 
   return a.ready;
 }
+
+buildSubmodules.timeOut = 300000;
 
 //
 
-function commandModuleNewNamed( test )
+function buildOptionWithSubmodules( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'twoExported' )
+  let a = context.assetFor( test, 'buildOptionWithSubmodules' );
+  a.reflect();
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = '.module.new super'
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.with withSubmodulesDef .build';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  });
+  })
 
-  a.appStartNonThrowing({ execPath : '.module.new super' })
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new module::super at' ), 1 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with some .module.new'
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-  a.appStartNonThrowing({ execPath : '.with some .module.new' })
+  a.appStart({ execPath : '.with withSubmodulesDef .build' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './some.will.yml',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with some .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with some/ .module.new'
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-  a.appStartNonThrowing({ execPath : '.with some/ .module.new' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './some',
-      './some/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with some .module.new some2'
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with some .module.new some2' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './some',
-      './some/some2.will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some2 at' ), 1 );
-
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with some/some2 .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some2'` ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.module.new'
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.module.new' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::commandModuleNewNamed at' ), 1 );
-
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with . .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'commandModuleNewNamed'` ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.module.new super/'
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.module.new super/' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './super',
-      './super/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::super at' ), 1 );
-
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with super/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'super'` ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.module.new some';
-    a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.module.new some' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './some.will.yml',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with some .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.module.new some/';
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    return null;
-  });
-  a.appStartNonThrowing({ execPath : '.module.new some/' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './some',
-      './some/will.yml'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
-
-    return null;
-  });
-
-  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    return null;
-  });
+  })
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.module.new ../dir1/dir2/some/';
-    a.reflectMinimal();
-    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
-    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    test.case = '.with withSubmodules2 .build';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  });
+  })
 
-  a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
+  a.appStart({ execPath : '.with withSubmodules2 .build' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    var exp =
-    [
-      '.',
-      './sub.ex.will.yml',
-      './sub.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ];
-    var files = a.find( a.routinePath );
-    test.identical( files, exp );
-
-    var exp =
-    [
-      '.',
-      './dir2',
-      './dir2/some',
-      './dir2/some/will.yml'
-    ];
-    var files = a.find( a.abs( '../dir1' ) );
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
-    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
-    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  });
+  })
 
-  a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with withSubmodules1 .build';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.with withSubmodules1 .build' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
-    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
-    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
-
-    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
-  });
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with withSubmodules0 .build';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.with withSubmodules0 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
 
   /* - */
 
   return a.ready;
 }
 
-commandModuleNewNamed.rapidity = -1;
+buildOptionWithSubmodules.timeOut = 300000;
+
+//
+
+function buildOptionWithSubmodulesExplicitRunOption( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildOptionWithSubmodules' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:0 ; .with withSubmodulesDef .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodulesDef .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:0 ; .with withSubmodules2 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules2 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:0 ; .with withSubmodules1 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules1 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:0 ; .with withSubmodules0 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules0 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:1 ; .with withSubmodulesDef .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodulesDef .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:1 ; .with withSubmodules2 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules2 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:1 ; .with withSubmodules1 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules1 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:1 ; .with withSubmodules0 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules0 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:2 ; .with withSubmodulesDef .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodulesDef .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:2 ; .with withSubmodules2 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules2 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:2 ; .with withSubmodules1 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules1 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withSubmodules:2 ; .with withSubmodules0 .build'
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  })
+
+  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules0 .build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo1' ), 1 );
+
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+buildOptionWithSubmodulesExplicitRunOption.rapidity = -1;
+buildOptionWithSubmodulesExplicitRunOption.timeOut = 300000;
+
+//
+
+function buildDetached( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDetached' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.build';
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.true( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
+    test.true( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#fb7c095a0fdbd6766b0d840ad914b5887c1500e7/ ) );
+    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
+
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting12.informal', 'ModuleForTesting12ab.informal', 'ModuleForTesting2a.informal', 'ModuleForTesting2b' ] );
+
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
+    test.identical( files, [ 'debug', 'ModuleForTesting12.informal.out.will.yml', 'ModuleForTesting12ab.informal.out.will.yml', 'ModuleForTesting2a.informal.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+buildDetached.timeOut = 300000;
 
 //
 
@@ -2136,736 +2533,6 @@ function openEach( test )
 }
 
 openEach.timeOut = 300000;
-
-//
-
-function commandWithMixed( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodulesMixed' );
-  a.reflect();
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.with module .build'
-    return null;
-  })
-
-  a.appStartNonThrowing({ execPath : '.with module .build' })
-  .then( ( op ) =>
-  {
-    test.true( op.exitCode !== 0 );
-    test.true( _.strHas( op.output, 'No module sattisfy criteria.' ) );
-    test.identical( _.strCount( op.output, 'uncaught error' ), 0 );
-    test.identical( _.strCount( op.output, '====' ), 0 );
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.with . .build'
-    return null;
-  })
-
-  a.appStartNonThrowing({ execPath : '.with . .export' })
-  .then( ( op ) =>
-  {
-    test.true( op.exitCode === 0 );
-    test.identical( _.strCount( op.output, /Exported .*module::submodulesMixed \/ build::proto.export.* in/ ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-commandWithMixed.timeOut = 300000;
-
-//
-
-function commandEachMixed( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodulesGit' );
-  a.reflect();
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.each submodule::*/path::download .shell "git status"'
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.build' })
-  a.appStart({ execPath : '.each submodule::*/path::download .shell "git status"' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'git status' ) );
-    /*
-    test.true( _.strHas( op.output, `Your branch is up to date with 'origin/master'.` ) );
-    // no such string on older git
-    */
-    test.identical( _.strCount( op.output, 'git status' ), 1 );
-    test.identical( _.strCount( op.output, 'git "status"' ), 4 );
-    test.identical( _.strCount( op.output, /nothing to commit, working .* clean/ ), 4 );
-
-    test.true( _.strHas( op.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/\.module\/Tools[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/\.module\/PathBasic[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/out\/UriBasic\.informal\.out\.will\.yml[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/out\/UriBasic[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
-    test.true( _.strHas( op.output, /eachMixed\/out\/Proto[^d]/ ) );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.each submodule:: .shell ls'
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.build' })
-  a.appStart({ execPath : '.each submodule:: .shell ls -al' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'ls -al' ), 1 );
-    test.identical( _.strCount( op.output, 'ls "-al"' ), 4 );
-    test.identical( _.strCount( op.output, 'Module at' ), 4 );
-
-    test.identical( _.strCount( op.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'out/Proto.informal.out.will.yml' ), 1 );
-
-    test.identical( _.strCount( op.output, '.module/Tools/out/wTools' ), 2 );
-    test.identical( _.strCount( op.output, '.module/PathBasic/out/wPathBasic' ), 2 );
-    test.identical( _.strCount( op.output, 'out/UriBasic.informal' ), 2 );
-    test.identical( _.strCount( op.output, 'out/Proto.informal' ), 2 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-commandEachMixed.timeOut = 300000;
-
-//
-
-function commandWithList( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'exportWithSubmodules' );
-
-  /* - */
-
-  begin();
-
-  /* */
-
-  a.appStart({ args : '.with . .resources.list about::name' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.with . .resources.list about::name';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-' ), 1 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ args : '.with . .resources.list about::description' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.with . .resources.list about::description';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'Module for testing' ), 1 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ args : '.with . .resources.list path::module.dir' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.with . .resources.list path::module.dir';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath ), 2 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    return a.ready.then( () =>
-    {
-      a.reflectMinimal();
-      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
-      return null;
-    });
-  }
-}
-
-//
-
-function commandEachList( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'eachList' );
-
-  /* - */
-
-  begin();
-
-  /* */
-
-  a.appStart({ args : '.clean' })
-
-  a.appStart({ args : '.each . .resources.list about::name' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.each . .resources.list about::name';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Module at' ), 6 );
-    test.identical( _.strCount( op.output, 'module-' ), 6 );
-
-    test.identical( _.strCount( op.output, 'eachList/.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-x' ), 1 );
-    test.identical( _.strCount( op.output, 'eachList/ab-named.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-ab-named' ), 1 );
-    test.identical( _.strCount( op.output, 'eachList/a.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-a' ), 2 );
-    test.identical( _.strCount( op.output, 'eachList/b.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-b' ), 2 );
-    test.identical( _.strCount( op.output, 'eachList/bc-named.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-bc-named' ), 1 );
-    test.identical( _.strCount( op.output, 'eachList/c.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, 'module-c' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ args : '.imply v:1 ; .each . .resources.list about::name' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.imply v:1 ; .each . .resources.list about::name';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Module at' ), 0 );
-    test.identical( _.strCount( op.output, 'module-' ), 6 );
-    test.identical( _.strLinesCount( op.output ), 8 );
-
-    test.identical( _.strCount( op.output, 'eachList/.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, 'module-x' ), 1 );
-    test.identical( _.strCount( op.output, 'eachList/a.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, 'module-a' ), 2 );
-    test.identical( _.strCount( op.output, 'eachList/ab-named.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, 'module-ab-named' ), 1 );
-    test.identical( _.strCount( op.output, 'eachList/b.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, 'module-b' ), 2 );
-    test.identical( _.strCount( op.output, 'eachList/bc-named.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, 'module-bc-named' ), 1 );
-    test.identical( _.strCount( op.output, 'eachList/c.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, 'module-c' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.imply v:1 ; .each . .resources.list path::module.common';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Module at' ), 0 );
-    test.identical( _.strCount( op.output, a.routinePath ), 6 );
-    test.identical( _.strLinesCount( op.output ), 8 );
-
-    test.identical( _.strCount( op.output, a.routinePath + '/' ), 6 );
-    test.identical( _.strCount( op.output, a.routinePath + '/a' ), 2 );
-    test.identical( _.strCount( op.output, a.routinePath + '/ab-named' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/b' ), 2 );
-    test.identical( _.strCount( op.output, a.routinePath + '/bc-named' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/c' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.imply v:1 ; .each * .resources.list path::module.common';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Module at' ), 0 );
-    test.identical( _.strCount( op.output, a.routinePath ), 6 );
-    test.identical( _.strLinesCount( op.output ), 8 );
-
-    test.identical( _.strCount( op.output, a.routinePath + '/' ), 6 );
-    test.identical( _.strCount( op.output, a.routinePath + '/a' ), 2 );
-    test.identical( _.strCount( op.output, a.routinePath + '/ab-named' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/b' ), 2 );
-    test.identical( _.strCount( op.output, a.routinePath + '/bc-named' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/c' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Module at' ), 0 );
-    test.identical( _.strCount( op.output, a.routinePath ), 9 );
-    test.identical( _.strLinesCount( op.output ), 11 );
-
-    test.identical( _.strCount( op.output, a.routinePath + '/' ), 9 );
-    test.identical( _.strCount( op.output, a.routinePath + '/a' ), 5 );
-    test.identical( _.strCount( op.output, a.routinePath + '/ab-named' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/b' ), 2 );
-    test.identical( _.strCount( op.output, a.routinePath + '/bc-named' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/c' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/aabc' ), 1 );
-    test.identical( _.strCount( op.output, a.routinePath + '/ab' ), 3 );
-    test.identical( _.strCount( op.output, a.routinePath + '/abac' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    return a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.fileRename({ srcPath : a.abs( 'aab' ), dstPath : a.abs( '-aab' ) });
-      return null;
-    });
-  }
-}
-
-commandEachList.timeOut = 300000;
-
-//
-
-function commandEachBrokenIll( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'eachBroken' );
-  a.reflect();
-
-  /* - */
-
-  a.appStartNonThrowing({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
-    test.true( !err );
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Failed to resolve' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-commandEachBrokenIll.description =
-`
-if one or several willfiles are broken .each should pass it and output error
-`;
-
-//
-
-/*
-utility should not try to open non-willfiles
-*/
-
-function commandEachBrokenNon( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'openNonWillfile' );
-  a.reflect();
-
-  /* - */
-
-  a.appStartNonThrowing({ args : '.each */* .paths.list' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.each */* .paths.list';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
-    // test.identical( _.strCount( op.output, 'Module at' ), 1 );
-    test.identical( _.strCount( op.output, 'Paths' ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-/*
-utility should handle properly illformed second command
-tab should not be accumulated in the output
-*/
-
-function commandEachBrokenCommand( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'exportWithSubmodulesFew' );
-  a.reflect();
-  a.fileProvider.filesDelete( a.abs( 'out' ) );
-
-  /* - */
-
-  a.appStartNonThrowing( `.each */* .resource.list path::module.common` );
-  a.ready.then( ( op ) =>
-  {
-    test.case = '.each */* .resource.list path::module.common';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
-    test.identical( _.strCount( op.output, '      ' ), 0 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function etcCommandsSeveral( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'open' );
-  a.reflect();
-  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
-
-  /* - */
-
-  a.appStart( '".with . .export ; .clean"' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .export ; .clean';
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
-    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
-    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
-
-    var exp =
-    [
-      '.',
-      './.ex.will.yml',
-      './.im.will.yml',
-      './doc.ex.will.yml',
-      './doc.im.will.yml',
-      './doc',
-      './doc/.ex.will.yml',
-      './doc/.im.will.yml',
-      './doc/doc.ex.will.yml',
-      './doc/doc.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ]
-    var got = a.find( a.routinePath );
-    test.identical( got, exp );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-} /* end of function etcCommandsSeveral */
-
-etcCommandsSeveral.description =
-`
-- check internal stat of will
-- several commands separated with ";"" should works
-`
-
-//
-
-function commandImplyWithSubmodulesModulesList( test )
-{
-  let context = this;
-  let a = context.assetFor( test, '4LevelsLocal' );
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'default withSubmodules';
-    a.reflect();
-    return null;
-  });
-  a.appStart( '".with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'withSubmodules:0';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:0 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 1 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = 'withSubmodules:1';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:1 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 3 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:2';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:2 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:0';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '.imply withSubmodules:0 .with l4 .modules.list' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 1 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:1';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '.imply withSubmodules:1 .with l4 .modules.list' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 3 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:2';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '.imply withSubmodules:2 .with l4 .modules.list' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-commandImplyWithSubmodulesModulesList.rapidity = -1;
-commandImplyWithSubmodulesModulesList.description =
-`
-- imply withSubmodules:0 cause to open no submodules
-- imply withSubmodules:1 cause to open only submodules of the main module
-- imply withSubmodules:2 cause to open all submodules recursively
-- no error are thowen
-`
 
 // --
 // reflect
@@ -5235,243 +4902,10 @@ function reflectorOptionStepThrowing( test )
 }
 
 // --
-// with do
+// hook
 // --
 
-function commandWithDoInfo( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'dos' );
-  a.reflect();
-
-  /* - */
-
-  a.appStart( '.clean' );
-  a.appStart( '.export' )
-  .then( ( op ) =>
-  {
-    test.case = 'setup';
-    a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
-
-    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.hook.call info.js' )
-  .then( ( op ) =>
-  {
-    test.case = '.hook.call info.js';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( op.output, 'local :' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with . .hook.call info.js' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .hook.call info.js';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( op.output, 'local :' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with * .hook.call info.js' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .hook.call info.js';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( op.output, 'local :' ), 1 );
-    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with ** .hook.call info.js' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .hook.call info.js';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    // test.identical( _.strCount( op.output, 'local :' ), 7 );
-    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
-  .then( ( op ) =>
-  {
-    test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 0 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( op.output, 'local :' ), 7 );
-    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
-  .then( ( op ) =>
-  {
-    test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( op.output, 'local :' ), 4 );
-    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-commandWithDoInfo.rapidity = -1;
-commandWithDoInfo.timeOut = 300000;
-commandWithDoInfo.description =
-`
-- do execute js script
-- filtering option withIn works
-- filtering option withOut works
-- only one attempt to open outdate outfile
-- action info works properly
-- message with time printed afterwards
-`
-
-//
-
-function commandWithDoStatus( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'dos' );
-
-  /* - */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    test.case = 'setup';
-    a.reflect();
-    a.shell({ execPath : 'git init', currentPath : a.abs( 'disabled' ) });
-
-    return null;
-  });
-
-  /* - */
-
-  a.appStart( '.clean' );
-  a.appStart( '.export' )
-  .then( ( op ) =>
-  {
-    test.case = 'setup';
-
-    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.hooks.list' )
-  .then( ( op ) =>
-  {
-    test.case = 'hooks list';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '/status.js' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with ** .do ./.will/hook/status.js' )
-  .then( ( op ) =>
-  {
-    test.case = 'no changes';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 0 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'changes';
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/Readme.md' ), '\n' );
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/Readme.md' ), '\n' );
-    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/License' ), '\n' );
-    return null;
-  });
-
-  a.appStart( '.with ** .do ./.will/hook/status.js' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( op.output, '! Outdated' ), 0 );
-    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( op.output, /module::\w+ at / ), 3 );
-    test.identical( _.strCount( op.output, 'module at' ), 2 );
-
-    test.identical( _.strCount( op.output, 'M ' ), 3 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-commandWithDoStatus.rapidity = -1;
-commandWithDoStatus.timeOut = 300000;
-commandWithDoStatus.description =
-`
-- it.shell exposed for action
-- it.shell has proper current path
-- errorors are brief
-`
-
-//
-
-function commandWithDoCommentOut( test )
+function hookCommentOut( test )
 {
   let context = this;
   let a = context.assetFor( test, 'dos' );
@@ -5519,8 +4953,8 @@ function commandWithDoCommentOut( test )
   return a.ready;
 }
 
-commandWithDoCommentOut.timeOut = 300000;
-commandWithDoCommentOut.description =
+hookCommentOut.timeOut = 300000;
+hookCommentOut.description =
 `
 - commenting out works
 - arguments passing to action works
@@ -7736,126 +7170,6 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
-function commandImplyWithDot( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( '.clone/File.txt' ), 'new line\n' );
-    return null;
-  });
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
-  .then( ( op ) =>
-  {
-    test.case = '.with .clone/ .git.status - only local commits';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.clone' ) });
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( '.clone' );
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    return a.ready;
-  }
-}
-
-//
-
-function commandImplyWithAsterisk( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( '.module/File.txt' ), 'new line\n' );
-    return null;
-  })
-
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/* .call GitStatus' )
-  .then( ( op ) =>
-  {
-    test.case = '.with module .git.status - only local commits';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
-    return null;
-  })
-
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/** .call GitStatus' )
-  .then( ( op ) =>
-  {
-    test.case = '.with module .git.status - only local commits';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 7 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 7 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.module' ) });
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( '.module' )
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    return a.ready;
-  }
-}
-
-//
-
 function verbositySet( test )
 {
   let context = this;
@@ -9139,94 +8453,6 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
 //
 
-function etcHelp( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'single' ); /* Dmytro : uses real asset to prevent exception */
-  // let a = context.assetFor( test, '' );
-  /* Dmytro : not needs currentPath in starter */
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    throwingExitCode : 0,
-  })
-
-  /* */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    test.case = 'simple run without args'
-    return null;
-  })
-
-  a.appStart( '' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 1 );
-    test.true( op.output.length >= 1 );
-    test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( ( op ) =>
-  {
-    test.case = 'simple run without args'
-    return null;
-  })
-
-  a.appStart( '.' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 1 );
-    test.true( op.output.length >= 1 );
-    test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
-    return null;
-  })
-
-  /* */
-
-  a.appStart({ execPath : '.help' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.ge( _.strLinesCount( op.output ), 24 );
-    return op;
-  })
-
-  /* */
-
-  a.appStart({ execPath : '.' })
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    test.ge( _.strLinesCount( op.output ), 24 );
-    return op;
-  })
-
-  /* */
-
-  a.appStart({ args : [] })
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    test.ge( _.strLinesCount( op.output ), 24 );
-    return op;
-  })
-
-  return a.ready;
-}
-
-//
-
 function listSingleModule( test )
 {
   let context = this;
@@ -9781,742 +9007,6 @@ function listSteps( test )
 
   return a.ready;
 }
-
-// --
-// build
-// --
-
-function buildSingleModule( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'single' );
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.build'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.build' })
-
-  .then( ( op ) =>
-  {
-
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
-    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.true( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
-
-    var files = a.find( a.abs( 'out/debug' ) );
-    test.identical( files, [ '.', './Single.s' ] );
-
-    return null;
-  })
-
-  /* - */
-
-  .then( () =>
-  {
-    test.case = '.build debug.raw'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.build debug.raw' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
-    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.true( _.strHas( op.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
-
-    var files = a.find( a.abs( 'out/debug' ) );
-    test.identical( files, [ '.', './Single.s' ] );
-
-    return null;
-  })
-
-  /* - */
-
-  .then( () =>
-  {
-    test.case = '.build release.raw'
-    a.fileProvider.filesDelete( a.abs( 'out/release' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.build release.raw' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Building .*module::single \/ build::release\.raw.*/ ) );
-    test.true( _.strHas( op.output, 'reflected 2 file(s)' ) );
-    test.true( _.strHas( op.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
-
-    var files = a.find( a.abs( 'out/debug' ) );
-    test.identical( files, [ '.', './Single.s' ] );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.build wrong'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out/release' ) );
-    var o =
-    {
-      args : [ '.build wrong' ],
-      ready : null,
-    }
-    return test.shouldThrowErrorOfAnyKind( () => a.appStart( o ) )
-    .then( ( op ) =>
-    {
-      test.true( o.exitCode !== 0 );
-      test.true( o.output.length >= 1 );
-      test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) )
-      test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) )
-
-      return null;
-    })
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function buildSingleStep( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'stepShell' );
-  a.reflect();
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.build debug1'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.build debug1' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.build debug2'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.build debug2' })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function buildSubmodules( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodules' );
-  a.reflectMinimal();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'build withoud submodules';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  });
-
-  a.appStart({ execPath : '.build' })
-  .finally( ( err, op ) =>
-  {
-    test.true( !err );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    var files = a.find( a.abs( 'out' ) );
-    test.gt( files.length, 10 );
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ execPath : '.submodules.update' })
-  .then( () =>
-  {
-    test.case = '.build';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  });
-
-  a.appStart({ execPath : '.build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
-    var files = a.find( a.abs( 'out' ) );
-    test.gt( files.length, 10 );
-    return null;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.build wrong';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  });
-
-  a.ready.then( () =>
-  {
-    var o =
-    {
-      execPath : 'node ' + context.appJsPath,
-      currentPath : a.routinePath,
-      outputCollecting : 1,
-      outputGraying : 1,
-      args : [ '.build wrong' ]
-    };
-
-    return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
-    .then( ( op ) =>
-    {
-      test.true( o.exitCode !== 0 );
-      test.true( o.output.length >= 1 );
-      test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
-      test.true( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
-      test.true( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
-      return null;
-    });
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-buildSubmodules.timeOut = 300000;
-
-//
-
-function buildOptionWithSubmodules( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'buildOptionWithSubmodules' );
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with withSubmodulesDef .build';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.with withSubmodulesDef .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with withSubmodules2 .build';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.with withSubmodules2 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with withSubmodules1 .build';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.with withSubmodules1 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with withSubmodules0 .build';
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.with withSubmodules0 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-buildOptionWithSubmodules.timeOut = 300000;
-
-//
-
-function buildOptionWithSubmodulesExplicitRunOption( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'buildOptionWithSubmodules' );
-  a.reflect();
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:0 ; .with withSubmodulesDef .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodulesDef .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:0 ; .with withSubmodules2 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules2 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:0 ; .with withSubmodules1 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules1 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:0 ; .with withSubmodules0 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules0 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:1 ; .with withSubmodulesDef .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodulesDef .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:1 ; .with withSubmodules2 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules2 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:1 ; .with withSubmodules1 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules1 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:1 ; .with withSubmodules0 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules0 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 0 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:2 ; .with withSubmodulesDef .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodulesDef .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:2 ; .with withSubmodules2 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules2 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:2 ; .with withSubmodules1 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules1 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.imply withSubmodules:2 ; .with withSubmodules0 .build'
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
-    return null;
-  })
-
-  a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules0 .build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l2.will.yml' ), 1 );
-    test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-buildOptionWithSubmodulesExplicitRunOption.rapidity = -1;
-buildOptionWithSubmodulesExplicitRunOption.timeOut = 300000;
-
-//
-
-function buildDetached( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodulesDetached' );
-  a.reflect();
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.build';
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.build' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.true( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
-    test.true( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
-    test.true( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
-    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#fb7c095a0fdbd6766b0d840ad914b5887c1500e7/ ) );
-    test.true( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
-
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting12.informal', 'ModuleForTesting12ab.informal', 'ModuleForTesting2a.informal', 'ModuleForTesting2b' ] );
-
-    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
-    test.identical( files, [ 'debug', 'ModuleForTesting12.informal.out.will.yml', 'ModuleForTesting12ab.informal.out.will.yml', 'ModuleForTesting2a.informal.out.will.yml' ] );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-buildDetached.timeOut = 300000;
 
 // --
 // export
@@ -23189,6 +21679,1232 @@ submodulesVersionsAgreeNpm.timeOut = 300000;
 
 //
 
+function submodulesUpgradeDryDetached( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDetached' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.submodules.upgrade dry:1 negative:1 -- after full update';
+    return null;
+  });
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:1 negative:0 -- after full update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:1 negative:1 -- after informal update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.each module .export' })
+  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:1 negative:1 -- after formal update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.submodules.update' })
+  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+
+    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+submodulesUpgradeDryDetached.timeOut = 500000;
+
+//
+
+function submodulesUpgradeDetached( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDetached' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
+    a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:0 -- after full update';
+
+    a.reflect();
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:1 -- after full update, second';
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:0 -- after full update, second';
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths/ ), 0 );
+    test.identical( _.strCount( op.output, /was upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /will be upgraded/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was skipped/ ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:1 -- after informal update';
+
+    a.reflect();
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.each module .export' })
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:1 -- after formal update';
+
+    a.reflect();
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.submodules.update' })
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+submodulesUpgradeDetached.timeOut = 500000;
+
+//
+
+function submodulesUpgradeDetachedExperiment( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDetachedSingle' );
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:1 -- after download';
+    a.reflect();
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.download' })
+  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 1 );
+
+    return null;
+  })
+
+  return a.ready;
+}
+
+submodulesUpgradeDetachedExperiment.experimental = 1;
+
+//
+
+function submodulesFixateDryDetached( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDetached' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:1 negative:1 -- after full update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:1 negative:0 -- after full update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.fixate dry:1 negative:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:1 negative:1 -- after informal update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.each module .export' })
+  a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:1 negative:1 -- after formal update';
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.submodules.update' })
+  a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+submodulesFixateDryDetached.timeOut = 500000;
+
+//
+
+function submodulesFixateDetached( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDetached' );
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:0 negative:1 -- after full update';
+    a.reflect();
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:0 negative:0 -- after full update';
+
+    a.reflect();
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.submodules.fixate dry:0 negative:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:0 negative:1 -- after full update, second';
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:0 negative:0 -- after full update, second';
+    return null;
+  })
+
+  a.appStart({ execPath : '.submodules.fixate dry:0 negative:0' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths/ ), 0 );
+    test.identical( _.strCount( op.output, /was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /will be fixated/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:0 negative:1 -- after informal update';
+
+    a.reflect();
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.each module .export' })
+  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.submodules.fixate dry:0 negative:1 -- after formal update';
+
+    a.reflect();
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+    return null;
+  })
+
+  a.appStart({ execPath : '.clean' })
+  a.appStart({ execPath : '.submodules.update' })
+  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
+
+    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+submodulesFixateDetached.timeOut = 500000;
+
+//
+
 function stepSubmodulesDownload( test )
 {
   let context = this;
@@ -26262,244 +25978,958 @@ function stepGitTag( test )
 
 stepGitTag.rapidity = -1;
 
-//
+// --
+// command
+// --
 
-function submodulesUpgradeDryDetached( test )
+function commandHelp( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesDetached' );
-  a.reflect();
+  let a = context.assetFor( test, 'single' );
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'simple run without args';
+    return null;
+  });
+
+  a.appStart( '' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 1 );
+    test.true( op.output.length >= 1 );
+    test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'simple run without args'
+    return null;
+  });
+
+  a.appStart( '.' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 1 );
+    test.true( op.output.length >= 1 );
+    test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
+    test.ge( _.strLinesCount( op.output ), 24 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.help' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.ge( _.strLinesCount( op.output ), 24 );
+    return op;
+  });
+
+  /* */
+
+  a.appStart({ args : [] })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.ge( _.strLinesCount( op.output ), 24 );
+    return op;
+  });
+
+  return a.ready;
+}
+
+//
+
+function commandModuleNewDotless( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'twoDotlessExported' );
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+  a.appStartNonThrowing({ execPath : '.module.new', currentPath : a.routinePath })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotless at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new some'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new some' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './some.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.with some .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new some/'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new some/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new ../dir1/dir2/some/'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
+    var files = a.find( a.abs( '../dir1' ) );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandModuleNewDotlessSingle( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'twoDotlessSingleExported' );
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new' })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::commandModuleNewDotlessSingle at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new some'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new some' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './some.will.yml',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.with some .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new some/'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new some/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml',
+      './sub',
+      './sub/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = '.module.new ../dir1/dir2/some/'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
+    var files = a.find( a.abs( '../dir1' ) );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandModuleNewNamed( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'twoExported' )
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = '.submodules.upgrade dry:1 negative:1 -- after full update';
+    test.case = '.module.new super'
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  a.appStartNonThrowing({ execPath : '.module.new super' })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new module::super at' ), 1 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 1 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with some .module.new'
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+  a.appStartNonThrowing({ execPath : '.with some .module.new' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './some.will.yml',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with some .about.list' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with some/ .module.new'
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+  a.appStartNonThrowing({ execPath : '.with some/ .module.new' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with some .module.new some2'
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with some .module.new some2' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/some2.will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some2 at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with some/some2 .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some2'` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.module.new'
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.module.new' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::commandModuleNewNamed at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with . .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'commandModuleNewNamed'` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.module.new super/'
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.module.new super/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './super',
+      './super/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::super at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with super/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'super'` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.module.new some';
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.module.new some' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './some.will.yml',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with some .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.module.new some/';
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    return null;
+  });
+  a.appStartNonThrowing({ execPath : '.module.new some/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with some/ .about.list' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
+
+    return null;
+  });
 
   /* - */
 
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.upgrade dry:1 negative:0 -- after full update';
+    test.case = '.module.new ../dir1/dir2/some/';
+    a.reflectMinimal();
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:0' })
+  a.appStartNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var files = a.find( a.routinePath );
+    test.identical( files, exp );
+
+    var exp =
+    [
+      '.',
+      './dir2',
+      './dir2/some',
+      './dir2/some/will.yml'
+    ];
+    var files = a.find( a.abs( '../dir1' ) );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( op.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( op.output, 'Create module::some at' ), 1 );
+
+    return null;
+  });
+
+  a.appStartNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
+    test.identical( _.strCount( op.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught error' ), 0 );
+    test.identical( _.strCount( op.output, `name : 'some'` ), 1 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
+    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:1 negative:1 -- after informal update';
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.each module .export' })
-  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:1 negative:1 -- after formal update';
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.update' })
-  a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
-
-    // test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 0 );
-
-    return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 }
 
-submodulesUpgradeDryDetached.timeOut = 500000;
+commandModuleNewNamed.rapidity = -1;
 
 //
 
-function submodulesUpgradeDetached( test )
+function commandWithMixed( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesDetached' );
+  let a = context.assetFor( test, 'submodulesMixed' );
   a.reflect();
 
   /* - */
@@ -26507,54 +26937,17 @@ function submodulesUpgradeDetached( test )
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
-    a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    test.case = '.with module .build'
     return null;
   })
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  a.appStartNonThrowing({ execPath : '.with module .build' })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 1 );
-
+    test.true( op.exitCode !== 0 );
+    test.true( _.strHas( op.output, 'No module sattisfy criteria.' ) );
+    test.identical( _.strCount( op.output, 'uncaught error' ), 0 );
+    test.identical( _.strCount( op.output, '====' ), 0 );
     return null;
   })
 
@@ -26563,288 +26956,15 @@ function submodulesUpgradeDetached( test )
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.upgrade dry:0 negative:0 -- after full update';
-
-    a.reflect();
-    // a.fileProvider.filesDelete({ filePath : routinePath })
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
+    test.case = '.with . .build'
     return null;
   })
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  a.appStartNonThrowing({ execPath : '.with . .export' })
   .then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:0 negative:1 -- after full update, second';
-    return null;
-  })
-
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:0 negative:0 -- after full update, second';
-    return null;
-  })
-
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:0' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths/ ), 0 );
-    test.identical( _.strCount( op.output, /was upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /will be upgraded/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was skipped/ ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:0 negative:1 -- after informal update';
-
-    a.reflect();
-    // a.fileProvider.filesDelete({ filePath : routinePath })
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.each module .export' })
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:0 negative:1 -- after formal update';
-
-    a.reflect();
-    // a.fileProvider.filesDelete({ filePath : routinePath })
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.update' })
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#fb7c095a0fdbd6766b0d840ad914b5887c1500e7.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#2da1d0de20bd23f6f32c11bda090569edd90da55.*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was upgraded/ ), 0 );
-
+    test.true( op.exitCode === 0 );
+    test.identical( _.strCount( op.output, /Exported .*module::submodulesMixed \/ build::proto.export.* in/ ), 1 );
     return null;
   })
 
@@ -26853,53 +26973,14 @@ function submodulesUpgradeDetached( test )
   return a.ready;
 }
 
-submodulesUpgradeDetached.timeOut = 500000;
+commandWithMixed.timeOut = 300000;
 
 //
 
-function submodulesUpgradeDetachedExperiment( test )
+function commandEachMixed( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesDetachedSingle' );
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.upgrade dry:0 negative:1 -- after download';
-    a.reflect();
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-    return null;
-  })
-
-  a.appStart({ execPath : '.submodules.download' })
-  a.appStart({ execPath : '.submodules.upgrade dry:0 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 1 );
-
-    return null;
-  })
-
-  return a.ready;
-}
-
-submodulesUpgradeDetachedExperiment.experimental = 1;
-
-//
-
-function submodulesFixateDryDetached( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodulesDetached' );
+  let a = context.assetFor( test, 'submodulesGit' );
   a.reflect();
 
   /* - */
@@ -26907,52 +26988,34 @@ function submodulesFixateDryDetached( test )
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.fixate dry:1 negative:1 -- after full update';
+    test.case = '.each submodule::*/path::download .shell "git status"'
     return null;
   })
 
   a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
+  a.appStart({ execPath : '.build' })
+  a.appStart({ execPath : '.each submodule::*/path::download .shell "git status"' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'git status' ) );
+    /*
+    test.true( _.strHas( op.output, `Your branch is up to date with 'origin/master'.` ) );
+    // no such string on older git
+    */
+    test.identical( _.strCount( op.output, 'git status' ), 1 );
+    test.identical( _.strCount( op.output, 'git "status"' ), 4 );
+    test.identical( _.strCount( op.output, /nothing to commit, working .* clean/ ), 4 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 1 );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/Tools[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/\.module\/PathBasic[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/UriBasic\.informal\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/UriBasic[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
+    test.true( _.strHas( op.output, /eachMixed\/out\/Proto[^d]/ ) );
 
     return null;
   })
@@ -26962,160 +27025,30 @@ function submodulesFixateDryDetached( test )
   a.ready
   .then( () =>
   {
-    test.case = '.submodules.fixate dry:1 negative:0 -- after full update';
-    return null;
-  })
-
-  a.appStart({ execPath : '.submodules.fixate dry:1 negative:0' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.fixate dry:1 negative:1 -- after informal update';
+    test.case = '.each submodule:: .shell ls'
     return null;
   })
 
   a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.each module .export' })
-  a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
+  a.appStart({ execPath : '.build' })
+  a.appStart({ execPath : '.each submodule:: .shell ls -al' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( op.output, 'ls -al' ), 1 );
+    test.identical( _.strCount( op.output, 'ls "-al"' ), 4 );
+    test.identical( _.strCount( op.output, 'Module at' ), 4 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
+    test.identical( _.strCount( op.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'out/Proto.informal.out.will.yml' ), 1 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.fixate dry:1 negative:1 -- after formal update';
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.update' })
-  a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* won't be fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* will be fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be fixated/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* won't be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* will be fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, '.module/Tools/out/wTools' ), 2 );
+    test.identical( _.strCount( op.output, '.module/PathBasic/out/wPathBasic' ), 2 );
+    test.identical( _.strCount( op.output, 'out/UriBasic.informal' ), 2 );
+    test.identical( _.strCount( op.output, 'out/Proto.informal' ), 2 );
 
     return null;
   })
@@ -27125,358 +27058,229 @@ function submodulesFixateDryDetached( test )
   return a.ready;
 }
 
-submodulesFixateDryDetached.timeOut = 500000;
+commandEachMixed.timeOut = 300000;
 
 //
 
-function submodulesFixateDetached( test )
+function commandWithList( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'submodulesDetached' );
+  let a = context.assetFor( test, 'exportWithSubmodules' );
 
   /* - */
 
-  a.ready
-  .then( () =>
-  {
-    test.case = '.submodules.fixate dry:0 negative:1 -- after full update';
-    a.reflect();
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-    return null;
-  })
+  begin();
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
-  .then( ( op ) =>
+  /* */
+
+  a.appStart({ args : '.with . .resources.list about::name' })
+  .finally( ( err, op ) =>
   {
+    test.case = '.with . .resources.list about::name';
+    test.true( !err );
     test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 1 );
-
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-' ), 1 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     return null;
-  })
+  });
+
+  /* */
+
+  a.appStart({ args : '.with . .resources.list about::description' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.with . .resources.list about::description';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'Module for testing' ), 1 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with . .resources.list path::module.dir' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.with . .resources.list path::module.dir';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'commandWithList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath ), 2 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    return null;
+  });
 
   /* - */
 
-  a.ready
-  .then( () =>
+  return a.ready;
+
+  /* */
+
+  function begin()
   {
-    test.case = '.submodules.fixate dry:0 negative:0 -- after full update';
+    return a.ready.then( () =>
+    {
+      a.reflectMinimal();
+      a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
+      return null;
+    });
+  }
+}
 
-    a.reflect();
-    // a.fileProvider.filesDelete({ filePath : routinePath })
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//
 
-    return null;
-  })
+function commandEachList( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'eachList' );
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.submodules.fixate dry:0 negative:0' })
-  .then( ( op ) =>
+  /* - */
+
+  begin();
+
+  /* */
+
+  a.appStart({ args : '.clean' })
+
+  a.appStart({ args : '.each . .resources.list about::name' })
+  .finally( ( err, op ) =>
   {
+    test.case = '.each . .resources.list about::name';
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Module at' ), 6 );
+    test.identical( _.strCount( op.output, 'module-' ), 6 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-x' ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/ab-named.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-ab-named' ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/a.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-a' ), 2 );
+    test.identical( _.strCount( op.output, 'eachList/b.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-b' ), 2 );
+    test.identical( _.strCount( op.output, 'eachList/bc-named.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-bc-named' ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/c.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, 'module-c' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.appStart({ args : '.imply v:1 ; .each . .resources.list about::name' })
+  .finally( ( err, op ) =>
   {
-    test.case = '.submodules.fixate dry:0 negative:1 -- after full update, second';
-    return null;
-  })
-
-  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
-  .then( ( op ) =>
-  {
+    test.case = '.imply v:1 ; .each . .resources.list about::name';
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Module at' ), 0 );
+    test.identical( _.strCount( op.output, 'module-' ), 6 );
+    test.identical( _.strLinesCount( op.output ), 8 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'module-x' ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/a.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'module-a' ), 2 );
+    test.identical( _.strCount( op.output, 'eachList/ab-named.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'module-ab-named' ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/b.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'module-b' ), 2 );
+    test.identical( _.strCount( op.output, 'eachList/bc-named.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'module-bc-named' ), 1 );
+    test.identical( _.strCount( op.output, 'eachList/c.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'module-c' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.appStart({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
+  .finally( ( err, op ) =>
   {
-    test.case = '.submodules.fixate dry:0 negative:0 -- after full update, second';
-    return null;
-  })
-
-  a.appStart({ execPath : '.submodules.fixate dry:0 negative:0' })
-  .then( ( op ) =>
-  {
+    test.case = '.imply v:1 ; .each . .resources.list path::module.common';
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths/ ), 0 );
-    test.identical( _.strCount( op.output, /was fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /will be fixated/ ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Module at' ), 0 );
+    test.identical( _.strCount( op.output, a.routinePath ), 6 );
+    test.identical( _.strLinesCount( op.output ), 8 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, a.routinePath + '/' ), 6 );
+    test.identical( _.strCount( op.output, a.routinePath + '/a' ), 2 );
+    test.identical( _.strCount( op.output, a.routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/b' ), 2 );
+    test.identical( _.strCount( op.output, a.routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/c' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.appStart({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
+  .finally( ( err, op ) =>
   {
-    test.case = '.submodules.fixate dry:0 negative:1 -- after informal update';
-
-    a.reflect();
-    // a.fileProvider.filesDelete({ filePath : routinePath })
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.each module .export' })
-  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
-  .then( ( op ) =>
-  {
+    test.case = '.imply v:1 ; .each * .resources.list path::module.common';
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Module at' ), 0 );
+    test.identical( _.strCount( op.output, a.routinePath ), 6 );
+    test.identical( _.strLinesCount( op.output ), 8 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/' ), 6 );
+    test.identical( _.strCount( op.output, a.routinePath + '/a' ), 2 );
+    test.identical( _.strCount( op.output, a.routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/b' ), 2 );
+    test.identical( _.strCount( op.output, a.routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/c' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.appStart({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  .finally( ( err, op ) =>
   {
-    test.case = '.submodules.fixate dry:0 negative:1 -- after formal update';
-
-    a.reflect();
-    // a.fileProvider.filesDelete({ filePath : routinePath })
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-    return null;
-  })
-
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.update' })
-  a.appStart({ execPath : '.submodules.fixate dry:0 negative:1' })
-  .then( ( op ) =>
-  {
+    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
+    test.true( !err );
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Module at' ), 0 );
+    test.identical( _.strCount( op.output, a.routinePath ), 9 );
+    test.identical( _.strLinesCount( op.output ), 11 );
 
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting1a.* was not fixated/ ), 1 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting12ab.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* was fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was fixated/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::Proto.* was not fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( op.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
-
-    test.identical( _.strCount( op.output, /Remote paths of .*module::submodulesDetached \/ relation::ModuleForTesting2b.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* was fixated/ ), 0 );
-    test.identical( _.strCount( op.output, /\+ .*fixateDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( op.output, a.routinePath + '/' ), 9 );
+    test.identical( _.strCount( op.output, a.routinePath + '/a' ), 5 );
+    test.identical( _.strCount( op.output, a.routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/b' ), 2 );
+    test.identical( _.strCount( op.output, a.routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/c' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/aabc' ), 1 );
+    test.identical( _.strCount( op.output, a.routinePath + '/ab' ), 3 );
+    test.identical( _.strCount( op.output, a.routinePath + '/abac' ), 1 );
 
     return null;
   })
@@ -27484,463 +27288,726 @@ function submodulesFixateDetached( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.fileRename({ srcPath : a.abs( 'aab' ), dstPath : a.abs( '-aab' ) });
+      return null;
+    });
+  }
 }
 
-submodulesFixateDetached.timeOut = 500000;
+commandEachList.timeOut = 300000;
+
+//
+
+function commandEachBrokenIll( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'eachBroken' );
+  a.reflect();
+
+  /* - */
+
+  a.appStartNonThrowing({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
+    test.true( !err );
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Failed to resolve' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+commandEachBrokenIll.description =
+`
+if one or several willfiles are broken .each should pass it and output error
+`;
 
 //
 
 /*
-  etcRunWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
+utility should not try to open non-willfiles
 */
 
-function etcRunWillbe( test )
+function commandEachBrokenNon( test )
 {
-
   let context = this;
-  let a = context.assetFor( test, 'runWillbe' );
-
-  a.fork = _.process.starter
-  ({
-    // execPath : 'node',
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'fork',
-  });
-  a.appStart = _.process.starter
-  ({
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-    mode : 'shell',
-  });
+  let a = context.assetFor( test, 'openNonWillfile' );
+  a.reflect();
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.appStartNonThrowing({ args : '.each */* .paths.list' })
+  .finally( ( err, op ) =>
   {
-    a.reflect();
-    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    test.case = '.each */* .paths.list';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
+    // test.identical( _.strCount( op.output, 'Module at' ), 1 );
+    test.identical( _.strCount( op.output, 'Paths' ), 1 );
     return null;
   })
 
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'execUnrestricted: terminate utility during heavy load of will files, should be terminated';
-    let o = { args : [ a.path.nativize( a.abs( __dirname, '../will/ExecUnrestricted' ) ), '.submodules.list' ], ready : null };
-
-    let con = a.fork( o );
-
-    o.pnd.stdout.on( 'data', ( data ) =>
-    {
-      if( _.bufferAnyIs( data ) )
-      data = _.bufferToStr( data );
-      if( _.strHas( data, 'wTools.out.will.yml' ) )
-      {
-        console.log( 'Terminating willbe...' );
-        o.pnd.kill( 'SIGINT' )
-        // o.pnd.stdin.write( '\x03\n' ); /* CTRL+C */
-        // o.pnd.stdin.write( '~^C\n' ); /* CTRL+C */
-      }
-    });
-
-    return test.shouldThrowErrorAsync( con )
-    .then( () =>
-    {
-      if( process.platform === 'win32' )
-      test.identical( o.exitCode, null );
-      else
-      test.identical( o.exitCode, 255 );
-      test.identical( o.exitSignal, 'SIGINT' );
-      test.true( _.strHas( o.output, 'wTools.out.will.yml' ) );
-      test.true( !_.strHas( o.output, 'wLogger.out.will.yml' ) );
-      test.true( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
-      test.true( !_.strHas( o.output, 'wConsequence.out.will.yml' ) );
-      test.true( !_.strHas( o.output, 'wInstancing.out.will.yml' ) );
-
-      return null;
-    })
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'Exec: terminate utility during heavy load of will files, should fail'
-    let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
-    let con = a.appStart( o );
-
-    o.pnd.stdout.on( 'data', ( data ) =>
-    {
-      if( _.bufferAnyIs( data ) )
-      data = _.bufferToStr( data );
-      if( _.strHas( data, 'wTools.out.will.yml' ) )
-      {
-        console.log( 'Terminating willbe...' );
-        // o.pnd.kill( 'SIGTERM' );
-        // o.pnd.kill( 'SIGINT' );
-        o.pnd.kill( 'SIGINT' );
-        // o.pnd.kill( 'SIGKILL' );
-      }
-    });
-
-    return test.shouldThrowErrorAsync( con )
-    .then( () =>
-    {
-      if( process.platform === 'win32' )
-      test.identical( o.exitCode, null );
-      else
-      test.identical( o.exitCode, 255 );
-      test.identical( o.exitSignal, 'SIGINT' );
-      test.true( _.strHas( o.output, 'module::runWillbe / submodule::Tools' ) );
-      test.true( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
-      test.true( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
-      return null;
-    })
-
-  })
-
-  /* */
-
-  return a.ready;
-}
-
-//
-
-function etcKillWillbe( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  let con = _.take( null );
-  a.reflect();
-
-  /* */
-
-  con.then( () =>
-  {
-    test.case = 'kill willbe without signal';
-    var o =
-    {
-      execPath : _.Will.WillPathGet() + ' .build',
-      currentPath : a.routinePath,
-      outputCollecting : 1,
-      throwingExitCode : 0,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'fork',
-    };
-    var result = _.process.start( o );
-    o.pnd.stdout.on( 'data', ( data ) =>
-    {
-      console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill() );
-    });
-
-    return a.ready.then( ( op ) =>
-    {
-      test.notIdentical( op.exitCode, 0 );
-      test.identical( op.exitReason, 'signal' );
-      test.identical( op.exitSignal, 'SIGTERM' );
-
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
-      if( !process.platform === 'win32' )
-      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
-
-      return null;
-    });
-  });
-
-  /* */
-
-  con.then( () =>
-  {
-    test.case = 'kill willbe with signal SIGTERM';
-    var o =
-    {
-      execPath : _.Will.WillPathGet() + ' .build',
-      currentPath : a.routinePath,
-      outputCollecting : 1,
-      throwingExitCode : 0,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'fork',
-    };
-    var result = _.process.start( o );
-    o.pnd.stdout.on( 'data', ( data ) =>
-    {
-      console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGTERM') );
-    });
-
-    return a.ready.then( ( op ) =>
-    {
-      test.notIdentical( op.exitCode, 0 );
-      test.identical( op.exitReason, 'signal' );
-      test.identical( op.exitSignal, 'SIGTERM' );
-
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
-      if( !process.platform === 'win32' )
-      test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
-
-      return null;
-    });
-  });
-
-  /* */
-
-  con.then( () =>
-  {
-    test.case = 'kill willbe with signal SIGKILL';
-    var o =
-    {
-      execPath : _.Will.WillPathGet() + ' .build',
-      currentPath : a.routinePath,
-      outputCollecting : 1,
-      throwingExitCode : 0,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'fork',
-    };
-    var result = _.process.start( o );
-    o.pnd.stdout.on( 'data', ( data ) =>
-    {
-      console.log( 'Terminating willbe... SIGKILL' );
-      o.pnd.kill( 'SIGKILL' );
-    });
-
-    return a.ready.then( ( op ) =>
-    {
-      test.notIdentical( op.exitCode, 0 );
-      test.identical( op.exitReason, 'signal' );
-      test.identical( op.exitSignal, 'SIGKILL' );
-
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 0 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
-      if( !process.platform === 'win32' )
-      test.ge( _.strCount( op.output, 'SIGKILL' ), 1 );
-
-      return null;
-    });
-  });
-
-  /* */
-
-  con.then( () =>
-  {
-    test.case = 'kill willbe with signal SIGINT';
-    var o =
-    {
-      execPath : _.Will.WillPathGet() + ' .build',
-      currentPath : a.routinePath,
-      outputCollecting : 1,
-      throwingExitCode : 0,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'fork',
-    };
-    var result = _.process.start( o );
-    o.pnd.stdout.on( 'data', ( data ) =>
-    {
-      console.log( 'Terminating willbe... SIGINT' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGINT' ) );
-    });
-
-    return a.ready.then( ( op ) =>
-    {
-      test.notIdentical( op.exitCode, 0 );
-      test.identical( op.exitReason, 'signal' );
-      test.identical( op.exitSignal, 'SIGINT' );
-
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
-      if( !process.platform === 'win32' )
-      test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
-
-      return null;
-    });
-  });
-
   /* - */
 
-  return con;
-}
-
-//
-
-function etcRunDebugWill( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  let con = _.take( null );
-  a.reflect();
-
-  /* */
-
-  con.then( () =>
-  {
-    test.case = 'debug-will .help';
-
-    var debugWillPath = a.abs( a.path.dir( _.Will.WillPathGet() ), 'ExecDebug' );
-    var o =
-    {
-      execPath : debugWillPath + ' .help',
-      currentPath : a.routinePath,
-      outputCollecting : 1,
-      throwingExitCode : 0,
-      outputGraying : 1,
-      ready : a.ready,
-      mode : 'fork',
-    };
-    _.process.start( o );
-
-    return a.ready.then( ( op ) =>
-    {
-      if( op.exitCode === 0 )
-      {
-        test.description = 'utility debugnode exists';
-        // test.identical( _.strCount( op.output, 'debugnode/node_modules/electron/dist/electron --no-sandbox' ), 1 );
-        // test.identical( _.strCount( op.output, 'debugnode/proto/wtools/atop/nodeWithDebug/browser/electron/ElectronProcess.ss' ), 1 );
-        test.identical( _.strCount( op.output, 'Command ".help"' ), 1 );
-        test.identical( _.strCount( op.output, '.help - Get help.' ), 1 );
-        test.identical( _.strCount( op.output, '.imply - Change state or imply value of a variable.' ), 1 );
-      }
-      else
-      {
-        test.description = 'utility debugnode not exists';
-        test.identical( _.strCount( op.output, 'spawn debugnode ENOENT' ), 1 );
-        test.identical( _.strCount( op.output, 'code : \'ENOENT\'' ), 1 );
-        test.identical( _.strCount( op.output, 'syscall : \'spawn debugnode\'' ), 1 );
-        test.identical( _.strCount( op.output, 'path : \'debugnode\'' ), 1 );
-        test.identical( _.strCount( op.output, 'spawnargs' ), 1 );
-        test.identical( _.strCount( op.output, 'Error starting the process' ), 1 );
-      }
-      return null;
-    });
-  });
-
-  return con;
+  return a.ready;
 }
 
 //
 
 /*
-
-Performance issue. Related with
-- path map handling
-- file filter forming
-Disappeared as mystically as appeared.
-
+utility should handle properly illformed second command
+tab should not be accumulated in the output
 */
 
-function etcResourcesFormReflectorsExperiment( test )
+function commandEachBrokenCommand( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'performance' );
-  a.reflect()
+  let a = context.assetFor( test, 'exportWithSubmodulesFew' );
+  a.reflect();
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
-  /* */
+  /* - */
 
-  a.ready.then( () =>
+  a.appStartNonThrowing( `.each */* .resource.list path::module.common` );
+  a.ready.then( ( op ) =>
   {
-    /* This case uses out file of Starter that cause slow forming of reflector reflect.submodules from supermode */
-
-    test.case = 'old version of out file from Starter module, works really slow';
-    let o2 =
-    {
-      execPath,
-      currentPath : a.abs( './old-out-file/' ),
-      args : [ '.submodules.list' ],
-      mode : 'fork',
-      outputCollecting : 1
-    };
-
-    let con = _.process.start( o2 );
-    let t = _.time.out( 10000, () =>
-    {
-      o2.pnd.kill( 'SIGKILL' );
-      throw _.err( 'TimeOut:10000, resources forming takes too long' );
-    });
-
-    return _.Consequence.Or( con, t );
-    // return con.orKeepingSplit( t );
-  })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'module::old-out-file / submodule::Starter' ) );
-    test.true( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
-    test.true( _.strHas( op.output, 'autoExporting : 0' ) );
-    test.true( _.strHas( op.output, 'enabled : 1' ) );
-    test.true( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
-    test.true( _.strHas( op.output, 'isDownloaded : false' ) );
-    test.true( _.strHas( op.output, 'isAvailable : false' ) );
-
+    test.case = '.each */* .resource.list path::module.common';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
+    test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
-  })
+  });
 
-  /* */
-
-  a.ready.then( () =>
-  {
-    /* This case uses new out file of Starter forming of reflector reflect.submodules from supermode is fast */
-
-    test.case = 'new version of out file from Starter module, works fast';
-
-    let o2 =
-    {
-      execPath,
-      currentPath : a.abs( './new-out-file/' ),
-      args : [ '.submodules.list' ],
-      mode : 'fork',
-      outputCollecting : 1
-    };
-
-    let con = _.process.start( o2 );
-    let t = _.time.out( 10000, () =>
-    {
-      o2.pnd.kill( 'SIGKILL' );
-      throw _.err( 'TimeOut : 10000, resources forming takes too long' );
-    });
-
-    return _.Consequence.Or( con, t );
-    // return con.orKeepingSplit( t );
-  })
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'module::new-out-file / submodule::Starter' ) );
-    test.true( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
-    test.true( _.strHas( op.output, 'autoExporting : 0' ) );
-    test.true( _.strHas( op.output, 'enabled : 1' ) );
-    test.true( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
-    test.true( _.strHas( op.output, 'isDownloaded : false' ) );
-    test.true( _.strHas( op.output, 'isAvailable : false' ) );
-
-    return null;
-  })
-
-  /* */
+  /* - */
 
   return a.ready;
 }
 
-// --
-// commands with implied options
-// --
+//
+
+function commandHookCallWithHookInfo( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'dos' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart( '.clean' );
+  a.appStart( '.export' )
+  .then( ( op ) =>
+  {
+    test.case = 'setup';
+    a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
+
+    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.hook.call info.js' )
+  .then( ( op ) =>
+  {
+    test.case = '.hook.call info.js';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( op.output, 'local :' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with . .hook.call info.js' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .hook.call info.js';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( op.output, 'local :' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with * .hook.call info.js' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .hook.call info.js';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( op.output, 'local :' ), 1 );
+    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with ** .hook.call info.js' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .hook.call info.js';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
+    // test.identical( _.strCount( op.output, 'local :' ), 7 );
+    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 0 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( op.output, 'local :' ), 7 );
+    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( op.output, 'local :' ), 4 );
+    test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+commandHookCallWithHookInfo.rapidity = -1;
+commandHookCallWithHookInfo.timeOut = 300000;
+commandHookCallWithHookInfo.description =
+`
+- do execute js script
+- filtering option withIn works
+- filtering option withOut works
+- only one attempt to open outdate outfile
+- action info works properly
+- message with time printed afterwards
+`
+
+//
+
+function commandDoWithHookStatus( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'dos' );
+
+  /* - */
+
+  a.ready
+  .then( ( op ) =>
+  {
+    test.case = 'setup';
+    a.reflect();
+    a.shell({ execPath : 'git init', currentPath : a.abs( 'disabled' ) });
+
+    return null;
+  });
+
+  /* - */
+
+  a.appStart( '.clean' );
+  a.appStart( '.export' )
+  .then( ( op ) =>
+  {
+    test.case = 'setup';
+
+    test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.hooks.list' )
+  .then( ( op ) =>
+  {
+    test.case = 'hooks list';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '/status.js' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with ** .do ./.will/hook/status.js' )
+  .then( ( op ) =>
+  {
+    test.case = 'no changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 0 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'changes';
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/Readme.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/Readme.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/License' ), '\n' );
+    return null;
+  });
+
+  a.appStart( '.with ** .do ./.will/hook/status.js' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 0 );
+    test.identical( _.strCount( op.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( op.output, /module::\w+ at / ), 3 );
+    test.identical( _.strCount( op.output, 'module at' ), 2 );
+
+    test.identical( _.strCount( op.output, 'M ' ), 3 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+commandDoWithHookStatus.rapidity = -1;
+commandDoWithHookStatus.timeOut = 300000;
+commandDoWithHookStatus.description =
+`
+- it.shell exposed for action
+- it.shell has proper current path
+- errorors are brief
+`
+
+//
+
+function commandImplyWithDot( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( '.clone/File.txt' ), 'new line\n' );
+    return null;
+  });
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with .clone/ .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.clone' ) });
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( '.clone' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
+    return a.ready;
+  }
+}
+
+//
+
+function commandImplyWithAsterisk( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( '.module/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/* .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with module .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/** .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with module .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 7 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 7 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.module' ) });
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( '.module' )
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
+    return a.ready;
+  }
+}
+
+//
+
+function etcCommandsSeveral( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'open' );
+  a.reflect();
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+
+  /* - */
+
+  a.appStart( '".with . .export ; .clean"' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .export ; .clean';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
+    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
+    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
+
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './doc.ex.will.yml',
+      './doc.im.will.yml',
+      './doc',
+      './doc/.ex.will.yml',
+      './doc/.im.will.yml',
+      './doc/doc.ex.will.yml',
+      './doc/doc.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var got = a.find( a.routinePath );
+    test.identical( got, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function etcCommandsSeveral */
+
+etcCommandsSeveral.description =
+`
+- check internal stat of will
+- several commands separated with ";"" should works
+`
+
+//
+
+function commandImplyWithSubmodulesModulesList( test )
+{
+  let context = this;
+  let a = context.assetFor( test, '4LevelsLocal' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'default withSubmodules';
+    a.reflect();
+    return null;
+  });
+  a.appStart( '".with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 7 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withSubmodules:0';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '".imply withSubmodules:0 ; .with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 1 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withSubmodules:1';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '".imply withSubmodules:1 ; .with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 3 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:2';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '".imply withSubmodules:2 ; .with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 7 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:0';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '.imply withSubmodules:0 .with l4 .modules.list' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 1 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:1';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '.imply withSubmodules:1 .with l4 .modules.list' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 3 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:2';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '.imply withSubmodules:2 .with l4 .modules.list' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 7 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+commandImplyWithSubmodulesModulesList.rapidity = -1;
+commandImplyWithSubmodulesModulesList.description =
+`
+- imply withSubmodules:0 cause to open no submodules
+- imply withSubmodules:1 cause to open only submodules of the main module
+- imply withSubmodules:2 cause to open all submodules recursively
+- no error are thowen
+`
+
+//
 
 function commandImplyPropertyWithDisabled( test )
 {
@@ -42954,98 +43021,6 @@ Second command executes long running step.
 Routine checks that procedures termination begins after last command.
 `
 
-//
-
-function etcWillFilterFieldsOverwrite( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'willFilterFieldsOverwrite' );
-  a.reflect();
-
-  /* - */
-
-  a.appStart( '.clean.submodules ; .submodules.update recursive:1' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting3' ] );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-etcWillFilterFieldsOverwrite.rapidity = 1;
-etcWillFilterFieldsOverwrite.description =
-
-`
-Filter fields overwrite problem:
-Command can modify filter fields of main( will ). It can break behavior of other commands that may be executed in the sequence.
-This test runs two commands with different filtering options in the sequence to check if problem is fixed.
-`
-
-//
-
-function etcOldImportFileAdapt( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'oldImportFileAdapt' );
-  a.reflect();
-
-  /* - */
-
-  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' )
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'Failed to download submodules' ) );
-    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, null );
-    return null;
-  });
-
-  /* - */
-
-  a.appStart( '.imply willFileAdapting:1 .submodules.download' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 )
-
-    let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    let expectedModules =
-    [
-      'ModuleForTesting1',
-      'ModuleForTesting1a',
-      'ModuleForTesting1b',
-      'ModuleForTesting2'
-    ]
-    test.identical( modules, expectedModules );
-
-    _.each( expectedModules, ( moduleName ) =>
-    {
-      test.true( _.git.isRepository({ localPath : a.abs( `.module/${moduleName}` ) }) );
-    })
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-etcOldImportFileAdapt.rapidity = 1;
-etcOldImportFileAdapt.description =
-`
-  Checks if old format of import file is converted to new format if feature is enabled via option.
-`
-
 // --
 // declare
 // --
@@ -43076,6 +43051,14 @@ const Proto =
 
     etcPreCloneRepos,
     etcSingleModuleWithSpaceTrivial,
+    etcWillFilterFieldsOverwrite,
+    etcOldImportFileAdapt,
+
+    // etcRunWillbe, // zzz : help to fix, please
+    etcKillWillbe,
+    etcRunDebugWill,
+
+    // etcResourcesFormReflectorsExperiment, // xxx : look
 
     // build
 
@@ -43083,12 +43066,12 @@ const Proto =
     buildTranspile,
     buildTranspileWithOptions,
     buildTranspileExperiment,
-
-    //command
-
-    commandModuleNewDotless,
-    commandModuleNewDotlessSingle,
-    commandModuleNewNamed,
+    buildSingleModule,
+    buildSingleStep,
+    buildSubmodules,
+    buildOptionWithSubmodules, /* xxx : fix */
+    buildOptionWithSubmodulesExplicitRunOption,
+    // buildDetached, /* xxx : later */
 
     //open
 
@@ -43096,22 +43079,6 @@ const Proto =
 
     openWith,
     openEach,
-
-    //command
-
-    // commandWithMixed, /* xxx : later */
-    commandWithList,
-
-    // commandEachMixed, // xxx : later
-    // commandEachList, // xxx : later
-    commandEachBrokenIll,
-    commandEachBrokenNon,
-    commandEachBrokenCommand,
-
-    // CUI
-
-    etcCommandsSeveral,
-    commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     // reflect
 
@@ -43146,10 +43113,7 @@ const Proto =
 
     // with do
 
-    commandWithDoInfo,
-    commandWithDoStatus,
-    commandWithDoCommentOut,
-
+    hookCommentOut,
     hookCallInfo,
     hookGitMake,
     // hookPrepare, /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
@@ -43165,14 +43129,12 @@ const Proto =
     hookWasPackageExtendWillfile,
     // hookPublish2, /* Dmytro : hook was commented out */
 
-    commandImplyWithDot,
-    commandImplyWithAsterisk,
-
     // output
 
     verbositySet,
     verbosityStepDelete,
     verbosityStepPrintName,
+
     modulesTreeDotless,
     modulesTreeLocal,
     modulesTreeHierarchyRemote,
@@ -43180,24 +43142,14 @@ const Proto =
     // modulesTreeHierarchyRemotePartiallyDownloaded, /* xxx : later */
     modulesTreeDisabledAndCorrupted,
 
-    etcHelp,
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
 
-    // build
-
-    buildSingleModule,
-    buildSingleStep,
-    buildSubmodules,
-    buildOptionWithSubmodules, /* xxx : fix */
-    buildOptionWithSubmodulesExplicitRunOption,
-    /* xxx : write test routine exportOptionWithSubmodules */
-    // buildDetached, /* xxx : later */
-
     // export
 
+    /* xxx : write test routine exportOptionWithSubmodules */
     exportSingle,
     exportWithExistedGitRepository,
     exportItself,
@@ -43291,7 +43243,7 @@ const Proto =
     functionPlatform,
     functionThisCriterion,
 
-    // download
+    // submodules
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
@@ -43323,6 +43275,14 @@ const Proto =
     submodulesVersionsAgree,
     submodulesVersionsAgreeNpm,
 
+    // submodulesUpgradeDryDetached, // xxx : look later
+    // submodulesUpgradeDetached, // xxx : look later
+    // submodulesUpgradeDetachedExperiment, // xxx : look later
+    // submodulesFixateDryDetached, // xxx : look later
+    // submodulesFixateDetached, // xxx : look later
+
+    // step
+
     stepSubmodulesDownload,
     stepSubmodulesUpdate,
     stepModulesUpdate,
@@ -43339,22 +43299,33 @@ const Proto =
     stepGitStatus,
     stepGitTag,
 
-
     /* xxx : cover "will .module.new.with prepare" */
 
-    // submodulesUpgradeDryDetached, // xxx : look later
-    // submodulesUpgradeDetached, // xxx : look later
-    // submodulesUpgradeDetachedExperiment, // xxx : look later
-    // submodulesFixateDryDetached, // xxx : look later
-    // submodulesFixateDetached, // xxx : look later
+    //command
 
-    // etcRunWillbe, // zzz : help to fix, please
-    etcKillWillbe,
-    etcRunDebugWill,
+    commandHelp,
 
-    // etcResourcesFormReflectorsExperiment, // xxx : look
+    commandModuleNewDotless,
+    commandModuleNewDotlessSingle,
+    commandModuleNewNamed,
 
-    // commands
+    // commandWithMixed, /* xxx : later */
+    commandWithList,
+
+    // commandEachMixed, // xxx : later
+    // commandEachList, // xxx : later
+    commandEachBrokenIll,
+    commandEachBrokenNon,
+    commandEachBrokenCommand,
+
+    commandHookCallWithHookInfo,
+    commandDoWithHookStatus,
+
+    commandImplyWithDot,
+    commandImplyWithAsterisk,
+
+    etcCommandsSeveral,
+    commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     commandImplyPropertyWithDisabled,
     commandImplyPropertyWithEnabled,
@@ -43452,10 +43423,6 @@ const Proto =
     commandSubmodulesUpdateSwitchToOutdatedBranch,
 
     commandsSequenceProceduresTermination,
-
-    etcWillFilterFieldsOverwrite,
-
-    etcOldImportFileAdapt
 
   }
 
