@@ -5704,7 +5704,7 @@ function hookGitMake( test )
     test.true( _.git.isRepository({ remotePath : `https://github.com/${ user }/New2` }) );
     test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
     test.identical( _.strCount( op.output, `localPath :` ), 1 );
-    test.identical( _.strCount( op.output, `remotePath : git+https:///github.com/${ user }/New2` ), 1 );
+    test.identical( _.strCount( op.output, /remotePath : \S+:\/\/\/github\.com\/\S+\/New2/ ), 1 );
     test.identical( _.strCount( op.output, `> git ls-remote https://github.com/${ user }/New2` ), 1 );
 
     var exp = [ '.', './will.yml' ];
