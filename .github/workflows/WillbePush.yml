@@ -21,12 +21,12 @@ jobs :
           - 'File.test.s'
           - 'Ext.test.s r:"build*"'
           - 'Ext.test.s r:"reflect*"'
-          - 'Ext.test.s r:"[ export*, import*, open* ]"'
+          - 'Ext.test.s r:"[export*,import*,open*]"'
           - 'Ext.test.s r:"clean*"'
-          - 'Ext.test.s r:"[ module*, submodule*, subModule* ]"'
+          - 'Ext.test.s r:"[module*,submodule*,subModule*]"'
           - 'Ext.test.s r:"step*"'
           - 'Ext.test.s r:"command*"'
-          - 'Ext.test.s r:"[ hook*, verbosity*, list*, shell*, function*, etc* ]"'
+          - 'Ext.test.s r:"[hook*,verbosity*,list*,shell*,function*,etc*]"'
     if : "!startsWith( github.event.head_commit.message, 'version' ) && !startsWith( github.event.head_commit.message, '.' )"
     runs-on : ${{ matrix.os }}-latest
     name : ${{ matrix.os }} ${{ matrix.test-job }}
