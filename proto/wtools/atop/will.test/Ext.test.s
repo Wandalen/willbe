@@ -5413,7 +5413,7 @@ function hookGitPull( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -5562,7 +5562,7 @@ function hookGitPullConflict( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -6331,7 +6331,7 @@ function hookGitSyncConflict( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -6521,7 +6521,7 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -6665,7 +6665,7 @@ function hookGitSyncArguments( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -24201,7 +24201,7 @@ function stepGitCheckHardLinkRestoring( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -24511,7 +24511,7 @@ function stepGitDifferentCommands( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -24629,7 +24629,7 @@ function stepGitPull( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -25645,7 +25645,7 @@ function stepGitSync( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -29147,7 +29147,7 @@ function commandSubmodulesGit( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -29329,7 +29329,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -29423,7 +29423,7 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -30428,7 +30428,7 @@ function commandSubmodulesGitSync( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -30914,7 +30914,7 @@ function commandModulesGit( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -31146,7 +31146,7 @@ function commandModulesGitRemoteSubmodules( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -31243,7 +31243,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -32434,7 +32434,7 @@ function commandModulesGitSync( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -32589,15 +32589,15 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
 
-  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
@@ -32737,7 +32737,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
@@ -32745,9 +32745,9 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 
   /* */
 
-  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
@@ -32903,7 +32903,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
@@ -32911,9 +32911,9 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
 
   /* */
 
-  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
@@ -33060,7 +33060,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
@@ -33068,9 +33068,9 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 
   /* */
 
-  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
@@ -33226,7 +33226,7 @@ function commandModules( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -33388,7 +33388,7 @@ function commandSubmodules( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -33683,7 +33683,7 @@ function commandGitCheckHardLinkRestoring( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -34041,7 +34041,7 @@ function commandGitDifferentCommands( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -34314,7 +34314,7 @@ function commandGitPull( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -34585,7 +34585,7 @@ function commandGitPullRestoreHardlinkOnFail( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -35645,7 +35645,7 @@ function commandGitSync( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -35873,7 +35873,7 @@ function commandGitSyncRestoringHardlinks( test )
   {
     config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
     profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
@@ -36028,7 +36028,7 @@ function commandGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
@@ -36037,9 +36037,9 @@ function commandGitSyncRestoreHardLinksWithShared( test )
 
   /* */
 
-  let config = { path : { hlink : a.abs( process.env.HOME, 'tmpWillbe' ) } };
+  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME, _.censor.storageDir, profile );
+  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
   let configPath = a.abs( profileDir, 'config.yaml' );
   a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
 
