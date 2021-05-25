@@ -292,7 +292,6 @@ function _statusPreUpdate()
 
   if( it.src instanceof _.will.Module )
   {
-    // debugger;
     it.currentModule = it.src;
     // rit.currentModule = it.src;
   }
@@ -326,7 +325,6 @@ function _statusPreUpdate()
   }
   else if( it.src instanceof _.will.Exported )
   {
-    // debugger;
     it.exported = it.src;
   }
 
@@ -443,7 +441,6 @@ function _resourceMapSelect()
 
     if( !it.src )
     {
-      debugger;
       throw _.looker.LookingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
@@ -664,7 +661,7 @@ function _pathsTransform( onPath, onStr )
     resource = resource.cloneDerivative();
     _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
     return onPath.call( it, resource.path, resource );
-    return resource;
+    // return resource;
   }
 
   /* */
@@ -801,8 +798,6 @@ function _pathCompositeResolve( /* currentModule, currentResource, filePath, res
   {
 
     /* xxx : use currentResource.module instead of currentModule? */
-    // if( result.length === 2 )
-    // debugger;
     result = currentModule.pathResolve
     ({
       selector : result,
@@ -872,11 +867,6 @@ function _pathResolve( filePath, resource )
   let path = fileProvider.path;
   let resourceName = resource.name;
   let result = filePath;
-
-  if( rit.currentModule )
-  debugger;
-  if( _.mapIs( filePath ) )
-  debugger;
 
   if( filePath === null || filePath === '' )
   return result;
@@ -1141,7 +1131,6 @@ function errResolvingMake( o )
 
   if( o.err && o.err.ResolvingError )
   {
-    debugger;
     return o.err;
   }
 
@@ -1156,7 +1145,6 @@ function errResolvingMake( o )
   // o.err = _.err( o.err, '\nFailed to resolve', _.color.strFormat( _.entity.exportStringDiagnosticShallow( o.selector ), 'path' ), 'in', module.decoratedAbsoluteName );
 
   _.error.concealedSet( o.err, { ResolvingError : true } );
-  debugger;
 
   return o.err;
 }
@@ -1285,7 +1273,6 @@ function iteratorInitEnd( iterator )
 
   if( !iterator.baseModule )
   {
-    debugger;
     _.assert( 0, 'not tested' ); /* xxx */
     if( iterator.currentContext && _.routineIs( iterator.currentContext.toModuleForResolver ) )
     iterator.baseModule = iterator.currentContext.toModuleForResolver();
