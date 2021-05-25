@@ -27801,13 +27801,7 @@ function etcCommandsSeveral( test )
     return null;
   })
 
-<<<<<<< HEAD
-etcRunDebugWill.experimental = 1;
-
-//
-=======
   /* - */
->>>>>>> 642257145063a474533308ea6f3cf82e0c2b0f04
 
   return a.ready;
 } /* end of function etcCommandsSeveral */
@@ -43432,12 +43426,9 @@ const Proto =
 
     commandsSequenceProceduresTermination,
 
-<<<<<<< HEAD
-    etcWillFilterFieldsOverwrite,
-    etcOldImportFileAdapt,
+    // etcWillFilterFieldsOverwrite,
+    // etcOldImportFileAdapt,
 
-=======
->>>>>>> 642257145063a474533308ea6f3cf82e0c2b0f04
   }
 
 }
