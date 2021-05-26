@@ -6612,7 +6612,7 @@ original/f.txt
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( context.suiteTempPath );
+    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
@@ -6673,6 +6673,7 @@ function hookGitSyncArguments( test )
   }
 
   let linkPath = config.path.hlink;
+
   /* */
 
   begin();
@@ -6694,9 +6695,6 @@ function hookGitSyncArguments( test )
   a.ready.finally( () =>
   {
     a.fileProvider.filesDelete( context.suiteTempPath );
-    // a.fileProvider.fileDelete( a.abs( linkPath, 'f1.lnk' ) );
-    // a.fileProvider.fileDelete( a.abs( linkPath, 'f2.lnk' ) );
-    // a.fileProvider.fileDelete( a.abs( linkPath, '.warchive' ) );
     a.fileProvider.filesDelete( profileDir );
     return null;
   });
