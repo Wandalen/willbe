@@ -28673,38 +28673,20 @@ function commandVersion( test )
 function commandVersionCheck( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'stepWillbeVersionCheck' );
+  let a = context.assetFor( test, 'simple' );
 
-  if( !a.fileProvider.fileExists( a.abs( a.abs( __dirname, '../../../..' ), 'package.json' ) ) )
-  {
-    test.true( true );
-    return;
-  }
+  begin();
 
-  a.fileProvider.filesReflect
-  ({
-    reflectMap :
-    {
-      'proto/node_modules/Tools' : 'proto/node_modules/Tools',
-      'proto/wtools/atop/will' : 'proto/wtools/atop/will',
-      'package.json' : 'package.json',
-    },
-    src : { prefixPath : a.abs( __dirname, '../../../..' ) },
-    dst : { prefixPath : a.abs( 'willbe' ) },
-  })
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
-  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.abs( __dirname, '../../../../node_modules' ) );
-
-  let execPath = a.path.nativize( a.abs( 'willbe/proto/wtools/atop/will/entry/Exec' ) );
+  /* starter for local copy of utility */
   a.appStart = _.process.starter
   ({
-    execPath : 'node ' + execPath,
-    currentPath : a.abs( 'asset' ),
+    execPath : `node ${ a.path.nativize( a.abs( 'proto/wtools/atop/will/entry/Exec' ) ) }`,
+    currentPath : a.abs( '.' ),
     outputCollecting : 1,
     throwingExitCode : 0,
     verbosity : 3,
-    ready : a.ready
-  })
+    ready : a.ready,
+  });
 
   /* - */
 
@@ -28716,7 +28698,7 @@ function commandVersionCheck( test )
     test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
     test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
-  })
+  });
 
   a.appStart({ args : '.imply v:9 ; .version.check' })
   .then( ( op ) =>
@@ -28727,7 +28709,7 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Read/ ) );
     test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
-  })
+  });
 
   a.appStart({ args : '.imply v:9 .version.check' })
   .then( ( op ) =>
@@ -28738,7 +28720,7 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Read/ ) );
     test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
-  })
+  });
 
   a.appStart({ args : '.version.check v:7' })
   .then( ( op ) =>
@@ -28749,16 +28731,18 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Read/ ) );
     test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
     return null
-  })
+  });
 
-  .then( () =>
+  /* */
+
+  a.ready.then( () =>
   {
-    let packageJsonPath = a.abs( 'willbe/package.json' );
+    let packageJsonPath = a.abs( 'package.json' );
     let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
     packageJson.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
     return null;
-  })
+  });
 
   a.appStart({ args : '.version.check' })
   .then( ( op ) =>
@@ -28768,7 +28752,7 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
     test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
-  })
+  });
 
   a.appStart({ args : '.imply v:9 ; .version.check' })
   .then( ( op ) =>
@@ -28778,7 +28762,7 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
     test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
-  })
+  });
 
   a.appStart({ args : '.imply v:9 .version.check' })
   .then( ( op ) =>
@@ -28788,7 +28772,7 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
     test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
-  })
+  });
 
   a.appStart({ args : '.version.check v:7' })
   .then( ( op ) =>
@@ -28798,11 +28782,21 @@ function commandVersionCheck( test )
     test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
     test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
+    a.shell( 'git clone https://github.com/Wandalen/willbe.git .' );
+    a.shell( 'npm i' );
+    return a.ready;
+  }
 }
 
 //
@@ -32643,10 +32637,10 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, 'Pulling module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, 'Pushing module::GitSync' ), 1 );
-    test.identical( _.strCount( op.output, '+ hardLink' ), 3 );
-    test.identical( _.strCount( op.output, '+ Restored 3 hardlinks' ), 1 );
+    test.identical( _.strCount( op.output, '+ hardLink' ), 2 );
+    test.identical( _.strCount( op.output, '+ Restored 2 hardlinks' ), 1 );
 
-    test.true( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
+    test.false( a.fileProvider.areHardLinked( a.abs( 'super/f1.txt' ), a.abs( linkPath, 'f1_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'super/f2.txt' ), a.abs( linkPath, 'f2_.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( linkPath, 'f1.lnk' ) ) );
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f2.txt' ), a.abs( linkPath, 'f2.lnk' ) ) );
