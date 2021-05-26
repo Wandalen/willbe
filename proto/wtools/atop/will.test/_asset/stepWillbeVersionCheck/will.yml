@@ -1,0 +1,14 @@
+
+path :
+
+  in : '.'
+  out : 'out'
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - willbe.version.check
+

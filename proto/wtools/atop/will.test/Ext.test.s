@@ -23646,36 +23646,18 @@ function stepWillbeVersionCheck( test )
   let context = this;
   let a = context.assetFor( test, 'stepWillbeVersionCheck' );
 
-  if( !a.fileProvider.fileExists( a.abs( a.abs( __dirname, '../../../..' ), 'package.json' ) ) )
-  {
-    test.true( true );
-    return;
-  }
+  begin();
 
-  a.fileProvider.filesReflect
-  ({
-    reflectMap :
-    {
-      'proto/node_modules/Tools' : 'proto/node_modules/Tools',
-      'proto/wtools/atop/will' : 'proto/wtools/atop/will',
-      'package.json' : 'package.json',
-    },
-    src : { prefixPath : a.abs( __dirname, '../../../..' ) },
-    dst : { prefixPath : a.abs( 'willbe' ) },
-  })
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
-  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.abs( a.abs( __dirname, '../../../..' ), 'node_modules' ) );
-
-  let execPath = a.path.nativize( a.abs( 'willbe/proto/wtools/atop/will/entry/Exec' ) );
+  /* starter for local copy of utility */
   a.appStart = _.process.starter
   ({
-    execPath : 'node ' + execPath,
-    currentPath : a.abs( 'asset' ),
+    execPath : `node ${ a.path.nativize( a.abs( 'proto/wtools/atop/will/entry/Exec' ) ) }`,
+    currentPath : a.abs( '.' ),
     outputCollecting : 1,
     throwingExitCode : 0,
     verbosity : 3,
-    ready : a.ready
-  })
+    ready : a.ready,
+  });
 
   /* - */
 
@@ -23685,16 +23667,16 @@ function stepWillbeVersionCheck( test )
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Built .+ \/ build::debug/ ) );
     return null;
-  })
+  });
 
-  .then( ( ) =>
+  a.ready.then( ( ) =>
   {
-    let packageJsonPath = a.abs( 'willbe/package.json' );
+    let packageJsonPath = a.abs( 'package.json' );
     let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
     packageJson.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
     return null;
-  })
+  });
 
   a.appStart( '.build' )
   .then( ( op ) =>
@@ -23703,12 +23685,31 @@ function stepWillbeVersionCheck( test )
     test.true( _.strHas( op.output, 'npm r -g willbe && npm i -g willbe' ) );
     test.true( _.strHas( op.output, /Failed .+ \/ step::willbe.version.check/ ) );
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
-}
 
-stepWillbeVersionCheck.timeOut = 40000;
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
+    a.shell( 'git clone https://github.com/Wandalen/willbe.git .' );
+    a.shell( 'npm i' );
+    a.ready.then( () =>
+    {
+      const willPath = a.abs( 'will.yml' );
+      const assetWillPath = a.abs( context.assetsOriginalPath, 'stepWillbeVersionCheck/will.yml' );
+      a.fileProvider.filesDelete( a.abs( 'out' ) );
+      a.fileProvider.filesDelete( a.abs( '.git' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ assetWillPath ] : willPath } });
+      return null;
+    });
+    return a.ready;
+  }
+}
 
 //
 
