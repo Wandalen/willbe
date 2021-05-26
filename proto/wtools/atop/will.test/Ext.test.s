@@ -25988,6 +25988,7 @@ function commandHelp( test )
 {
   let context = this;
   let a = context.assetFor( test, 'single' );
+  a.fileProvider.dirMake( a.abs( '.' ) );
 
   /* */
 
@@ -25997,10 +25998,10 @@ function commandHelp( test )
     return null;
   });
 
-  a.appStart( '' )
+  a.appStartNonThrowing( '' )
   .then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 1 );
+    test.notIdentical( op.exitCode, 0 );
     test.true( op.output.length >= 1 );
     test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
     return null;
@@ -26014,10 +26015,10 @@ function commandHelp( test )
     return null;
   });
 
-  a.appStart( '.' )
+  a.appStartNonThrowing( '.' )
   .then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 1 );
+    test.notIdentical( op.exitCode, 0 );
     test.true( op.output.length >= 1 );
     test.identical( _.strCount( op.output, /.*.help.* - Get help/ ), 1 );
     test.ge( _.strLinesCount( op.output ), 24 );
@@ -26036,7 +26037,7 @@ function commandHelp( test )
 
   /* */
 
-  a.appStart({ args : [] })
+  a.appStartNonThrowing({ args : [] })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
