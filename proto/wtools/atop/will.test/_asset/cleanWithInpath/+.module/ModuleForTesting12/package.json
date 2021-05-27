@@ -3,11 +3,11 @@
   "version" : "0.0.69",
   "engine" : "node >= 10.0.0",
   "description" : "Module for testing. This module is a test asset and not intended to be used with another purpose.",
-  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "author" : "Kostiantyn Wandalen <wandalen@01.school>",
   "license" : "MIT",
   "contributors" :
   [
-    { "name" : "Kostiantyn Wandalen", "email" : "wanalen@01.school" },
+    { "name" : "Kostiantyn Wandalen", "email" : "wandalen@01.school" },
     { "name" : "Kryvoruchko Dmytro", "email" : "dm.vict.kr@gmail.com" }
   ],
   "main" : "proto/wtools/testing/l3/testing12/Include.s",
