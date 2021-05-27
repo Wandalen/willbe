@@ -1203,7 +1203,7 @@ function resolve_body( o )
 
 var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 
 // let resolve = _.routine.uniteCloning_replaceByUnite( resolve_head, resolve_body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
@@ -1268,18 +1268,18 @@ function inPathResolve_body( o )
 // defaults.pathResolving = 'in';
 // let inPathResolve = _.routine.uniteCloning_replaceByUnite( inPathResolve_head, inPathResolve_body );
 
-_.assert( _.prototype.has( resolve.defaults, resolve.defaults.OriginalLooker ) );
+_.assert( _.prototype.has( resolve.defaults, resolve.defaults.OriginalSeeker ) );
 _.routine.extendInheriting( inPathResolve_body, { defaults : resolve.defaults } );
 _.assert( inPathResolve_body.defaults !== resolve.defaults );
 var defaults = inPathResolve_body.defaults;
 defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 // let inPathResolve = _.routine.uniteCloning_replaceByUnite({ head : inPathResolve_head, body : inPathResolve_body, strategy : 'replacing' });
 let inPathResolve = _.routine.uniteReplacing( inPathResolve_head, inPathResolve_body );
 _.assert( inPathResolve.defaults === inPathResolve.body.defaults );
-_.assert( _.prototype.has( inPathResolve.defaults, inPathResolve.defaults.OriginalLooker ) );
+_.assert( _.prototype.has( inPathResolve.defaults, inPathResolve.defaults.OriginalSeeker ) );
 
 //
 
@@ -1330,7 +1330,7 @@ function reflectorResolve_body( o )
 
 reflectorResolve_body.defaults = _.will.Module.prototype.reflectorResolve.defaults;
 let reflectorResolve = _.routine.uniteReplacing( resolve.head, reflectorResolve_body );
-_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Seeker );
 // let reflectorResolve = _.routine.uniteCloning_replaceByUnite({ head : resolve.head, body : reflectorResolve_body, strategy : 'replacing' });
 
 // --

@@ -5231,10 +5231,10 @@ function resolve_body( o )
 _.routine.extendReplacing( resolve_body, _.will.resolver.resolve.body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 // let resolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
-// resolve.defaults.Looker = resolve.defaults;
+// resolve.defaults.Seeker = resolve.defaults;
 _.assert( resolve.defaults === resolve.body.defaults );
 _.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
-_.assert( resolve.defaults === resolve.defaults.Looker );
+_.assert( resolve.defaults === resolve.defaults.Seeker );
 
 //
 
@@ -5251,8 +5251,8 @@ _.assert( resolveMaybe_body.defaults === _.will.resolver.resolveMaybe.defaults )
 _.assert( resolveMaybe_body.defaults !== resolve_body.defaults );
 let resolveMaybe = _.routine.uniteReplacing( resolve_head, resolveMaybe_body );
 // let resolveMaybe = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
-_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Looker );
-_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Looker );
+_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Seeker );
+_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Seeker );
 
 //
 
@@ -5393,7 +5393,7 @@ let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolv
 
 _.assert( submodulesResolve.defaults === submodulesResolve.body.defaults );
 _.assert( submodulesResolve.defaults === _.will.resolver.submodulesResolve.defaults );
-_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Looker );
+_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Seeker );
 
 _.assert( _.will.resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
@@ -5412,7 +5412,7 @@ function reflectorResolve_body( o )
 _.routine.extendReplacing( reflectorResolve_body, _.will.resolver.reflectorResolve.body );
 let reflectorResolve = _.routine.uniteReplacing( resolve_head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
-_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Seeker );
 
 // --
 // other resolver
