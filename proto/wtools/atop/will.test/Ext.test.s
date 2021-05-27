@@ -6611,7 +6611,7 @@ original/f.txt
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
+    a.fileProvider.filesDelete( context.suiteTempPath );
     a.fileProvider.filesDelete( profileDir );
     context.suiteTempPath = temp;
     return null;
