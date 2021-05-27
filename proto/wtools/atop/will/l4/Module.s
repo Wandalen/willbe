@@ -5319,6 +5319,7 @@ _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 function pathOrReflectorResolve_head( routine, args )
 {
   let module = this;
+  debugger;
   let o = module._resolve_head.call( module, routine, args );
   _.assert( arguments.length === 2 );
   return _.will.resolver.pathOrReflectorResolve.head.call( _.will.resolver, routine, [ o ] );

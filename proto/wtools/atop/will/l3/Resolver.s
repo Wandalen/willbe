@@ -1355,6 +1355,7 @@ let ResolverWillbeSelector =
   seeker :
   {
     ... Common,
+    currentModule : null,
   },
   iterationPreserve :
   {
@@ -1382,6 +1383,7 @@ let ResolverWillbeReplicator =
     performBegin,
     optionsToIteration,
     iteratorInitEnd,
+    // currentModule : null,
   },
   iterationPreserve :
   {
@@ -1389,12 +1391,12 @@ let ResolverWillbeReplicator =
     currentModule : null, /* xxx : remove? */
     selectorIsPath : 0,
   },
-  iteration :
-  {
-    exported : null,
-    currentModule : null, /* xxx : remove? */
-    selectorIsPath : 0,
-  },
+  // iteration :
+  // {
+  //   exported : null,
+  //   currentModule : null, /* xxx : remove? */
+  //   selectorIsPath : 0,
+  // },
 });
 
 /* */
@@ -1406,9 +1408,11 @@ const ResolverWillbe = _.resolverAdv.classDefine
 });
 
 _.assert( ResolverWillbe.IterationPreserve.isFunction !== undefined );
-_.assert( ResolverWillbe.Iteration.isFunction === undefined );
+// _.assert( ResolverWillbe.Iteration.isFunction === undefined );
+_.assert( ResolverWillbe.Iteration.isFunction !== undefined );
 _.assert( ResolverWillbe.Iterator.isFunction === undefined );
-_.assert( ResolverWillbe.isFunction !== undefined );
+// _.assert( ResolverWillbe.isFunction !== undefined );
+_.assert( ResolverWillbe.isFunction === undefined );
 _.assert( ResolverWillbe.Iterator.resolveExtraOptions === undefined );
 _.assert( ResolverWillbe.Seeker === ResolverWillbe );
 
@@ -1467,7 +1471,9 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
+  debugger;
   _.routine.options( routine, o );
+  debugger;
   return o;
 }
 
@@ -1486,7 +1492,9 @@ function pathOrReflectorResolve_body( o )
   let o2 = _.props.extend( null, o );
   o2.missingAction = 'undefine';
   o2.selector = 'reflector::' + o.selector;
+  debugger;
   resource = module.reflectorResolve( o2 );
+  debugger;
 
   if( resource )
   return resource;
