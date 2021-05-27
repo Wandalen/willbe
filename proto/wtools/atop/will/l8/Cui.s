@@ -1558,6 +1558,7 @@ function commandVersion( e )
   ({
     localPath : _.path.join( __dirname, '../../../../..' ),
     remotePath : 'willbe',
+    tags : [ 'latest', 'stable' ],
   });
 }
 
