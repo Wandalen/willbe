@@ -28593,16 +28593,16 @@ commandImplyPropertyWithEnabled.timeOut = 1200000;
 function commandVersion( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'stepWillbeVersionCheck' );
-  a.reflect();
+  let a = context.assetFor( test, 'simple' );
+  a.fileProvider.dirMake( a.abs( '.' ) );
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
     test.case = '.version';
     return null;
-  })
+  });
 
   a.appStart({ args : '.version' })
   .then( ( op ) =>
@@ -28610,8 +28610,10 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -28619,7 +28621,7 @@ function commandVersion( test )
   {
     test.case = '.imply v:9 ; .version';
     return null;
-  })
+  });
 
   a.appStart({ args : '.imply v:9 ; .version' })
   .then( ( op ) =>
@@ -28627,8 +28629,10 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -28636,7 +28640,7 @@ function commandVersion( test )
   {
     test.case = '.imply v:9 .version';
     return null;
-  })
+  });
 
   a.appStart({ args : '.imply v:9 .version' })
   .then( ( op ) =>
@@ -28644,8 +28648,10 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -28653,7 +28659,7 @@ function commandVersion( test )
   {
     test.case = '.version v:7';
     return null;
-  })
+  });
 
   a.appStart({ args : '.version v:7' })
   .then( ( op ) =>
@@ -28661,10 +28667,12 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
