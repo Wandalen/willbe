@@ -69,7 +69,7 @@ function _onSelectorReplicate( o )
     if( !it.selectorIs( selector ) )
     if( !it.composite )
     {
-      selector = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : 1, path : selector });
+      selector = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : true, path : selector });
       selector.form1();
       it.src = selector;
     }
@@ -101,7 +101,7 @@ function _onSelectorDown()
 
     if( rit.defaultResourceKind === 'path' || rit.selectorIsPath )
     {
-      it.dst = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : true, path : it.dst });
       it.dst.form1();
     }
 
@@ -1786,6 +1786,6 @@ let NamespaceExtension =
 
 }
 
-_.props.extend( _.will.resolver, NamespaceExtension );
+/* _.props.extend */Object.assign( _.will.resolver, NamespaceExtension );
 
 })();

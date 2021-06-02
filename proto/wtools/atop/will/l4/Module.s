@@ -6830,6 +6830,7 @@ function exportStructure( o )
     }
   }
 
+  if( Config.debug )
   if( o.exportModule.isOut )
   {
     _.assert( !!o.dst.path );
@@ -6842,7 +6843,8 @@ function exportStructure( o )
     _.assert( !!o.dst.path[ 'module.willfiles' ] );
     _.assert( !!o.dst.path[ 'module.willfiles' ].path );
     _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
-    _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( module.isOut === _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     _.assert( !_.path.map.identical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     // _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     // _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
@@ -8842,7 +8844,7 @@ function willfileVersionBump( o )
   else
   _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
 
-  _.assert( versionArray.length >= deltaArray.length, 'Not known how to change version.' );
+  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to change version.' );
 
   for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
   {

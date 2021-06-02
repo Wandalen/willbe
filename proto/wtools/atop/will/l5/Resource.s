@@ -378,7 +378,7 @@ function unform()
   let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  _.assert( resource.formed );
+  _.assert( resource.formed !== 0 );
 
   if( resource.original && !resource.phantom )
   _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
@@ -1395,7 +1395,7 @@ let Aggregates =
   importableFromOut : 1,
   importableFromPeer : 0,
   // generated : 0,
-  phantom : 0,
+  phantom : false,
 }
 
 let Associates =
