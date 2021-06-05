@@ -1909,7 +1909,7 @@ function isConsistent( o )
   o = _.routine.options( isConsistent, arguments );
   _.assert( o.recursive === 0 );
 
-  let willfiles = module.willfilesEach({ recursive : o.recursive, withPeers : 0 });
+  let willfiles = module.willfilesEach({ recursive : o.recursive, withPeers : false });
 
   return willfiles.every( ( willfile ) =>
   {
@@ -2341,7 +2341,7 @@ willfilesEach.defaults =
 {
   recursive : 0,
   withStem : 1,
-  withPeers : 0,
+  withPeers : false,
   onUp : null,
 }
 
@@ -2777,7 +2777,7 @@ var defaults = modulesEach_body.defaults = _.props.extend
 
 delete defaults.modules;
 
-_.assert( defaults.withPeers === 0 );
+_.assert( defaults.withPeers === false );
 
 let modulesEach = _.routine.uniteCloning_replaceByUnite( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, _.Will.RelationFilterOn );
@@ -2800,12 +2800,12 @@ function modulesBuild_body( o )
 
 var defaults = modulesBuild_body.defaults = _.props.extend( null, _.mapBut_( null, moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
 
-defaults.recursive = 0;
-defaults.withStem = 1;
-defaults.withDisabledStem = 1;
-defaults.withPeers = 1;
-defaults.upforming = 1;
-defaults.downloading = 1;
+defaults.recursive = false;
+defaults.withStem = true;
+defaults.withDisabledStem = true;
+defaults.withPeers = true;
+defaults.upforming = true;
+defaults.downloading = true;
 defaults.doneContainer = null;
 
 delete defaults.onEach;
@@ -2815,16 +2815,16 @@ delete defaults.withOut;
 delete defaults.withIn;
 
 _.assert( defaults.outputFormat === undefined );
-_.assert( defaults.withDisabledSubmodules === 0 );
-_.assert( defaults.withDisabledModules === 0 );
+_.assert( defaults.withDisabledSubmodules === false );
+_.assert( defaults.withDisabledModules === false );
 
 let modulesBuild = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
-modulesBuild.defaults.downloading = 1;
+modulesBuild.defaults.downloading = true;
 
 let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
-modulesExport.defaults.downloading = 1;
+modulesExport.defaults.downloading = true;
 
 //
 
@@ -2848,7 +2848,7 @@ var defaults = modulesUpform.defaults = _.props.extend( null, upform.defaults, m
 defaults.withDisabledStem = 1;
 defaults.recursive = 2;
 defaults.withStem = 1;
-defaults.withPeers = 1;
+defaults.withPeers = true;
 // defaults.allowingMissing = 1;
 
 delete defaults.outputFormat;
@@ -2891,7 +2891,7 @@ function rootModuleSet( src )
     ({
       outputFormat : '/',
       recursive : 2,
-      withPeers : 1,
+      withPeers : true,
     });
     modules.forEach( ( junction ) =>
     {
@@ -3035,8 +3035,8 @@ function submodulesAreDownloaded( o )
 
 var defaults = submodulesAreDownloaded.defaults = _.props.extend( null, modulesEach.defaults );
 
-defaults.withStem = 0;
-defaults.withPeers = 0;
+defaults.withStem = false;
+defaults.withPeers = false;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -3105,8 +3105,8 @@ function submodulesAreValid( o )
 
 var defaults = submodulesAreValid.defaults = _.props.extend( null, modulesEach.defaults );
 
-defaults.withStem = 0;
-defaults.withPeers = 0;
+defaults.withStem = false;
+defaults.withPeers = false;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -3154,8 +3154,8 @@ function submodulesClean()
 
   let modules = module.modulesEachAll
   ({
-    withPeers : 1,
-    withStem : 0,
+    withPeers : true,
+    withStem : false,
     recursive : 2,
     outputFormat : '/'
   });
@@ -3666,21 +3666,21 @@ function submodulesVerify( o )
 
   let o2 = _.props.extend( null, o );
   o2.modules = _.props.vals( module.submoduleMap );
-  o2.withStem = 1;
+  o2.withStem = true;
   return will.modulesVerify( o2 );
 }
 
 var defaults = submodulesVerify.defaults = _.props.extend( null, _.Will.prototype.modulesFor.defaults );
 
-defaults.recursive = 1;
-defaults.throwing = 1;
-defaults.asMap = 0;
+defaults.recursive = true;
+defaults.throwing = true;
+defaults.asMap = false;
 
-defaults.hasFiles = 1;
-defaults.isValid = 1;
-defaults.isRepository = 1;
-defaults.hasRemote = 1;
-defaults.isUpToDate = 1
+defaults.hasFiles = true;
+defaults.isValid = true;
+defaults.isRepository = true;
+defaults.hasRemote = true;
+defaults.isUpToDate = true
 
 delete defaults.withStem;
 delete defaults.onEach;
@@ -3690,8 +3690,8 @@ delete defaults.onEachJunction;
 // delete defaults.withIn;
 
 _.assert( defaults.outputFormat === undefined );
-_.assert( defaults.withDisabledSubmodules === 0 );
-_.assert( defaults.withDisabledModules === 0 );
+_.assert( defaults.withDisabledSubmodules === false );
+_.assert( defaults.withDisabledModules === false );
 
 // var defaults  = submodulesVerify.defaults = Object.create( null );
 //
@@ -3925,7 +3925,7 @@ submodulesRelationsFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : 1,
+  withPeers : true,
   withoutDuplicates : 0,
 
 }
@@ -4008,7 +4008,7 @@ submodulesRelationsOwnFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : 1,
+  withPeers : true,
   withoutDuplicates : 0,
   allVariants : 0,
 
@@ -4918,8 +4918,8 @@ function cleanWhatSingle( o )
     {
       let modules = module.modulesEachAll
       ({
-        withPeers : 1,
-        withStem : 0,
+        withPeers : true,
+        withStem : false,
         recursive : 2,
         outputFormat : '/'
       });
@@ -5932,7 +5932,7 @@ function _pathRegister()
 
   let o2 =
   {
-    withPeers : 0,
+    withPeers : false,
     outputFormat : '/',
   }
   let junctions = module.modulesEachAll( o2 );
@@ -6902,7 +6902,7 @@ function structureExportOut( o )
 
   let found = module.modulesEach
   ({
-    withPeers : 1,
+    withPeers : true,
     withStem : 1,
     withDisabledModules : 0,
     withDisabledSubmodules : 0,
@@ -7131,7 +7131,7 @@ function structureExportConsistency( o )
   _.assert( arguments.length === 1 );
   _.assert( o.exportModule.isOut );
 
-  let willfiles = module.willfilesEach({ recursive : 0, withPeers : 1 });
+  let willfiles = module.willfilesEach({ recursive : 0, withPeers : true });
 
   willfiles.forEach( ( willf ) =>
   {
@@ -7829,8 +7829,8 @@ function willfileExtendWillfile( o )
     return will.willfilesFind
     ({
       commonPath : dstPath,
-      withIn : 1,
-      withOut : 0,
+      withIn : true,
+      withOut : false,
     });
   }
 
@@ -7902,7 +7902,7 @@ function willfileExtendWillfile( o )
     return fileProvider.filesFind
     ({
       filePath,
-      withStem : 0,
+      withStem : false,
       withDirs : 0,
       mode : 'distinct',
       mandatory : 0,
@@ -8226,8 +8226,8 @@ function _willfileOnPropertyAct( o )
     return will.willfilesFind
     ({
       commonPath : dstPath,
-      withIn : 1,
-      withOut : 0,
+      withIn : true,
+      withOut : false,
     });
   }
 
@@ -8655,8 +8655,8 @@ function willfileMergeIntoSingle( o )
     return will.willfilesFind
     ({
       commonPath : srcPath,
-      withIn : 1,
-      withOut : 0,
+      withIn : true,
+      withOut : false,
     });
   }
 

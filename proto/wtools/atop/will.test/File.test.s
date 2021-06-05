@@ -379,7 +379,7 @@ function fileAt( test )
   test.shouldThrowErrorSync( () => _.will.fileAt({ commonPath : a.abs( './' ), unknown : 1 }) );
 
   test.case = 'withIn - 0 and withOut - 0';
-  test.shouldThrowErrorSync( () => _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 0 }) );
+  test.shouldThrowErrorSync( () => _.will.fileAt({ commonPath : a.abs( './' ), withIn : false, withOut : false }) );
 }
 
 //
@@ -397,7 +397,7 @@ function fileAtWithOptions( test )
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : true, withOut : false });
   test.identical( got.length, 2 );
   test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
@@ -405,7 +405,7 @@ function fileAtWithOptions( test )
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withSingle : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : true, withOut : false, withSingle : 0 });
   test.identical( got.length, 2 );
   test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
@@ -413,14 +413,14 @@ function fileAtWithOptions( test )
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withImport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : true, withOut : false, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
 
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withExport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : true, withOut : false, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
 
@@ -432,27 +432,27 @@ function fileAtWithOptions( test )
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : false, withOut : true });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
 
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withSingle : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : false, withOut : true, withSingle : 0 });
   test.identical( got, [] );
 
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withImport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : false, withOut : true, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
 
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.fileAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withExport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './' ), withIn : false, withOut : true, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
 
@@ -464,27 +464,27 @@ function fileAtWithOptions( test )
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withSingle : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false, withSingle : 0 });
   test.identical( got, [] );
 
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withImport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withExport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
@@ -496,27 +496,27 @@ function fileAtWithOptions( test )
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withSingle : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true, withSingle : 0 });
   test.identical( got, [] );
 
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withImport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.fileAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withExport : 0 });
+  var got = _.will.fileAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
 
@@ -785,7 +785,7 @@ function filesAtCommonPathWithoutGlobs( test )
   test.shouldThrowErrorSync( () => _.will.filesAt({ commonPath : a.abs( './' ), unknown : 1 }) );
 
   test.case = 'withIn - 0 and withOut - 0';
-  test.shouldThrowErrorSync( () => _.will.filesAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 0 }) );
+  test.shouldThrowErrorSync( () => _.will.filesAt({ commonPath : a.abs( './' ), withIn : false, withOut : false }) );
 }
 
 //
@@ -1186,7 +1186,7 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : true, withOut : false });
   test.identical( got.length, 2 );
   test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
@@ -1194,7 +1194,7 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withSingle : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : true, withOut : false, withSingle : 0 });
   test.identical( got.length, 2 );
   test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
   test.identical( got[ 1 ].filePath, a.abs( './.im.will.yml' ) );
@@ -1202,14 +1202,14 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withImport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : true, withOut : false, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.ex.will.yml' ) );
 
   test.case = 'path to dir, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 1, withOut : 0, withExport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : true, withOut : false, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.im.will.yml' ) );
 
@@ -1221,27 +1221,27 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : false, withOut : true });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
 
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withSingle : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : false, withOut : true, withSingle : 0 });
   test.identical( got, [] );
 
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withImport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : false, withOut : true, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
 
   test.case = 'path to dir, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.filesAt({ commonPath : a.abs( './' ) });
   test.identical( got.length, 3 );
-  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 1, withExport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './' ), withIn : false, withOut : true, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './.out.will.yml' ) );
 
@@ -1253,27 +1253,27 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withSingle : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false, withSingle : 0 });
   test.identical( got, [] );
 
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withImport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 1, withOut - 0, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 1, withOut : 0, withExport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : true, withOut : false, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.will.yml' ) );
 
@@ -1285,27 +1285,27 @@ function filesAtCommonPathWithoutGlobsWithOptions( test )
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 0, withImport - 1, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withSingle : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true, withSingle : 0 });
   test.identical( got, [] );
 
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 0, withExport - 1';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withImport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true, withImport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
 
   test.case = 'path to named willfile, withIn - 0, withOut - 1, withSingle - 1, withImport - 1, withExport - 0';
   var got = _.will.filesAt({ commonPath : a.abs( './Author' ) });
   test.identical( got.length, 2 );
-  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : 0, withOut : 1, withExport : 0 });
+  var got = _.will.filesAt({ commonPath : a.abs( './Author' ), withIn : false, withOut : true, withExport : 0 });
   test.identical( got.length, 1 );
   test.identical( got[ 0 ].filePath, a.abs( './Author.out.will.yml' ) );
 
@@ -1352,8 +1352,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 1,
-    withOut : 1,
+    withIn : true,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1366,8 +1366,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1379,8 +1379,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1391,8 +1391,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1404,8 +1404,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1419,8 +1419,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1433,8 +1433,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1447,8 +1447,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1461,8 +1461,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( './*' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1486,8 +1486,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 1,
-    withOut : 1,
+    withIn : true,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1502,8 +1502,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1516,8 +1516,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1528,8 +1528,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1542,8 +1542,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1558,8 +1558,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1574,8 +1574,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1590,8 +1590,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1606,8 +1606,8 @@ function filesAtCommonPathWithGlobsWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/**' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1643,8 +1643,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 1,
-    withOut : 1,
+    withIn : true,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1661,8 +1661,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1675,8 +1675,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1687,8 +1687,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1701,8 +1701,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1717,8 +1717,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1733,8 +1733,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1749,8 +1749,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1763,8 +1763,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '*/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1788,8 +1788,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 1,
-    withOut : 1,
+    withIn : true,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1806,8 +1806,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1820,8 +1820,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1832,8 +1832,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1846,8 +1846,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 0,
-    withOut : 1,
+    withIn : false,
+    withOut : true,
     withSingle : 1,
     withImport : 1,
     withExport : 0
@@ -1862,8 +1862,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 1
@@ -1878,8 +1878,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 0,
     withImport : 1,
     withExport : 1
@@ -1894,8 +1894,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 0,
     withExport : 1
@@ -1908,8 +1908,8 @@ function filesAtCommonPathWithGlobsWithTrailedPathWithOptions( test )
   var got = _.will.filesAt
   ({
     commonPath : a.abs( '**/' ),
-    withIn : 1,
-    withOut : 0,
+    withIn : true,
+    withOut : false,
     withSingle : 1,
     withImport : 1,
     withExport : 0

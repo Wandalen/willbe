@@ -234,7 +234,7 @@ function samples( test )
   let found = fileProvider.filesFind
   ({
     filePath : path.join( sampleDir, '**/*.(s|ss)' ),
-    withStem : 0,
+    withStem : false,
     withDirs : 0,
     filter :
     {

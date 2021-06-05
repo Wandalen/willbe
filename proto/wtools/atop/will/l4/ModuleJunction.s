@@ -1578,7 +1578,7 @@ submodulesJunctionsFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : 1,
+  withPeers : true,
   withoutDuplicates : 0,
 
 }

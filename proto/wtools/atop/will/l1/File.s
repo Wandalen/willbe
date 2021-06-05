@@ -152,7 +152,6 @@ function fileAt_body( o )
 
     if( o.withIn )
     {
-
       if( isTrailed )
       {
         if( o.withSingle )
@@ -206,9 +205,7 @@ function fileAt_body( o )
         if( fileProvider.resolvedIsTerminal( filePath ) )
         result.push({ filePath, role : 'import', out : false });
       }
-
     }
-
   });
 
   return result;
@@ -217,11 +214,11 @@ function fileAt_body( o )
 fileAt_body.defaults =
 {
   commonPath : null,
-  withIn : 1,
-  withOut : 1,
-  withSingle : 1,
-  withImport : 1,
-  withExport : 1,
+  withIn : true,
+  withOut : true,
+  withSingle : true,
+  withImport : true,
+  withExport : true,
   safe : 1,
   fileProvider : null,
 };
@@ -283,10 +280,10 @@ function _filesAtFindTerminals( o )
   var globTerminals = o.fileProvider.filesFinder
   ({
     filter,
-    withTerminals : 1,
-    withDirs : 0,
-    maskPreset : 0,
-    mandatory : 0,
+    withTerminals : true,
+    withDirs : false,
+    maskPreset : false,
+    mandatory : false,
     safe : 0,
     mode : 'distinct',
   });
@@ -494,11 +491,11 @@ function filesAt_body( o )
 filesAt_body.defaults =
 {
   commonPath : null,
-  withIn : 1,
-  withOut : 1,
-  withSingle : 1,
-  withImport : 1,
-  withExport : 1,
+  withIn : true,
+  withOut : true,
+  withSingle : true,
+  withImport : true,
+  withExport : true,
   safe : 1,
   fileProvider : null,
 };

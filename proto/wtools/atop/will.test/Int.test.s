@@ -9503,9 +9503,9 @@ function modulesEach( test )
 
     /* */
 
-    test.description = 'withPeers : 1, withStem : 1, recursive : 2';
-    logger.log( 'withPeers : 1, withStem : 1, recursive : 2' );
-    var got = opener.openedModule.modulesEach({ withPeers : 1, withStem : 1, recursive : 2, outputFormat : '/' })
+    test.description = 'withPeers : true, withStem : 1, recursive : 2';
+    logger.log( 'withPeers : true, withStem : 1, recursive : 2' );
+    var got = opener.openedModule.modulesEach({ withPeers : true, withStem : 1, recursive : 2, outputFormat : '/' })
 
     var exp =
     [
@@ -9523,9 +9523,9 @@ function modulesEach( test )
 
     /* */
 
-    test.description = 'peer, withPeers : 1, withStem : 1, recursive : 2';
-    logger.log( 'peer, withPeers : 1, withStem : 1, recursive : 2' );
-    var got = opener.openedModule.peerModule.modulesEach({ withPeers : 1, withStem : 1, recursive : 2, outputFormat : '/' })
+    test.description = 'peer, withPeers : true, withStem : 1, recursive : 2';
+    logger.log( 'peer, withPeers : true, withStem : 1, recursive : 2' );
+    var got = opener.openedModule.peerModule.modulesEach({ withPeers : true, withStem : 1, recursive : 2, outputFormat : '/' })
 
     var exp =
     [
@@ -9568,14 +9568,14 @@ function modulesEach( test )
   .then( () =>
   {
 
-    test.description = 'withPeers : 1, withStem : 1, recursive : 2';
+    test.description = 'withPeers : true, withStem : 1, recursive : 2';
     var exp = [ 'super', 'sub', 'sub.out/sub.out', 'super.out/supermodule.out' ];
-    var got = opener.openedModule.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
+    var got = opener.openedModule.modulesEach({ withPeers : true, withStem : 1, recursive : 2 })
     test.identical( _.setFrom( a.rel( _.select( got, '*/commonPath' ) ) ), _.setFrom( exp ) );
 
-    test.description = 'peerModule, withPeers : 1, withStem : 1, recursive : 2';
+    test.description = 'peerModule, withPeers : true, withStem : 1, recursive : 2';
     var exp = [ 'super', 'sub', 'sub.out/sub.out', 'super.out/supermodule.out' ];
-    var got = opener.openedModule.peerModule.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
+    var got = opener.openedModule.peerModule.modulesEach({ withPeers : true, withStem : 1, recursive : 2 })
     test.identical( _.setFrom( a.rel( _.select( got, '*/commonPath' ) ) ), _.setFrom( exp ) );
 
     opener.finit();
@@ -9618,7 +9618,7 @@ function modulesEachDuplicates( test )
     var o2 = Object.create( null );
     o2.recursive = 1;
     o2.withStem = 1;
-    o2.withPeers = 1;
+    o2.withPeers = true;
     o2.onUp = handleUp;
     o2.outputFormat = '*/module';
     var got = opener.openedModule.modulesEach( o2 );
@@ -9644,7 +9644,7 @@ function modulesEachDuplicates( test )
     var o2 = Object.create( null );
     o2.recursive = 1;
     o2.withStem = 1;
-    o2.withPeers = 1;
+    o2.withPeers = true;
     o2.onUp = handleUp;
     o2.outputFormat = '*/module';
     var got = opener.openedModule.submoduleMap.a.opener.openedModule.modulesEach( o2 )
@@ -9805,7 +9805,7 @@ function modulesForOpeners( test )
     clean();
     let o2 =
     {
-      withPeers : 0,
+      withPeers : false,
       withStem : 1,
       modules : [ opener ],
       onEachModule : onEachModule,
@@ -9849,12 +9849,12 @@ function modulesForOpeners( test )
 
   a.ready.then( () =>
   {
-    test.case = 'withStem : 0';
+    test.case = 'withStem : false';
     clean();
     let o2 =
     {
-      withPeers : 0,
-      withStem : 0,
+      withPeers : false,
+      withStem : false,
       modules : [ opener ],
       onEachModule : onEachModule,
       onEachJunction : onEachJunction,
@@ -9951,13 +9951,13 @@ function modulesFor( test )
     withDisabledSubmodules : 0,
     withEnabledModules : 1,
     withEnabledSubmodules : 1,
-    withIn : 1,
+    withIn : true,
     withInvalid : 1,
     withKnown : 1,
     withMandatorySubmodules : 1,
     withOptionalSubmodules : 1,
-    withOut : 1,
-    withPeers : 1,
+    withOut : true,
+    withPeers : true,
     withStem : 1,
     withTerminals : 1,
     withUnknown : 0,
@@ -10342,13 +10342,13 @@ function modulesForWithOptionsWith( test )
     withDisabledSubmodules : 0,
     withEnabledModules : 1,
     withEnabledSubmodules : 1,
-    withIn : 1,
+    withIn : true,
     withInvalid : 1,
     withKnown : 1,
     withMandatorySubmodules : 1,
     withOptionalSubmodules : 1,
-    withOut : 1,
-    withPeers : 1,
+    withOut : true,
+    withPeers : true,
     withStem : 1,
     withTerminals : 1,
     withUnknown : 0,
@@ -10450,11 +10450,11 @@ function modulesForWithOptionsWith( test )
   begin({ selector : a.abs( './a' ) })
   .then( () =>
   {
-    test.case = 'single module, with nested submodules, withStem : 0';
+    test.case = 'single module, with nested submodules, withStem : false';
     let o2 =
     {
       ... defaults,
-      withStem : 0,
+      withStem : false,
       modules : openers,
     }
     return a.will.modulesFor( o2 )
@@ -10500,11 +10500,11 @@ function modulesForWithOptionsWith( test )
   begin({ selector : a.abs( './group2/c' ) })
   .then( () =>
   {
-    test.case = 'exported module, withIn : 0';
+    test.case = 'exported module, withIn : false';
     let o2 =
     {
       ... defaults,
-      withIn : 0,
+      withIn : false,
       modules : openers,
     }
     return a.will.modulesFor( o2 )
@@ -10550,11 +10550,11 @@ function modulesForWithOptionsWith( test )
   begin({ selector : a.abs( './group2/c' ) })
   .then( () =>
   {
-    test.case = 'exported module, withOut : 0';
+    test.case = 'exported module, withOut : false';
     let o2 =
     {
       ... defaults,
-      withOut : 0,
+      withOut : false,
       modules : openers,
     }
     return a.will.modulesFor( o2 )
@@ -10600,12 +10600,12 @@ function modulesForWithOptionsWith( test )
   begin({ selector : a.abs( './group2/c' ) })
   .then( () =>
   {
-    test.case = 'exported module, withIn : 0, withOut : 0';
+    test.case = 'exported module, withIn : false, withOut : false';
     let o2 =
     {
       ... defaults,
-      withIn : 0,
-      withOut : 0,
+      withIn : false,
+      withOut : false,
       modules : openers,
     }
     return a.will.modulesFor( o2 )
@@ -10639,11 +10639,11 @@ function modulesForWithOptionsWith( test )
   begin({ selector : a.abs( './group2/c' ) })
   .then( () =>
   {
-    test.case = 'exported module, withPeers : 0';
+    test.case = 'exported module, withPeers : false';
     let o2 =
     {
       ... defaults,
-      withPeers : 0,
+      withPeers : false,
       modules : openers,
     }
     return a.will.modulesFor( o2 )
@@ -10905,13 +10905,13 @@ function modulesForWithSubmodules( test )
     withDisabledSubmodules : 0,
     withEnabledModules : 1,
     withEnabledSubmodules : 1,
-    withIn : 1,
+    withIn : true,
     withInvalid : 1,
     withKnown : 1,
     withMandatorySubmodules : 1,
     withOptionalSubmodules : 1,
-    withOut : 1,
-    withPeers : 1,
+    withOut : true,
+    withPeers : true,
     withStem : 1,
     withTerminals : 1,
     withUnknown : 0,

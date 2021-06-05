@@ -438,8 +438,8 @@ function _willfilesFindAct( o )
 _willfilesFindAct.defaults =
 {
   willfilesPath : null,
-  withIn : 1,
-  withOut : 1,
+  withIn : true,
+  withOut : true,
 }
 
 //
@@ -997,7 +997,7 @@ submodulesRelationsFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : 1,
+  withPeers : true,
   withoutDuplicates : 0,
 
 }
@@ -1020,7 +1020,7 @@ submodulesRelationsOwnFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : 1,
+  withPeers : true,
   withoutDuplicates : 0,
   allVariants : 0,
 
