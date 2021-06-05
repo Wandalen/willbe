@@ -221,6 +221,1167 @@ module:
           - ../proto/wtools/atop/will.test/Remake.s
           - ../proto/wtools/atop/will.test/ReposDownload.s
           - ../proto/wtools/atop/will.test/_asset
+          - ../proto/wtools/atop/will.test/_asset/-repo
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/objects/pack/pack-dc0625f133199444e25adc86fafb4618b8092233.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/objects/pack/pack-dc0625f133199444e25adc86fafb4618b8092233.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/doc/ModuleForTesting1.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/node_modules/wmodulefortesting1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/wtools/testing/l1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/objects/pack/pack-f9c0bbc92ab89b7c784eb80abbfb2f766fd7e943.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/objects/pack/pack-f9c0bbc92ab89b7c784eb80abbfb2f766fd7e943.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/doc/ModuleForTesting12.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/out/wModuleForTesting12.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/node_modules/wmodulefortesting12
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/wtools/testing/l3
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/wtools/testing/l3/testing12
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/proto/wtools/testing/l3/testing12/ModuleForTesting12.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.circleci/config.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/objects/pack/pack-3d505fa019290f1d874d2213357f1ee741d72eb3.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/objects/pack/pack-3d505fa019290f1d874d2213357f1ee741d72eb3.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/doc/ModuleForTesting12ab.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/node_modules/wmodulefortesting12ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/wtools/testing/l4
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/wtools/testing/l4/testing12ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting12ab/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/objects/pack/pack-c553d9eb2c07fa2b0b8272fd8ac6e3e7a353a1ff.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/objects/pack/pack-c553d9eb2c07fa2b0b8272fd8ac6e3e7a353a1ff.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/doc/ModuleForTesting1a.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/out/wModuleForTesting1a.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/node_modules/wmodulefortesting1a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/wtools/testing/l2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/wtools/testing/l2/testing1a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/proto/wtools/testing/l2/testing1a/ModuleForTesting1a.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1a/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/objects/pack/pack-c98fa225cd776457905a816777bb6c5077092334.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/objects/pack/pack-c98fa225cd776457905a816777bb6c5077092334.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/doc/ModuleForTesting1b.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/out/wModuleForTesting1b.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/node_modules/wmodulefortesting1b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/wtools/testing/l3
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/wtools/testing/l3/testing1b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/proto/wtools/testing/l3/testing1b/ModuleForTesting1b.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting1b/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/objects/pack/pack-f8e9de2edeae6f0622bdebc3055539637783f2c0.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/objects/pack/pack-f8e9de2edeae6f0622bdebc3055539637783f2c0.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/doc/ModuleForTesting2.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/out/wModuleForTesting2.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/node_modules/wmodulefortesting2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/wtools/testing/l2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/wtools/testing/l2/testing2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/proto/wtools/testing/l2/testing2/ModuleForTesting2.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/objects/pack/pack-3c1ddcfa06d6935670f92dc1761fe26978eecbcd.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/objects/pack/pack-3c1ddcfa06d6935670f92dc1761fe26978eecbcd.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/doc/ModuleForTesting2a.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/node_modules/wmodulefortesting2a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools/testing/Basic.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools/testing/l3
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools/testing/l3/testing2a
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2a/sample/trivial/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.eslintrc.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.gitattributes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.gitignore
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/License
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/Readme.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/was.package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.circleci
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.circleci/config.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/config
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/description
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/index
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/ORIG_HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/packed-refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/branches
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/post-update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/pre-push.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/hooks/update.sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/info/exclude
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/objects
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/objects/info
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/objects/pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/objects/pack/pack-312f10c8ad7006c2f45f58cb8c6bee02031c21e5.idx
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/objects/pack/pack-312f10c8ad7006c2f45f58cb8c6bee02031c21e5.pack
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs/heads
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs/heads/master
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs/remotes
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs/remotes/origin
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs/remotes/origin/HEAD
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.git/refs/tags
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.github
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.github/workflows
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.github/workflows/TestAssetPublish.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.github/workflows/TestAssetPullRequest.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/.github/workflows/TestAssetPush.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/doc
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/doc/ModuleForTesting2b.md
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/doc/README.md
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/out/wModuleForTesting2b.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/node_modules/wmodulefortesting2b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/wtools/testing/l4
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/wtools/testing/l4/testing2b
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/proto/wtools/testing/l4/testing2b/ModuleForTesting2b.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/sample
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/sample/trivial
+          - >-
+            ../proto/wtools/atop/will.test/_asset/-repo/ModuleForTesting2b/sample/trivial/Sample.s
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal/l1.will.yml
           - ../proto/wtools/atop/will.test/_asset/4LevelsLocal/l2.will.yml
@@ -1298,6 +2459,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/hierarchyDuplicate/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchyDuplicate/group1/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd
+          - >-
+            ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd/z.will.yml
+          - ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd/group1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/hierarchyDuplicateGitHd/group1/a.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/z.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchyHdBug/+
@@ -1949,6 +3116,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck
           - >-
             ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck/.will.yaml
+          - ../proto/wtools/atop/will.test/_asset/submoduleIsValid
+          - ../proto/wtools/atop/will.test/_asset/submoduleIsValid/good.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules
           - ../proto/wtools/atop/will.test/_asset/submodules/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules/.im.will.yml
@@ -2162,6 +3331,14 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesReflectWithNotExisting/module/moduleB/proto/amid
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesReflectWithNotExisting/module/moduleB/proto/amid/File.txt
+          - ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/.ex.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesRemoteGitHd/proto/WithSubmodules.s
           - ../proto/wtools/atop/will.test/_asset/submodulesRemoteRepos
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesRemoteRepos/.ex.will.yml
@@ -2195,6 +3372,18 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/src/out
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/src/out/experiment.out.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo/out
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchToOutdatedBranch/repo/out/testrepo.out.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/module
@@ -2869,7 +4058,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           content: proto

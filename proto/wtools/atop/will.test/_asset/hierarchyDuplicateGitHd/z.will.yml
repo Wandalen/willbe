@@ -1,0 +1,49 @@
+
+about :
+  name : z
+  version : '0.0.0'
+
+submodule :
+
+  a : ./group1/a
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!gamma
+
+path :
+
+  out : out
+  out.debug :
+    path : '{path::out}/debug'
+    criterion :
+      debug : 1
+  temp : '{path::out}'
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    criterion :
+      debug : 1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+
+step :
+
+  export :
+    inherit : module.export
+    export : '{path::out.*=1}/**'
+    tar : 0
+    criterion :
+      debug : 1
+
+build :
+
+  export :
+    steps :
+      - submodules.download
+      - reflect.submodules
+      - export
+    criterion :
+      debug : 1
+      default : 1
+      export : 1

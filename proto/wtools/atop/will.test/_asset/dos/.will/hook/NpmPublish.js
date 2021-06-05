@@ -16,11 +16,20 @@ function onModule( context )
   o.verbosity = o.v;
   _.routine.options( onModule, o );
 
+  if( o.org === null )
+  o.org = [ 'srt', 'wtools' ];
+
   if( !context.junction.module )
   return;
 
   if( !o.tag )
   throw _.errBrief( 'Expects option {-tag-}' );
+
+  if( !o.org )
+  throw _.errBrief( 'Expects option {-org-}' );
+
+  if( !o.npmUserName )
+  throw _.errBrief( 'Expects option {-npmUserName-}' );
 
   if( !fileProvider.fileExists( wasСonfigPath ) )
   throw _.errBrief( `Does not have ${wasСonfigPath}` );
@@ -38,6 +47,8 @@ function onModule( context )
     delete context2.request.map.dry;
     delete context2.request.map.submodulesUpdating;
     delete context2.request.map.force;
+    delete context2.request.map.org;
+    delete context2.request.map.npmUserName;
     _.assert( context2.request.map !== context.request.map );
     context2.will.hooks.GitSync.call( context2 );
   }
@@ -131,6 +142,8 @@ function onModule( context )
     delete context2.request.map.dry;
     delete context2.request.map.submodulesUpdating;
     delete context2.request.map.force;
+    delete context2.request.map.org;
+    delete context2.request.map.npmUserName;
     context2.will.hooks.GitSync.call( context2 );
   }
 
@@ -181,14 +194,31 @@ function onModule( context )
     let about = aboutCache[ dep.name ];
     if( !about )
     about = aboutCache[ dep.name ] = _.npm.remoteAbout( dep.name );
-    if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
+
+    if( about )
     {
-      dep.version = o.tag;
-      return;
-    }
-    if( about && about.version )
-    {
-      dep.version = about.version;
+      let isOwner = false;
+
+      if( about.org )
+      {
+        if( _.longHasAny( _.array.as( o.org ), about.org ) )
+        isOwner = true;
+      }
+      else if( about._npmUser && about._npmUser.name === o.npmUserName )
+      {
+        isOwner = true;
+      }
+
+      if( isOwner )
+      {
+        dep.version = o.tag;
+        return;
+      }
+
+      if( about.version )
+      {
+        dep.version = about.version;
+      }
     }
   }
 
@@ -202,6 +232,8 @@ defaults.dry = 0;
 defaults.submodulesUpdating = 0;
 defaults.force = 0;
 defaults.verbosity = 2;
+defaults.org = null;
+defaults.npmUserName = 'wandalen'
 
 module.exports = onModule;
 

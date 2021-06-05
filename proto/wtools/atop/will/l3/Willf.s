@@ -74,8 +74,6 @@ function finit()
         peerWillfile.peerWillfiles = null;
       }
       if( !peerWillfile.isUsed() )
-      debugger;
-      if( !peerWillfile.isUsed() )
       peerWillfile.finit();
     });
   }
@@ -204,9 +202,6 @@ function preform()
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  // if( willf.id === 259 )
-  // debugger;
-
   if( willf.formed >= 2 )
   return willf;
 
@@ -214,9 +209,6 @@ function preform()
 
   willf._registerForm();
   willf._inPathsForm();
-
-  // if( willf.id === 259 )
-  // debugger;
 
   _.assert( willf.formed === 2 );
   return willf;
@@ -394,7 +386,7 @@ function _read()
       _.bufferBytesIs( willf.data ) || willf.filePath !== willf.storagePath,
       `Something wrong with content of willfile ${willf.filePath}`
     );
-    _.assert( willf.dirPath === path.detrail( path.dir( _.arrayAs( willf.filePath )[ 0 ] ) ) );
+    _.assert( willf.dirPath === path.detrail( path.dir( _.array.as( willf.filePath )[ 0 ] ) ) );
 
     willf._readLog( 1, 0 );
 
@@ -433,9 +425,6 @@ function _open()
   let path = fileProvider.path;
   let logger = will.transaction.logger;
   let inconsistent = 0;
-
-  // if( willf.id === 259 )
-  // debugger;
 
   if( willf.formed === 2 )
   willf._read();
@@ -557,7 +546,7 @@ function _open()
       willf.isConsistent();
       inconsistent = 1;
       let peerWillfilesPath = willf.peerWillfilesPathGet();
-      peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+      peerWillfilesPath = _.array.as( peerWillfilesPath );
       if( willf.openedModule && willf.openedModule.peerModule )
       willf.openedModule.peerModule.peerModuleIsOutdated = true;
       throw _.errBrief
@@ -615,10 +604,8 @@ function reopen( o )
 
   if( o.forModule )
   {
-    // debugger;
     if( willf.openedModule !== o.forModule )
     {
-      debugger;
       throw _.err( 'Willfiles reopening is not impemented' );
     }
   }
@@ -675,11 +662,11 @@ function _readLog( reading, failed )
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( willf.storagePath ) );
 
-  let filePath = _.color.strFormat( _.arrayAs( willf.filePath ), 'path' );
+  let filePath = _.color.strFormat( _.array.as( willf.filePath ), 'path' );
 
   if( willf.storagePath && willf.storagePath !== willf.filePath )
   {
-    let storagePath = _.color.strFormat( path.s.relative( _.arrayAs( willf.filePath ), willf.storagePath ), 'path' );
+    let storagePath = _.color.strFormat( path.s.relative( _.array.as( willf.filePath ), willf.storagePath ), 'path' );
     for( let f = 0 ; f < filePath.length ; f++ )
     {
       if( failed === 2 )
@@ -909,7 +896,7 @@ function peerWillfilesOpen()
   peerWillfiles = willf.peerWillfiles = [];
 
   let peerWillfilesPath = willf.peerWillfilesPathGet();
-  peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+  peerWillfilesPath = _.array.as( peerWillfilesPath );
   peerWillfilesPath.forEach( ( peerWillfilePath ) =>
   {
     let got = will.willfileFor({ willf : { filePath : peerWillfilePath }, combining : 'supplement' });
@@ -1152,7 +1139,6 @@ function isConsistentWith( willf2, opening )
     let hash2 = willf2.hashFullGet();
     if( !hash2 )
     {
-      debugger;
       return false;
     }
     return hash1 === hash2;
@@ -1165,14 +1151,10 @@ function isConsistentWith( willf2, opening )
 
     _.assert( _.strIs( filePath ) );
 
-    // if( _.strEnds( filePath, '.module/wModuleForTesting1/.ex.will.yml' ) )
-    // debugger;
-
     let hash1 = willf.hashFullFor( filePath );
 
     if( !hash1 )
     {
-      debugger;
       throw _.err( `${willf.filePath} does not have hash for ${filePath}` );
     }
 
@@ -1224,7 +1206,7 @@ function isConsistent( opening )
   {
 
     let peerWillfilesPath = willf.peerWillfilesPathGet();
-    peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+    peerWillfilesPath = _.array.as( peerWillfilesPath );
     result = peerWillfilesPath.every( ( peerWillfilePath ) =>
     {
       return willf.isConsistentWith( peerWillfilePath, 0 );
@@ -1262,7 +1244,6 @@ function isConsistent( opening )
 //   //   let relativePathSplits = _.path.split( o.relativePath );
 //   //   if( _.longHas( relativePathSplits, '.module' ) )
 //   //   {
-//   //     debugger;
 //   //     dirPathSplits.splice( dirPathSplits.indexOf( '.module' ) );
 //   //     o.dirPath = dirPathSplits.join( '/' );
 //   //     relativePathSplits.splice( 0, relativePathSplits.indexOf( '.module' ) );
@@ -1279,7 +1260,6 @@ function isConsistent( opening )
 //   //   let splits = _.path.split( r );
 //   //   if( _.longCountElement( splits, '.module' ) > 1 )
 //   //   {
-//   //     // debugger; // yyy
 //   //     let f = splits.indexOf( '.module' );
 //   //     let l = splits.lastIndexOf( '.module' );
 //   //     splits.splice( f, l-f );
@@ -1337,9 +1317,7 @@ function _attachedModulesOpenWillfiles()
     // willfilesPath = path.s.join( willf.dirPath, path.dirFirst( relativePath ), inPath, willfilesPath );
 
     willfilesPath = path.s.join( willf.dirPath, path.dirFirst( relativePath ), inPath, willfilesPath );
-    // debugger;
     willfilesPath = will.LocalPathNormalize( willfilesPath );
-    // debugger;
 
     let willfOptions =
     {
@@ -1377,8 +1355,6 @@ function structureOf( object )
   let relativePath = path.relative( willf.dirPath, commonPath );
 
   _.sure( _.mapIs( willf.structure.module ), `Structure of willfile ${willf.filePath} does not have section "module"` );
-  if( !willf.structure.module[ relativePath ] )
-  debugger;
 
   return willf.structure.module[ relativePath ];
 }
@@ -1588,14 +1564,12 @@ function save( o )
   if( will.transaction.verbosity >= 2 )
   logger.log( `Saving ${_.color.strFormat( willf.filePath, 'path' )}` );
 
-  debugger;
   hd.fileWrite
   ({
     filePath : willf.filePath,
     data : structure,
     encoding : 'yaml',
   });
-  debugger;
 
 }
 
@@ -1611,13 +1585,11 @@ function exportStructure( o )
   let will = willf.will;
   let module = willf.openedModule;
   o = _.routine.options_( exportStructure, arguments );
-  debugger;
 
   let o2 = _.mapOnly_( null, o, module.exportStructure.defaults );
   o2.willf = willf
   let structure = module.exportStructure( o2 );
 
-  debugger;
   return structure
 }
 

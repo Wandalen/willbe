@@ -17,11 +17,11 @@ step :
     profile : 'test-profile'
 
   git.sync.message :
-    commit : '-am fifth'
+    message : '-am fifth'
     profile : 'test-profile'
 
   git.sync.dry :
-    commit : '-am fifth'
+    message : '-am fifth'
     profile : 'test-profile'
     dry : 1
 

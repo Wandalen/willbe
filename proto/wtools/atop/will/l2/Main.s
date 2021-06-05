@@ -303,7 +303,7 @@ function DirPathFromFilePaths( filePaths )
 {
   let module = this;
 
-  filePaths = _.arrayAs( filePaths );
+  filePaths = _.array.as( filePaths );
 
   _.assert( _.strsAreAll( filePaths ) );
   _.assert( arguments.length === 1 );
@@ -325,7 +325,7 @@ function DirPathFromFilePaths( filePaths )
     return filePath;
   });
 
-  let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
+  let filePath = _.strCommonLeft.apply( _, _.array.as( filePaths ) );
   _.assert( filePath.length > 0 );
   return filePath;
 }
@@ -819,7 +819,6 @@ function _pathChanged( o )
   if( o.propName === 'currentRemotePath' || o.propName === 'currentRemote' )
   {
     logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.propName, _.entity.exportStringNice( o.val ) );
-    // debugger;
   }
 
   // if( o.val )
@@ -1070,7 +1069,7 @@ function recursiveValueDeduceFromBuild( o )
   if( will.transaction.withSubmodules !== null )
   return will.transaction.withSubmodules;
 
-  o.modules = _.arrayAs( o.modules );
+  o.modules = _.array.as( o.modules );
 
   _.all( o.modules, ( module ) =>
   {
@@ -1777,7 +1776,7 @@ function modulesFindEachAt( o )
     });
 
     if( !_.mapIs( resolved ) )
-    resolved = _.arrayAs( resolved );
+    resolved = _.array.as( resolved );
 
     _.each( resolved, ( it ) =>
     {
@@ -2163,13 +2162,13 @@ function modulesEach_body( o )
 
   if( !o.ownedObjects )
   o.ownedObjects = [];
-  o.modules = _.arrayAs( o.modules );
+  o.modules = _.array.as( o.modules );
   o.modules.forEach( objectAppend );
   _.assert( will.ObjectsAreAll( o.modules ) );
 
   /* */
 
-  let nodes = _.arrayAs( o.modules );
+  let nodes = _.array.as( o.modules );
   nodes = _.filter_( null, nodes, ( node ) =>
   {
     if( _.will.isJunction( node ) )
@@ -2372,7 +2371,7 @@ function modulesFor_body( o )
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
-  o.modules = _.arrayAs( o.modules );
+  o.modules = _.array.as( o.modules );
 
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
@@ -2583,7 +2582,7 @@ function modulesDownload_body( o )
   o.nodesGroup = will.graphGroupMake( _.mapOnly_( null, o, will.graphGroupMake.defaults ) );
 
   _.routine.assertOptions( modulesDownload_body, arguments );
-  o.modules = _.arrayAs( o.modules );
+  o.modules = _.array.as( o.modules );
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
   _.assert( arguments.length === 1 );
@@ -2601,7 +2600,7 @@ function modulesDownload_body( o )
   return _.Consequence().take( o );
 
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ] : null;
-  let rootJunctions = _.arrayAs( will.junctionsFrom( o.modules ) );
+  let rootJunctions = _.array.as( will.junctionsFrom( o.modules ) );
 
   return objectsUpformAndDownload( o.modules )
   .finally( ( err, arg ) =>
@@ -3097,7 +3096,7 @@ function modulesClean( o )
       if( object instanceof _.will.ModuleOpener )
       module = object.openedModule;
 
-      const willfilesPath = _.arrayAs( module.willfilesPath );
+      const willfilesPath = _.array.as( module.willfilesPath );
       if( _.longHasAny( files[ '/' ], willfilesPath ) )
       {
         const msg = `${ module.qualifiedName } should not delete itself. Please, set correct {-path::out-} and {-path::temp-}`;
@@ -4783,7 +4782,7 @@ function willfileFor( o )
     return r;
     _.assert( !o.willf.data );
     _.assert( !o.willf.structure );
-    _.arrayAs( willf ).forEach( ( willf ) =>
+    _.array.as( willf ).forEach( ( willf ) =>
     {
       if( !o.combining )
       throw _.err( `Cant redefine willfile ${willf.filePath}, because {- o.combining -} is off` );
@@ -4819,7 +4818,7 @@ function willfileUnregister( willf )
   if( !will.willfileWithCommonPathMap[ willf.commonPath ].length )
   delete will.willfileWithCommonPathMap[ willf.commonPath ];
 
-  let filePath = _.arrayAs( willf.filePath );
+  let filePath = _.array.as( willf.filePath );
   for( let f = 0 ; f < filePath.length ; f++ )
   {
     _.assert( will.willfileWithFilePathPathMap[ filePath[ f ] ] === willf );
@@ -4842,7 +4841,7 @@ function willfileRegister( willf )
 
   _.arrayAppendOnceStrictly( will.willfilesArray, willf );
 
-  let filePath = _.arrayAs( willf.filePath );
+  let filePath = _.array.as( willf.filePath );
   for( let f = 0 ; f < filePath.length ; f++ )
   {
     _.assert( _.longHas( [ willf, undefined ], will.willfileWithFilePathPathMap[ filePath[ f ] ] ) );
@@ -5376,7 +5375,7 @@ function hookFindAt( o )
   function end( found )
   {
     if( !o.single )
-    return _.arrayAs( found );
+    return _.array.as( found );
     if( _.strIs( found ) )
     return found;
     _.assert( _.arrayIs( found ) );

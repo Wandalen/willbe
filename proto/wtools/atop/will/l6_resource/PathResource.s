@@ -189,7 +189,7 @@ function form3()
 
   if( resource.path )
   {
-    let filePath = _.arrayAs( resource.path );
+    let filePath = _.array.as( resource.path );
     filePath.forEach( ( p ) =>
     {
       // _.sure( !path.isGlobal( p ) || path.isAbsolute( p ), 'Global paths should be absolute, but ' + p + ' is not absolute' );

@@ -1,10 +1,10 @@
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!delta
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!delta
-  # ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!delta
-  # ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will!delta
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will!gamma
+  # ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma
+  # ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will!gamma
 
 path :
 

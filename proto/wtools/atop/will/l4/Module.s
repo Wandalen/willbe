@@ -3494,7 +3494,7 @@ function moduleFixateAct( o )
   _.assert( _.strIs( o.originalPath ) );
   _.assert( !o.fixatedPath || _.strIs( o.fixatedPath ) );
 
-  o.willfilePath = _.arrayAs( o.willfilePath );
+  o.willfilePath = _.array.as( o.willfilePath );
   o.report = o.report || Object.create( null );
 
   if( !o.fixatedPath )
@@ -4403,7 +4403,7 @@ function peerWillfilesPathFromWillfiles( willfilesArray )
   let will = module.will;
 
   willfilesArray = willfilesArray || module.willfilesArray;
-  willfilesArray = _.arrayAs( willfilesArray );
+  willfilesArray = _.array.as( willfilesArray );
 
   let peerWillfilesPath = module.willfilesArray.map( ( willf ) =>
   {
@@ -4987,7 +4987,7 @@ function cleanWhatSingle( o )
       let filePath = resource.path;
       if( !filePath )
       filePath = [];
-      filePath = _.arrayAs( path.s.join( module.inPath, filePath ) );
+      filePath = _.array.as( path.s.join( module.inPath, filePath ) );
       find( filePath );
     }
 
@@ -5231,10 +5231,10 @@ function resolve_body( o )
 _.routine.extendReplacing( resolve_body, _.will.resolver.resolve.body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 // let resolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
-// resolve.defaults.Looker = resolve.defaults;
+// resolve.defaults.Seeker = resolve.defaults;
 _.assert( resolve.defaults === resolve.body.defaults );
 _.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
-_.assert( resolve.defaults === resolve.defaults.Looker );
+_.assert( resolve.defaults === resolve.defaults.Seeker );
 
 //
 
@@ -5251,8 +5251,8 @@ _.assert( resolveMaybe_body.defaults === _.will.resolver.resolveMaybe.defaults )
 _.assert( resolveMaybe_body.defaults !== resolve_body.defaults );
 let resolveMaybe = _.routine.uniteReplacing( resolve_head, resolveMaybe_body );
 // let resolveMaybe = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
-_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Looker );
-_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Looker );
+_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Seeker );
+_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Seeker );
 
 //
 
@@ -5319,6 +5319,7 @@ _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 function pathOrReflectorResolve_head( routine, args )
 {
   let module = this;
+  debugger;
   let o = module._resolve_head.call( module, routine, args );
   _.assert( arguments.length === 2 );
   return _.will.resolver.pathOrReflectorResolve.head.call( _.will.resolver, routine, [ o ] );
@@ -5393,7 +5394,7 @@ let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolv
 
 _.assert( submodulesResolve.defaults === submodulesResolve.body.defaults );
 _.assert( submodulesResolve.defaults === _.will.resolver.submodulesResolve.defaults );
-_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Looker );
+_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Seeker );
 
 _.assert( _.will.resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
@@ -5412,7 +5413,7 @@ function reflectorResolve_body( o )
 _.routine.extendReplacing( reflectorResolve_body, _.will.resolver.reflectorResolve.body );
 let reflectorResolve = _.routine.uniteReplacing( resolve_head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
-_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Seeker );
 
 // --
 // other resolver
@@ -6829,6 +6830,7 @@ function exportStructure( o )
     }
   }
 
+  if( Config.debug )
   if( o.exportModule.isOut )
   {
     _.assert( !!o.dst.path );
@@ -6841,7 +6843,8 @@ function exportStructure( o )
     _.assert( !!o.dst.path[ 'module.willfiles' ] );
     _.assert( !!o.dst.path[ 'module.willfiles' ].path );
     _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
-    _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( module.isOut === _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     _.assert( !_.path.map.identical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     // _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     // _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
@@ -7133,7 +7136,7 @@ function structureExportConsistency( o )
   willfiles.forEach( ( willf ) =>
   {
 
-    _.arrayAs( willf.filePath ).forEach( ( filePath ) =>
+    _.array.as( willf.filePath ).forEach( ( filePath ) =>
     {
       let r = willf.hashDescriptorGet( filePath );
       let relativePath = path.relative( o.exportModule.inPath, filePath );
@@ -7267,7 +7270,7 @@ function _npmGenerateFromWillfile( o )
 
     if( o.srcConfig.about.interpreters )
     {
-      let interpreters = _.arrayAs( o.srcConfig.about.interpreters );
+      let interpreters = _.array.as( o.srcConfig.about.interpreters );
       interpreters.forEach( ( interpreter ) =>
       {
         if( _.strHas( interpreter, 'njs' ) )
@@ -8837,11 +8840,11 @@ function willfileVersionBump( o )
   if( _.strIs( o.versionDelta ) )
   deltaArray = o.versionDelta.split( '.' );
   else if( _.numberIs( o.versionDelta ) )
-  deltaArray = _.arrayAs( o.versionDelta );
+  deltaArray = _.array.as( o.versionDelta );
   else
   _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
 
-  _.assert( versionArray.length >= deltaArray.length, 'Not known how to change version.' );
+  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to change version.' );
 
   for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
   {
@@ -9480,7 +9483,7 @@ function _providerArchiveMake( o )
   /* qqq : for Dmyto : bad! */
 
   if( config && config.path && config.path.hlink )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.array.as( provider.archive.basePath ), _.array.as( config.path.hlink ) );
 
   if( o.logger )
   provider.archive.logger.outputTo( o.logger, { combining : 'rewrite' } );

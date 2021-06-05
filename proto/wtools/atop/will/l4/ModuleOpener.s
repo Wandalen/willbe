@@ -404,7 +404,7 @@ function _willfilesFindAct( o )
 
   if( opener.searching === 'exact' )
   {
-    o.willfilesPath = _.arrayAs( o.willfilesPath );
+    o.willfilesPath = _.array.as( o.willfilesPath );
     records = o.willfilesPath.map( ( willfilePath ) => fileProvider.record( willfilePath ) );
   }
   else
@@ -1691,7 +1691,10 @@ function _repoDownload( o )
 
       _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
-      o2.extra.fetchingTags = 1;
+      {
+        o2.extra.fetching = 1;
+        o2.extra.fetchingTags = 1;
+      }
     }
 
     if( downloading && !o.dry )
@@ -1779,7 +1782,7 @@ function _repoDownload( o )
       if( will.transaction.verbosity >= 3 )
       logger.log( ` + Reflected ${path.moveTextualReport( opener2.downloadPath, opener.downloadPath )}` );
       let filter = { filePath : { [ opener.downloadPath ] : opener2.downloadPath } }
-      return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linking : 'hardLink' });
+      return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linkingAction : 'hardLink' });
     });
   }
 
@@ -1812,7 +1815,8 @@ function _repoDownload( o )
   function moduleReopenMaybe( opener2, same )
   {
 
-    if( ( opener2.downloadPath === opener.downloadPath ) ^ same )
+    // if( ( opener2.downloadPath === opener.downloadPath ) ^ same )
+    if( ( opener2.downloadPath === opener.downloadPath ) === !same )
     return null;
 
     if( _.longHas( reopened, opener2 ) )
