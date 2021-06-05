@@ -555,6 +555,7 @@ function fileReadResource_body( o )
 
   if( !found.length )
   {
+    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;
@@ -612,6 +613,7 @@ function fileWriteResource_body( o )
 
   if( !found.length )
   {
+    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;

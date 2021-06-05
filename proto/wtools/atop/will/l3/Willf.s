@@ -1390,6 +1390,8 @@ function exists()
   if( !willf._found )
   {
 
+    // debugger;
+    // _.assert( !!_.files.ReadEncoders[ 'yml' ] );
     willf._found = fileProvider.configFind({ filePath : willf.filePath });
     _.assert( willf._found.length === 0 || willf._found.length === 1 );
     if( willf._found.length )
