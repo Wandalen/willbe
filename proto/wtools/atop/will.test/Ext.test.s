@@ -17406,12 +17406,11 @@ function shellVerbosity( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepShellVerbosity' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
   a.appStart({ execPath : '.build verbosity.0' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.0';
@@ -17423,12 +17422,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.1' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.1';
@@ -17440,12 +17438,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.2' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.2';
@@ -17457,12 +17454,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.3' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.3';
@@ -17474,12 +17470,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.5' })
-
   .then( ( op ) =>
   {
     test.case = 'verbosity:5';
@@ -17491,7 +17486,7 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -24182,6 +24177,49 @@ function stepBuild( test )
     test.identical( _.strCount( op.output, 'Instance build::step3 already exists' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to make resource build::step3' ), 1 );
     return op;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepShellWithSeveralCommands( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellSeveralCommands' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ execPath : '.build echo.simple' })
+  .then( ( op ) =>
+  {
+    test.case = 'three different list commands';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo' ), 3 );
+    test.identical( _.strCount( op.output, '> echo \'one\'' ), 1 );
+    test.identical( _.strCount( op.output, '> echo \'two\'' ), 1 );
+    test.identical( _.strCount( op.output, '> echo \'three\'' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::shellSeveralCommands / build::echo.simple in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build echo.resolved' })
+  .then( ( op ) =>
+  {
+    test.case = 'three different list commands';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo' ), 3 );
+    test.identical( _.strCount( op.output, '> echo \'in : .\'' ), 1 );
+    test.identical( _.strCount( op.output, '> echo \'out : .\'' ), 1 );
+    test.identical( _.strCount( op.output, /> echo \'will : .*\'/ ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::shellSeveralCommands / build::echo.resolved in' ), 1 );
+    return null;
   });
 
   /* - */
@@ -43300,6 +43338,7 @@ const Proto =
     stepVersionBump,
     stepSubmodulesAreUpdated,
     stepBuild,
+    stepShellWithSeveralCommands,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
     stepGitPull,
