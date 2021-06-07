@@ -10007,10 +10007,10 @@ function shell( o )
   let path = fileProvider.path;
 
   if( !_.mapIs( arguments[ 0 ] ) )
-  o = { execPath : arguments[ 0 ] }
+  o = { execPath : arguments[ 0 ] };
 
   o = _.routine.options( shell, o );
-  _.assert( _.strIs( o.execPath ) );
+  _.assert( _.strIs( o.execPath ) || _.array.is( o.execPath ) );
   _.assert( arguments.length === 1 );
   _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );
 
@@ -10035,6 +10035,7 @@ function shell( o )
     prefixlessAction : 'resolved',
     currentContext : o.currentContext,
   });
+
   _.sure
   (
     o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
@@ -10065,7 +10066,7 @@ shell.defaults =
   currentThis : null,
   currentContext : null,
   verbosity : null,
-}
+};
 
 //
 

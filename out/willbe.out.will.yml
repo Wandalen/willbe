@@ -3076,6 +3076,9 @@ module:
             ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShell
           - ../proto/wtools/atop/will.test/_asset/stepShell/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepShellSeveralCommands
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepShellSeveralCommands/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue
           - >-
             ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue/.im.will.yml
