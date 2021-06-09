@@ -2590,7 +2590,7 @@ var defaults = modulesFor_body.defaults = _.props.extend
   relationFit.defaults
 );
 
-defaults.recursive = true;
+defaults.recursive = 1;
 defaults.withPeers = true;
 defaults.withStem = true; /* yyy */
 defaults.left = true;
