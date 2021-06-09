@@ -1,0 +1,31 @@
+
+about :
+  name : 'shellSeveralCommands'
+
+step :
+
+  echo.simple :
+    currentPath : .
+    shell :
+      - echo 'one'
+      - echo 'two'
+      - echo 'three'
+
+  echo.resolved :
+    currentPath : .
+    shell :
+      - "echo 'in : {path::in}'"
+      - "echo 'out : {path::out}'"
+      - "echo 'will : {path::will}'"
+
+build :
+
+  echo.simple :
+    criterion :
+      default : 1
+    steps :
+      - echo.simple
+
+  echo.resolved :
+    steps :
+      - echo.resolved

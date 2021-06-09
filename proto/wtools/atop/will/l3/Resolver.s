@@ -4,10 +4,10 @@
 'use strict';
 
 const _ = _global_.wTools;
-const Parent = _.resolverAdv.Looker;
+const Parent = _.resolverAdv.Seeker;
 _.assert( !!_.resolverAdv.resolve );
-_.assert( !_.resolverAdv.Looker.resolve );
-_.assert( !!_.resolverAdv.Looker.exec );
+_.assert( !_.resolverAdv.Seeker.resolve );
+_.assert( !!_.resolverAdv.Seeker.exec );
 _.assert( !!_.resolverAdv.compositeSymbol );
 _.will.resolver = Object.create( _.resolverAdv );
 
@@ -69,7 +69,7 @@ function _onSelectorReplicate( o )
     if( !it.selectorIs( selector ) )
     if( !it.composite )
     {
-      selector = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : 1, path : selector });
+      selector = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : true, path : selector });
       selector.form1();
       it.src = selector;
     }
@@ -101,7 +101,7 @@ function _onSelectorDown()
 
     if( rit.defaultResourceKind === 'path' || rit.selectorIsPath )
     {
-      it.dst = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst = new _.will.PathResource({ module : rit.baseModule, name : null, phantom : true, path : it.dst });
       it.dst.form1();
     }
 
@@ -441,7 +441,7 @@ function _resourceMapSelect()
 
     if( !it.src )
     {
-      throw _.looker.LookingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
+      throw _.looker.SeekingError( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
     it.iterable = null;
@@ -854,8 +854,8 @@ function _pathResolve( filePath, resource )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  _.assert( rit.OriginalLooker === rit.Replicator );
-  _.assert( _.prototype.has( rit.Looker, rit.Replicator ) );
+  _.assert( rit.OriginalSeeker === rit.Replicator );
+  _.assert( _.prototype.has( rit.Seeker, rit.Replicator ) );
   _.assert( rit.baseModule !== undefined );
   _.assert( rit.currentModule !== undefined );
   _.assert( rit.baseModule !== undefined );
@@ -1207,10 +1207,10 @@ function performBegin()
   _.assert( it.criterion === null || _.mapIs( it.criterion ) );
   _.assert( it.baseModule instanceof _.will.AbstractModule2 );
   _.assert( !_.props.own( it, 'criterion' ) );
-  _.assert( it.OriginalLooker === ResolverWillbe );
-  _.assert( _.prototype.has( it.Looker, ResolverWillbe ) );
-  _.assert( it.Looker.Iteration.currentModule !== undefined );
-  _.assert( it.Looker.IterationPreserve.currentModule !== undefined );
+  _.assert( it.OriginalSeeker === ResolverWillbe );
+  _.assert( _.prototype.has( it.Seeker, ResolverWillbe ) );
+  _.assert( it.Seeker.Iteration.currentModule !== undefined );
+  _.assert( it.Seeker.IterationPreserve.currentModule !== undefined );
 
   return it;
 }
@@ -1227,7 +1227,7 @@ function optionsToIteration( iterator, o )
   _.assert( arguments.length === 2 );
   _.assert( !!Self.Selector );
   _.assert( it.Selector === Self.Selector );
-  _.assert( it.Looker.Selector === Self.Selector );
+  _.assert( it.Seeker.Selector === Self.Selector );
   _.assert( it.currentThis !== undefined );
   _.assert( it.currentContext !== undefined );
   _.assert( it.criterion !== undefined );
@@ -1352,9 +1352,10 @@ let ResolverWillbeSelector =
   prime :
   {
   },
-  looker :
+  seeker :
   {
     ... Common,
+    currentModule : null,
   },
   iterationPreserve :
   {
@@ -1376,12 +1377,13 @@ let ResolverWillbeReplicator =
 ({
   name : 'ResolverWillbeReplicator',
   prime : Prime,
-  looker :
+  seeker :
   {
     ... Common,
     performBegin,
     optionsToIteration,
     iteratorInitEnd,
+    // currentModule : null,
   },
   iterationPreserve :
   {
@@ -1389,12 +1391,12 @@ let ResolverWillbeReplicator =
     currentModule : null, /* xxx : remove? */
     selectorIsPath : 0,
   },
-  iteration :
-  {
-    exported : null,
-    currentModule : null, /* xxx : remove? */
-    selectorIsPath : 0,
-  },
+  // iteration :
+  // {
+  //   exported : null,
+  //   currentModule : null, /* xxx : remove? */
+  //   selectorIsPath : 0,
+  // },
 });
 
 /* */
@@ -1406,17 +1408,19 @@ const ResolverWillbe = _.resolverAdv.classDefine
 });
 
 _.assert( ResolverWillbe.IterationPreserve.isFunction !== undefined );
-_.assert( ResolverWillbe.Iteration.isFunction === undefined );
+// _.assert( ResolverWillbe.Iteration.isFunction === undefined );
+_.assert( ResolverWillbe.Iteration.isFunction !== undefined );
 _.assert( ResolverWillbe.Iterator.isFunction === undefined );
-_.assert( ResolverWillbe.isFunction !== undefined );
+// _.assert( ResolverWillbe.isFunction !== undefined );
+_.assert( ResolverWillbe.isFunction === undefined );
 _.assert( ResolverWillbe.Iterator.resolveExtraOptions === undefined );
-_.assert( ResolverWillbe.Looker === ResolverWillbe );
+_.assert( ResolverWillbe.Seeker === ResolverWillbe );
 
 const Self = ResolverWillbe;
 
 let resolveMaybe = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
 var defaults = resolveMaybe.defaults;
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 defaults.missingAction = 'undefine';
 
 // --
@@ -1426,7 +1430,7 @@ defaults.missingAction = 'undefine';
 let resolveRaw = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
 
 var defaults = resolveRaw.defaults;
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 defaults.pathResolving = 0;
 defaults.pathNativizing = 0;
 defaults.pathUnwrapping = 0;
@@ -1447,7 +1451,7 @@ alternatively adjust call from finit of class Exported
 let pathResolve = _.routine.uniteInheriting( ResolverWillbe.exec.head, ResolverWillbe.exec.body );
 
 var defaults = pathResolve.defaults;
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 defaults.pathResolving = 'in';
 defaults.prefixlessAction = 'resolved';
 defaults.arrayFlattening = 1;
@@ -1467,7 +1471,9 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
+  debugger;
   _.routine.options( routine, o );
+  debugger;
   return o;
 }
 
@@ -1486,7 +1492,9 @@ function pathOrReflectorResolve_body( o )
   let o2 = _.props.extend( null, o );
   o2.missingAction = 'undefine';
   o2.selector = 'reflector::' + o.selector;
+  debugger;
   resource = module.reflectorResolve( o2 );
+  debugger;
 
   if( resource )
   return resource;
@@ -1648,7 +1656,7 @@ function filesFromResource_body( o )
 
 var defaults = filesFromResource_body.defaults = _.props.extend( null, ResolverWillbe.Prime );
 
-_.assert( ResolverWillbe.Prime.Looker === undefined );
+_.assert( ResolverWillbe.Prime.Seeker === undefined );
 
 defaults.selector = null;
 defaults.prefixlessAction = 'resolved';
@@ -1665,7 +1673,7 @@ defaults.withStem = null;
 
 let filesFromResource = _.routine.uniteCloning_replaceByUnite( filesFromResource_head, filesFromResource_body );
 
-_.assert( defaults.Looker === undefined );
+_.assert( defaults.Seeker === undefined );
 
 //
 
@@ -1720,11 +1728,11 @@ defaults.defaultResourceKind = 'reflector';
 defaults.prefixlessAction = 'default';
 defaults.currentContext = null;
 defaults.pathResolving = 'in';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 
 let reflectorResolve = _.routine.uniteReplacing( ResolverWillbe.exec.head, reflectorResolve_body );
 
-_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Seeker );
 _.assert( reflectorResolve.defaults === defaults );
 _.assert( reflectorResolve.body.defaults === defaults );
 
@@ -1747,7 +1755,7 @@ var defaults = submodulesResolve_body.defaults = Object.create( ResolverWillbe )
 defaults.selector = null;
 defaults.prefixlessAction = 'default';
 defaults.defaultResourceKind = 'submodule';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 
 let submodulesResolve = _.routine.uniteReplacing( ResolverWillbe.exec.head, submodulesResolve_body );
 
@@ -1761,7 +1769,7 @@ let NamespaceExtension =
 {
 
   name : 'resolverWillbe',
-  Looker : ResolverWillbe,
+  Seeker : ResolverWillbe,
   Resolver : ResolverWillbe,
 
   resolve : ResolverWillbe.exec,
@@ -1778,6 +1786,6 @@ let NamespaceExtension =
 
 }
 
-_.props.extend( _.will.resolver, NamespaceExtension );
+/* _.props.extend */Object.assign( _.will.resolver, NamespaceExtension );
 
 })();

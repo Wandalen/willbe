@@ -32,6 +32,7 @@ function onModule( context )
   // repoProgramsNormalize( context );
   // repoProgramsReplace( context );
   // repoProgramsDelete( context );
+  // repoOldWillfilesDelete( context );
   // gitIgnorePatch( context );
   // gitIgnoreReplace( context );
 
@@ -56,11 +57,12 @@ function onModule( context )
   // npmDepAddFileNodeModulesEntry( context );
   // npmEntryPathAdjust( context );
   // npmFilesDeleteTools( context );
+  npmFilesAddTerminals( context );
   // willProtoEntryPathFromNpm( context );
   // willProtoEntryPathOrder( context );
   // willProtoEntryPathAdjustTools( context );
   // willDisableIfEmpty( context );
-  willFixDmytrosFuckup( context );
+  // willFix1( context );
   // deleteIfDisabled( context );
 
   // readmeModuleNameAdjust( context );
@@ -244,6 +246,31 @@ function repoProgramsDelete( context )
   return;
 
   fileProvider.fileDelete( abs( '.github/workflows/Publish.yml' ) );
+
+}
+
+//
+
+function repoOldWillfilesDelete( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !fileProvider.fileExists( abs( '-.ex.will.yml' ) ) && !fileProvider.fileExists( abs( '-.im.will.yml' ) ) )
+  return;
+
+  logger.log( `Deleting old willfiles ${abs( '.' )}` );
+
+  if( o.dry )
+  return;
+
+  fileProvider.fileDelete({ filePath : abs( '-.im.will.yml' ), throwing : 0 });
+  fileProvider.fileDelete({ filePath : abs( '-.ex.will.yml' ), throwing : 0 });
 
 }
 
@@ -893,12 +920,58 @@ function npmFilesDeleteTools( context )
   if( !filesPath )
   return;
 
-  filesPath = _.filter_( filesPath, ( filePath ) =>
+  filesPath = _.entity.filter_( null, filesPath, ( filePath ) =>
   {
     if( abs( filePath ) !== abs( 'proto/node_modules/Tools' ) )
     return filePath;
     return;
   });
+
+  _.npm.fileWriteField
+  ({
+    key : 'files',
+    val : filesPath,
+    configPath,
+    dry : o.dry,
+    logger : o.verbosity - 1,
+  });
+
+}
+
+//
+
+function npmFilesAddTerminals( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.junction.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  let configPath = abs( 'was.package.json' );
+  let filesPath = _.npm.fileReadField({ configPath, key : 'files' });
+  if( !filesPath )
+  return;
+
+  let originalFilesPath = filesPath.slice();
+
+  if( !fileProvider.fileExists( abs( './proto/node_modules' ) ) )
+  return;
+
+  let foundFiles = fileProvider.dirRead({ filePath : abs( './proto/node_modules' ), outputFormat : 'absolute' });
+  foundFiles = path.s.relative( inPath, foundFiles );
+
+  _.arrayAppendArrayOnce( filesPath, foundFiles );
+
+  if( _.array.identical( filesPath, originalFilesPath ) )
+  return;
+
+  console.log( `Adding terminal files of proto/node_modules to ${configPath}` );
+
+  if( o.dry )
+  return;
 
   _.npm.fileWriteField
   ({
@@ -1092,7 +1165,7 @@ function willDisableIfEmpty( context )
 
 //
 
-function willFixDmytrosFuckup( context )
+function willFix1( context )
 {
   let o = context.request.map;
   let logger = context.logger;
@@ -1105,15 +1178,6 @@ function willFixDmytrosFuckup( context )
   debugger;
   if( !context.module )
   return;
-
-  // debugger; xxx
-
-// submodule:
-//   wTools:
-//     path:
-//       path: 'npm:///wTools'
-//       enabled: 0
-//     enabled: 0
 
   let filePath = _.array.as( context.junction.module.willfilesPath )[ 0 ];
   let config = fileProvider.fileReadUnknown( filePath );
@@ -1131,19 +1195,6 @@ function willFixDmytrosFuckup( context )
 
   if( !edited )
   return;
-
-  // let protoEntryPath = _.will.fileReadPath( context.module.commonPath, 'npm.proto.entry' );
-  // if( !protoEntryPath )
-  // return;
-  //
-  // let any = _.any( protoEntryPath, ( entryPath ) =>
-  // {
-  //   if( abs( entryPath ) === abs( 'proto/node_modules/Tools' ) )
-  //   return true;
-  // });
-  //
-  // if( !any )
-  // return;
 
   logger.log( `Fixing ${context.junction.nameWithLocationGet()}` );
 

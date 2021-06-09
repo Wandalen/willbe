@@ -17403,12 +17403,11 @@ function shellVerbosity( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepShellVerbosity' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
   a.appStart({ execPath : '.build verbosity.0' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.0';
@@ -17420,12 +17419,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.1' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.1';
@@ -17437,12 +17435,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.2' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.2';
@@ -17454,12 +17451,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.3' })
-
   .then( ( op ) =>
   {
     test.case = '.build verbosity.3';
@@ -17471,12 +17467,11 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.build verbosity.5' })
-
   .then( ( op ) =>
   {
     test.case = 'verbosity:5';
@@ -17488,7 +17483,7 @@ function shellVerbosity( test )
     test.identical( _.strCount( op.output, 'Process returned error code 0' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -24189,6 +24184,49 @@ function stepBuild( test )
 
 //
 
+function stepShellWithSeveralCommands( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellSeveralCommands' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ execPath : '.build echo.simple' })
+  .then( ( op ) =>
+  {
+    test.case = 'three different list commands';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo' ), 3 );
+    test.identical( _.strCount( op.output, '> echo \'one\'' ), 1 );
+    test.identical( _.strCount( op.output, '> echo \'two\'' ), 1 );
+    test.identical( _.strCount( op.output, '> echo \'three\'' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::shellSeveralCommands / build::echo.simple in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build echo.resolved' })
+  .then( ( op ) =>
+  {
+    test.case = 'three different list commands';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo' ), 3 );
+    test.identical( _.strCount( op.output, '> echo \'in : .\'' ), 1 );
+    test.identical( _.strCount( op.output, '> echo \'out : .\'' ), 1 );
+    test.identical( _.strCount( op.output, /> echo \'will : .*\'/ ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::shellSeveralCommands / build::echo.resolved in' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -28592,16 +28630,16 @@ commandImplyPropertyWithEnabled.timeOut = 1200000;
 function commandVersion( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'stepWillbeVersionCheck' );
-  a.reflect();
+  let a = context.assetFor( test, 'simple' );
+  a.fileProvider.dirMake( a.abs( '.' ) );
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
     test.case = '.version';
     return null;
-  })
+  });
 
   a.appStart({ args : '.version' })
   .then( ( op ) =>
@@ -28609,8 +28647,10 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -28618,7 +28658,7 @@ function commandVersion( test )
   {
     test.case = '.imply v:9 ; .version';
     return null;
-  })
+  });
 
   a.appStart({ args : '.imply v:9 ; .version' })
   .then( ( op ) =>
@@ -28626,8 +28666,10 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -28635,7 +28677,7 @@ function commandVersion( test )
   {
     test.case = '.imply v:9 .version';
     return null;
-  })
+  });
 
   a.appStart({ args : '.imply v:9 .version' })
   .then( ( op ) =>
@@ -28643,8 +28685,10 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -28652,7 +28696,7 @@ function commandVersion( test )
   {
     test.case = '.version v:7';
     return null;
-  })
+  });
 
   a.appStart({ args : '.version v:7' })
   .then( ( op ) =>
@@ -28660,10 +28704,12 @@ function commandVersion( test )
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'Read' ) );
     test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -43285,6 +43331,7 @@ const Proto =
     stepVersionBump,
     stepSubmodulesAreUpdated,
     stepBuild,
+    stepShellWithSeveralCommands,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
     stepGitPull,

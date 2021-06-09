@@ -4,7 +4,7 @@
 'use strict';
 
 const _ = _global_.wTools;
-const Self = _.will = _.will || Object.create( null );
+_.will = _.will || Object.create( null );
 
 // --
 // implementation
@@ -555,6 +555,7 @@ function fileReadResource_body( o )
 
   if( !found.length )
   {
+    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;
@@ -612,6 +613,7 @@ function fileWriteResource_body( o )
 
   if( !found.length )
   {
+    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;
@@ -810,6 +812,6 @@ let Extension =
 
 }
 
-_.props.extend( Self, Extension );
+/* _.props.extend */Object.assign( _.will, Extension );
 
 })();

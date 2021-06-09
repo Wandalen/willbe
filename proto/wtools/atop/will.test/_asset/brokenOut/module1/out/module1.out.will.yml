@@ -33,9 +33,9 @@ module:
         - mmap file
         - zero copy
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@01.school>
       contributors: &ref_4
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
       npm.name: module1
       npm.scripts: &ref_5
@@ -800,7 +800,7 @@ module:
       interpreters: *ref_2
       keywords: *ref_3
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@01.school>
       contributors: *ref_4
       npm.name: module1
       npm.scripts: *ref_5

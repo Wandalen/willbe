@@ -27,7 +27,7 @@ qqq : make working command `will .with file1 file2 file3.will.yml`
 */
 
 const _ = _global_.wTools;
-const Self = _.will = _.will || Object.create( null );
+_.will = _.will || Object.create( null );
 
 // --
 // implementation
@@ -61,6 +61,6 @@ let Extension =
 
 }
 
-_.props.extend( Self, Extension );
+/* _.props.extend */Object.assign( _.will, Extension );
 
 })();

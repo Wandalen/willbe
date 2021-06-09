@@ -5231,10 +5231,10 @@ function resolve_body( o )
 _.routine.extendReplacing( resolve_body, _.will.resolver.resolve.body );
 let resolve = _.routine.uniteReplacing( resolve_head, resolve_body );
 // let resolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolve_body, strategy : 'replacing' });
-// resolve.defaults.Looker = resolve.defaults;
+// resolve.defaults.Seeker = resolve.defaults;
 _.assert( resolve.defaults === resolve.body.defaults );
 _.assert( resolve.defaults === _.will.resolver.resolve.body.defaults );
-_.assert( resolve.defaults === resolve.defaults.Looker );
+_.assert( resolve.defaults === resolve.defaults.Seeker );
 
 //
 
@@ -5251,8 +5251,8 @@ _.assert( resolveMaybe_body.defaults === _.will.resolver.resolveMaybe.defaults )
 _.assert( resolveMaybe_body.defaults !== resolve_body.defaults );
 let resolveMaybe = _.routine.uniteReplacing( resolve_head, resolveMaybe_body );
 // let resolveMaybe = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : resolveMaybe_body, strategy : 'replacing' });
-_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Looker );
-_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Looker );
+_.assert( resolveMaybe.defaults === resolveMaybe.defaults.Seeker );
+_.assert( resolveMaybe.body.defaults === resolveMaybe.defaults.Seeker );
 
 //
 
@@ -5319,6 +5319,7 @@ _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 function pathOrReflectorResolve_head( routine, args )
 {
   let module = this;
+  debugger;
   let o = module._resolve_head.call( module, routine, args );
   _.assert( arguments.length === 2 );
   return _.will.resolver.pathOrReflectorResolve.head.call( _.will.resolver, routine, [ o ] );
@@ -5393,7 +5394,7 @@ let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolv
 
 _.assert( submodulesResolve.defaults === submodulesResolve.body.defaults );
 _.assert( submodulesResolve.defaults === _.will.resolver.submodulesResolve.defaults );
-_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Looker );
+_.assert( submodulesResolve.defaults === submodulesResolve.defaults.Seeker );
 
 _.assert( _.will.resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
@@ -5412,7 +5413,7 @@ function reflectorResolve_body( o )
 _.routine.extendReplacing( reflectorResolve_body, _.will.resolver.reflectorResolve.body );
 let reflectorResolve = _.routine.uniteReplacing( resolve_head, reflectorResolve_body );
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
-_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Looker );
+_.assert( reflectorResolve.defaults === reflectorResolve.defaults.Seeker );
 
 // --
 // other resolver
@@ -6829,6 +6830,7 @@ function exportStructure( o )
     }
   }
 
+  if( Config.debug )
   if( o.exportModule.isOut )
   {
     _.assert( !!o.dst.path );
@@ -6841,7 +6843,8 @@ function exportStructure( o )
     _.assert( !!o.dst.path[ 'module.willfiles' ] );
     _.assert( !!o.dst.path[ 'module.willfiles' ].path );
     _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
-    _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( module.isOut === _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    // _.assert( !module.isOut ^ _.path.map.identical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     _.assert( !_.path.map.identical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     // _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
     // _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
@@ -8841,7 +8844,7 @@ function willfileVersionBump( o )
   else
   _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
 
-  _.assert( versionArray.length >= deltaArray.length, 'Not known how to change version.' );
+  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to change version.' );
 
   for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
   {
@@ -10004,10 +10007,10 @@ function shell( o )
   let path = fileProvider.path;
 
   if( !_.mapIs( arguments[ 0 ] ) )
-  o = { execPath : arguments[ 0 ] }
+  o = { execPath : arguments[ 0 ] };
 
   o = _.routine.options( shell, o );
-  _.assert( _.strIs( o.execPath ) );
+  _.assert( _.strIs( o.execPath ) || _.array.is( o.execPath ) );
   _.assert( arguments.length === 1 );
   _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );
 
@@ -10032,6 +10035,7 @@ function shell( o )
     prefixlessAction : 'resolved',
     currentContext : o.currentContext,
   });
+
   _.sure
   (
     o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
@@ -10062,7 +10066,7 @@ shell.defaults =
   currentThis : null,
   currentContext : null,
   verbosity : null,
-}
+};
 
 //
 
