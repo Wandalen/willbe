@@ -21653,9 +21653,10 @@ function submodulesVersionsAgreeNpm( test )
       './node_modules/wmodulefortesting2b',
       './wtools',
       './wtools/testing',
+      './wtools/testing/Common.s',
       './wtools/testing/l4',
       './wtools/testing/l4/testing2b',
-      './wtools/testing/l4/testing2b/ModuleForTesting2b.s',
+      './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );
