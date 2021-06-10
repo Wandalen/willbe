@@ -4061,7 +4061,11 @@ function commandEach( e )
   throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
 
   let commandIndex = _.longLeftIndex( e.parsedCommands, '.each', ( parsed, command ) => parsed.commandName === command );
-  _.assert( e.parsedCommands[ commandIndex + 1 ], 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
+  _.assert
+  (
+    _.aux.is( e.parsedCommands[ commandIndex + 1 ] ),
+    'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"'
+  );
 
   let con;
   if( _.will.resolver.Resolver.selectorIs( e.instructionArgument ) )
