@@ -13155,7 +13155,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
@@ -13187,14 +13187,14 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), true );
 
     return null;
-  })
+  });
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -13232,7 +13232,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -13270,7 +13270,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });

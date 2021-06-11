@@ -440,6 +440,7 @@ function filesAt_body( o )
       filePath : commonPath,
       maskDirectory : {},
       maskTransientDirectory : {},
+      recursive : 1,
     };
 
     if( _.strHas( commonPath, '**' ) )
