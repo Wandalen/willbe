@@ -52,7 +52,7 @@ function unform()
   let logger = will.transaction.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  _.assert( run.formed );
+  _.assert( run.formed > 0 );
 
   return run;
 }

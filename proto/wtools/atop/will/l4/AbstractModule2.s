@@ -533,7 +533,7 @@ function willfileRegister( willf )
     });
   }
 
-  _.assert( !!module.willfilesArray.length );
+  _.assert( module.willfilesArray.length > 0 );
 
   let willfilesPath = _.arrayFlatten( _.select( module.willfilesArray, '*/filePath' ) );
   module.willfilesPath = willfilesPath;

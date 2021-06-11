@@ -169,7 +169,7 @@ function init( o )
 {
   let reflector = this;
 
-  _.assert( o && o.module );
+  _.assert( o && !!o.module );
 
   let module = o.module;
   let will = module.will;

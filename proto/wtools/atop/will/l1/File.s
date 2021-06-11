@@ -4,7 +4,7 @@
 'use strict';
 
 const _ = _global_.wTools;
-const Self = _.will = _.will || Object.create( null );
+_.will = _.will || Object.create( null );
 
 // --
 // implementation
@@ -97,7 +97,11 @@ function fileAt_body( o )
   _.assert( path.isAbsolute( o.commonPath ) );
   _.assert( !path.isGlob( o.commonPath ), 'Expects no glob in {-o.commonPath-}' );
   _.assert( !path.isGlobal( o.commonPath ), 'Expects local path {-o.commonPath-}' );
-  _.assert( o.withIn || o.withOut, 'Routine searches in and out willfiles. Please, define option {-o.withIn-} or {-o.withOut-}' );
+  _.assert
+  (
+    _.bool.likeTrue( o.withIn ) || _.bool.likeTrue( o.withOut ),
+    'Routine searches in and out willfiles. Please, define option {-o.withIn-} or {-o.withOut-}'
+  );
 
   let isTrailed = path.isTrailed( o.commonPath );
 
@@ -302,7 +306,11 @@ function filesAt_body( o )
   let path = fileProvider.path;
 
   _.assert( !path.isGlobal( o.commonPath ), 'Expects local path {-o.commonPath-}' );
-  _.assert( o.withIn || o.withOut, 'Routine searches in and out willfiles. Please, define option {-o.withIn-} or {-o.withOut-}' );
+  _.assert
+  (
+    _.bool.likeTrue( o.withIn ) || _.bool.likeTrue( o.withOut ),
+    'Routine searches in and out willfiles. Please, define option {-o.withIn-} or {-o.withOut-}'
+  );
 
   let result = [];
 
@@ -555,6 +563,7 @@ function fileReadResource_body( o )
 
   if( !found.length )
   {
+    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;
@@ -612,6 +621,7 @@ function fileWriteResource_body( o )
 
   if( !found.length )
   {
+    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;
@@ -810,6 +820,6 @@ let Extension =
 
 }
 
-_.props.extend( Self, Extension );
+/* _.props.extend */Object.assign( _.will, Extension );
 
 })();

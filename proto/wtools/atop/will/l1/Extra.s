@@ -4,7 +4,7 @@
 'use strict';
 
 const _ = _global_.wTools;
-const Self = _.will = _.will || Object.create( null );
+_.will = _.will || Object.create( null );
 
 // --
 // implementation
@@ -40,6 +40,6 @@ let Extension =
 
 }
 
-_.props.extend( Self, Extension );
+/* _.props.extend */Object.assign( _.will, Extension );
 
 })();

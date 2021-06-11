@@ -361,12 +361,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting1
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -1026,12 +1026,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting1
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -1797,12 +1797,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting2a
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -2466,12 +2466,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting2a
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0

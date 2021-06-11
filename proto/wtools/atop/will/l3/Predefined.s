@@ -1275,6 +1275,6 @@ let Extension =
   stepRoutineWillfileVersionBump,
 }
 
-_.props.extend( _.will.Predefined, Extension );
+/* _.props.extend */Object.assign( _.will.Predefined, Extension );
 
 })()

@@ -13,9 +13,9 @@ about :
   - willbe
   - test
   license : MIT
-  author : 'Kostiantyn Wandalen <wanalen@01.school>'
+  author : 'Kostiantyn Wandalen <wandalen@01.school>'
   contributors :
-  - 'Kostiantyn Wandalen <wanalen@01.school>'
+  - 'Kostiantyn Wandalen <wandalen@01.school>'
   - 'Kryvoruchko Dmytro <dm.vict.kr@gmail.com>'
   npm.name : 'wmodulefortesting1'
   npm.scripts :

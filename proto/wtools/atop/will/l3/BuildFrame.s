@@ -61,7 +61,7 @@ function unform()
   let module = run.module;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  _.assert( frame.formed );
+  _.assert( frame.formed > 0 );
 
   return frame;
 }

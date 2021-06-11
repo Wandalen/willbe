@@ -1814,7 +1814,8 @@ function _repoDownload( o )
   function moduleReopenMaybe( opener2, same )
   {
 
-    if( ( opener2.downloadPath === opener.downloadPath ) ^ same )
+    // if( ( opener2.downloadPath === opener.downloadPath ) ^ same )
+    if( ( opener2.downloadPath === opener.downloadPath ) === !same )
     return null;
 
     if( _.longHas( reopened, opener2 ) )
