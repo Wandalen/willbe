@@ -414,7 +414,7 @@ function _willfilesFindAct( o )
       commonPath : o.willfilesPath,
       // commonPath,
       withIn : o.withIn,
-      withOut : o.withOut,
+      withOut : ( o.withOut && !opener.superRelation ) || _.will.filePathIsOut( o.willfilesPath ),
       // exact : !!opener.superRelation, /* Dmytro : hack, should not be used */
       usingCache : 1,
     });
