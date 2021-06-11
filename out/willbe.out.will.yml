@@ -3118,7 +3118,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepView/File.html
           - ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck
           - >-
-            ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck/.will.yaml
+            ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck/will.yml
           - ../proto/wtools/atop/will.test/_asset/submoduleIsValid
           - ../proto/wtools/atop/will.test/_asset/submoduleIsValid/good.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodules

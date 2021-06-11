@@ -4066,7 +4066,7 @@ function commandEach( e )
   let commandIndex = _.longLeftIndex( e.parsedCommands, '.each', ( parsed, command ) => parsed.commandName === command );
   _.assert
   (
-    e.parsedCommands[ commandIndex + 1 ] !== undefined,
+    _.aux.is( e.parsedCommands[ commandIndex + 1 ] ),
     'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"'
   );
 

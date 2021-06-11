@@ -11,3 +11,4 @@ build :
       default : 1
     steps :
       - willbe.version.check
+
