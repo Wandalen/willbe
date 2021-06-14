@@ -7304,9 +7304,11 @@ function _npmGenerateFromWillfile( o )
   if( o.srcConfig.path )
   {
     if( o.srcConfig.path.repository )
-    config.repository = pathSimplify( o.srcConfig.path.repository );
+    config.repository = _.git.path.nativize( o.srcConfig.path.repository );
+    // config.repository = pathSimplify( o.srcConfig.path.repository );
     if( o.srcConfig.path.bugtracker )
-    config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
+    config.bugs = _.git.path.nativize( o.srcConfig.path.bugtracker );
+    // config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
     if( o.srcConfig.path.entry && !config.main )
     config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
 
@@ -7348,17 +7350,17 @@ function _npmGenerateFromWillfile( o )
 
   /* */
 
-  function pathSimplify( src )
-  {
-    let r = src;
-    if( !_.strIs( r ) )
-    return r;
-
-    r = r.replace( '///', '//' );
-    r = r.replace( 'npm://', '' );
-
-    return r;
-  }
+  // function pathSimplify( src )
+  // {
+  //   let r = src;
+  //   if( !_.strIs( r ) )
+  //   return r;
+  //
+  //   r = r.replace( '///', '//' );
+  //   r = r.replace( 'npm://', '' );
+  //
+  //   return r;
+  // }
 
   function depAdd( submodule, name, hash )
   {
