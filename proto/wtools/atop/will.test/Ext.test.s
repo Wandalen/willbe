@@ -40517,7 +40517,7 @@ function commandWillfileMergeIntoSingleRunWith( test )
     test.identical( partIm, oldIm );
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ] );
     test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
     delete config.about.interpreters;
     delete partEx.about.interpreters;
@@ -40619,7 +40619,7 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     test.identical( partIm, oldIm );
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ] );
     test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
     delete config.about.interpreters;
     delete partEx.about.interpreters;
@@ -40668,7 +40668,7 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     test.identical( partIm, oldIm );
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/Named.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
+    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ] );
     test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
     delete config.about.interpreters;
     delete partEx.about.interpreters;
