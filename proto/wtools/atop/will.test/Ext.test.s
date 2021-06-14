@@ -39034,7 +39034,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -39069,7 +39069,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -39846,7 +39846,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -39881,7 +39881,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
