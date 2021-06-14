@@ -40038,7 +40038,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ],
+      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0', 'njs >= 6.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
