@@ -8165,17 +8165,17 @@ function willfileExtendWillfile( o )
 
   }
 
-  function mapToArrayOfStrings( src )
-  {
-    if( _.longIs( src ) )
-    return src;
-
-    debugger; /* xxx : qqq : check */
-    src = _.props.pairs( src );
-    for( let i = 0 ; i < src.length ; i++ )
-    src[ i ] = src[ i ].join( ' ' );
-    return src;
-  }
+  // function mapToArrayOfStrings( src )
+  // {
+  //   if( _.longIs( src ) )
+  //   return src;
+  //
+  //   debugger; /* xxx : aaa : check */ /* Dmytro : removed */
+  //   src = _.props.pairs( src );
+  //   for( let i = 0 ; i < src.length ; i++ )
+  //   src[ i ] = src[ i ].join( ' ' );
+  //   return src;
+  // }
 }
 
 willfileExtendWillfile.defaults =
