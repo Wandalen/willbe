@@ -7451,47 +7451,41 @@ npmGenerateFromWillfile.defaults =
 function _willfileGenerateFromNpm( o )
 {
   let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
 
   /* */
 
   let config = o.srcConfig;
-  let willfile = Object.create( null );
-  willfile.about = Object.create( null );
-  willfile.path = Object.create( null );
-  willfile.path.origins = [];
-  willfile.submodule = Object.create( null );
-
-  /* */
+  let willfile = willfileStructureForm();
 
   let propertiesMap =
   {
-    name :          { propertyAdd : aboutPropertyAdd,             name : 'name' },
-    version :       { propertyAdd : aboutPropertyAdd,             name : 'version' },
-    enabled :       { propertyAdd : aboutPropertyAdd,             name : 'enabled' },
-    description :   { propertyAdd : aboutPropertyAdd,             name : 'description' },
-    keywords :      { propertyAdd : aboutPropertyAdd,             name : 'keywords' },
-    license :       { propertyAdd : aboutPropertyAdd,             name : 'license' },
-    author :        { propertyAdd : aboutAuthorPropertyAdd,       name : 'author' },
-    contributors :  { propertyAdd : aboutContributorsPropertyAdd, name : 'contributors' },
-    scripts :       { propertyAdd : aboutPropertyAdd,             name : 'npm.scripts' },
-    interpreters :  { propertyAdd : interpretersAdd,              name : 'interpreters' },
-    engines :       { propertyAdd : interpretersAdd,              name : 'interpreters' },
-    repository :    { propertyAdd : pathPropertyAdd,              name : 'repository' },
-    bugs :          { propertyAdd : pathPropertyAdd,              name : 'bugs' },
-    main :          { propertyAdd : pathPropertyAdd,              name : 'main' },
-    files :         { propertyAdd : pathPropertyAdd,              name : 'files' },
-    dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
-    devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
-    optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
+    name :          { propertyAdd : propertyAdd, section : 'about', name : 'name' },
+    version :       { propertyAdd : propertyAdd, section : 'about', name : 'version' },
+    enabled :       { propertyAdd : propertyAdd, section : 'about', name : 'enabled' },
+    description :   { propertyAdd : propertyAdd, section : 'about', name : 'description' },
+    keywords :      { propertyAdd : propertyAdd, section : 'about', name : 'keywords' },
+    license :       { propertyAdd : propertyAdd, section : 'about', name : 'license' },
+    author :        { propertyAdd : aboutAuthorPropertyAdd, section : 'about', name : 'author' },
+    contributors :  { propertyAdd : aboutContributorsPropertyAdd, section : 'about', name : 'contributors' },
+    scripts :       { propertyAdd : propertyAdd, section : 'about', name : 'npm.scripts' },
+    interpreters :  { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+    engines :       { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+
+    repository :    { propertyAdd : pathRepositoryPropertyAdd, section : 'path', name : 'repository' },
+    bugs :          { propertyAdd : pathBugtrackerPropertyAdd, section : 'path', name : 'bugs' },
+    main :          { propertyAdd : propertyAdd, section : 'path', name : 'entry' },
+    files :         { propertyAdd : propertyAdd, section : 'path', name : 'npm.files' },
+
+    dependencies :          { propertyAdd : submodulePropertyAdd, section : 'submodule', name : undefined },
+    devDependencies :       { propertyAdd : submodulePropertyAdd, section : 'submodule', name : 'development' },
+    optionalDependencies :  { propertyAdd : submodulePropertyAdd, section : 'submodule', name : 'optional' },
   };
 
-  for( let property in config )
-  if( property in propertiesMap )
-  propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
+  for( let key in config )
+  if( key in propertiesMap )
+  propertiesMap[ key ].propertyAdd( key, propertiesMap[ key ].name, propertiesMap[ key ].section );
   else
-  willfile.about[ `npm.${ property }` ] = config[ property ];
+  willfile.about[ `npm.${ key }` ] = config[ key ];
 
   // for( let property in propertiesMap )
   // if( property in config )
@@ -7507,24 +7501,28 @@ function _willfileGenerateFromNpm( o )
     willfile.about[ 'npm.name' ] = willfile.about.name;
     willfile.path.origins.push( `npm:///${ willfile.about[ 'npm.name' ] }` );
   }
-  if( willfile.path.origins.length === 0 )
+
+  willfile = willfileFilterFields();
+
+  return willfile;
+
+  /* */
+
+  function willfileStructureForm()
   {
-    delete willfile.path.origins;
-  }
-  if( _.props.keys( willfile.submodule ).length === 0 )
-  {
-    delete willfile.submodule;
-  }
-  if( _.props.keys( willfile.path ).length === 0 )
-  {
-    delete willfile.path;
+    let willfile = Object.create( null );
+    willfile.about = Object.create( null );
+    willfile.path = Object.create( null );
+    willfile.path.origins = [];
+    willfile.submodule = Object.create( null );
+    return willfile;
   }
 
   /* */
 
-  function aboutPropertyAdd( property, name )
+  function propertyAdd( property, name, section )
   {
-    willfile.about[ name ] = config[ property ];
+    willfile[ section ][ name ] = config[ property ];
   }
 
   /* */
@@ -7561,31 +7559,45 @@ function _willfileGenerateFromNpm( o )
 
   /* */
 
-  function pathPropertyAdd( property )
+  function pathRepositoryPropertyAdd( property )
   {
-    if( property === 'repository' )
-    {
-      // willfile.path.repository = pathNormalize( config.repository );
-      willfile.path.repository = _.git.path.normalize( config.repository );
-      willfile.path.origins.push( willfile.path.repository );
-    }
-    if( property === 'bugs' )
-    {
-      willfile.path.bugtracker = pathNormalize( config.bugs );
-    }
-    if( property === 'main' )
-    {
-      willfile.path.entry = config.main;
-    }
-    if( property === 'files' )
-    {
-      willfile.path[ 'npm.files' ] = config.files;
-    }
+    willfile.path.repository = _.git.path.normalize( config.repository );
+    willfile.path.origins.push( willfile.path.repository );
   }
 
-  /* return config */
+  /* */
 
-  return willfile;
+  function pathBugtrackerPropertyAdd( property )
+  {
+    if( !_.strHas( config.bugs, '///' ) )
+    willfile.path.bugtracker = _.strReplace( config.bugs, '//', '///' );
+    else
+    willfile.path.bugtracker = config.bugs;
+  }
+
+  /* */
+
+  // function pathPropertyAdd( property )
+  // {
+  //   if( property === 'repository' )
+  //   {
+  //     // willfile.path.repository = pathNormalize( config.repository );
+  //     willfile.path.repository = _.git.path.normalize( config.repository );
+  //     willfile.path.origins.push( willfile.path.repository );
+  //   }
+  //   if( property === 'bugs' )
+  //   {
+  //     willfile.path.bugtracker = pathNormalize( config.bugs );
+  //   }
+  //   if( property === 'main' )
+  //   {
+  //     willfile.path.entry = config.main;
+  //   }
+  //   if( property === 'files' )
+  //   {
+  //     willfile.path[ 'npm.files' ] = config.files;
+  //   }
+  // }
 
   /* */
 
@@ -7596,21 +7608,21 @@ function _willfileGenerateFromNpm( o )
 
   /* */
 
-  function pathNormalize( src )
-  {
-    if( _.strIs( src ) )
-    {
-      if( !_.strHas( src, '///' ) )
-      return _.strReplace( src, '//', '///' );
-      return str;
-    }
-
-    let result = '';
-    if( src.type )
-    result = src.type + '+';
-    result += src.url.replace( '//', '///' );
-    return result;
-  }
+  // function pathNormalize( src )
+  // {
+  //   if( _.strIs( src ) )
+  //   {
+  //     if( !_.strHas( src, '///' ) )
+  //     return _.strReplace( src, '//', '///' );
+  //     return str;
+  //   }
+N //
+  //   let result = '';
+  //   if( src.type )
+  //   result = src.type + '+';
+  //   result += src.url.replace( '//', '///' );
+  //   return result;
+  // }
 
   /* */
 
@@ -7656,6 +7668,18 @@ function _willfileGenerateFromNpm( o )
     return result;
   }
 
+  /* */
+
+  function willfileFilterFields()
+  {
+    if( willfile.path.origins.length === 0 )
+    delete willfile.path.origins;
+    if( _.props.keys( willfile.submodule ).length === 0 )
+    delete willfile.submodule;
+    if( _.props.keys( willfile.path ).length === 0 )
+    delete willfile.path;
+    return willfile;
+  }
 }
 
 _willfileGenerateFromNpm.defaults =
