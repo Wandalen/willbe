@@ -7326,7 +7326,7 @@ function _npmGenerateFromWillfile( o )
     {
       let submodule = o.srcConfig.submodule[ s ];
       let p = submodule.path;
-      p = path.parseFull( p );
+      p = _.git.path.parseFull( p );
 
       _.assert
       (
@@ -7336,7 +7336,7 @@ function _npmGenerateFromWillfile( o )
 
       if( p.protocol === 'npm' )
       {
-        depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
+        depAdd( submodule, path.relative( '/', p.longPath ), p.tag );
       }
       else if( p.protocol === 'hd' )
       {

@@ -176,6 +176,57 @@ function submodulesSwitch( src, enabled )
 
 //
 
+function submoduleMake( o )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument.' );
+  _.routine.options( submoduleMake, o );
+  _.assert( _.strDefined( o.name ), 'Expects name {-o.name-}' );
+  _.assert( _.str.is( o.path ), 'Expects path {-o.path-}' );
+  _.assert( o.criterions === null || _.strsAreAll( o.criterions ) );
+
+  /* */
+
+  let result = Object.create( null );
+  result.path = submodulePathMake( o.name, o.path );
+  result.enabled = 1;
+  if( o.criterions )
+  {
+    result.criterion = Object.create( null );
+    for( let i = 0 ; i < o.criterions.length ; i++ )
+    result.criterion[ o.criterions[ i ] ] = 1;
+  }
+
+  return result;
+
+  /* */
+
+  function submodulePathMake( name, path )
+  {
+    if( _.strBegins( path, 'file:' ) )
+    return _.strReplace( path, 'file:', 'hd://' );
+
+    const replaced = _.strReplace( path, _.git.path.hashToken, _.git.path.tagToken );
+    const parsed = _.git.path.parse( replaced );
+    if( parsed.protocols.length > 0 )
+    return _.git.path.normalize( replaced );
+
+    if( _.strHas( replaced, _.git.path.upToken ) )
+    return _.git.path.normalize( `https://github.com/${ replaced }` );
+
+    let postfix = path === '' ? `${ path }` : `${ _.npm.path.tagToken }${ path }`;
+    return `npm:///${ name }${ postfix }`;
+  }
+}
+
+submoduleMake.defaults =
+{
+  name : null,
+  path : null,
+  criterions : null,
+};
+
+//
+
 function willfileFromNpm( o )
 {
   _.assert( arguments.length === 1, 'Expects exactly one argument.' );
@@ -187,26 +238,26 @@ function willfileFromNpm( o )
 
   let propertiesMap =
   {
-    name :          { propertyAdd : propertyAdd, section : 'about', name : 'name' },
-    version :       { propertyAdd : propertyAdd, section : 'about', name : 'version' },
-    enabled :       { propertyAdd : propertyAdd, section : 'about', name : 'enabled' },
-    description :   { propertyAdd : propertyAdd, section : 'about', name : 'description' },
-    keywords :      { propertyAdd : propertyAdd, section : 'about', name : 'keywords' },
-    license :       { propertyAdd : propertyAdd, section : 'about', name : 'license' },
+    name :          { propertyAdd, section : 'about', name : 'name' },
+    version :       { propertyAdd, section : 'about', name : 'version' },
+    enabled :       { propertyAdd, section : 'about', name : 'enabled' },
+    description :   { propertyAdd, section : 'about', name : 'description' },
+    keywords :      { propertyAdd, section : 'about', name : 'keywords' },
+    license :       { propertyAdd, section : 'about', name : 'license' },
     author :        { propertyAdd : aboutAuthorPropertyAdd, section : 'about', name : 'author' },
     contributors :  { propertyAdd : aboutContributorsPropertyAdd, section : 'about', name : 'contributors' },
-    scripts :       { propertyAdd : propertyAdd, section : 'about', name : 'npm.scripts' },
+    scripts :       { propertyAdd, section : 'about', name : 'npm.scripts' },
     interpreters :  { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
     engines :       { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
 
     repository :    { propertyAdd : pathRepositoryPropertyAdd, section : 'path', name : 'repository' },
     bugs :          { propertyAdd : pathBugtrackerPropertyAdd, section : 'path', name : 'bugs' },
-    main :          { propertyAdd : propertyAdd, section : 'path', name : 'entry' },
-    files :         { propertyAdd : propertyAdd, section : 'path', name : 'npm.files' },
+    main :          { propertyAdd, section : 'path', name : 'entry' },
+    files :         { propertyAdd, section : 'path', name : 'npm.files' },
 
-    dependencies :          { propertyAdd : submodulePropertyAdd, section : 'submodule', name : undefined },
-    devDependencies :       { propertyAdd : submodulePropertyAdd, section : 'submodule', name : 'development' },
-    optionalDependencies :  { propertyAdd : submodulePropertyAdd, section : 'submodule', name : 'optional' },
+    dependencies :          { propertyAdd : submodulePropertyAdd_functor( undefined ), section : 'submodule', name : undefined },
+    devDependencies :       { propertyAdd : submodulePropertyAdd_functor( 'development' ), section : 'submodule', name : 'development' },
+    optionalDependencies :  { propertyAdd : submodulePropertyAdd_functor( 'optional' ), section : 'submodule', name : 'optional' },
   };
 
   for( let key in config )
@@ -285,61 +336,28 @@ function willfileFromNpm( o )
 
   function pathBugtrackerPropertyAdd( property )
   {
-    if( !_.strHas( config.bugs, '///' ) )
-    willfile.path.bugtracker = _.strReplace( config.bugs, '//', '///' );
-    else
+    if( _.strHas( config.bugs, '///' ) )
     willfile.path.bugtracker = config.bugs;
+    else
+    willfile.path.bugtracker = _.strReplace( config.bugs, '//', '///' );
   }
 
   /* */
 
-  function submodulePropertyAdd( property, criterion )
+  function submodulePropertyAdd_functor( criterion )
   {
-    addDependency( config[ property ], criterion );
-  }
-
-  /* */
-
-  function addDependency( dependenciesMap, criterion )
-  {
-    for( let dependency in dependenciesMap )
+    const criterions = criterion ? [ criterion ] : null;
+    return function( property )
     {
-      if( _.strHas( dependenciesMap[ dependency ], /file:/ ) )
-      willfile.submodule[ dependency ] = addHdDependency( dependenciesMap[ dependency ], criterion );
-      else
-      willfile.submodule[ dependency ] = addNpmDependency( dependency, dependenciesMap[ dependency ], criterion );
+      let dependenciesMap = config[ property ];
+      for( let name in dependenciesMap )
+      willfile.submodule[ name ] = _.will.transform.submoduleMake
+      ({
+        name,
+        path : dependenciesMap[ name ],
+        criterions,
+      });
     }
-  }
-
-  /* */
-
-  function addHdDependency( path, criterion )
-  {
-    let result = Object.create( null );
-    result.path = `hd://${ _.strRemoveBegin( path, 'file:' ) }`;
-    result.enabled = 1;
-    if( criterion )
-    {
-      result.criterion = Object.create( null );
-      result.criterion[ criterion ] = 1;
-    }
-    return result;
-  }
-
-  /* */
-
-  function addNpmDependency( name, hash, criterion )
-  {
-    let result = Object.create( null );
-    hash = hash === '' ? hash : `#${ hash }`;
-    result.path = `npm:///${ name }${ hash }`;
-    result.enabled = 1;
-    if( criterion )
-    {
-      result.criterion = Object.create( null );
-      result.criterion[ criterion ] = 1;
-    }
-    return result;
   }
 
   /* */
@@ -374,6 +392,7 @@ let Extension =
 
   interpreterParse,
 
+  submoduleMake,
   submodulesSwitch,
 
   willfileFromNpm,
