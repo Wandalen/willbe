@@ -37321,12 +37321,12 @@ function commandWillfileFromNpm( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 1
       },
       'babel' :
       {
-        'path' : 'npm:///babel#^0.3.0',
+        'path' : 'npm:///babel!^0.3.0',
         'enabled' : 1
       },
       'npmfromwillfile' :
@@ -37343,7 +37343,7 @@ function commandWillfileFromNpm( test )
       },
       'willbe' :
       {
-        'path' : 'npm:///willbe#alpha',
+        'path' : 'npm:///willbe!alpha',
         'enabled' : 1,
         'criterion' : { 'development' : 1 }
       }
@@ -37410,7 +37410,7 @@ function commandWillfileFromNpm( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -37481,7 +37481,7 @@ function commandWillfileFromNpmDoubleConversion( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
