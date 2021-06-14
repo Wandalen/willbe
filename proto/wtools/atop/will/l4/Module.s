@@ -7553,7 +7553,8 @@ function _willfileGenerateFromNpm( o )
   {
     if( property === 'repository' )
     {
-      willfile.path.repository = pathNormalize( config.repository );
+      // willfile.path.repository = pathNormalize( config.repository );
+      willfile.path.repository = _.git.path.normalize( config.repository );
       willfile.path.origins.push( willfile.path.repository );
     }
     if( property === 'bugs' )

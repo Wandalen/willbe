@@ -37522,7 +37522,7 @@ function commandWillfileFromNpmDoubleConversion( test )
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
