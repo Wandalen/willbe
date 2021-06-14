@@ -37197,7 +37197,7 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `interpreters`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-    test.identical( config.about.interpreters, 'njs >= 10.0.0' );
+    test.identical( config.about.interpreters, [ 'njs >= 10.0.0' ] );
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
