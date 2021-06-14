@@ -36791,7 +36791,7 @@ function commandNpmFromWillfile( test )
     test.case = 'check fields `repository` and `bugs`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.repository, 'git+https://github.com/author/NpmFromWillfile.git' );
+    test.identical( config.repository, 'https://github.com/author/NpmFromWillfile.git' );
     test.identical( config.bugs, 'https://github.com/author/NpmFromWillfile/issues' );
     test.identical( config.name, null );
     test.identical( config.enabled, 1 );
@@ -36850,14 +36850,14 @@ function commandNpmFromWillfile( test )
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36896,7 +36896,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
@@ -36929,7 +36929,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
@@ -36962,7 +36962,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
