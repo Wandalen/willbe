@@ -39535,8 +39535,8 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
         [
           'chrome >= 60.0.0',
           'firefox >= 60.0.0',
-          'njs >= 6.0.0',
-          'chromium >= 67.0.0'
+          'chromium >= 67.0.0',
+          'njs >= 6.0.0'
         ],
         'keywords' :
         [
