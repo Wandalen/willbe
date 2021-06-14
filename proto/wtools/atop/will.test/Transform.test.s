@@ -312,6 +312,130 @@ function interpreterParse( test )
 
 //
 
+function submoduleMake( test )
+{
+  test.case = 'o.path - empty string';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '' });
+  var exp = { path : 'npm:///wTools', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - version';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '0.0.1' });
+  var exp = { path : 'npm:///wTools!0.0.1', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - version with range';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '>= 0.0.1' });
+  var exp = { path : 'npm:///wTools!>= 0.0.1', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - tag';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'alpha' });
+  var exp = { path : 'npm:///wTools!alpha', enabled : 1 };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'o.path - url, not git';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'https://domain.com/wTools.tar.gz' });
+  var exp = { path : 'https://domain.com/wTools.tar.gz', enabled : 1 };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'o.path - git path, short form for github.com';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'Wandalen/wTools' });
+  var exp = { path : 'git+https:///github.com/Wandalen/wTools', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - git path, short form for github.com with version';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'Wandalen/wTools.git#0.0.1' });
+  var exp = { path : 'git+https:///github.com/Wandalen/wTools.git!0.0.1', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - git path, protocol - https';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'https://github.com/Wandalen/wTools.git' });
+  var exp = { path : 'git+https:///github.com/Wandalen/wTools.git', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - git path, protocol - https with version';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'https://github.com/Wandalen/wTools.git#0.0.1' });
+  var exp = { path : 'git+https:///github.com/Wandalen/wTools.git!0.0.1', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - git path, protocol - git+ssh';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'git+ssh://git@github.com/Wandalen/wTools.git' });
+  var exp = { path : 'git+ssh:///git@github.com/Wandalen/wTools.git', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - git path, protocol - git+ssh with version';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : 'git+ssh://git@github.com/Wandalen/wTools.git#0.0.1' });
+  var exp = { path : 'git+ssh:///git@github.com/Wandalen/wTools.git!0.0.1', enabled : 1 };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'o.path - empty string, criterions - null';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '', criterions : null });
+  var exp = { path : 'npm:///wTools', enabled : 1 };
+  test.identical( got, exp );
+
+  test.case = 'o.path - empty string, criterions - string';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '', criterions : 'debug' });
+  var exp = { path : 'npm:///wTools', enabled : 1, criterion : { debug : 1 } };
+  test.identical( got, exp );
+
+  test.case = 'o.path - empty string, criterions - string';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '', criterions : 'debug' });
+  var exp = { path : 'npm:///wTools', enabled : 1, criterion : { debug : 1 } };
+  test.identical( got, exp );
+
+  test.case = 'o.path - empty string, criterions - empty array';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '', criterions : [] });
+  var exp = { path : 'npm:///wTools', enabled : 1, criterion : {} };
+  test.identical( got, exp );
+
+  test.case = 'o.path - empty string, criterions - array with single element';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '', criterions : [ 'debug' ] });
+  var exp = { path : 'npm:///wTools', enabled : 1, criterion : { debug : 1 } };
+  test.identical( got, exp );
+
+  test.case = 'o.path - empty string, criterions - array with several elements';
+  var got = _.will.transform.submoduleMake({ name : 'wTools', path : '', criterions : [ 'debug', 'development' ] });
+  var exp = { path : 'npm:///wTools', enabled : 1, criterion : { debug : 1, development : 1 } };
+  test.identical( got, exp );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.submoduleMake() );
+
+  test.case = 'without arguments';
+  var o = { name : 'wTools', path : '' };
+  test.shouldThrowErrorSync( () => _.will.transform.submoduleMake( o, o ) );
+
+  test.case = 'wrong type of options map';
+  var o = { name : 'wTools', path : '' };
+  test.shouldThrowErrorSync( () => _.will.transform.submoduleMake([ o ]) );
+
+  test.case = 'o.name is not defined string';
+  var o = { name : '', path : '' };
+  test.shouldThrowErrorSync( () => _.will.transform.submoduleMake( o ) );
+
+  test.case = 'wrong type of o.path';
+  var o = { name : 'wTools', path : [ '' ] };
+  test.shouldThrowErrorSync( () => _.will.transform.submoduleMake( o ) );
+
+  test.case = 'wrong type of o.criterions';
+  var o = { name : 'wTools', path : '', criterions : { wrong : 1 } };
+  test.shouldThrowErrorSync( () => _.will.transform.submoduleMake( o ) );
+}
+
+//
+
 function submodulesSwitch( test )
 {
   test.case = 'empty map, enabled - 0';
@@ -473,6 +597,8 @@ let Self =
     authorRecordNormalize,
 
     interpreterParse,
+
+    submoduleMake,
 
     submodulesSwitch,
 
