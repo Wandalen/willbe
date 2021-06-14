@@ -2800,7 +2800,7 @@ function modulesBuild_body( o )
 
 var defaults = modulesBuild_body.defaults = _.props.extend( null, _.mapBut_( null, moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
 
-defaults.recursive = false;
+defaults.recursive = 0;
 defaults.withStem = true;
 defaults.withDisabledStem = true;
 defaults.withPeers = true;
@@ -3672,7 +3672,7 @@ function submodulesVerify( o )
 
 var defaults = submodulesVerify.defaults = _.props.extend( null, _.Will.prototype.modulesFor.defaults );
 
-defaults.recursive = true;
+defaults.recursive = 0;
 defaults.throwing = true;
 defaults.asMap = false;
 

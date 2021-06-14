@@ -3313,7 +3313,7 @@ var defaults = modulesBuild_body.defaults =
 
   modules : null,
   doneContainer : null,
-  recursive : false,
+  recursive : 0,
   withStem : true,
   withDisabledStem : true,
   withPeers : true,
