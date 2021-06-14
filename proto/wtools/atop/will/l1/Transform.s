@@ -307,7 +307,7 @@ function willfileFromNpm( o )
 
   function aboutContributorsPropertyAdd( property, name )
   {
-    willfile.about.contributors = [];
+    willfile.about.contributors = _.array.make( config.contributors.length );
     for( let i = 0 ; i < config.contributors.length ; i++ )
     willfile.about.contributors[ i ] = _.will.transform.authorRecordNormalize( config.contributors[ i ] );
   }
@@ -392,10 +392,10 @@ let Extension =
 
   interpreterParse,
 
-  submoduleMake,
+  submoduleMake, /* qqq : for Dmytro : cover */
   submodulesSwitch,
 
-  willfileFromNpm,
+  willfileFromNpm, /* qqq : for Dmytro : cover */
 };
 
 _.props.extend( Self, Extension );

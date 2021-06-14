@@ -48,85 +48,6 @@ function onSuiteEnd()
 // tests
 // --
 
-function authorRecordNormalize( test )
-{
-  test.case = 'string with only name';
-  var src = 'name';
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name' );
-
-  test.case = 'string with only name, two parts, symbols';
-  var src = 'name #name';
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name #name' );
-
-  test.case = 'string with name and email';
-  var src = 'name <user@domain.com>';
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name <user@domain.com>' );
-
-  test.case = 'string with name and url';
-  var src = 'name (https://github.com/user)';
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name (https://github.com/user)' );
-
-  test.case = 'string with name, email and url';
-  var src = 'name <user@domain.com> (https://github.com/user)';
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name <user@domain.com> (https://github.com/user)' );
-
-  /* */
-
-  test.case = 'map with only name';
-  var src = { name : 'name' };
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name' );
-
-  test.case = 'map with only name, two parts, symbols';
-  var src = { name : 'name #name' };
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name #name' );
-
-  test.case = 'map with name and email';
-  var src = { name : 'name', email : 'user@domain.com' };
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name <user@domain.com>' );
-
-  test.case = 'map with name and url';
-  var src = { name : 'name', url : 'https://github.com/user' };
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name (https://github.com/user)' );
-
-  test.case = 'string with name, email and url';
-  var src = { name : 'name', email : 'user@domain.com', url : 'https://github.com/user' };
-  var got = _.will.transform.authorRecordNormalize( src );
-  test.identical( got, 'name <user@domain.com> (https://github.com/user)' );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize() );
-
-  test.case = 'extra arguments';
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name', 'user@domain.com' ) );
-
-  test.case = 'src is empty string';
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( '' ) );
-
-  test.case = 'src has broken email or url';
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name <user@domain.com' ) );
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name user@domain.com>' ) );
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name <>user@domain.com' ) );
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name (https://github.com/user' ) );
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name https://github.com/user)' ) );
-  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name ()https://github.com/user' ) );
-}
-
-//
-
 function authorRecordParse( test )
 {
   test.case = 'empty map';
@@ -261,6 +182,132 @@ function authorRecordStr( test )
 
   test.case = 'src map has unknown fields';
   test.shouldThrowErrorSync( () => _.will.transform.authorRecordStr({ name : 'name', unknown : 'unknown' }) );
+}
+
+//
+
+function authorRecordNormalize( test )
+{
+  test.case = 'string with only name';
+  var src = 'name';
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name' );
+
+  test.case = 'string with only name, two parts, symbols';
+  var src = 'name #name';
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name #name' );
+
+  test.case = 'string with name and email';
+  var src = 'name <user@domain.com>';
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name <user@domain.com>' );
+
+  test.case = 'string with name and url';
+  var src = 'name (https://github.com/user)';
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name (https://github.com/user)' );
+
+  test.case = 'string with name, email and url';
+  var src = 'name <user@domain.com> (https://github.com/user)';
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name <user@domain.com> (https://github.com/user)' );
+
+  /* */
+
+  test.case = 'map with only name';
+  var src = { name : 'name' };
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name' );
+
+  test.case = 'map with only name, two parts, symbols';
+  var src = { name : 'name #name' };
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name #name' );
+
+  test.case = 'map with name and email';
+  var src = { name : 'name', email : 'user@domain.com' };
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name <user@domain.com>' );
+
+  test.case = 'map with name and url';
+  var src = { name : 'name', url : 'https://github.com/user' };
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name (https://github.com/user)' );
+
+  test.case = 'string with name, email and url';
+  var src = { name : 'name', email : 'user@domain.com', url : 'https://github.com/user' };
+  var got = _.will.transform.authorRecordNormalize( src );
+  test.identical( got, 'name <user@domain.com> (https://github.com/user)' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name', 'user@domain.com' ) );
+
+  test.case = 'src is empty string';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( '' ) );
+
+  test.case = 'src has broken email or url';
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name <user@domain.com' ) );
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name user@domain.com>' ) );
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name <>user@domain.com' ) );
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name (https://github.com/user' ) );
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name https://github.com/user)' ) );
+  test.shouldThrowErrorSync( () => _.will.transform.authorRecordNormalize( 'name ()https://github.com/user' ) );
+}
+
+//
+
+function interpreterParse( test )
+{
+  test.case = 'src - empty map';
+  var got = _.will.transform.interpreterParse( {} );
+  test.identical( got, {} );
+
+  test.case = 'src - map';
+  var got = _.will.transform.interpreterParse({ some : 1 });
+  test.identical( got, { some : 1 } );
+
+  /* */
+
+  test.case = 'src - string, interpreter with version';
+  var got = _.will.transform.interpreterParse( 'njs = 10.0.0' );
+  test.identical( got, { njs : '= 10.0.0' } );
+
+  test.case = 'src - string, interpreter with not valid version';
+  var got = _.will.transform.interpreterParse( 'njs invalid' );
+  test.identical( got, { njs : 'invalid' } );
+
+  test.case = 'src - string, interpreter with not valid version with several spaces';
+  var got = _.will.transform.interpreterParse( 'njs v10.0.0 - v12.0.0' );
+  test.identical( got, { njs : 'v10.0.0 - v12.0.0' } );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterParse() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterParse( 'njs >= 10.0.0', 'njs >= 10.0.0' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterParse([ 'njs >= 10.0.0' ]) );
+
+  test.case = 'empty string';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterParse( '' ) );
+
+  test.case = 'string without space';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterParse( 'njs' ) );
 }
 
 //
@@ -421,13 +468,15 @@ let Self =
   tests :
   {
 
-    submodulesSwitch,
-
     authorRecordParse,
     authorRecordStr,
     authorRecordNormalize,
 
-  }
+    interpreterParse,
+
+    submodulesSwitch,
+
+  },
 
 }
 
