@@ -191,6 +191,7 @@ function submoduleMake( o )
   result.enabled = 1;
   if( o.criterions )
   {
+    o.criterions = _.array.as( o.criterions );
     result.criterion = Object.create( null );
     for( let i = 0 ; i < o.criterions.length ; i++ )
     result.criterion[ o.criterions[ i ] ] = 1;
@@ -208,7 +209,12 @@ function submoduleMake( o )
     const replaced = _.strReplace( path, _.git.path.hashToken, _.git.path.tagToken );
     const parsed = _.git.path.parse( replaced );
     if( parsed.protocols.length > 0 )
-    return _.git.path.normalize( replaced );
+    {
+      if( parsed.service )
+      return _.git.path.normalize( replaced );
+      else
+      return _.uri.normalize( replaced );
+    }
 
     if( _.strHas( replaced, _.git.path.upToken ) )
     return _.git.path.normalize( `https://github.com/${ replaced }` );
@@ -346,7 +352,7 @@ function willfileFromNpm( o )
 
   function submodulePropertyAdd_functor( criterion )
   {
-    const criterions = criterion ? [ criterion ] : null;
+    const criterions = criterion ? criterion : null;
     return function( property )
     {
       let dependenciesMap = config[ property ];
@@ -392,7 +398,7 @@ let Extension =
 
   interpreterParse,
 
-  submoduleMake, /* qqq : for Dmytro : cover */
+  submoduleMake,
   submodulesSwitch,
 
   willfileFromNpm, /* qqq : for Dmytro : cover */
