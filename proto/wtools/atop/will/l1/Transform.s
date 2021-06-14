@@ -324,10 +324,14 @@ function willfileFromNpm( o )
   {
     willfile.about.interpreters = [];
     for( let name in config.engines )
-    if( name === 'node' )
-    willfile.about.interpreters.push( `njs ${ config.engines[ name ] }` );
-    else
-    willfile.about.interpreters.push( `${ name } ${ config.engines[ name ] }` );
+    {
+      const version = config.engines[ name ];
+      const versionPrefix = _.strHasAny( version, [ '=', '<', '>' ] ) ? '' : '=';
+      if( name === 'node' )
+      willfile.about.interpreters.push( `njs ${ versionPrefix }${ version }` );
+      else
+      willfile.about.interpreters.push( `${ name } ${ versionPrefix }${ version }` );
+    }
   }
 
   /* */
@@ -370,6 +374,8 @@ function willfileFromNpm( o )
 
   function willfileFilterFields()
   {
+    if( _.props.keys( willfile.about ).length === 0 )
+    delete willfile.about;
     if( willfile.path.origins.length === 0 )
     delete willfile.path.origins;
     if( _.props.keys( willfile.submodule ).length === 0 )
@@ -401,7 +407,7 @@ let Extension =
   submoduleMake,
   submodulesSwitch,
 
-  willfileFromNpm, /* qqq : for Dmytro : cover */
+  willfileFromNpm,
 };
 
 _.props.extend( Self, Extension );
