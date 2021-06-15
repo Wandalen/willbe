@@ -814,7 +814,7 @@ function npmFromWillfile( test )
 function npmFromWillfileWithComplexConfig( test )
 {
 
-  test.case = 'complex json config';
+  test.case = 'complex willfile';
   var src =
   {
     config :
@@ -1284,6 +1284,132 @@ function willfileFromNpmWithComplexConfig( test )
   test.identical( got, exp );
 }
 
+//
+
+function npmAndWillfileDoubleConvertion( test )
+{
+  test.case = 'willfile -> package -> willfile';
+  var src =
+  {
+    config :
+    {
+      about :
+      {
+        'name' : 'wTools',
+        'version' : '0.0.1',
+        'enabled' : 0,
+        'npm.name' : 'wTools',
+        'description' : 'test module',
+        'keywords' : [ 'test', 'module' ],
+        'license' : 'MIT',
+        'author' : 'author <author@domain.com>',
+        'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
+        'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+        'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
+        'npm.map' : { map : '' },
+        'npm.array' : [ 'array' ],
+        'npm.string' : 'string',
+      },
+      path :
+      {
+        'entry' : 'proto/file',
+        'npm.files' : [ 'proto/file', 'proto/some', 'out' ],
+        'repository' : 'git+https:///github.com/Wandalen/wTools.git',
+        'bugtracker' : 'https:///github.com/Wandalen/wTools/issues',
+        'origins' : [ 'git+https:///github.com/Wandalen/wTools.git', 'npm:///wTools' ],
+      },
+      submodule :
+      {
+        'wTools' : { path : 'npm:///wTools', enabled : 1 },
+        'next' : { path : 'npm:///next!0.0.1', enabled : 1 },
+        'https' : { path : 'https://domain/https.tar.gz', enabled : 1 },
+        'git' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1 },
+        'disabled' : { path : 'git+https:///github.com/user/disabled', enabled : 0 },
+        'hd' : { path : 'hd://./user/hd', enabled : 1 },
+
+        'wToolsd' : { path : 'npm:///wToolsd', enabled : 1, criterion : { development : 1 } },
+        'nextd' : { path : 'npm:///nextd!0.0.1', enabled : 1, criterion : { development : 1 } },
+        'httpsd' : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { development : 1 } },
+        'gitd' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { development : 1 } },
+        'disabledd' : { path : 'git+https:///github.com/user/disabledd', enabled : 0, criterion : { development : 1 } },
+        'hdd' : { path : 'hd://./user/hd', enabled : 1, criterion : { development : 1 } },
+
+        'wToolso' : { path : 'npm:///wToolso', enabled : 1, criterion : { optional : 1 } },
+        'nexto' : { path : 'npm:///nexto!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        'httpso' : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { optional : 1 } },
+        'gito' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        'disabledo' : { path : 'git+https:///github.com/user/disabledo', enabled : 0, criterion : { optional : 1 } },
+        'hdo' : { path : 'hd://./user/hd', enabled : 1, criterion : { optional : 1 } },
+      }
+    },
+  };
+  var converted = _.will.transform.npmFromWillfile( src );
+  var got = _.will.transform.willfileFromNpm({ config : converted });
+  test.identical( _.props.keys( got ), [ 'about', 'path', 'submodule' ] );
+  test.identical( got.about, src.config.about );
+  test.identical( got.path, src.config.path );
+  test.identical( got.submodule, _.mapBut_( null, src.config.submodule, [ 'disabled', 'disabledd', 'disabledo' ] ) );
+  test.true( got !== src.config );
+  test.true( got.about !== src.config.about );
+  test.true( got.path !== src.config.path );
+  test.true( got.submodule !== src.config.submodule );
+
+  /* */
+
+  test.case = 'package -> willfile -> package';
+  var src =
+  {
+    config :
+    {
+      name : 'wTools',
+      version : '0.0.1',
+      enabled : 0,
+      description : 'test module',
+      keywords : [ 'test', 'module' ],
+      license : 'MIT',
+      author : 'author <author@domain.com>',
+      contributors : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
+      scripts : { script1 : 'script1', script2 : 'script2' },
+      engines : { node : '10.0.0', chromium : '67.0.0' },
+      repository : 'https://github.com/Wandalen/wTools.git',
+      bugs : 'https://github.com/Wandalen/wTools/issues',
+      main : 'proto/file',
+      files : [ 'proto/file', 'proto/some', 'out' ],
+      dependencies :
+      {
+        wTools : '',
+        next : '0.0.1',
+        https : 'https://domain/https.tar.gz',
+        git : 'https://github.com/user/repo.git#0.0.1',
+        hd : 'file:./user/hd',
+      },
+      devDependencies :
+      {
+        wToolsd : '',
+        nextd : '0.0.1',
+        httpsd : 'https://domain/https.tar.gz',
+        gitd : 'https://github.com/user/repo.git#0.0.1',
+        hdd : 'file:./user/hd',
+      },
+      optionalDependencies :
+      {
+        wToolso : '',
+        nexto : '0.0.1',
+        httpso : 'https://domain/https.tar.gz',
+        gito : 'https://github.com/user/repo.git#0.0.1',
+        hdo : 'file:./user/hd',
+      },
+      map : { map : '' },
+      array : [ 'array' ],
+      string : 'string',
+    },
+  };
+  var converted = _.will.transform.willfileFromNpm( src );
+  var got = _.will.transform.npmFromWillfile({ config : converted });
+  test.identical( got, src.config );
+  test.true( got !== src.config );
+}
+
 // --
 // declare
 // --
@@ -1322,6 +1448,7 @@ let Self =
     npmFromWillfileWithComplexConfig,
     willfileFromNpm,
     willfileFromNpmWithComplexConfig,
+    npmAndWillfileDoubleConvertion,
 
   },
 
