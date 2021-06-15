@@ -23,7 +23,7 @@ function onSuiteBegin()
 {
   let context = this;
 
-  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
 
@@ -157,7 +157,7 @@ function authorRecordStr( test )
   test.identical( got, 'name (url)' );
 
   test.case = 'map with name, email and url';
-  var src = { name : 'name', email: 'email', url : 'url' };
+  var src = { name : 'name', email : 'email', url : 'url' };
   var got = _.will.transform.authorRecordStr( src );
   test.identical( got, 'name <email> (url)' );
 
@@ -823,6 +823,117 @@ function willfileFromNpm( test )
   test.shouldThrowErrorSync( () => _.will.transform.willfileFromNpm({ config : [] }) );
 }
 
+//
+
+function willfileFromNpmWithComplexConfig( test )
+{
+
+  test.case = 'complex json config';
+  var src =
+  {
+    config :
+    {
+      name : 'wTools',
+      version : '0.0.1',
+      enabled : 0,
+      description : 'test module',
+      keywords : [ 'test', 'module' ],
+      license : 'MIT',
+      author : { name : 'author', email : 'author@domain.com' },
+      contributors : [ 'author1 <author1@domain.com>', { name : 'author2', email : 'author2@domain.com' } ],
+      scripts : { script1 : 'script1', script2 : 'script2' },
+      engines : { node : '10.0.0', chromium : '67.0.0' },
+      repository : 'https://github.com/Wandalen/wTools.git',
+      bugs : 'https://github.com/Wandalen/wTools/issues',
+      main : 'proto/file',
+      files : [ 'proto/file', 'proto/some', 'out' ],
+      dependencies :
+      {
+        wTools : '',
+        next : '0.0.1',
+        https : 'https://domain/https.tar.gz',
+        git : 'https://github.com/user/repo.git#0.0.1',
+        gitshort : 'user/git-short',
+        hd : 'file:./user/hd',
+      },
+      devDependencies :
+      {
+        wToolsd : '',
+        nextd : '0.0.1',
+        httpsd : 'https://domain/https.tar.gz',
+        gitd : 'https://github.com/user/repo.git#0.0.1',
+        gitshortd : 'user/git-short',
+        hdd : 'file:./user/hd',
+      },
+      optionalDependencies :
+      {
+        wToolso : '',
+        nexto : '0.0.1',
+        httpso : 'https://domain/https.tar.gz',
+        gito : 'https://github.com/user/repo.git#0.0.1',
+        gitshorto : 'user/git-short',
+        hdo : 'file:./user/hd',
+      },
+      map : { map : '' },
+      array : [ 'array' ],
+      string : 'string',
+    },
+  };
+  var got = _.will.transform.willfileFromNpm( src );
+  var exp =
+  {
+    about :
+    {
+      'name' : 'wTools',
+      'version' : '0.0.1',
+      'enabled' : 0,
+      'npm.name' : 'wTools',
+      'description' : 'test module',
+      'keywords' : [ 'test', 'module' ],
+      'license' : 'MIT',
+      'author' : 'author <author@domain.com>',
+      'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+      'interpreters' : [ 'njs =10.0.0', 'chromium =67.0.0' ],
+      'npm.map' : { map : '' },
+      'npm.array' : [ 'array' ],
+      'npm.string' : 'string',
+    },
+    path :
+    {
+      'entry' : 'proto/file',
+      'npm.files' : [ 'proto/file', 'proto/some', 'out' ],
+      'repository' : 'git+https:///github.com/Wandalen/wTools.git',
+      'bugtracker' : 'https:///github.com/Wandalen/wTools/issues',
+      'origins' : [ 'git+https:///github.com/Wandalen/wTools.git', 'npm:///wTools' ],
+    },
+    submodule :
+    {
+      'wTools' : { path : 'npm:///wTools', enabled : 1 },
+      'next' : { path : 'npm:///next!0.0.1', enabled : 1 },
+      'https' : { path : 'https://domain/https.tar.gz', enabled : 1 },
+      'git' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1 },
+      'gitshort' : { path : 'git+https:///github.com/user/git-short', enabled : 1 },
+      'hd' : { path : 'hd://./user/hd', enabled : 1 },
+
+      'wToolsd' : { path : 'npm:///wToolsd', enabled : 1, criterion : { development : 1 } },
+      'nextd' : { path : 'npm:///nextd!0.0.1', enabled : 1, criterion : { development : 1 } },
+      'httpsd' : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { development : 1 } },
+      'gitd' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { development : 1 } },
+      'gitshortd' : { path : 'git+https:///github.com/user/git-short', enabled : 1, criterion : { development : 1 } },
+      'hdd' : { path : 'hd://./user/hd', enabled : 1, criterion : { development : 1 } },
+
+      'wToolso' : { path : 'npm:///wToolso', enabled : 1, criterion : { optional : 1 } },
+      'nexto' : { path : 'npm:///nexto!0.0.1', enabled : 1, criterion : { optional : 1 } },
+      'httpso' : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { optional : 1 } },
+      'gito' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { optional : 1 } },
+      'gitshorto' : { path : 'git+https:///github.com/user/git-short', enabled : 1, criterion : { optional : 1 } },
+      'hdo' : { path : 'hd://./user/hd', enabled : 1, criterion : { optional : 1 } },
+    }
+  };
+  test.identical( got, exp );
+}
+
 // --
 // declare
 // --
@@ -858,6 +969,7 @@ let Self =
     submodulesSwitch,
 
     willfileFromNpm,
+    willfileFromNpmWithComplexConfig,
 
   },
 
