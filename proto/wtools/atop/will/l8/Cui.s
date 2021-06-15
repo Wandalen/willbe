@@ -4183,6 +4183,7 @@ commandNpmFromWillfile.defaults =
   entryPath : null,
   filesPath : null,
   withSubmodules : 0,
+  withDisabledSubmodules : 0,
 };
 
 var command = commandNpmFromWillfile.command = Object.create( null );
@@ -4193,11 +4194,11 @@ command.propertiesAliases = _.props.extend( null, commandImply.command.propertie
 command.properties =
 {
   ... commandImply.command.properties,
-  'packagePath' : 'Path to generated JSON file. Default is "{path::out}/package.json".'
+  packagePath : 'Path to generated JSON file. Default is "{path::out}/package.json".'
   + '\n\t"will .npm.from.willfile packagePath:debug/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "debug".',
-  'entryPath' : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".'
+  entryPath : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".'
   + '\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
-  'filesPath' : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
+  filesPath : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
   + '\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
 };
 
