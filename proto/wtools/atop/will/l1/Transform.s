@@ -356,7 +356,7 @@ function npmFromWillfile( o )
     for( let name in willfile.submodule )
     {
       const submodule = willfile.submodule[ name ];
-      if( _.bool.likeTrue( submodule.enabled ) || submodule.enabled === undefined || _.bool.likeTrue( o.withDisabled ) )
+      if( _.bool.likeTrue( submodule.enabled ) || submodule.enabled === undefined || _.bool.likeTrue( o.withDisabledSubmodules ) )
       {
         const path = submodule.path;
         const parsedPath = _.git.path.parseFull( path );
@@ -430,7 +430,7 @@ function npmFromWillfile( o )
 npmFromWillfile.defaults =
 {
   config : null,
-  withDisabled : 0,
+  withDisabledSubmodules : 0,
 };
 
 //

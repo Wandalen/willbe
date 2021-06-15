@@ -7386,53 +7386,60 @@ function _npmGenerateFromWillfile( o )
 
 function npmGenerateFromWillfile( o )
 {
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let opts = _.props.extend( null, o );
-  let verbosity = o.verbosity;
-
   _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( opts ) );
 
-  let currentContext = o.currentContext ? o.currentContext : module;
-  opts.packagePath = module.pathResolve
+  const module = this;
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  _.routine.options( npmGenerateFromWillfile, o );
+  const logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+
+  /* */
+
+  const currentContext = o.currentContext || module;
+  const packagePath = module.pathResolve
   ({
-    selector : opts.packagePath || '{path::out}/package.json',
+    selector : o.packagePath || '{path::out}/package.json',
     prefixlessAction : 'resolved',
     pathNativizing : 0,
     selectorIsPath : 1,
     currentContext,
   });
 
-  if( opts.entryPath )
-  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
-  if( opts.filesPath )
-  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext });
-
-  /* */
-
-  let o2 =
-  {
-    srcConfig :
+  debugger;
+  let data = _.will.transform.npmFromWillfile
+  ({
+    config :
     {
       about : module.about.exportStructure(),
       path : module.pathMap,
       submodule : module.submoduleMap,
     },
-    ... opts,
-  };
-  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o2 );
+  });
 
-  _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
+  if( o.entryPath )
+  {
+    debugger;
+    const entryPath = module.filesFromResource({ selector : o.entryPath, currentContext })
+    if( entryPath )
+    data.main = entryPath;
+  };
+  if( o.filesPath )
+  {
+    debugger;
+    const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+    if( files )
+    data.files = files;
+  }
+
+  _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
 
   fileProvider.fileWrite
   ({
-    filePath : opts.packagePath,
-    data : config,
+    filePath : packagePath,
+    data,
     encoding : 'json.fine',
-    verbosity : verbosity ? 5 : 0,
+    logger,
   });
 
   return null;
@@ -7443,8 +7450,71 @@ npmGenerateFromWillfile.defaults =
   packagePath : null,
   entryPath : null,
   filesPath : null,
-  verbosity : null,
-}
+  logger : null,
+  currentContext : null,
+};
+
+// function npmGenerateFromWillfile( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let opts = _.props.extend( null, o );
+//   let verbosity = o.verbosity;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( opts ) );
+//
+//   let currentContext = o.currentContext ? o.currentContext : module;
+//   opts.packagePath = module.pathResolve
+//   ({
+//     selector : opts.packagePath || '{path::out}/package.json',
+//     prefixlessAction : 'resolved',
+//     pathNativizing : 0,
+//     selectorIsPath : 1,
+//     currentContext,
+//   });
+//
+//   if( opts.entryPath )
+//   opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
+//   if( opts.filesPath )
+//   opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext });
+//
+//   /* */
+//
+//   let o2 =
+//   {
+//     srcConfig :
+//     {
+//       about : module.about.exportStructure(),
+//       path : module.pathMap,
+//       submodule : module.submoduleMap,
+//     },
+//     ... opts,
+//   };
+//   let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o2 );
+//
+//   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : opts.packagePath,
+//     data : config,
+//     encoding : 'json.fine',
+//     verbosity : verbosity ? 5 : 0,
+//   });
+//
+//   return null;
+// }
+//
+// npmGenerateFromWillfile.defaults =
+// {
+//   packagePath : null,
+//   entryPath : null,
+//   filesPath : null,
+//   verbosity : null,
+// }
 
 // //
 //

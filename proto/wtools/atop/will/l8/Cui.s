@@ -4172,10 +4172,9 @@ function commandNpmFromWillfile( e )
     ({
       ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
       currentContext,
-      verbosity : 2,
+      logger : 2,
     });
   }
-
 }
 
 commandNpmFromWillfile.defaults =

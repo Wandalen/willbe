@@ -725,6 +725,19 @@ function npmFromWillfile( test )
   };
   test.identical( got, exp );
 
+  test.case = 'map with only dependencies - disabled, o.withDisabledSubmodules - 1';
+  var src =
+  {
+    config :
+    {
+      submodule : { disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0 } }
+    },
+    withDisabledSubmodules : 1,
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { dependencies : { disabled : 'https://github.com/user/disabled' } };
+  test.identical( got, exp );
+
   test.case = 'map with only development dependencies - different';
   var src =
   {
@@ -755,6 +768,19 @@ function npmFromWillfile( test )
   };
   test.identical( got, exp );
 
+  test.case = 'map with only development dependencies - disabled, o.withDisabledSubmodules - 1';
+  var src =
+  {
+    config :
+    {
+      submodule : { disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { development : 1 } } }
+    },
+    withDisabledSubmodules : 1,
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { devDependencies : { disabled : 'https://github.com/user/disabled' } };
+  test.identical( got, exp );
+
   test.case = 'map with only optional dependencies - different';
   var src =
   {
@@ -783,6 +809,19 @@ function npmFromWillfile( test )
       hd : 'file:./user/hd',
     },
   };
+  test.identical( got, exp );
+
+  test.case = 'map with only development dependencies - disabled, o.withDisabledSubmodules - 1';
+  var src =
+  {
+    config :
+    {
+      submodule : { disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { optional : 1 } } }
+    },
+    withDisabledSubmodules : 1,
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { optionalDependencies : { disabled : 'https://github.com/user/disabled' } };
   test.identical( got, exp );
 
   test.case = 'map with only non standard options - different';
