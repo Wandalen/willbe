@@ -236,7 +236,7 @@ submoduleMake.defaults =
 function npmFromWillfile( o )
 {
   _.assert( arguments.length === 1, 'Expects exactly one argument.' );
-  _.routine.options( willfileFromNpm, o );
+  _.routine.options( npmFromWillfile, o );
   _.assert( _.aux.is( o.config ), 'Expects options map {-o-}' );
 
   const willfile = o.config;
@@ -356,7 +356,7 @@ function npmFromWillfile( o )
     for( let name in willfile.submodule )
     {
       const submodule = willfile.submodule[ name ];
-      if( _.bool.likeTrue( submodule.enabled ) || submodule.enabled === undefined )
+      if( _.bool.likeTrue( submodule.enabled ) || submodule.enabled === undefined || _.bool.likeTrue( o.withDisabled ) )
       {
         const path = submodule.path;
         const parsedPath = _.git.path.parseFull( path );
@@ -430,6 +430,7 @@ function npmFromWillfile( o )
 npmFromWillfile.defaults =
 {
   config : null,
+  withDisabled : 0,
 };
 
 //
