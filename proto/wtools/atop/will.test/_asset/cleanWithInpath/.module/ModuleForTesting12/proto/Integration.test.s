@@ -42,7 +42,7 @@ function samples( test )
   ({
     // filePath : path.join( sampleDir, '**/*.(s|js|ss)' ),
     filePath : path.join( sampleDir, '**/*.(s|ss)' ),
-    withStem : false,
+    withStem : 0,
     withDirs : 0,
     mode : 'distinct',
     mandatory : 0,

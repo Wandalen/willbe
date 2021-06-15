@@ -313,7 +313,7 @@ function _openEnd()
   let modules2 = relation.opener.openedModule.modulesEachAll
   ({
     ... _.Will.RelationFilterOn,
-    withPeers : false,
+    withPeers : 0,
     withStem : 1,
     recursive : 2,
   })
@@ -432,7 +432,7 @@ submodulesRelationsFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : true,
+  withPeers : 1,
   withoutDuplicates : 0,
 
 }
@@ -456,7 +456,7 @@ submodulesRelationsOwnFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : true,
+  withPeers : 1,
   withoutDuplicates : 0,
   allVariants : 0,
 

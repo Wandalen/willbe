@@ -339,10 +339,10 @@ function _performRecursive()
     let modules = outModule.modulesEach
     ({
       recursive : exported.recursive,
-      withPeers : true,
-      withStem : false,
-      withOut : false,
-      withIn : true,
+      withPeers : 1,
+      withStem : 0,
+      withOut : 0,
+      withIn : 1,
     });
 
     modules.forEach( ( module2 ) =>

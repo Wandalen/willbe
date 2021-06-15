@@ -438,8 +438,8 @@ function _willfilesFindAct( o )
 _willfilesFindAct.defaults =
 {
   willfilesPath : null,
-  withIn : true,
-  withOut : true,
+  withIn : 1,
+  withOut : 1,
 }
 
 //
@@ -997,7 +997,7 @@ submodulesRelationsFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : true,
+  withPeers : 1,
   withoutDuplicates : 0,
 
 }
@@ -1020,7 +1020,7 @@ submodulesRelationsOwnFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
-  withPeers : true,
+  withPeers : 1,
   withoutDuplicates : 0,
   allVariants : 0,
 
@@ -1716,7 +1716,7 @@ function _repoDownload( o )
       opener2.repo.statusInvalidate({ all : 1 });
       // if( downloading && !o.dry )
       // {
-      // opener2.repo._.hasFiles = true;
+      // opener2.repo._.hasFiles = 1;
       // opener2.repo.statusInvalidate({ all : 1, hasFiles : 1 });
       // }
     });

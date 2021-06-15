@@ -147,7 +147,7 @@ build :
       dry : 0
       loggingNoChanges : 1
       recursive : 1
-      withStem : false
+      withStem : 0
       withDisabledStem : 1
       to : 0
     steps :

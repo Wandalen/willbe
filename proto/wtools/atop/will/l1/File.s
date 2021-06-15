@@ -218,11 +218,11 @@ function fileAt_body( o )
 fileAt_body.defaults =
 {
   commonPath : null,
-  withIn : true,
-  withOut : true,
-  withSingle : true,
-  withImport : true,
-  withExport : true,
+  withIn : 1,
+  withOut : 1,
+  withSingle : 1,
+  withImport : 1,
+  withExport : 1,
   safe : 1,
   fileProvider : null,
 };
@@ -284,10 +284,10 @@ function _filesAtFindTerminals( o )
   var globTerminals = o.fileProvider.filesFinder
   ({
     filter,
-    withTerminals : true,
-    withDirs : false,
-    maskPreset : false,
-    mandatory : false,
+    withTerminals : 1,
+    withDirs : 0,
+    maskPreset : 0,
+    mandatory : 0,
     safe : 0,
     mode : 'distinct',
   });
@@ -500,11 +500,11 @@ function filesAt_body( o )
 filesAt_body.defaults =
 {
   commonPath : null,
-  withIn : true,
-  withOut : true,
-  withSingle : true,
-  withImport : true,
-  withExport : true,
+  withIn : 1,
+  withOut : 1,
+  withSingle : 1,
+  withImport : 1,
+  withExport : 1,
   safe : 1,
   fileProvider : null,
 };

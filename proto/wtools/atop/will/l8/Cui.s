@@ -1021,8 +1021,8 @@ function _commandNewLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.object.isBasic( o.event ) );
 
-  // withIn : true,
-  // withOut : true,
+  // withIn : 1,
+  // withOut : 1,
   // withInvalid : 0,
   // withDisabledModules : 0,
 
@@ -1103,8 +1103,8 @@ defaults.allowNoOpeners = null;
 //   onEach : null,
 //   commandRoutine : null,
 //   name : null,
-//   withIn : true,
-//   withOut : true,
+//   withIn : 1,
+//   withOut : 1,
 //   withInvalid : 0,
 //   withDisabledModules : 0,
 // }
@@ -1410,7 +1410,7 @@ function _commandModuleOrientedLike( o )
 var defaults = _commandModuleOrientedLike.defaults =
 {
   ... Parent.prototype.modulesFor.defaults,
-  withPeers : false,
+  withPeers : 0,
   // withStem : 1,
   withStem : null,
   event : null,
@@ -1461,7 +1461,7 @@ commandImply.defaults =
   verbosity : 3,
   beeping : null,
   withOut : null,
-  withIn : true,
+  withIn : 1,
   withEnabled : null,
   withEnabledModules : null,
   withEnabledSubmodules : null,
@@ -2414,7 +2414,7 @@ command.properties =
 //     onEachModule : handleEach,
 //     // onEach : handleEach,
 //     commandRoutine : commandSubmodulesShell,
-//     withStem : false,
+//     withStem : 0,
 //   });
 
 //   function handleEach( module )
@@ -2463,7 +2463,7 @@ command.properties =
 //     onEachModule : handleEach,
 //     // onEach : handleEach,
 //     commandRoutine : commandSubmodulesGit,
-//     withStem : false,
+//     withStem : 0,
 //   });
 
 //   function handleEach( module )
@@ -2494,7 +2494,7 @@ command.properties =
 // commandSubmodulesGit.defaults =
 // {
 //   withSubmodules : 1,
-//   withOut : false,
+//   withOut : 0,
 //   hardLinkMaybe : 0,
 //   profile : 'default'
 // }
@@ -2525,7 +2525,7 @@ command.properties =
 //     onEachModule : handleEach,
 //     // onEach : handleEach,
 //     commandRoutine : commandSubmodulesGitDiff,
-//     withStem : false,
+//     withStem : 0,
 //   });
 
 //   function handleEach( module )
@@ -2573,7 +2573,7 @@ command.properties =
 //     onEachModule : handleEach,
 //     // onEach : handleEach,
 //     commandRoutine : commandSubmodulesRepoPullOpen,
-//     withStem : false,
+//     withStem : 0,
 //   });
 
 //   function handleEach( module )
@@ -2637,7 +2637,7 @@ command.properties =
 //     onEachModule : handleEach,
 //     // onEach : handleEach,
 //     commandRoutine : commandSubmodulesGitStatus,
-//     withStem : false,
+//     withStem : 0,
 //   });
 
 //   function handleEach( module )
@@ -2704,7 +2704,7 @@ command.properties =
 //     onEach,
 //     onModulesEnd,
 //     commandRoutine : commandSubmodulesGitSync,
-//     withStem : false,
+//     withStem : 0,
 //   });
 
 //   /* */
@@ -2797,7 +2797,7 @@ function commandSubmodulesRepoPullOpen( e )
     onEachModule : handleEach,
     // onEach : handleEach,
     commandRoutine : commandSubmodulesRepoPullOpen,
-    withStem : false,
+    withStem : 0,
   });
 
   function handleEach( module )
@@ -2907,7 +2907,7 @@ function commandModuleNewWith( e )
     name : 'make a new module and call a hook',
     onEach : handleEach,
     commandRoutine : commandModuleNewWith,
-    withOut : false,
+    withOut : 0,
     // withDisabledModules : 0,
     withInvalid : 1,
     allowNoOpeners : true
@@ -3028,7 +3028,7 @@ command.subjectHint = 'A path to hook and arguments.';
 
 // commandModulesGit.defaults =
 // {
-//   withOut : false,
+//   withOut : 0,
 //   withSubmodules : 1,
 //   hardLinkMaybe : 0,
 //   profile : 'default'
@@ -3441,7 +3441,7 @@ function commandDo( e )
     name : 'do',
     onEach : handleEach,
     commandRoutine : commandDo,
-    withOut : false,
+    withOut : 0,
     // withDisabledModules : 0,
     withInvalid : 1,
   })
@@ -3484,7 +3484,7 @@ function commandHookCall( e )
     name : 'call a hook',
     onEach : handleEach,
     commandRoutine : commandHookCall,
-    withOut : false,
+    withOut : 0,
     withInvalid : 1,
   })
   .then( ( arg ) =>
@@ -3595,7 +3595,7 @@ function commandClean( e )
 commandClean.defaults =
 {
   // withSubmodules : 0,
-  withOut : true,
+  withOut : 1,
   dry : 0,
   cleaningSubmodules : 1,
   cleaningOut : 1,
@@ -3662,7 +3662,7 @@ function commandCleanSubmodules( e )
 
 commandCleanSubmodules.defaults =
 {
-  withOut : true,
+  withOut : 1,
   force : 0,
   dry : 0,
   recursive : 0,
@@ -4097,8 +4097,8 @@ function commandEach( e )
     ({
       selector : _.strUnquote( e.instructionArgument ),
       atLeastOne : !path.isGlob( e.instructionArgument ),
-      withInvalid : true,
-    })
+      withInvalid : 1,
+    });
   }
 
   return con.then( function( it )
@@ -4995,7 +4995,7 @@ commandGit.defaults =
 {
   hardLinkMaybe : 0,
   profile : 'default',
-  withOut : false
+  withOut : 0
   // withSubmodules : 0
 };
 var command = commandGit.command = Object.create( null );

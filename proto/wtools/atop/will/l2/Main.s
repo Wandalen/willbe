@@ -48,75 +48,39 @@ let ModuleFilterNulls =
 
 let ModuleFilterDefaults =
 {
-  withOut : true,
-  withIn : true,
-  withEnabledModules : true,
-  withDisabledModules : false,
-  withValid : true,
-  withInvalid : true,
-  withKnown : true,
-  withUnknown : false,
+  withOut : 1,
+  withIn : 1,
+  withEnabledModules : 1,
+  withDisabledModules : 0,
+  withValid : 1,
+  withInvalid : 1,
+  withKnown : 1,
+  withUnknown : 0,
 };
-
-// let ModuleFilterDefaults =
-// {
-//   withOut : true,
-//   withIn : true,
-//   withEnabledModules : 1,
-//   withDisabledModules : 0,
-//   withValid : 1,
-//   withInvalid : 1,
-//   withKnown : 1,
-//   withUnknown : 0,
-// }
 
 let ModuleFilterOff =
 {
-  withOut : false,
-  withIn : false,
-  withEnabledModules : false,
-  withDisabledModules : false,
-  withValid : false,
-  withInvalid : false,
-  withKnown : false,
-  withUnknown : false,
+  withOut : 0,
+  withIn : 0,
+  withEnabledModules : 0,
+  withDisabledModules : 0,
+  withValid : 0,
+  withInvalid : 0,
+  withKnown : 0,
+  withUnknown : 0,
 };
-
-// let ModuleFilterOff =
-// {
-//   withOut : false,
-//   withIn : false,
-//   withEnabledModules : 0,
-//   withDisabledModules : 0,
-//   withValid : 0,
-//   withInvalid : 0,
-//   withKnown : 0,
-//   withUnknown : 0,
-// }
 
 let ModuleFilterOn =
 {
-  withOut : true,
-  withIn : true,
-  withEnabledModules : true,
-  withDisabledModules : true,
-  withValid : true,
-  withInvalid : true,
-  withKnown : true,
-  withUnknown : true,
+  withOut : 1,
+  withIn : 1,
+  withEnabledModules : 1,
+  withDisabledModules : 1,
+  withValid : 1,
+  withInvalid : 1,
+  withKnown : 1,
+  withUnknown : 1,
 };
-
-// let ModuleFilterOn =
-// {
-//   withOut : true,
-//   withIn : true,
-//   withEnabledModules : 1,
-//   withDisabledModules : 1,
-//   withValid : 1,
-//   withInvalid : 1,
-//   withKnown : 1,
-//   withUnknown : 1,
-// }
 
 let RelationFilterNulls =
 {
@@ -125,76 +89,42 @@ let RelationFilterNulls =
   withDisabledSubmodules : null,
   withOptionalSubmodules : null,
   withMandatorySubmodules : null,
-}
+};
 
 let RelationFilterDefaults =
 {
   ... ModuleFilterDefaults,
-  withEnabledSubmodules : true,
-  withDisabledSubmodules : false,
-  withOptionalSubmodules : true,
-  withMandatorySubmodules : true,
-}
-
-// let RelationFilterDefaults =
-// {
-//   ... ModuleFilterDefaults,
-//   withEnabledSubmodules : 1,
-//   withDisabledSubmodules : 0,
-//   withOptionalSubmodules : 1,
-//   withMandatorySubmodules : 1,
-// }
+  withEnabledSubmodules : 1,
+  withDisabledSubmodules : 0,
+  withOptionalSubmodules : 1,
+  withMandatorySubmodules : 1,
+};
 
 let RelationFilterOff =
 {
   ... ModuleFilterOff,
-  withEnabledSubmodules : false,
-  withDisabledSubmodules : false,
-  withOptionalSubmodules : false,
-  withMandatorySubmodules : false,
+  withEnabledSubmodules : 0,
+  withDisabledSubmodules : 0,
+  withOptionalSubmodules : 0,
+  withMandatorySubmodules : 0,
 };
-
-// let RelationFilterOff =
-// {
-//   ... ModuleFilterOff,
-//   withEnabledSubmodules : 0,
-//   withDisabledSubmodules : 0,
-//   withOptionalSubmodules : 0,
-//   withMandatorySubmodules : 0,
-// }
 
 let RelationFilterOn =
 {
   ... ModuleFilterOn,
-  withEnabledSubmodules : true,
-  withDisabledSubmodules : true,
-  withOptionalSubmodules : true,
-  withMandatorySubmodules : true,
+  withEnabledSubmodules : 1,
+  withDisabledSubmodules : 1,
+  withOptionalSubmodules : 1,
+  withMandatorySubmodules : 1,
 };
-
-// let RelationFilterOn =
-// {
-//   ... ModuleFilterOn,
-//   withEnabledSubmodules : 1,
-//   withDisabledSubmodules : 1,
-//   withOptionalSubmodules : 1,
-//   withMandatorySubmodules : 1,
-// }
 
 let FilterFields =
 {
-  withEnabled : true,
-  withDisabled : false,
+  withEnabled : 1,
+  withDisabled : 0,
+  // ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
   ... RelationFilterDefaults
 };
-
-// let FilterFields =
-// {
-//   withEnabled : 1,
-//   withDisabled : 0,
-//   // ... _.mapBut_( null, ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
-//   ... RelationFilterDefaults
-// }
 
 //
 
@@ -1500,8 +1430,8 @@ function moduleFit_body( object, opts )
 
 var defaults = moduleFit_body.defaults = _.props.extend( null, ModuleFilterDefaults );
 
-defaults.withStem = false;
-defaults.withPeers = false;
+defaults.withStem = 0;
+defaults.withPeers = 0;
 
 let moduleFit = _.routine.uniteCloning_replaceByUnite( moduleFit_head, moduleFit_body );
 
@@ -1939,7 +1869,7 @@ function modulesFindWithAt( o )
       tracing : o.tracing,
       withIn : o.withIn,
       withOut : o.withOut,
-      excludingUnderscore : true,
+      excludingUnderscore : 1,
     });
   }
   catch( err )
@@ -2096,7 +2026,7 @@ defaults.withEnabledSubmodules = null;
 defaults.withDisabledSubmodules = null;
 defaults.selector = null;
 defaults.tracing = null;
-defaults.atLeastOne = true;
+defaults.atLeastOne = 1;
 
 //
 
@@ -2114,7 +2044,7 @@ function modulesOnlyRoots( modules )
 
   let filter =
   {
-    withPeers : true,
+    withPeers : 1,
     withStem : 1,
     ... _.Will.RelationFilterOn,
   }
@@ -2152,8 +2082,8 @@ function modulesOnlyRoots( modules )
     ... filter,
     modules : sources,
     revisiting : 0,
-    withStem : false,
-    withPeers : true,
+    withStem : 0,
+    withPeers : 1,
     recursive : 2,
     outputFormat : '*/object',
     nodesGroup,
@@ -2384,15 +2314,15 @@ var defaults = modulesEach_body.defaults =
   ... _.props.extend( null, _.graph.AbstractNodesGroup.prototype.each.defaults ),
   ... _.props.extend( null, relationFit.defaults ),
 
-  withPeers : false,
-  withStem : false,
-  withoutDuplicates : false,
+  withPeers : 0,
+  withStem : 0,
+  withoutDuplicates : 0,
   withDisabledStem : null,
 
   modules : null,
   ownedObjects : null,
   outputFormat : '*/module',
-  descriptive : false,
+  descriptive : 0,
   onUp : null,
   onDown : null,
   recursive : 1,
@@ -2400,11 +2330,11 @@ var defaults = modulesEach_body.defaults =
 
 }
 
-_.assert( defaults.withStem === false );
+_.assert( defaults.withStem === 0 );
 _.assert( defaults.withDisabledStem === null );
-_.assert( defaults.withDisabledSubmodules === false );
-_.assert( defaults.withDisabledModules === false );
-_.assert( defaults.withPeers === false );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
+_.assert( defaults.withPeers === 0 );
 
 let modulesEach = _.routine.uniteCloning_replaceByUnite( modulesEach_head, modulesEach_body );
 let modulesEachAll = _.routineDefaults( null, modulesEach, RelationFilterOn );
@@ -2591,9 +2521,9 @@ var defaults = modulesFor_body.defaults = _.props.extend
 );
 
 defaults.recursive = 1;
-defaults.withPeers = true;
-defaults.withStem = true; /* yyy */
-defaults.left = true;
+defaults.withPeers = 1;
+defaults.withStem = 1; /* yyy */
+defaults.left = 1;
 defaults.nodesGroup = null;
 defaults.modules = null;
 defaults.onEachJunction = null;
@@ -2606,8 +2536,8 @@ delete defaults.onDown;
 delete defaults.onNode;
 
 _.assert( defaults.onEach === undefined );
-_.assert( defaults.withDisabledSubmodules === false );
-_.assert( defaults.withDisabledModules === false );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
 
 let modulesFor = _.routine.uniteCloning_replaceByUnite( modulesFor_head, modulesFor_body );
 
@@ -2696,7 +2626,7 @@ function modulesDownload_body( o )
       o2.all = 0;
       if( o2.recursive === 2 )
       o2.subModulesFormed = 1;
-      o2.withPeers = true;
+      o2.withPeers = 1;
       return will.modulesUpform( o2 );
     });
 
@@ -2705,7 +2635,7 @@ function modulesDownload_body( o )
       let o2 = _.mapOnly_( null, o, will.modulesEach.defaults );
       o2.outputFormat = '*/object';
       o2.modules = objects;
-      o2.withPeers = true; /* xxx */
+      o2.withPeers = 1; /* xxx */
       o2.withIn = 1;
       o2.withOut = 1;
       delete o2.nodesGroup;
@@ -3030,7 +2960,7 @@ defaults.recursive = 1;
 defaults.withStem = 1;
 defaults.withOut = 1;
 defaults.withIn = 1;
-defaults.withPeers = true;
+defaults.withPeers = 1;
 defaults.nodesGroup = null;
 
 defaults.to = null;
@@ -3090,7 +3020,7 @@ var defaults = modulesUpform.defaults = _.props.extend( null, UpformingDefaults,
 
 defaults.recursive = 2;
 defaults.withStem = 1;
-defaults.withPeers = true;
+defaults.withPeers = 1;
 defaults.all = 1;
 
 delete defaults.outputFormat;
@@ -3187,7 +3117,7 @@ defaults.asCommand = 0;
 
 defaults.recursive = 0;
 defaults.withStem = 1;
-defaults.withPeers = true;
+defaults.withPeers = 1;
 defaults.force = 0;
 
 delete defaults.outputFormat;
@@ -3314,14 +3244,14 @@ var defaults = modulesBuild_body.defaults =
   modules : null,
   doneContainer : null,
   recursive : 0,
-  withStem : true,
-  withDisabledStem : true,
-  withPeers : true,
-  upforming : true,
-  downloading : true,
-  purging : false,
+  withStem : 1,
+  withDisabledStem : 1,
+  withPeers : 1,
+  upforming : 1,
+  downloading : 1,
+  purging : 0,
 
-}
+};
 
 delete defaults.onEach;
 delete defaults.onEachModule;
@@ -3332,8 +3262,8 @@ delete defaults.withIn;
 _.assert( defaults.outputFormat === undefined );
 _.assert( defaults.withIn === undefined );
 _.assert( defaults.onEach === undefined );
-_.assert( defaults.withDisabledSubmodules === false );
-_.assert( defaults.withDisabledModules === false );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
 
 let modulesBuild = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
@@ -3849,8 +3779,8 @@ function graphGroupMake( o )
 
 var defaults = graphGroupMake.defaults = _.props.extend( null, RelationFilterDefaults );
 
-defaults.withPeers = true;
-defaults.withoutDuplicates = false;
+defaults.withPeers = 1;
+defaults.withoutDuplicates = 0;
 
 //
 
@@ -4527,16 +4457,16 @@ function WillfilesFind( o )
 WillfilesFind.defaults =
 {
   commonPath : null,
-  withIn : true,
-  withOut : true,
-  withExport : true,
-  withSingle : true,
-  withImport : true,
+  withIn : 1,
+  withOut : 1,
+  withExport : 1,
+  withSingle : 1,
+  withImport : 1,
   fileProvider : null,
 
   recursive : false,
-  tracing : false,
-  excludingUnderscore : false,
+  tracing : 0,
+  excludingUnderscore : 0,
   outputFormat : 'record', /* Dmytro : introduced option outputFormat : [ 'record', 'descriptor' ], routines of utility looks for file records, not willfile descriptors. It saves back compatibility */
   logger : null, /* Dmytro : not used, maybe should be deleted */
 };
@@ -4702,8 +4632,8 @@ WillfilesFind.defaults =
 // WillfilesFind.defaults =
 // {
 //   commonPath : null,
-//   withIn : true,
-//   withOut : true,
+//   withIn : 1,
+//   withOut : 1,
 //   exact : 0,
 //   recursive : false,
 //   tracing : 0,
@@ -4754,7 +4684,7 @@ function willfilesFind( o )
 willfilesFind.defaults =
 {
   ... _.mapBut_( null, WillfilesFind.defaults, [ 'logger', 'fileProvider' ] ),
-  usingCache : false,
+  usingCache : 0,
 };
 
 //
