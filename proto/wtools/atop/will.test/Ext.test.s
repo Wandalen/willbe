@@ -36619,7 +36619,7 @@ function commandNpmFromWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
