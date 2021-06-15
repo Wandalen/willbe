@@ -4222,36 +4222,8 @@ function commandWillfileFromNpm( e )
   e.optionsMap.willfilePath = e.subject;
 
   let con = _.take( null );
-  if( !cui.currentOpeners )
+  return con.Try( () =>
   {
-    con = cui.modulesFindWithAt
-    ({
-      atLeastOne : 1,
-      selector : './',
-      tracing : 1,
-    })
-    .finally( ( err, it ) =>
-    {
-      if( err )
-      throw _.err( err );
-      cui.currentOpeners = it.openers;
-      return null;
-    });
-  }
-
-  return con.then( () =>
-  {
-
-    if( !cui.currentOpeners.length )
-    {
-      const o =
-      {
-        ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
-        logger : 3,
-      };
-      return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
-    }
-
     return cui._commandBuildLike
     ({
       event : e,
@@ -4260,6 +4232,20 @@ function commandWillfileFromNpm( e )
       commandRoutine : commandWillfileFromNpm,
     });
   })
+  .catch( ( err ) =>
+  {
+    if( !cui.currentOpeners || cui.currentOpeners.length === 0 )
+    _.errAttend( err );
+    else
+    throw _.errBrief( err );
+
+    const o =
+    {
+      ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
+      logger : 3,
+    };
+    return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
+  });
 
   function handleEach( it )
   {
@@ -4277,7 +4263,6 @@ function commandWillfileFromNpm( e )
   }
 }
 
-// commandWillfileFromNpm.defaults =  _.props.extend( null, commandImply.defaults,
 commandWillfileFromNpm.defaults =
 {
   packagePath : null,
