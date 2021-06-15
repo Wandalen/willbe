@@ -569,6 +569,248 @@ function submodulesSwitch( test )
 
 //
 
+function npmFromWillfile( test )
+{
+  test.case = 'o.config - empty';
+  var src = { config : {} };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = {};
+  test.identical( got, exp );
+
+  test.case = 'map with only name';
+  var src = { config : { about : { name : 'wTools' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { name : 'wTools' };
+  test.identical( got, exp );
+
+  test.case = 'map with only version';
+  var src = { config : { about : { version : '0.0.1' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { version : '0.0.1' };
+  test.identical( got, exp );
+
+  test.case = 'map with only enabled';
+  var src = { config : { about : { enabled : 0 } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { enabled : 0 };
+  test.identical( got, exp );
+
+  test.case = 'map with only description';
+  var src = { config : { about : { description : 'test module' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { description : 'test module' };
+  test.identical( got, exp );
+
+  test.case = 'map with only keywords';
+  var src = { config : { about : { keywords : [ 'test', 'module' ] } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { keywords : [ 'test', 'module' ] };
+  test.identical( got, exp );
+
+  test.case = 'map with only license';
+  var src = { config : { about : { license : 'MIT' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { license : 'MIT' };
+  test.identical( got, exp );
+
+  test.case = 'map with only author - string';
+  var src = { config : { about : { author : 'author <author@domain.com> (https://site.com)' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { author : 'author <author@domain.com> (https://site.com)' };
+  test.identical( got, exp );
+
+  test.case = 'map with only author - map with name and email';
+  var src = { config : { about : { author : { name : 'author', email : 'author@domain.com' } } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { author : 'author <author@domain.com>' };
+  test.identical( got, exp );
+
+  test.case = 'map with only author - map with name and email and url';
+  var src = { config : { about : { author : { name : 'author', email : 'author@domain.com', url : 'https://site.com' } } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { author : 'author <author@domain.com> (https://site.com)' };
+  test.identical( got, exp );
+
+  test.case = 'map with only contributors - different';
+  var src =
+  {
+    config :
+    {
+      about :
+      {
+        contributors :
+        [
+          'author1 <author1@domain.com>',
+          { name : 'author2', email : 'author2@domain.com' },
+          { name : 'author3', email : 'author3@domain.com', url : 'https://site.com' },
+        ],
+      }
+    },
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp =
+  {
+    contributors :
+    [
+      'author1 <author1@domain.com>',
+      'author2 <author2@domain.com>',
+      'author3 <author3@domain.com> (https://site.com)',
+    ]
+  };
+  test.identical( got, exp );
+
+  test.case = 'map with only scripts';
+  var src = { config : { about : { 'npm.scripts' : { script1 : 'script1', script2 : 'script2' } } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { scripts : { script1 : 'script1', script2 : 'script2' } };
+  test.identical( got, exp );
+
+  test.case = 'map with only interpreters';
+  var src = { config : { about : { interpreters : [ 'njs =10.0.0', 'chromium =67.0.0' ] } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { engines : { node : '=10.0.0', chromium : '=67.0.0' } };
+  test.identical( got, exp );
+
+  test.case = 'map with only repository';
+  var src = { config : { path : { repository : 'git+https:///github.com/Wandalen/wTools.git' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { repository : 'https://github.com/Wandalen/wTools.git' };
+  test.identical( got, exp );
+
+  test.case = 'map with only bugtracker';
+  var src = { config : { path : { bugtracker : 'https:///github.com/Wandalen/wTools/issues' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { bugs : 'https://github.com/Wandalen/wTools/issues' };
+  test.identical( got, exp );
+
+  test.case = 'map with only entry';
+  var src = { config : { path : { entry : 'proto/file' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { main : 'proto/file' };
+  test.identical( got, exp );
+
+  test.case = 'map with only files';
+  var src = { config : { path : { 'npm.files' : [ 'proto/file', 'proto/some', 'out' ] } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { files : [ 'proto/file', 'proto/some', 'out' ] };
+  test.identical( got, exp );
+
+  test.case = 'map with only dependencies - different';
+  var src =
+  {
+    config :
+    {
+      submodule :
+      {
+        wTools : { path : 'npm:///wTools', enabled : 1 },
+        next : { path : 'npm:///next!0.0.1', enabled : 1 },
+        https : { path : 'https://domain/https.tar.gz', enabled : 1 },
+        git : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1 },
+        disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0 },
+        hd : { path : 'hd://./user/hd', enabled : 1 },
+      }
+    }
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp =
+  {
+    dependencies :
+    {
+      wTools : '',
+      next : '0.0.1',
+      https : 'https://domain/https.tar.gz',
+      git : 'https://github.com/user/repo.git#0.0.1',
+      hd : 'file:./user/hd',
+    },
+  };
+  test.identical( got, exp );
+
+  test.case = 'map with only development dependencies - different';
+  var src =
+  {
+    config :
+    {
+      submodule :
+      {
+        wTools : { path : 'npm:///wTools', enabled : 1, criterion : { development : 1 } },
+        next : { path : 'npm:///next!0.0.1', enabled : 1, criterion : { development : 1 } },
+        https : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { development : 1 } },
+        git : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { development : 1 } },
+        disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { development : 1 } },
+        hd : { path : 'hd://./user/hd', enabled : 1, criterion : { development : 1 } },
+      }
+    }
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp =
+  {
+    devDependencies :
+    {
+      wTools : '',
+      next : '0.0.1',
+      https : 'https://domain/https.tar.gz',
+      git : 'https://github.com/user/repo.git#0.0.1',
+      hd : 'file:./user/hd',
+    },
+  };
+  test.identical( got, exp );
+
+  test.case = 'map with only optional dependencies - different';
+  var src =
+  {
+    config :
+    {
+      submodule :
+      {
+        wTools : { path : 'npm:///wTools', enabled : 1, criterion : { optional : 1 } },
+        next : { path : 'npm:///next!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        https : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { optional : 1 } },
+        git : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { optional : 1 } },
+        hd : { path : 'hd://./user/hd', enabled : 1, criterion : { optional : 1 } },
+      }
+    }
+  };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp =
+  {
+    optionalDependencies :
+    {
+      wTools : '',
+      next : '0.0.1',
+      https : 'https://domain/https.tar.gz',
+      git : 'https://github.com/user/repo.git#0.0.1',
+      hd : 'file:./user/hd',
+    },
+  };
+  test.identical( got, exp );
+
+  test.case = 'map with only non standard options - different';
+  var src = { config : { about : { 'npm.map' : { map : '' }, 'npm.array' : [ 'array' ], 'npm.string' : 'string' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { map : { map : '' }, array : [ 'array' ], string : 'string' };
+  test.identical( got, exp );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.npmFromWillfile() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.npmFromWillfile( { config : {} }, { config : {} } ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.will.transform.npmFromWillfile( 'wrong' ) );
+
+  test.case = 'wrong type of o.config';
+  test.shouldThrowErrorSync( () => _.will.transform.npmFromWillfile({ config : [] }) );
+}
+
+//
+
 function willfileFromNpm( test )
 {
   test.case = 'o.config - empty';
@@ -968,6 +1210,7 @@ let Self =
     submoduleMake,
     submodulesSwitch,
 
+    npmFromWillfile,
     willfileFromNpm,
     willfileFromNpmWithComplexConfig,
 
