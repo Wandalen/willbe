@@ -4244,10 +4244,10 @@ function commandWillfileFromNpm( e )
 
     if( !cui.currentOpeners.length )
     {
-      let o =
+      const o =
       {
-        ... e.optionsMap,
-        verbosity : 3,
+        ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
+        logger : 3,
       };
       return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
     }
@@ -4272,7 +4272,7 @@ function commandWillfileFromNpm( e )
       packagePath : e.optionsMap.packagePath,
       willfilePath : e.optionsMap.willfilePath,
       currentContext,
-      verbosity : 3,
+      logger : 3,
     });
   }
 }
