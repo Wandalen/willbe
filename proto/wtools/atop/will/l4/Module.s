@@ -7375,13 +7375,13 @@ function _npmGenerateFromWillfile( o )
 function npmGenerateFromWillfile( o )
 {
   _.assert( arguments.length === 1 );
+  _.routine.options( npmGenerateFromWillfile, o );
 
   const module = this;
   const will = module.will;
   const fileProvider = will.fileProvider;
   const path = fileProvider.path;
-  _.routine.options( npmGenerateFromWillfile, o );
-  const logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
 
   /* */
 
@@ -7395,7 +7395,7 @@ function npmGenerateFromWillfile( o )
     currentContext,
   });
 
-  let data = _.will.transform.npmFromWillfile
+  const data = _.will.transform.npmFromWillfile
   ({
     config :
     {
@@ -7439,7 +7439,7 @@ npmGenerateFromWillfile.defaults =
   currentContext : null,
   withDisabledSubmodules : 0,
 
-  logger : null,
+  logger : 2,
 };
 
 // function npmGenerateFromWillfile( o )
@@ -7751,74 +7751,150 @@ npmGenerateFromWillfile.defaults =
 
 function willfileGenerateFromNpm( o )
 {
-  let module = this;
-  let will = module.will ? module.will : module;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.transaction.logger;
-  let opts = _.props.extend( null, o );
-  let verbosity = o.verbosity;
-
   _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( opts ) );
+  _.routine.options( willfileGenerateFromNpm, o );
 
-  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
-  if( opts.currentContext )
-  {
-    packagePath = module.pathResolve
-    ({
-      selector : opts.packagePath || '{path::in}/package.json',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-    willfilePath = module.pathResolve
-    ({
-      selector : opts.willfilePath || '{path::out}/will.yml',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-  }
-  else
-  {
-    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
-    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
-  }
-
-  if( !fileProvider.isTerminal( willfilePath ) || fileProvider.isDir( willfilePath ) )
-  {
-    let ext = path.ext( willfilePath );
-    if( ext === '' || ( ext !== 'will' && !_.longHasAny( [ 'yml', 'yaml' ], ext ) ) )
-    willfilePath += '.will.yml';
-    else if( ext === 'will' )
-    willfilePath += '.yml';
-  }
+  const module = this;
+  const will = module.will || module;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+  const inPath = will.inPath ? will.inPath : path.current();
 
   /* */
+
+  const packagePath = packagePathGet();
+  let willfilePath = willfilePathGet();
 
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+  _.sure( _.will.filePathIs( willfilePath ), () => `Expexts path to willfile, but got : ${ willfilePath }` );
 
-  let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) })
-  // let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
-  let willfile = _.will.transform.willfileFromNpm({ config });
-
-  /* */
+  const config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger })
+  const data = _.will.transform.willfileFromNpm({ config });
 
   fileProvider.fileWrite
   ({
     filePath : willfilePath,
-    data : willfile,
+    data,
     encoding : 'yaml',
-    verbosity : o.verbosity ? 5 : 0,
+    logger,
   });
 
   return null;
+
+  /* */
+
+  function packagePathGet()
+  {
+    if( o.currentContext )
+    return module.pathResolve
+    ({
+      selector : o.packagePath || '{path::in}/package.json',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : o.currentContext || module,
+    });
+    else
+    return path.join( inPath, o.packagePath || 'package.json' );
+  }
+
+  /* */
+
+  function willfilePathGet()
+  {
+    if( o.currentContext )
+    return module.pathResolve
+    ({
+      selector : o.willfilePath || '{path::out}/will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : o.currentContext || module,
+    });
+    else
+    return path.join( inPath, o.willfilePath || 'will.yml' );
+  }
 }
+
+willfileGenerateFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+  currentContext : null,
+  logger : 2,
+};
+
+// function willfileGenerateFromNpm( o )
+// {
+//   let module = this;
+//   let will = module.will ? module.will : module;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.transaction.logger;
+//   let opts = _.props.extend( null, o );
+//   let verbosity = o.verbosity;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( opts ) );
+//
+//   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+//   let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
+//   if( opts.currentContext )
+//   {
+//     packagePath = module.pathResolve
+//     ({
+//       selector : opts.packagePath || '{path::in}/package.json',
+//       prefixlessAction : 'resolved',
+//       pathNativizing : 0,
+//       selectorIsPath : 1,
+//       currentContext : opts.currentContext,
+//     });
+//     willfilePath = module.pathResolve
+//     ({
+//       selector : opts.willfilePath || '{path::out}/will.yml',
+//       prefixlessAction : 'resolved',
+//       pathNativizing : 0,
+//       selectorIsPath : 1,
+//       currentContext : opts.currentContext,
+//     });
+//   }
+//   else
+//   {
+//     packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+//     willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+//   }
+//
+//   if( !fileProvider.isTerminal( willfilePath ) || fileProvider.isDir( willfilePath ) )
+//   {
+//     let ext = path.ext( willfilePath );
+//     if( ext === '' || ( ext !== 'will' && !_.longHasAny( [ 'yml', 'yaml' ], ext ) ) )
+//     willfilePath += '.will.yml';
+//     else if( ext === 'will' )
+//     willfilePath += '.yml';
+//   }
+//
+//   /* */
+//
+//   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+//   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+//
+//   let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) })
+//   let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
+//
+//   /* */
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : willfilePath,
+//     data : willfile,
+//     encoding : 'yaml',
+//     verbosity : o.verbosity ? 5 : 0,
+//   });
+//
+//   return null;
+// }
 
 //
 
