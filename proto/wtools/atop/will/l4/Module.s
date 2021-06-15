@@ -3881,9 +3881,6 @@ function submodulesRelationsFilter( o )
 
   o = _.routine.options( submodulesRelationsFilter, arguments );
 
-  // if( module.id === 178 )
-  // debugger;
-
   // if( _global_.debugger )
   // debugger;
 
@@ -3893,8 +3890,6 @@ function submodulesRelationsFilter( o )
   let junction = will.junctionFrom( module );
   let junctions = junction.submodulesJunctionsFilter( _.mapOnly_( null, o, junction.submodulesJunctionsFilter.defaults ) );
 
-  // if( junctions.length )
-  // debugger;
   // result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 
   junctions.forEach( ( junction2 ) =>
@@ -4348,7 +4343,6 @@ function peerModuleSet( src )
 
       // if( !( module.remotePath === null || module.remotePath === peerRemotePath ) )
       // {
-      //   debugger;
       //   console.log( module.remotePath );
       //   // src.peerRemotePathGet();
       // }
@@ -5319,7 +5313,6 @@ _.assert( pathResolve.defaults.defaultResourceKind === 'path' );
 function pathOrReflectorResolve_head( routine, args )
 {
   let module = this;
-  debugger;
   let o = module._resolve_head.call( module, routine, args );
   _.assert( arguments.length === 2 );
   return _.will.resolver.pathOrReflectorResolve.head.call( _.will.resolver, routine, [ o ] );
@@ -6283,9 +6276,6 @@ function remotePathSet( filePath )
   // let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
   let isIdentical = ex === filePath || _.path.map.identical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
-  // if( filePath && _.strHas( filePath, 'wTools.git' ) )
-  // debugger;
-
   module._remotePathPut( filePath );
 
   if( !isIdentical )
@@ -6892,8 +6882,6 @@ function structureExportOut( o )
   // o.dst.format = will.willfile.FormatVersion; /* Dmytro : previous */
   o.dst.format = _.will.Willfile.FormatVersion;
 
-  // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
-  // // debugger;
   // if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )
   // {
   //   // _global_.debugger = 1;
@@ -7067,7 +7055,7 @@ function structureExportModules( modules, op )
 
     if( op.dst.module[ relative ] )
     {
-      debugger;
+      // debugger;
     }
     else
     {
@@ -7391,6 +7379,7 @@ function npmGenerateFromWillfile( o )
   const module = this;
   const will = module.will;
   const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
   _.routine.options( npmGenerateFromWillfile, o );
   const logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
 
@@ -7406,7 +7395,6 @@ function npmGenerateFromWillfile( o )
     currentContext,
   });
 
-  debugger;
   let data = _.will.transform.npmFromWillfile
   ({
     config :
@@ -7415,21 +7403,18 @@ function npmGenerateFromWillfile( o )
       path : module.pathMap,
       submodule : module.submoduleMap,
     },
+    withDisabledSubmodules : o.withDisabledSubmodules,
   });
 
   if( o.entryPath )
   {
-    debugger;
-    const entryPath = module.filesFromResource({ selector : o.entryPath, currentContext })
-    if( entryPath )
-    data.main = entryPath;
-  };
+    const entryPath = module.pathResolve({ selector : o.entryPath, prefixlessAction : 'resolved', currentContext });
+    data.main = path.relative( path.dir( packagePath ), entryPath );
+  }
   if( o.filesPath )
   {
-    debugger;
     const files = module.filesFromResource({ selector : o.filesPath, currentContext });
-    if( files )
-    data.files = files;
+    data.files = path.s.relative( path.dir( packagePath ), files );
   }
 
   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
@@ -7450,8 +7435,11 @@ npmGenerateFromWillfile.defaults =
   packagePath : null,
   entryPath : null,
   filesPath : null,
-  logger : null,
+
   currentContext : null,
+  withDisabledSubmodules : 0,
+
+  logger : null,
 };
 
 // function npmGenerateFromWillfile( o )
