@@ -36828,7 +36828,7 @@ function commandNpmFromWillfile( test )
     test.identical( config.enabled, 1 );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36850,7 +36850,7 @@ function commandNpmFromWillfile( test )
       engines : { node : '>= 6.0.0', chrome : '>= 60.0.0', firefox : '>= 60.0.0' },
       scripts : { test : 'wtest .run proto/** v:5', docgen : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
       repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
@@ -36873,11 +36873,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"out/debug/package.json"' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"out/debug/package.json" withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, direct link to directory';
@@ -36894,9 +36894,10 @@ function commandNpmFromWillfileOptionsInCommand( test )
       license : 'MIT',
       author : 'Author <author@dot.com>',
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      engines : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
       repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
@@ -36906,11 +36907,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'out/' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out}/package.json"' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out}/package.json" withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path without criterions';
@@ -36928,8 +36929,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       author : 'Author <author@dot.com>',
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      engines : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
       dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
       repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
@@ -36939,11 +36941,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'out/' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out.*=1}/package.json" debug:1' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out.*=1}/package.json" debug:1 withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
@@ -36961,8 +36963,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       author : 'Author <author@dot.com>',
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      engines : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
       dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
       repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
@@ -36972,11 +36975,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'out/' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"proto/File.s"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"proto/File.s" withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, direct link to file';
@@ -36995,11 +36998,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::proto}/File.s"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::proto}/File.s"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37018,11 +37021,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:debug' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:debug' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37041,11 +37044,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"proto/**"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"proto/**"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `filesPath`, direct link to file';
@@ -37064,11 +37067,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::proto}/**"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::proto}/**"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37087,11 +37090,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:debug' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:debug' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37108,7 +37111,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
