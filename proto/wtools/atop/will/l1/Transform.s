@@ -312,7 +312,10 @@ function npmFromWillfile( o )
     for( let key in willfile.about.interpreters )
     {
       const interpreter = _.strReplaceBegin( willfile.about.interpreters[ key ], 'njs', 'node' );
-      _.props.extend( dst.engines, _.will.transform.interpreterParse( interpreter ) );
+      const interpreterDescriptor = _.will.transform.interpreterParse( interpreter );
+      for( let key in interpreterDescriptor )
+      interpreterDescriptor[ key ] = interpreterDescriptor[ key ].replace( /^=\s*(\d)/, '$1' );
+      _.props.extend( dst.engines, interpreterDescriptor );
     }
   }
 

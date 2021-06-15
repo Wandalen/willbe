@@ -668,7 +668,7 @@ function npmFromWillfile( test )
   test.case = 'map with only interpreters';
   var src = { config : { about : { interpreters : [ 'njs =10.0.0', 'chromium =67.0.0' ] } } };
   var got = _.will.transform.npmFromWillfile( src );
-  var exp = { engines : { node : '=10.0.0', chromium : '=67.0.0' } };
+  var exp = { engines : { node : '10.0.0', chromium : '67.0.0' } };
   test.identical( got, exp );
 
   test.case = 'map with only repository';
@@ -831,7 +831,7 @@ function npmFromWillfileWithComplexConfig( test )
         'author' : { name : 'author', email : 'author@domain.com' },
         'contributors' : [ 'author1 <author1@domain.com>', { name : 'author2', email : 'author2@domain.com' } ],
         'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
-        'interpreters' : [ 'njs =10.0.0', 'chromium =67.0.0' ],
+        'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
         'npm.map' : { map : '' },
         'npm.array' : [ 'array' ],
         'npm.string' : 'string',
@@ -881,7 +881,7 @@ function npmFromWillfileWithComplexConfig( test )
     author : 'author <author@domain.com>',
     contributors : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
     scripts : { script1 : 'script1', script2 : 'script2' },
-    engines : { node : '=10.0.0', chromium : '=67.0.0' },
+    engines : { node : '10.0.0', chromium : '>=67.0.0' },
     repository : 'https://github.com/Wandalen/wTools.git',
     bugs : 'https://github.com/Wandalen/wTools/issues',
     main : 'proto/file',
