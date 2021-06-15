@@ -233,6 +233,204 @@ submoduleMake.defaults =
 
 //
 
+function npmFromWillfile( o )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument.' );
+  _.routine.options( willfileFromNpm, o );
+  _.assert( _.aux.is( o.config ), 'Expects options map {-o-}' );
+
+  const willfile = o.config;
+  const config = Object.create( null );
+
+  /* */
+
+  _.props.extend( config, aboutSectionTransform() );
+  _.props.extend( config, pathSectionTransform() );
+  _.props.extend( config, submoduleSectionTransform() );
+
+  return config;
+
+  /* */
+
+  function aboutSectionTransform()
+  {
+    const result = Object.create( null );
+
+    if( !willfile.about )
+    return result;
+
+    const propertiesMap =
+    {
+      name :         { propertyAdd, name : 'name' },
+      version :      { propertyAdd, name : 'version' },
+      enabled :      { propertyAdd, name : 'enabled' },
+      description :  { propertyAdd, name : 'description' },
+      keywords :     { propertyAdd, name : 'keywords' },
+      license :      { propertyAdd, name : 'license' },
+      author :       { propertyAdd : authorPropertyAdd, name : 'author' },
+      contributors : { propertyAdd : contributorsPropertyAdd, name : 'contributors' },
+      interpreters : { propertyAdd : enginesAdd, name : 'engines' },
+    };
+
+    for( let key in willfile.about )
+    if( _.strBegins( key, 'npm.' ) )
+    result[ _.strRemoveBegin( key, 'npm.' ) ] = willfile.about[ key ];
+    else if( key in propertiesMap )
+    propertiesMap[ key ].propertyAdd( result, key, propertiesMap[ key ].name );
+
+    return result;
+  }
+
+  /* */
+
+  function propertyAdd( dst, property, name )
+  {
+    dst[ property ] = willfile.about[ name ];
+  }
+
+  /* */
+
+  function authorPropertyAdd( dst, property, name )
+  {
+    dst.author = _.will.transform.authorRecordNormalize( willfile.about.author );
+  }
+
+  /* */
+
+  function contributorsPropertyAdd( dst, property, name )
+  {
+    dst.contributors = _.array.make( willfile.about.contributors );
+    for( let i = 0 ; i < dst.contributors.length ; i++ )
+    dst.contributors[ i ] = _.will.transform.authorRecordNormalize( dst.contributors[ i ] );
+  }
+
+  /* */
+
+  function enginesAdd( dst, property, name )
+  {
+    dst.engines = Object.create( null );
+    for( let key in willfile.about.interpreters )
+    {
+      const interpreter = _.strReplaceBegin( willfile.about.interpreters[ key ], 'njs', 'node' );
+      _.props.extend( dst.engines, _.will.transform.interpreterParse( interpreter ) );
+    }
+  }
+
+  /* */
+
+  function pathSectionTransform()
+  {
+    const result = Object.create( null );
+
+    if( !willfile.path )
+    return result;
+
+    if( willfile.path.repository )
+    result.repository = _.git.path.nativize( willfile.path.repository );
+    if( willfile.path.bugtracker )
+    result.bugs = _.git.path.nativize( willfile.path.bugtracker );
+    if( willfile.path.entry )
+    result.main = willfile.path.entry;
+
+    for( let key in willfile.path )
+    if( _.strBegins( key, 'npm.' ) )
+    result[ _.strRemoveBegin( key, 'npm.' ) ] = willfile.path[ key ];
+
+    return result;
+  }
+
+  /* */
+
+  function submoduleSectionTransform()
+  {
+    const result = Object.create( null );
+
+    if( !willfile.submodule )
+    return result;
+
+    dependenciesStructureForm( result );
+
+    for( let name in willfile.submodule )
+    {
+      const submodule = willfile.submodule[ name ];
+      if( _.bool.likeTrue( submodule.enabled ) || submodule.enabled === undefined )
+      {
+        const path = submodule.path;
+        const parsedPath = _.git.path.parseFull( path );
+
+        if( parsedPath.protocol === 'npm' )
+        {
+          const tag = _.npm.path.parse( path ).tag;
+          result[ sectionForSubmoduleGet( submodule ) ][ name ] = tag === 'latest' ? '' : tag;
+        }
+        else if( _.longHas( parsedPath.protocols, 'git' ) )
+        {
+          const gitPath = _.strReplace( _.git.path.nativize( path ), _.git.path.tagToken, _.git.path.hashToken );
+          result[ sectionForSubmoduleGet( submodule ) ][ name ] = gitPath;
+        }
+        else if( parsedPath.protocol === 'hd' )
+        {
+          result[ sectionForSubmoduleGet( submodule ) ][ name ] = `file:${ _.fileProvider.path.localsFromGlobals( path ) }`;
+        }
+        else if( _.longHasAny( parsedPath.protocols, [ 'http', 'https' ] ) )
+        {
+          result[ sectionForSubmoduleGet( submodule ) ][ name ] = path;
+        }
+        else
+        {
+          _.assert( false, `Unexpected protocols : ${ _.entity.exportStringSolo( parsedPath.protocols ) }` );
+        }
+      }
+    }
+
+    return dependenciesSectionsFilter( result );
+  }
+
+  /* */
+
+  function dependenciesStructureForm( src )
+  {
+    src.dependencies = Object.create( null );
+    src.devDependencies = Object.create( null );
+    src.optionalDependencies = Object.create( null );
+    return src;
+  }
+
+  /* */
+
+  function sectionForSubmoduleGet( submodule )
+  {
+    if( submodule.criterion )
+    {
+      if( submodule.criterion.development )
+      return 'devDependencies';
+      if( submodule.criterion.optional )
+      return 'optionalDependencies';
+    }
+    return 'dependencies';
+  }
+
+  /* */
+
+  function dependenciesSectionsFilter( src )
+  {
+    if( src.dependencies && _.props.keys( src.dependencies ).length === 0 )
+    delete src.dependencies;
+    if( src.devDependencies && _.props.keys( src.devDependencies ).length === 0 )
+    delete src.devDependencies;
+    if( src.optionalDependencies && _.props.keys( src.optionalDependencies ).length === 0 )
+    delete src.optionalDependencies;
+    return src;
+  }
+}
+
+npmFromWillfile.defaults =
+{
+  config : null,
+};
+
+//
+
 function willfileFromNpm( o )
 {
   _.assert( arguments.length === 1, 'Expects exactly one argument.' );
@@ -407,7 +605,9 @@ let Extension =
   submoduleMake,
   submodulesSwitch,
 
+  npmFromWillfile,
   willfileFromNpm,
+
 };
 
 _.props.extend( Self, Extension );
