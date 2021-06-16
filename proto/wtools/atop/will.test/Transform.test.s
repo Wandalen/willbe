@@ -1789,6 +1789,171 @@ function willfilesMerge( test )
   test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o ) );
 }
 
+//
+
+function willfilesMergeCheckOptions( test )
+{
+  test.case = 'sections options set to 1';
+  var dst = {};
+  var src =
+  {
+    about : { name : 'test' },
+    build : { all : { criterion : { default : 1, debug : 1 }, steps : [ 'submodules.download' ] } },
+    path : { in : '.' },
+    reflector : { 'reflect.trivial' : { criterion : { debug : 1 }, src : 'path:in', dst : 'path:out' } },
+    step : { 'shell.echo' : { shell : 'echo one' } },
+    submodule : { test : 'hd://./local' },
+  };
+  var got = _.will.transform.willfilesMerge
+  ({
+    dst,
+    src,
+    onSection : _.map.supplement.bind( _.map ),
+    about : 1,
+    build : 1,
+    path : 1,
+    reflector : 1,
+    step : 1,
+    submodule : 1,
+  });
+  var exp =
+  {
+    about : { name : 'test' },
+    build : { all : { criterion : { default : 1, debug : 1 }, steps : [ 'submodules.download' ] } },
+    path : { in : '.' },
+    reflector : { 'reflect.trivial' : { criterion : { debug : 1 }, src : 'path:in', dst : 'path:out' } },
+    step : { 'shell.echo' : { shell : 'echo one' } },
+    submodule : { test : 'hd://./local' },
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'sections options set to 0';
+  var dst = {};
+  var src =
+  {
+    about : { name : 'test' },
+    build : { all : { criterion : { default : 1, debug : 1 }, steps : [ 'submodules.download' ] } },
+    path : { in : '.' },
+    reflector : { 'reflect.trivial' : { criterion : { debug : 1 }, src : 'path:in', dst : 'path:out' } },
+    step : { 'shell.echo' : { shell : 'echo one' } },
+    submodule : { test : 'hd://./local' },
+  };
+  var got = _.will.transform.willfilesMerge
+  ({
+    dst,
+    src,
+    onSection : _.map.supplement.bind( _.map ),
+    about : 0,
+    build : 0,
+    path : 0,
+    reflector : 0,
+    step : 0,
+    submodule : 0,
+  });
+  var exp = {};
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'options for section about - 1, all fields in src';
+  var dst = {};
+  var src =
+  {
+    about :
+    {
+      'name' : 'wTools',
+      'version' : '0.0.1',
+      'enabled' : 0,
+      'npm.name' : 'wTools',
+      'description' : 'test module',
+      'keywords' : [ 'test', 'module' ],
+      'license' : 'MIT',
+      'author' : { name : 'author', email : 'author@domain.com' },
+      'contributors' : [ 'author1 <author1@domain.com>', { name : 'author2', email : 'author2@domain.com' } ],
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+      'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
+    },
+  };
+  var got = _.will.transform.willfilesMerge
+  ({
+    'dst' : dst,
+    'src' : src,
+    'onSection' : _.map.supplement.bind( _.map ),
+    'name' : 1,
+    'version' : 1,
+    'author' : 1,
+    'enabled' : 1,
+    'description' : 1,
+    'contributors' : 1,
+    'interpreters' : 1,
+    'license' : 1,
+    'keywords' : 1,
+    'npm.name' : 1,
+    'npm.scripts' : 1,
+  });
+  var exp =
+  {
+    about :
+    {
+      'name' : 'wTools',
+      'version' : '0.0.1',
+      'enabled' : 0,
+      'npm.name' : 'wTools',
+      'description' : 'test module',
+      'keywords' : [ 'test', 'module' ],
+      'license' : 'MIT',
+      'author' : 'author <author@domain.com>',
+      'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+      'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
+    },
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'options for section about - 1, all fields in src';
+  var dst = {};
+  var src =
+  {
+    about :
+    {
+      'name' : 'wTools',
+      'version' : '0.0.1',
+      'enabled' : 0,
+      'npm.name' : 'wTools',
+      'description' : 'test module',
+      'keywords' : [ 'test', 'module' ],
+      'license' : 'MIT',
+      'author' : { name : 'author', email : 'author@domain.com' },
+      'contributors' : [ 'author1 <author1@domain.com>', { name : 'author2', email : 'author2@domain.com' } ],
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+      'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
+    },
+  };
+  var got = _.will.transform.willfilesMerge
+  ({
+    'dst' : dst,
+    'src' : src,
+    'onSection' : _.map.supplement.bind( _.map ),
+    'name' : 0,
+    'version' : 0,
+    'author' : 0,
+    'enabled' : 0,
+    'description' : 0,
+    'contributors' : 0,
+    'interpreters' : 0,
+    'license' : 0,
+    'keywords' : 0,
+    'npm.name' : 0,
+    'npm.scripts' : 0,
+  });
+  var exp = {};
+  test.identical( got, exp );
+  test.true( got === dst );
+}
+
 // --
 // declare
 // --
@@ -1830,6 +1995,7 @@ let Self =
     npmAndWillfileDoubleConvertion,
 
     willfilesMerge,
+    willfilesMergeCheckOptions,
 
   },
 
