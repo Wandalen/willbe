@@ -744,8 +744,8 @@ function willfilesMerge( o )
     o.onSection( dstInterpreters, srcInterpreters );
     if( dstInterpreters[ 'nodejs' ] !== undefined )
     {
-      srcMap[ 'njs' ] = srcMap[ 'nodejs' ];
-      delete srcMap[ 'nodejs' ];
+      dstInterpreters[ 'njs' ] = dstInterpreters[ 'nodejs' ];
+      delete dstInterpreters[ 'nodejs' ];
     }
 
     o.dst.about.interpreters = [];
