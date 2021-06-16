@@ -593,6 +593,199 @@ willfileFromNpm.defaults =
   config : null,
 };
 
+//
+
+function willfilesMerge( o )
+{
+  _.assert( arguments.length === 1, 'Expexts exactly one argument.' );
+  _.routine.options( willfilesMerge, o );
+  _.assert( _.routine.is( o.onSection ), 'Expexts callback {-o.onSection-} to merge sections.' );
+  _.assert( _.aux.is( o.dst ), 'Expexts map like {-o.dst-}.' );
+  _.assert( _.aux.is( o.src ), 'Expexts map like {-o.src-}.' );
+
+  /* */
+
+  _.map.sureHasOnly( o.dst, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] );
+  _.map.sureHasOnly( o.src, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] );
+
+  const callbackMap =
+  {
+    about : aboutSectionExtend,
+    build : sectionExtend,
+    path : sectionExtend,
+    reflector : sectionExtend,
+    step : sectionExtend,
+    submodule : sectionExtend,
+  };
+
+  for( let sectionName in o.src )
+  callbackMap[ sectionName ]( o.dst, o.src, sectionName );
+
+  return o.dst;
+
+  /* */
+
+  function aboutSectionExtend( dst, src, name )
+  {
+    if( !o.about )
+    return;
+
+    if( !o.dst.about )
+    o.dst.about = Object.create( null );
+
+    const aboutSectionCallbackMap =
+    {
+      'author' : authorFieldAdd,
+      'contributors' : contributorsFieldAdd,
+      'interpreters' : interpretersFieldAdd,
+    };
+
+    for( let key in o.src.about )
+    {
+      if( ( key in aboutSectionCallbackMap ) && o[ key ] )
+      {
+        aboutSectionCallbackMap[ key ]();
+      }
+      else if( o[ key ] )
+      {
+        if( _.primitive.is( o.src.about[ key ] ) || _.primitive.is( o.dst.about[ key ] ) )
+        o.onSection( o.dst.about, { [ key ] : o.src.about[ key ] } );
+        else if( _.array.is( o.src.about[ key ] ) )
+        o.dst.about[ key ] = _.arrayAppendArrayOnce( o.dst.about[ key ] || null, o.src.about[ key ] );
+        else if( _.aux.is( o.src.about[ key ] ) )
+        o.onSection( o.dst.about[ key ] || Object.create( null ), o.src.about[ key ] );
+      }
+      else if( !( key in o ) )
+      {
+        o.onSection( o.dst.about, { [ key ] : o.src.about[ key ] } );
+      }
+    }
+
+    return o.dst;
+  }
+
+  /* */
+
+  function authorFieldAdd( dst )
+  {
+    if( o.src.about.author )
+    o.dst.about.author = _.will.transform.authorRecordNormalize( o.src.about.author );
+  }
+
+  /* */
+
+  function contributorsFieldAdd( dst )
+  {
+    if( !o.src.about.contributors )
+    return;
+
+    _.assert( _.array.is( o.src.about.contributors ), 'Expexts array of source contributors.' );
+
+    const srcContributors = _.array.make( src.about.contributors.length );
+    _.each( o.src.about.contributors, ( record, k ) => /* Dmytro : the `each` is used because the `map` does not exist at now */
+    {
+      srcContributors[ k ] = _.will.transform.authorRecordParse( record );
+    });
+
+    let dstContributors;
+    if( o.dst.about.contributors )
+    {
+      _.assert( _.array.is( o.dst.about.contributors ), 'Expexts array of destination contributors.' );
+
+      dstContributors = _.array.make( o.dst.about.contributors.length );
+      _.each( o.dst.about.contributors, ( record, k ) =>
+      {
+        dstContributors[ k ] = _.will.transform.authorRecordParse( record );
+      });
+      _.each( srcContributors, ( record ) =>
+      {
+        const index = _.long.leftIndex( dstContributors, record, ( r ) => r.name );
+        if( index !== -1 )
+        dstContributors[ index ] = o.onSection( dstContributors[ index ], record )
+        else
+        dstContributors.push( record );
+      });
+    }
+    else
+    {
+      dstContributors = srcContributors;
+    }
+
+    o.dst.about.contributors = dstContributors;
+    _.each( dstContributors, ( record, k ) =>
+    {
+      o.dst.about.contributors[ k ] = _.will.transform.authorRecordNormalize( record );
+    });
+  }
+
+  /* */
+
+  function interpretersFieldAdd( dst )
+  {
+    if( !o.src.about.interpreters )
+    return;
+
+    const srcInterpreters = Object.create( null );
+    _.each( o.src.about.interpreters, ( e ) =>
+    {
+      o.onSection( srcInterpreters, _.will.transform.interpreterParse( e ) );
+    });
+
+    let dstInterpreters = Object.create( null );
+    if( o.dst.about.interpreters )
+    {
+      _.each( o.dst.about.interpreters, ( e ) =>
+      {
+        o.onSection( dstInterpreters, _.will.transform.interpreterParse( e ) );
+      });
+    }
+
+    o.onSection( dstInterpreters, srcInterpreters );
+    if( dstInterpreters[ 'nodejs' ] !== undefined )
+    {
+      srcMap[ 'njs' ] = srcMap[ 'nodejs' ];
+      delete srcMap[ 'nodejs' ];
+    }
+
+    o.dst.about.interpreters = [];
+    _.each( dstInterpreters, ( e, k ) => o.dst.about.interpreters.push( `${ k } ${ e }` ) );
+  }
+
+  /* */
+
+  function sectionExtend( dst, src, name )
+  {
+    if( o[ name ] )
+    o.onSection( dst[ name ], src[ name ] );
+  }
+}
+
+willfilesMerge.defaults =
+{
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
+
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
+  'npm.name' : 1,
+  'npm.scripts' : 1,
+
+  'dst' : null,
+  'src' : null,
+  'onSection' : null,
+};
+
 // --
 // declare
 // --
@@ -611,6 +804,8 @@ let Extension =
 
   npmFromWillfile,
   willfileFromNpm,
+
+  willfilesMerge, /* qqq : for Dmytro : cover */
 
 };
 
