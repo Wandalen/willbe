@@ -605,10 +605,7 @@ function willfilesMerge( o )
 
   /* */
 
-  _.map.sureHasOnly( o.dst, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] );
-  _.map.sureHasOnly( o.src, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] );
-
-  const callbackMap =
+  const willfileSectionsCallbackMap =
   {
     about : aboutSectionExtend,
     build : sectionExtend,
@@ -617,9 +614,13 @@ function willfilesMerge( o )
     step : sectionExtend,
     submodule : sectionExtend,
   };
+  _.map.sureHasOnly( o.dst, willfileSectionsCallbackMap );
+  _.map.sureHasOnly( o.src, willfileSectionsCallbackMap );
 
   for( let sectionName in o.src )
-  callbackMap[ sectionName ]( o.dst, o.src, sectionName );
+  o.dst[ sectionName ] = willfileSectionsCallbackMap[ sectionName ]( o.dst, o.src, sectionName );
+
+  o.dst = dstSectionsFilter();
 
   return o.dst;
 
@@ -661,27 +662,27 @@ function willfilesMerge( o )
       }
     }
 
-    return o.dst;
+    return o.dst.about;
   }
 
   /* */
 
-  function authorFieldAdd( dst )
+  function authorFieldAdd()
   {
     if( o.src.about.author )
-    o.dst.about.author = _.will.transform.authorRecordNormalize( o.src.about.author );
+    o.onSection( o.dst.about, { author : _.will.transform.authorRecordNormalize( o.src.about.author ) } );
   }
 
   /* */
 
-  function contributorsFieldAdd( dst )
+  function contributorsFieldAdd()
   {
     if( !o.src.about.contributors )
     return;
 
     _.assert( _.array.is( o.src.about.contributors ), 'Expexts array of source contributors.' );
 
-    const srcContributors = _.array.make( src.about.contributors.length );
+    const srcContributors = _.array.make( o.src.about.contributors.length );
     _.each( o.src.about.contributors, ( record, k ) => /* Dmytro : the `each` is used because the `map` does not exist at now */
     {
       srcContributors[ k ] = _.will.transform.authorRecordParse( record );
@@ -756,7 +757,17 @@ function willfilesMerge( o )
   function sectionExtend( dst, src, name )
   {
     if( o[ name ] )
-    o.onSection( dst[ name ], src[ name ] );
+    return o.onSection( dst[ name ] || Object.create( null ), src[ name ] );
+  }
+
+  /* */
+
+  function dstSectionsFilter()
+  {
+    for( let sectionName in willfileSectionsCallbackMap )
+    if( !o.dst[ sectionName ] || _.props.keys( o.dst[ sectionName ] ).length === 0 )
+    delete o.dst[ sectionName ];
+    return o.dst;
   }
 }
 
@@ -805,7 +816,7 @@ let Extension =
   npmFromWillfile,
   willfileFromNpm,
 
-  willfilesMerge, /* qqq : for Dmytro : cover */
+  willfilesMerge,
 
 };
 

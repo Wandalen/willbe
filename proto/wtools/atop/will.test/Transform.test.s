@@ -1449,6 +1449,346 @@ function npmAndWillfileDoubleConvertion( test )
   test.true( got !== src.config );
 }
 
+//
+
+function willfilesMerge( test )
+{
+  test.open( 'merge all sections' );
+
+  test.case = 'dst - empty, src - empty, onSection - extend';
+  var dst = {};
+  var src = {};
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = {};
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'dst - filled, src - empty, onSection - extend';
+  var dst = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  var src = {};
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'dst - empty, src - filled, onSection - extend';
+  var dst = {};
+  var src = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'dst - filled, src - filled, different fields in sections, onSection - extend';
+  var dst = { about : { name : 'test' }, path : { out : './out' }, step : { export : { export : 'path::in' } } };
+  var src = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp =
+  {
+    about : { name : 'test', enabled : 1 },
+    path : { in : '.', out : './out' },
+    submodule : { test : 'hd://./local' },
+    step : { export : { export : 'path::in' } }
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'dst - filled, src - filled, different fields in sections, onSection - supplement';
+  var dst = { about : { name : 'test' }, path : { out : './out' }, step : { export : { export : 'path::in' } } };
+  var src = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp =
+  {
+    about : { name : 'test', enabled : 1 },
+    path : { in : '.', out : './out' },
+    submodule : { test : 'hd://./local' },
+    step : { export : { export : 'path::in' } }
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'dst - filled, src - filled, same fields in sections, onSection - extend';
+  var dst = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  var src = { about : { enabled : 0 }, path : { in : './in' }, submodule : { test : 'hd://./test' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { enabled : 0 }, path : { in : './in' }, submodule : { test : 'hd://./test' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'dst - filled, src - filled, different fields in sections, onSection - supplement';
+  var dst = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  var src = { about : { enabled : 0 }, path : { in : './in' }, submodule : { test : 'hd://./test' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp = { about : { enabled : 1 }, path : { in : '.' }, submodule : { test : 'hd://./local' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.close( 'merge all sections' );
+
+  /* - */
+
+  test.open( 'merge fields of section about' );
+
+  test.case = 'same fields with primitive values, onSection - extend';
+  var dst = { about : { 'name' : 'test', 'enabled' : 1, 'description' : 'test', 'npm.string' : 'string' } };
+  var src = { about : { 'name' : 'second', 'enabled' : 0, 'description' : 'second', 'npm.string' : 'str' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { 'name' : 'second', 'enabled' : 0, 'description' : 'second', 'npm.string' : 'str' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'same fields with primitive values, onSection - supplement';
+  var dst = { about : { 'name' : 'test', 'enabled' : 1, 'description' : 'test', 'npm.string' : 'string' } };
+  var src = { about : { 'name' : 'second', 'enabled' : 0, 'description' : 'second', 'npm.string' : 'str' } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp = { about : { 'name' : 'test', 'enabled' : 1, 'description' : 'test', 'npm.string' : 'string' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'same fields with array values, not contributors, not interpreters, onSection - extend';
+  var dst = { about : { keywords : [ 'one', 'two' ], 'npm.array' : [ 'one', 'two' ] } };
+  var src = { about : { keywords : [ 'one', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { keywords : [ 'one', 'two', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'same fields with array values, not contributors, not interpreters, onSection - supplement';
+  var dst = { about : { keywords : [ 'one', 'two' ], 'npm.array' : [ 'one', 'two' ] } };
+  var src = { about : { keywords : [ 'one', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp = { about : { keywords : [ 'one', 'two', 'three' ], 'npm.array' : [ 'one', 'two' ] } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'same fields with map values, onSection - extend';
+  var dst =
+  {
+    about :
+    {
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+      'npm.map' : { key1 : 'value1', key2 : 'value2' },
+    }
+  };
+  var src =
+  {
+    about :
+    {
+      'npm.scripts' : { script1 : 'srcscript1', script3 : 'script3' },
+      'npm.map' : { key1 : 'srcvalue1', key3 : 'value3' },
+    }
+  };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp =
+  {
+    about :
+    {
+      'npm.scripts' : { script1 : 'srcscript1', script2 : 'script2', script3 : 'script3' },
+      'npm.map' : { key1 : 'srcvalue1', key3 : 'value3' },
+    }
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'same fields with map values, onSection - supplement';
+  var dst =
+  {
+    about :
+    {
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
+      'npm.map' : { key1 : 'value1', key2 : 'value2' },
+    }
+  };
+  var src =
+  {
+    about :
+    {
+      'npm.scripts' : { script1 : 'srcscript1', script3 : 'script3' },
+      'npm.map' : { key1 : 'srcvalue1', key3 : 'value3' },
+    }
+  };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp =
+  {
+    about :
+    {
+      'npm.scripts' : { script1 : 'script1', script2 : 'script2', script3 : 'script3' },
+      'npm.map' : { key1 : 'value1', key2 : 'value2' },
+    }
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'autor fields with different values, onSection - extend';
+  var dst = { about : { author : 'author <author@domain.com>' } };
+  var src = { about : { author : { name : 'author2', email : 'author2@domain.com', url : 'https://site.com' } } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { author : 'author2 <author2@domain.com> (https://site.com)' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'autor fields with different values, onSection - supplement';
+  var dst = { about : { author : 'author <author@domain.com>' } };
+  var src = { about : { author : { name : 'author2', email : 'author2@domain.com', url : 'https://site.com' } } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp = { about : { author : 'author <author@domain.com>' } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'contributors fields with different values, onSection - extend';
+  var dst =
+  {
+    about :
+    {
+      contributors :
+      [
+        'author <wrong@email>',
+        { name : 'author2', email : 'author2@domain.com' },
+        { name : 'author3', email : 'author3@domain.com' }
+      ]
+    }
+  };
+  var src =
+  {
+    about :
+    {
+      contributors :
+      [
+        { name : 'author', email : 'author@domain.com', url : 'https://site.com' },
+        'author2 <author2@domain.com> (https://site2.com)',
+        { name : 'author3', email : 'author3@domain.com' },
+        { name : 'author4', email : 'author4@domain.com' },
+      ]
+    }
+  };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp =
+  {
+    about :
+    {
+      contributors :
+      [
+        'author <author@domain.com> (https://site.com)',
+        'author2 <author2@domain.com> (https://site2.com)',
+        'author3 <author3@domain.com>',
+        'author4 <author4@domain.com>',
+      ]
+    }
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'contributors fields with different values, onSection - supplement';
+  var dst =
+  {
+    about :
+    {
+      contributors :
+      [
+        'author <wrong@email>',
+        { name : 'author2', email : 'author2@domain.com' },
+        { name : 'author3', email : 'author3@domain.com' }
+      ]
+    }
+  };
+  var src =
+  {
+    about :
+    {
+      contributors :
+      [
+        { name : 'author', email : 'author@domain.com', url : 'https://site.com' },
+        'author2 <author2@domain.com> (https://site2.com)',
+        { name : 'author3', email : 'author3@domain.com' },
+        { name : 'author4', email : 'author4@domain.com' },
+      ]
+    }
+  };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp =
+  {
+    about :
+    {
+      contributors :
+      [
+        'author <wrong@email> (https://site.com)',
+        'author2 <author2@domain.com> (https://site2.com)',
+        'author3 <author3@domain.com>',
+        'author4 <author4@domain.com>',
+      ]
+    }
+  };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  /* */
+
+  test.case = 'interpreters fields with different values, onSection - extend';
+  var dst = { about : { interpreters : [ 'njs = 10.0.0', 'chromium >= 67.0.0' ] } };
+  var src = { about : { interpreters : [ 'njs >= 12.0.0', 'chromium = 75.0.0', 'filefox > 67.0.0' ] } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
+  var exp = { about : { interpreters : [ 'njs >= 12.0.0', 'chromium = 75.0.0', 'filefox > 67.0.0' ] } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.case = 'interpreters fields with different values, onSection - supplement';
+  var dst = { about : { interpreters : [ 'njs = 10.0.0', 'chromium >= 67.0.0' ] } };
+  var src = { about : { interpreters : [ 'njs >= 12.0.0', 'chromium = 75.0.0', 'filefox > 67.0.0' ] } };
+  var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
+  var exp = { about : { interpreters : [ 'njs = 10.0.0', 'chromium >= 67.0.0', 'filefox > 67.0.0' ] } };
+  test.identical( got, exp );
+  test.true( got === dst );
+
+  test.close( 'merge fields of section about' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge() );
+
+  test.case = 'extra arguments';
+  var o = { src : { path : {} }, dst : { path : {} }, onSection : _.map.extend.bind( _.map ) };
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o, o ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( 'wrong' ) );
+
+  test.case = 'wrong type of o.src';
+  var o = { src : 'wrong', dst : { path : {} }, onSection : _.map.extend.bind( _.map ) };
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o ) );
+
+  test.case = 'wrong type of o.dst';
+  var o = { src : { path : {} }, dst : 'wrong', onSection : _.map.extend.bind( _.map ) };
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o ) );
+
+  test.case = 'wrong type of o.onSection';
+  var o = { src : { path : {} }, dst : { path : {} }, onSection : 'wrong' };
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o ) );
+
+  test.case = 'o.src contains extra section';
+  var o = { src : { extra : {} }, dst : { path : {} }, onSection : _.map.extend.bind( _.map ) };
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o ) );
+
+  test.case = 'o.dst contains extra section';
+  var o = { src : { path : {} }, dst : { extra : {} }, onSection : _.map.extend.bind( _.map ) };
+  test.shouldThrowErrorSync( () => _.will.transform.willfilesMerge( o ) );
+}
+
 // --
 // declare
 // --
@@ -1488,6 +1828,8 @@ let Self =
     willfileFromNpm,
     willfileFromNpmWithComplexConfig,
     npmAndWillfileDoubleConvertion,
+
+    willfilesMerge,
 
   },
 
