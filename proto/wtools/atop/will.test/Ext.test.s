@@ -38533,7 +38533,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config.about.contributors.length, 2 );
     test.true( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.true( _.longHas( config.about.interpreters, 'njs >= 6.0.0' ) );
+    test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
   });
@@ -38619,7 +38619,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -38684,7 +38684,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -38704,7 +38704,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -38724,10 +38724,10 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
         'enabled' : 0,
         'interpreters' :
         [
+          'njs = 6.0.0',
           'chrome >= 60.0.0',
           'firefox >= 67.0.0',
           'chromium >= 67.0.0',
-          'njs >= 6.0.0',
         ],
         'keywords' :
         [
