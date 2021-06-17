@@ -7902,14 +7902,15 @@ function willfileExtendWillfile( o )
   _.assert( arguments.length === 1 );
   _.routine.options( willfileExtendWillfile, o );
 
-  const will = this.will ? this.will : this;
+  const module = this;
+  const will = module.will || module;
   const fileProvider = will.fileProvider;
   const path = fileProvider.path;
   const logger = will.transaction.logger;
 
   /* */
 
-  o.dirPath = o.dirPath || will.inPath || path.current();
+  o.dirPath = o.dirPath || module.dirPath || will.inPath || path.current();
 
   const splits = _.strSplit({ src : o.request, preservingEmpty : 0 });
   for( let i = 0 ; i < splits.length ; i++ )
