@@ -7055,7 +7055,6 @@ function structureExportModules( modules, op )
 
     if( op.dst.module[ relative ] )
     {
-      // debugger;
     }
     else
     {
@@ -7906,7 +7905,7 @@ function willfileExtendWillfile( o )
   const will = this.will ? this.will : this;
   const fileProvider = will.fileProvider;
   const path = fileProvider.path;
-  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+  const logger = will.transaction.logger;
 
   /* */
 
@@ -9979,7 +9978,6 @@ function gitPull( o )
   let provider;
   if( o.restoringHardLinks )
   {
-    debugger;
     /* aaa : for Dmytro : ? */ /* Dmytro : done */
     // provider = module._providerArchiveMake({ dirPath : will.currentOpener.dirPath, verbosity : o.verbosity, profile : o.profile });
     provider = module._providerArchiveMake({ dirPath : module.dirPath, logger, profile : o.profile });

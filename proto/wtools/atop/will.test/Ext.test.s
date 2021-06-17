@@ -39110,7 +39110,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.author, 'Author <author1@dot.com>' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39123,7 +39123,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.keywords, [ 'wtools', 'common' ] );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39137,7 +39137,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.contributors, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39151,15 +39151,15 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.interpreters, exp );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./.ex ForExtension about:0' })
   a.ready.then( ( op ) =>
@@ -39173,7 +39173,7 @@ function commandWillfileExtendWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'interpreters' : [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
       'keywords' : [ 'tools', 'export' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -39184,7 +39184,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39192,7 +39192,7 @@ function commandWillfileExtendWillfileWithOptions( test )
   {
     a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./.ex ForExtension build:0' })
   a.ready.then( ( op ) =>
@@ -39211,7 +39211,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.build, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39219,7 +39219,7 @@ function commandWillfileExtendWillfileWithOptions( test )
   {
     a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./.ex ForExtension step:0 contributors:0 name:0' })
   a.ready.then( ( op ) =>
@@ -39233,7 +39233,7 @@ function commandWillfileExtendWillfileWithOptions( test )
       'description' : 'To check the extension',
       'version' : '1.1.1',
       'enabled' : 0,
-      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0', 'njs >= 6.0.0' ],
+      'interpreters' : [ 'njs = 6.0.0', 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'GPL',
       'author' : 'Author <author1@dot.com>',
@@ -39254,7 +39254,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.step, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39294,7 +39294,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.submodule, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39306,7 +39306,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.true( _.strHas( op.output, '+ writing' ) );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39318,7 +39318,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.true( !_.strHas( op.output, '+ writing' ) );
 
     return null;
-  })
+  });
 
   /* - */
 
