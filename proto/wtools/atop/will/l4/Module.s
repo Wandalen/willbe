@@ -7232,142 +7232,142 @@ resourceImport.defaults =
   overriding : 1,
 }
 
+// //
 //
-
-function _npmGenerateFromWillfile( o )
-{
-  let will = this;
-  let path = will.fileProvider.path;
-
-  /* */
-
-  let config = Object.create( null );
-  if( o.srcConfig.about )
-  {
-    config.name = o.srcConfig.about.name;
-    config.version = o.srcConfig.about.version;
-    config.enabled = o.srcConfig.about.enabled;
-
-    if( o.srcConfig.about.description )
-    config.description = o.srcConfig.about.description;
-    if( o.srcConfig.about.keywords )
-    config.keywords = o.srcConfig.about.keywords;
-    if( o.srcConfig.about.license )
-    config.license = o.srcConfig.about.license;
-
-    if( o.srcConfig.about.interpreters )
-    {
-      let interpreters = _.array.as( o.srcConfig.about.interpreters );
-      interpreters.forEach( ( interpreter ) =>
-      {
-        if( _.strHas( interpreter, 'njs' ) )
-        config.engine = _.strReplace( interpreter, 'njs', 'node' );
-      });
-    }
-
-    if( o.srcConfig.about.author )
-    config.author = o.srcConfig.about.author;
-    if( o.srcConfig.about.contributors )
-    config.contributors = o.srcConfig.about.contributors;
-
-    for( let n in o.srcConfig.about )
-    {
-      if( !_.strBegins( n, 'npm.' ) )
-      continue;
-      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.about[ n ];
-    }
-  }
-
-  if( o.entryPath && o.entryPath.length )
-  {
-    config.main = _.scalarFrom( path.s.relative( path.dir( o.packagePath ), o.entryPath ) );
-  }
-
-  if( o.filesPath && o.filesPath.length )
-  {
-    config.files = path.s.relative( path.dir( o.packagePath ), o.filesPath );
-  }
-
-  if( o.srcConfig.path )
-  {
-    if( o.srcConfig.path.repository )
-    config.repository = _.git.path.nativize( o.srcConfig.path.repository );
-    // config.repository = pathSimplify( o.srcConfig.path.repository );
-    if( o.srcConfig.path.bugtracker )
-    config.bugs = _.git.path.nativize( o.srcConfig.path.bugtracker );
-    // config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
-    if( o.srcConfig.path.entry && !config.main )
-    config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
-
-    for( let n in o.srcConfig.path )
-    {
-      if( !_.strBegins( n, 'npm.' ) )
-      continue;
-      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.path[ n ];
-    }
-  }
-
-  if( o.srcConfig.submodule )
-  {
-    for( let s in o.srcConfig.submodule )
-    {
-      let submodule = o.srcConfig.submodule[ s ];
-      let p = submodule.path;
-      p = _.git.path.parseFull( p );
-
-      _.assert
-      (
-        p.protocol === 'npm' || p.protocol === 'hd',
-        () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
-      );
-
-      if( p.protocol === 'npm' )
-      {
-        depAdd( submodule, path.relative( '/', p.longPath ), p.tag );
-      }
-      else if( p.protocol === 'hd' )
-      {
-        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath );
-      }
-      else _.assert( 0 );
-    }
-  }
-
-  return config;
-
-  /* */
-
-  // function pathSimplify( src )
-  // {
-  //   let r = src;
-  //   if( !_.strIs( r ) )
-  //   return r;
-  //
-  //   r = r.replace( '///', '//' );
-  //   r = r.replace( 'npm://', '' );
-  //
-  //   return r;
-  // }
-
-  function depAdd( submodule, name, hash )
-  {
-    if( submodule.criterion )
-    {
-      if( submodule.criterion.optional )
-      return _depAdd( 'optionalDependencies', name, hash );
-      else if( submodule.criterion.development )
-      return _depAdd( 'devDependencies', name, hash );
-    }
-    return _depAdd( 'dependencies', name, hash );
-  }
-
-  function _depAdd( section, name, hash )
-  {
-    config[ section ] = config[ section ] || Object.create( null );
-    config[ section ][ name ] = hash ? hash : '';
-  }
-
-}
+// function _npmGenerateFromWillfile( o )
+// {
+//   let will = this;
+//   let path = will.fileProvider.path;
+//
+//   /* */
+//
+//   let config = Object.create( null );
+//   if( o.srcConfig.about )
+//   {
+//     config.name = o.srcConfig.about.name;
+//     config.version = o.srcConfig.about.version;
+//     config.enabled = o.srcConfig.about.enabled;
+//
+//     if( o.srcConfig.about.description )
+//     config.description = o.srcConfig.about.description;
+//     if( o.srcConfig.about.keywords )
+//     config.keywords = o.srcConfig.about.keywords;
+//     if( o.srcConfig.about.license )
+//     config.license = o.srcConfig.about.license;
+//
+//     if( o.srcConfig.about.interpreters )
+//     {
+//       let interpreters = _.array.as( o.srcConfig.about.interpreters );
+//       interpreters.forEach( ( interpreter ) =>
+//       {
+//         if( _.strHas( interpreter, 'njs' ) )
+//         config.engine = _.strReplace( interpreter, 'njs', 'node' );
+//       });
+//     }
+//
+//     if( o.srcConfig.about.author )
+//     config.author = o.srcConfig.about.author;
+//     if( o.srcConfig.about.contributors )
+//     config.contributors = o.srcConfig.about.contributors;
+//
+//     for( let n in o.srcConfig.about )
+//     {
+//       if( !_.strBegins( n, 'npm.' ) )
+//       continue;
+//       config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.about[ n ];
+//     }
+//   }
+//
+//   if( o.entryPath && o.entryPath.length )
+//   {
+//     config.main = _.scalarFrom( path.s.relative( path.dir( o.packagePath ), o.entryPath ) );
+//   }
+//
+//   if( o.filesPath && o.filesPath.length )
+//   {
+//     config.files = path.s.relative( path.dir( o.packagePath ), o.filesPath );
+//   }
+//
+//   if( o.srcConfig.path )
+//   {
+//     if( o.srcConfig.path.repository )
+//     config.repository = _.git.path.nativize( o.srcConfig.path.repository );
+//     // config.repository = pathSimplify( o.srcConfig.path.repository );
+//     if( o.srcConfig.path.bugtracker )
+//     config.bugs = _.git.path.nativize( o.srcConfig.path.bugtracker );
+//     // config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
+//     if( o.srcConfig.path.entry && !config.main )
+//     config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
+//
+//     for( let n in o.srcConfig.path )
+//     {
+//       if( !_.strBegins( n, 'npm.' ) )
+//       continue;
+//       config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.path[ n ];
+//     }
+//   }
+//
+//   if( o.srcConfig.submodule )
+//   {
+//     for( let s in o.srcConfig.submodule )
+//     {
+//       let submodule = o.srcConfig.submodule[ s ];
+//       let p = submodule.path;
+//       p = _.git.path.parseFull( p );
+//
+//       _.assert
+//       (
+//         p.protocol === 'npm' || p.protocol === 'hd',
+//         () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+//       );
+//
+//       if( p.protocol === 'npm' )
+//       {
+//         depAdd( submodule, path.relative( '/', p.longPath ), p.tag );
+//       }
+//       else if( p.protocol === 'hd' )
+//       {
+//         depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath );
+//       }
+//       else _.assert( 0 );
+//     }
+//   }
+//
+//   return config;
+//
+//   /* */
+//
+//   // function pathSimplify( src )
+//   // {
+//   //   let r = src;
+//   //   if( !_.strIs( r ) )
+//   //   return r;
+//   //
+//   //   r = r.replace( '///', '//' );
+//   //   r = r.replace( 'npm://', '' );
+//   //
+//   //   return r;
+//   // }
+//
+//   function depAdd( submodule, name, hash )
+//   {
+//     if( submodule.criterion )
+//     {
+//       if( submodule.criterion.optional )
+//       return _depAdd( 'optionalDependencies', name, hash );
+//       else if( submodule.criterion.development )
+//       return _depAdd( 'devDependencies', name, hash );
+//     }
+//     return _depAdd( 'dependencies', name, hash );
+//   }
+//
+//   function _depAdd( section, name, hash )
+//   {
+//     config[ section ] = config[ section ] || Object.create( null );
+//     config[ section ][ name ] = hash ? hash : '';
+//   }
+//
+// }
 
 //
 
@@ -9415,6 +9415,7 @@ function npmModulePublish( o )
     ({
       packagePath,
       currentContext,
+      withDisabledSubmodules : o.withDisabledSubmodules,
       verbosity : o.verbosity,
     });
     return null;
@@ -9492,6 +9493,7 @@ npmModulePublish.defaults =
   message : '-am "."',
   tag : '',
   force : 0,
+  withDisabledSubmodules : 1,
   dry : 0,
   verbosity : 1,
 };
@@ -11051,7 +11053,7 @@ let Extension =
 
   resourceImport,
 
-  _npmGenerateFromWillfile,
+  // _npmGenerateFromWillfile,
   npmGenerateFromWillfile,
   // _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
