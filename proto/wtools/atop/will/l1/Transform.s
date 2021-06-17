@@ -629,7 +629,7 @@ function willfilesMerge( o )
   function aboutSectionExtend( dst, src, name )
   {
     if( !o.about )
-    return;
+    return dst.about;
 
     if( !o.dst.about )
     o.dst.about = Object.create( null );
@@ -758,6 +758,7 @@ function willfilesMerge( o )
   {
     if( o[ name ] )
     return o.onSection( dst[ name ] || Object.create( null ), src[ name ] );
+    return dst[ name ];
   }
 
   /* */
