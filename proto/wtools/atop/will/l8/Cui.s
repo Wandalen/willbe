@@ -4899,11 +4899,12 @@ function commandWillfileMergeIntoSingle( e )
 
 commandWillfileMergeIntoSingle.defaults =
 {
-  logger : 3,
   primaryPath : null,
   secondaryPath : null,
+  force : 0,
   submodulesDisabling : 1,
   filterSameSubmodules : 1,
+  logger : 3,
 };
 
 var command = commandWillfileMergeIntoSingle.command = Object.create( null );
@@ -4915,11 +4916,12 @@ command.propertiesAliases =
 }
 command.properties =
 {
+  primaryPath : 'Name of destination willfile. Default is `will.yml`.',
+  secondaryPath : 'Name of file to extend destination willfile.',
+  force : 'Enable overwriting of existed willfile. Default is 0.',
+  submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1.',
+  filterSameSubmodules : 'Enables filtering of submodules with the same path but different names. Default is 1.',
   verbosity : 'Set verbosity. Default is 3.',
-  primaryPath : 'Name of destination willfile. Default is `will.yml`',
-  secondaryPath : 'Name of file to extend destination willfile',
-  submodulesDisabling : 'Disables submodules in the destination willfile. Default is 1',
-  filterSameSubmodules : 'Enables filtering of submodules with the same path but different names. Default is 1',
 };
 
 // --
@@ -5777,7 +5779,7 @@ command.properties =
   message : 'Commit message', /* aaa : for Dmytro : bad : bad name */ /* Dmytro : renamed */
   tag : 'Tag for NPM module',
   force : 'Forces diff.',
-  withDisabledSubmodules : 'Generate dependencies from disabled submodules. Default is 1.'
+  withDisabledSubmodules : 'Generate dependencies from disabled submodules. Default is 1.',
   dry : 'Dry run.',
   verbosity : 'Change verbosity of output.',
 };
