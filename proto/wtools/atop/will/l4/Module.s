@@ -8994,66 +8994,58 @@ willfileExtendProperty.defaults =
 
 //
 
-/* qqq : for Dmytro : bad, refactor, rewrite */
+/* aaa : for Dmytro : bad, refactor, rewrite */ /* Dmytro : reimplemented using new functional namespace `_.will.transform`, simplified, fixed bugs */
 
 function willfileMergeIntoSingle( o )
 {
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-
+  _.assert( arguments.length === 1, 'Expexts exactly one argument.' );
   _.routine.options( willfileMergeIntoSingle, o );
 
-  let primaryWillfilePath = o.primaryPath || 'CommandWillfileMergeIntoSingle';
+  const module = this;
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  const path = will.fileProvider.path;
+  const logger = will.transaction.logger;
 
-  let o2 =
-  {
-    request : primaryWillfilePath + ' ./',
-    onSection : _.props.supplement.bind( _.props ),
-    dirPath : module.dirPath,
-  };
-  try
-  {
-    willfileExtendWillfile.call( will, o2 );
-  }
-  catch( err )
-  {
-    _.error.attend( err );
-  }
+  /* */
 
-  if( o.secondaryPath )
-  {
-    let o3 =
-    {
-      request : `${ primaryWillfilePath } ${ o.secondaryPath }`,
-      name : 0,
-      onSection : _.props.extend.bind( _.props ),
-      dirPath : module.dirPath,
-    };
-    module.willfileExtendWillfile( o3 );
-  }
+  const primaryPath = path.join( module.dirPath, o.primaryPath || './' );
 
-  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
-
-  let dstPath = filesFind( primaryWillfilePath, 1 );
-  if( dstPath.length === 0 )
+  const willfiles = willfilesFind( primaryPath );
+  if( willfiles.length < 2 )
   {
     if( logger.verbosity >= 2 )
     logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
     return null;
   }
-  _.assert( dstPath.length === 1 );
-  dstPath = dstPath[ 0 ];
 
-  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger : 0 });
-  filterAboutNpmFields();
-  filterSubmodulesCriterions();
-  if( o.filterSameSubmodules )
-  filterSameSubmodules()
-  if( o.submodulesDisabling )
-  _.will.transform.submodulesSwitch( config.submodule, 0 );
-  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
+  let mergedWillfile = configRead( willfiles[ 0 ].absolute );
+  if( willfiles.length === 2 )
+  mergedWillfile = configsMerge( configRead ( willfiles[ 1 ].absolute ), _.map.supplement.bind( _.map ) );
+
+  if( o.secondaryPath )
+  mergedWillfileExtendBySecondaryConfig();
+
+  let dstPath = dstPathGet();
+
+  if( !o.force )
+  _.sure
+  (
+    !fileProvider.fileExists( dstPath ),
+    `Destination file ${ dstPath } already exists. Please, rename or delete file before merge.`
+  );
+
+  willfileFilterSameNpmScripts();
+  if( mergedWillfile.submodule )
+  {
+    willfileFilterSubmodulesCriterions();
+    if( o.filterSameSubmodules )
+    willfileFilterSameSubmodules()
+    if( o.submodulesDisabling )
+      _.will.transform.submodulesSwitch( mergedWillfile.submodule, 0 );
+  }
+
+  fileProvider.fileWrite({ filePath : dstPath, data : mergedWillfile, encoding : 'yaml', logger });
 
   /* */
 
@@ -9063,19 +9055,13 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function filesFind( srcPath, dst )
+  function willfilesFind( commonPath )
   {
-    if( dst && path.isGlob( srcPath ) )
-    throw _.err( 'Path to destination file should have not globs.' );
-
-    srcPath = path.join( module.dirPath, srcPath );
-
-    if( fileProvider.isDir( srcPath ) )
-    srcPath = path.join( srcPath, './' );
+    _.sure( !path.isGlob( commonPath ), 'Path to destination file should have not globs.' );
 
     return will.willfilesFind
     ({
-      commonPath : srcPath,
+      commonPath,
       withIn : 1,
       withOut : 0,
     });
@@ -9083,47 +9069,83 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function filterSubmodulesCriterions()
+  function configRead( filePath, encoding )
   {
-    let submodules = config.submodule;
-    for( let name in submodules )
+    return fileProvider.fileRead
+    ({
+      filePath,
+      encoding : encoding || 'yaml',
+      logger : 0
+    });
+  }
+
+  /* */
+
+  function configsMerge( src, onSection )
+  {
+    return _.will.transform.willfilesMerge
+    ({
+      onSection,
+      dst : mergedWillfile,
+      src,
+    });
+  }
+
+  /* */
+
+  function mergedWillfileExtendBySecondaryConfig()
+  {
+    const secondaryPath = path.join( module.dirPath, o.secondaryPath === '.' ? './' : o.secondaryPath );
+    let files = [];
+    if( path.isTrailed( secondaryPath ) )
+    files = willfilesFind( secondaryPath );
+    else
+    files.push( fileProvider.record( secondaryPath ) );
+
+    if( files.length )
+    for( let i = 0 ; i < files.length ; i++ )
     {
-      let criterions = submodules[ name ].criterion;
-      if( criterions )
-      if( criterions.debug )
-      if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
-      {
-        delete criterions.debug;
-        criterions.development = 1;
-      }
+      const encoding = files[ i ].ext === 'json' ? 'json' : 'yaml';
+      let config = configRead( files[ i ].absolute, encoding );
+      if( encoding === 'json' )
+      config = _.will.transform.npmFromWillfile({ config });
+      configsMerge( config, _.map.extend.bind( _.map ) );
     }
   }
 
   /* */
 
-  function filterAboutNpmFields()
+  function dstPathGet()
   {
-    let about = config.about;
-    for( let name in about )
+    if( path.isTrailed( primaryPath ) )
+    return path.join( primaryPath, 'will.yml' );
+
+    if( !_.will.filePathIs( primaryPath ) )
     {
-      if( !_.strBegins( name, 'npm.' ) )
-      continue;
+      const name = path.name( o.primaryPath );
+      const exts = path.exts( o.primaryPath );
+      _.arrayAppendArray( exts, [ 'will', 'yml' ] );
+      return `${ path.join( module.dirPath, name ) }.${ exts.join( '.' ) }`;
+    }
 
-      if( _.arrayIs( about[ name ] ) )
-      {
-        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
-      }
-      else if( _.aux.is( about[ name ] ) )
-      {
-        let npmMap = about[ name ];
-        let reversedMap = Object.create( null );
+    return primaryPath;
+  }
 
-        for( let property in npmMap )
-        if( npmMap[ property ] in reversedMap )
-        filterPropertyByName( npmMap, reversedMap, property )
-        else
-        reversedMap[ npmMap[ property ] ] = property;
-      }
+  /* */
+
+  function willfileFilterSameNpmScripts()
+  {
+    if( mergedWillfile.about )
+    if( 'npm.scripts' in mergedWillfile.about )
+    {
+      const npmMap = mergedWillfile.about[ 'npm.scripts' ];
+      const reversedMap = Object.create( null );
+
+      for( let property in npmMap )
+      if( npmMap[ property ] in reversedMap )
+      filterPropertyByName( npmMap, reversedMap, property );
+      else
+      reversedMap[ npmMap[ property ] ] = property;
     }
   }
 
@@ -9144,15 +9166,33 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function filterSameSubmodules()
+  function willfileFilterSubmodulesCriterions()
   {
-    let submodules = config.submodule;
-    let regularPaths = new Set();
-    let mergedSubmodules = Object.create( null );
+    for( let name in mergedWillfile.submodule )
+    {
+      const criterions = mergedWillfile.submodule[ name ].criterion;
+      if( criterions )
+      if( criterions.debug )
+      if( !_.longHasAny( _.props.keys( criterions ), [ 'development', 'optional' ] ) )
+      {
+        delete criterions.debug;
+        criterions.development = 1;
+      }
+    }
+  }
+
+  /* */
+
+  function willfileFilterSameSubmodules()
+  {
+    const submodules = mergedWillfile.submodule;
+    const regularPaths = new Set();
+    const mergedSubmodules = Object.create( null );
+
     for( let name in submodules )
     {
-      let path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
-      let parsed = _.uri.parse( path );
+      const path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
+      const parsed = _.uri.parse( path );
 
       let parsedModuleName;
       if( _.longHas( parsed.protocols, 'npm' ) )
@@ -9175,71 +9215,276 @@ function willfileMergeIntoSingle( o )
       if( !( parsedModuleName in mergedSubmodules ) )
       mergedSubmodules[ parsedModuleName ] = submodules[ name ];
     }
-    config.submodule = mergedSubmodules;
+    mergedWillfile.submodule = mergedSubmodules;
   }
-
-  /* */
-
-  // function submodulesDisable()
-  // {
-  //   for( let dependency in config.submodule )
-  //   {
-  //     if( _.aux.is( config.submodule[ dependency ] ) )
-  //     {
-  //       config.submodule[ dependency ].enabled = 0;
-  //     }
-  //     else if( _.str.is( config.submodule[ dependency ] ) )
-  //     {
-  //       let dependencyMap = Object.create( null );
-  //       dependencyMap.path = config.submodule[ dependency ];
-  //       dependencyMap.enabled = 0;
-  //       config.submodule[ dependency ] = dependencyMap;
-  //     }
-  //   }
-  // }
 
   /* */
 
   function renameFiles()
   {
-    let unnamedWillfiles = filesFind( './.*' );
-    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+    for( let i = 0 ; i < willfiles.length ; i++ )
     {
-      let oldName = unnamedWillfiles[ i ].absolute;
-      let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
+      let oldName = willfiles[ i ].absolute;
+      let newName = path.join( willfiles[ i ].dir, '-' + willfiles[ i ].fullName );
       fileProvider.fileRename( newName, oldName );
-    }
-
-    if( !o.primaryPath )
-    {
-      let oldName = dstPath.absolute;
-      let newName = path.join( dstPath.dir, 'will.yml' );
-      try
-      {
-        fileProvider.fileRename( newName, oldName );
-        logger.log( `  + writing {- Map.pure -} to ${ newName }` )
-      }
-      catch( err )
-      {
-        logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
-        fileProvider.filesDelete( oldName );
-      }
-    }
-    else
-    {
-      logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
     }
   }
 }
 
 willfileMergeIntoSingle.defaults =
 {
-  logger : 3,
   primaryPath : null,
   secondaryPath : null,
+  force : 0,
   submodulesDisabling : 1,
   filterSameSubmodules : 1,
+  logger : 3,
 };
+
+// function willfileMergeIntoSingle( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = will.fileProvider.path;
+//
+//   _.routine.options( willfileMergeIntoSingle, o );
+//
+//   let primaryWillfilePath = o.primaryPath || 'CommandWillfileMergeIntoSingle';
+//
+//   let o2 =
+//   {
+//     request : primaryWillfilePath + ' ./',
+//     onSection : _.props.supplement.bind( _.props ),
+//     dirPath : module.dirPath,
+//   };
+//   try
+//   {
+//     willfileExtendWillfile.call( will, o2 );
+//   }
+//   catch( err )
+//   {
+//     _.error.attend( err );
+//   }
+//
+//   if( o.secondaryPath )
+//   {
+//     let o3 =
+//     {
+//       request : `${ primaryWillfilePath } ${ o.secondaryPath }`,
+//       name : 0,
+//       onSection : _.props.extend.bind( _.props ),
+//       dirPath : module.dirPath,
+//     };
+//     module.willfileExtendWillfile( o3 );
+//   }
+//
+//   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+//
+//   let dstPath = filesFind( primaryWillfilePath, 1 );
+//   if( dstPath.length === 0 )
+//   {
+//     if( logger.verbosity >= 2 )
+//     logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
+//     return null;
+//   }
+//   _.assert( dstPath.length === 1 );
+//   dstPath = dstPath[ 0 ];
+//
+//   let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger : 0 });
+//   filterAboutNpmFields();
+//   filterSubmodulesCriterions();
+//   if( o.filterSameSubmodules )
+//   filterSameSubmodules()
+//   if( o.submodulesDisabling )
+//   _.will.transform.submodulesSwitch( config.submodule, 0 );
+//   fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
+//
+//   /* */
+//
+//   renameFiles();
+//
+//   return null;
+//
+//   /* */
+//
+//   function filesFind( srcPath, dst )
+//   {
+//     if( dst && path.isGlob( srcPath ) )
+//     throw _.err( 'Path to destination file should have not globs.' );
+//
+//     srcPath = path.join( module.dirPath, srcPath );
+//
+//     if( fileProvider.isDir( srcPath ) )
+//     srcPath = path.join( srcPath, './' );
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : srcPath,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function filterSubmodulesCriterions()
+//   {
+//     let submodules = config.submodule;
+//     for( let name in submodules )
+//     {
+//       let criterions = submodules[ name ].criterion;
+//       if( criterions )
+//       if( criterions.debug )
+//       if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
+//       {
+//         delete criterions.debug;
+//         criterions.development = 1;
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function filterAboutNpmFields()
+//   {
+//     let about = config.about;
+//     for( let name in about )
+//     {
+//       if( !_.strBegins( name, 'npm.' ) )
+//       continue;
+//
+//       if( _.arrayIs( about[ name ] ) )
+//       {
+//         about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
+//       }
+//       else if( _.aux.is( about[ name ] ) )
+//       {
+//         let npmMap = about[ name ];
+//         let reversedMap = Object.create( null );
+//
+//         for( let property in npmMap )
+//         if( npmMap[ property ] in reversedMap )
+//         filterPropertyByName( npmMap, reversedMap, property )
+//         else
+//         reversedMap[ npmMap[ property ] ] = property;
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function filterPropertyByName( srcMap, butMap, property )
+//   {
+//     if( _.strHas( property, '-' ) )
+//     delete srcMap[ property ];
+//     else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
+//     delete srcMap[ butMap[ srcMap[ property ] ] ];
+//     else if( !_.strHasAny( property, [ '.', '-' ] ) )
+//     {
+//       if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
+//       delete srcMap[ butMap[ srcMap[ property ] ] ];
+//     }
+//   }
+//
+//   /* */
+//
+//   function filterSameSubmodules()
+//   {
+//     let submodules = config.submodule;
+//     let regularPaths = new Set();
+//     let mergedSubmodules = Object.create( null );
+//     for( let name in submodules )
+//     {
+//       let path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
+//       let parsed = _.uri.parse( path );
+//
+//       let parsedModuleName;
+//       if( _.longHas( parsed.protocols, 'npm' ) )
+//       {
+//         parsedModuleName = _.npm.path.parse( path ).host;
+//       }
+//       else if( _.longHas( parsed.protocols, 'git' ) )
+//       {
+//         parsedModuleName = _.git.path.parse({ remotePath : path, full : 0, atomic : 0, objects : 1 }).repo;
+//       }
+//       else
+//       {
+//         if( regularPaths.has( path ) )
+//         continue;
+//
+//         regularPaths.add( path );
+//         parsedModuleName = name;
+//       }
+//
+//       if( !( parsedModuleName in mergedSubmodules ) )
+//       mergedSubmodules[ parsedModuleName ] = submodules[ name ];
+//     }
+//     config.submodule = mergedSubmodules;
+//   }
+//
+//   /* */
+//
+//   // function submodulesDisable()
+//   // {
+//   //   for( let dependency in config.submodule )
+//   //   {
+//   //     if( _.aux.is( config.submodule[ dependency ] ) )
+//   //     {
+//   //       config.submodule[ dependency ].enabled = 0;
+//   //     }
+//   //     else if( _.str.is( config.submodule[ dependency ] ) )
+//   //     {
+//   //       let dependencyMap = Object.create( null );
+//   //       dependencyMap.path = config.submodule[ dependency ];
+//   //       dependencyMap.enabled = 0;
+//   //       config.submodule[ dependency ] = dependencyMap;
+//   //     }
+//   //   }
+//   // }
+//
+//   /* */
+//
+//   function renameFiles()
+//   {
+//     let unnamedWillfiles = filesFind( './.*' );
+//     for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+//     {
+//       let oldName = unnamedWillfiles[ i ].absolute;
+//       let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
+//       fileProvider.fileRename( newName, oldName );
+//     }
+//
+//     if( !o.primaryPath )
+//     {
+//       let oldName = dstPath.absolute;
+//       let newName = path.join( dstPath.dir, 'will.yml' );
+//       try
+//       {
+//         fileProvider.fileRename( newName, oldName );
+//         logger.log( `  + writing {- Map.pure -} to ${ newName }` )
+//       }
+//       catch( err )
+//       {
+//         logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
+//         fileProvider.filesDelete( oldName );
+//       }
+//     }
+//     else
+//     {
+//       logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
+//     }
+//   }
+// }
+//
+// willfileMergeIntoSingle.defaults =
+// {
+//   logger : 3,
+//   primaryPath : null,
+//   secondaryPath : null,
+//   submodulesDisabling : 1,
+//   filterSameSubmodules : 1,
+// };
 
 //
 
