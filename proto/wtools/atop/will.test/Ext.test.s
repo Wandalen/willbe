@@ -40550,7 +40550,6 @@ function commandWillfileMergeIntoSingleWithSeveralRuns( test )
     test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
-    debugger;
     var exp = 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}';
     test.identical( _.strCount( op.output, exp ), 1 );
     return null;
@@ -40578,41 +40577,29 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
     return null;
   });
 
   a.appStart({ args : '.willfile.merge.into.single primaryPath:out/ secondaryPath:./' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'primaryPath - directory';
+    test.case = 'primaryPath - directory, willfile does not exists, secondaryPath - path to unnamed willfiles';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
 
-    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
-    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
-
-    test.identical( partEx, oldEx );
-    test.identical( partIm, oldIm );
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
-    delete config.about.interpreters;
-    delete partEx.about.interpreters;
-    test.contains( config, partEx );
-    test.identical( config.submodule.eslint.criterion.development, 1 );
-    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
-    delete config.submodule.eslint.criterion.development;
-    delete partIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldEx );
+    oldIm.submodule.eslint.criterion.development = 1;
+    delete oldIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldIm );
 
     return null;
   });
@@ -40627,41 +40614,88 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
     return null;
   });
 
-  a.appStart({ args : '.willfile.merge.into.single primaryPath:out/Named' });
+  a.appStart({ args : '.willfile.merge.into.single primaryPath:out/Named secondaryPath:.' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'primaryPath - directory with named willfile';
+    test.case = 'primaryPath - directory with named willfile, willfile does not exists, secondaryPath - path to unnamed willfiles';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
 
-    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
-    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
-
-    test.identical( partEx, oldEx );
-    test.identical( partIm, oldIm );
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/Named.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
-    delete config.about.interpreters;
-    delete partEx.about.interpreters;
-    test.contains( config, partEx );
-    test.identical( config.submodule.eslint.criterion.development, 1 );
-    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
-    delete config.submodule.eslint.criterion.development;
-    delete partIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldEx );
+    oldIm.submodule.eslint.criterion.development = 1;
+    delete oldIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldIm );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    a.fileProvider.dirMake( a.abs( 'out' ) );
+    a.fileProvider.fileCopy( a.abs( 'out/will.yml' ), a.abs( 'Author.will.yml' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.willfile.merge.into.single primaryPath:out/ secondaryPath:./' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - directory, unnamed willfile exists, force - 0, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    var exp = /Destination file .* already exists\. Please, rename or delete file before merge/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    a.fileProvider.dirMake( a.abs( 'out' ) );
+    a.fileProvider.fileCopy( a.abs( 'out/will.yml' ), a.abs( 'Author.will.yml' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.willfile.merge.into.single primaryPath:out/ secondaryPath:./ force:1' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - directory, unnamed willfile exists, force - 1, should overwrite willfile';
+    test.identical( op.exitCode, 0 );
+
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/will.yml' ), encoding : 'yaml' });
+    test.contains( config, oldEx );
+    oldIm.submodule.eslint.criterion.development = 1;
+    delete oldIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldIm );
 
     return null;
   });
@@ -43432,7 +43466,7 @@ const Proto =
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSingleRunWith,
     commandWillfileMergeIntoSingleWithSeveralRuns,
-    // commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
+    commandWillfileMergeIntoSinglePrimaryPathIsDirectory,
     commandWillfileMergeIntoSingleWithDuplicatedSubmodules,
     commandWillfileMergeIntoSingleWithDiffSubmoduleRecord,
     commandWillfileMergeIntoSingleFilterNpmFields,

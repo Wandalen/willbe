@@ -9012,14 +9012,14 @@ function willfileMergeIntoSingle( o )
   const primaryPath = path.join( module.dirPath, o.primaryPath || './' );
 
   const willfiles = willfilesFind( primaryPath );
-  if( willfiles.length < 2 )
+  if( willfiles.length < 2 && !o.secondaryPath )
   {
     if( logger.verbosity >= 2 )
     logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
     return null;
   }
 
-  let mergedWillfile = configRead( willfiles[ 0 ].absolute );
+  let mergedWillfile = willfiles.length ? configRead( willfiles[ 0 ].absolute ) : Object.create( null );
   if( willfiles.length === 2 )
   mergedWillfile = configsMerge( configRead ( willfiles[ 1 ].absolute ), _.map.supplement.bind( _.map ) );
 
@@ -9122,10 +9122,11 @@ function willfileMergeIntoSingle( o )
 
     if( !_.will.filePathIs( primaryPath ) )
     {
+      const dir = path.dir( primaryPath );
       const name = path.name( o.primaryPath );
       const exts = path.exts( o.primaryPath );
       _.arrayAppendArray( exts, [ 'will', 'yml' ] );
-      return `${ path.join( module.dirPath, name ) }.${ exts.join( '.' ) }`;
+      return `${ path.join( dir, name ) }.${ exts.join( '.' ) }`;
     }
 
     return primaryPath;
@@ -9222,6 +9223,7 @@ function willfileMergeIntoSingle( o )
 
   function renameFiles()
   {
+    if( willfiles.length === 2 )
     for( let i = 0 ; i < willfiles.length ; i++ )
     {
       let oldName = willfiles[ i ].absolute;
