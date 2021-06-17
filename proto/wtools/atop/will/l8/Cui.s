@@ -5760,6 +5760,7 @@ commandNpmPublish.defaults =
   tag : null,
 
   force : 0,
+  withDisabledSubmodules : 1,
   dry : 0,
   verbosity : 1,
 };
@@ -5776,6 +5777,7 @@ command.properties =
   message : 'Commit message', /* aaa : for Dmytro : bad : bad name */ /* Dmytro : renamed */
   tag : 'Tag for NPM module',
   force : 'Forces diff.',
+  withDisabledSubmodules : 'Generate dependencies from disabled submodules. Default is 1.'
   dry : 'Dry run.',
   verbosity : 'Change verbosity of output.',
 };
