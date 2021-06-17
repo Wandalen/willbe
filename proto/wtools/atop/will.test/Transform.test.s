@@ -1064,7 +1064,7 @@ function willfileFromNpm( test )
   var exp = { about : { interpreters : [ 'njs =10.0.0', 'chromium =67.0.0' ] } };
   test.identical( got, exp );
 
-  test.case = 'map with only repository';
+  test.case = 'map with only repository - string';
   var src = { config : { repository : 'https://github.com/Wandalen/wTools.git' } };
   var got = _.will.transform.willfileFromNpm( src );
   var exp =
@@ -1077,8 +1077,27 @@ function willfileFromNpm( test )
   };
   test.identical( got, exp );
 
-  test.case = 'map with only bugs';
+  test.case = 'map with only repository - map';
+  var src = { config : { repository : { type : 'git', url : 'https://github.com/Wandalen/wTools.git' } } };
+  var got = _.will.transform.willfileFromNpm( src );
+  var exp =
+  {
+    path :
+    {
+      repository : 'git+https:///github.com/Wandalen/wTools.git',
+      origins : [ 'git+https:///github.com/Wandalen/wTools.git' ],
+    }
+  };
+  test.identical( got, exp );
+
+  test.case = 'map with only bugs - string';
   var src = { config : { bugs : 'https://github.com/Wandalen/wTools/issues' } };
+  var got = _.will.transform.willfileFromNpm( src );
+  var exp = { path : { bugtracker : 'https:///github.com/Wandalen/wTools/issues' } };
+  test.identical( got, exp );
+
+  test.case = 'map with only bugs - map';
+  var src = { config : { bugs : { type : 'git', url : 'https://github.com/Wandalen/wTools/issues' } } };
   var got = _.will.transform.willfileFromNpm( src );
   var exp = { path : { bugtracker : 'https:///github.com/Wandalen/wTools/issues' } };
   test.identical( got, exp );
