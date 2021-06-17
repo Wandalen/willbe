@@ -540,7 +540,7 @@ function willfileFromNpm( o )
 
   function pathRepositoryPropertyAdd( property )
   {
-    willfile.path.repository = _.git.path.normalize( config.repository );
+    willfile.path.repository = _.git.path.normalize( config.repository.url || config.repository );
     willfile.path.origins.push( willfile.path.repository );
   }
 
@@ -548,10 +548,11 @@ function willfileFromNpm( o )
 
   function pathBugtrackerPropertyAdd( property )
   {
-    if( _.strHas( config.bugs, '///' ) )
-    willfile.path.bugtracker = config.bugs;
+    const bugtrackerPath = config.bugs.url || config.bugs;
+    if( _.strHas( bugtrackerPath, '///' ) )
+    willfile.path.bugtracker = bugtrackerPath;
     else
-    willfile.path.bugtracker = _.strReplace( config.bugs, '//', '///' );
+    willfile.path.bugtracker = _.strReplace( bugtrackerPath, '//', '///' );
   }
 
   /* */
