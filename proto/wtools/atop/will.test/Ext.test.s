@@ -38970,10 +38970,11 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( _.props.keys( config.engines ).length, 3 );
+    test.identical( config.engines.node, '>= 10.0.0' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -38988,14 +38989,15 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( _.props.keys( config.engines ).length, 3 );
+    test.identical( config.engines.node, '>= 10.0.0' );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile Author Contributors Description* Interpreters format:"json"' })
+  a.appStart({ args : '.willfile.extend.willfile Author.json Contributors Description* Interpreters format:"json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -39006,10 +39008,11 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( _.props.keys( config.engines ).length, 3 );
+    test.identical( config.engines.node, '>= 10.0.0' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39020,7 +39023,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./ files/p* format:json' })
   a.ready.then( ( op ) =>
@@ -39046,7 +39049,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39055,7 +39058,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile NewFile files/p* format:json' })
   a.ready.then( ( op ) =>
@@ -39081,7 +39084,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* - */
 

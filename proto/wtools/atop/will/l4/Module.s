@@ -7964,7 +7964,7 @@ function willfileExtendWillfile( o )
     const exWillfile = configRead( dstWillfiles[ 0 ].absolute );
     const imWillfile = configRead( dstWillfiles[ 1 ].absolute );
 
-    const[ exWillfileExtension, imWillfileExtension ] = splitWillfilesExtensionMake( exWillfile, imWillfile );
+    const [ exWillfileExtension, imWillfileExtension ] = splitWillfilesExtensionMake( exWillfile, imWillfile );
 
     willfilesMerge( exWillfile, exWillfileExtension );
     willfilesMerge( imWillfile, imWillfileExtension );
