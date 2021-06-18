@@ -39333,7 +39333,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39396,7 +39396,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -39435,7 +39435,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -39461,7 +39461,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -39500,7 +39500,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -39540,10 +39540,10 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
         'enabled' : 1,
         'interpreters' :
         [
+          'njs >= 6.0.0',
           'chrome >= 60.0.0',
           'firefox >= 60.0.0',
           'chromium >= 67.0.0',
-          'njs >= 6.0.0'
         ],
         'keywords' :
         [
@@ -39611,7 +39611,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         eslint :
         {
-          path : 'npm:///eslint#7.1.0',
+          path : 'npm:///eslint!7.1.0',
           enabled : 0,
           criterion : { debug : 1 },
         },
@@ -39770,7 +39770,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39785,10 +39785,10 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( config.engines, { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39803,14 +39803,14 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( config.engines, { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   })
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Author Contributors Description* Interpreters format:"json"' })
+  a.appStart({ args : '.willfile.supplement.willfile Author.json Contributors Description* Interpreters format:"json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -39821,7 +39821,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( config.engines, { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   })
@@ -39830,7 +39830,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
@@ -39867,7 +39867,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -39909,7 +39909,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39969,7 +39969,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -39985,7 +39985,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'interpreters' : [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
       'keywords' : [ 'tools', 'export' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -40002,7 +40002,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -40029,7 +40029,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -40045,7 +40045,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0', 'njs >= 6.0.0' ],
+      'interpreters' : [ 'njs = 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -40080,7 +40080,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 0,
         'criterion' : { 'debug' : 1 }
       },
@@ -40106,7 +40106,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     test.identical( config.submodule, exp );
 
     return null;
-  })
+  });
 
   /* */
 
