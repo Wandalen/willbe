@@ -1526,14 +1526,14 @@ function buildOptionWithSubmodules( test )
   let a = context.assetFor( test, 'buildOptionWithSubmodules' );
   a.reflect();
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodulesDef .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodulesDef .build' })
   .then( ( op ) =>
@@ -1547,16 +1547,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules2 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules2 .build' })
   .then( ( op ) =>
@@ -1570,16 +1570,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules1 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules1 .build' })
   .then( ( op ) =>
@@ -1593,16 +1593,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules0 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules0 .build' })
   .then( ( op ) =>
@@ -1616,7 +1616,7 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -1624,6 +1624,7 @@ function buildOptionWithSubmodules( test )
 }
 
 buildOptionWithSubmodules.timeOut = 300000;
+buildOptionWithSubmodules.experimental = 1;
 
 //
 
@@ -32634,7 +32635,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
 
-  if( !_.censor )
+  if( !_.censor || _.process.insideTestContainer() )
   return test.true( true );
 
   let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
