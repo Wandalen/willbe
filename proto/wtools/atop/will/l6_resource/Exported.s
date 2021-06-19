@@ -365,7 +365,6 @@ function _performRecursive()
         let exports = module3.exportsResolve({ criterion : exported.build.criterion, strictCriterion : 0 });
         if( exports.length !== 1 )
         {
-          debugger;
           throw _.err( `Not clear which export to use, found ${exports.length} :\n - ${_.select( exports, '*/absoluteName' ).join( '\n - ' )}` );
         }
         return exports[ 0 ].perform();
@@ -440,7 +439,6 @@ function _performPrepare2()
     {
       if( submodule.opener && submodule.opener.error )
       logger.log( submodule.opener.error );
-      debugger;
       throw _.errBrief( 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is not downloaded or not valid!' );
     }
 
@@ -449,7 +447,6 @@ function _performPrepare2()
       let peerModule = submodule.opener.openedModule.peerModule;
       if( !peerModule || !peerModule.isValid() )
       {
-        debugger;
         throw _.errBrief( 'Exporting is impossible because found no out-willfile of ' + submodule.decoratedAbsoluteName + '! Please re-export it, first.' );
       }
     }
@@ -565,7 +562,6 @@ function _performExportedReflectors()
   }
   else _.assert( 0 );
 
-  // debugger;
   if( recursive !== null )
   exportedReflector.src.recursive = recursive;
   exportedReflector.criterion = _.props.extend( exportedReflector.criterion, exported.criterion );
@@ -602,7 +598,6 @@ function _performExportedReflectors()
   if( hd.isTerminal( exportedDirPath ) )
   exportedDirPath = path.dir( exportedDirPath );
 
-  // debugger;
   exported.exportedDirPath = outModule.resourceGenerate( 'path', 'exported.dir.' + exported.name );
   // exported.exportedDirPath.generated = 1;
   exported.exportedDirPath.path = path.undot( path.relative( outModule.inPath, exportedDirPath ) );
@@ -662,7 +657,6 @@ function _performExportedFilesReflector()
 
   if( exported.exportedFilesPath.path.length === 0 )
   {
-    debugger;
     throw _.errBrief
     (
       'No file found at ' + path.commonTextualReport( exported.srcFilter.filePath )
@@ -824,14 +818,12 @@ function _performWriteOutFile()
 
   /* */
 
-  // debugger;
   hd.fileWrite
   ({
     filePath : outFilePath,
     data : structure,
     encoding : 'yaml',
   });
-  // debugger;
 
   /* */
 
@@ -886,8 +878,6 @@ function _performReloadOutFile()
   return outModule.reopen()
   .finally( ( err, outModule2 ) =>
   {
-    if( err )
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} after exporting it` );
     _.assert( outModule2 instanceof _.will.Module );

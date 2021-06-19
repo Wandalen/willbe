@@ -178,9 +178,6 @@ function reform()
   function pathsForm()
   {
 
-    if( junction.id === 49 )
-    debugger;
-
     junction.localPaths.splice( 0, junction.localPaths.length );
     junction.remotePaths.splice( 0, junction.remotePaths.length );
 
@@ -236,13 +233,8 @@ function reform()
 
   function finitedRemove()
   {
-
-    if( junction.module && junction.module.isFinited() )
-    debugger;
     if( junction.module && junction.module.isFinited() )
     junction._remove( junction.module );
-    if( junction.opener && junction.opener.isFinited() )
-    debugger;
     if( junction.opener && junction.opener.isFinited() )
     junction._remove( junction.opener );
     if( junction.relation && junction.relation.isFinited() )
@@ -366,30 +358,40 @@ function reform()
 
     if( junction2.peer && junction2.peer !== junction )
     {
-      if( !junction2.peer.ownSomething() )
-      {
-        debugger;
-        junction2.peer.finit();
-      }
+      if( junction2.peer.ownSomething() )
+      junction2.peer.mergeIn( junction );
       else
-      {
-        debugger;
-        junction2.peer.mergeIn( junction );
-      }
+      junction2.peer.finit();
+      // if( !junction2.peer.ownSomething() )
+      // {
+      //   junction2.peer.finit();
+      // }
+      // else
+      // {
+      //   junction2.peer.mergeIn( junction );
+      // }
     }
 
     if( junction.peer && junction.peer !== junction2 )
     {
-      if( !junction.peer.ownSomething() )
-      {
-        debugger;
-        junction.peer.finit();
-      }
-      else
+      if( junction.peer.ownSomething() )
       {
         junction2.mergeIn( junction.peer );
         return;
       }
+      else
+      {
+        junction.peer.finit();
+      }
+      // if( !junction.peer.ownSomething() )
+      // {
+      //   junction.peer.finit();
+      // }
+      // else
+      // {
+      //   junction2.mergeIn( junction.peer );
+      //   return;
+      // }
     }
 
     assign();
@@ -762,7 +764,6 @@ function _From( o )
   }
   else if( _.mapIs( o.object ) )
   {
-    debugger;
     junction = Self( o.object );
   }
   else
@@ -827,7 +828,6 @@ function _From( o )
     {
       if( junction[ f ] !== o[ f ] )
       {
-        debugger;
         _.assert( 0, 'not tested' );
         junction[ f ] = o[ f ];
         changed = true;
@@ -844,8 +844,6 @@ function _From( o )
 
     [ localPath, remotePath ] = cls.PathsOf( o.object );
 
-    if( localPath === null )
-    debugger;
     if( junctionMap && junctionMap[ localPath ] )
     junction = junctionMap[ localPath ];
     else if( junctionMap && remotePath && junctionMap[ remotePath ] )
@@ -1087,7 +1085,6 @@ function _relationAdd( relation )
   _.assert( relation instanceof _.will.ModulesRelation );
   if( !relation.isAliveGet() ) /* yyy */
   {
-    // debugger;
     return false
   }
   // if( _.longHas( junction.relations, relation ) ) /* xxx */
@@ -1171,7 +1168,6 @@ function _openerAdd( opener )
   _.assert( opener instanceof _.will.ModuleOpener );
   if( !opener.isAliveGet() ) /* yyy */
   {
-    debugger;
     return false
   }
   // if( _.longHas( junction.openers, opener ) ) /* xxx */
@@ -1232,8 +1228,6 @@ function _openerRemoveSingle( opener )
   will.objectToJunctionHash.delete( opener );
 
   // console.log( ` !! removed opener#${opener.id} ${opener.commonPath}` );
-  // if( opener.id === 122 )
-  // debugger;
 
 }
 
@@ -1317,9 +1311,6 @@ function _moduleRemoveSingle( module )
   let junction2 = will.objectToJunctionHash.get( module );
   _.assert( junction2 === junction );
 
-  // if( module.id === 1004 )
-  // debugger;
-
   will.objectToJunctionHash.delete( module );
 
 }
@@ -1353,7 +1344,6 @@ function _add( object )
   // _.assert( _.numberIs( object.formed ) ); /* yyy */
   // if( object.formed <= 0 )
   // {
-  //   debugger;
   //   return false
   // }
 
@@ -1495,7 +1485,6 @@ function submodulesJunctionsFilter( o )
   if( !junction.peer )
   if( junction.module && junction.module.peerModule )
   {
-    debugger;
     junction._From
     ({
       module : junction.module.peerModule,
@@ -1533,7 +1522,6 @@ function submodulesJunctionsFilter( o )
         if( !junction2.peer )
         if( junction2.module && junction2.module.peerModule )
         {
-          debugger;
           _.assert( 0, 'not tested' );
           junction2._From
           ({

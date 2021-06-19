@@ -127,7 +127,6 @@ function MakeSingle( o )
 
   if( o.resource.step )
   {
-    // debugger;
     if( !_.mapIs( o.resource.step ) )
     o.resource.step = { inherit : o.resource.step }
     _.props.extend( o3.resource, o.resource.step );
@@ -135,7 +134,6 @@ function MakeSingle( o )
 
   if( o.resource.shell )
   {
-    // debugger;
     // o3.resource.forEachDst = 'reflector::' + o.resource.name + '*';
     o3.resource.forEachDst = 'reflector::' + o.resource.name;
     if( !o3.resource.inherit )
@@ -145,7 +143,6 @@ function MakeSingle( o )
   }
   else if( !module.stepMap[ o.resource.name ] )
   {
-    // debugger;
     // o3.resource.filePath = 'reflector::' + o.resource.name + '*';
     o3.resource.filePath = 'reflector::' + o.resource.name;
     if( !o3.resource.inherit )
@@ -233,9 +230,6 @@ function form1()
 
   /* begin */
 
-  // if( reflector.name === "exported.files.proto.export" )
-  // debugger;
-
   reflector.src = reflector.src || Object.create( null );
   if( reflector.src )
   {
@@ -313,18 +307,7 @@ function form2( o )
     });
   }
 
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
-  // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
-  // debugger;
-
-  // if( reflector.name === 'reflect.proto2' )
-  // debugger;
-
   let result = Parent.prototype.form2.apply( reflector, arguments );
-
-  // if( reflector.name === 'reflect.proto2' )
-  // debugger;
 
   if( reflector.mandatory === null )
   reflector.mandatory = 1;
@@ -445,8 +428,6 @@ function _inheritMultiple( o )
 
   reflector._accumulator.prefixesApply();
 
-  if( reflector.id === 56 )
-  debugger;
   reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
@@ -517,17 +498,11 @@ function _inheritSingle( o )
   delete extend.filePath;
   delete extend.inherit;
 
-  // if( reflector.name === 'reflect.proto2' )
-  // debugger;
-
   // reflector.copy( extend );
 
   for( let k in extend )
   if( reflector[ k ] === null && extend[ k ] !== null )
   reflector[ k ] = extend[ k ];
-
-  // if( reflector.name === 'reflect.proto2' )
-  // debugger;
 
   reflector.criterionInherit( reflector2.criterion );
 
@@ -551,9 +526,6 @@ function _inheritSingle( o )
 
   /* */
 
-  // if( reflector.name === 'reflect.not.test.only.js.v1' )
-  // debugger;
-
   if( o.extending )
   {
 
@@ -575,9 +547,6 @@ function _inheritSingle( o )
     _.assert( reflector._accumulator.src.filePath === reflector._accumulator.dst.filePath );
 
   }
-
-  // if( reflector.name === 'reflect.not.test.only.js.v1' )
-  // debugger;
 
 }
 
@@ -677,15 +646,11 @@ function _inheritPathMapAct1( o )
       + _.strQuote( dst )
     );
 
-    // if( reflector.qualifiedName === "reflector::exported.export" )
-    // debugger;
-
     if( resolvedSrc === '' )
     path.mapExtend( reflector.filePath, { '' : dst } );
     else
     path.mapExtend( reflector.filePath, resolvedSrc, dst );
   }
-
 }
 
 _inheritPathMapAct1.defaults =
@@ -707,9 +672,6 @@ function _inheritPathMapAct2( o )
   let logger = will.transaction.logger;
 
   _.routine.assertOptions( _inheritPathMapAct2, arguments );
-
-  // if( reflector.name === 'reflect.submodules.debug' )
-  // debugger;
 
   let resolvedSrc = o.src;
   if( _.will.resolver.Resolver.selectorIs( resolvedSrc ) )
@@ -738,17 +700,14 @@ function _inheritPathMapAct2( o )
     && !( resolvedSrc instanceof _.will.Reflector )
   )
   {
-    debugger;
     resolvedSrc = _.err( 'Source of path map was resolved to unexpected type', _.entity.strType( resolvedSrc ) );
   }
   if( _.errIs( resolvedSrc ) )
   {
-    debugger;
     throw _.err( resolvedSrc, '\nFailed to form', reflector.qualifiedName );
   }
   if( _.errIs( resolvedDst ) )
   {
-    debugger;
     throw _.err( resolvedDst, '\nFailed to form', reflector.qualifiedName );
   }
 
@@ -821,9 +780,6 @@ function _inheritPathMapAct3( o )
 
   _.assert( o.dst === null || _.strIs( o.dst ) || _.arrayIs( o.dst ) || _.mapIs( o.dst ) );
   _.assert( o.src === null || _.strIs( o.src ) || _.arrayIs( o.src ) || _.mapIs( o.src ) );
-
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
 
   o.src = reflector.pathAbsolute( o.src, 1 );
   o.dst = reflector.pathAbsolute( o.dst, 0 );
@@ -912,11 +868,6 @@ function _inheritPrefixes( o )
 
   /* */
 
-  // if( reflector.name === "reflect.files2" )
-  // debugger;
-  // if( reflector.name === 'reflect.files2' )
-  // debugger;
-
   let srcPrefixPath = reflector.src.prefixPath;
   reflector.src.prefixPath = null;
   let dstPrefixPath = reflector.dst.prefixPath;
@@ -924,11 +875,10 @@ function _inheritPrefixes( o )
 
   if( srcPrefixPath )
   {
-    // let prefixPath = reflector.src.prefixPath; debugger;
+    // let prefixPath = reflector.src.prefixPath;
     // reflector.src.prefixPath = null;
     reflector.src.prefixPath = path.filterInplace( srcPrefixPath, ( prefixPath ) =>
     {
-      // debugger;
       if( _.will.resolver.Resolver.selectorIs( prefixPath ) )
       return inherit( prefixPath, 0 );
       return prefixPath;
@@ -941,11 +891,10 @@ function _inheritPrefixes( o )
 
   if( dstPrefixPath )
   {
-    // let prefixPath = reflector.dst.prefixPath; debugger;
+    // let prefixPath = reflector.dst.prefixPath;
     // reflector.dst.prefixPath = null;
     reflector.dst.prefixPath = path.filterInplace( dstPrefixPath, ( prefixPath ) =>
     {
-      // debugger;
       if( _.will.resolver.Resolver.selectorIs( prefixPath ) )
       return inherit( prefixPath, 1 );
       return prefixPath;
@@ -955,9 +904,6 @@ function _inheritPrefixes( o )
   {
     reflector.dst.prefixPath = dstPrefixPath;
   }
-
-  // if( reflector.name === "reflect.files2" )
-  // debugger;
 
   // if( reflector.dst.prefixPath )
   // reflector.dst.prefixPath = path.filterInplace( reflector.dst.prefixPath, ( prefixPath ) =>
@@ -975,9 +921,6 @@ function _inheritPrefixes( o )
 
   function inherit( prefixPath, isDst )
   {
-
-    // if( reflector.name === 'reflect.submodules.debug' )
-    // debugger;
 
     let resolvedPrefixPath = module.pathResolve
     ({
@@ -1002,14 +945,11 @@ function _inheritPrefixes( o )
     reflector._inheritPathMapAct3
     ({
       dst : isDst ? resolvedPrefixPath : null,
-      src : !isDst ? resolvedPrefixPath : null,
+      src : isDst ? null : resolvedPrefixPath,
+      // src : !isDst ? resolvedPrefixPath : null,
     });
 
   }
-
-  if( reflector.name === 'reflect.files2' )
-  debugger;
-
 }
 
 _inheritPrefixes.defaults =
@@ -1260,9 +1200,6 @@ function pathsResolve( o )
   paired = true;
   _.assert( paired );
 
-  // if( reflector.name === "reflect.submodules.debug" )
-  // debugger;
-
   // if( _.mapIs( reflector.src.filePath ) )
   // reflector.src.filePathNullizeMaybe();
 
@@ -1272,9 +1209,6 @@ function pathsResolve( o )
   if( path.s.anyAreAbsolute( reflector.src.filePath ) )
   reflector.src.prefixPath = reflector.src.prefixPathFromFilePath({ usingBools : 0 });
   /* yyy */
-
-  // if( reflector.name === "reflect.submodules.debug" )
-  // debugger;
 
   /* prefix path */
 
@@ -1326,7 +1260,6 @@ function pathsResolve( o )
   //   reflector.dst.filePath = null;
   //   if( r instanceof _.files.FileRecordFilter )
   //   {
-  //     debugger;
   //     reflector.dst.pathsSupplementJoining( r );
   //   }
   //   else
@@ -1360,9 +1293,6 @@ function pathsResolve( o )
 
   _.assert( reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ) );
-
-  // if( reflector.name === "reflect.submodules.debug" )
-  // debugger;
 
   /* */
 
@@ -1502,9 +1432,6 @@ function pathsResolve( o )
   //
   //     // if( !_.will.resolver.Resolver.selectorIs( filePath ) && !pathResolving )
   //     // return filePath;
-  //
-  //     // if( reflector.name === 'reflect.submodules.debug' )
-  //     // debugger;
   //
   //     // if( reflector.name === "reflect.submodules" )
   //     // {
@@ -1647,7 +1574,6 @@ function pathsRebase( o )
 
   if( o.inPath === o.exInPath )
   {
-    debugger;
     return resource;
   }
 

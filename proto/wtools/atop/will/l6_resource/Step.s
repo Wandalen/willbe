@@ -203,7 +203,7 @@ function framePerform( frame )
     _.assert( !!module );
     _.assert( !!will );
     _.assert( !!logger );
-    _.assert( module.preformed > 0  );
+    _.assert( module.preformed > 0 );
     _.assert( will.formed === 1 );
     _.assert( build.formed === 3 );
     _.assert( step.formed === 3 );
@@ -234,7 +234,8 @@ function verbosityWithDelta( delta )
   let step = this;
   let will = step.module.will;
   // let verbosity = step.verbosity !== null ? step.verbosity : ( will.verbosity + delta );
-  let verbosity = step.verbosity !== null ? step.verbosity : ( will.transaction.verbosity + delta );
+  // let verbosity = step.verbosity !== null ? step.verbosity : ( will.transaction.verbosity + delta );
+  let verbosity = step.verbosity === null ? ( will.transaction.verbosity + delta ) : step.verbosity;
 
   // if( will.verbosity < -delta )
   if( will.transaction.verbosity < -delta )

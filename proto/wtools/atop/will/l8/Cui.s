@@ -105,18 +105,18 @@ function _openersCurrentEach( o )
   //
   // }
   // else
+  // {
+
+  // _.assert( will.currentOpener === null );
+  _.assert( _.arrayIs( will.currentOpeners ) );
+
+  for( let i = 0 ; i < will.currentOpeners.length ; i++ )
   {
-
-    // _.assert( will.currentOpener === null );
-    _.assert( _.arrayIs( will.currentOpeners ) );
-
-    for( let i = 0 ; i < will.currentOpeners.length ; i++ )
-    {
-      let it = itFrom( will.currentOpeners[ i ] );
-      ready.then( () => o.onEach.call( will, it ) );
-    }
-
+    let it = itFrom( will.currentOpeners[ i ] );
+    ready.then( () => o.onEach.call( will, it ) );
   }
+
+  // }
 
   return ready;
 
@@ -177,7 +177,7 @@ function openersFind( o )
     o.tracing = 0;
 
     if( !path.isGlob( o.localPath ) )
-    if( o.localPath === path.current() || path.isTrailed( o.localPath )  )
+    if( o.localPath === path.current() || path.isTrailed( o.localPath ) )
     o.tracing = 1;
   }
 
@@ -199,15 +199,18 @@ function openersFind( o )
 
     if( !will.currentOpeners.length )
     {
-      if( !o.allowNoOpeners )
-      throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
-      else
+      if( o.allowNoOpeners )
       will.currentOpeners = null;
+      else
+      throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+      // if( !o.allowNoOpeners )
+      // throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+      // else
+      // will.currentOpeners = null;
     }
 
     return will.currentOpeners;
-  })
-
+  });
 }
 
 openersFind.defaults =
@@ -493,37 +496,37 @@ function _commandsMake()
   let commands =
   {
 
-    'help' :                            { ro : _.routineJoin( cui, cui.commandHelp )                         },
-    'imply' :                           { ro : _.routineJoin( cui, cui.commandImply )                        },
-    'version' :                         { ro : _.routineJoin( cui, cui.commandVersion )                      },
-    'version check' :                   { ro : _.routineJoin( cui, cui.commandVersionCheck )                 },
-    'version bump' :                    { ro : _.routineJoin( cui, cui.commandVersionBump )                  },
+    'help' :                            { ro : _.routineJoin( cui, cui.commandHelp ) },
+    'imply' :                           { ro : _.routineJoin( cui, cui.commandImply ) },
+    'version' :                         { ro : _.routineJoin( cui, cui.commandVersion ) },
+    'version check' :                   { ro : _.routineJoin( cui, cui.commandVersionCheck ) },
+    'version bump' :                    { ro : _.routineJoin( cui, cui.commandVersionBump ) },
 
-    'modules list' :                    { ro : _.routineJoin( cui, cui.commandModulesList )                  },
-    'modules topological list' :        { ro : _.routineJoin( cui, cui.commandModulesTopologicalList )       },
-    'modules tree' :                    { ro : _.routineJoin( cui, cui.commandModulesTree )                  },
-    'modules update' :                  { ro : _.routineJoin( cui, cui.commandModulesUpdate )                },
-    'resources list' :                  { ro : _.routineJoin( cui, cui.commandResourcesList )                },
-    'paths list' :                      { ro : _.routineJoin( cui, cui.commandPathsList )                    },
-    'submodules list' :                 { ro : _.routineJoin( cui, cui.commandSubmodulesList )               },
-    'reflectors list' :                 { ro : _.routineJoin( cui, cui.commandReflectorsList )               },
-    'steps list' :                      { ro : _.routineJoin( cui, cui.commandStepsList )                    },
-    'builds list' :                     { ro : _.routineJoin( cui, cui.commandBuildsList )                   },
-    'exports list' :                    { ro : _.routineJoin( cui, cui.commandExportsList )                  },
-    'about list' :                      { ro : _.routineJoin( cui, cui.commandAboutList )                    },
-    'about' :                           { ro : _.routineJoin( cui, cui.commandAboutList )                    },
+    'modules list' :                    { ro : _.routineJoin( cui, cui.commandModulesList ) },
+    'modules topological list' :        { ro : _.routineJoin( cui, cui.commandModulesTopologicalList ) },
+    'modules tree' :                    { ro : _.routineJoin( cui, cui.commandModulesTree ) },
+    'modules update' :                  { ro : _.routineJoin( cui, cui.commandModulesUpdate ) },
+    'resources list' :                  { ro : _.routineJoin( cui, cui.commandResourcesList ) },
+    'paths list' :                      { ro : _.routineJoin( cui, cui.commandPathsList ) },
+    'submodules list' :                 { ro : _.routineJoin( cui, cui.commandSubmodulesList ) },
+    'reflectors list' :                 { ro : _.routineJoin( cui, cui.commandReflectorsList ) },
+    'steps list' :                      { ro : _.routineJoin( cui, cui.commandStepsList ) },
+    'builds list' :                     { ro : _.routineJoin( cui, cui.commandBuildsList ) },
+    'exports list' :                    { ro : _.routineJoin( cui, cui.commandExportsList ) },
+    'about list' :                      { ro : _.routineJoin( cui, cui.commandAboutList ) },
+    'about' :                           { ro : _.routineJoin( cui, cui.commandAboutList ) },
 
-    'clean submodules' :                { ro : _.routineJoin( cui, cui.commandCleanSubmodules )              },
-    'add submodules' :                  { ro : _.routineJoin( cui, cui.commandAddSubmodules )                },
-    'submodules fixate' :               { ro : _.routineJoin( cui, cui.commandSubmodulesFixate )             },
-    'submodules upgrade' :              { ro : _.routineJoin( cui, cui.commandSubmodulesUpgrade )            },
+    'clean submodules' :                { ro : _.routineJoin( cui, cui.commandCleanSubmodules ) },
+    'add submodules' :                  { ro : _.routineJoin( cui, cui.commandAddSubmodules ) },
+    'submodules fixate' :               { ro : _.routineJoin( cui, cui.commandSubmodulesFixate ) },
+    'submodules upgrade' :              { ro : _.routineJoin( cui, cui.commandSubmodulesUpgrade ) },
 
-    'submodules download' :             { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsDownload )   },
-    'submodules update' :               { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate )     },
-    'submodules versions download' :    { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsDownload )   },
-    'submodules versions update' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate )     },
-    'submodules versions verify' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsVerify )     },
-    'submodules versions agree' :       { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsAgree )      },
+    'submodules download' :             { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsDownload ) },
+    'submodules update' :               { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate ) },
+    'submodules versions download' :    { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsDownload ) },
+    'submodules versions update' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsUpdate ) },
+    'submodules versions verify' :      { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsVerify ) },
+    'submodules versions agree' :       { ro : _.routineJoin( cui, cui.commandSubmodulesVersionsAgree ) },
     // 'submodules shell' :                { ro : _.routineJoin( cui, cui.commandSubmodulesShell )              },
     // 'submodules git' :                  { ro : _.routineJoin( cui, cui.commandSubmodulesGit )                },
     // 'submodules git diff' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitDiff )            },
@@ -531,19 +534,19 @@ function _commandsMake()
     // 'submodules git status' :           { ro : _.routineJoin( cui, cui.commandSubmodulesGitStatus )          },
     // 'submodules git sync' :             { ro : _.routineJoin( cui, cui.commandSubmodulesGitSync )            },
 
-    'shell' :                           { ro : _.routineJoin( cui, cui.commandShell )                        },
-    'do' :                              { ro : _.routineJoin( cui, cui.commandDo )                           },
-    'call' :                            { ro : _.routineJoin( cui, cui.commandHookCall )                     },
-    'hook call' :                       { ro : _.routineJoin( cui, cui.commandHookCall )                     },
-    'hooks list' :                      { ro : _.routineJoin( cui, cui.commandHooksList )                    },
-    'clean' :                           { ro : _.routineJoin( cui, cui.commandClean )                        },
-    'build' :                           { ro : _.routineJoin( cui, cui.commandBuild )                        },
-    'export' :                          { ro : _.routineJoin( cui, cui.commandExport )                       },
-    'export purging' :                  { ro : _.routineJoin( cui, cui.commandExportPurging )                },
-    'export recursive' :                { ro : _.routineJoin( cui, cui.commandExportRecursive )              },
+    'shell' :                           { ro : _.routineJoin( cui, cui.commandShell ) },
+    'do' :                              { ro : _.routineJoin( cui, cui.commandDo ) },
+    'call' :                            { ro : _.routineJoin( cui, cui.commandHookCall ) },
+    'hook call' :                       { ro : _.routineJoin( cui, cui.commandHookCall ) },
+    'hooks list' :                      { ro : _.routineJoin( cui, cui.commandHooksList ) },
+    'clean' :                           { ro : _.routineJoin( cui, cui.commandClean ) },
+    'build' :                           { ro : _.routineJoin( cui, cui.commandBuild ) },
+    'export' :                          { ro : _.routineJoin( cui, cui.commandExport ) },
+    'export purging' :                  { ro : _.routineJoin( cui, cui.commandExportPurging ) },
+    'export recursive' :                { ro : _.routineJoin( cui, cui.commandExportRecursive ) },
 
-    'module new' :                      { ro : _.routineJoin( cui, cui.commandModuleNew )                    },
-    'module new with' :                 { ro : _.routineJoin( cui, cui.commandModuleNewWith )                },
+    'module new' :                      { ro : _.routineJoin( cui, cui.commandModuleNew ) },
+    'module new with' :                 { ro : _.routineJoin( cui, cui.commandModuleNewWith ) },
     // 'modules shell' :                   { ro : _.routineJoin( cui, cui.commandModulesShell )                 },
     // 'modules git' :                     { ro : _.routineJoin( cui, cui.commandModulesGit )                   },
     // 'modules git diff' :                { ro : _.routineJoin( cui, cui.commandModulesGitDiff )               },
@@ -551,46 +554,46 @@ function _commandsMake()
     // 'modules git status' :              { ro : _.routineJoin( cui, cui.commandModulesGitStatus )             },
     // 'modules git sync' :                { ro : _.routineJoin( cui, cui.commandModulesGitSync )               },
 
-    'with' :                            { ro : _.routineJoin( cui, cui.commandWith )                         },
-    'modules' :                         { ro : _.routineJoin( cui, cui.commandModules )                         },
-    'submodules' :                      { ro : _.routineJoin( cui, cui.commandSubmodules )                         },
-    'each' :                            { ro : _.routineJoin( cui, cui.commandEach )                         },
+    'with' :                            { ro : _.routineJoin( cui, cui.commandWith ) },
+    'modules' :                         { ro : _.routineJoin( cui, cui.commandModules ) },
+    'submodules' :                      { ro : _.routineJoin( cui, cui.commandSubmodules ) },
+    'each' :                            { ro : _.routineJoin( cui, cui.commandEach ) },
 
-    'npm from willfile' :               { ro : _.routineJoin( cui, cui.commandNpmFromWillfile )              },
-    'willfile from npm' :               { ro : _.routineJoin( cui, cui.commandWillfileFromNpm )              },
-    'willfile get' :                    { ro : _.routineJoin( cui, cui.commandWillfileGet )                  },
-    'willfile set' :                    { ro : _.routineJoin( cui, cui.commandWillfileSet )                  },
-    'willfile del' :                    { ro : _.routineJoin( cui, cui.commandWillfileDel )                  },
-    'willfile extend' :                 { ro : _.routineJoin( cui, cui.commandWillfileExtend )               },
-    'willfile supplement' :             { ro : _.routineJoin( cui, cui.commandWillfileSupplement )           },
-    'willfile extend willfile' :        { ro : _.routineJoin( cui, cui.commandWillfileExtendWillfile )       },
-    'willfile supplement willfile' :    { ro : _.routineJoin( cui, cui.commandWillfileSupplementWillfile )   },
-    'willfile merge into single' :      { ro : _.routineJoin( cui, cui.commandWillfileMergeIntoSingle )      },
+    'npm from willfile' :               { ro : _.routineJoin( cui, cui.commandNpmFromWillfile ) },
+    'willfile from npm' :               { ro : _.routineJoin( cui, cui.commandWillfileFromNpm ) },
+    'willfile get' :                    { ro : _.routineJoin( cui, cui.commandWillfileGet ) },
+    'willfile set' :                    { ro : _.routineJoin( cui, cui.commandWillfileSet ) },
+    'willfile del' :                    { ro : _.routineJoin( cui, cui.commandWillfileDel ) },
+    'willfile extend' :                 { ro : _.routineJoin( cui, cui.commandWillfileExtend ) },
+    'willfile supplement' :             { ro : _.routineJoin( cui, cui.commandWillfileSupplement ) },
+    'willfile extend willfile' :        { ro : _.routineJoin( cui, cui.commandWillfileExtendWillfile ) },
+    'willfile supplement willfile' :    { ro : _.routineJoin( cui, cui.commandWillfileSupplementWillfile ) },
+    'willfile merge into single' :      { ro : _.routineJoin( cui, cui.commandWillfileMergeIntoSingle ) },
 
-    'git' :                             { ro : _.routineJoin( cui, cui.commandGit )                          },
-    'git diff' :                        { ro : _.routineJoin( cui, cui.commandGitDiff )                      },
-    'git pull' :                        { ro : _.routineJoin( cui, cui.commandGitPull )                      },
-    'git push' :                        { ro : _.routineJoin( cui, cui.commandGitPush )                      },
-    'git reset' :                       { ro : _.routineJoin( cui, cui.commandGitReset )                     },
-    'git status' :                      { ro : _.routineJoin( cui, cui.commandGitStatus )                    },
-    'git sync' :                        { ro : _.routineJoin( cui, cui.commandGitSync )                      },
-    'git tag' :                         { ro : _.routineJoin( cui, cui.commandGitTag )                       },
-    'git hook preserving hardlinks' :   { ro : _.routineJoin( cui, cui.commandGitHookPreservingHardLinks )   },
+    'git' :                             { ro : _.routineJoin( cui, cui.commandGit ) },
+    'git diff' :                        { ro : _.routineJoin( cui, cui.commandGitDiff ) },
+    'git pull' :                        { ro : _.routineJoin( cui, cui.commandGitPull ) },
+    'git push' :                        { ro : _.routineJoin( cui, cui.commandGitPush ) },
+    'git reset' :                       { ro : _.routineJoin( cui, cui.commandGitReset ) },
+    'git status' :                      { ro : _.routineJoin( cui, cui.commandGitStatus ) },
+    'git sync' :                        { ro : _.routineJoin( cui, cui.commandGitSync ) },
+    'git tag' :                         { ro : _.routineJoin( cui, cui.commandGitTag ) },
+    'git hook preserving hardlinks' :   { ro : _.routineJoin( cui, cui.commandGitHookPreservingHardLinks ) },
 
-    'repo pull open' :                  { ro : _.routineJoin( cui, cui.commandRepoPullOpen )                 },
-    'repo pull list' :                  { ro : _.routineJoin( cui, cui.commandRepoPullList )                 },
-    'repo program list' :               { ro : _.routineJoin( cui, cui.commandRepoProgramList )              },
-    'repo program process list' :       { ro : _.routineJoin( cui, cui.commandRepoProgramProcessList )       },
+    'repo pull open' :                  { ro : _.routineJoin( cui, cui.commandRepoPullOpen ) },
+    'repo pull list' :                  { ro : _.routineJoin( cui, cui.commandRepoPullList ) },
+    'repo program list' :               { ro : _.routineJoin( cui, cui.commandRepoProgramList ) },
+    'repo program process list' :       { ro : _.routineJoin( cui, cui.commandRepoProgramProcessList ) },
 
-    'npm publish' :                     { ro : _.routineJoin( cui, cui.commandNpmPublish )                   },
-    'npm dep add' :                     { ro : _.routineJoin( cui, cui.commandNpmDepAdd )                    },
-    'npm install' :                     { ro : _.routineJoin( cui, cui.commandNpmInstall )                   },
-    'npm clean' :                       { ro : _.routineJoin( cui, cui.commandNpmClean )                     },
+    'npm publish' :                     { ro : _.routineJoin( cui, cui.commandNpmPublish ) },
+    'npm dep add' :                     { ro : _.routineJoin( cui, cui.commandNpmDepAdd ) },
+    'npm install' :                     { ro : _.routineJoin( cui, cui.commandNpmInstall ) },
+    'npm clean' :                       { ro : _.routineJoin( cui, cui.commandNpmClean ) },
 
-    'package install' :                 { ro : _.routineJoin( cui, cui.commandPackageInstall )               },
-    'package local versions' :          { ro : _.routineJoin( cui, cui.commandPackageLocalVersions )         },
-    'package remote versions' :         { ro : _.routineJoin( cui, cui.commandPackageRemoteVersions )        },
-    'package version' :                 { ro : _.routineJoin( cui, cui.commandPackageVersion )               },
+    'package install' :                 { ro : _.routineJoin( cui, cui.commandPackageInstall ) },
+    'package local versions' :          { ro : _.routineJoin( cui, cui.commandPackageLocalVersions ) },
+    'package remote versions' :         { ro : _.routineJoin( cui, cui.commandPackageRemoteVersions ) },
+    'package version' :                 { ro : _.routineJoin( cui, cui.commandPackageVersion ) },
 
   }
 
@@ -1378,7 +1381,7 @@ function _commandModuleOrientedLike( o )
 
   let reload = will.transaction.wasFilterFieldsChanged( will.transactionOld );
 
-  ready.then( () => will.openersFindMaybe({ localPath : will.transaction.withPath, reload : reload }) )
+  ready.then( () => will.openersFindMaybe({ localPath : will.transaction.withPath, reload }) )
 
   if( reload )
   ready.then( () => will.modulesUpform({ modules : will.currentOpeners, recursive : modulesDepth[ 0 ] }) )
