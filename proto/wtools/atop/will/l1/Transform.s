@@ -151,6 +151,32 @@ function interpreterParse( src )
 
 //
 
+function interpreterNormalize( src )
+{
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
+
+  if( _.aux.is( src ) )
+  return recordNormalize( src );
+  else if( _.str.is( src ) )
+  return recordNormalize( _.will.transform.interpreterParse( src ) );
+  else
+  _.assert( false, 'Unexpected type of {-src-}' );
+
+  /* */
+
+  function recordNormalize( record )
+  {
+    const [ name, version ] = _.props.pairs( record )[ 0 ];
+    const versionPrefix = _.strHasAny( version, [ '=', '<', '>' ] ) ? '' : '= ';
+    if( name === 'node' )
+    return `njs ${ versionPrefix }${ version }`;
+    else
+    return `${ name } ${ versionPrefix }${ version }`;
+  }
+}
+
+//
+
 function submodulesSwitch( src, enabled )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -532,7 +558,7 @@ function willfileFromNpm( o )
     if( property === 'npm.name' )
     for( let name in config[ property ] )
     {
-      const version = config.[ property ][ name ];
+      const version = config[ property ][ name ];
       const versionPrefix = _.strHasAny( version, [ '=', '<', '>' ] ) ? '' : '=';
       if( name === 'node' )
       _.arrayAppendOnce( willfile.about.interpreters, `njs ${ versionPrefix }${ version }` );
@@ -709,10 +735,10 @@ function willfilesMerge( o )
       _.each( srcContributors, ( record ) =>
       {
         const index = _.long.leftIndex( dstContributors, record, ( r ) => r.name );
-        if( index !== -1 )
-        dstContributors[ index ] = o.onSection( dstContributors[ index ], record )
-        else
+        if( index === -1 )
         dstContributors.push( record );
+        else
+        dstContributors[ index ] = o.onSection( dstContributors[ index ], record )
       });
     }
     else
@@ -818,6 +844,7 @@ let Extension =
   authorRecordNormalize,
 
   interpreterParse,
+  interpreterNormalize,
 
   submoduleMake,
   submodulesSwitch,
