@@ -4171,12 +4171,19 @@ function commandNpmFromWillfile( e )
     it.opener.openedModule.stepMap[ 'npm.generate' ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ 'npm.generate' ];
 
-    return it.opener.openedModule.npmGenerateFromWillfile
+    return cui.npmGenerateFromWillfile
     ({
-      ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
+      ... _.mapOnly_( null, e.optionsMap, cui.npmGenerateFromWillfile.defaults ),
       currentContext,
+      modules : [ it.opener.openedModule ],
       logger : 2,
     });
+    // return it.opener.openedModule.npmGenerateFromWillfile
+    // ({
+    //   ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
+    //   currentContext,
+    //   logger : 2,
+    // });
   }
 }
 

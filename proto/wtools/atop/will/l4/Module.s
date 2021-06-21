@@ -7428,79 +7428,79 @@ resourceImport.defaults =
 //   }
 //
 // }
-
 //
-
-function npmGenerateFromWillfile( o )
-{
-  _.assert( arguments.length === 1 );
-  _.routine.options( npmGenerateFromWillfile, o );
-
-  const module = this;
-  const will = module.will;
-  const fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
-
-  /* */
-
-  const currentContext = o.currentContext || module;
-  const packagePath = module.pathResolve
-  ({
-    selector : o.packagePath || '{path::out}/package.json',
-    prefixlessAction : 'resolved',
-    pathNativizing : 0,
-    selectorIsPath : 1,
-    currentContext,
-  });
-
-  const data = _.will.transform.npmFromWillfile
-  ({
-    config :
-    {
-      about : module.about.exportStructure(),
-      path : module.pathMap,
-      submodule : module.submoduleMap,
-    },
-    withDisabledSubmodules : o.withDisabledSubmodules,
-  });
-
-  if( o.entryPath )
-  {
-    const entryPath = module.pathResolve({ selector : o.entryPath, prefixlessAction : 'resolved', currentContext });
-    data.main = path.relative( path.dir( packagePath ), entryPath );
-  }
-  if( o.filesPath )
-  {
-    const files = module.filesFromResource({ selector : o.filesPath, currentContext });
-    data.files = path.s.relative( path.dir( packagePath ), files );
-  }
-
-  _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
-
-  fileProvider.fileWrite
-  ({
-    filePath : packagePath,
-    data,
-    encoding : 'json.fine',
-    logger,
-  });
-
-  return null;
-}
-
-npmGenerateFromWillfile.defaults =
-{
-  packagePath : null,
-  entryPath : null,
-  filesPath : null,
-
-  currentContext : null,
-  withDisabledSubmodules : 0,
-
-  logger : 2,
-};
-
+// //
+//
+// function npmGenerateFromWillfile( o )
+// {
+//   _.assert( arguments.length === 1 );
+//   _.routine.options( npmGenerateFromWillfile, o );
+//
+//   const module = this;
+//   const will = module.will;
+//   const fileProvider = will.fileProvider;
+//   const path = fileProvider.path;
+//   const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+//
+//   /* */
+//
+//   const currentContext = o.currentContext || module;
+//   const packagePath = module.pathResolve
+//   ({
+//     selector : o.packagePath || '{path::out}/package.json',
+//     prefixlessAction : 'resolved',
+//     pathNativizing : 0,
+//     selectorIsPath : 1,
+//     currentContext,
+//   });
+//
+//   const data = _.will.transform.npmFromWillfile
+//   ({
+//     config :
+//     {
+//       about : module.about.exportStructure(),
+//       path : module.pathMap,
+//       submodule : module.submoduleMap,
+//     },
+//     withDisabledSubmodules : o.withDisabledSubmodules,
+//   });
+//
+//   if( o.entryPath )
+//   {
+//     const entryPath = module.pathResolve({ selector : o.entryPath, prefixlessAction : 'resolved', currentContext });
+//     data.main = path.relative( path.dir( packagePath ), entryPath );
+//   }
+//   if( o.filesPath )
+//   {
+//     const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+//     data.files = path.s.relative( path.dir( packagePath ), files );
+//   }
+//
+//   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : packagePath,
+//     data,
+//     encoding : 'json.fine',
+//     logger,
+//   });
+//
+//   return null;
+// }
+//
+// npmGenerateFromWillfile.defaults =
+// {
+//   packagePath : null,
+//   entryPath : null,
+//   filesPath : null,
+//
+//   currentContext : null,
+//   withDisabledSubmodules : 0,
+//
+//   logger : 2,
+// };
+//
 // function npmGenerateFromWillfile( o )
 // {
 //   let module = this;
@@ -9721,9 +9721,10 @@ function npmModulePublish( o )
   function packageJsonGenerate()
   {
     let currentContext = module.stepMap[ 'willfile.generate' ];
-    module.npmGenerateFromWillfile
+    will.npmGenerateFromWillfile
     ({
       packagePath,
+      modules : [ module ],
       currentContext,
       withDisabledSubmodules : o.withDisabledSubmodules,
       verbosity : o.verbosity,
@@ -11365,7 +11366,7 @@ let Extension =
   resourceImport,
 
   // _npmGenerateFromWillfile,
-  npmGenerateFromWillfile,
+  // npmGenerateFromWillfile,
   // _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
 

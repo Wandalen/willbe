@@ -633,11 +633,12 @@ function stepRoutineNpmGenerate( frame )
   let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
   opts.currentContext = step;
+  opts.modules = [ module ];
 
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
 
-  return module.npmGenerateFromWillfile( opts );
+  return module.will.npmGenerateFromWillfile( opts );
 }
 
 stepRoutineNpmGenerate.stepOptions =

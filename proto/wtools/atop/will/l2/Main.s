@@ -4615,6 +4615,83 @@ function willfileRegister( willf )
 }
 
 // --
+// convert
+// --
+
+function npmGenerateFromWillfile( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( npmGenerateFromWillfile, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+
+  /* */
+
+  const module = o.modules[ 0 ];
+  const currentContext = o.currentContext;
+  _.assert( o.modules.length === 1 );
+
+  const packagePath = module.pathResolve
+  ({
+    selector : o.packagePath || '{path::out}/package.json',
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext,
+  });
+
+  const data = _.will.transform.npmFromWillfile
+  ({
+    config :
+    {
+      about : module.about.exportStructure(),
+      path : module.pathMap,
+      submodule : module.submoduleMap,
+    },
+    withDisabledSubmodules : o.withDisabledSubmodules,
+  });
+
+  if( o.entryPath )
+  {
+    const entryPath = module.pathResolve({ selector : o.entryPath, prefixlessAction : 'resolved', currentContext });
+    data.main = path.relative( path.dir( packagePath ), entryPath );
+  }
+  if( o.filesPath )
+  {
+    const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+    data.files = path.s.relative( path.dir( packagePath ), files );
+  }
+
+  _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
+
+  fileProvider.fileWrite
+  ({
+    filePath : packagePath,
+    data,
+    encoding : 'json.fine',
+    logger,
+  });
+
+  return null;
+}
+
+npmGenerateFromWillfile.defaults =
+{
+  packagePath : null,
+  entryPath : null,
+  filesPath : null,
+
+  modules : null,
+  currentContext : null,
+  withDisabledSubmodules : 0,
+
+  logger : 2,
+};
+
+// --
 // clean
 // --
 
@@ -5636,6 +5713,10 @@ let Extension =
   willfileFor,
   willfileUnregister,
   willfileRegister,
+
+  // convert
+
+  npmGenerateFromWillfile,
 
   // clean
 
