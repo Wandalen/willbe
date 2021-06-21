@@ -42876,11 +42876,12 @@ function commandSubmodulesUpdateOptionTo( test )
   .then( () =>
   {
     test.case = 'switch to dev3, dev1 was renamed to dev3 on the remote after download'
-    a.moduleDownloadedShellSync( 'git fetch --tags' )
-    a.moduleShellSync( 'git tag dev3 dev1^{}' )
-    a.moduleShellSync( 'git tag -d dev1' )
+    let escapeCaret = process.platform === 'win32' ? '^' : '';
+    a.moduleDownloadedShellSync( 'git fetch --tags' );
+    a.moduleShellSync( `git tag dev3 dev1${ escapeCaret }^{}` );
+    a.moduleShellSync( 'git tag -d dev1' );
     return null;
-  })
+  });
   a.appStart( '.submodules.update to:!dev3' )
   .then( ( op ) =>
   {
