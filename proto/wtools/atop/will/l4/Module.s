@@ -275,12 +275,58 @@ function init( o )
   ({
     object :            module,
     // verbosity :         Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
-    verbosity :         Math.max( Math.min( will.transaction.verbosity, will.transaction.verboseStaging ), will.transaction.verbosity - 6 ),
-    stageNames :        [ 'preformed',        'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'finalFormed' ],
-    consequences :      [ 'preformReady',     'openedReady',        'attachedWillfilesFormReady',   'peerModulesFormReady',     'subModulesFormReady',              'resourcesFormReady',       'ready' ],
-    onPerform :         [ '_preform',         '_willfilesOpen',     '_attachedWillfilesForm',       '_peerModulesForm',         '_subModulesForm',                  '_resourcesForm',           null ],
-    onBegin :           [ '_performBegin',    null,                 null,                           null,                       null,                               null,                       null ],
-    onEnd :             [ null,               '_willfilesOpenEnd',  null,                           null,                       null, /*module._willfilesReadEnd,*/ null,                       module._formEnd ],
+    verbosity :
+    Math.max( Math.min( will.transaction.verbosity, will.transaction.verboseStaging ), will.transaction.verbosity - 6 ),
+    stageNames :
+    [
+      'preformed',
+      'opened',
+      'attachedWillfilesFormed',
+      'peerModulesFormed',
+      'subModulesFormed',
+      'resourcesFormed',
+      'finalFormed'
+    ],
+    consequences :
+    [
+      'preformReady',
+      'openedReady',
+      'attachedWillfilesFormReady',
+      'peerModulesFormReady',
+      'subModulesFormReady',
+      'resourcesFormReady',
+      'ready'
+    ],
+    onPerform :
+    [
+      '_preform',
+      '_willfilesOpen',
+      '_attachedWillfilesForm',
+      '_peerModulesForm',
+      '_subModulesForm',
+      '_resourcesForm',
+      null
+    ],
+    onBegin :
+    [
+      '_performBegin',
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    onEnd :
+    [
+      null,
+      '_willfilesOpenEnd',
+      null,
+      null,
+      null, /*module._willfilesReadEnd,*/
+      null,
+      module._formEnd
+    ],
   });
 
   module.stager.stageStatePausing( 'opened', 1 );
@@ -3149,7 +3195,7 @@ function submodulesClean()
   let will = module.will;
   let logger = will.transaction.logger;
 
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let modules = module.modulesEachAll
@@ -3247,7 +3293,7 @@ function submodulesFixate( o )
   let will = module.will;
   let logger = will.transaction.logger;
 
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( arguments.length === 0 || arguments.length === 1 );
   o = _.routine.options( submodulesFixate, arguments );
 
@@ -3295,11 +3341,11 @@ function moduleFixate( o )
   o = { module : o }
 
   _.routine.options( moduleFixate, o );
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
-  _.assert( o.module  === null || o.module instanceof _.will.Module );
+  _.assert( o.module === null || o.module instanceof _.will.Module );
   _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   // _.assert( o.module  === null || o.module.rootModule === o.module || _.longHas( o.module.superRelations, module ) );
 
@@ -3484,11 +3530,11 @@ function moduleFixateAct( o )
   o = { submodule : o }
 
   _.routine.options( moduleFixateAct, o );
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
-  _.assert( o.module  === null || o.module instanceof _.will.Module );
+  _.assert( o.module === null || o.module instanceof _.will.Module );
   _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   _.assert( _.strIs( o.willfilePath ) || _.strsAreAll( o.willfilePath ) );
   _.assert( _.strIs( o.originalPath ) );
@@ -3543,7 +3589,11 @@ function moduleFixateAct( o )
     try
     {
 
-      let code = fileProvider.fileRead({ filePath : willfilePath, logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) });
+      let code = fileProvider.fileRead
+      ({
+        filePath : willfilePath,
+        logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta )
+      });
 
       if( !_.strHas( code, o.originalPath ) )
       {
@@ -3619,7 +3669,7 @@ function moduleFixatePathFor( o )
   let path = fileProvider.path;
   let logger = will.transaction.logger;
 
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.upgrading ) );
   _.routine.options( moduleFixatePathFor, o );
@@ -3880,9 +3930,6 @@ function submodulesRelationsFilter( o )
   let will = module.will;
 
   o = _.routine.options( submodulesRelationsFilter, arguments );
-
-  // if( _global_.debugger )
-  // debugger;
 
   let result = module.submodulesRelationsOwnFilter( o );
   let resultJunctions = will.junctionsFrom( result );
@@ -4528,7 +4575,7 @@ function _resourcesForm()
   {
     // if( will.verbosity === 2 )
     if( will.transaction.verbosity === 2 ) /* xxx : throw error instead? */
-    logger.error( ' ! One or several submodules of ' + module.decoratedQualifiedName + ' were not downloaded!'  );
+    logger.error( ' ! One or several submodules of ' + module.decoratedQualifiedName + ' were not downloaded!' );
   }
 
   return con;
@@ -5378,7 +5425,8 @@ let filesFromResource = _.routine.uniteCloning_replaceByUnite( filesFromResource
 
 //
 
-let submodulesResolve_body = _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.submodulesResolve.defaults } );
+let submodulesResolve_body =
+  _.routine.extendReplacing( null, resolve_body, { defaults : _.will.resolver.submodulesResolve.defaults } );
 let submodulesResolve = _.routine.uniteReplacing( resolve_head, submodulesResolve_body );
 // let submodulesResolve = _.routine.uniteCloning_replaceByUnite({ head : resolve_head, body : submodulesResolve_body, strategy : 'replacing' });
 
@@ -5420,14 +5468,19 @@ function _buildsResolve_head( routine, args )
   _.assert( args.length <= 2 );
 
   let o;
-  if( args[ 1 ] !== undefined )
-  o =
-  {
-    name : args[ 0 ],
-    criterion : args[ 1 ],
-  }
-  else
+  if( args[ 1 ] === undefined )
   o = args[ 0 ] || null;
+  else
+  o = { name : args[ 0 ], criterion : args[ 1 ] };
+
+  // if( args[ 1 ] !== undefined )
+  // o =
+  // {
+  //   name : args[ 0 ],
+  //   criterion : args[ 1 ],
+  // }
+  // else
+  // o = args[ 0 ] || null;
 
   o = _.routine.options( routine, o );
   _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
@@ -5754,10 +5807,17 @@ function _pathChanged( o )
       let o2 = _.props.extend( null, o );
       o2.touching = 0;
       if( o2.val )
-      if( o2.name !== 'inPath' )
-      o2.val = path.s.join( module.inPath, o2.val );
-      else
-      o2.val = path.s.join( module.dirPath, o2.val );
+      {
+
+        if( o2.name === 'inPath' )
+        o2.val = path.s.join( module.dirPath, o2.val );
+        else
+        o2.val = path.s.join( module.inPath, o2.val );
+        // if( o2.name !== 'inPath' )
+        // o2.val = path.s.join( module.inPath, o2.val );
+        // else
+        // o2.val = path.s.join( module.dirPath, o2.val );
+      }
       opener._pathChanged( o2 );
       /* qqq xxx : use _.entity.identicalShallow()? */
       _.assert( _.identical( opener[ o2.name ], o2.val ) );
@@ -8592,9 +8652,11 @@ function _willfileOnPropertyAct( o )
 
   let willfile, willfile2;
   let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
-  willfile = fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
+  willfile =
+    fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
   if( dstWillfileRecords.length === 2 )
-  willfile2 = fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
+  willfile2 =
+    fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
 
   /* */
 
@@ -9673,7 +9735,7 @@ function npmModulePublish( o )
 
   function moduleExport( op )
   {
-    let filterProperties = _.mapBut_( null,  will.RelationFilterOn, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null, will.RelationFilterOn, { withIn : null, withOut : null } );
     return module.modulesExport
     ({
       ... filterProperties,
@@ -10548,7 +10610,7 @@ function gitSync( o )
     let start = _.process.starter
     ({
       currentPath : o.dirPath,
-      logger : logger,
+      logger,
       ready : con,
     });
 
@@ -10722,7 +10784,8 @@ function shell( o )
     execPath,
     currentPath : o.currentPath,
     // verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
-    verbosity : o.verbosity !== null ? o.verbosity : will.transaction.verbosity - 1,
+    // verbosity : o.verbosity !== null ? o.verbosity : will.transaction.verbosity - 1,
+    verbosity : o.verbosity === null ? ( will.transaction.verbosity - 1 ) : o.verbosity,
     ready,
   });
 

@@ -157,7 +157,6 @@ function form3()
   {
     if( relation.opener && !relation.opener.isValid() )
     {
-      debugger;
       relation.close();
     }
     else
@@ -279,8 +278,6 @@ function _openAct( o )
   return relation.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
-    // if( err )
-    // debugger;
     if( err )
     throw _.err( err, '\n', 'Failed to open', relation.absoluteName );
     return arg;
@@ -343,7 +340,6 @@ function _moduleAdoptEnd()
   }
   else
   {
-    debugger;
   }
 
   relation._openEnd();
@@ -670,7 +666,6 @@ function pathsRebase( o )
 
   if( o.inPath === o.exInPath )
   {
-    debugger;
     return resource;
   }
 
@@ -916,7 +911,6 @@ function resolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  // debugger;
   return module.resolve.head.call( module, routine, [ o ] );
 }
 
@@ -931,7 +925,6 @@ function resolve_body( o )
   // _.assert( o.currentContext === null || o.currentContext === resource );
   _.assert( o.currentContext === resource );
 
-  // debugger;
   // o.currentContext = resource;
   return module.resolve.body.call( module, o );
 }

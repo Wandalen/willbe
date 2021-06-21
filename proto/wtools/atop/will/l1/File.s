@@ -237,9 +237,9 @@ let fileAt = _.routine.unite( fileAt_head, fileAt_body );
 function _filesAtFindTerminals( o )
 {
   let filter =
-   {
-     maskTerminal :
-     {
+  {
+    maskTerminal :
+    {
       includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
       excludeAny :
       [
@@ -563,7 +563,6 @@ function fileReadResource_body( o )
 
   if( !found.length )
   {
-    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;
@@ -621,7 +620,6 @@ function fileWriteResource_body( o )
 
   if( !found.length )
   {
-    debugger;
     if( o.throwing )
     throw _.err( `Found no willfile at ${o.commonPath}` );
     return;

@@ -23,7 +23,7 @@ function onSuiteBegin()
 {
   let context = this;
 
-  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
 
