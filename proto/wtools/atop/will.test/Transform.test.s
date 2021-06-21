@@ -312,6 +312,62 @@ function interpreterParse( test )
 
 //
 
+function interpreterNormalize( test )
+{
+  test.case = 'not njs interpreter - string without version prefix';
+  var got = _.will.transform.interpreterNormalize( 'npm 6.0.0' );
+  test.identical( got, 'npm = 6.0.0' );
+
+  test.case = 'not njs interpreter - string';
+  var got = _.will.transform.interpreterNormalize( 'npm >= 6.0.0' );
+  test.identical( got, 'npm >= 6.0.0' );
+
+  test.case = 'njs interpreter - string without version prefix';
+  var got = _.will.transform.interpreterNormalize( 'node 14.0.0' );
+  test.identical( got, 'njs = 14.0.0' );
+
+  test.case = 'njs interpreter - string';
+  var got = _.will.transform.interpreterNormalize( 'node >= 12.0.0' );
+  test.identical( got, 'njs >= 12.0.0' );
+
+  /* */
+
+  test.case = 'not njs interpreter - string without version prefix';
+  var got = _.will.transform.interpreterNormalize({ npm : '6.0.0' });
+  test.identical( got, 'npm = 6.0.0' );
+
+  test.case = 'not njs interpreter - string';
+  var got = _.will.transform.interpreterNormalize({ npm : '>= 6.0.0' });
+  test.identical( got, 'npm >= 6.0.0' );
+
+  test.case = 'njs interpreter - string without version prefix';
+  var got = _.will.transform.interpreterNormalize({ node : '14.0.0' });
+  test.identical( got, 'njs = 14.0.0' );
+
+  test.case = 'njs interpreter - string';
+  var got = _.will.transform.interpreterNormalize({ node : '>= 12.0.0' });
+  test.identical( got, 'njs >= 12.0.0' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterNormalize() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterNormalize( 'njs >= 10.0.0', 'njs >= 10.0.0' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterNormalize([ 'njs >= 10.0.0' ]) );
+
+  test.case = 'wrong format of src';
+  test.shouldThrowErrorSync( () => _.will.transform.interpreterNormalize( '' ) );
+}
+
+//
+
 function submoduleMake( test )
 {
   test.case = 'o.path - empty string';
@@ -1571,18 +1627,18 @@ function willfilesMerge( test )
   /* */
 
   test.case = 'same fields with array values, not contributors, not interpreters, onSection - extend';
-  var dst = { about : { keywords : [ 'one', 'two' ], 'npm.array' : [ 'one', 'two' ] } };
-  var src = { about : { keywords : [ 'one', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
+  var dst = { about : { 'keywords' : [ 'one', 'two' ], 'npm.array' : [ 'one', 'two' ] } };
+  var src = { about : { 'keywords' : [ 'one', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
   var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.extend.bind( _.map ) });
-  var exp = { about : { keywords : [ 'one', 'two', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
+  var exp = { about : { 'keywords' : [ 'one', 'two', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
   test.identical( got, exp );
   test.true( got === dst );
 
   test.case = 'same fields with array values, not contributors, not interpreters, onSection - supplement';
-  var dst = { about : { keywords : [ 'one', 'two' ], 'npm.array' : [ 'one', 'two' ] } };
-  var src = { about : { keywords : [ 'one', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
+  var dst = { about : { 'keywords' : [ 'one', 'two' ], 'npm.array' : [ 'one', 'two' ] } };
+  var src = { about : { 'keywords' : [ 'one', 'three' ], 'npm.array' : [ 'one', 'three' ] } };
   var got = _.will.transform.willfilesMerge({ dst, src, onSection : _.map.supplement.bind( _.map ) });
-  var exp = { about : { keywords : [ 'one', 'two', 'three' ], 'npm.array' : [ 'one', 'two' ] } };
+  var exp = { about : { 'keywords' : [ 'one', 'two', 'three' ], 'npm.array' : [ 'one', 'two' ] } };
   test.identical( got, exp );
   test.true( got === dst );
 
@@ -2185,6 +2241,7 @@ let Self =
     authorRecordNormalize,
 
     interpreterParse,
+    interpreterNormalize,
 
     submoduleMake,
     submodulesSwitch,
