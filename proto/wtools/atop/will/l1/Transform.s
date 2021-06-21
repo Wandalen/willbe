@@ -269,7 +269,7 @@ function npmFromWillfile( o )
       license :      { propertyAdd, name : 'license' },
       author :       { propertyAdd : authorPropertyAdd, name : 'author' },
       contributors : { propertyAdd : contributorsPropertyAdd, name : 'contributors' },
-      interpreters : { propertyAdd : enginesAdd, name : 'engines' },
+      interpreters : { propertyAdd : enginesAdd, name : 'npm.engines' },
     };
 
     for( let key in willfile.about )
@@ -308,7 +308,7 @@ function npmFromWillfile( o )
 
   function enginesAdd( dst, property, name )
   {
-    dst.engines = Object.create( null );
+    dst[ name ] = Object.create( null );
     for( let key in willfile.about.interpreters )
     {
       const interpreter = _.strReplaceBegin( willfile.about.interpreters[ key ], 'njs', 'node' );
@@ -317,6 +317,9 @@ function npmFromWillfile( o )
       interpreterDescriptor[ key ] = interpreterDescriptor[ key ].replace( /^=\s*(\d)/, '$1' );
       _.props.extend( dst.engines, interpreterDescriptor );
     }
+
+    if( 'node' in dst[ name ] )
+    dst.engine = `node ${ dst[ name ].node }`;
   }
 
   /* */
@@ -446,26 +449,26 @@ function willfileFromNpm( o )
 
   let propertiesMap =
   {
-    name :          { propertyAdd, section : 'about', name : 'name' },
-    version :       { propertyAdd, section : 'about', name : 'version' },
-    enabled :       { propertyAdd, section : 'about', name : 'enabled' },
-    description :   { propertyAdd, section : 'about', name : 'description' },
-    keywords :      { propertyAdd, section : 'about', name : 'keywords' },
-    license :       { propertyAdd, section : 'about', name : 'license' },
-    author :        { propertyAdd : aboutAuthorPropertyAdd, section : 'about', name : 'author' },
-    contributors :  { propertyAdd : aboutContributorsPropertyAdd, section : 'about', name : 'contributors' },
-    scripts :       { propertyAdd, section : 'about', name : 'npm.scripts' },
-    interpreters :  { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
-    engines :       { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+    'name' :          { propertyAdd, section : 'about', name : 'name' },
+    'version' :       { propertyAdd, section : 'about', name : 'version' },
+    'enabled' :       { propertyAdd, section : 'about', name : 'enabled' },
+    'description' :   { propertyAdd, section : 'about', name : 'description' },
+    'keywords' :      { propertyAdd, section : 'about', name : 'keywords' },
+    'license' :       { propertyAdd, section : 'about', name : 'license' },
+    'author' :        { propertyAdd : aboutAuthorPropertyAdd, section : 'about', name : 'author' },
+    'contributors' :  { propertyAdd : aboutContributorsPropertyAdd, section : 'about', name : 'contributors' },
+    'scripts' :       { propertyAdd, section : 'about', name : 'npm.scripts' },
+    'npm.engines' :   { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+    'engine' :        { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
 
-    repository :    { propertyAdd : pathRepositoryPropertyAdd, section : 'path', name : 'repository' },
-    bugs :          { propertyAdd : pathBugtrackerPropertyAdd, section : 'path', name : 'bugs' },
-    main :          { propertyAdd, section : 'path', name : 'entry' },
-    files :         { propertyAdd, section : 'path', name : 'npm.files' },
+    'repository' :    { propertyAdd : pathRepositoryPropertyAdd, section : 'path', name : 'repository' },
+    'bugs' :          { propertyAdd : pathBugtrackerPropertyAdd, section : 'path', name : 'bugs' },
+    'main' :          { propertyAdd, section : 'path', name : 'entry' },
+    'files' :         { propertyAdd, section : 'path', name : 'npm.files' },
 
-    dependencies :          { propertyAdd : submodulePropertyAdd_functor( undefined ), section : 'submodule', name : undefined },
-    devDependencies :       { propertyAdd : submodulePropertyAdd_functor( 'development' ), section : 'submodule', name : 'development' },
-    optionalDependencies :  { propertyAdd : submodulePropertyAdd_functor( 'optional' ), section : 'submodule', name : 'optional' },
+    'dependencies' : { propertyAdd : submoduleAdd_functor( undefined ), section : 'submodule', name : undefined },
+    'devDependencies' : { propertyAdd : submoduleAdd_functor( 'development' ), section : 'submodule', name : 'development' },
+    'optionalDependencies' : { propertyAdd : submoduleAdd_functor( 'optional' ), section : 'submodule', name : 'optional' },
   };
 
   for( let key in config )
@@ -524,16 +527,20 @@ function willfileFromNpm( o )
 
   function interpretersAdd( property, name )
   {
-    willfile.about.interpreters = [];
-    for( let name in config.engines )
+    willfile.about.interpreters = willfile.about.interpreters || [];
+
+    if( property === 'npm.name' )
+    for( let name in config[ property ] )
     {
-      const version = config.engines[ name ];
+      const version = config.[ property ][ name ];
       const versionPrefix = _.strHasAny( version, [ '=', '<', '>' ] ) ? '' : '=';
       if( name === 'node' )
-      willfile.about.interpreters.push( `njs ${ versionPrefix }${ version }` );
+      _.arrayAppendOnce( willfile.about.interpreters, `njs ${ versionPrefix }${ version }` );
       else
-      willfile.about.interpreters.push( `${ name } ${ versionPrefix }${ version }` );
+      _.arrayAppendOnce( willfile.about.interpreters, `${ name } ${ versionPrefix }${ version }` );
     }
+    else
+    _.arrayAppendOnce( willfile.about.interpreters, config[ property ] );
   }
 
   /* */
@@ -557,7 +564,7 @@ function willfileFromNpm( o )
 
   /* */
 
-  function submodulePropertyAdd_functor( criterion )
+  function submoduleAdd_functor( criterion )
   {
     const criterions = criterion ? criterion : null;
     return function( property )
