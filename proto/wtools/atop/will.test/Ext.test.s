@@ -37129,70 +37129,70 @@ function commandWillfileFromNpm( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.from.npm packagePath:Author.json' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'check field `author`';
-    test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-    test.identical( config.about.author, 'Author <author@dot.com>' );
-    test.identical( config.about.name, 'author' );
-    test.identical( config.about.enabled, 1 );
-
-    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-
-    return null;
-  })
-
-  /* */
-
-  a.appStart({ args : '.willfile.from.npm packagePath:Contributors.json' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'check field `contributors`';
-    test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-    test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
-    test.identical( config.about.name, 'contributors' );
-    test.identical( config.about.enabled, 1 );
-
-    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-
-    return null;
-  })
-
-  /* */
-
-  a.appStart({ args : '.willfile.from.npm packagePath:Description.json' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'check field `description`';
-    test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-    test.identical( config.about.description, 'To check the conversion' );
-    test.identical( config.about.name, 'description' );
-    test.identical( config.about.enabled, 1 );
-
-    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-
-    return null;
-  })
-
-  /* */
-
-  a.appStart({ args : '.willfile.from.npm packagePath:Enabled.json' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'check field `enabled`';
-    test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-    test.identical( config.about.name, 'enabled' );
-    test.identical( config.about.enabled, 0 );
-
-    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-
-    return null;
-  })
+  // a.appStart({ args : '.willfile.from.npm packagePath:Author.json' })
+  // a.ready.then( ( op ) =>
+  // {
+  //   test.case = 'check field `author`';
+  //   test.identical( op.exitCode, 0 );
+  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+  //   test.identical( config.about.author, 'Author <author@dot.com>' );
+  //   test.identical( config.about.name, 'author' );
+  //   test.identical( config.about.enabled, 1 );
+  //
+  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+  //
+  //   return null;
+  // });
+  //
+  // /* */
+  //
+  // a.appStart({ args : '.willfile.from.npm packagePath:Contributors.json' })
+  // a.ready.then( ( op ) =>
+  // {
+  //   test.case = 'check field `contributors`';
+  //   test.identical( op.exitCode, 0 );
+  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+  //   test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
+  //   test.identical( config.about.name, 'contributors' );
+  //   test.identical( config.about.enabled, 1 );
+  //
+  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.appStart({ args : '.willfile.from.npm packagePath:Description.json' })
+  // a.ready.then( ( op ) =>
+  // {
+  //   test.case = 'check field `description`';
+  //   test.identical( op.exitCode, 0 );
+  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+  //   test.identical( config.about.description, 'To check the conversion' );
+  //   test.identical( config.about.name, 'description' );
+  //   test.identical( config.about.enabled, 1 );
+  //
+  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+  //
+  //   return null;
+  // })
+  //
+  // /* */
+  //
+  // a.appStart({ args : '.willfile.from.npm packagePath:Enabled.json' })
+  // a.ready.then( ( op ) =>
+  // {
+  //   test.case = 'check field `enabled`';
+  //   test.identical( op.exitCode, 0 );
+  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+  //   test.identical( config.about.name, 'enabled' );
+  //   test.identical( config.about.enabled, 0 );
+  //
+  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+  //
+  //   return null;
+  // });
 
   /* */
 
