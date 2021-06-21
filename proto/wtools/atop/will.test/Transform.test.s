@@ -368,6 +368,78 @@ function interpreterNormalize( test )
 
 //
 
+function engineNormalize( test )
+{
+  test.case = 'not njs interpreter - string without version prefix';
+  var got = _.will.transform.engineNormalize( 'npm 6.0.0' );
+  test.identical( got, 'npm = 6.0.0' );
+
+  test.case = 'not njs interpreter - string';
+  var got = _.will.transform.engineNormalize( 'npm >= 6.0.0' );
+  test.identical( got, 'npm >= 6.0.0' );
+
+  test.case = 'njs interpreter - string without version prefix, not required format';
+  var got = _.will.transform.engineNormalize( 'njs 14.0.0' );
+  test.identical( got, 'node = 14.0.0' );
+
+  test.case = 'njs interpreter - string, not required format';
+  var got = _.will.transform.engineNormalize( 'njs >= 12.0.0' );
+  test.identical( got, 'node >= 12.0.0' );
+
+  test.case = 'njs interpreter - string without version prefix, required format';
+  var got = _.will.transform.engineNormalize( 'node 14.0.0' );
+  test.identical( got, 'node = 14.0.0' );
+
+  test.case = 'njs interpreter - string, required format';
+  var got = _.will.transform.engineNormalize( 'node >= 12.0.0' );
+  test.identical( got, 'node >= 12.0.0' );
+
+  /* */
+
+  test.case = 'not njs interpreter - string without version prefix';
+  var got = _.will.transform.engineNormalize({ npm : '6.0.0' });
+  test.identical( got, 'npm = 6.0.0' );
+
+  test.case = 'not njs interpreter - string';
+  var got = _.will.transform.engineNormalize({ npm : '>= 6.0.0' });
+  test.identical( got, 'npm >= 6.0.0' );
+
+  test.case = 'njs interpreter - string without version prefix, not required format';
+  var got = _.will.transform.engineNormalize({ njs : '14.0.0' });
+  test.identical( got, 'node = 14.0.0' );
+
+  test.case = 'njs interpreter - string, not required format';
+  var got = _.will.transform.engineNormalize({ njs : '>= 12.0.0' });
+  test.identical( got, 'node >= 12.0.0' );
+
+  test.case = 'njs interpreter - string without version prefix, required format';
+  var got = _.will.transform.engineNormalize({ node : '14.0.0' });
+  test.identical( got, 'node = 14.0.0' );
+
+  test.case = 'njs interpreter - string, required format';
+  var got = _.will.transform.engineNormalize({ node : '>= 12.0.0' });
+  test.identical( got, 'node >= 12.0.0' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.engineNormalize() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.transform.engineNormalize( 'njs >= 10.0.0', 'njs >= 10.0.0' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.will.transform.engineNormalize([ 'njs >= 10.0.0' ]) );
+
+  test.case = 'wrong format of src';
+  test.shouldThrowErrorSync( () => _.will.transform.engineNormalize( '' ) );
+}
+
+//
+
 function submoduleMake( test )
 {
   test.case = 'o.path - empty string';
@@ -2017,8 +2089,8 @@ function willfilesMergeCheckOptions( test )
   /* */
 
   test.case = 'dst - empty, src - full section about, options for section about - 1';
-  var dst = {};
-  var src =
+  var dst_ = {};
+  var src_ =
   {
     about :
     {
@@ -2037,8 +2109,8 @@ function willfilesMergeCheckOptions( test )
   };
   var got = _.will.transform.willfilesMerge
   ({
-    'dst' : dst,
-    'src' : src,
+    'dst' : dst_,
+    'src' : src_,
     'onSection' : _.map.supplement.bind( _.map ),
     'name' : 1,
     'version' : 1,
@@ -2070,11 +2142,11 @@ function willfilesMergeCheckOptions( test )
     },
   };
   test.identical( got, exp );
-  test.true( got === dst );
+  test.true( got === dst_ );
 
   test.case = 'dst - empty, src - full section about, options for section about - 1';
-  var dst = {};
-  var src =
+  var dst_ = {};
+  var src_ =
   {
     about :
     {
@@ -2093,8 +2165,8 @@ function willfilesMergeCheckOptions( test )
   };
   var got = _.will.transform.willfilesMerge
   ({
-    'dst' : dst,
-    'src' : src,
+    'dst' : dst_,
+    'src' : src_,
     'onSection' : _.map.supplement.bind( _.map ),
     'name' : 0,
     'version' : 0,
@@ -2110,10 +2182,10 @@ function willfilesMergeCheckOptions( test )
   });
   var exp = {};
   test.identical( got, exp );
-  test.true( got === dst );
+  test.true( got === dst_ );
 
   test.case = 'dst - full section about, src - empty, options for section about - 1';
-  var dst =
+  var dst_ =
   {
     about :
     {
@@ -2130,11 +2202,11 @@ function willfilesMergeCheckOptions( test )
       'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
     },
   }
-  var src = {};
+  var src_ = {};
   var got = _.will.transform.willfilesMerge
   ({
-    'dst' : dst,
-    'src' : src,
+    'dst' : dst_,
+    'src' : src_,
     'onSection' : _.map.supplement.bind( _.map ),
     'name' : 1,
     'version' : 1,
@@ -2166,10 +2238,10 @@ function willfilesMergeCheckOptions( test )
     },
   };
   test.identical( got, exp );
-  test.true( got === dst );
+  test.true( got === dst_ );
 
   test.case = 'dst - full section about, src - empty, options for section about - 0';
-  var dst =
+  var dst_ =
   {
     about :
     {
@@ -2186,11 +2258,11 @@ function willfilesMergeCheckOptions( test )
       'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
     },
   }
-  var src = {};
+  var src_ = {};
   var got = _.will.transform.willfilesMerge
   ({
-    'dst' : dst,
-    'src' : src,
+    'dst' : dst_,
+    'src' : src_,
     'onSection' : _.map.supplement.bind( _.map ),
     'name' : 0,
     'version' : 0,
@@ -2222,7 +2294,7 @@ function willfilesMergeCheckOptions( test )
     },
   };
   test.identical( got, exp );
-  test.true( got === dst );
+  test.true( got === dst_ );
 }
 
 // --
@@ -2256,6 +2328,7 @@ let Self =
 
     interpreterParse,
     interpreterNormalize,
+    engineNormalize,
 
     submoduleMake,
     submodulesSwitch,
