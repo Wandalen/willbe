@@ -438,10 +438,11 @@ function etcRunWillbe( test )
 
 function etcKillWillbe( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  let con = _.take( null );
-  a.reflect();
+  const context = this;
+  const a = context.assetFor( test, 'simple' );
+  const con = _.take( null );
+  const delay = 1500;
+  a.reflectMinimal();
 
   /* */
 
@@ -462,7 +463,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill() );
+      _.time.out( delay, () => o.pnd.kill() );
     });
 
     return a.ready.then( ( op ) =>
@@ -500,7 +501,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGTERM') );
+      _.time.out( delay, () => o.pnd.kill( 'SIGTERM') );
     });
 
     return a.ready.then( ( op ) =>
@@ -576,7 +577,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGINT' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGINT' ) );
+      _.time.out( delay, () => o.pnd.kill( 'SIGINT' ) );
     });
 
     return a.ready.then( ( op ) =>
