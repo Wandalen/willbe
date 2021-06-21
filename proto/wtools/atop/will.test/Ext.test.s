@@ -39790,7 +39790,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engines, { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
+    test.identical( config[ 'npm.engines' ], { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   });
@@ -39808,7 +39808,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engines, { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
+    test.identical( config[ 'npm.engines' ], { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   })
@@ -39826,7 +39826,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engines, { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
+    test.identical( config[ 'npm.engines' ], { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   })
