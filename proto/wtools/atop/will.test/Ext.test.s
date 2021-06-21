@@ -36841,20 +36841,21 @@ function commandNpmFromWillfile( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      engines : { node : '>= 6.0.0', chrome : '>= 60.0.0', firefox : '>= 60.0.0' },
-      scripts : { test : 'wtest .run proto/** v:5', docgen : 'wdocgen .build proto' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { node : '>= 6.0.0', chrome : '>= 60.0.0', firefox : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { test : 'wtest .run proto/** v:5', docgen : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -36888,20 +36889,21 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      engines : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -36922,20 +36924,21 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      engines : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -36956,20 +36959,21 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      engines : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
