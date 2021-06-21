@@ -3824,7 +3824,7 @@ function graphTopSort( modules )
 {
   let will = this;
 
-  _.assert( 0 <= arguments.length &&  arguments.length <= 2 )
+  _.assert( 0 <= arguments.length && arguments.length <= 2 )
 
   let group = will.graphGroupMake();
 

@@ -6509,13 +6509,14 @@ hookGitSyncConflict.description =
 function hookGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
+
+  if( !_.censor )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
-
-  if( !_.censor )
-  return test.true( true );
 
   /* */
 
@@ -32632,12 +32633,13 @@ function commandModulesGitSync( test )
 function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor || _.process.insideTestContainer() )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
@@ -32780,12 +32782,13 @@ super
 function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -32946,12 +32949,13 @@ original/f2.txt
 function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -33103,12 +33107,13 @@ original/f2.txt
 function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -36071,13 +36076,14 @@ ${ mergeEnd }
 function commandGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
+
+  if( !_.censor )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
-
-  if( !_.censor )
-  return test.true( true );
 
   /* */
 
