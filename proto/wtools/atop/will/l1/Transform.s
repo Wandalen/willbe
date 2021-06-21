@@ -485,6 +485,7 @@ function willfileFromNpm( o )
     'contributors' :  { propertyAdd : aboutContributorsPropertyAdd, section : 'about', name : 'contributors' },
     'scripts' :       { propertyAdd, section : 'about', name : 'npm.scripts' },
     'npm.engines' :   { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+    'engines' :       { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
     'engine' :        { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
 
     'repository' :    { propertyAdd : pathRepositoryPropertyAdd, section : 'path', name : 'repository' },
@@ -557,16 +558,9 @@ function willfileFromNpm( o )
 
     if( property === 'npm.name' )
     for( let name in config[ property ] )
-    {
-      const version = config[ property ][ name ];
-      const versionPrefix = _.strHasAny( version, [ '=', '<', '>' ] ) ? '' : '=';
-      if( name === 'node' )
-      _.arrayAppendOnce( willfile.about.interpreters, `njs ${ versionPrefix }${ version }` );
-      else
-      _.arrayAppendOnce( willfile.about.interpreters, `${ name } ${ versionPrefix }${ version }` );
-    }
+    _.arrayAppendOnce( willfile.about.interpreters, _.will.transform.interpreterNormalize( config[ property ][ name ] ) );
     else
-    _.arrayAppendOnce( willfile.about.interpreters, config[ property ] );
+    _.arrayAppendOnce( willfile.about.interpreters, _.will.transform.interpreterNormalize( config[ property ] ) );
   }
 
   /* */
