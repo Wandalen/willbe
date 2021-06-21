@@ -724,7 +724,7 @@ function npmFromWillfile( test )
   test.case = 'map with only interpreters';
   var src = { config : { about : { interpreters : [ 'njs =10.0.0', 'chromium =67.0.0' ] } } };
   var got = _.will.transform.npmFromWillfile( src );
-  var exp = { engines : { node : '10.0.0', chromium : '67.0.0' } };
+  var exp = { 'npm.engines' : { node : '10.0.0', chromium : '67.0.0' }, 'engine' : 'node = 10.0.0' };
   test.identical( got, exp );
 
   test.case = 'map with only repository';
@@ -967,21 +967,22 @@ function npmFromWillfileWithComplexConfig( test )
   var got = _.will.transform.npmFromWillfile( src );
   var exp =
   {
-    name : 'wTools',
-    version : '0.0.1',
-    enabled : 0,
-    description : 'test module',
-    keywords : [ 'test', 'module' ],
-    license : 'MIT',
-    author : 'author <author@domain.com>',
-    contributors : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
-    scripts : { script1 : 'script1', script2 : 'script2' },
-    engines : { node : '10.0.0', chromium : '>=67.0.0' },
-    repository : 'https://github.com/Wandalen/wTools.git',
-    bugs : 'https://github.com/Wandalen/wTools/issues',
-    main : 'proto/file',
-    files : [ 'proto/file', 'proto/some', 'out' ],
-    dependencies :
+    'name' : 'wTools',
+    'version' : '0.0.1',
+    'enabled' : 0,
+    'description' : 'test module',
+    'keywords' : [ 'test', 'module' ],
+    'license' : 'MIT',
+    'author' : 'author <author@domain.com>',
+    'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
+    'scripts' : { script1 : 'script1', script2 : 'script2' },
+    'engine' : 'node = 10.0.0',
+    'npm.engines' : { node : '10.0.0', chromium : '>=67.0.0' },
+    'repository' : 'https://github.com/Wandalen/wTools.git',
+    'bugs' : 'https://github.com/Wandalen/wTools/issues',
+    'main' : 'proto/file',
+    'files' : [ 'proto/file', 'proto/some', 'out' ],
+    'dependencies' :
     {
       wTools : '',
       next : '0.0.1',
@@ -989,7 +990,7 @@ function npmFromWillfileWithComplexConfig( test )
       git : 'https://github.com/user/repo.git#0.0.1',
       hd : 'file:./user/hd',
     },
-    devDependencies :
+    'devDependencies' :
     {
       wToolsd : '',
       nextd : '0.0.1',
@@ -997,7 +998,7 @@ function npmFromWillfileWithComplexConfig( test )
       gitd : 'https://github.com/user/repo.git#0.0.1',
       hdd : 'file:./user/hd',
     },
-    optionalDependencies :
+    'optionalDependencies' :
     {
       wToolso : '',
       nexto : '0.0.1',
@@ -1005,9 +1006,9 @@ function npmFromWillfileWithComplexConfig( test )
       gito : 'https://github.com/user/repo.git#0.0.1',
       hdo : 'file:./user/hd',
     },
-    map : { map : '' },
-    array : [ 'array' ],
-    string : 'string',
+    'map' : { map : '' },
+    'array' : [ 'array' ],
+    'string' : 'string',
   };
   test.identical( got, exp );
 }
@@ -1114,10 +1115,22 @@ function willfileFromNpm( test )
   var exp = { about : { 'npm.scripts' : { script1 : 'script1', script2 : 'script2' } } };
   test.identical( got, exp );
 
+  test.case = 'map with only engine';
+  var src = { config : { engine : 'node 10.0.0' } };
+  var got = _.will.transform.willfileFromNpm( src );
+  var exp = { about : { interpreters : [ 'njs = 10.0.0' ] } };
+  test.identical( got, exp );
+
   test.case = 'map with only engines';
   var src = { config : { engines : { node : '10.0.0', chromium : '67.0.0' } } };
   var got = _.will.transform.willfileFromNpm( src );
-  var exp = { about : { interpreters : [ 'njs =10.0.0', 'chromium =67.0.0' ] } };
+  var exp = { about : { interpreters : [ 'njs = 10.0.0', 'chromium = 67.0.0' ] } };
+  test.identical( got, exp );
+
+  test.case = 'map with only npm.engines';
+  var src = { config : { 'npm.engines' : { node : '10.0.0', chromium : '67.0.0' } } };
+  var got = _.will.transform.willfileFromNpm( src );
+  var exp = { about : { interpreters : [ 'njs = 10.0.0', 'chromium = 67.0.0' ] } };
   test.identical( got, exp );
 
   test.case = 'map with only repository - string';
@@ -1358,7 +1371,7 @@ function willfileFromNpmWithComplexConfig( test )
       'author' : 'author <author@domain.com>',
       'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
       'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
-      'interpreters' : [ 'njs =10.0.0', 'chromium =67.0.0' ],
+      'interpreters' : [ 'njs = 10.0.0', 'chromium = 67.0.0' ],
       'npm.map' : { map : '' },
       'npm.array' : [ 'array' ],
       'npm.string' : 'string',
@@ -1419,7 +1432,7 @@ function npmAndWillfileDoubleConvertion( test )
         'author' : 'author <author@domain.com>',
         'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
         'npm.scripts' : { script1 : 'script1', script2 : 'script2' },
-        'interpreters' : [ 'njs =10.0.0', 'chromium >=67.0.0' ],
+        'interpreters' : [ 'njs = 10.0.0', 'chromium >= 67.0.0' ],
         'npm.map' : { map : '' },
         'npm.array' : [ 'array' ],
         'npm.string' : 'string',
@@ -1475,21 +1488,22 @@ function npmAndWillfileDoubleConvertion( test )
   {
     config :
     {
-      name : 'wTools',
-      version : '0.0.1',
-      enabled : 0,
-      description : 'test module',
-      keywords : [ 'test', 'module' ],
-      license : 'MIT',
-      author : 'author <author@domain.com>',
-      contributors : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
-      scripts : { script1 : 'script1', script2 : 'script2' },
-      engines : { node : '10.0.0', chromium : '67.0.0' },
-      repository : 'https://github.com/Wandalen/wTools.git',
-      bugs : 'https://github.com/Wandalen/wTools/issues',
-      main : 'proto/file',
-      files : [ 'proto/file', 'proto/some', 'out' ],
-      dependencies :
+      'name' : 'wTools',
+      'version' : '0.0.1',
+      'enabled' : 0,
+      'description' : 'test module',
+      'keywords' : [ 'test', 'module' ],
+      'license' : 'MIT',
+      'author' : 'author <author@domain.com>',
+      'contributors' : [ 'author1 <author1@domain.com>', 'author2 <author2@domain.com>' ],
+      'scripts' : { script1 : 'script1', script2 : 'script2' },
+      'npm.engines' : { node : '10.0.0', chromium : '67.0.0' },
+      'engine' : 'node = 10.0.0',
+      'repository' : 'https://github.com/Wandalen/wTools.git',
+      'bugs' : 'https://github.com/Wandalen/wTools/issues',
+      'main' : 'proto/file',
+      'files' : [ 'proto/file', 'proto/some', 'out' ],
+      'dependencies' :
       {
         wTools : '',
         next : '0.0.1',
@@ -1497,7 +1511,7 @@ function npmAndWillfileDoubleConvertion( test )
         git : 'https://github.com/user/repo.git#0.0.1',
         hd : 'file:./user/hd',
       },
-      devDependencies :
+      'devDependencies' :
       {
         wToolsd : '',
         nextd : '0.0.1',
@@ -1505,7 +1519,7 @@ function npmAndWillfileDoubleConvertion( test )
         gitd : 'https://github.com/user/repo.git#0.0.1',
         hdd : 'file:./user/hd',
       },
-      optionalDependencies :
+      'optionalDependencies' :
       {
         wToolso : '',
         nexto : '0.0.1',
@@ -1513,9 +1527,9 @@ function npmAndWillfileDoubleConvertion( test )
         gito : 'https://github.com/user/repo.git#0.0.1',
         hdo : 'file:./user/hd',
       },
-      map : { map : '' },
-      array : [ 'array' ],
-      string : 'string',
+      'map' : { map : '' },
+      'array' : [ 'array' ],
+      'string' : 'string',
     },
   };
   var converted = _.will.transform.willfileFromNpm( src );

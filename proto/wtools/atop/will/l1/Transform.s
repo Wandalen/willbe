@@ -177,6 +177,13 @@ function interpreterNormalize( src )
 
 //
 
+function engineNormalize()
+{
+  return _.strReplaceBegin( _.will.transform.interpreterNormalize.apply( this, arguments ), 'njs', 'node' );
+}
+
+//
+
 function submodulesSwitch( src, enabled )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -341,11 +348,11 @@ function npmFromWillfile( o )
       const interpreterDescriptor = _.will.transform.interpreterParse( interpreter );
       for( let key in interpreterDescriptor )
       interpreterDescriptor[ key ] = interpreterDescriptor[ key ].replace( /^=\s*(\d)/, '$1' );
-      _.props.extend( dst.engines, interpreterDescriptor );
+      _.props.extend( dst[ name ], interpreterDescriptor );
     }
 
     if( 'node' in dst[ name ] )
-    dst.engine = `node ${ dst[ name ].node }`;
+    dst.engine = _.will.transform.engineNormalize({ node : dst[ name ].node });
   }
 
   /* */
@@ -554,13 +561,13 @@ function willfileFromNpm( o )
 
   function interpretersAdd( property, name )
   {
-    willfile.about.interpreters = willfile.about.interpreters || [];
+    const interpreters = willfile.about.interpreters = willfile.about.interpreters || [];
 
-    if( property === 'npm.name' )
-    for( let name in config[ property ] )
-    _.arrayAppendOnce( willfile.about.interpreters, _.will.transform.interpreterNormalize( config[ property ][ name ] ) );
+    if( property === 'npm.engines' || property === 'engines' )
+    for( let key in config[ property ] )
+    _.arrayAppendOnce( interpreters, _.will.transform.interpreterNormalize({ [ key ] : config[ property ][ key ] }) );
     else
-    _.arrayAppendOnce( willfile.about.interpreters, _.will.transform.interpreterNormalize( config[ property ] ) );
+    _.arrayAppendOnce( interpreters, _.will.transform.interpreterNormalize( config[ property ] ) );
   }
 
   /* */
@@ -839,6 +846,7 @@ let Extension =
 
   interpreterParse,
   interpreterNormalize,
+  engineNormalize,
 
   submoduleMake,
   submodulesSwitch,
