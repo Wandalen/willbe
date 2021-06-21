@@ -453,13 +453,8 @@ function _open()
     if( willf.error )
     throw willf.error;
 
-    if( !willf.data )
+    if( willf.data )
     {
-      _.assert( _.strIs( willf.storagePath ) && willf.storagePath !== willf.filePath );
-    }
-    else
-    {
-
       _.assert( !!willf._found, `Cant open ${willf.filePath}` );
       _.assert( willf._found.length === 1, `Found ${willf._found.length} files at ${willf.filePath}` );
       _.assert( _.strIs( willf._found[ 0 ].ext ), `Cant open ${willf.filePath}` );
@@ -480,7 +475,6 @@ function _open()
         inFormat : 'string',
         outFormat : 'structure',
         ext : willf._found[ 0 ].ext,
-        // feature : { fine : 1 },
       });
       _.assert( !!encoder, `No encoder for ${willf.filePath}` );
 
@@ -492,8 +486,52 @@ function _open()
       {
         throw _.errBrief( err, '\nSyntax error' );
       }
-
     }
+    else
+    {
+      _.assert( _.strIs( willf.storagePath ) && willf.storagePath !== willf.filePath );
+    }
+    // if( !willf.data )
+    // {
+    //   _.assert( _.strIs( willf.storagePath ) && willf.storagePath !== willf.filePath );
+    // }
+    // else
+    // {
+    //
+    //   _.assert( !!willf._found, `Cant open ${willf.filePath}` );
+    //   _.assert( willf._found.length === 1, `Found ${willf._found.length} files at ${willf.filePath}` );
+    //   _.assert( _.strIs( willf._found[ 0 ].ext ), `Cant open ${willf.filePath}` );
+    //
+    //   /*
+    //     zzz qqq : make it working
+    //     let encoder = _.gdf.selectContext
+    //     ({
+    //       inFormat : 'buffer.raw',
+    //       outFormat : 'structure',
+    //       ext : 'yml',
+    //     })[ 0 ];
+    //     let structure = encoder.encode( bufferRaw );
+    //   */
+    //
+    //   let encoder = _.gdf.selectSingleContext
+    //   ({
+    //     inFormat : 'string',
+    //     outFormat : 'structure',
+    //     ext : willf._found[ 0 ].ext,
+    //     // feature : { fine : 1 },
+    //   });
+    //   _.assert( !!encoder, `No encoder for ${willf.filePath}` );
+    //
+    //   try
+    //   {
+    //     willf.structure = encoder.encode({ data : _.bufferToStr( willf.data ) }).out.data;
+    //   }
+    //   catch( err )
+    //   {
+    //     throw _.errBrief( err, '\nSyntax error' );
+    //   }
+    //
+    // }
 
     willf.formed = 4;
 

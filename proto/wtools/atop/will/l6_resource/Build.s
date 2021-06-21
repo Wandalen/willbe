@@ -105,7 +105,6 @@ function stepsEach( o )
 
     if( _.errIs( step ) )
     {
-      debugger;
       throw _.err( step, '\nFound no ' + stepName + ' for ' + build.qualifiedName );
     }
 
@@ -170,7 +169,7 @@ function framePerform( frame )
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!logger );
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( resource === build );
@@ -180,9 +179,7 @@ function framePerform( frame )
     first run to make sure all steps exist
   */
 
-  // debugger;
   let steps = build.stepsEach();
-  // debugger;
 
   steps.forEach( function( step )
   {

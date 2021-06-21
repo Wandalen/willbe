@@ -113,7 +113,6 @@ function MakeForEachCriterion( o )
   }
   catch( err )
   {
-    debugger;
     throw _.err( err, '\nCant form', Cls.KindName + '::' + o.resource.name );
   }
 
@@ -216,7 +215,6 @@ function MakeSingle( o )
 
     if( !isOut && importing && o.resource.name === 'local' && Cls.KindName === 'path' )
     {
-      debugger;
       throw _.err( 'Willfile should have no path::local' );
     }
 
@@ -336,7 +334,8 @@ function copy( o )
 
   let result = _.Copyable.prototype.copy.call( resource, o );
 
-  let module = o.module !== undefined ? o.module : resource.module;
+  // let module = o.module !== undefined ? o.module : resource.module;
+  let module = o.module === undefined ? resource.module : o.module;
   if( o.unformedResource )
   resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module });
 
@@ -647,9 +646,6 @@ function _inheritSingle( o )
   _.assert( resource.formed === 1 );
   _.assert( !!resource2.formed );
   _.routine.assertOptions( _inheritSingle, arguments );
-
-  // if( resource.id === 154 )
-  // debugger;
 
   if( resource2.formed < 2 )
   {
@@ -1001,7 +997,6 @@ function exportStructure()
   if( o.willf )
   if( resource.willf && o.willf !== resource.willf )
   {
-    debugger;
     _.assert( 0, 'not tested' );
     return;
   }
