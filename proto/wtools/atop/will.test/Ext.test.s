@@ -38975,8 +38975,8 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( _.props.keys( config.engines ).length, 3 );
-    test.identical( config.engines.node, '>= 10.0.0' );
+    test.identical( _.props.keys( config[ 'npm.engines' ] ).length, 3 );
+    test.identical( config[ 'npm.engines' ].node, '>= 10.0.0' );
 
     return null;
   });
@@ -38994,8 +38994,8 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( _.props.keys( config.engines ).length, 3 );
-    test.identical( config.engines.node, '>= 10.0.0' );
+    test.identical( _.props.keys( config[ 'npm.engines' ] ).length, 3 );
+    test.identical( config[ 'npm.engines' ].node, '>= 10.0.0' );
 
     return null;
   });
@@ -39013,8 +39013,8 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( _.props.keys( config.engines ).length, 3 );
-    test.identical( config.engines.node, '>= 10.0.0' );
+    test.identical( _.props.keys( config[ 'npm.engines' ] ).length, 3 );
+    test.identical( config[ 'npm.engines' ].node, '>= 10.0.0' );
 
     return null;
   });
