@@ -8192,7 +8192,7 @@ function willfileExtendWillfile( o )
     if( _.longIs( src ) )
     return src;
 
-    debugger; /* xxx : qqq : check */
+    // debugger; /* xxx : qqq : check */
     src = _.props.pairs( src );
     for( let i = 0 ; i < src.length ; i++ )
     src[ i ] = src[ i ].join( ' ' );

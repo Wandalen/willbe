@@ -224,15 +224,24 @@ function modulesDepthSet( src )
   if( t.formed )
   return;
 
-  if( !t._.modulesDepth )
-  {
-    t._.modulesDepth = src.slice();
-  }
-  else
+  if( t._.modulesDepth )
   {
     t._.modulesDepth[ 0 ] = src[ 0 ];
     t._.modulesDepth[ 1 ] = src[ 1 ];
   }
+  else
+  {
+    t._.modulesDepth = src.slice();
+  }
+  // if( !t._.modulesDepth )
+  // {
+  //   t._.modulesDepth = src.slice();
+  // }
+  // else
+  // {
+  //   t._.modulesDepth[ 0 ] = src[ 0 ];
+  //   t._.modulesDepth[ 1 ] = src[ 1 ];
+  // }
 
   _.assert( t._.modulesDepth[ 0 ] >= 0 && t._.modulesDepth[ 0 ] <= 2 );
   _.assert( t._.modulesDepth[ 1 ] === 0 || t._.modulesDepth[ 1 ] === Infinity );
@@ -245,7 +254,14 @@ function _transactionPropertyGetter_functor( propName )
   return function get()
   {
     let t = this;
-    _.assert( t._[ propName ] === null || _.boolLike( t._[ propName ] ) || _.strDefined( t._[ propName ] ) || _.numberIs( t._[ propName ] ) || _.arrayIs( t._[ propName ] ) );
+    _.assert
+    (
+      t._[ propName ] === null
+      || _.boolLike( t._[ propName ] )
+      || _.strDefined( t._[ propName ] )
+      || _.number.is( t._[ propName ] )
+      || _.array.is( t._[ propName ] )
+    );
     return t._[ propName ];
   }
 }

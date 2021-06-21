@@ -177,7 +177,12 @@ function init( o )
   will.copy( o );
 
   if( will.transaction === null )
-  will.transaction = _.will.Transaction({ isInitial : 1, /*verbosity : will.logger.verbosity, will */ targetLogger : will.logger }); /* qqq : for Vova : ? */
+  will.transaction = _.will.Transaction /* qqq : for Vova : ? */
+  ({
+    isInitial : 1,
+    /*verbosity : will.logger.verbosity, will */
+    targetLogger : will.logger
+  });
 
 }
 
@@ -942,7 +947,11 @@ function versionIsUpToDate( o )
       break;
     }
 
-    if( !upToDate )
+    if( upToDate )
+    {
+      logger.log( `Current version: ${ currentVersion.join( '.' ) }. Utility willbe is up to date.` );
+    }
+    else
     {
       let message =
       [
@@ -952,12 +961,12 @@ function versionIsUpToDate( o )
         `║ Latest: ${ latestVersion.join( '.' ) }`,
         '║ Please run: "npm r -g willbe && npm i -g willbe" to update.║',
         '╚════════════════════════════════════════════════════════════╝'
-      ]
+      ];
 
       message[ 2 ] = message[ 2 ] + _.strDup( ' ', message[ 4 ].length - message[ 2 ].length - 1 ) + '║';
       message[ 3 ] = message[ 3 ] + _.strDup( ' ', message[ 4 ].length - message[ 3 ].length - 1 ) + '║';
 
-      message = message.join( '\n' )
+      message = message.join( '\n' );
 
       let coloredMessage = _.color.strBg( message, 'yellow' );
 
@@ -969,13 +978,40 @@ function versionIsUpToDate( o )
 
       throw _.errBrief( coloredMessage );
     }
-    else
-    {
-      logger.log( `Current version: ${ currentVersion.join( '.' ) }. Utility willbe is up to date.` );
-    }
+    // if( !upToDate )
+    // {
+    //   let message =
+    //   [
+    //     '╔════════════════════════════════════════════════════════════╗',
+    //     '║ Utility willbe is out of date!                             ║',
+    //     `║ Current version: ${ currentVersion.join( '.' ) }`,
+    //     `║ Latest: ${ latestVersion.join( '.' ) }`,
+    //     '║ Please run: "npm r -g willbe && npm i -g willbe" to update.║',
+    //     '╚════════════════════════════════════════════════════════════╝'
+    //   ]
+    //
+    //   message[ 2 ] = message[ 2 ] + _.strDup( ' ', message[ 4 ].length - message[ 2 ].length - 1 ) + '║';
+    //   message[ 3 ] = message[ 3 ] + _.strDup( ' ', message[ 4 ].length - message[ 3 ].length - 1 ) + '║';
+    //
+    //   message = message.join( '\n' )
+    //
+    //   let coloredMessage = _.color.strBg( message, 'yellow' );
+    //
+    //   if( !o.throwing )
+    //   {
+    //     logger.log( coloredMessage );
+    //     return false;
+    //   }
+    //
+    //   throw _.errBrief( coloredMessage );
+    // }
+    // else
+    // {
+    //   logger.log( `Current version: ${ currentVersion.join( '.' ) }. Utility willbe is up to date.` );
+    // }
 
     return true;
-  })
+  });
 
   return ready;
 
@@ -2730,7 +2766,7 @@ function modulesDownload_body( o )
 
       if( !junction.object )
       {
-        debugger; /* xxx : check */
+        // debugger; /* xxx : check */
         return;
       }
 
@@ -5020,8 +5056,6 @@ function hookCall( o )
     .finally( ( err, arg ) =>
     {
       if( err )
-      debugger;
-      if( err )
       throw _.err( err, `\nFailed to ${o.execPath}` );
       return arg;
     })
@@ -5110,10 +5144,15 @@ function hookFindAt( o )
     _.assert( _.arrayIs( found ) );
     if( found.length )
     return found[ 0 ];
-    if( !found.length )
-    throw _.errBrief( `Found none hook file at ${o.execPath}` );
-    else
+
+    if( found.length > 0 )
     throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
+    else
+    throw _.errBrief( `Found none hook file at ${o.execPath}` );
+    // if( !found.length ) /* Dmytro : seems as wrong condition */
+    // throw _.errBrief( `Found none hook file at ${o.execPath}` );
+    // else
+    // throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
     return found
   }
 

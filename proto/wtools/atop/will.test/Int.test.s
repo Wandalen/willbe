@@ -41,7 +41,7 @@ function onSuiteBegin()
 {
   let context = this;
 
-  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '-repo' );
 
@@ -1824,10 +1824,6 @@ function moduleClone( test )
       var resource2 = module2[ mapName ][ k ];
       test.true( !!resource1 );
       test.true( !!resource2 );
-      if( !resource1 || !resource2 )
-      continue;
-      if( resource1 === resource2 )
-      debugger;
       test.true( resource1 !== resource2 );
       test.true( resource1.module === module1 );
       test.true( resource2.module === module2 );
@@ -5472,8 +5468,8 @@ function moduleResolveSimple( test )
       mapValsUnwrapping : 0,
       pathResolving : 0,
       pathUnwrapping : 0,
-      prefixlessAction : "throw",
-      selector : "*::*",
+      prefixlessAction : 'throw',
+      selector : '*::*',
       strictCriterion : 1,
     };
 
@@ -6642,9 +6638,10 @@ function pathsResolve( test )
       'super.out',
       'super.out/debug',
       'super.out/release'
-    ]
+    ];
     var got = resolved;
-    test.identical( _.setFrom( got ), _.setFrom( _.filter_( null, a.abs( expected ), ( p ) => p ? a.path.s.nativize( p ) : p ) ) );
+    var exp = _.setFrom( _.filter_( null, a.abs( expected ), ( p ) => p ? a.path.s.nativize( p ) : p ) );
+    test.identical( _.setFrom( got ), exp );
 
     /* */
 
@@ -7131,7 +7128,6 @@ function pathsResolveImportIn( test )
   a.ready.then( ( arg ) =>
   {
 
-    debugger;
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = opener.openedModule.resolve( 'submodule::*/path::in*=1' )
     var expected = ( 'sub.out' );
@@ -9692,7 +9688,7 @@ function modulesFindEachAt( test )
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
-    a.will.prefer({ allOfSub : 1, });
+    a.will.prefer({ allOfSub : 1 });
     return opener.open({ all : 1, resourcesFormed : 0 });
   });
 
@@ -9787,8 +9783,7 @@ function modulesForOpeners( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyDuplicate' );
-  let opener;
-  let onEachModules, onEachJunctions, onEachVisitedObjects;
+  let opener, onEachModules, onEachJunctions, onEachVisitedObjects;
 
   a.ready.then( () =>
   {
@@ -9808,11 +9803,11 @@ function modulesForOpeners( test )
       withPeers : 0,
       withStem : 1,
       modules : [ opener ],
-      onEachModule : onEachModule,
-      onEachJunction : onEachJunction,
-      onEachVisitedObject : onEachVisitedObject,
-      onBegin : onBegin,
-      onEnd : onEnd,
+      onEachModule,
+      onEachJunction,
+      onEachVisitedObject,
+      onBegin,
+      onEnd,
     }
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
@@ -9856,11 +9851,11 @@ function modulesForOpeners( test )
       withPeers : 0,
       withStem : 0,
       modules : [ opener ],
-      onEachModule : onEachModule,
-      onEachJunction : onEachJunction,
-      onEachVisitedObject : onEachVisitedObject,
-      onBegin : onBegin,
-      onEnd : onEnd,
+      onEachModule,
+      onEachJunction,
+      onEachVisitedObject,
+      onBegin,
+      onEnd,
     }
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
@@ -9909,7 +9904,6 @@ function modulesForOpeners( test )
 
   function onBegin( object, op )
   {
-    debugger;
     return null;
   }
 
@@ -9917,7 +9911,6 @@ function modulesForOpeners( test )
 
   function onEnd( object, op )
   {
-    debugger;
     return null;
   }
 
@@ -9940,8 +9933,7 @@ function modulesFor( test )
 {
   let context = this;
   let a = context.assetFor( test, 'modulesFor' );
-  let onEachModules, onEachJunctions, onEachVisitedObjects;
-  let openers;
+  let onEachModules, onEachJunctions, onEachVisitedObjects, openers;
 
   let defaults =
   {
@@ -9964,11 +9956,11 @@ function modulesFor( test )
     withValid : 1,
     withoutDuplicates : 0,
 
-    onEachModule : onEachModule,
-    onEachJunction : onEachJunction,
-    onEachVisitedObject : onEachVisitedObject,
-    onBegin : onBegin,
-    onEnd : onEnd,
+    onEachModule,
+    onEachJunction,
+    onEachVisitedObject,
+    onBegin,
+    onEnd,
   }
 
   /* - */
@@ -10331,8 +10323,7 @@ function modulesForWithOptionsWith( test )
 {
   let context = this;
   let a = context.assetFor( test, 'modulesFor' );
-  let onEachModules, onEachJunctions, onEachVisitedObjects;
-  let openers;
+  let onEachModules, onEachJunctions, onEachVisitedObjects, openers;
 
   let defaults =
   {
@@ -10355,11 +10346,11 @@ function modulesForWithOptionsWith( test )
     withValid : 1,
     withoutDuplicates : 0,
 
-    onEachModule : onEachModule,
-    onEachJunction : onEachJunction,
-    onEachVisitedObject : onEachVisitedObject,
-    onBegin : onBegin,
-    onEnd : onEnd,
+    onEachModule,
+    onEachJunction,
+    onEachVisitedObject,
+    onBegin,
+    onEnd,
   };
 
   /* - */
@@ -10391,15 +10382,9 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
-      var exp =
-      [
-        a.abs( './a' ),
-      ];
+      var exp = [ a.abs( './a' ) ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
-      var exp =
-      [
-        'opener::a',
-      ];
+      var exp = [ 'opener::a' ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
       return op;
@@ -10467,27 +10452,15 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( './group1/b' ),
-      ];
+      var exp = [ a.abs( './group1/b' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::a / module::b )',
-      ]
+      var exp = [ 'junction::( module::a / module::b )' ];
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
-      var exp =
-      [
-        a.abs( './group1/b' ),
-      ];
+      var exp = [ a.abs( './group1/b' ) ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
-      var exp =
-      [
-        'relation::b',
-      ];
+      var exp = [ 'relation::b' ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
       return op;
@@ -10517,27 +10490,15 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( './group2/out/c.out' )
-      ];
+      var exp = [ a.abs( './group2/out/c.out' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::c / module::c )',
-      ]
+      var exp = [ 'junction::( module::c / module::c )' ];
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
-      var exp =
-      [
-        a.abs( './group2/out/c.out' )
-      ];
+      var exp = [ a.abs( './group2/out/c.out' ) ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
-      var exp =
-      [
-        'module::c'
-      ];
+      var exp = [ 'module::c' ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
       return op;
@@ -10567,27 +10528,15 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( './group2/c' )
-      ];
+      var exp = [ a.abs( './group2/c' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::c )',
-      ]
+      var exp = [ 'junction::( module::c )' ]
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
-      var exp =
-      [
-        a.abs( './group2/c' )
-      ];
+      var exp = [ a.abs( './group2/c' ) ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
-      var exp =
-      [
-        'opener::c'
-      ];
+      var exp = [ 'opener::c' ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
       return op;
@@ -10656,27 +10605,15 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( './group2/c' )
-      ];
+      var exp = [ a.abs( './group2/c' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::c )',
-      ]
+      var exp = [ 'junction::( module::c )' ]
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
-      var exp =
-      [
-        a.abs( './group2/c' )
-      ];
+      var exp = [ a.abs( './group2/c' ) ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
-      var exp =
-      [
-        'opener::c'
-      ];
+      var exp = [ 'opener::c' ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
       return op;
@@ -10706,27 +10643,15 @@ function modulesForWithOptionsWith( test )
       test.identical( _.select( onEachModules, '*/qualifiedName' ), exp );
 
       test.description = 'onEachJunctions';
-      var exp =
-      [
-        a.abs( 'group1/b' )
-      ];
+      var exp = [ a.abs( 'group1/b' ) ];
       test.identical( _.select( onEachJunctions, '*/localPath' ), exp );
-      var exp =
-      [
-        'junction::( module::b )'
-      ]
+      var exp = [ 'junction::( module::b )' ]
       test.identical( _.select( onEachJunctions, '*/qualifiedName' ), exp );
 
       test.description = 'onEachVisitedObjects';
-      var exp =
-      [
-        a.abs( 'group1/b' )
-      ];
+      var exp = [ a.abs( 'group1/b' ) ];
       test.identical( _.select( onEachVisitedObjects, '*/localPath' ), exp );
-      var exp =
-      [
-        'opener::b'
-      ];
+      var exp = [ 'opener::b' ];
       test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
 
       return op;
@@ -10894,8 +10819,7 @@ function modulesForWithSubmodules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'modulesFor' );
-  let onEachModules, onEachJunctions, onEachVisitedObjects;
-  let openers;
+  let onEachModules, onEachJunctions, onEachVisitedObjects, openers;
 
   let defaults =
   {
@@ -10918,11 +10842,11 @@ function modulesForWithSubmodules( test )
     withValid : 1,
     withoutDuplicates : 0,
 
-    onEachModule : onEachModule,
-    onEachJunction : onEachJunction,
-    onEachVisitedObject : onEachVisitedObject,
-    onBegin : onBegin,
-    onEnd : onEnd,
+    onEachModule,
+    onEachJunction,
+    onEachVisitedObject,
+    onBegin,
+    onEnd,
   };
 
   /* - */
@@ -11260,7 +11184,7 @@ function submodulesRemoteResolveNotDownloaded( test )
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
-    a.will.prefer({ allOfSub : 1, });
+    a.will.prefer({ allOfSub : 1 });
     return opener.open({ all : 1, resourcesFormed : 0 });
   });
   a.ready.then( () =>

@@ -1258,7 +1258,7 @@ function _moduleAdd( module )
   _.assert( module instanceof _.will.Module );
   if( !module.isAliveGet() ) /* yyy */
   {
-    debugger; /* xxx : enter? */
+    // debugger; /* xxx : enter? */
     return false
   }
   // if( _.longHas( junction.modules, module ) ) /* xxx */
