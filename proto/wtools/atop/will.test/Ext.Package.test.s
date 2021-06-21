@@ -26,7 +26,7 @@ function onSuiteBegin()
 {
   let self = this;
 
-  self.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  self.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..' ), 'willbe' );
   self.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   self.repoDirPath = _.path.join( self.assetsOriginalPath, '-repo' );
   self.willPath = _.path.nativize( _.Will.WillPathGet() );

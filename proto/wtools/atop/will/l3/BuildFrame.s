@@ -84,7 +84,7 @@ function form()
   _.assert( !frame.formed );
   _.assert( !!will );
   _.assert( !!module );
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( !!resource );
   _.assert( !!fileProvider );
   _.assert( !!logger );

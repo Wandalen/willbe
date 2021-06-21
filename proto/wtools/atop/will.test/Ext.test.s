@@ -18104,7 +18104,7 @@ function submodulesDownloadSwitchBranch( test )
 
   /* - */
 
-  a.ready .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup repo';
 
@@ -23040,7 +23040,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build default' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23056,7 +23056,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( `.build to.!master` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23072,7 +23072,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( `.build to.!gamma` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23088,7 +23088,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build dry.clean' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23101,7 +23101,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build dry' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23117,7 +23117,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build recursive.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23130,7 +23130,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build recursive.one' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23147,9 +23147,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build recursive.two' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1'  ] );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23164,9 +23164,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build loggingNoChanges.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23181,9 +23181,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build loggingNoChanges.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23198,9 +23198,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build withStem.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23215,9 +23215,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build withStem.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23375,7 +23375,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build default' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23391,7 +23391,7 @@ function stepModulesUpdate( test )
   a.appStart( `.build to.!master` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23407,7 +23407,7 @@ function stepModulesUpdate( test )
   a.appStart( `.build to.!gamma` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23423,7 +23423,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build dry.clean' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 );
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23436,7 +23436,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build dry' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23452,7 +23452,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build recursive.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 );
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23465,7 +23465,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build recursive.one' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23482,9 +23482,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build recursive.two' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1'  ] );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23499,9 +23499,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build loggingNoChanges.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23516,9 +23516,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build loggingNoChanges.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23533,9 +23533,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build withStem.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23550,9 +23550,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build withStem.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -28132,7 +28132,7 @@ function commandImplyPropertyWithDisabled( test )
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
@@ -28193,7 +28193,7 @@ function commandImplyPropertyWithDisabled( test )
       expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
@@ -28201,7 +28201,7 @@ function commandImplyPropertyWithDisabled( test )
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
@@ -28213,7 +28213,7 @@ function commandImplyPropertyWithDisabled( test )
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
@@ -28254,7 +28254,7 @@ function commandImplyPropertyWithDisabled( test )
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1','ModuleForTesting2' ];
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
     })
@@ -28290,7 +28290,7 @@ function commandImplyPropertyWithDisabled( test )
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
-     .then( () =>
+    .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
@@ -30620,7 +30620,7 @@ function commandSubmodulesGitSync( test )
 
 commandSubmodulesGitSync.rapidity = -1;
 
-
+//
 
 function commandSubmodulesRepoPullOpen( test )
 {
@@ -36410,7 +36410,7 @@ function commandRepoPullOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config = _.censor === undefined ? null : _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   return test.true( true );
 
@@ -36579,7 +36579,8 @@ function commandRepoPullOpenRemote( test )
     a.shell
     ({
       currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+      execPath :
+      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`,
     });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
@@ -41009,7 +41010,8 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
       'TEST',
       'docgen-docgen',
       'docgen.docgen',
-      'DOCGEN' ];
+      'DOCGEN'
+    ];
     test.identical( npmScriptsConfigKeys, exp );
 
     return null;
@@ -42354,11 +42356,11 @@ function commandsSubmoduleSafety( test )
       else
       test.identical( op.exitCode, 0 );
 
-      var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
+      var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}` });
       if( _.object.isBasic( expectedOutput ) )
-      expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
+      expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` });
       if( expectedOutput )
-      _.each( _.array.as( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
+      _.each( _.array.as( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) );
 
       let moduleDirExists = a.fileProvider.isDir( a.localPath );
 

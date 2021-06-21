@@ -79,7 +79,7 @@ function form()
   _.assert( !run.formed );
   _.assert( !!will );
   _.assert( !!module );
-  _.assert( module.preformed > 0  );
+  _.assert( module.preformed > 0 );
   _.assert( build instanceof _.will.Build );
   _.assert( !!fileProvider );
   _.assert( !!logger );
