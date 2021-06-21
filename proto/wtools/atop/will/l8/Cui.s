@@ -4157,34 +4157,52 @@ function commandNpmFromWillfile( e )
   if( e.subject )
   e.optionsMap.packagePath = e.subject;
 
-  return cui._commandBuildLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'npm from willfile',
-    onEach : handleEach,
+    onAll : handleAll,
     commandRoutine : commandNpmFromWillfile,
   });
 
-  function handleEach( it )
+  function handleAll( it )
   {
+    _.assert( it.roots.length === 1 );
+
     if( _.props.keys( criterionsMap ).length > 0 )
-    it.opener.openedModule.stepMap[ 'npm.generate' ].criterion = criterionsMap;
-    let currentContext = it.opener.openedModule.stepMap[ 'npm.generate' ];
+    it.roots[ 0 ].stepMap[ 'npm.generate' ].criterion = criterionsMap;
+    let currentContext = it.roots[ 0 ].stepMap[ 'npm.generate' ];
 
     return cui.npmGenerateFromWillfile
     ({
       ... _.mapOnly_( null, e.optionsMap, cui.npmGenerateFromWillfile.defaults ),
+      modules : it.roots,
       currentContext,
-      modules : [ it.opener.openedModule ],
       logger : 2,
     });
-    // return it.opener.openedModule.npmGenerateFromWillfile
-    // ({
-    //   ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
-    //   currentContext,
-    //   logger : 2,
-    // });
   }
+
+  // return cui._commandBuildLike
+  // ({
+  //   event : e,
+  //   name : 'npm from willfile',
+  //   onEach : handleEach,
+  //   commandRoutine : commandNpmFromWillfile,
+  // });
+  //
+  // function handleEach( it )
+  // {
+  //   if( _.props.keys( criterionsMap ).length > 0 )
+  //   it.opener.openedModule.stepMap[ 'npm.generate' ].criterion = criterionsMap;
+  //   let currentContext = it.opener.openedModule.stepMap[ 'npm.generate' ];
+  //
+  //   return it.opener.openedModule.npmGenerateFromWillfile
+  //   ({
+  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
+  //     currentContext,
+  //     logger : 2,
+  //   });
+  // }
 }
 
 commandNpmFromWillfile.defaults =
@@ -4234,11 +4252,11 @@ function commandWillfileFromNpm( e )
   let con = _.take( null );
   return con.Try( () =>
   {
-    return cui._commandBuildLike
+    return cui._commandCleanLike
     ({
       event : e,
       name : 'npm from willfile',
-      onEach : handleEach,
+      onAll : handleAll,
       commandRoutine : commandWillfileFromNpm,
     });
   })
@@ -4249,28 +4267,70 @@ function commandWillfileFromNpm( e )
     else
     throw _.errBrief( err );
 
-    const o =
-    {
-      ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
+    return cui.willfileGenerateFromNpm
+    ({
+      ... _.mapOnly_( null, e.optionsMap, cui.willfileGenerateFromNpm.defaults ),
       logger : 3,
-    };
-    return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
+    });
   });
 
-  function handleEach( it )
+  function handleAll( it )
   {
+    _.assert( it.roots.length === 1 );
     if( _.props.keys( criterionsMap ).length > 0 )
-    it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
-    let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
+    it.roots[ 0 ].stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+    let currentContext = it.roots[ 0 ].stepMap[ 'willfile.generate' ];
 
-    return it.opener.openedModule.willfileGenerateFromNpm
+    return cui.willfileGenerateFromNpm
     ({
       packagePath : e.optionsMap.packagePath,
       willfilePath : e.optionsMap.willfilePath,
       currentContext,
+      modules : it.roots,
       logger : 3,
     });
   }
+
+  // let con = _.take( null );
+  // return con.Try( () =>
+  // {
+  //   return cui._commandBuildLike
+  //   ({
+  //     event : e,
+  //     name : 'npm from willfile',
+  //     onEach : handleEach,
+  //     commandRoutine : commandWillfileFromNpm,
+  //   });
+  // })
+  // .catch( ( err ) =>
+  // {
+  //   if( !cui.currentOpeners || cui.currentOpeners.length === 0 )
+  //   _.errAttend( err );
+  //   else
+  //   throw _.errBrief( err );
+  //
+  //   const o =
+  //   {
+  //     ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
+  //     logger : 3,
+  //   };
+  //   return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
+  // });
+  //
+  // function handleEach( it )
+  // {
+  //   if( _.props.keys( criterionsMap ).length > 0 )
+  //   it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+  //   let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
+  //
+  //   return it.opener.openedModule.willfileGenerateFromNpm
+  //   ({
+  //     packagePath : e.optionsMap.packagePath,
+  //     willfilePath : e.optionsMap.willfilePath,
+  //     currentContext,
+  //     logger : 3,
+  //   });
+  // }
 }
 
 commandWillfileFromNpm.defaults =
