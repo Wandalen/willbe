@@ -1003,6 +1003,92 @@ defaults.name = null;
 
 //
 
+function _commandExtendLike( o )
+{
+  let will = this;
+  let logger = will.transaction.logger;
+  let ready = _.take( null );
+
+  _.routine.options_( _commandExtendLike, arguments );
+  _.mapSupplementNulls( o, will.filterImplied() );
+  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+  _.all
+  (
+    _.Will.ModuleFilterNulls,
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.entity.strType( k )}` )
+  );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onAll ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.object.isBasic( o.event ) );
+
+  will._commandsBegin({ commandRoutine : o.commandRoutine, properties : o.event.propertiesMap });
+
+  if( will.currentOpeners === null )
+  ready.then( () => will.openersFind({ allowNoOpeners : true }) );
+
+  ready.then( () => filter() );
+  ready.then( () => forAll() );
+  return ready.finally( end );
+
+  /* */
+
+  function filter()
+  {
+    if( will.currentOpeners === null )
+    return null;
+
+    _.assert( _.array.is( will.currentOpeners ) );
+    let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly_( null, o, will.modulesFilter.defaults ) );
+    if( openers2.length )
+    will.currentOpeners = openers2;
+    return null;
+  }
+
+  /* */
+
+  function forAll()
+  {
+    let ready2 = _.take( null );
+    let it2 = _.props.extend( null, o );
+
+    _.assert( arguments.length === 0, 'Expects no arguments' );
+    it2.openers = will.currentOpeners;
+    it2.roots = will.modulesOnlyRoots( it2.openers );
+
+    ready2.then( () => o.onAll.call( will, it2 ) );
+    ready2.finally( ( err, arg ) =>
+    {
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name}` );
+      return arg;
+    });
+
+    return ready2;
+  }
+
+  /* */
+
+  function end( err, arg )
+  {
+    will._commandsEnd( o.event );
+    if( err )
+    logger.error( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  }
+}
+
+var defaults = _commandExtendLike.defaults = _.props.extend( null, _.Will.ModuleFilterNulls );
+
+defaults.event = null;
+defaults.onAll = null;
+defaults.commandRoutine = null;
+defaults.name = null;
+
+//
+
 function _commandNewLike( o )
 {
   let will = this;
@@ -4141,23 +4227,56 @@ command.subjectHint = 'A module or resource selector.';
 
 //
 
+// function commandNpmFromWillfile( e )
+// {
+//   let cui = this;
+//   // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+//   let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.command.properties );
+//   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
+//   cui._command_head( commandNpmFromWillfile, arguments );
+//   // _.routine.options_( commandNpmFromWillfile, e.propertiesMap );
+//
+//   // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+//   // cui._propertiesImply({ withSubmodules : 0 });
+//   // cui._propertiesImply( e.propertiesMap );
+//
+//   if( e.subject )
+//   e.optionsMap.packagePath = e.subject;
+//
+//   return cui._commandBuildLike
+//   ({
+//     event : e,
+//     name : 'npm from willfile',
+//     onEach : handleEach,
+//     commandRoutine : commandNpmFromWillfile,
+//   });
+//
+//   function handleEach( it )
+//   {
+//     if( _.props.keys( criterionsMap ).length > 0 )
+//     it.opener.openedModule.stepMap[ 'npm.generate' ].criterion = criterionsMap;
+//     let currentContext = it.opener.openedModule.stepMap[ 'npm.generate' ];
+//
+//     return it.opener.openedModule.npmGenerateFromWillfile
+//     ({
+//       ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
+//       currentContext,
+//       logger : 2,
+//     });
+//   }
+// }
+
 function commandNpmFromWillfile( e )
 {
   let cui = this;
-  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   let criterionsMap = _.mapBut_( null, e.propertiesMap, commandNpmFromWillfile.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandNpmFromWillfile.defaults );
   cui._command_head( commandNpmFromWillfile, arguments );
-  // _.routine.options_( commandNpmFromWillfile, e.propertiesMap );
-
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-  // cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
   e.optionsMap.packagePath = e.subject;
 
-  return cui._commandCleanLike
+  return cui._commandExtendLike
   ({
     event : e,
     name : 'npm from willfile',
@@ -4167,11 +4286,14 @@ function commandNpmFromWillfile( e )
 
   function handleAll( it )
   {
-    _.assert( it.roots.length === 1 );
-
-    if( _.props.keys( criterionsMap ).length > 0 )
-    it.roots[ 0 ].stepMap[ 'npm.generate' ].criterion = criterionsMap;
-    let currentContext = it.roots[ 0 ].stepMap[ 'npm.generate' ];
+    let currentContext = null;
+    if( it.openers )
+    {
+      _.assert( it.roots.length === 1 );
+      if( _.props.keys( criterionsMap ).length > 0 )
+      it.roots[ 0 ].stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+      currentContext = it.roots[ 0 ].stepMap[ 'willfile.generate' ];
+    }
 
     return cui.npmGenerateFromWillfile
     ({
@@ -4181,28 +4303,6 @@ function commandNpmFromWillfile( e )
       logger : 2,
     });
   }
-
-  // return cui._commandBuildLike
-  // ({
-  //   event : e,
-  //   name : 'npm from willfile',
-  //   onEach : handleEach,
-  //   commandRoutine : commandNpmFromWillfile,
-  // });
-  //
-  // function handleEach( it )
-  // {
-  //   if( _.props.keys( criterionsMap ).length > 0 )
-  //   it.opener.openedModule.stepMap[ 'npm.generate' ].criterion = criterionsMap;
-  //   let currentContext = it.opener.openedModule.stepMap[ 'npm.generate' ];
-  //
-  //   return it.opener.openedModule.npmGenerateFromWillfile
-  //   ({
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.npmGenerateFromWillfile.defaults ),
-  //     currentContext,
-  //     logger : 2,
-  //   });
-  // }
 }
 
 commandNpmFromWillfile.defaults =
@@ -4232,54 +4332,93 @@ command.properties =
 
 //
 
+// function commandWillfileFromNpm( e )
+// {
+//   let cui = this;
+//   // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+//   let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.command.properties );
+//   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
+//   cui._command_head( commandWillfileFromNpm, arguments );
+//   // _.routine.options_( commandWillfileFromNpm, e.propertiesMap );
+//
+//   // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
+//   // cui._propertiesImply({ withSubmodules : 0 });
+//
+//   // cui._propertiesImply( e.propertiesMap );
+//
+//   if( e.subject )
+//   e.optionsMap.willfilePath = e.subject;
+//
+//   let con = _.take( null );
+//   return con.Try( () =>
+//   {
+//     return cui._commandBuildLike
+//     ({
+//       event : e,
+//       name : 'npm from willfile',
+//       onEach : handleEach,
+//       commandRoutine : commandWillfileFromNpm,
+//     });
+//   })
+//   .catch( ( err ) =>
+//   {
+//     if( !cui.currentOpeners || cui.currentOpeners.length === 0 )
+//     _.errAttend( err );
+//     else
+//     throw _.errBrief( err );
+//
+//     const o =
+//     {
+//       ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
+//       logger : 3,
+//     };
+//     return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
+//   });
+//
+//   function handleEach( it )
+//   {
+//     if( _.props.keys( criterionsMap ).length > 0 )
+//     it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+//     let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
+//
+//     return it.opener.openedModule.willfileGenerateFromNpm
+//     ({
+//       packagePath : e.optionsMap.packagePath,
+//       willfilePath : e.optionsMap.willfilePath,
+//       currentContext,
+//       logger : 3,
+//     });
+//   }
+// }
+
 function commandWillfileFromNpm( e )
 {
   let cui = this;
-  // let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   let criterionsMap = _.mapBut_( null, e.propertiesMap, commandWillfileFromNpm.command.properties );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_head( commandWillfileFromNpm, arguments );
-  // _.routine.options_( commandWillfileFromNpm, e.propertiesMap );
-
-  // if( e.propertiesMap.withSubmodules === null || e.propertiesMap.withSubmodules === undefined )
-  // cui._propertiesImply({ withSubmodules : 0 });
-
-  // cui._propertiesImply( e.propertiesMap );
 
   if( e.subject )
   e.optionsMap.willfilePath = e.subject;
 
-  let con = _.take( null );
-  return con.Try( () =>
-  {
-    return cui._commandCleanLike
-    ({
-      event : e,
-      name : 'npm from willfile',
-      onAll : handleAll,
-      commandRoutine : commandWillfileFromNpm,
-    });
-  })
-  .catch( ( err ) =>
-  {
-    if( !cui.currentOpeners || cui.currentOpeners.length === 0 )
-    _.errAttend( err );
-    else
-    throw _.errBrief( err );
-
-    return cui.willfileGenerateFromNpm
-    ({
-      ... _.mapOnly_( null, e.optionsMap, cui.willfileGenerateFromNpm.defaults ),
-      logger : 3,
-    });
+  return cui._commandExtendLike
+  ({
+    event : e,
+    name : 'npm from willfile',
+    onAll : handleAll,
+    commandRoutine : commandWillfileFromNpm,
   });
 
   function handleAll( it )
   {
-    _.assert( it.roots.length === 1 );
-    if( _.props.keys( criterionsMap ).length > 0 )
-    it.roots[ 0 ].stepMap[ 'willfile.generate' ].criterion = criterionsMap;
-    let currentContext = it.roots[ 0 ].stepMap[ 'willfile.generate' ];
+    let currentContext = null;
+    if( it.openers )
+    {
+      _.assert( it.roots.length === 1 );
+      if( _.props.keys( criterionsMap ).length > 0 )
+      it.roots[ 0 ].stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+      currentContext = it.roots[ 0 ].stepMap[ 'willfile.generate' ];
+    }
 
     return cui.willfileGenerateFromNpm
     ({
@@ -4290,48 +4429,14 @@ function commandWillfileFromNpm( e )
       logger : 3,
     });
   }
-
-  // let con = _.take( null );
-  // return con.Try( () =>
-  // {
-  //   return cui._commandBuildLike
-  //   ({
-  //     event : e,
-  //     name : 'npm from willfile',
-  //     onEach : handleEach,
-  //     commandRoutine : commandWillfileFromNpm,
-  //   });
-  // })
-  // .catch( ( err ) =>
-  // {
-  //   if( !cui.currentOpeners || cui.currentOpeners.length === 0 )
-  //   _.errAttend( err );
-  //   else
-  //   throw _.errBrief( err );
-  //
-  //   const o =
-  //   {
-  //     ... _.mapOnly_( null, e.optionsMap, _.will.Module.prototype.willfileGenerateFromNpm.defaults ),
-  //     logger : 3,
-  //   };
-  //   return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
-  // });
-  //
-  // function handleEach( it )
-  // {
-  //   if( _.props.keys( criterionsMap ).length > 0 )
-  //   it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
-  //   let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
-  //
-  //   return it.opener.openedModule.willfileGenerateFromNpm
-  //   ({
-  //     packagePath : e.optionsMap.packagePath,
-  //     willfilePath : e.optionsMap.willfilePath,
-  //     currentContext,
-  //     logger : 3,
-  //   });
-  // }
 }
+
+commandWillfileFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+  withSubmodules : 0,
+};
 
 commandWillfileFromNpm.defaults =
 {
@@ -4808,25 +4913,61 @@ function commandWillfileExtendWillfile( e )
   })
   .catch( ( err ) =>
   {
+    if( cui.currentOpeners === null || cui.currentOpeners.length === 0 )
     _.errAttend( err );
-    let o =
-    {
-      request : e.subject,
-      onSection : _.props.extend.bind( _.props ),
-      ... e.optionsMap,
-    };
-    return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
-  });
+    else
+    throw _.errBrief( err );
 
-  function handleEach( it )
-  {
-    return it.opener.openedModule.willfileExtendWillfile
+    return cui.willfileExtendWillfile
     ({
       request : e.subject,
       onSection : _.props.extend.bind( _.props ),
       ... e.optionsMap,
     });
+  });
+
+  function handleAll( it )
+  {
+    return cui.willfileExtendWillfile
+    ({
+      request : e.subject,
+      onSection : _.props.extend.bind( _.props ),
+      modules : it.roots,
+      ... e.optionsMap,
+    });
   }
+  // let ready = _.take( null );
+  // return ready.Try( () =>
+  // {
+  //   return cui._commandBuildLike
+  //   ({
+  //     event : e,
+  //     name : 'willfile extend willfile',
+  //     onEach : handleEach,
+  //     commandRoutine : commandWillfileExtendWillfile,
+  //   });
+  // })
+  // .catch( ( err ) =>
+  // {
+  //   _.errAttend( err );
+  //   let o =
+  //   {
+  //     request : e.subject,
+  //     onSection : _.props.extend.bind( _.props ),
+  //     ... e.optionsMap,
+  //   };
+  //   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
+  // });
+  //
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.willfileExtendWillfile
+  //   ({
+  //     request : e.subject,
+  //     onSection : _.props.extend.bind( _.props ),
+  //     ... e.optionsMap,
+  //   });
+  // }
 }
 
 commandWillfileExtendWillfile.defaults =
@@ -6685,6 +6826,7 @@ let Extension =
   _commandListLike,
   _commandBuildLike,
   _commandCleanLike,
+  _commandExtendLike,
   _commandNewLike,
   _commandTreeLike,
   // _commandModulesLike, /* aaa : for Dmytro : use _commandModuleOrientedLike instaed of _commandModulesLike */ /* Dmytro : is not used */
