@@ -4466,82 +4466,107 @@ command.properties =
 
 //
 
+// function commandWillfileGet( e )
+// {
+//   let cui = this;
+//   let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
+//   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileGet.defaults );
+//   cui._command_head( commandWillfileExtend, arguments );
+//
+//   if( !e.subject && !cui.currentOpeners )
+//   e.subject = './';
+//
+//   if( e.subject )
+//   subjectNormalize();
+//
+//   if( _.props.keys( selectorsMap ).length === 0 )
+//   selectorsMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
+//
+//   if( e.subject )
+//   {
+//     let o =
+//     {
+//       request : e.subject,
+//       selectorsMap,
+//       ... e.optionsMap,
+//     };
+//     return _.will.Module.prototype.willfileGetProperty.call( cui, o );
+//   }
+//
+//   if( cui.currentOpeners )
+//   return cui._commandBuildLike
+//   ({
+//     event : e,
+//     name : 'willfile get',
+//     onEach : handleEach,
+//     commandRoutine : commandWillfileGet,
+//   });
+//
+//   function handleEach( it )
+//   {
+//     let request = it.opener.commonPath;
+//     if( cui.fileProvider.isDir( request ) )
+//     request = cui.fileProvider.path.join( request, './.*' );
+//
+//     return it.opener.openedModule.willfileGetProperty
+//     ({
+//       request,
+//       selectorsMap,
+//       ... e.optionsMap,
+//     });
+//   }
+//
+//   /* */
+//
+//   function subjectNormalize()
+//   {
+//     let subject = e.subject;
+//     let isolated = _.strIsolateLeftOrAll( e.subject, ' ' );
+//     if( cui.fileProvider.path.isGlob( isolated[ 0 ] ) )
+//     {
+//       e.subject = isolated[ 0 ];
+//     }
+//     else
+//     {
+//       let firstKey = isolated[ 0 ].split( '/' )[ 0 ];
+//       if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
+//       e.subject = undefined;
+//       else
+//       e.subject = isolated[ 0 ];
+//     }
+//
+//     let splits = subject.split( /\s+/ );
+//     let i = e.subject === undefined ? 0 : 1;
+//     for( ; i < splits.length ; i++ )
+//     selectorsMap[ splits[ i ] ] = 1;
+//
+//     if( !e.subject && !cui.currentOpeners )
+//     e.subject = './';
+//   }
+// }
+
 function commandWillfileGet( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
+  let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileGet.defaults );
   cui._command_head( commandWillfileExtend, arguments );
 
-  if( !e.subject && !cui.currentOpeners )
-  e.subject = './';
-
-  if( e.subject )
-  subjectNormalize();
-
-  if( _.props.keys( willfilePropertiesMap ).length === 0 )
-  willfilePropertiesMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
-
-  if( e.subject )
-  {
-    let o =
-    {
-      request : e.subject,
-      willfilePropertiesMap,
-      ... e.optionsMap,
-    };
-    return _.will.Module.prototype.willfileGetProperty.call( cui, o );
-  }
-
-  if( cui.currentOpeners )
-  return cui._commandBuildLike
+  return cui._commandExtendLike
   ({
     event : e,
     name : 'willfile get',
-    onEach : handleEach,
+    onAll : handleAll,
     commandRoutine : commandWillfileGet,
   });
 
-  function handleEach( it )
+  function handleAll( it )
   {
-    let request = it.opener.commonPath;
-    if( cui.fileProvider.isDir( request ) )
-    request = cui.fileProvider.path.join( request, './.*' );
-
-    return it.opener.openedModule.willfileGetProperty
+    return cui.willfileGetProperty
     ({
-      request,
-      willfilePropertiesMap,
-      ... e.optionsMap,
+      request : e.subject,
+      selectorsMap,
     });
-  }
-
-  /* */
-
-  function subjectNormalize()
-  {
-    let subject = e.subject;
-    let isolated = _.strIsolateLeftOrAll( e.subject, ' ' );
-    if( cui.fileProvider.path.isGlob( isolated[ 0 ] ) )
-    {
-      e.subject = isolated[ 0 ];
-    }
-    else
-    {
-      let firstKey = isolated[ 0 ].split( '/' )[ 0 ];
-      if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
-      e.subject = undefined;
-      else
-      e.subject = isolated[ 0 ];
-    }
-
-    let splits = subject.split( /\s+/ );
-    let i = e.subject === undefined ? 0 : 1;
-    for( ; i < splits.length ; i++ )
-    willfilePropertiesMap[ splits[ i ] ] = 1;
-
-    if( !e.subject && !cui.currentOpeners )
-    e.subject = './';
   }
 }
 
@@ -4569,12 +4594,12 @@ command.properties =
 function commandWillfileSet( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileSet.defaults );
+  let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileSet.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileSet.defaults );
   cui._command_head( commandWillfileSet, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  if( _.props.keys( willfilePropertiesMap ).length > 0 )
+  if( _.props.keys( selectorsMap ).length > 0 )
   // e.subject = './';
   e.subject = cui.transaction.withPath;
 
@@ -4583,7 +4608,7 @@ function commandWillfileSet( e )
     let o =
     {
       request : e.subject,
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileSetProperty.call( cui, o );
@@ -4609,7 +4634,7 @@ function commandWillfileSet( e )
     return it.opener.openedModule.willfileSetProperty
     ({
       request,
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     });
   }
@@ -4642,7 +4667,7 @@ command.properties =
 function commandWillfileDel( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
+  let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileGet.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileDel.defaults );
   cui._command_head( commandWillfileExtend, arguments );
 
@@ -4653,15 +4678,15 @@ function commandWillfileDel( e )
   if( e.subject )
   subjectNormalize();
 
-  if( _.props.keys( willfilePropertiesMap ).length === 0 )
-  willfilePropertiesMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
+  if( _.props.keys( selectorsMap ).length === 0 )
+  selectorsMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
 
   if( e.subject )
   {
     let o =
     {
       request : e.subject,
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileDeleteProperty.call( cui, o );
@@ -4685,7 +4710,7 @@ function commandWillfileDel( e )
     return it.opener.openedModule.willfileDeleteProperty
     ({
       request,
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     });
   }
@@ -4712,7 +4737,7 @@ function commandWillfileDel( e )
     let splits = subject.split( /\s+/ );
     let i = e.subject === undefined ? 0 : 1;
     for( ; i < splits.length ; i++ )
-    willfilePropertiesMap[ splits[ i ] ] = 1;
+    selectorsMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
     // e.subject = './';
@@ -4744,12 +4769,12 @@ command.properties =
 function commandWillfileExtend( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileExtend.defaults );
+  let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileExtend.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileExtend.defaults );
   cui._command_head( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  if( _.props.keys( willfilePropertiesMap ).length > 0 )
+  if( _.props.keys( selectorsMap ).length > 0 )
   // e.subject = './';
   e.subject = cui.transaction.withPath;
 
@@ -4759,7 +4784,7 @@ function commandWillfileExtend( e )
     {
       request : e.subject,
       onProperty : _.props.extend.bind( _.property ),
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
@@ -4786,7 +4811,7 @@ function commandWillfileExtend( e )
     ({
       request,
       onProperty : _.props.extend,
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     });
   }
@@ -4818,7 +4843,7 @@ command.properties =
 function commandWillfileSupplement( e )
 {
   let cui = this;
-  let willfilePropertiesMap = _.mapBut_( null, e.propertiesMap, commandWillfileSupplement.defaults );
+  let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileSupplement.defaults );
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileSupplement.defaults );
   cui._command_head( commandWillfileSupplement, arguments );
 
@@ -4832,7 +4857,7 @@ function commandWillfileSupplement( e )
     {
       request : e.subject,
       onProperty : _.props.supplement.bind( _.props ),
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     };
     return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
@@ -4857,7 +4882,7 @@ function commandWillfileSupplement( e )
     ({
       request,
       onProperty : _.props.supplement,
-      willfilePropertiesMap,
+      selectorsMap,
       ... e.optionsMap,
     });
   }
