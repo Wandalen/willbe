@@ -37585,16 +37585,16 @@ function commandWillfileGet( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.willfile.get' })
+  a.appStart({ args : '.willfile.get' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - without name, without options and subject';
     test.identical( op.exitCode, 0 );
-    test.ge( _.strLinesCount( op.output ), 100 );
+    test.ge( _.strLinesCount( op.output ), 90 );
     test.true( _.strHas( op.output, 'about ::' ) );
     test.true( _.strHas( op.output, 'build ::' ) );
     test.true( _.strHas( op.output, 'path ::' ) );
@@ -37603,9 +37603,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'submodule ::' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get about/author' })
+  a.appStart({ args : '.willfile.get about/author' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - without name, only subject';
@@ -37613,9 +37613,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get about/author:1' })
+  a.appStart({ args : '.willfile.get about/author:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - without name, only enabled option';
@@ -37623,9 +37623,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get Author about/author about/name v:4' })
+  a.appStart({ args : '.willfile.get Author about/author about/name v:4' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - only name and subjects';
@@ -37634,9 +37634,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get Author.will.yml about/author:1 about/name:1 v:5' })
+  a.appStart({ args : '.willfile.get Author.will.yml about/author:1 about/name:1 v:5' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile with - full form and enabled options';
@@ -37645,9 +37645,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - glob, subject and enabled options';
@@ -37657,9 +37657,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:0 about/name:0' })
+  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:0 about/name:0' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - glob, subject and disabled options';
@@ -37670,9 +37670,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'path : npm:///eslint#7.1.0' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get .* path/in' })
+  a.appStart({ args : '.willfile.get .* path/in' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - glob for two unnamed willfiles';
@@ -37680,11 +37680,11 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'path/in :: .' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with Author .willfile.get about/author about/name' })
+  a.appStart({ args : '.with Author .willfile.get about/author about/name' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, subjects';
@@ -37693,9 +37693,9 @@ function commandWillfileGet( test )
     test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with Author.will.yml .willfile.get about/author:1 about/name:1' })
+  a.appStart({ args : '.with Author.will.yml .willfile.get about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, enabled options';
@@ -37704,9 +37704,9 @@ function commandWillfileGet( test )
     test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with .* .willfile.get submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.with .* .willfile.get submodule/eslint about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, enabled options';
@@ -37715,9 +37715,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/name :: NpmFromWillfile' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with . .willfile.get submodule/eslint about/author:0 about/name:0' })
+  a.appStart({ args : '.with . .willfile.get submodule/eslint about/author:0 about/name:0' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, disabled options';
@@ -37727,9 +37727,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with .* .willfile.get path/in' })
+  a.appStart({ args : '.with .* .willfile.get path/in' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - two unnamed willfiles from context';
@@ -37737,29 +37737,29 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'path/in :: .' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.willfile.get Unknown* about' })
+  a.appStartNonThrowing({ args : '.willfile.get Unknown* about' });
   a.ready.then( ( op ) =>
   {
     test.case = 'call not existed file';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' })
+  a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'unknown section';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }

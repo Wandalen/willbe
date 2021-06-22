@@ -4775,6 +4775,134 @@ willfileGenerateFromNpm.defaults =
 
 //
 
+function willfileGetProperty( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfileGetProperty, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+  const willfileSections = [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ];
+
+  if( o.request )
+  requestParsePathAndSelectors();
+  else
+  o.request = './';
+
+  if( _.props.keys( o.selectorsMap ).length === 0 )
+  o.selectorsMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
+
+  /* */
+
+  let willfile = willfileGet( o.request );
+  const result = Object.create( null );
+  for( let selector in o.selectorsMap )
+  if( o.selectorsMap[ selector ] )
+  {
+    _.assert
+    (
+      _.strBegins( selector, willfileSections ),
+      `Invalid property selector "${ selector }". Please, improve property selector.`
+    );
+    result[ selector ] = _.select({ src : willfile, selector });
+  }
+
+  resultLog( result );
+
+  return null;
+
+  /* */
+
+  function requestParsePathAndSelectors()
+  {
+    let isolated = _.strIsolateLeftOrAll( o.request, /\s+/ );
+    let selectorsString = isolated[ 2 ];
+
+    if( path.isGlob( isolated[ 0 ] ) )
+    {
+      o.request = isolated[ 0 ];
+    }
+    else if( isolated[ 0 ] === '.' )
+    {
+      o.request = './';
+    }
+    else
+    {
+      let firstKey = isolated[ 0 ].split( '/' )[ 0 ];
+      if( _.longHas( willfileSections, firstKey ) )
+      {
+        selectorsString = o.request;
+        o.request = './';
+      }
+      else
+      {
+        o.request = isolated[ 0 ];
+      }
+    }
+
+    if( _.strDefined( selectorsString ) )
+    {
+      let splits = selectorsString.split( /\s+/ );
+      for( let i = 0 ; i < splits.length ; i++ )
+      o.selectorsMap[ splits[ i ] ] = 1;
+    }
+  }
+
+  /* */
+
+  function willfileGet( src )
+  {
+    src = path.join( will.inPath ? will.inPath : path.current(), src );
+
+    const willfilesArray = will.willfilesFind
+    ({
+      commonPath : src,
+      withIn : 1,
+      withOut : 0,
+    });
+
+    _.sure( willfilesArray.length > 0, 'Expects willfiles to get properties. Please, improve selector.' )
+
+    let willfile = Object.create( null );
+    for( let i = 0 ; i < willfilesArray.length ; i++ )
+    {
+      const config = fileProvider.fileRead({ filePath : willfilesArray[ i ].absolute, encoding : 'yaml' });
+      _.map.extend( willfile, config );
+    }
+    return willfile;
+  }
+
+  /* */
+
+  function resultLog( src )
+  {
+    for( let selector in src )
+    if( src[ selector ] === undefined )
+    {
+      logger.log( `${ selector } :: {-undefined-}` );
+    }
+    else
+    {
+      let value = _.entity.exportStringNice( src[ selector ] );
+      if( _.primitive.is( src[ selector ] ) )
+      logger.log( `${ selector } :: ${ value }` );
+      else
+      logger.log( `${ selector } ::\n${ value }` );
+    }
+  }
+}
+
+willfileGetProperty.defaults =
+{
+  request : null,
+  selectorsMap : null,
+  logger : 3,
+};
+
+//
+
 function willfileExtendWillfile( o )
 {
   _.assert( arguments.length === 1 );
@@ -5153,14 +5281,12 @@ function hooksReload()
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( path.is( will.environmentPath ) );
 
-  // debugger;
   let hooksFiles = fileProvider.filesFind
   ({
     filePath : will.hooksPath + '/*',
     withDirs : 0,
     resolvingSoftLink : 1, /* xxx : comment out and investigate why returns non-empty list when path is link? */ /* xxx : cover */
   });
-  // debugger;
 
   hooksFiles.forEach( ( hookFile ) =>
   {
@@ -5445,7 +5571,6 @@ function hookCall( o )
     ready
     .then( () =>
     {
-      // debugger;
       /* qqq : cover hooks behind soft link */
       return require( _.fileProvider.path.nativize( _.fileProvider.pathResolveLinkFull( o.execPath ).absolutePath ) );
     })
@@ -6054,6 +6179,7 @@ let Extension =
   npmGenerateFromWillfile,
   willfileGenerateFromNpm,
 
+  willfileGetProperty,
   willfileExtendWillfile,
 
   // clean

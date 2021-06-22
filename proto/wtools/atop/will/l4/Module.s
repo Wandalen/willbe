@@ -8670,7 +8670,7 @@ function _willfileOnPropertyAct( o )
     submodule : 'submodule',
   };
 
-  for( let option in o.willfilePropertiesMap )
+  for( let option in o.selectorsMap )
   {
 
     let splits = option.split( '/' );
@@ -8733,7 +8733,7 @@ function _willfileOnPropertyAct( o )
 _willfileOnPropertyAct.defaults =
 {
   request : null,
-  willfilePropertiesMap : null,
+  selectorsMap : null,
   onProperty : null,
   onConfig : null,
   act : null,
@@ -8745,73 +8745,75 @@ _willfileOnPropertyAct.defaults =
 
 //
 
-function willfileGetProperty( o )
-{
-  let will = this.will ? this.will : this;
-  let logger = will.transaction.logger;
-
-  _.routine.options( willfileGetProperty, o );
-
-  o.act = getProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function getProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( o.verbosity > 3 )
-        logger.log( `${ option } :: {-undefined-}` );
-        break;
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        dstConfig = dstConfig[ key ];
-      }
-      else if( o.willfilePropertiesMap[ option ] )
-      {
-        let value = _.entity.exportStringNice( dstConfig[ key ] );
-        if( _.strLinesCount( value ) > 1 )
-        logger.log( `${ option } ::\n${ value }` );
-        else
-        logger.log( `${ option } :: ${ value }` );
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
-    return config2;
-
-    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
-
-    return config;
-  }
-
-}
-
-willfileGetProperty.defaults =
-{
-  request : null,
-  willfilePropertiesMap : null,
-  structureParse : 0,
-  writing : 0,
-  verbosity : 3,
-  // v : 3,
-}
+// function willfileGetProperty( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let logger = will.transaction.logger;
+//
+//   _.routine.options( willfileGetProperty, o );
+//
+//   o.act = getProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   debugger;
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function getProperty( dstConfig, splits, option )
+//   {
+//     debugger;
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( o.verbosity > 3 )
+//         logger.log( `${ option } :: {-undefined-}` );
+//         break;
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         dstConfig = dstConfig[ key ];
+//       }
+//       else if( o.selectorsMap[ option ] )
+//       {
+//         let value = _.entity.exportStringNice( dstConfig[ key ] );
+//         if( _.strLinesCount( value ) > 1 )
+//         logger.log( `${ option } ::\n${ value }` );
+//         else
+//         logger.log( `${ option } :: ${ value }` );
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+//     return config2;
+//
+//     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+//     _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
+//
+//     return config;
+//   }
+//
+// }
+//
+// willfileGetProperty.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   structureParse : 0,
+//   writing : 0,
+//   verbosity : 3,
+//   // v : 3,
+// }
 
 //
 
@@ -8837,7 +8839,7 @@ function willfileSetProperty( o )
       {
         if( i === splits.length - 1 )
         {
-          let value = o.willfilePropertiesMap[ option ];
+          let value = o.selectorsMap[ option ];
           if( o.structureParse )
           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
           dstConfig[ key ] = value;
@@ -8863,7 +8865,7 @@ function willfileSetProperty( o )
       }
       else
       {
-        let value = o.willfilePropertiesMap[ option ];
+        let value = o.selectorsMap[ option ];
         if( o.structureParse )
         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
         dstConfig[ key ] = value;
@@ -8896,7 +8898,7 @@ function willfileSetProperty( o )
 willfileSetProperty.defaults =
 {
   request : null,
-  willfilePropertiesMap : null,
+  selectorsMap : null,
   structureParse : 0,
   writing : 1,
   verbosity : 3,
@@ -8934,7 +8936,7 @@ function willfileDeleteProperty( o )
       {
         dstConfig = dstConfig[ key ];
       }
-      else if( o.willfilePropertiesMap[ option ] )
+      else if( o.selectorsMap[ option ] )
       {
         if( o.verbosity > 3 )
         logger.log( `Option "${ option }" is deleted.` );
@@ -8973,7 +8975,7 @@ function willfileDeleteProperty( o )
 willfileDeleteProperty.defaults =
 {
   request : null,
-  willfilePropertiesMap : null,
+  selectorsMap : null,
   structureParse : 0,
   writing : 1,
   verbosity : 3,
@@ -9003,7 +9005,7 @@ function willfileExtendProperty( o )
       {
         if( i === splits.length - 1 )
         {
-          let value = o.willfilePropertiesMap[ option ];
+          let value = o.selectorsMap[ option ];
           if( o.structureParse )
           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
           o.onProperty( dstConfig, { [ key ] : value } );
@@ -9021,7 +9023,7 @@ function willfileExtendProperty( o )
       }
       else
       {
-        let value = o.willfilePropertiesMap[ option ];
+        let value = o.selectorsMap[ option ];
         if( o.structureParse )
         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
         o.onProperty( dstConfig, { [ key ] : value } );
@@ -9047,7 +9049,7 @@ function willfileExtendProperty( o )
 willfileExtendProperty.defaults =
 {
   request : null,
-  willfilePropertiesMap : null,
+  selectorsMap : null,
   onProperty : null,
   structureParse : 0,
   writing : 1,
@@ -9594,7 +9596,7 @@ function willfileVersionBump( o )
   module.willfileSetProperty
   ({
     request : willfilePath,
-    willfilePropertiesMap : extensionMap,
+    selectorsMap : extensionMap,
     structureParse : 0,
     verbosity : o.verbosity,
   });
@@ -11373,7 +11375,7 @@ let Extension =
   // willfileExtendWillfile,
 
   _willfileOnPropertyAct,
-  willfileGetProperty,
+  // willfileGetProperty,
   willfileSetProperty,
   willfileDeleteProperty,
   willfileExtendProperty,
