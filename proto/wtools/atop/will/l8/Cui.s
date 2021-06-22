@@ -1056,7 +1056,12 @@ function _commandExtendLike( o )
     it2.openers = will.currentOpeners;
     it2.roots = will.modulesOnlyRoots( it2.openers );
 
-    ready2.then( () => o.onAll.call( will, it2 ) );
+    ready2.then( () =>
+    {
+      if( it2.openers )
+      will.readingEnd();
+      return o.onAll.call( will, it2 );
+    });
     ready2.finally( ( err, arg ) =>
     {
       if( err )
@@ -4895,35 +4900,56 @@ else then name.will.yml
 
 */
 
+// function commandWillfileExtendWillfile( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandWillfileExtendWillfile, arguments );
+//
+//   let ready = _.take( null );
+//   return ready.Try( () =>
+//   {
+//     return cui._commandBuildLike
+//     ({
+//       event : e,
+//       name : 'willfile extend willfile',
+//       onEach : handleEach,
+//       commandRoutine : commandWillfileExtendWillfile,
+//     });
+//   })
+//   .catch( ( err ) =>
+//   {
+//     _.errAttend( err );
+//     let o =
+//     {
+//       request : e.subject,
+//       onSection : _.props.extend.bind( _.props ),
+//       ... e.optionsMap,
+//     };
+//     return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
+//   });
+//
+//   function handleEach( it )
+//   {
+//     return it.opener.openedModule.willfileExtendWillfile
+//     ({
+//       request : e.subject,
+//       onSection : _.props.extend.bind( _.props ),
+//       ... e.optionsMap,
+//     });
+//   }
+// }
+
 function commandWillfileExtendWillfile( e )
 {
   let cui = this;
   cui._command_head( commandWillfileExtendWillfile, arguments );
 
-  let ready = _.take( null );
-  return ready.Try( () =>
-  {
-    return cui._commandBuildLike
-    ({
-      event : e,
-      name : 'willfile extend willfile',
-      onEach : handleEach,
-      commandRoutine : commandWillfileExtendWillfile,
-    });
-  })
-  .catch( ( err ) =>
-  {
-    if( cui.currentOpeners === null || cui.currentOpeners.length === 0 )
-    _.errAttend( err );
-    else
-    throw _.errBrief( err );
-
-    return cui.willfileExtendWillfile
-    ({
-      request : e.subject,
-      onSection : _.props.extend.bind( _.props ),
-      ... e.optionsMap,
-    });
+  return cui._commandExtendLike
+  ({
+    event : e,
+    name : 'willfile extend willfile',
+    onAll : handleAll,
+    commandRoutine : commandWillfileExtendWillfile,
   });
 
   function handleAll( it )
@@ -4936,38 +4962,6 @@ function commandWillfileExtendWillfile( e )
       ... e.optionsMap,
     });
   }
-  // let ready = _.take( null );
-  // return ready.Try( () =>
-  // {
-  //   return cui._commandBuildLike
-  //   ({
-  //     event : e,
-  //     name : 'willfile extend willfile',
-  //     onEach : handleEach,
-  //     commandRoutine : commandWillfileExtendWillfile,
-  //   });
-  // })
-  // .catch( ( err ) =>
-  // {
-  //   _.errAttend( err );
-  //   let o =
-  //   {
-  //     request : e.subject,
-  //     onSection : _.props.extend.bind( _.props ),
-  //     ... e.optionsMap,
-  //   };
-  //   return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
-  // });
-  //
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.willfileExtendWillfile
-  //   ({
-  //     request : e.subject,
-  //     onSection : _.props.extend.bind( _.props ),
-  //     ... e.optionsMap,
-  //   });
-  // }
 }
 
 commandWillfileExtendWillfile.defaults =
@@ -5032,40 +5026,65 @@ command.properties =
 
 //
 
+// function commandWillfileSupplementWillfile( e )
+// {
+//   let cui = this;
+//   cui._command_head( commandWillfileSupplementWillfile, arguments );
+//
+//   let ready = _.take( null );
+//   return ready.Try( () =>
+//   {
+//     return cui._commandBuildLike
+//     ({
+//       event : e,
+//       name : 'willfile supplement willfile',
+//       onEach : handleEach,
+//       commandRoutine : commandWillfileExtendWillfile,
+//     });
+//   })
+//   .catch( ( err ) =>
+//   {
+//     _.errAttend( err );
+//     let o =
+//     {
+//       request : e.subject,
+//       onSection : _.props.supplement.bind( _.props ),
+//       ... e.optionsMap,
+//     };
+//     return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
+//   });
+//
+//   function handleEach( it )
+//   {
+//     return it.opener.openedModule.willfileExtendWillfile
+//     ({
+//       request : e.subject,
+//       onSection : _.props.supplement.bind( _.props ),
+//       ... e.optionsMap,
+//     });
+//   }
+// }
+
 function commandWillfileSupplementWillfile( e )
 {
   let cui = this;
   cui._command_head( commandWillfileSupplementWillfile, arguments );
 
-  let ready = _.take( null );
-  return ready.Try( () =>
-  {
-    return cui._commandBuildLike
-    ({
-      event : e,
-      name : 'willfile supplement willfile',
-      onEach : handleEach,
-      commandRoutine : commandWillfileExtendWillfile,
-    });
-  })
-  .catch( ( err ) =>
-  {
-    _.errAttend( err );
-    let o =
-    {
-      request : e.subject,
-      onSection : _.props.supplement.bind( _.props ),
-      ... e.optionsMap,
-    };
-    return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
+  return cui._commandExtendLike
+  ({
+    event : e,
+    name : 'willfile supplement willfile',
+    onAll : handleAll,
+    commandRoutine : commandWillfileExtendWillfile,
   });
 
-  function handleEach( it )
+  function handleAll( it )
   {
-    return it.opener.openedModule.willfileExtendWillfile
+    return cui.willfileExtendWillfile
     ({
       request : e.subject,
       onSection : _.props.supplement.bind( _.props ),
+      modules : it.roots,
       ... e.optionsMap,
     });
   }
