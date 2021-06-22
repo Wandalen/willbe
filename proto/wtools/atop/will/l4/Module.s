@@ -7954,258 +7954,258 @@ resourceImport.defaults =
 //
 //   return null;
 // }
-
 //
-
-function willfileExtendWillfile( o )
-{
-  _.assert( arguments.length === 1 );
-  _.routine.options( willfileExtendWillfile, o );
-
-  const module = this;
-  const will = module.will || module;
-  const fileProvider = will.fileProvider;
-  const path = fileProvider.path;
-  const logger = will.transaction.logger;
-
-  /* */
-
-  o.dirPath = o.dirPath || module.dirPath || will.inPath || path.current();
-
-  const splits = _.strSplit({ src : o.request, preservingEmpty : 0 });
-  for( let i = 0 ; i < splits.length ; i++ )
-  if( splits[ i ] === '.' )
-  splits[ i ] = './';
-  const configPaths = path.s.join( o.dirPath, splits );
-
-  const dstWillfiles = dstFilesFind( configPaths[ 0 ] );
-  if( o.format === 'json' )
-  _.sure( dstWillfiles.length === 0, 'not implemented' );
-  else
-  _.sure( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles.' );
-  const commonDstPath = dstCommonPathGet( dstWillfiles );
-
-  let willfile = Object.create( null );
-  if( dstWillfiles.length === 1 )
-  willfile = configRead( dstWillfiles[ 0 ].absolute );
-
-  for( let i = 1 ; i < configPaths.length ; i++ )
-  {
-    let files = configFilesFind( configPaths[ i ] );
-    _.sure( files.length !== 0, 'Source configuration file does not exist.' );
-
-    for( let j = 0 ; j < files.length ; j++ )
-    {
-      _.sure
-      (
-        _.longHasAny( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ),
-        'Unexpected configuration files. Please, improve selector.'
-      );
-
-      const encoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
-      let config = configRead( files[ j ].absolute, encoding );
-      if( !_.longHas( files[ j ].exts, 'will' ) )
-      config = _.will.transform.willfileFromNpm({ config });
-
-      willfilesMerge( willfile, config );
-    }
-  }
-
-  if( o.submodulesDisabling )
-  _.will.transform.submodulesSwitch( willfile.submodule, 0 );
-
-  if( o.format === 'json' )
-  {
-    let data = _.will.transform.npmFromWillfile({ config : willfile });
-    configWrite( commonDstPath, data, 'json' );
-  }
-  else if( dstWillfiles.length === 2 )
-  {
-    const exWillfile = configRead( dstWillfiles[ 0 ].absolute );
-    const imWillfile = configRead( dstWillfiles[ 1 ].absolute );
-
-    const [ exWillfileExtension, imWillfileExtension ] = splitWillfilesExtensionMake( exWillfile, imWillfile );
-
-    willfilesMerge( exWillfile, exWillfileExtension );
-    willfilesMerge( imWillfile, imWillfileExtension );
-
-    configWrite( dstWillfiles[ 0 ].absolute, exWillfile );
-    configWrite( dstWillfiles[ 1 ].absolute, imWillfile );
-  }
-  else
-  {
-    const filePath = dstWillfiles.length ? dstWillfiles[ 0 ].absolute : commonDstPath;
-    configWrite( filePath, willfile );
-  }
-  return null;
-
-  /* */
-
-  function dstFilesFind( src )
-  {
-    _.assert( !path.isGlob( src ), 'Path to destination file should have not globs.' );
-
-    return will.willfilesFind
-    ({
-      commonPath : src,
-      withIn : 1,
-      withOut : 0,
-    });
-  }
-
-  /* */
-
-  function dstCommonPathGet( files )
-  {
-    if( files.length === 1 )
-    {
-      return files[ 0 ].absolute;
-    }
-    else if( files.length === 2 )
-    {
-      return path.join( files[ 0 ].dir, _.strCommonLeft( files[ 0 ].fullName, files[ 1 ].fullName ) + '*' );
-    }
-    else
-    {
-      if( path.isTrailed( configPaths[ 0 ] ) )
-      {
-        const fileName = o.format === 'json' ? 'package.json' : 'will.yml';
-        return path.join( configPaths[ 0 ], fileName );
-      }
-      else
-      {
-        const dir = path.dir( configPaths[ 0 ] );
-        const name = _.strSplit( path.name( configPaths[ 0 ] ), '.' )[ 0 ];
-        const exts = path.exts( configPaths[ 0 ] );
-        _.arrayRemoveArrayOnce( exts, [ 'will', 'yml', 'yaml', 'json' ] );
-        const extsArray = o.format === 'json' ? [ 'json' ] : [ 'will', 'yml' ];
-        _.arrayAppendArray( exts, extsArray );
-        return path.join( dir, `${ name }.${ exts.join( '.' ) }` );
-      }
-    }
-  }
-
-  /* */
-
-  function configRead( filePath, encoding )
-  {
-    return fileProvider.fileRead({ filePath, encoding : encoding || 'yaml', logger });
-  }
-
-  /* */
-
-  function configFilesFind( srcPath )
-  {
-    let filePath = srcPath;
-    if( fileProvider.isTerminal( filePath ) )
-    {
-      if( dstWillfiles.length )
-      if( _.longHasAny( _.select( dstWillfiles, '*/absolute' ), filePath ) )
-      return [];
-      return [ fileProvider.record( filePath ) ];
-    }
-
-    if( path.isTrailed( srcPath ) )
-    return _.will.fileAt({ commonPath : srcPath });
-
-    if( !path.isGlob( filePath ) )
-    filePath = filePath + '*';
-
-    let filter =
-    {
-      filePath : { [ filePath ] : true, [ commonDstPath ] : 0 },
-      maskTerminal : { includeAny : /(.will){0,1}\.(yml|yaml|json)/ },
-    };
-
-    return fileProvider.filesFind
-    ({
-      filePath,
-      withStem : 0,
-      withDirs : 0,
-      mode : 'distinct',
-      mandatory : 0,
-      filter,
-    });
-  }
-
-  /* */
-
-  function willfilesMerge( dst, src )
-  {
-    _.will.transform.willfilesMerge
-    ({
-      ... _.mapOnly_( null, o, _.will.transform.willfilesMerge.defaults ),
-      dst,
-      src,
-    });
-  }
-
-  /* */
-
-  function splitWillfilesExtensionMake( exWillfile, imWillfile )
-  {
-    const imWillfileExtension = Object.create( null );
-    const exWillfileExtension = Object.create( null );
-    for( let section in exWillfile )
-    {
-      if( ( section in imWillfile ) && ( section in willfile ) )
-      {
-        exWillfileExtension[ section ] = _.mapOnly_( null, willfile[ section ], exWillfile[ section ] );
-        imWillfileExtension[ section ] = _.mapBut_( willfile[ section ], willfile[ section ], exWillfile[ section ] );
-      }
-      else if( section in willfile )
-      {
-        exWillfileExtension[ section ] = willfile[ section ];
-      }
-      delete willfile[ section ];
-    }
-    _.map.extend( imWillfileExtension, willfile );
-    return [ exWillfileExtension, imWillfileExtension ];
-  }
-
-  /* */
-
-  function configWrite( filePath, data, encoding )
-  {
-    fileProvider.fileWrite
-    ({
-      filePath,
-      data,
-      encoding : encoding || 'yaml',
-      logger,
-    });
-  }
-}
-
-willfileExtendWillfile.defaults =
-{
-  'about' : 1,
-  'build' : 1,
-  'path' : 1,
-  'reflector' : 1,
-  'step' : 1,
-  'submodule' : 1,
-
-  'name' : 1,
-  'version' : 1,
-  'author' : 1,
-  'enabled' : 1,
-  'description' : 1,
-  'contributors' : 1,
-  'interpreters' : 1,
-  'license' : 1,
-  'keywords' : 1,
-  'npm.name' : 1,
-  'npm.scripts' : 1,
-
-  'dirPath' : null,
-  'request' : null,
-  'onSection' : null,
-  'submodulesDisabling' : 0,
-  'format' : 'willfile',
-  'logger' : 3,
-};
-
+// //
+//
+// function willfileExtendWillfile( o )
+// {
+//   _.assert( arguments.length === 1 );
+//   _.routine.options( willfileExtendWillfile, o );
+//
+//   const module = this;
+//   const will = module.will || module;
+//   const fileProvider = will.fileProvider;
+//   const path = fileProvider.path;
+//   const logger = will.transaction.logger;
+//
+//   /* */
+//
+//   o.dirPath = o.dirPath || module.dirPath || will.inPath || path.current();
+//
+//   const splits = _.strSplit({ src : o.request, preservingEmpty : 0 });
+//   for( let i = 0 ; i < splits.length ; i++ )
+//   if( splits[ i ] === '.' )
+//   splits[ i ] = './';
+//   const configPaths = path.s.join( o.dirPath, splits );
+//
+//   const dstWillfiles = dstFilesFind( configPaths[ 0 ] );
+//   if( o.format === 'json' )
+//   _.sure( dstWillfiles.length === 0, 'not implemented' );
+//   else
+//   _.sure( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles.' );
+//   const commonDstPath = dstCommonPathGet( dstWillfiles );
+//
+//   let willfile = Object.create( null );
+//   if( dstWillfiles.length === 1 )
+//   willfile = configRead( dstWillfiles[ 0 ].absolute );
+//
+//   for( let i = 1 ; i < configPaths.length ; i++ )
+//   {
+//     let files = configFilesFind( configPaths[ i ] );
+//     _.sure( files.length !== 0, 'Source configuration file does not exist.' );
+//
+//     for( let j = 0 ; j < files.length ; j++ )
+//     {
+//       _.sure
+//       (
+//         _.longHasAny( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ),
+//         'Unexpected configuration files. Please, improve selector.'
+//       );
+//
+//       const encoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
+//       let config = configRead( files[ j ].absolute, encoding );
+//       if( !_.longHas( files[ j ].exts, 'will' ) )
+//       config = _.will.transform.willfileFromNpm({ config });
+//
+//       willfilesMerge( willfile, config );
+//     }
+//   }
+//
+//   if( o.submodulesDisabling )
+//   _.will.transform.submodulesSwitch( willfile.submodule, 0 );
+//
+//   if( o.format === 'json' )
+//   {
+//     let data = _.will.transform.npmFromWillfile({ config : willfile });
+//     configWrite( commonDstPath, data, 'json' );
+//   }
+//   else if( dstWillfiles.length === 2 )
+//   {
+//     const exWillfile = configRead( dstWillfiles[ 0 ].absolute );
+//     const imWillfile = configRead( dstWillfiles[ 1 ].absolute );
+//
+//     const [ exWillfileExtension, imWillfileExtension ] = splitWillfilesExtensionMake( exWillfile, imWillfile );
+//
+//     willfilesMerge( exWillfile, exWillfileExtension );
+//     willfilesMerge( imWillfile, imWillfileExtension );
+//
+//     configWrite( dstWillfiles[ 0 ].absolute, exWillfile );
+//     configWrite( dstWillfiles[ 1 ].absolute, imWillfile );
+//   }
+//   else
+//   {
+//     const filePath = dstWillfiles.length ? dstWillfiles[ 0 ].absolute : commonDstPath;
+//     configWrite( filePath, willfile );
+//   }
+//   return null;
+//
+//   /* */
+//
+//   function dstFilesFind( src )
+//   {
+//     _.assert( !path.isGlob( src ), 'Path to destination file should have not globs.' );
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : src,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function dstCommonPathGet( files )
+//   {
+//     if( files.length === 1 )
+//     {
+//       return files[ 0 ].absolute;
+//     }
+//     else if( files.length === 2 )
+//     {
+//       return path.join( files[ 0 ].dir, _.strCommonLeft( files[ 0 ].fullName, files[ 1 ].fullName ) + '*' );
+//     }
+//     else
+//     {
+//       if( path.isTrailed( configPaths[ 0 ] ) )
+//       {
+//         const fileName = o.format === 'json' ? 'package.json' : 'will.yml';
+//         return path.join( configPaths[ 0 ], fileName );
+//       }
+//       else
+//       {
+//         const dir = path.dir( configPaths[ 0 ] );
+//         const name = _.strSplit( path.name( configPaths[ 0 ] ), '.' )[ 0 ];
+//         const exts = path.exts( configPaths[ 0 ] );
+//         _.arrayRemoveArrayOnce( exts, [ 'will', 'yml', 'yaml', 'json' ] );
+//         const extsArray = o.format === 'json' ? [ 'json' ] : [ 'will', 'yml' ];
+//         _.arrayAppendArray( exts, extsArray );
+//         return path.join( dir, `${ name }.${ exts.join( '.' ) }` );
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configRead( filePath, encoding )
+//   {
+//     return fileProvider.fileRead({ filePath, encoding : encoding || 'yaml', logger });
+//   }
+//
+//   /* */
+//
+//   function configFilesFind( srcPath )
+//   {
+//     let filePath = srcPath;
+//     if( fileProvider.isTerminal( filePath ) )
+//     {
+//       if( dstWillfiles.length )
+//       if( _.longHasAny( _.select( dstWillfiles, '*/absolute' ), filePath ) )
+//       return [];
+//       return [ fileProvider.record( filePath ) ];
+//     }
+//
+//     if( path.isTrailed( srcPath ) )
+//     return _.will.fileAt({ commonPath : srcPath });
+//
+//     if( !path.isGlob( filePath ) )
+//     filePath = filePath + '*';
+//
+//     let filter =
+//     {
+//       filePath : { [ filePath ] : true, [ commonDstPath ] : 0 },
+//       maskTerminal : { includeAny : /(.will){0,1}\.(yml|yaml|json)/ },
+//     };
+//
+//     return fileProvider.filesFind
+//     ({
+//       filePath,
+//       withStem : 0,
+//       withDirs : 0,
+//       mode : 'distinct',
+//       mandatory : 0,
+//       filter,
+//     });
+//   }
+//
+//   /* */
+//
+//   function willfilesMerge( dst, src )
+//   {
+//     _.will.transform.willfilesMerge
+//     ({
+//       ... _.mapOnly_( null, o, _.will.transform.willfilesMerge.defaults ),
+//       dst,
+//       src,
+//     });
+//   }
+//
+//   /* */
+//
+//   function splitWillfilesExtensionMake( exWillfile, imWillfile )
+//   {
+//     const imWillfileExtension = Object.create( null );
+//     const exWillfileExtension = Object.create( null );
+//     for( let section in exWillfile )
+//     {
+//       if( ( section in imWillfile ) && ( section in willfile ) )
+//       {
+//         exWillfileExtension[ section ] = _.mapOnly_( null, willfile[ section ], exWillfile[ section ] );
+//         imWillfileExtension[ section ] = _.mapBut_( willfile[ section ], willfile[ section ], exWillfile[ section ] );
+//       }
+//       else if( section in willfile )
+//       {
+//         exWillfileExtension[ section ] = willfile[ section ];
+//       }
+//       delete willfile[ section ];
+//     }
+//     _.map.extend( imWillfileExtension, willfile );
+//     return [ exWillfileExtension, imWillfileExtension ];
+//   }
+//
+//   /* */
+//
+//   function configWrite( filePath, data, encoding )
+//   {
+//     fileProvider.fileWrite
+//     ({
+//       filePath,
+//       data,
+//       encoding : encoding || 'yaml',
+//       logger,
+//     });
+//   }
+// }
+//
+// willfileExtendWillfile.defaults =
+// {
+//   'about' : 1,
+//   'build' : 1,
+//   'path' : 1,
+//   'reflector' : 1,
+//   'step' : 1,
+//   'submodule' : 1,
+//
+//   'name' : 1,
+//   'version' : 1,
+//   'author' : 1,
+//   'enabled' : 1,
+//   'description' : 1,
+//   'contributors' : 1,
+//   'interpreters' : 1,
+//   'license' : 1,
+//   'keywords' : 1,
+//   'npm.name' : 1,
+//   'npm.scripts' : 1,
+//
+//   'dirPath' : null,
+//   'request' : null,
+//   'onSection' : null,
+//   'submodulesDisabling' : 0,
+//   'format' : 'willfile',
+//   'logger' : 3,
+// };
+//
 // function willfileExtendWillfile( o )
 // {
 //   let will = this.will ? this.will : this;
@@ -11370,7 +11370,7 @@ let Extension =
   // _willfileGenerateFromNpm,
   // willfileGenerateFromNpm,
 
-  willfileExtendWillfile,
+  // willfileExtendWillfile,
 
   _willfileOnPropertyAct,
   willfileGetProperty,
