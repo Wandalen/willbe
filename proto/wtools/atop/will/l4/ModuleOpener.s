@@ -412,9 +412,10 @@ function _willfilesFindAct( o )
     records = will.willfilesFind
     ({
       commonPath : o.willfilesPath,
+      // commonPath,
       withIn : o.withIn,
-      withOut : o.withOut,
-      exact : !!opener.superRelation,
+      withOut : ( o.withOut && !opener.superRelation ) || _.will.filePathIsOut( o.willfilesPath ),
+      // exact : !!opener.superRelation, /* Dmytro : hack, should not be used */
       usingCache : 1,
     });
   }
@@ -1723,7 +1724,7 @@ function _repoDownload( o )
       opener2.repo.statusInvalidate({ all : 1 });
       // if( downloading && !o.dry )
       // {
-      // opener2.repo._.hasFiles = true;
+      // opener2.repo._.hasFiles = 1;
       // opener2.repo.statusInvalidate({ all : 1, hasFiles : 1 });
       // }
     });
