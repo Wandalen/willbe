@@ -15,7 +15,7 @@ _.will.resolver = Object.create( _.resolverAdv );
 // relation
 // --
 
-let Prime = Object.create( null )
+let Prime = Object.create( null );
 
 Prime.src = undefined;
 
