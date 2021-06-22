@@ -5139,23 +5139,28 @@ function hookFindAt( o )
   {
     if( !o.single )
     return _.array.as( found );
-    if( _.strIs( found ) )
+    if( _.str.is( found ) )
     return found;
-    _.assert( _.arrayIs( found ) );
-    if( found.length )
-    return found[ 0 ];
 
-    if( found.length > 0 )
-    throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
-    else
+    _.assert( _.array.is( found ) );
+    if( found.length === 1 )
+    return found;
+    if( found.length < 1 )
     throw _.errBrief( `Found none hook file at ${o.execPath}` );
-    // if( !found.length ) /* Dmytro : seems as wrong condition */
-    // throw _.errBrief( `Found none hook file at ${o.execPath}` );
-    // else
+    throw _.errBrief
+    (
+      `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}`
+    );
+    // if( found.length )
+    // return found[ 0 ];
+    //
+    // if( found.length > 0 )
     // throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
-    return found
+    // else
+    // throw _.errBrief( `Found none hook file at ${o.execPath}` );
+    //
+    // return found;
   }
-
 }
 
 hookFindAt.defaults =
