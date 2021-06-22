@@ -227,8 +227,6 @@ function status( o )
   function returnResult( err, arg )
   {
     if( err )
-    debugger;
-    if( err )
     throw _.err( err, `\nFailed to get status for repository at ${repo.downloadPath}` );
     for( let k in o )
     {
@@ -421,7 +419,7 @@ function status( o )
 
     // if( repo.downloadPath && _.strEnds( repo.downloadPath, 'ModuleForTesting1a' ) )
     // {
-    //   logger.log( 'isRepositoryReform', repo.downloadPath ); debugger;
+    //   logger.log( 'isRepositoryReform', repo.downloadPath );
     // }
 
     _.assert( _.strDefined( repo.downloadPath ) );
@@ -623,9 +621,7 @@ function repoLocalVersion()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  debugger;
   let remoteProvider = will.vcsProviderFor( repo.downloadPath );
-  debugger;
   return remoteProvider.versionLocalRetrive( repo.downloadPath );
 }
 
@@ -640,9 +636,7 @@ function repoLatestVersion()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
-  debugger;
   let remoteProvider = will.vcsProviderFor( repo.downloadPath );
-  debugger;
   return remoteProvider.versionRemoteLatestRetrive( repo.downloadPath )
 }
 
@@ -662,7 +656,6 @@ function renormalize( dirPath )
 
   if( !_.git.isRepository({ localPath }) )
   {
-    debugger
     return true;
   }
 
@@ -885,3 +878,4 @@ _.Copyable.mixin( Self );
 _.will[ Self.shortName ] = Self;
 
 })();
+

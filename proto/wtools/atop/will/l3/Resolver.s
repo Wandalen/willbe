@@ -313,10 +313,14 @@ function _statusPreUpdate()
 
     if( !module2 )
     {
-      if( it.selector !== undefined )
-      throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
-      else
+      if( it.selector === undefined )
       module2 = it.currentModule;
+      else
+      throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
+      // if( it.selector !== undefined )
+      // throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
+      // else
+      // module2 = it.currentModule;
       // module2 = rit.currentModule;
     }
 
@@ -909,23 +913,31 @@ function _pathResolve( filePath, resource )
   let prefixPath = '.';
   if( rit.pathResolving === 'in' )
   {
-    if( resourceName !== 'in' )
-    prefixPath = currentModule.inPath || '.';
-    else
+    if( resourceName === 'in' )
     prefixPath = currentModule.dirPath;
+    else
+    prefixPath = currentModule.inPath || '.';
+    // if( resourceName !== 'in' )
+    // prefixPath = currentModule.inPath || '.';
+    // else
+    // prefixPath = currentModule.dirPath;
   }
   else if( rit.pathResolving === 'out' )
   {
-    if( resourceName !== 'out' )
-    prefixPath = currentModule.outPath || '.';
-    else
+    if( resourceName === 'out' )
     prefixPath = currentModule.dirPath;
+    else
+    prefixPath = currentModule.outPath || '.';
+    // if( resourceName !== 'out' )
+    // prefixPath = currentModule.outPath || '.';
+    // else
+    // prefixPath = currentModule.dirPath;
   }
 
-  if( it.selectorIs( prefixPath ) )
-  {
-    debugger; /* xxx : not tested? */
-  }
+  // if( it.selectorIs( prefixPath ) )
+  // {
+  //   debugger; /* xxx : not tested? */
+  // }
   if( it.selectorIs( prefixPath ) )
   prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
   if( it.selectorIs( result ) )
@@ -964,17 +976,25 @@ function _pathResolveAct( o )
   let prefixPath = '.';
   if( o.pathResolving === 'in' )
   {
-    if( o.resourceName !== 'in' )
-    prefixPath = o.currentModule.inPath || '.';
-    else
+    if( o.resourceName === 'in' )
     prefixPath = o.currentModule.dirPath;
+    else
+    prefixPath = o.currentModule.inPath || '.';
+    // if( o.resourceName !== 'in' )
+    // prefixPath = o.currentModule.inPath || '.';
+    // else
+    // prefixPath = o.currentModule.dirPath;
   }
   else if( o.pathResolving === 'out' )
   {
-    if( o.resourceName !== 'out' )
-    prefixPath = o.currentModule.outPath || '.';
-    else
+    if( o.resourceName === 'out' )
     prefixPath = o.currentModule.dirPath;
+    else
+    prefixPath = o.currentModule.outPath || '.';
+    // if( o.resourceName !== 'out' )
+    // prefixPath = o.currentModule.outPath || '.';
+    // else
+    // prefixPath = o.currentModule.dirPath;
   }
   else _.assert( 0 );
 
@@ -1471,9 +1491,7 @@ function pathOrReflectorResolve_head( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.aux.is( o ) );
-  debugger;
   _.routine.options( routine, o );
-  debugger;
   return o;
 }
 
@@ -1492,9 +1510,7 @@ function pathOrReflectorResolve_body( o )
   let o2 = _.props.extend( null, o );
   o2.missingAction = 'undefine';
   o2.selector = 'reflector::' + o.selector;
-  debugger;
   resource = module.reflectorResolve( o2 );
-  debugger;
 
   if( resource )
   return resource;

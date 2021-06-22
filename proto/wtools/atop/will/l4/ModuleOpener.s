@@ -412,9 +412,10 @@ function _willfilesFindAct( o )
     records = will.willfilesFind
     ({
       commonPath : o.willfilesPath,
+      // commonPath,
       withIn : o.withIn,
-      withOut : o.withOut,
-      exact : !!opener.superRelation,
+      withOut : ( o.withOut && !opener.superRelation ) || _.will.filePathIsOut( o.willfilesPath ),
+      // exact : !!opener.superRelation, /* Dmytro : hack, should not be used */
       usingCache : 1,
     });
   }
@@ -474,7 +475,7 @@ function _willfilesFind()
   {
     let err;
     if( opener.superRelation )
-    err = _.errBrief( 'Found no out-willfile for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
+    err = _.errBrief( 'Found no out-willfile for', opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
     err = _.errBrief( 'Found no willfile at', _.strQuote( opener.commonPath ) );
     opener.error = opener.error || err;
@@ -630,7 +631,10 @@ function find( o )
     }
 
     _.assert( _.long.identical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
-    _.assert( _.long.identical( _.props.vals( opener.willfileWithRoleMap ), _.props.vals( opener.openedModule.willfileWithRoleMap ) ) );
+    _.assert
+    (
+      _.long.identical( _.props.vals( opener.willfileWithRoleMap ), _.props.vals( opener.openedModule.willfileWithRoleMap ) )
+    );
 
     if( !opener.openedModule.isUsedBy( opener ) )
     opener.openedModule.usedBy( opener );
@@ -785,7 +789,8 @@ function open( o )
     // o.resourcesFormed = isMain ? will.resourcesFormedOfMain : will.resourcesFormedOfSub;
 
     if( o.attachedWillfilesFormed === null )
-    o.attachedWillfilesFormed = isMain ? will.transaction.attachedWillfilesFormedOfMain : will.transaction.attachedWillfilesFormedOfSub;
+    o.attachedWillfilesFormed =
+      isMain ? will.transaction.attachedWillfilesFormedOfMain : will.transaction.attachedWillfilesFormedOfSub;
     if( o.peerModulesFormed === null )
     o.peerModulesFormed = isMain ? will.transaction.peerModulesFormedOfMain : will.transaction.peerModulesFormedOfSub;
     if( o.subModulesFormed === null )
@@ -1214,7 +1219,11 @@ function _repoForm()
       }
 
       if( downloadPath )
-      _.assert( !fileProvider.path.isTrailed( downloadPath ), `Download path of the ${opener.absoluteName} shouldn't have trailing slash.` );
+      _.assert
+      (
+        !fileProvider.path.isTrailed( downloadPath ),
+        `Download path of the ${opener.absoluteName} shouldn't have trailing slash.`
+      );
     }
 
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
@@ -1715,7 +1724,7 @@ function _repoDownload( o )
       opener2.repo.statusInvalidate({ all : 1 });
       // if( downloading && !o.dry )
       // {
-      // opener2.repo._.hasFiles = true;
+      // opener2.repo._.hasFiles = 1;
       // opener2.repo.statusInvalidate({ all : 1, hasFiles : 1 });
       // }
     });
@@ -1898,8 +1907,8 @@ build :
       export : 1
     steps :
       step::export
-`
-    fileProvider.fileWrite( willFilePath, willFile ); debugger; /* xxx */
+`;
+    fileProvider.fileWrite( willFilePath, willFile ); // debugger; /* xxx */
   }
 
   /* */
@@ -2736,7 +2745,7 @@ let Accessors =
   openedModule : {},
   peerModule : {},
 
-  error : { set : errorSet, get : errorGet, },
+  error : { set : errorSet, get : errorGet },
 
 }
 

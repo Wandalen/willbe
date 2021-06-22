@@ -121,7 +121,11 @@ function stepRoutineReflect( frame )
 
   let reflector = step.reflectorResolve( opts.filePath );
 
-  _.sure( reflector instanceof _.will.Reflector, () => `Step "reflect" expects reflector, but got ${_.entity.strType( reflector )}` )
+  _.sure
+  (
+    reflector instanceof _.will.Reflector,
+    () => `Step "reflect" expects reflector, but got ${_.entity.strType( reflector )}`
+  );
   _.assert( reflector.formed === 3, () => `${reflector.qualifiedName} is not formed` );
 
   beginLog();
@@ -400,7 +404,8 @@ function stepRoutineShell( frame )
   ({
     execPath : opts.shell,
     currentPath : opts.currentPath,
-    currentThis : forEachDst !== undefined ? forEachDst : null,
+    currentThis : forEachDst === undefined ? null : forEachDst,
+    // currentThis : forEachDst !== undefined ? forEachDst : null,
     currentContext : step,
     verbosity,
   })

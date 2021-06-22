@@ -438,10 +438,11 @@ function etcRunWillbe( test )
 
 function etcKillWillbe( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  let con = _.take( null );
-  a.reflect();
+  const context = this;
+  const a = context.assetFor( test, 'simple' );
+  const con = _.take( null );
+  const delay = 1500;
+  a.reflectMinimal();
 
   /* */
 
@@ -462,7 +463,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill() );
+      _.time.out( delay, () => o.pnd.kill() );
     });
 
     return a.ready.then( ( op ) =>
@@ -500,7 +501,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGTERM') );
+      _.time.out( delay, () => o.pnd.kill( 'SIGTERM') );
     });
 
     return a.ready.then( ( op ) =>
@@ -576,7 +577,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGINT' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGINT' ) );
+      _.time.out( delay, () => o.pnd.kill( 'SIGINT' ) );
     });
 
     return a.ready.then( ( op ) =>
@@ -1526,14 +1527,14 @@ function buildOptionWithSubmodules( test )
   let a = context.assetFor( test, 'buildOptionWithSubmodules' );
   a.reflect();
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodulesDef .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodulesDef .build' })
   .then( ( op ) =>
@@ -1547,16 +1548,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules2 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules2 .build' })
   .then( ( op ) =>
@@ -1570,16 +1571,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules1 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules1 .build' })
   .then( ( op ) =>
@@ -1593,16 +1594,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules0 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules0 .build' })
   .then( ( op ) =>
@@ -1616,7 +1617,7 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -1624,6 +1625,7 @@ function buildOptionWithSubmodules( test )
 }
 
 buildOptionWithSubmodules.timeOut = 300000;
+buildOptionWithSubmodules.experimental = 1;
 
 //
 
@@ -6507,13 +6509,14 @@ hookGitSyncConflict.description =
 function hookGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
+
+  if( !_.censor )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
-
-  if( !_.censor )
-  return test.true( true );
 
   /* */
 
@@ -13155,7 +13158,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
@@ -13187,14 +13190,14 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), true );
 
     return null;
-  })
+  });
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -13232,7 +13235,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -13270,7 +13273,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -18104,7 +18107,7 @@ function submodulesDownloadSwitchBranch( test )
 
   /* - */
 
-  a.ready .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup repo';
 
@@ -23040,7 +23043,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build default' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23056,7 +23059,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( `.build to.!master` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23072,7 +23075,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( `.build to.!gamma` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23088,7 +23091,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build dry.clean' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23101,7 +23104,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build dry' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23117,7 +23120,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build recursive.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23130,7 +23133,7 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build recursive.one' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23147,9 +23150,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build recursive.two' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1'  ] );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23164,9 +23167,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build loggingNoChanges.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23181,9 +23184,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build loggingNoChanges.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23198,9 +23201,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build withStem.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23215,9 +23218,9 @@ function stepSubmodulesUpdate( test )
   a.appStart( '.build withStem.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23375,7 +23378,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build default' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23391,7 +23394,7 @@ function stepModulesUpdate( test )
   a.appStart( `.build to.!master` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23407,7 +23410,7 @@ function stepModulesUpdate( test )
   a.appStart( `.build to.!gamma` )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23423,7 +23426,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build dry.clean' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 );
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23436,7 +23439,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build dry' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23452,7 +23455,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build recursive.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 );
     test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
@@ -23465,7 +23468,7 @@ function stepModulesUpdate( test )
   a.appStart( '.build recursive.one' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
     test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
@@ -23482,9 +23485,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build recursive.two' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1'  ] );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23499,9 +23502,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build loggingNoChanges.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23516,9 +23519,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build loggingNoChanges.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 );
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23533,9 +23536,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build withStem.on' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -23550,9 +23553,9 @@ function stepModulesUpdate( test )
   a.appStart( '.build withStem.off' )
   .then( ( op ) =>
   {
-    test.identical( _.strCount( op.output , /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2'  ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     var got = a.shellSyncClone( 'git status' );
     test.true( _.strHas( got.output, `On branch master` ) );
     var got = a.shellSyncSubmodule( 'git status' );
@@ -28132,7 +28135,7 @@ function commandImplyPropertyWithDisabled( test )
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
@@ -28193,7 +28196,7 @@ function commandImplyPropertyWithDisabled( test )
       expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
@@ -28201,7 +28204,7 @@ function commandImplyPropertyWithDisabled( test )
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
@@ -28213,7 +28216,7 @@ function commandImplyPropertyWithDisabled( test )
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
-     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
@@ -28254,7 +28257,7 @@ function commandImplyPropertyWithDisabled( test )
     .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1','ModuleForTesting2' ];
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
     })
@@ -28290,7 +28293,7 @@ function commandImplyPropertyWithDisabled( test )
 
     clean()
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
-     .then( () =>
+    .then( () =>
     {
       let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
@@ -30620,7 +30623,7 @@ function commandSubmodulesGitSync( test )
 
 commandSubmodulesGitSync.rapidity = -1;
 
-
+//
 
 function commandSubmodulesRepoPullOpen( test )
 {
@@ -32630,12 +32633,13 @@ function commandModulesGitSync( test )
 function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
+
+  if( !_.censor || _.process.insideTestContainer() )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
-
-  if( !_.censor )
-  return test.true( true );
 
   let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
@@ -32778,12 +32782,13 @@ super
 function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -32944,12 +32949,13 @@ original/f2.txt
 function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -33101,12 +33107,13 @@ original/f2.txt
 function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -36069,13 +36076,14 @@ ${ mergeEnd }
 function commandGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
+
+  if( !_.censor )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
-
-  if( !_.censor )
-  return test.true( true );
 
   /* */
 
@@ -36410,7 +36418,7 @@ function commandRepoPullOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor !== undefined ? _.censor.configRead() : a.fileProvider.configUserRead();
+  let config = _.censor === undefined ? null : _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
   return test.true( true );
 
@@ -36579,7 +36587,8 @@ function commandRepoPullOpenRemote( test )
     a.shell
     ({
       currentPath,
-      execPath : `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+      execPath :
+      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`,
     });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
@@ -41009,7 +41018,8 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
       'TEST',
       'docgen-docgen',
       'docgen.docgen',
-      'DOCGEN' ];
+      'DOCGEN'
+    ];
     test.identical( npmScriptsConfigKeys, exp );
 
     return null;
@@ -42354,11 +42364,11 @@ function commandsSubmoduleSafety( test )
       else
       test.identical( op.exitCode, 0 );
 
-      var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}`})
+      var expectedOutput = _.select({ src : outputMap, selector : `${env.case}/${env.command}` });
       if( _.object.isBasic( expectedOutput ) )
-      expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` })
+      expectedOutput = _.select({ src : expectedOutput, selector : `downloaded:${env.downloaded}` });
       if( expectedOutput )
-      _.each( _.array.as( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) )
+      _.each( _.array.as( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) );
 
       let moduleDirExists = a.fileProvider.isDir( a.localPath );
 
@@ -42866,11 +42876,12 @@ function commandSubmodulesUpdateOptionTo( test )
   .then( () =>
   {
     test.case = 'switch to dev3, dev1 was renamed to dev3 on the remote after download'
-    a.moduleDownloadedShellSync( 'git fetch --tags' )
-    a.moduleShellSync( 'git tag dev3 dev1^{}' )
-    a.moduleShellSync( 'git tag -d dev1' )
+    let escapeCaret = process.platform === 'win32' ? '^' : '';
+    a.moduleDownloadedShellSync( 'git fetch --tags' );
+    a.moduleShellSync( `git tag dev3 dev1${ escapeCaret }^{}` );
+    a.moduleShellSync( 'git tag -d dev1' );
     return null;
-  })
+  });
   a.appStart( '.submodules.update to:!dev3' )
   .then( ( op ) =>
   {
@@ -43055,7 +43066,7 @@ function commandsSequenceProceduresTermination( test )
 }
 
 commandsSequenceProceduresTermination.rapidity = 1;
-commandsSequenceProceduresTermination.routineTimeOut = 60000;
+commandsSequenceProceduresTermination.routineTimeOut = 120000;
 commandsSequenceProceduresTermination.description =
 `
 Runs two commands in sequence.
