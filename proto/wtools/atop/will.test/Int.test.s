@@ -13019,26 +13019,9 @@ function remotePathOfMainGitRepo( test )
   let a = context.assetFor( test, 'remotePathOfMain' );
   let opener;
 
-  a.shell.predefined.sync = 1;
-  a.shell.predefined.deasync = 0;
-  a.shell.predefined.ready = null;
-
   /* - */
 
-  a.ready
-  .then( () =>
-  {
-    a.reflect();
-    a.shell( 'git init' )
-    a.shell( 'git remote add origin https://github.com/test/TestRepo.git' )
-
-    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
-    return opener.open();
-  })
-
-  /* - */
-
-  a.ready.then( () =>
+  begin().then( () =>
   {
     test.identical( opener.remotePath, 'git+https:///github.com/test/TestRepo.git/' );
     return null;
@@ -13056,6 +13039,21 @@ function remotePathOfMainGitRepo( test )
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => { a.reflect(); return null } );
+    a.shell( 'git init' );
+    a.shell( 'git remote add origin https://github.com/test/TestRepo.git' );
+    a.ready.then( () =>
+    {
+      opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+      return opener.open();
+    });
+    return a.ready;
+  }
 }
 
 remotePathOfMainGitRepo.description =
