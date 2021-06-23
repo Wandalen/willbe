@@ -8814,96 +8814,96 @@ _willfileOnPropertyAct.defaults =
 //   verbosity : 3,
 //   // v : 3,
 // }
-
 //
-
-function willfileSetProperty( o )
-{
-  let will = this.will ? this.will : this;
-
-  _.routine.options( willfileSetProperty, o );
-
-  o.act = setProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function setProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( i === splits.length - 1 )
-        {
-          let value = o.selectorsMap[ option ];
-          if( o.structureParse )
-          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-          dstConfig[ key ] = value;
-        }
-        else
-        {
-          dstConfig[ key ] = Object.create( null );
-          dstConfig = dstConfig[ key ];
-        }
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        if( _.mapIs( dstConfig[ key ] ) )
-        {
-          dstConfig = dstConfig[ key ];
-        }
-        else
-        {
-          if( o.verbosity > 3 )
-          logger.log( `${ dstConfig[ key ] } is removed` );
-          dstConfig = Object.create( null );
-        }
-      }
-      else
-      {
-        let value = o.selectorsMap[ option ];
-        if( o.structureParse )
-        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-        dstConfig[ key ] = value;
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
-    return config2;
-
-    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    {
-      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
-      return config2;
-      return config;
-    }
-
-    return config;
-  }
-
-}
-
-willfileSetProperty.defaults =
-{
-  request : null,
-  selectorsMap : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-}
+// //
+//
+// function willfileSetProperty( o )
+// {
+//   let will = this.will ? this.will : this;
+//
+//   _.routine.options( willfileSetProperty, o );
+//
+//   o.act = setProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function setProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( i === splits.length - 1 )
+//         {
+//           let value = o.selectorsMap[ option ];
+//           if( o.structureParse )
+//           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//           dstConfig[ key ] = value;
+//         }
+//         else
+//         {
+//           dstConfig[ key ] = Object.create( null );
+//           dstConfig = dstConfig[ key ];
+//         }
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         if( _.mapIs( dstConfig[ key ] ) )
+//         {
+//           dstConfig = dstConfig[ key ];
+//         }
+//         else
+//         {
+//           if( o.verbosity > 3 )
+//           logger.log( `${ dstConfig[ key ] } is removed` );
+//           dstConfig = Object.create( null );
+//         }
+//       }
+//       else
+//       {
+//         let value = o.selectorsMap[ option ];
+//         if( o.structureParse )
+//         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//         dstConfig[ key ] = value;
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+//     return config2;
+//
+//     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+//     {
+//       if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+//       return config2;
+//       return config;
+//     }
+//
+//     return config;
+//   }
+//
+// }
+//
+// willfileSetProperty.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// }
 
 //
 
@@ -9593,12 +9593,12 @@ function willfileVersionBump( o )
 
   let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
 
-  module.willfileSetProperty
+  will.willfileSetProperty
   ({
     request : willfilePath,
     selectorsMap : extensionMap,
     structureParse : 0,
-    verbosity : o.verbosity,
+    logger : o.verbosity,
   });
 
   /* */
@@ -11376,7 +11376,7 @@ let Extension =
 
   _willfileOnPropertyAct,
   // willfileGetProperty,
-  willfileSetProperty,
+  // willfileSetProperty,
   willfileDeleteProperty,
   willfileExtendProperty,
 

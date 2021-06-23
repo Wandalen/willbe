@@ -37602,7 +37602,7 @@ function commandWillfileGet( test )
   {
     test.case = 'source willfile - without name, without options and subject';
     test.identical( op.exitCode, 0 );
-    test.ge( _.strLinesCount( op.output ), 90 );
+    test.ge( _.strLinesCount( op.output ), 80 );
     test.true( _.strHas( op.output, 'about ::' ) );
     test.true( _.strHas( op.output, 'build ::' ) );
     test.true( _.strHas( op.output, 'path ::' ) );
@@ -37655,10 +37655,10 @@ function commandWillfileGet( test )
     return null;
   });
 
-  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:1 about/name:1' });
+  a.appStart({ args : '.willfile.get ForExtension.will submodule/eslint about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and enabled options';
+    test.case = 'source willfile, subject and enabled options';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'about/author :: Author <author1@dot.com>' ) );
     test.true( _.strHas( op.output, 'about/name :: Extension willfile' ) );
@@ -37667,10 +37667,10 @@ function commandWillfileGet( test )
     return null;
   });
 
-  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:0 about/name:0' });
+  a.appStart({ args : '.willfile.get ForExtension submodule/eslint about/author:0 about/name:0' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and disabled options';
+    test.case = 'source willfile, subject and disabled options';
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'about/author :: Author1 some.nickname@dot.com' ) );
     test.false( _.strHas( op.output, 'about/name :: Extension willfile' ) );
@@ -37680,10 +37680,10 @@ function commandWillfileGet( test )
     return null;
   });
 
-  a.appStart({ args : '.willfile.get .* path/in' });
+  a.appStart({ args : '.willfile.get ./ path/in' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.case = 'source willfile for two unnamed willfiles';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'path/in :: .' ) );
 
@@ -37709,12 +37709,12 @@ function commandWillfileGet( test )
     test.case = 'source willfile from context module, enabled options';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   });
 
-  a.appStart({ args : '.with .* .willfile.get submodule/eslint about/author:1 about/name:1' });
+  a.appStart({ args : '.with ./ .willfile.get submodule/eslint about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, enabled options';
@@ -37737,7 +37737,7 @@ function commandWillfileGet( test )
     return null;
   });
 
-  a.appStart({ args : '.with .* .willfile.get path/in' });
+  a.appStart({ args : '.with ./ .willfile.get path/in' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - two unnamed willfiles from context';
@@ -37778,7 +37778,7 @@ function commandWillfileSet( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -37819,10 +37819,10 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.set Name* about/author:Author author@some.dot.com about/name:author' })
+  a.appStart({ args : '.willfile.set Name.will about/author:Author author@some.dot.com about/name:author' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, options';
+    test.case = 'source willfile, options';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author author@some.dot.com' );
@@ -37831,10 +37831,10 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.set .* path/in:in' })
+  a.appStart({ args : '.willfile.set . path/in:in' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.case = 'source willfile - two unnamed willfiles';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -37853,19 +37853,19 @@ function commandWillfileSet( test )
     test.identical( config.path.in.criterion, { debug : 1 } );
 
     return null;
-  })
+  });
 
   /* */
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain.will.yml .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.appStart({ args : '.with PathMain.will.yml .willfile.set about/author:"Author author@some.dot.com" about/name:author' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, options';
@@ -37889,7 +37889,7 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.with Name* .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.appStart({ args : '.with Name .willfile.set about/author:Author author@some.dot.com about/name:author' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, options';
@@ -37901,7 +37901,7 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.with .* .willfile.set path/in:in' })
+  a.appStart({ args : '.with ./ .willfile.set path/in:in' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, two unnamed willfiles';
@@ -38047,7 +38047,7 @@ function commandWillfileDel( test )
   a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and enabled options';
+    test.case = 'source willfile, subject and enabled options';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
@@ -38062,7 +38062,7 @@ function commandWillfileDel( test )
   a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and disabled options';
+    test.case = 'source willfile, subject and disabled options';
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.description, 'To check the extension' );
     test.identical( config.about.version, '1.1.1' );

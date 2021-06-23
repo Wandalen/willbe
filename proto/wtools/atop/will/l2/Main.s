@@ -5071,16 +5071,16 @@ function willfileGetProperty( o )
 
   /* */
 
-  let willfile = willfileGet( o.request );
+  let willfile = willfileFromConfigsRead( o.request );
   const result = Object.create( null );
   for( let selector in o.selectorsMap )
-  if( o.selectorsMap[ selector ] )
   {
     _.assert
     (
       _.strBegins( selector, willfileSections ),
       `Invalid property selector "${ selector }". Please, improve property selector.`
     );
+    if( o.selectorsMap[ selector ] )
     result[ selector ] = _.select({ src : willfile, selector });
   }
 
@@ -5127,25 +5127,12 @@ function willfileGetProperty( o )
 
   /* */
 
-  function willfileGet( src )
+  function willfileFromConfigsRead( src )
   {
     src = path.join( will.inPath ? will.inPath : path.current(), src );
-
-    const willfilesArray = will.willfilesFind
-    ({
-      commonPath : src,
-      withIn : 1,
-      withOut : 0,
-    });
-
-    _.sure( willfilesArray.length > 0, 'Expects willfiles to get properties. Please, improve selector.' )
-
-    let willfile = Object.create( null );
-    for( let i = 0 ; i < willfilesArray.length ; i++ )
-    {
-      const config = fileProvider.fileRead({ filePath : willfilesArray[ i ].absolute, encoding : 'yaml' });
-      _.map.extend( willfile, config );
-    }
+    const willfilesMap = _.will.fileReadAt( src );
+    const willfile = Object.create( null );
+    _.each( willfilesMap, ( config ) => _.map.extend( willfile, config ) );
     return willfile;
   }
 
@@ -5173,6 +5160,104 @@ willfileGetProperty.defaults =
 {
   request : null,
   selectorsMap : null,
+  logger : 3,
+};
+
+//
+
+function willfileSetProperty( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfileSetProperty, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+  const willfileSections = [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ];
+
+  /* */
+
+  selectorsMapVerify();
+
+  o.request = o.request === '.' ? './' : o.request;
+  const willfilesMap = _.will.fileReadAt( path.join( will.inPath || path.current(), o.request || './' ) );
+  const willfileSet = o.structureParse ? willfileSetParsed : willfileSetPrimitive;
+
+  for( let selector in o.selectorsMap )
+  willfileSet( o.selectorsMap[ selector ], selector, willfileGetBySelector( selector ) );
+
+  _.each( willfilesMap, ( willfile, willfilePath ) =>
+  {
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile })
+  });
+
+  return null;
+
+  /* */
+
+  function selectorsMapVerify()
+  {
+    let count = 0;
+    for( let selector in o.selectorsMap )
+    {
+      ++count;
+      break;
+    }
+    _.assert( count === 1, 'Expects options to set.' );
+  }
+
+  /* */
+
+  function willfileSetParsed( set, selector, src )
+  {
+    _.selectSet
+    ({
+      src,
+      selector,
+      set : _.strStructureParse( set ),
+    });
+  }
+
+  /* */
+
+  function willfileSetPrimitive( set, selector, src )
+  {
+    _.selectSet({ src, selector, set });
+  }
+
+  /* */
+
+  function willfileGetBySelector( selector )
+  {
+    _.assert
+    (
+      _.strBegins( selector, willfileSections ),
+      `Invalid property selector "${ selector }". Please, improve property selector.`
+    );
+
+    while( selector !== '.' )
+    {
+      const willfile = _.any( willfilesMap, ( willfile ) =>
+      {
+        if( _.select( willfile, selector ) !== undefined )
+        return willfile;
+      });
+      if( willfile )
+      return willfile;
+      selector = path.dir( selector );
+    }
+
+    for( let willfile in willfilesMap )
+    return willfilesMap[ willfile ];
+  }
+}
+
+willfileSetProperty.defaults =
+{
+  request : null,
+  selectorsMap : null,
+  structureParse : 0,
   logger : 3,
 };
 
@@ -6455,6 +6540,7 @@ let Extension =
   willfileGenerateFromNpm,
 
   willfileGetProperty,
+  willfileSetProperty,
   willfileExtendWillfile,
 
   // clean
