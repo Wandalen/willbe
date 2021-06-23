@@ -4565,9 +4565,17 @@ function commandWillfileGet( e )
 
   function handleAll( it )
   {
+    let request = e.subject;
+    if( !request )
+    if( it.openers.length )
+    {
+      _.sure( it.openers.length === 1 );
+      request = it.openers[ 0 ].openedModule.commonPath;
+    }
+
     return cui.willfileGetProperty
     ({
-      request : e.subject,
+      request,
       selectorsMap,
     });
   }
@@ -4594,6 +4602,55 @@ command.properties =
 
 //
 
+// function commandWillfileSet( e )
+// {
+//   let cui = this;
+//   let selectorsMap = _.mapBut_( null, e.propertiesMap, commandWillfileSet.defaults );
+//   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileSet.defaults );
+//   cui._command_head( commandWillfileSet, arguments );
+//
+//   if( !e.subject && !cui.currentOpeners )
+//   if( _.props.keys( selectorsMap ).length > 0 )
+//   // e.subject = './';
+//   e.subject = cui.transaction.withPath;
+//
+//   if( e.subject )
+//   {
+//     let o =
+//     {
+//       request : e.subject,
+//       selectorsMap,
+//       ... e.optionsMap,
+//     };
+//     return _.will.Module.prototype.willfileSetProperty.call( cui, o );
+//   }
+//
+//   if( cui.currentOpeners )
+//   return cui._commandBuildLike
+//   ({
+//     event : e,
+//     name : 'willfile set',
+//     onEach : handleEach,
+//     commandRoutine : commandWillfileSet,
+//   });
+//
+//   throw _.errBrief( 'Please, specify at least one option. Format: will .willfile.set about/name:name' );
+//
+//   function handleEach( it )
+//   {
+//     let request = it.opener.commonPath;
+//     if( cui.fileProvider.isDir( request ) )
+//     request = cui.fileProvider.path.join( request, './.*' );
+//
+//     return it.opener.openedModule.willfileSetProperty
+//     ({
+//       request,
+//       selectorsMap,
+//       ... e.optionsMap,
+//     });
+//   }
+// }
+
 function commandWillfileSet( e )
 {
   let cui = this;
@@ -4601,44 +4658,29 @@ function commandWillfileSet( e )
   e.propertiesMap = _.mapOnly_( null, e.propertiesMap, commandWillfileSet.defaults );
   cui._command_head( commandWillfileSet, arguments );
 
-  if( !e.subject && !cui.currentOpeners )
-  if( _.props.keys( selectorsMap ).length > 0 )
-  // e.subject = './';
-  e.subject = cui.transaction.withPath;
-
-  if( e.subject )
-  {
-    let o =
-    {
-      request : e.subject,
-      selectorsMap,
-      ... e.optionsMap,
-    };
-    return _.will.Module.prototype.willfileSetProperty.call( cui, o );
-  }
-
-  if( cui.currentOpeners )
-  return cui._commandBuildLike
+  return cui._commandExtendLike
   ({
     event : e,
     name : 'willfile set',
-    onEach : handleEach,
+    onAll : handleAll,
     commandRoutine : commandWillfileSet,
   });
 
-  throw _.errBrief( 'Please, specify at least one option. Format: will .willfile.set about/name:name' );
-
-  function handleEach( it )
+  function handleAll( it )
   {
-    let request = it.opener.commonPath;
-    if( cui.fileProvider.isDir( request ) )
-    request = cui.fileProvider.path.join( request, './.*' );
+    let request = e.subject;
+    if( !request )
+    if( it.openers.length )
+    {
+      _.sure( it.openers.length === 1 );
+      request = it.openers[ 0 ].openedModule.commonPath;
+    }
 
-    return it.opener.openedModule.willfileSetProperty
+    return cui.willfileSetProperty
     ({
       request,
       selectorsMap,
-      ... e.optionsMap,
+      structureParse : e.optionsMap.structureParse,
     });
   }
 }
