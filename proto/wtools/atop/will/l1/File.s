@@ -156,7 +156,6 @@ function fileAt_body( o )
 
     if( o.withIn )
     {
-
       if( isTrailed )
       {
         if( o.withSingle )
@@ -210,9 +209,7 @@ function fileAt_body( o )
         if( fileProvider.resolvedIsTerminal( filePath ) )
         result.push({ filePath, role : 'import', out : false });
       }
-
     }
-
   });
 
   return result;
@@ -443,6 +440,7 @@ function filesAt_body( o )
       filePath : commonPath,
       maskDirectory : {},
       maskTransientDirectory : {},
+      recursive : 1,
     };
 
     if( _.strHas( commonPath, '**' ) )

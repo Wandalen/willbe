@@ -3730,7 +3730,7 @@ defaults.hasFiles = 1;
 defaults.isValid = 1;
 defaults.isRepository = 1;
 defaults.hasRemote = 1;
-defaults.isUpToDate = 1
+defaults.isUpToDate = 1;
 
 delete defaults.withStem;
 delete defaults.onEach;
@@ -6702,8 +6702,8 @@ function optionsForOpenerExport()
   let result = _.mapOnly_( null, module, fields );
 
   // debugger; xxx
-  // result.hasFiles = true;
-  // result.isRepository = true;
+  // result.hasFiles = 1;
+  // result.isRepository = 1;
   // result.repo = module.repo;
 
   result.willfilesArray = _.entity.make( result.willfilesArray );
