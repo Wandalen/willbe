@@ -2351,6 +2351,96 @@ function fileReadPath( test )
 
 //
 
+function fileReadAt( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  test.open( 'call with arguments' );
+
+  test.case = 'commonPath - path to dir';
+  var got = _.will.fileReadAt( a.abs( './' ) );
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( '.ex.will.yml' ), a.abs( '.im.will.yml' ) ] );
+  test.identical( got[ a.abs( '.ex.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( '.ex.will.yml' ) ) );
+  test.identical( got[ a.abs( '.im.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) ) );
+
+  test.case = 'commonPath - path with name of file, resourceKind - path, resourceName - proto';
+  var got = _.will.fileReadAt( a.abs( './PathMain' ) );
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( 'PathMain.will.yml' ) ] );
+  test.identical( got[ a.abs( 'PathMain.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( 'PathMain.will.yml' ) ) );
+
+  test.case = 'commonPath - path with name of file and extension, resourceKind - path, resourceName - proto';
+  var got = _.will.fileReadAt( a.abs( './PathMain.will' ) );
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( 'PathMain.will.yml' ) ] );
+  test.identical( got[ a.abs( 'PathMain.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( 'PathMain.will.yml' ) ) );
+
+  test.case = 'commonPath - path with full name of file, resourceKind - path, resourceName - proto';
+  var got = _.will.fileReadAt( a.abs( './PathMain.will.yml' ) );
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( 'PathMain.will.yml' ) ] );
+  test.identical( got[ a.abs( 'PathMain.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( 'PathMain.will.yml' ) ) );
+
+  test.close( 'call with arguments' );
+
+  /* - */
+
+  test.open( 'call with options map' );
+
+  test.case = 'commonPath - path to dir';
+  var got = _.will.fileReadAt({ commonPath : a.abs( './' ) });
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( '.ex.will.yml' ), a.abs( '.im.will.yml' ) ] );
+  test.identical( got[ a.abs( '.ex.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( '.ex.will.yml' ) ) );
+  test.identical( got[ a.abs( '.im.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( '.im.will.yml' ) ) );
+
+  test.case = 'commonPath - path with name of file, resourceKind - path, resourceName - proto';
+  var got = _.will.fileReadAt({ commonPath : a.abs( './PathMain' ) });
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( 'PathMain.will.yml' ) ] );
+  test.identical( got[ a.abs( 'PathMain.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( 'PathMain.will.yml' ) ) );
+
+  test.case = 'commonPath - path with name of file and extension, resourceKind - path, resourceName - proto';
+  var got = _.will.fileReadAt({ commonPath : a.abs( './PathMain.will' ) });
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( 'PathMain.will.yml' ) ] );
+  test.identical( got[ a.abs( 'PathMain.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( 'PathMain.will.yml' ) ) );
+
+  test.case = 'commonPath - path with full name of file, resourceKind - path, resourceName - proto';
+  var got = _.will.fileReadAt({ commonPath : a.abs( './PathMain.will.yml' ) });
+  test.true( _.aux.is( got ) );
+  test.identical( _.props.keys( got ), [ a.abs( 'PathMain.will.yml' ) ] );
+  test.identical( got[ a.abs( 'PathMain.will.yml' ) ], a.fileProvider.fileReadUnknown( a.abs( 'PathMain.will.yml' ) ) );
+
+  test.close( 'call with options map' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  a.reflect();
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.will.fileReadAt() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.will.fileReadAt( a.abs( './' ), 'extra' ) );
+
+  test.case = 'common path has no willfiles';
+  test.shouldThrowErrorSync( () => _.will.fileReadAt({ commonPath : a.abs( 'proto' ) }) );
+
+  test.case = 'common path has willfiles but options for searching allows no read';
+  test.shouldThrowErrorSync( () => _.will.fileReadAt ({ commonPath : a.abs( './PathMain' ), withSingle : 0 }) );
+}
+
+//
+
 function fileWriteResource( test )
 {
   let context = this;
@@ -2759,6 +2849,7 @@ let Self =
 
     fileReadResource,
     fileReadPath,
+    fileReadAt,
     fileWriteResource,
     fileWritePath,
 
