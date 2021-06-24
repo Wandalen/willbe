@@ -382,6 +382,8 @@ function fileAt( test )
   test.shouldThrowErrorSync( () => _.will.fileAt({ commonPath : a.abs( './' ), withIn : 0, withOut : 0 }) );
 }
 
+fileAt.timeOut = 200000;
+
 //
 
 function fileAtWithOptions( test )
