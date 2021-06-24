@@ -13059,7 +13059,40 @@ function remotePathOfMainGitRepo( test )
 remotePathOfMainGitRepo.description =
 `
 Checks remotePath of the main module as a git repository.
+`;
+
+//
+
+function moduleLoadingExperiment( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'remotePathOfMain' );
+  let opener;
+
+  a.shell.predefined.sync = 1;
+  a.shell.predefined.ready = null;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.shell( 'git init' )
+    a.shell( 'git remote add origin https://github.com/test/TestRepo.git' )
+    return test.true( true );
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+moduleLoadingExperiment.experimental = 1;
+moduleLoadingExperiment.description =
 `
+Demonstrate problem 'Module did not self-register'
+The full copy of this test in module 'Process' does not work as expected.
+`;
 
 // --
 // define class
@@ -13184,6 +13217,8 @@ const Proto =
     repoStatusLocalChanges,
     repoStatusLocalUncommittedChanges,
     remotePathOfMainGitRepo,
+
+    moduleLoadingExperiment,
 
   }
 
