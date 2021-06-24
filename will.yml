@@ -4,7 +4,8 @@ about:
   version: 0.6.0
   enabled: 1
   license: MIT
-  engines:
+  npm.engine-strict: true
+  npm.engines:
     node: '>=10.21.0 <15.0.0'
   npm.name: willbe
   npm.bin:

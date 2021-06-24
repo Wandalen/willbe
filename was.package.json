@@ -10,6 +10,7 @@
     { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
   "license" : "MIT",
+  "engine-strict" : true,
   "engines" :
   {
     "node": ">=10.21.0 <15.0.0"
