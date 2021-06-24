@@ -10,6 +10,10 @@
     { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
   "license" : "MIT",
+  "engines" :
+  {
+    "node": ">=10.21.0 <15.0.0"
+  },
   "main" : "proto/node_modules/willbe",
   "files" : [ "proto/wtools/atop/will", "out", "proto/node_modules", "proto/node_modules/Tools", "proto/node_modules/willbe" ],
   "bin" :

@@ -4,6 +4,8 @@ about:
   version: 0.6.0
   enabled: 1
   license: MIT
+  engines:
+    node: '>=10.21.0 <15.0.0'
   npm.name: willbe
   npm.bin:
     single-process-will: proto/wtools/atop/will/entry/Exec
