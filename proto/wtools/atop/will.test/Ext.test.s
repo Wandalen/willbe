@@ -438,10 +438,11 @@ function etcRunWillbe( test )
 
 function etcKillWillbe( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  let con = _.take( null );
-  a.reflect();
+  const context = this;
+  const a = context.assetFor( test, 'simple' );
+  const con = _.take( null );
+  const delay = 1500;
+  a.reflectMinimal();
 
   /* */
 
@@ -462,7 +463,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill() );
+      _.time.out( delay, () => o.pnd.kill() );
     });
 
     return a.ready.then( ( op ) =>
@@ -500,7 +501,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGTERM' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGTERM') );
+      _.time.out( delay, () => o.pnd.kill( 'SIGTERM') );
     });
 
     return a.ready.then( ( op ) =>
@@ -576,7 +577,7 @@ function etcKillWillbe( test )
     o.pnd.stdout.on( 'data', ( data ) =>
     {
       console.log( 'Terminating willbe... SIGINT' );
-      _.time.out( 1000, () => o.pnd.kill( 'SIGINT' ) );
+      _.time.out( delay, () => o.pnd.kill( 'SIGINT' ) );
     });
 
     return a.ready.then( ( op ) =>
@@ -1526,14 +1527,14 @@ function buildOptionWithSubmodules( test )
   let a = context.assetFor( test, 'buildOptionWithSubmodules' );
   a.reflect();
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodulesDef .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodulesDef .build' })
   .then( ( op ) =>
@@ -1547,16 +1548,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules2 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules2 .build' })
   .then( ( op ) =>
@@ -1570,16 +1571,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules1 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules1 .build' })
   .then( ( op ) =>
@@ -1593,16 +1594,16 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.with withSubmodules0 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with withSubmodules0 .build' })
   .then( ( op ) =>
@@ -1616,7 +1617,7 @@ function buildOptionWithSubmodules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml' ), 0 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -1624,6 +1625,7 @@ function buildOptionWithSubmodules( test )
 }
 
 buildOptionWithSubmodules.timeOut = 300000;
+buildOptionWithSubmodules.experimental = 1;
 
 //
 
@@ -6507,13 +6509,14 @@ hookGitSyncConflict.description =
 function hookGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
+
+  if( !_.censor )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
-
-  if( !_.censor )
-  return test.true( true );
 
   /* */
 
@@ -13155,7 +13158,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
@@ -13187,14 +13190,14 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), true );
 
     return null;
-  })
+  });
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -13232,7 +13235,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -13270,7 +13273,7 @@ function exportWithDisabled( test )
   a.ready.then( () =>
   {
     test.case = '.with */* .export.recursive';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   });
@@ -32630,12 +32633,13 @@ function commandModulesGitSync( test )
 function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 {
   let context = this;
+
+  if( !_.censor || _.process.insideTestContainer() )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'modulesGitSync' );
-
-  if( !_.censor )
-  return test.true( true );
 
   let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
   let profile = 'test-profile';
@@ -32778,12 +32782,13 @@ super
 function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -32944,12 +32949,13 @@ original/f2.txt
 function commandModulesGitSyncRestoreHardLinksInModule( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -33101,12 +33107,13 @@ original/f2.txt
 function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
   let context = this;
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
 
   if( !_.censor )
   return test.true( true );
+
+  let temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
@@ -36069,13 +36076,14 @@ ${ mergeEnd }
 function commandGitSyncRestoreHardLinksWithShared( test )
 {
   let context = this;
+
+  if( !_.censor )
+  return test.true( true );
+
   let temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
-
-  if( !_.censor )
-  return test.true( true );
 
   /* */
 
@@ -41923,7 +41931,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -41947,7 +41958,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -41972,7 +41986,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -41996,7 +42013,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -42020,7 +42040,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 5 )
+    var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -42044,7 +42067,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -42868,11 +42894,12 @@ function commandSubmodulesUpdateOptionTo( test )
   .then( () =>
   {
     test.case = 'switch to dev3, dev1 was renamed to dev3 on the remote after download'
-    a.moduleDownloadedShellSync( 'git fetch --tags' )
-    a.moduleShellSync( 'git tag dev3 dev1^{}' )
-    a.moduleShellSync( 'git tag -d dev1' )
+    let escapeCaret = process.platform === 'win32' ? '^' : '';
+    a.moduleDownloadedShellSync( 'git fetch --tags' );
+    a.moduleShellSync( `git tag dev3 dev1${ escapeCaret }^{}` );
+    a.moduleShellSync( 'git tag -d dev1' );
     return null;
-  })
+  });
   a.appStart( '.submodules.update to:!dev3' )
   .then( ( op ) =>
   {
@@ -43057,7 +43084,7 @@ function commandsSequenceProceduresTermination( test )
 }
 
 commandsSequenceProceduresTermination.rapidity = 1;
-commandsSequenceProceduresTermination.routineTimeOut = 60000;
+commandsSequenceProceduresTermination.routineTimeOut = 120000;
 commandsSequenceProceduresTermination.description =
 `
 Runs two commands in sequence.
