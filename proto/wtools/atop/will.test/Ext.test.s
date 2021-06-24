@@ -42142,6 +42142,121 @@ function commandNpmInstall( test )
 
 //
 
+function commandNpmInstallFromPackageWithoutName( test )
+{
+  let self = this;
+  let a = test.assetFor( 'npmDepAdd' );
+  a.fileProvider.dirMake( a.abs( '.' ) );
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'default option linkingSelf, should not link';
+    return null;
+  });
+  a.appStart( '.npm.install' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 0, should not link';
+    return null;
+  });
+  a.appStart( '.npm.install linkingSelf:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install linkingSelf:0"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 0 );
+
+    return null;
+  });
+
+  begin().then( () =>
+  {
+    test.case = 'linkingSelf - 1, should throw error';
+    return null;
+  });
+  a.appStartNonThrowing( '.npm.install linkingSelf:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var files = find( 'node_modules' );
+    var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'Command ".npm.install linkingSelf:1"' ), 1 );
+    test.identical( _.strCount( op.output, '> npm install' ), 1 );
+    test.identical( _.strCount( op.output, /Linking hd:\/\/.*\/commandNpmInstall to .*\/commandNpmInstall\/node_modules\/test/ ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    const data =
+    {
+      dependencies :
+      {
+        wmodulefortesting1 : '',
+        wmodulefortesting12 : '',
+      }
+    };
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.fileProvider.fileWriteUnknown({ filePath : a.abs( 'package.json' ), data });
+      return null;
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function find( filePath )
+  {
+    return a.fileProvider.filesFind
+    ({
+      filePath : a.abs( filePath ),
+      filter : { recursive : 1 },
+      outputFormat : 'relative',
+      withDirs : 1,
+    });
+  }
+}
+
+//
+
 function commandsSubmoduleSafety( test )
 {
   let context = this;
@@ -43487,6 +43602,7 @@ const Proto =
     commandNpmPublishFullRegularModule,
     commandNpmDepAdd,
     commandNpmInstall,
+    commandNpmInstallFromPackageWithoutName,
 
     commandsSubmoduleSafety,
     commandsSubmoduleSafetyDownloadInvalidUrl,
