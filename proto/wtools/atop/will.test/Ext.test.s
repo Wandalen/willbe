@@ -41950,7 +41950,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -41974,7 +41977,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -41999,7 +42005,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.notIdentical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.notIdentical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.notIdentical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -42023,7 +42032,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -42047,7 +42059,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 5 )
+    var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
@@ -42071,7 +42086,10 @@ function commandNpmInstall( test )
   {
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
-    test.identical( files, [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ] );
+    var exp = [ '.', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    if( files.length === 6 )
+    var exp = [ '.', './.package-lock.json', './test', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
+    test.identical( files, exp );
     test.identical( versionGet( 'wmodulefortesting1' ), '0.0.134' );
     test.identical( versionGet( 'wmodulefortesting2' ), '0.0.125' );
     test.identical( versionGet( 'wmodulefortesting12' ), '0.0.125' );
