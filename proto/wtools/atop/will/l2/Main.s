@@ -5185,6 +5185,7 @@ function willfileSetProperty( o )
 
   /* */
 
+  _requestParsePathAndSelectors.call( will, o );
   selectorsMapVerify();
 
   o.commonPath = o.commonPath === '.' ? './' : o.commonPath;
@@ -5263,6 +5264,7 @@ function willfileSetProperty( o )
 willfileSetProperty.defaults =
 {
   commonPath : null,
+  request : null,
   selectorsMap : null,
   structureParse : 0,
   logger : 3,
@@ -5337,6 +5339,120 @@ willfileDeleteProperty.defaults =
   selectorsMap : null,
   logger : 3,
 };
+
+//
+
+function willfileExtendProperty( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfileExtendProperty, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+
+  /* */
+
+  _requestParsePathAndSelectors.call( will, o );
+  selectorsMapVerify();
+
+  o.commonPath = o.commonPath === '.' ? './' : o.commonPath;
+  const willfilesMap = _.will.fileReadAt( path.join( will.inPath || path.current(), o.commonPath || './' ) );
+
+  for( let selector in o.selectorsMap )
+  {
+    let [ willfile, property ] = willfileAndPropertyGetBySelector( selector );
+    property = propertyExtend( property, o.selectorsMap[ selector ] );
+    _.selectSet({ src : willfile, selector, set : property });
+  }
+
+  _.each( willfilesMap, ( willfile, willfilePath ) =>
+  {
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile });
+  });
+
+  return null;
+
+  /* */
+
+  function selectorsMapVerify()
+  {
+    let count = 0;
+    for( let selector in o.selectorsMap )
+    {
+      ++count;
+      break;
+    }
+    _.assert( count === 1, 'Expects options to set.' );
+  }
+
+  /* */
+
+  function willfileAndPropertyGetBySelector( selector )
+  {
+    _.assert
+    (
+      _.strBegins( selector, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] ),
+      `Invalid property selector "${ selector }". Please, improve property selector.`
+    );
+
+    let property;
+    const willfile = _.any( willfilesMap, ( willfile ) =>
+    {
+      property = _.select( willfile, selector );
+      if( property !== undefined )
+      return willfile;
+    });
+    if( willfile )
+    return [ willfile, property ];
+    selector = path.dir( selector );
+
+    /* */
+
+    selector = path.dir( selector );
+    while( selector !== '.' )
+    {
+      const willfile = _.any( willfilesMap, ( willfile ) =>
+      {
+        if( _.select( willfile, selector ) !== undefined )
+        return willfile;
+      });
+      if( willfile )
+      return [ willfile, undefined ];
+      selector = path.dir( selector );
+    }
+
+    for( let willfile in willfilesMap )
+    return [ willfilesMap[ willfile ], undefined ];
+  }
+
+  /* */
+
+  function propertyExtend( dst, src )
+  {
+    if( o.structureParse )
+    src = _.strStructureParse({ src, parsingArrays : 1 });
+
+    if( dst === undefined || dst === null )
+    return src;
+    if( _.array.is( dst ) )
+    return _.arrayAppendArrayOnce( dst, src );
+    if( _.primitive.is( dst ) || _.aux.is( dst ) )
+    return o.onProperty( { el : dst }, { el : src } ).el;
+    _.assert( false, 'Unexpected type of property' );
+  }
+}
+
+willfileExtendProperty.defaults =
+{
+  commonPath : null,
+  request : null,
+  selectorsMap : null,
+  onProperty : null,
+  structureParse : 0,
+  logger : 3,
+}
 
 //
 
@@ -6619,6 +6735,7 @@ let Extension =
   willfileGetProperty,
   willfileSetProperty,
   willfileDeleteProperty,
+  willfileExtendProperty,
   willfileExtendWillfile,
 
   // clean

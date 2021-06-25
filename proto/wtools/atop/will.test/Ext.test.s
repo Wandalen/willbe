@@ -38194,11 +38194,11 @@ function commandWillfileExtend( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend Author about/author:"Author1 some.nickname@dot.com"' })
+  a.appStart({ args : '.willfile.extend Author about/author:"Author1 some.nickname@dot.com"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'dstFile - only first part of willfile name, replace existing property';
@@ -38208,9 +38208,9 @@ function commandWillfileExtend( test )
     test.identical( _.props.keys( config.about ).length, 1 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend Author.will.yml about/author:"Author author@dot.com"' })
+  a.appStart({ args : '.willfile.extend Author.will.yml about/author:"Author author@dot.com"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'dstFile - full willfile name, replace existing property';
@@ -38220,12 +38220,12 @@ function commandWillfileExtend( test )
     test.identical( _.props.keys( config.about ).length, 1 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend .*.will.* about/author:"Author author@dot.com"' })
+  a.appStart({ args : '.willfile.extend . about/author:"Author author@dot.com"' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace existing property';
+    test.case = 'dstFile - two unnamed willfiles, replace existing property';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author author@dot.com' );
@@ -38235,12 +38235,12 @@ function commandWillfileExtend( test )
     test.identical( config.about, undefined );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend .*.will.* path/in:./' })
+  a.appStart({ args : '.willfile.extend . path/in:./' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace property that exists in both files';
+    test.case = 'dstFile - two unnamed willfiles, replace property that exists in both files';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38249,24 +38249,12 @@ function commandWillfileExtend( test )
     test.identical( config.path.in, './' );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend PathMain* path/proto/path:proto/wtools' })
+  a.appStart({ args : '.willfile.extend PathMain path/proto:proto/wtools' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, replace single field of resource';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
-    test.identical( config.path.proto.path, 'proto/wtools' );
-    test.identical( _.props.keys( config.path ).length, 2 );
-
-    return null;
-  })
-
-  a.appStart({ args : '.willfile.extend PathMain* path/proto:proto/wtools' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'dstFile - glob that find willfile, replace resource data';
+    test.case = 'replace resource data';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.proto, 'proto/wtools' );
@@ -38278,10 +38266,10 @@ function commandWillfileExtend( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend PathMain* about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
+  a.appStart({ args : '.willfile.extend PathMain about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add few new sections and resources';
+    test.case = 'add few new sections and resources';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38293,10 +38281,10 @@ function commandWillfileExtend( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
+  a.appStart({ args : '.willfile.extend PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38304,14 +38292,14 @@ function commandWillfileExtend( test )
     test.identical( _.props.keys( config.path ).length, 2 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' })
+  a.appStart({ args : '.willfile.extend PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38341,15 +38329,6 @@ function commandWillfileExtend( test )
     return null;
   })
 
-  a.appStartNonThrowing({ args : '.willfile.extend PathMain path/entry/path/criterion/throwing:1' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'replace existing property which is not a map';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
-
   /* */
 
   return a.ready;
@@ -38361,7 +38340,7 @@ function commandWillfileSupplement( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -38389,10 +38368,10 @@ function commandWillfileSupplement( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .*.will.* about/author:"Author author@dot.com"' })
+  a.appStart({ args : '.willfile.supplement . about/author:"Author author@dot.com"' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace existing property';
+    test.case = 'dstFile - two unnamed willfiles, replace existing property';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author <author@dot.com>' );
@@ -38404,10 +38383,10 @@ function commandWillfileSupplement( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .*.will.* path/in:./' })
+  a.appStart({ args : '.willfile.supplement . path/in:./' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace property that exists in both files';
+    test.case = 'dstFile - two unnamed willfiles, replace property that exists in both files';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38416,12 +38395,12 @@ function commandWillfileSupplement( test )
     test.identical( config.path.in, '.' );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/proto/path:proto/wtools' })
+  a.appStart({ args : '.willfile.supplement PathMain path/proto/path:proto/wtools' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, replace single field of resource';
+    test.case = 'replace single field of resource';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.proto.path, 'proto' );
@@ -38430,10 +38409,10 @@ function commandWillfileSupplement( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/proto:proto/wtools' })
+  a.appStart({ args : '.willfile.supplement PathMain path/proto:proto/wtools' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, replace resource data';
+    test.case = 'replace resource data';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.proto, { path : 'proto' } );
@@ -38444,10 +38423,10 @@ function commandWillfileSupplement( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement PathMain* about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
+  a.appStart({ args : '.willfile.supplement PathMain about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add few new sections and resources';
+    test.case = 'add few new sections and resources';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38459,10 +38438,10 @@ function commandWillfileSupplement( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
+  a.appStart({ args : '.willfile.supplement PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38470,14 +38449,14 @@ function commandWillfileSupplement( test )
     test.identical( _.props.keys( config.path ).length, 2 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' })
+  a.appStart({ args : '.willfile.supplement PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38485,38 +38464,29 @@ function commandWillfileSupplement( test )
     test.identical( _.props.keys( config.path ).length, 2 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.appStartNonThrowing({ args : '.willfile.supplement NotExisted about/name:throwing' })
+  a.appStartNonThrowing({ args : '.willfile.supplement NotExisted about/name:throwing' });
   a.ready.then( ( op ) =>
   {
     test.case = 'dstFile not exists';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ args : '.willfile.supplement "**" about/name:throwing' })
+  a.appStartNonThrowing({ args : '.willfile.supplement "**" about/name:throwing' });
   a.ready.then( ( op ) =>
   {
     test.case = 'too many dstFiles';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ args : '.willfile.supplement PathMain path/entry/path/criterion/throwing:1' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'replace existing property which is not a map';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
-
-  /* */
+  /* - */
 
   return a.ready;
 }

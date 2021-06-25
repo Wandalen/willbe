@@ -8627,124 +8627,124 @@ resourceImport.defaults =
 //   'logger' : 3,
 //   // 'v' : null,
 // }
-
 //
-
-function _willfileOnPropertyAct( o )
-{
-  let will = this.will ? this.will : this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.transaction.logger;
-  let loggerForProvider = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
-
-  _.routine.options( _willfileOnPropertyAct, o );
-  _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( o ) );
-
-  let dstWillfileRecords = dstRecordsFind( o.request );
-  _.assert
-  (
-    1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
-    `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
-  );
-  _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ) || dstWillfileRecords[ 0 ].name === 'will', 'Expexts willfiles' );
-
-  let willfile, willfile2;
-  let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
-  willfile =
-    fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
-  if( dstWillfileRecords.length === 2 )
-  willfile2 =
-    fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
-
-  /* */
-
-  let sectionMap =
-  {
-    about : 'about',
-    build : 'build',
-    path : 'path',
-    reflector : 'reflector',
-    step : 'step',
-    submodule : 'submodule',
-  };
-
-  for( let option in o.selectorsMap )
-  {
-
-    let splits = option.split( '/' );
-
-    if( splits[ 0 ] === '' )
-    splits.shift();
-
-    if( !( splits[ 0 ] in sectionMap ) )
-    throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
-
-    let dstConfig = o.onConfig( willfile, willfile2, splits );
-    o.act( dstConfig, splits, option );
-
-  }
-
-  /* */
-
-  if( o.writing )
-  {
-    configWrite( dstWillfileRecords[ 0 ].absolute, willfile );
-    if( dstWillfileRecords.length === 2 )
-    configWrite( dstWillfileRecords[ 1 ].absolute, willfile2 );
-  }
-
-  return null;
-
-  /* */
-
-  function dstRecordsFind( dstPath )
-  {
-    if( !path.isAbsolute( dstPath ) )
-    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
-
-    if( fileProvider.isDir( dstPath ) )
-    dstPath = path.join( dstPath, './' );
-
-    return will.willfilesFind
-    ({
-      commonPath : dstPath,
-      withIn : 1,
-      withOut : 0,
-    });
-  }
-
-  /* */
-
-  function configWrite( path, data )
-  {
-    fileProvider.fileWrite
-    ({
-      filePath : path,
-      data,
-      encoding : dstEncoding,
-      verbosity : o.verbosity,
-    });
-  }
-
-}
-
-_willfileOnPropertyAct.defaults =
-{
-  request : null,
-  selectorsMap : null,
-  onProperty : null,
-  onConfig : null,
-  act : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-};
-
+// //
 //
-
+// function _willfileOnPropertyAct( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.transaction.logger;
+//   let loggerForProvider = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+//
+//   _.routine.options( _willfileOnPropertyAct, o );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( o ) );
+//
+//   let dstWillfileRecords = dstRecordsFind( o.request );
+//   _.assert
+//   (
+//     1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
+//     `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
+//   );
+//   _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ) || dstWillfileRecords[ 0 ].name === 'will', 'Expexts willfiles' );
+//
+//   let willfile, willfile2;
+//   let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
+//   willfile =
+//     fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
+//   if( dstWillfileRecords.length === 2 )
+//   willfile2 =
+//     fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
+//
+//   /* */
+//
+//   let sectionMap =
+//   {
+//     about : 'about',
+//     build : 'build',
+//     path : 'path',
+//     reflector : 'reflector',
+//     step : 'step',
+//     submodule : 'submodule',
+//   };
+//
+//   for( let option in o.selectorsMap )
+//   {
+//
+//     let splits = option.split( '/' );
+//
+//     if( splits[ 0 ] === '' )
+//     splits.shift();
+//
+//     if( !( splits[ 0 ] in sectionMap ) )
+//     throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
+//
+//     let dstConfig = o.onConfig( willfile, willfile2, splits );
+//     o.act( dstConfig, splits, option );
+//
+//   }
+//
+//   /* */
+//
+//   if( o.writing )
+//   {
+//     configWrite( dstWillfileRecords[ 0 ].absolute, willfile );
+//     if( dstWillfileRecords.length === 2 )
+//     configWrite( dstWillfileRecords[ 1 ].absolute, willfile2 );
+//   }
+//
+//   return null;
+//
+//   /* */
+//
+//   function dstRecordsFind( dstPath )
+//   {
+//     if( !path.isAbsolute( dstPath ) )
+//     dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+//
+//     if( fileProvider.isDir( dstPath ) )
+//     dstPath = path.join( dstPath, './' );
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : dstPath,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function configWrite( path, data )
+//   {
+//     fileProvider.fileWrite
+//     ({
+//       filePath : path,
+//       data,
+//       encoding : dstEncoding,
+//       verbosity : o.verbosity,
+//     });
+//   }
+//
+// }
+//
+// _willfileOnPropertyAct.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   onProperty : null,
+//   onConfig : null,
+//   act : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// };
+//
+// //
+//
 // function willfileGetProperty( o )
 // {
 //   let will = this.will ? this.will : this;
@@ -8981,81 +8981,81 @@ _willfileOnPropertyAct.defaults =
 //   verbosity : 3,
 //   // v : 3,
 // }
-
 //
-
-function willfileExtendProperty( o )
-{
-  let will = this;
-
-  _.routine.options( willfileExtendProperty, o );
-  o.act = extendProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function extendProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( i === splits.length - 1 )
-        {
-          let value = o.selectorsMap[ option ];
-          if( o.structureParse )
-          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-          o.onProperty( dstConfig, { [ key ] : value } );
-        }
-        else
-        {
-          dstConfig[ key ] = Object.create( null );
-          dstConfig = dstConfig[ key ];
-        }
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
-        dstConfig = dstConfig[ key ];
-      }
-      else
-      {
-        let value = o.selectorsMap[ option ];
-        if( o.structureParse )
-        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-        o.onProperty( dstConfig, { [ key ] : value } );
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 )
-    return config2;
-
-    return config;
-  }
-
-}
-
-willfileExtendProperty.defaults =
-{
-  request : null,
-  selectorsMap : null,
-  onProperty : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-}
+// //
+//
+// function willfileExtendProperty( o )
+// {
+//   let will = this;
+//
+//   _.routine.options( willfileExtendProperty, o );
+//   o.act = extendProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function extendProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( i === splits.length - 1 )
+//         {
+//           let value = o.selectorsMap[ option ];
+//           if( o.structureParse )
+//           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//           o.onProperty( dstConfig, { [ key ] : value } );
+//         }
+//         else
+//         {
+//           dstConfig[ key ] = Object.create( null );
+//           dstConfig = dstConfig[ key ];
+//         }
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
+//         dstConfig = dstConfig[ key ];
+//       }
+//       else
+//       {
+//         let value = o.selectorsMap[ option ];
+//         if( o.structureParse )
+//         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//         o.onProperty( dstConfig, { [ key ] : value } );
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 )
+//     return config2;
+//
+//     return config;
+//   }
+//
+// }
+//
+// willfileExtendProperty.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   onProperty : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// }
 
 //
 
@@ -11374,11 +11374,11 @@ let Extension =
 
   // willfileExtendWillfile,
 
-  _willfileOnPropertyAct,
+  // _willfileOnPropertyAct,
   // willfileGetProperty,
   // willfileSetProperty,
   // willfileDeleteProperty,
-  willfileExtendProperty,
+  // willfileExtendProperty,
 
   willfileMergeIntoSingle,
 
