@@ -8904,83 +8904,83 @@ _willfileOnPropertyAct.defaults =
 //   verbosity : 3,
 //   // v : 3,
 // }
-
 //
-
-function willfileDeleteProperty( o )
-{
-  let will = this.will ? this.will : this;
-  let logger = will.transaction.logger;
-
-  _.routine.options( willfileDeleteProperty, o );
-
-  o.act = deleteProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function deleteProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( o.verbosity > 3 )
-        logger.log( `Option "${ option }" does not exist.` );
-        break;
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        dstConfig = dstConfig[ key ];
-      }
-      else if( o.selectorsMap[ option ] )
-      {
-        if( o.verbosity > 3 )
-        logger.log( `Option "${ option }" is deleted.` );
-        delete dstConfig[ key ];
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
-    return config2;
-
-    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    {
-      if( !keys[ 1 ] )
-      {
-        _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
-        delete config2[ keys[ 0 ] ];
-        return config;
-      }
-      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
-      return config2;
-      return config;
-    }
-
-    return config;
-  }
-}
-
-willfileDeleteProperty.defaults =
-{
-  request : null,
-  selectorsMap : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-}
+// //
+//
+// function willfileDeleteProperty( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let logger = will.transaction.logger;
+//
+//   _.routine.options( willfileDeleteProperty, o );
+//
+//   o.act = deleteProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function deleteProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( o.verbosity > 3 )
+//         logger.log( `Option "${ option }" does not exist.` );
+//         break;
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         dstConfig = dstConfig[ key ];
+//       }
+//       else if( o.selectorsMap[ option ] )
+//       {
+//         if( o.verbosity > 3 )
+//         logger.log( `Option "${ option }" is deleted.` );
+//         delete dstConfig[ key ];
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+//     return config2;
+//
+//     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+//     {
+//       if( !keys[ 1 ] )
+//       {
+//         _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
+//         delete config2[ keys[ 0 ] ];
+//         return config;
+//       }
+//       if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+//       return config2;
+//       return config;
+//     }
+//
+//     return config;
+//   }
+// }
+//
+// willfileDeleteProperty.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// }
 
 //
 
@@ -11377,7 +11377,7 @@ let Extension =
   _willfileOnPropertyAct,
   // willfileGetProperty,
   // willfileSetProperty,
-  willfileDeleteProperty,
+  // willfileDeleteProperty,
   willfileExtendProperty,
 
   willfileMergeIntoSingle,

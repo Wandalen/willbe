@@ -37698,7 +37698,7 @@ function commandWillfileGet( test )
     test.case = 'source willfile from context module, subjects';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   });
@@ -37965,7 +37965,7 @@ function commandWillfileDel( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -37984,7 +37984,7 @@ function commandWillfileDel( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -38026,12 +38026,11 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.props.keys( config.about ).length, 0 );
-    test.true( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1 verbosity:5' })
+  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1 verbosity:5' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile with - full form and enabled options';
@@ -38039,12 +38038,11 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, undefined );
     test.identical( _.props.keys( config.about ).length, 0 );
-    test.true( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.del ForExtension.will submodule/eslint about/author:1 about/name:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile, subject and enabled options';
@@ -38057,9 +38055,9 @@ function commandWillfileDel( test )
     test.identical( _.props.keys( config.submodule ).length, 2 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
+  a.appStart({ args : '.willfile.del ForExtension submodule/NpmFromWillfile about/description:0 about/version:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile, subject and disabled options';
@@ -38071,12 +38069,12 @@ function commandWillfileDel( test )
     test.ge( _.props.keys( config.submodule ).length, 1 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del .* path/in' })
+  a.appStart({ args : '.willfile.del . path/in' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.case = 'source willfile - two unnamed willfiles';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38085,15 +38083,15 @@ function commandWillfileDel( test )
     test.ge( _.props.keys( config.path ).length, 3 );
 
     return null;
-  })
+  });
 
   /* */
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   /* */
 
@@ -38105,7 +38103,6 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.props.keys( config.about ).length, 0 );
-    test.false( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
   })
@@ -38123,7 +38120,7 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.del ForExtension.will submodule/eslint about/author:1 about/name:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, enabled options';
@@ -38136,9 +38133,9 @@ function commandWillfileDel( test )
     test.identical( _.props.keys( config.submodule ).length, 2 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
+  a.appStart({ args : '.willfile.del ForExtension submodule/NpmFromWillfile about/description:0 about/version:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, subject and disabled options';
@@ -38152,7 +38149,7 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.del .* path/in' })
+  a.appStart({ args : '.willfile.del . path/in' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, two unnamed willfiles';
@@ -38164,11 +38161,11 @@ function commandWillfileDel( test )
     test.ge( _.props.keys( config.path ).length, 3 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.willfile.del Unknown* about' })
+  a.appStartNonThrowing({ args : '.willfile.del Unknown about' })
   a.ready.then( ( op ) =>
   {
     test.case = 'call not existed file';
@@ -38177,16 +38174,16 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStartNonThrowing({ args : '.willfile.del .* notSection/option:1' })
+  a.appStartNonThrowing({ args : '.willfile.del . notSection/option:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'unknown section';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
