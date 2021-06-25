@@ -5197,7 +5197,7 @@ function willfilePropertySet( o )
 
   _.each( willfilesMap, ( willfile, willfilePath ) =>
   {
-    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile });
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile, logger });
   });
 
   return null;
@@ -5297,7 +5297,7 @@ function willfilePropertyDelete( o )
   _.each( willfilesMap, ( willfile, willfilePath ) =>
   {
     willfileDeleteProperties( willfile );
-    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile });
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile, logger });
   });
 
   return null;
@@ -5369,7 +5369,7 @@ function willfilePropertyExtend( o )
 
   _.each( willfilesMap, ( willfile, willfilePath ) =>
   {
-    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile });
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile, logger });
   });
 
   return null;

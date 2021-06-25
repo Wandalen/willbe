@@ -1217,7 +1217,7 @@ function stepRoutineWillfileVersionBump( frame )
   let run = frame.run;
   let module = run.module;
   let opts = _.props.extend( null, step.opts );
-  opts.verbosity = step.verbosityWithDelta( -1 );
+  opts.logger = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
 

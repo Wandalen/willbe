@@ -1722,7 +1722,7 @@ function commandVersionBump( e )
 
 commandVersionBump.defaults =
 {
-  verbosity : 3,
+  logger : 3,
   versionDelta : 1
 };
 

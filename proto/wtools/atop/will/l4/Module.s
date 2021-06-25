@@ -9562,51 +9562,59 @@ function willfileVersionBump( o )
 
   _.routine.options( willfileVersionBump, o );
 
-  let version = module.willfilesArray[ 0 ].structure.about.version;
-  _.assert( _.strIs( version ), 'Expexts version in format "x.x.x".' );
+  let version = _.any( module.willfilesArray, ( willfile ) => _.select( willfile.structure, 'about/version' ) );
+  _.assert( _.str.is( version ), 'Expexts version in format "x.x.x".' );
 
   let versionArray = version.split( '.' );
+  let deltaArray = deltaArrayGet();
 
-  let deltaArray;
-  if( _.strIs( o.versionDelta ) )
-  deltaArray = o.versionDelta.split( '.' );
-  else if( _.numberIs( o.versionDelta ) )
-  deltaArray = _.array.as( o.versionDelta );
-  else
-  _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
+  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to bump version.' );
 
-  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to change version.' );
-
-  for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
-  {
-    let delta = Number( deltaArray[ i ] );
-    let versionArrayOffset = versionArray.length - 1 - offset;
-    _.assert( _.intIs( delta ), 'Expects integer as delta.' );
-    _.assert( delta >= 0, 'Expects positive delta.' );
-    versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
-  }
-
-  let extensionMap = Object.create( null );
-  version = extensionMap[ 'about/version' ] = versionArray.join( '.' );
-
-  let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
+  versionBump();
+  version = versionArray.join( '.' );
 
   will.willfilePropertySet
   ({
-    request : willfilePath,
-    selectorsMap : extensionMap,
+    commonPath : path.common( module.willfilesPath ),
+    selectorsMap : { 'about/version' : version },
     structureParse : 0,
-    logger : o.verbosity,
+    logger : o.logger,
   });
 
   /* */
 
   return version;
+
+  /* */
+
+  function deltaArrayGet()
+  {
+    if( _.str.is( o.versionDelta ) )
+    return o.versionDelta.split( '.' );
+    else if( _.number.is( o.versionDelta ) )
+    return _.array.as( o.versionDelta );
+    else
+    _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
+  }
+
+  /* */
+
+  function versionBump()
+  {
+    for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+    {
+      let delta = Number( deltaArray[ i ] );
+      let versionArrayOffset = versionArray.length - 1 - offset;
+      _.assert( _.intIs( delta ), 'Expects integer as delta.' );
+      _.assert( delta >= 0, 'Expects positive delta.' );
+      versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+    }
+  }
 }
 
 willfileVersionBump.defaults =
 {
-  verbosity : 3,
+  logger : 3,
   versionDelta : 1,
 };
 
