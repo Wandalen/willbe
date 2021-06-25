@@ -4493,7 +4493,7 @@ command.properties =
 //       selectorsMap,
 //       ... e.optionsMap,
 //     };
-//     return _.will.Module.prototype.willfileGetProperty.call( cui, o );
+//     return _.will.Module.prototype.willfilePropertyGet.call( cui, o );
 //   }
 //
 //   if( cui.currentOpeners )
@@ -4511,7 +4511,7 @@ command.properties =
 //     if( cui.fileProvider.isDir( request ) )
 //     request = cui.fileProvider.path.join( request, './.*' );
 //
-//     return it.opener.openedModule.willfileGetProperty
+//     return it.opener.openedModule.willfilePropertyGet
 //     ({
 //       request,
 //       selectorsMap,
@@ -4571,7 +4571,7 @@ function commandWillfileGet( e )
     return _.each( it.openers, ( opener ) =>
     {
       commonPath = cui.fileProvider.path.common( opener.openedModule.willfilesPath );
-      cui.willfileGetProperty
+      cui.willfilePropertyGet
       ({
         commonPath,
         request,
@@ -4579,7 +4579,7 @@ function commandWillfileGet( e )
       });
     });
 
-    return cui.willfileGetProperty
+    return cui.willfilePropertyGet
     ({
       commonPath,
       request,
@@ -4629,7 +4629,7 @@ command.properties =
 //       selectorsMap,
 //       ... e.optionsMap,
 //     };
-//     return _.will.Module.prototype.willfileSetProperty.call( cui, o );
+//     return _.will.Module.prototype.willfilePropertySet.call( cui, o );
 //   }
 //
 //   if( cui.currentOpeners )
@@ -4649,7 +4649,7 @@ command.properties =
 //     if( cui.fileProvider.isDir( request ) )
 //     request = cui.fileProvider.path.join( request, './.*' );
 //
-//     return it.opener.openedModule.willfileSetProperty
+//     return it.opener.openedModule.willfilePropertySet
 //     ({
 //       request,
 //       selectorsMap,
@@ -4681,7 +4681,7 @@ function commandWillfileSet( e )
     return _.each( it.openers, ( opener ) =>
     {
       commonPath = cui.fileProvider.path.common( opener.openedModule.willfilesPath );
-      cui.willfileSetProperty
+      cui.willfilePropertySet
       ({
         commonPath,
         request,
@@ -4690,7 +4690,7 @@ function commandWillfileSet( e )
       });
     });
 
-    return cui.willfileSetProperty
+    return cui.willfilePropertySet
     ({
       commonPath,
       request,
@@ -4749,7 +4749,7 @@ command.properties =
 //       selectorsMap,
 //       ... e.optionsMap,
 //     };
-//     return _.will.Module.prototype.willfileDeleteProperty.call( cui, o );
+//     return _.will.Module.prototype.willfilePropertyDelete.call( cui, o );
 //   }
 //
 //   if( cui.currentOpeners )
@@ -4767,7 +4767,7 @@ command.properties =
 //     if( cui.fileProvider.isDir( request ) )
 //     request = cui.fileProvider.path.join( request, './.*' );
 //
-//     return it.opener.openedModule.willfileDeleteProperty
+//     return it.opener.openedModule.willfilePropertyDelete
 //     ({
 //       request,
 //       selectorsMap,
@@ -4828,7 +4828,7 @@ function commandWillfileDel( e )
     return _.each( it.openers, ( opener ) =>
     {
       commonPath = cui.fileProvider.path.common( opener.openedModule.willfilesPath );
-      cui.willfileDeleteProperty
+      cui.willfilePropertyDelete
       ({
         commonPath,
         request,
@@ -4836,7 +4836,7 @@ function commandWillfileDel( e )
       });
     });
 
-    return cui.willfileDeleteProperty
+    return cui.willfilePropertyDelete
     ({
       commonPath,
       request,
@@ -4887,7 +4887,7 @@ command.properties =
 //       selectorsMap,
 //       ... e.optionsMap,
 //     };
-//     return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
+//     return _.will.Module.prototype.willfilePropertyExtend.call( cui, o );
 //   }
 //
 //   if( cui.currentOpeners )
@@ -4907,7 +4907,7 @@ command.properties =
 //     if( cui.fileProvider.isDir( request ) )
 //     request = cui.fileProvider.path.join( request, './.*' );
 //
-//     return it.opener.openedModule.willfileExtendProperty
+//     return it.opener.openedModule.willfilePropertyExtend
 //     ({
 //       request,
 //       onProperty : _.props.extend,
@@ -4940,7 +4940,7 @@ function commandWillfileExtend( e )
     return _.each( it.openers, ( opener ) =>
     {
       commonPath = cui.fileProvider.path.common( opener.openedModule.willfilesPath );
-      cui.willfileExtendProperty
+      cui.willfilePropertyExtend
       ({
         commonPath,
         request,
@@ -4950,7 +4950,7 @@ function commandWillfileExtend( e )
       });
     });
 
-    return cui.willfileExtendProperty
+    return cui.willfilePropertyExtend
     ({
       commonPath,
       request,
@@ -5004,7 +5004,7 @@ command.properties =
 //       selectorsMap,
 //       ... e.optionsMap,
 //     };
-//     return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
+//     return _.will.Module.prototype.willfilePropertyExtend.call( cui, o );
 //   }
 //
 //   if( cui.currentOpeners )
@@ -5022,7 +5022,7 @@ command.properties =
 //     if( cui.fileProvider.isDir( request ) )
 //     request = cui.fileProvider.path.join( request, './.*' );
 //
-//     return it.opener.openedModule.willfileExtendProperty
+//     return it.opener.openedModule.willfilePropertyExtend
 //     ({
 //       request,
 //       onProperty : _.props.supplement,
@@ -5055,7 +5055,7 @@ function commandWillfileSupplement( e )
     return _.each( it.openers, ( opener ) =>
     {
       commonPath = cui.fileProvider.path.common( opener.openedModule.willfilesPath );
-      cui.willfileExtendProperty
+      cui.willfilePropertyExtend
       ({
         commonPath,
         request,
@@ -5065,7 +5065,7 @@ function commandWillfileSupplement( e )
       });
     });
 
-    return cui.willfileExtendProperty
+    return cui.willfilePropertyExtend
     ({
       commonPath,
       request,

@@ -8745,24 +8745,22 @@ resourceImport.defaults =
 //
 // //
 //
-// function willfileGetProperty( o )
+// function willfilePropertyGet( o )
 // {
 //   let will = this.will ? this.will : this;
 //   let logger = will.transaction.logger;
 //
-//   _.routine.options( willfileGetProperty, o );
+//   _.routine.options( willfilePropertyGet, o );
 //
 //   o.act = getProperty;
 //   o.onConfig = configChooseByKeys;
 //
-//   debugger;
 //   return _willfileOnPropertyAct.call( will, o );
 //
 //   /* */
 //
 //   function getProperty( dstConfig, splits, option )
 //   {
-//     debugger;
 //     for( let i = 0 ; i < splits.length ; i++ )
 //     {
 //       let key = splits[ i ];
@@ -8805,7 +8803,7 @@ resourceImport.defaults =
 //
 // }
 //
-// willfileGetProperty.defaults =
+// willfilePropertyGet.defaults =
 // {
 //   request : null,
 //   selectorsMap : null,
@@ -8817,11 +8815,11 @@ resourceImport.defaults =
 //
 // //
 //
-// function willfileSetProperty( o )
+// function willfilePropertySet( o )
 // {
 //   let will = this.will ? this.will : this;
 //
-//   _.routine.options( willfileSetProperty, o );
+//   _.routine.options( willfilePropertySet, o );
 //
 //   o.act = setProperty;
 //   o.onConfig = configChooseByKeys;
@@ -8895,7 +8893,7 @@ resourceImport.defaults =
 //
 // }
 //
-// willfileSetProperty.defaults =
+// willfilePropertySet.defaults =
 // {
 //   request : null,
 //   selectorsMap : null,
@@ -8907,12 +8905,12 @@ resourceImport.defaults =
 //
 // //
 //
-// function willfileDeleteProperty( o )
+// function willfilePropertyDelete( o )
 // {
 //   let will = this.will ? this.will : this;
 //   let logger = will.transaction.logger;
 //
-//   _.routine.options( willfileDeleteProperty, o );
+//   _.routine.options( willfilePropertyDelete, o );
 //
 //   o.act = deleteProperty;
 //   o.onConfig = configChooseByKeys;
@@ -8972,7 +8970,7 @@ resourceImport.defaults =
 //   }
 // }
 //
-// willfileDeleteProperty.defaults =
+// willfilePropertyDelete.defaults =
 // {
 //   request : null,
 //   selectorsMap : null,
@@ -8984,11 +8982,11 @@ resourceImport.defaults =
 //
 // //
 //
-// function willfileExtendProperty( o )
+// function willfilePropertyExtend( o )
 // {
 //   let will = this;
 //
-//   _.routine.options( willfileExtendProperty, o );
+//   _.routine.options( willfilePropertyExtend, o );
 //   o.act = extendProperty;
 //   o.onConfig = configChooseByKeys;
 //
@@ -9046,7 +9044,7 @@ resourceImport.defaults =
 //
 // }
 //
-// willfileExtendProperty.defaults =
+// willfilePropertyExtend.defaults =
 // {
 //   request : null,
 //   selectorsMap : null,
@@ -9593,7 +9591,7 @@ function willfileVersionBump( o )
 
   let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
 
-  will.willfileSetProperty
+  will.willfilePropertySet
   ({
     request : willfilePath,
     selectorsMap : extensionMap,
@@ -11375,10 +11373,10 @@ let Extension =
   // willfileExtendWillfile,
 
   // _willfileOnPropertyAct,
-  // willfileGetProperty,
-  // willfileSetProperty,
-  // willfileDeleteProperty,
-  // willfileExtendProperty,
+  // willfilePropertyGet,
+  // willfilePropertySet,
+  // willfilePropertyDelete,
+  // willfilePropertyExtend,
 
   willfileMergeIntoSingle,
 

@@ -5098,10 +5098,10 @@ function _requestParsePathAndSelectors( o )
 
 //
 
-function willfileGetProperty( o )
+function willfilePropertyGet( o )
 {
   _.assert( arguments.length === 1 );
-  _.routine.options( willfileGetProperty, o );
+  _.routine.options( willfilePropertyGet, o );
 
   const will = this;
   const fileProvider = will.fileProvider;
@@ -5163,7 +5163,7 @@ function willfileGetProperty( o )
   }
 }
 
-willfileGetProperty.defaults =
+willfilePropertyGet.defaults =
 {
   commonPath : null,
   request : null,
@@ -5173,10 +5173,10 @@ willfileGetProperty.defaults =
 
 //
 
-function willfileSetProperty( o )
+function willfilePropertySet( o )
 {
   _.assert( arguments.length === 1 );
-  _.routine.options( willfileSetProperty, o );
+  _.routine.options( willfilePropertySet, o );
 
   const will = this;
   const fileProvider = will.fileProvider;
@@ -5261,7 +5261,7 @@ function willfileSetProperty( o )
   }
 }
 
-willfileSetProperty.defaults =
+willfilePropertySet.defaults =
 {
   commonPath : null,
   request : null,
@@ -5272,10 +5272,10 @@ willfileSetProperty.defaults =
 
 //
 
-function willfileDeleteProperty( o )
+function willfilePropertyDelete( o )
 {
   _.assert( arguments.length === 1 );
-  _.routine.options( willfileDeleteProperty, o );
+  _.routine.options( willfilePropertyDelete, o );
 
   const will = this;
   const fileProvider = will.fileProvider;
@@ -5332,7 +5332,7 @@ function willfileDeleteProperty( o )
   }
 }
 
-willfileDeleteProperty.defaults =
+willfilePropertyDelete.defaults =
 {
   commonPath : null,
   request : null,
@@ -5342,10 +5342,10 @@ willfileDeleteProperty.defaults =
 
 //
 
-function willfileExtendProperty( o )
+function willfilePropertyExtend( o )
 {
   _.assert( arguments.length === 1 );
-  _.routine.options( willfileExtendProperty, o );
+  _.routine.options( willfilePropertyExtend, o );
 
   const will = this;
   const fileProvider = will.fileProvider;
@@ -5444,7 +5444,7 @@ function willfileExtendProperty( o )
   }
 }
 
-willfileExtendProperty.defaults =
+willfilePropertyExtend.defaults =
 {
   commonPath : null,
   request : null,
@@ -6732,10 +6732,10 @@ let Extension =
   npmGenerateFromWillfile,
   willfileGenerateFromNpm,
 
-  willfileGetProperty,
-  willfileSetProperty,
-  willfileDeleteProperty,
-  willfileExtendProperty,
+  willfilePropertyGet,
+  willfilePropertySet,
+  willfilePropertyDelete,
+  willfilePropertyExtend,
   willfileExtendWillfile,
 
   // clean
