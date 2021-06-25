@@ -13,7 +13,7 @@
   "engine-strict" : true,
   "engines" :
   {
-    "node": ">=10.21.0 <15.0.0"
+    "node": ">=10.21.0 <=16"
   },
   "main" : "proto/node_modules/willbe",
   "files" : [ "proto/wtools/atop/will", "out", "proto/node_modules", "proto/node_modules/Tools", "proto/node_modules/willbe" ],

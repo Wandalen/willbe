@@ -6,7 +6,7 @@ about:
   license: MIT
   npm.engine-strict: true
   npm.engines:
-    node: '>=10.21.0 <15.0.0'
+    node: '>=10.21.0 <=16'
   npm.name: willbe
   npm.bin:
     single-process-will: proto/wtools/atop/will/entry/Exec
