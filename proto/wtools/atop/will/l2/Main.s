@@ -5452,7 +5452,7 @@ willfileExtendProperty.defaults =
   onProperty : null,
   structureParse : 0,
   logger : 3,
-}
+};
 
 //
 
