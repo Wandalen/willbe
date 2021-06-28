@@ -41040,7 +41040,7 @@ function commandNpmPublish( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  let config, tagOriginal, tag;
+  let config, tagOriginal, tag, moduleName;
   a.fileProvider.dirMake( a.abs( '.' ) );
 
   let botUser = 'wtools-bot';
@@ -41063,6 +41063,7 @@ function commandNpmPublish( test )
   /* - */
 
   repoPrepare();
+  tagsAndModuleNameGet();
 
   /* */
 
@@ -41073,16 +41074,16 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tagOriginal }` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal }"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal }"` ), 1 );
     test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 1 );
 
     return null;
   });
@@ -41096,16 +41097,16 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tagOriginal } v:7` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal } v:7` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal } v:7"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal } v:7"` ), 1 );
     test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 1 );
 
     return null;
   });
@@ -41119,19 +41120,19 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tag } dry:1` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tag } dry:1` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tag } dry:1"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tag } dry:1"` ), 1 );
+    test.ge( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
 
     return null;
   });
@@ -41145,25 +41146,25 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tag }` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tag }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tag }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tag }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 2 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tag }` ), 1 );
 
@@ -41179,25 +41180,25 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish force:1 tag:${ tagOriginal }` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish force:1 tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish force:1 tag:${ tagOriginal }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish force:1 tag:${ tagOriginal }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 2 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
 
@@ -41214,26 +41215,26 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish tag:${ tagOriginal } dry:1` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal } dry:1` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal } dry:1"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal } dry:1"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 0 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 0 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 1 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 0 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 0 );
 
@@ -41250,26 +41251,26 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish tag:${ tagOriginal }` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( `package.json` ), encoding : `json` });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 2 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
 
@@ -41286,26 +41287,26 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish -am 'Update module' tag:${ tagOriginal }` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish -am 'Update module' tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish -am "Update module" tag:${ tagOriginal }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 2 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "Update module"` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
 
@@ -41322,33 +41323,33 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish -am 'Update module' tag:${ tagOriginal } v:7` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish -am 'Update module' tag:${ tagOriginal } v:7` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish -am "Update module" tag:${ tagOriginal } v:7"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 2 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal } v:7"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 6 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "Update module"` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '"name" : "WillbeNpmPublishTest"' ), 1 );
-    test.identical( _.strCount( op.output, '"keywords" : [ "willbe", "test" ]' ), 1 );
-    test.identical( _.strCount( op.output, '"license" : "MIT"' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 3 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `"name" : "${ configAfter.name }"` ), 1 );
+    test.identical( _.strCount( op.output, `"keywords" : [ "wTools" ]` ), 1 );
+    test.identical( _.strCount( op.output, `"license" : "MIT"` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
     test.identical( _.strCount( op.output, `> npm publish --tag ${ tagOriginal }` ), 1 );
-    test.identical( _.strCount( op.output, `+ willbe.npm.publish.test@${ configAfter.version }` ), 1 );
+    test.identical( _.strCount( op.output, `+ ${ configAfter.name }@${ configAfter.version }` ), 1 );
 
     return null;
   });
@@ -41373,11 +41374,20 @@ function commandNpmPublish( test )
       outputPiping : 0,
       inputMirroring : 0
     });
+    return a.ready;
+  }
+
+  /* */
+
+  function tagsAndModuleNameGet()
+  {
     a.ready.then( () =>
     {
-      config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-      tagOriginal = config.devDependencies.wTesting;
+      const pkgConfig = a.fileProvider.fileReadUnknown( a.abs( 'package.json' ) );
+      tagOriginal = pkgConfig.devDependencies.wTesting;
       tag = tagOriginal === 'alpha' ? 'gamma' : 'alpha';
+      const willConfig = a.fileProvider.fileReadUnknown( a.abs( '.ex.will.yml' ) );
+      moduleName = willConfig.about.name;
       return null;
     });
     return a.ready;
@@ -41390,6 +41400,8 @@ function commandNpmPublish( test )
     a.shell( 'npm logout' );
   }
 }
+
+commandNpmPublish.timeOut = 500000;
 
 //
 
