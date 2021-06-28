@@ -9623,10 +9623,11 @@ willfileVersionBump.defaults =
 function npmModulePublish( o )
 {
   let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let packagePath = path.join( module.dirPath, 'package.json' );
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const packagePath = path.join( module.dirPath, 'package.json' );
+  const logger = will.transaction.logger;
 
   _.routine.options_( npmModulePublish, o );
   _.assert( path.isTrailed( module.localPath ), 'not tested' );
@@ -9634,11 +9635,11 @@ function npmModulePublish( o )
   if( !module.about.enabled )
   return;
 
-  let ready = moduleSync( o.message );
+  const ready = moduleSync( o.message );
   ready.deasync();
-  let diff = moduleDiffsGet();
+  const diff = moduleDiffsGet();
 
-  let nameWithLocation = module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() );
+  const nameWithLocation = module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() );
   if( o.force || !diff || diff.status )
   {
     if( o.verbosity )
@@ -9676,12 +9677,12 @@ function npmModulePublish( o )
 
   let aboutCache = Object.create( null );
   ready.then( () => npmFixate() );
-  ready.then( () => _.npm.fileFormat({ filePath : packagePath }) );
+  ready.then( () => _.npm.fileFormat({ configPath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
   ready.then( () => module.gitTag({ name : `v${ version }` }) );
   ready.then( () => module.gitTag({ name : o.tag }) );
-  ready.then( () => module.gitPush( Object.create( null ) ) );
+  ready.then( () => module.gitPush({ withTags : 1, force : 1 }) );
 
   ready.then( () => npmPublish() );
 
@@ -9695,7 +9696,7 @@ function npmModulePublish( o )
     ({
       message,
       restoringHardLinks : 1,
-      verbosity : 0,
+      verbosity : o.verbosity,
     });
   }
 
@@ -9735,7 +9736,7 @@ function npmModulePublish( o )
       modules : [ module ],
       currentContext,
       withDisabledSubmodules : o.withDisabledSubmodules,
-      verbosity : o.verbosity,
+      logger : o.verbosity,
     });
     return null;
   }
@@ -9767,7 +9768,7 @@ function npmModulePublish( o )
       configPath : packagePath,
       tag : o.tag,
       onDep,
-      verbosity : o.verbosity - 2,
+      logger : o.verbosity - 2,
     });
   }
 
@@ -9780,7 +9781,6 @@ function npmModulePublish( o )
       localPath : module.dirPath,
       tag : o.tag,
       logger : o.verbosity === 2 ? 2 : o.verbosity - 1,
-      // verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
     });
   }
 

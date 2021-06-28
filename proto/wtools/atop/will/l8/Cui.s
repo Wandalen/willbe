@@ -3830,7 +3830,6 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    // let filterProperties = _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } );
     let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
@@ -6207,7 +6206,7 @@ commandNpmPublish.defaults =
   force : 0,
   withDisabledSubmodules : 1,
   dry : 0,
-  verbosity : 1,
+  verbosity : 2,
 };
 
 var command = commandNpmPublish.command = Object.create( null );
