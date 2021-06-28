@@ -6988,6 +6988,144 @@ function hookWasPackageExtendWillfile( test )
 
 //
 
+function hookPublishCheckPackageJsonFormatting( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  let config, tagOriginal, tag, moduleName;
+  a.fileProvider.dirMake( a.abs( '.' ) );
+
+  let botUser = 'wtools-bot';
+  let botRepo = 'PublishCommandTest1';
+  let botPass = process.env.PRIVATE_WTOOLS_BOT_NPM_PASS;
+  let botEmail = process.env.PRIVATE_WTOOLS_BOT_EMAIL;
+  if( !_.process.insideTestContainer() || !botPass || !botEmail )
+  return test.true( true );
+
+  a.start = _.process.starter
+  ({
+    execPath : 'node ' + context.appJsPath,
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    mode : 'spawn',
+    outputGraying : 1,
+    throwingExitCode : 1,
+  });
+
+  /* - */
+
+  repoPrepare();
+  setVersionInWasPackageJson();
+  a.shell( 'git commit -am .' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repo is changed, should publish';
+    config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    a.fileProvider.fileAppend( a.abs( 'doc/VersionLog.txt' ), `${ config.version }\n` );
+    return null;
+  });
+
+  a.appStart( `.imply withSubmodules:0 .call publish tag:latest` );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    let configAfter = a.fileProvider.fileReadUnknown( a.abs( 'package.json' ) );
+    let moduleName = a.fileProvider.fileReadUnknown( a.abs( '.ex.will.yml' ) ).about.name;
+
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .call publish tag:latest"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 2 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
+    test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
+    test.identical( _.strCount( op.output, `Creating tag latest` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check formatting of package.json';
+    return null;
+  });
+
+  a.shell( 'npm i' );
+  a.shell( 'git diff' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( op.output, '' );
+    return null;
+  });
+
+  /* */
+
+  npmLogout();
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function repoPrepare()
+  {
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null } );
+    a.shell( `git clone https://github.com/${ botUser }/${ botRepo }.git .` );
+    a.shell( 'npm i -g npm-cli-login' );
+    a.shell
+    ({
+      execPath : `npm-cli-login -u ${ botUser } -p ${ botPass } -e ${ botEmail } --quotes`,
+      outputPiping : 0,
+      inputMirroring : 0
+    });
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function setVersionInWasPackageJson()
+  {
+    return a.ready.then( () =>
+    {
+      let moduleName = botRepo.toLowerCase();
+      let filePath = a.abs( 'was.package.json' );
+      let config = a.fileProvider.fileReadUnknown( filePath );
+      let lastVersion = _.npm.remoteVersion( `npm:///${ moduleName }!latest` );
+      config.version = lastVersion;
+      a.fileProvider.fileWriteUnknown({ filePath, data : config });
+      return null;
+    });
+  }
+
+  /* */
+
+  function npmLogout()
+  {
+    a.shell( 'npm logout' );
+  }
+}
+
+//
+
 // function hookPublish2( test )
 // {
 //   let context = this;
@@ -41209,7 +41347,7 @@ function commandNpmPublish( test )
 
   a.ready.then( () =>
   {
-    test.case = 'repo is changed, dry - 1, publish shoud exit with committing';
+    test.case = 'repo is changed, dry - 1, publish should exit with committing';
     config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     a.fileProvider.fileAppend( a.abs( 'doc/VersionLog.txt' ), `${ config.version }\n` );
     return null;
@@ -43199,6 +43337,7 @@ const Proto =
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
+    hookPublishCheckPackageJsonFormatting,
     // hookPublish2, /* Dmytro : hook was commented out */
 
     // output
