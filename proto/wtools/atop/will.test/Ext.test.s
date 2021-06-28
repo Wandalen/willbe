@@ -41610,7 +41610,7 @@ function commandNpmPublishFullRegularModule( test )
     return null;
   });
 
-  a.appStart( `.npm.publish tag:latest` );
+  a.appStart( `.imply withSubmodules:0 .npm.publish tag:latest` );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -41641,8 +41641,8 @@ function commandNpmPublishFullRegularModule( test )
     let wasPackageDevDepKeys = _.mapKeys( configWasPackage.devDependencies );
     test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:latest"` ), 1 );
+    test.ge( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'x Nothing to publish in module::PublishCommandTest2' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::PublishCommandTest2' ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
