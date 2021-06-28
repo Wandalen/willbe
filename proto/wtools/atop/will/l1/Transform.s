@@ -399,8 +399,8 @@ function npmFromWillfile( o )
 
         if( parsedPath.protocol === 'npm' )
         {
-          const tag = _.npm.path.parse( path ).tag;
-          result[ sectionForSubmoduleGet( submodule ) ][ name ] = tag === 'latest' ? '' : tag;
+          const parsed = _.npm.path.parse( path );
+          result[ sectionForSubmoduleGet( submodule ) ][ parsed.host ] = parsed.tag === 'latest' ? '' : parsed.tag;
         }
         else if( _.longHas( parsedPath.protocols, 'git' ) )
         {
