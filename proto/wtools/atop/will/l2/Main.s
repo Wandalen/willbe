@@ -4918,14 +4918,19 @@ function npmGenerateFromWillfile( o )
     currentContext,
   });
 
+  const willfilesMap = _.will.fileReadAt( path.common( module.willfilesPath ) );
+  const config = Object.create( null );
+  for( let willfile in willfilesMap )
+  _.will.transform.willfilesMerge
+  ({
+    dst : config,
+    src : willfilesMap[ willfile ],
+    onSection : _.map.extend.bind( _.map )
+  });
+
   const data = _.will.transform.npmFromWillfile
   ({
-    config :
-    {
-      about : module.about.exportStructure(),
-      path : module.pathMap,
-      submodule : module.submoduleMap,
-    },
+    config,
     withDisabledSubmodules : o.withDisabledSubmodules,
   });
 
@@ -4981,10 +4986,10 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
-  _.assert( o.modules === null || o.modules.length === 1 );
+  _.assert( o.modules === null || o.modules.length <= 1 );
   const module = o.modules ? o.modules[ 0 ] : o.modules;
-  const packagePath = packagePathGet();
-  let willfilePath = willfilePathGet();
+  const packagePath = pathResolveConditional( o.packagePath, '{path::in}/package.json', 'package.json' );
+  const willfilePath = pathResolveConditional( o.willfilePath, '{path::out}/will.yml', 'will.yml' );
 
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
@@ -5005,36 +5010,19 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
-  function packagePathGet()
+  function pathResolveConditional( src, alternative1, alternative2 )
   {
     if( module )
     return module.pathResolve
     ({
-      selector : o.packagePath || '{path::in}/package.json',
+      selector : src || alternative1,
       prefixlessAction : 'resolved',
       pathNativizing : 0,
       selectorIsPath : 1,
       currentContext : o.currentContext || module,
     });
     else
-    return path.join( inPath, o.packagePath || 'package.json' );
-  }
-
-  /* */
-
-  function willfilePathGet()
-  {
-    if( module )
-    return module.pathResolve
-    ({
-      selector : o.willfilePath || '{path::out}/will.yml',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : o.currentContext || module,
-    });
-    else
-    return path.join( inPath, o.willfilePath || 'will.yml' );
+    return path.join( inPath, src || alternative2 );
   }
 }
 
@@ -5139,7 +5127,10 @@ function willfilePropertyGet( o )
     src = path.join( will.inPath ? will.inPath : path.current(), src );
     const willfilesMap = _.will.fileReadAt( src );
     const willfile = Object.create( null );
-    _.each( willfilesMap, ( config ) => _.map.extend( willfile, config ) );
+    _.each( willfilesMap, ( config ) =>
+    {
+      _.will.transform.willfilesMerge({ dst : willfile, src : config, onSection : _.map.extend.bind( _.map ) })
+    });
     return willfile;
   }
 
