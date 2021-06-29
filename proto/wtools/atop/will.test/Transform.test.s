@@ -811,8 +811,14 @@ function npmFromWillfile( test )
   var exp = { bugs : 'https://github.com/Wandalen/wTools/issues' };
   test.identical( got, exp );
 
-  test.case = 'map with only entry';
+  test.case = 'map with only entry - string';
   var src = { config : { path : { entry : 'proto/file' } } };
+  var got = _.will.transform.npmFromWillfile( src );
+  var exp = { main : 'proto/file' };
+  test.identical( got, exp );
+
+  test.case = 'map with only entry - map';
+  var src = { config : { path : { entry : { path : 'proto/file', criterion : { debug : [ 0, 1 ] } } } } };
   var got = _.will.transform.npmFromWillfile( src );
   var exp = { main : 'proto/file' };
   test.identical( got, exp );
