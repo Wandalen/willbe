@@ -36777,8 +36777,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.author, 'Author <author@dot.com>' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36792,8 +36792,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36807,8 +36807,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.description, 'To check the conversion' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36821,7 +36821,7 @@ function commandNpmFromWillfile( test )
     test.case = 'check field `enabled`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.name, null );
+    test.identical( config.name, undefined );
     test.identical( config.enabled, 0 );
 
     return null;
@@ -36836,8 +36836,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.interpreters, undefined );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36851,8 +36851,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.keywords, [ 'tools', 'export' ] );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36866,11 +36866,11 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.license, 'MIT' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36881,7 +36881,7 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.name, 'NpmFromWillfile' );
-    test.identical( config.enabled, 1 );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36895,7 +36895,7 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.name, 'npmfromwillfile' );
-    test.identical( config.enabled, 1 );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36909,11 +36909,11 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.scripts, { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36923,12 +36923,12 @@ function commandNpmFromWillfile( test )
     test.case = 'check field `main`, should not read path';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.main, undefined );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.main, 'proto' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36940,11 +36940,11 @@ function commandNpmFromWillfile( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.repository, 'https://github.com/author/NpmFromWillfile.git' );
     test.identical( config.bugs, 'https://github.com/author/NpmFromWillfile/issues' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36957,10 +36957,10 @@ function commandNpmFromWillfile( test )
     test.identical( config.dependencies, { eslint : '7.1.0', babel : '^0.3.0' } );
     test.identical( config.devDependencies, { NpmFromWillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
     test.identical( config.name, 'npmfromwillfile' );
-    test.identical( config.enabled, 1 );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36971,8 +36971,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.version, '0.0.0' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   });
@@ -37138,12 +37138,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      main : 'proto/File.s',
-    };
+    var exp = { main : 'proto/File.s' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
@@ -37161,12 +37156,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      main : 'proto/File.s',
-    };
+    var exp = { main : 'proto/File.s' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
@@ -37184,12 +37174,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      main : 'proto/File.s',
-    };
+    var exp = { main : 'proto/File.s' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
@@ -37207,12 +37192,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      files : [ 'proto/File.s' ]
-    };
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
@@ -37230,12 +37210,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      files : [ 'proto/File.s' ]
-    };
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
@@ -37253,12 +37228,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      files : [ 'proto/File.s' ]
-    };
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
     test.identical( config, exp );
 
     return null;
@@ -37279,70 +37249,70 @@ function commandWillfileFromNpm( test )
 
   /* - */
 
-  // a.appStart({ args : '.willfile.from.npm packagePath:Author.json' })
-  // a.ready.then( ( op ) =>
-  // {
-  //   test.case = 'check field `author`';
-  //   test.identical( op.exitCode, 0 );
-  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-  //   test.identical( config.about.author, 'Author <author@dot.com>' );
-  //   test.identical( config.about.name, 'author' );
-  //   test.identical( config.about.enabled, 1 );
-  //
-  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-  //
-  //   return null;
-  // });
-  //
-  // /* */
-  //
-  // a.appStart({ args : '.willfile.from.npm packagePath:Contributors.json' })
-  // a.ready.then( ( op ) =>
-  // {
-  //   test.case = 'check field `contributors`';
-  //   test.identical( op.exitCode, 0 );
-  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-  //   test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
-  //   test.identical( config.about.name, 'contributors' );
-  //   test.identical( config.about.enabled, 1 );
-  //
-  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-  //
-  //   return null;
-  // })
-  //
-  // /* */
-  //
-  // a.appStart({ args : '.willfile.from.npm packagePath:Description.json' })
-  // a.ready.then( ( op ) =>
-  // {
-  //   test.case = 'check field `description`';
-  //   test.identical( op.exitCode, 0 );
-  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-  //   test.identical( config.about.description, 'To check the conversion' );
-  //   test.identical( config.about.name, 'description' );
-  //   test.identical( config.about.enabled, 1 );
-  //
-  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-  //
-  //   return null;
-  // })
-  //
-  // /* */
-  //
-  // a.appStart({ args : '.willfile.from.npm packagePath:Enabled.json' })
-  // a.ready.then( ( op ) =>
-  // {
-  //   test.case = 'check field `enabled`';
-  //   test.identical( op.exitCode, 0 );
-  //   let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-  //   test.identical( config.about.name, 'enabled' );
-  //   test.identical( config.about.enabled, 0 );
-  //
-  //   a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
-  //
-  //   return null;
-  // });
+  a.appStart({ args : '.willfile.from.npm packagePath:Author.json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `author`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, 'author' );
+    test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Contributors.json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `contributors`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
+    test.identical( config.about.name, 'contributors' );
+    test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Description.json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `description`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.description, 'To check the conversion' );
+    test.identical( config.about.name, 'description' );
+    test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Enabled.json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `enabled`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.name, 'enabled' );
+    test.identical( config.about.enabled, 0 );
+
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
+
+    return null;
+  });
 
   /* */
 
@@ -37359,7 +37329,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37376,7 +37346,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37393,7 +37363,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
