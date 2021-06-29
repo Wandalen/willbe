@@ -544,7 +544,7 @@ function fileAtWithOptions( test )
 }
 
 fileAtWithOptions.rapidity = -1;
-fileAtWithOptions.timeOut = 200000;
+fileAtWithOptions.timeOut = 400000;
 
 //
 
