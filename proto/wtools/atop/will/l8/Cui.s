@@ -4294,17 +4294,28 @@ function commandNpmFromWillfile( e )
   function handleAll( it )
   {
     let currentContext = null;
+    const options = _.mapOnly_( null, e.optionsMap, cui.npmGenerateFromWillfile.defaults );
+
     if( it.openers )
+    return _.each( it.openers, ( opener ) =>
     {
-      _.assert( it.roots.length === 1 );
       if( _.props.keys( criterionsMap ).length > 0 )
-      it.roots[ 0 ].stepMap[ 'willfile.generate' ].criterion = criterionsMap;
-      currentContext = it.roots[ 0 ].stepMap[ 'willfile.generate' ];
-    }
+      opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+      currentContext = opener.openedModule.stepMap[ 'willfile.generate' ];
+      const modules = _.array.as( opener.openedModule );
+
+      return cui.npmGenerateFromWillfile
+      ({
+        ... options,
+        modules,
+        currentContext,
+        logger : 2,
+      });
+    });
 
     return cui.npmGenerateFromWillfile
     ({
-      ... _.mapOnly_( null, e.optionsMap, cui.npmGenerateFromWillfile.defaults ),
+      ... options,
       modules : it.roots,
       currentContext,
       logger : 2,
@@ -4420,12 +4431,22 @@ function commandWillfileFromNpm( e )
   {
     let currentContext = null;
     if( it.openers )
+    return _.each( it.openers, ( opener ) =>
     {
-      _.assert( it.roots.length === 1 );
       if( _.props.keys( criterionsMap ).length > 0 )
-      it.roots[ 0 ].stepMap[ 'willfile.generate' ].criterion = criterionsMap;
-      currentContext = it.roots[ 0 ].stepMap[ 'willfile.generate' ];
-    }
+      opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+      currentContext = opener.openedModule.stepMap[ 'willfile.generate' ];
+      const modules = _.array.as( opener.openedModule );
+
+      return cui.willfileGenerateFromNpm
+      ({
+        packagePath : e.optionsMap.packagePath,
+        willfilePath : e.optionsMap.willfilePath,
+        currentContext,
+        modules,
+        logger : 3,
+      });
+    });
 
     return cui.willfileGenerateFromNpm
     ({
@@ -5166,6 +5187,18 @@ function commandWillfileExtendWillfile( e )
 
   function handleAll( it )
   {
+    if( it.openers && it.openers.length )
+    return _.each( it.openers, ( opener ) =>
+    {
+      return cui.willfileExtendWillfile
+      ({
+        request : e.subject,
+        onSection : _.props.extend.bind( _.props ),
+        modules : _.array.as( opener.openedModule ),
+        ... e.optionsMap,
+      });
+    });
+
     return cui.willfileExtendWillfile
     ({
       request : e.subject,
@@ -5292,6 +5325,18 @@ function commandWillfileSupplementWillfile( e )
 
   function handleAll( it )
   {
+    if( it.openers && it.openers.length )
+    return _.each( it.openers, ( opener ) =>
+    {
+      return cui.willfileExtendWillfile
+      ({
+        request : e.subject,
+        onSection : _.props.supplement.bind( _.props ),
+        modules : _.array.as( opener.openedModule ),
+        ... e.optionsMap,
+      });
+    });
+
     return cui.willfileExtendWillfile
     ({
       request : e.subject,
