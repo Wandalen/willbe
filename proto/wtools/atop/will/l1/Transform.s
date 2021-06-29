@@ -369,7 +369,7 @@ function npmFromWillfile( o )
     if( willfile.path.bugtracker )
     result.bugs = _.git.path.nativize( willfile.path.bugtracker );
     if( willfile.path.entry )
-    result.main = willfile.path.entry;
+    result.main = _.str.is( willfile.path.entry ) ? willfile.path.entry : willfile.path.entry.path;
 
     for( let key in willfile.path )
     if( _.strBegins( key, 'npm.' ) )
