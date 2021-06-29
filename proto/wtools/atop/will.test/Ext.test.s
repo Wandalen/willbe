@@ -13138,7 +13138,7 @@ function exportHierarchyRemote( test )
 }
 
 exportHierarchyRemote.rapidity = -1;
-exportHierarchyRemote.timeOut = 300000;
+exportHierarchyRemote.timeOut = 500000;
 exportHierarchyRemote.description =
 `
 - "with module .export.recursive" should export the same number of modules as "with ** .export.recursive"
