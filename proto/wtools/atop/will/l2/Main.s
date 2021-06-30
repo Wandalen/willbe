@@ -5396,38 +5396,56 @@ function hookFindAt( o )
   let logger = will.transaction.logger;
 
   if( !_.mapIs( o ) )
-  o = { execPath : o }
-  _.routine.options_( hookFindAt, o );
+  o = { execPath : o };
+
   _.assert( arguments.length === 1 );
+  _.routine.options_( hookFindAt, o );
 
   if( fileProvider.isTerminal( o.execPath ) )
   return end( o.execPath );
 
   let filePath = `${o.execPath}.(${will.KnownHookExts.join( '|' )})`;
-  let found = fileProvider.filesFind({ filePath, outputFormat : 'absolute', withDirs : 0, resolvingSoftLink : 1 });
+  let found = fileProvider.filesFind
+  ({
+    filePath,
+    outputFormat : 'absolute',
+    withDirs : 0,
+    resolvingSoftLink : 1
+  });
   return end( found );
 
   function end( found )
   {
     if( !o.single )
     return _.array.as( found );
-    if( _.strIs( found ) )
+    if( _.str.is( found ) )
     return found;
-    _.assert( _.arrayIs( found ) );
-    if( found.length )
+
+    _.assert( _.array.is( found ) );
+    if( found.length === 1 )
     return found[ 0 ];
-
-    if( found.length > 0 )
-    throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
-    else
+    if( found.length < 1 )
     throw _.errBrief( `Found none hook file at ${o.execPath}` );
-    // if( !found.length ) /* Dmytro : seems as wrong condition */
-    // throw _.errBrief( `Found none hook file at ${o.execPath}` );
-    // else
-    // throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
-    return found
-  }
+    throw _.errBrief
+    (
+      `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}`
+    );
 
+    // if( !o.single )
+    // return _.array.as( found );
+    // if( _.str.is( found ) )
+    // return found;
+    //
+    // if( found.length )
+    // return found[ 0 ];
+    //
+    // if( found.length > 0 )
+    // throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
+    // else
+    // throw _.errBrief( `Found none hook file at ${o.execPath}` );
+    //
+    // return found;
+  }
 }
 
 hookFindAt.defaults =
