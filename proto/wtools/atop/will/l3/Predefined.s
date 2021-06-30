@@ -1246,7 +1246,7 @@ function stepRoutineNjsVersionVerify( frame )
   if( !opts.version )
   opts.version = module.resolve( '{about::npm.engines/node}' );
 
-  _.assert( opts.version, 'Expects node version to verify. Please, add it to section `about` or to the step.' );
+  _.assert( !!opts.version, 'Expects node version to verify. Please, add it to section `about` or to the step.' );
 
   const versionsMap = versionParse( opts.version );
   const currentNjsVersion = process.versions.node;
@@ -1280,7 +1280,7 @@ function stepRoutineNjsVersionVerify( frame )
 
   function versionSplit( src )
   {
-    return _.strSplit({ src, delimeter : /\d+\.\d+\.\d+/, preservingEmpty : 0 });
+    return _.strSplit({ src, delimeter : /\d+(\.\d+\.\d+){0,1}/, preservingEmpty : 0 });
   }
 
   /* */
@@ -1288,7 +1288,7 @@ function stepRoutineNjsVersionVerify( frame )
   function versionMapFill( dstMap, versionArray )
   {
     for( let i = versionArray.length - 1 ; i >= 0 ; i-- )
-    if( _.strHas( versionArray[ i ], /\d+\.\d+\.\d+/ ) )
+    if( _.strHas( versionArray[ i ], /\d+(\.\d+\.\d+){0,1}/ ) )
     {
       if( versionArray[ i - 1 ] )
       {

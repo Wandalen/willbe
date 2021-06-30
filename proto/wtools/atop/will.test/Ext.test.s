@@ -26328,6 +26328,19 @@ function stepNjsVersionVerify( test )
     return null;
   });
 
+  /* */
+
+  a.appStart( '.build not.full.version' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build not.full.version"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
