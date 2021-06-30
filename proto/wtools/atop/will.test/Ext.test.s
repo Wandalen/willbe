@@ -26020,6 +26020,61 @@ function stepGitTag( test )
 
 stepGitTag.rapidity = -1;
 
+//
+
+function stepView( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepView' );
+
+  if( process.platform !== 'linux' )
+  return test.true( true );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'view file on remote server';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.build view1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build view1"' ), 1 );
+    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepView / build::view1' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepView / build::view1' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'view file on local storage';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.build view2' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build view2"' ), 1 );
+    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepView / build::view2' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepView / build::view2' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
 // --
 // command
 // --
@@ -43370,6 +43425,7 @@ const Proto =
     stepGitSync,
     stepGitStatus,
     stepGitTag,
+    stepView,
 
     /* xxx : cover "will .module.new.with prepare" */
 
