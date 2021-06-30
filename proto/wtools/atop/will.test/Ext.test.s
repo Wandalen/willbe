@@ -7197,8 +7197,8 @@ function verbositySet( test )
 
     test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.true( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.identical( _.strCount( op.output, 'submodule(s)' ), 2 );
+    test.false( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
     test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
@@ -7228,8 +7228,8 @@ function verbositySet( test )
 
     test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.true( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.identical( _.strCount( op.output, 'submodule(s)' ), 2 );
+    test.false( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
     test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
