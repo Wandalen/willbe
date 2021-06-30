@@ -1225,12 +1225,12 @@ function stepRoutineWillfileVersionBump( frame )
 stepRoutineWillfileVersionBump.stepOptions =
 {
   versionDelta : 1,
-}
+};
 
 stepRoutineWillfileVersionBump.uniqueOptions =
 {
   versionDelta : 1,
-}
+};
 
 //
 
@@ -1238,8 +1238,15 @@ function stepRoutineNjsVersionVerify( frame )
 {
   const step = this;
   const opts = _.props.extend( null, step.opts );
+  const run = frame.run;
+  const module = run.module;
 
   _.assert( arguments.length === 1 );
+
+  if( !opts.version )
+  opts.version = module.resolve( '{about::npm.engines/node}' );
+
+  _.assert( opts.version, 'Expects node version to verify. Please, add it to section `about` or to the step.' );
 
   const versionsMap = versionParse( opts.version );
   const currentNjsVersion = process.versions.node;
@@ -1317,15 +1324,13 @@ function stepRoutineNjsVersionVerify( frame )
     {
       _.sure( versionsMap[ '=' ].length === 0, 'Expects no direct defined version' );
 
-      let version = versionsMap[ '>' ] || versionsMap[ '>=' ];
-      let greater = versionIsGreater( currentVersion, version );
-      let equivalent = versionIsEquivalent( currentVersion, versionsMap[ '>=' ] );
+      const version = versionsMap[ '>' ] || versionsMap[ '>=' ];
+      const greater = versionIsGreater( currentVersion, version );
+      const equivalent = versionIsEquivalent( currentVersion, versionsMap[ '>=' ] );
 
-      _.sure
-      (
-        greater || equivalent,
-        `Expects NodeJS version newer${ versionsMap[ '>=' ] ? ' or equivalent' : '' } than ${ version }`
-      );
+      const errorMsg =
+        opts.errorMsg || `Expects NodeJS version newer${ versionsMap[ '>=' ] ? ' or equivalent' : '' } than ${ version }`;
+      _.sure ( greater || equivalent, errorMsg );
       if( !versionsMap[ '<' ] && !versionsMap[ '<=' ] )
       return;
     }
@@ -1334,23 +1339,18 @@ function stepRoutineNjsVersionVerify( frame )
     {
       _.sure( versionsMap[ '=' ].length === 0, 'Expects no direct defined version' );
 
-      let version = versionsMap[ '<' ] || versionsMap[ '<=' ];
-      let greater = versionIsGreater( currentVersion, version );
-      let equivalent = versionIsEquivalent( currentVersion, versionsMap[ '<=' ] );
+      const version = versionsMap[ '<' ] || versionsMap[ '<=' ];
+      const greater = versionIsGreater( currentVersion, version );
+      const equivalent = versionIsEquivalent( currentVersion, versionsMap[ '<=' ] );
 
-      _.sure
-      (
-        !greater || equivalent,
-        `Expects NodeJS version older${ versionsMap[ '<=' ] ? ' or equivalent' : '' } than ${ version }`
-      );
+      const errorMsg =
+        opts.errorMsg || `Expects NodeJS version older${ versionsMap[ '<=' ] ? ' or equivalent' : '' } than ${ version }`;
+      _.sure ( !greater || equivalent, errorMsg );
       return;
     }
 
-    _.sure
-    (
-      _.any( versionsMap[ '=' ], ( version ) => versionIsEquivalent( currentVersion, version ) ),
-      `Expects NodeJS with versions :\n${ _.entity.exportStringNice( versionsMap[ '=' ] ) }`
-    );
+    const errorMsg = opts.errorMsg || `Expects NodeJS with versions :\n${ _.entity.exportStringNice( versionsMap[ '=' ] ) }`;
+    _.sure ( _.any( versionsMap[ '=' ], ( version ) => versionIsEquivalent( currentVersion, version ) ), errorMsg );
   }
 
   /* */
@@ -1359,7 +1359,6 @@ function stepRoutineNjsVersionVerify( frame )
   {
     const splits1 = _.strSplit( version1, '.' );
     const splits2 = _.strSplit( version2, '.' );
-    _.assert( splits1.length === splits2.length );
     let greater = false;
     for( let i = 0 ; i < splits1.length ; i++ )
     {
@@ -1387,6 +1386,7 @@ function stepRoutineNjsVersionVerify( frame )
 stepRoutineNjsVersionVerify.stepOptions =
 {
   version : null,
+  errorMsg : null,
 };
 
 stepRoutineNjsVersionVerify.uniqueOptions =

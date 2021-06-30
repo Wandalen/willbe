@@ -26085,6 +26085,19 @@ function stepNjsVersionVerify( test )
 
   /* - */
 
+  a.appStart( '.build from.about' )
+  .then( ( op ) =>
+  {
+    test.case = 'range of versions in field about/npm.engines/node';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build from.about"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    return null;
+  });
+
+  /* */
+
   a.appStartNonThrowing( '.build strict.version.str' )
   .then( ( op ) =>
   {
@@ -26163,7 +26176,7 @@ function stepNjsVersionVerify( test )
     test.identical( _.strCount( op.output, 'Command ".build one.bound.left.throwing"' ), 1 );
     test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
     test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
-    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 2 );
     test.identical( _.strCount( op.output, 'Expects NodeJS version newer or equivalent' ), 0 );
     return null;
   });
@@ -26220,7 +26233,7 @@ function stepNjsVersionVerify( test )
     test.identical( _.strCount( op.output, 'Command ".build one.bound.right.throwing"' ), 1 );
     test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
     test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
-    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 2 );
     test.identical( _.strCount( op.output, 'Expects NodeJS version older or equivalent' ), 0 );
     return null;
   });
@@ -26273,12 +26286,12 @@ function stepNjsVersionVerify( test )
   a.appStartNonThrowing( '.build range.versions.left.bound.throwing' )
   .then( ( op ) =>
   {
-    test.case = 'njs version in range, should throw no error';
+    test.case = 'njs version out of range, should throw error';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".build range.versions.left.bound.throwing"' ), 1 );
     test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
     test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
-    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 2 );
     test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 0 );
     return null;
   });
@@ -26288,13 +26301,30 @@ function stepNjsVersionVerify( test )
   a.appStartNonThrowing( '.build range.versions.right.bound.throwing' )
   .then( ( op ) =>
   {
-    test.case = 'njs version in range, should throw no error';
+    test.case = 'njs version out of range, should throw error';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Command ".build range.versions.right.bound.throwing"' ), 1 );
     test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
     test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
     test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 0 );
-    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 2 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build custom.error.message' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build custom.error.message"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS with versions :' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer ' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older ' ), 0 );
+    test.identical( _.strCount( op.output, 'user error message' ), 1 );
     return null;
   });
 

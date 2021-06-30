@@ -1,6 +1,8 @@
 about :
 
   name : 'stepNjsVersionVerify'
+  npm.engines :
+    node : '>= 6.0.0 <= 30.0.0'
 
 step :
 
@@ -53,7 +55,15 @@ step :
   range.versions.right.bound.throwing :
     version : '> 1.0.0 <= 6.0.0'
 
+  custom.error.message :
+    version : '> 1.0.0 <= 6.0.0'
+    errorMsg : 'user error message'
+
 build :
+
+  from.about :
+    steps :
+      - step::njs.version.verify
 
   strict.version.str :
     steps :
@@ -114,4 +124,8 @@ build :
   range.versions.right.bound.throwing :
     steps :
       - step::range.versions.right.bound.throwing
+
+  custom.error.message :
+    steps :
+      - step::custom.error.message
 
