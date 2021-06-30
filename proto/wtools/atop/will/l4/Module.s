@@ -1337,6 +1337,12 @@ function predefinedForm()
     stepRoutine : Predefined.stepRoutineWillfileVersionBump,
   })
 
+  step
+  ({
+    name : 'njs.version.verify',
+    stepRoutine : Predefined.stepRoutineNjsVersionVerify,
+  })
+
   /* */
 
   reflector

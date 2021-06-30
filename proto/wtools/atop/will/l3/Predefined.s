@@ -1232,6 +1232,168 @@ stepRoutineWillfileVersionBump.uniqueOptions =
   versionDelta : 1,
 }
 
+//
+
+function stepRoutineNjsVersionVerify( frame )
+{
+  const step = this;
+  const opts = _.props.extend( null, step.opts );
+
+  _.assert( arguments.length === 1 );
+
+  const versionsMap = versionParse( opts.version );
+  const currentNjsVersion = process.versions.node;
+
+  versionVerify( currentNjsVersion, versionsMap );
+
+  return true;
+
+  /* */
+
+  function versionParse( version )
+  {
+    const resultMap = Object.create( null );
+    resultMap[ '=' ] = _.array.make();
+    resultMap[ '>' ] = null;
+    resultMap[ '>=' ] = null;
+    resultMap[ '<' ] = null;
+    resultMap[ '<=' ] = null;
+
+    let versionArray = null;
+    if( _.str.is( version ) )
+    versionArray = versionSplit( version );
+    else if( _.array.is( version ) )
+    _.each( version, ( el ) => { versionArray = _.arrayAppendArray( versionArray, versionSplit( el ) ) } );
+
+    versionMapFill( resultMap, versionArray );
+    return resultMap;
+  }
+
+  /* */
+
+  function versionSplit( src )
+  {
+    return _.strSplit({ src, delimeter : /\d+\.\d+\.\d+/, preservingEmpty : 0 });
+  }
+
+  /* */
+
+  function versionMapFill( dstMap, versionArray )
+  {
+    for( let i = versionArray.length - 1 ; i >= 0 ; i-- )
+    if( _.strHas( versionArray[ i ], /\d+\.\d+\.\d+/ ) )
+    {
+      if( versionArray[ i - 1 ] )
+      {
+        if( _.strHasAny( versionArray[ i - 1 ], [ '>', '>=' ] ) )
+        {
+          _.assert( dstMap[ '>' ] === null );
+          _.assert( dstMap[ '>=' ] === null );
+          dstMap[ versionArray[ i - 1 ] ] = versionArray[ i ];
+          i -= 1;
+          continue;
+        }
+        else if( _.strHasAny( versionArray[ i - 1 ], [ '<', '<=' ] ) )
+        {
+          _.assert( dstMap[ '<' ] === null );
+          _.assert( dstMap[ '<=' ] === null );
+          dstMap[ versionArray[ i - 1 ] ] = versionArray[ i ];
+          i -= 1;
+          continue;
+        }
+      }
+
+      dstMap[ '=' ].unshift( versionArray[ i ] );
+      if( versionArray[ i - 1 ] && _.strHas( versionArray[ i - 1 ], /=+/ ) )
+      i -= 1;
+    }
+  }
+
+  /* */
+
+  function versionVerify( currentVersion, versionsMap )
+  {
+    if( versionsMap[ '>' ] || versionsMap[ '>=' ] )
+    {
+      _.sure( versionsMap[ '=' ].length === 0, 'Expects no direct defined version' );
+
+      let version = versionsMap[ '>' ] || versionsMap[ '>=' ];
+      let greater = versionIsGreater( currentVersion, version );
+      let equivalent = versionIsEquivalent( currentVersion, versionsMap[ '>=' ] );
+
+      _.sure
+      (
+        greater || equivalent,
+        `Expects NodeJS version newer${ versionsMap[ '>=' ] ? ' or equivalent' : '' } than ${ version }`
+      );
+      if( !versionsMap[ '<' ] && !versionsMap[ '<=' ] )
+      return;
+    }
+
+    if( versionsMap[ '<' ] || versionsMap[ '<=' ] )
+    {
+      _.sure( versionsMap[ '=' ].length === 0, 'Expects no direct defined version' );
+
+      let version = versionsMap[ '<' ] || versionsMap[ '<=' ];
+      let greater = versionIsGreater( currentVersion, version );
+      let equivalent = versionIsEquivalent( currentVersion, versionsMap[ '<=' ] );
+
+      _.sure
+      (
+        !greater || equivalent,
+        `Expects NodeJS version older${ versionsMap[ '<=' ] ? ' or equivalent' : '' } than ${ version }`
+      );
+      return;
+    }
+
+    _.sure
+    (
+      _.any( versionsMap[ '=' ], ( version ) => versionIsEquivalent( currentVersion, version ) ),
+      `Expects NodeJS with versions :\n${ _.entity.exportStringNice( versionsMap[ '=' ] ) }`
+    );
+  }
+
+  /* */
+
+  function versionIsGreater( version1, version2 )
+  {
+    const splits1 = _.strSplit( version1, '.' );
+    const splits2 = _.strSplit( version2, '.' );
+    _.assert( splits1.length === splits2.length );
+    let greater = false;
+    for( let i = 0 ; i < splits1.length ; i++ )
+    {
+      let v1 = _.number.from( splits1[ i ] );
+      let v2 = _.number.from( splits2[ i ] );
+
+      if( v1 === v2 )
+      continue;
+      if( v1 > v2 )
+      greater = true;
+
+      break
+    }
+    return greater;
+  }
+
+  /* */
+
+  function versionIsEquivalent( version1, version2 )
+  {
+    return version1 === version2;
+  }
+}
+
+stepRoutineNjsVersionVerify.stepOptions =
+{
+  version : null,
+};
+
+stepRoutineNjsVersionVerify.uniqueOptions =
+{
+  version : null,
+};
+
 // --
 // declare
 // --
@@ -1278,6 +1440,8 @@ let Extension =
   stepRoutineWillbeIsUpToDate,
 
   stepRoutineWillfileVersionBump,
+
+  stepRoutineNjsVersionVerify,
 }
 
 /* _.props.extend */Object.assign( _.will.Predefined, Extension );
