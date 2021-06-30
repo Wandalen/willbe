@@ -667,7 +667,7 @@ function stepRoutineWillfileFromNpm( frame )
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
 
-  return module.cui.willfileGenerateFromNpm( opts );
+  return module.will.willfileGenerateFromNpm( opts );
 }
 
 stepRoutineWillfileFromNpm.stepOptions =

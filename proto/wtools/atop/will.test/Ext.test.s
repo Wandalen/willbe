@@ -6908,18 +6908,18 @@ function hookWasPackageExtendWillfile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '+ writing' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about.name, 'NpmFromWillfile' );
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.description, 'To check the conversion' );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
-    test.identical( _.props.keys( config.submodule ).length, 4 );
-    test.identical( config.submodule.eslint.enabled, 1 );
+    test.identical( _.props.keys( config.submodule ).length, 3 );
+    test.identical( config.submodule.eslint.enabled, 0 );
 
     return null;
   });
@@ -6936,17 +6936,17 @@ function hookWasPackageExtendWillfile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '+ writing' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about.name, 'NpmFromWillfile' );
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.description, 'To check the conversion' );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
-    test.identical( _.props.keys( config.submodule ).length, 4 );
+    test.identical( _.props.keys( config.submodule ).length, 3 );
     test.identical( config.submodule.eslint.enabled, 0 );
 
     return null;
@@ -41402,7 +41402,8 @@ function commandNpmPublish( test )
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal }"` ), 1 );
+    var exp = `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal }"`;
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.ge( _.strCount( op.output, `. Opened .` ), 0 );
     test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
     test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
@@ -41438,7 +41439,8 @@ function commandNpmPublish( test )
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal } v:7"` ), 1 );
+    var exp = `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal } v:7"`;
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.ge( _.strCount( op.output, `. Opened .` ), 6 );
     test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
     test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
