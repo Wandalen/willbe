@@ -12456,7 +12456,7 @@ function exportWithRemoteSubmodulesMin( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
 
     var exp =
     [
