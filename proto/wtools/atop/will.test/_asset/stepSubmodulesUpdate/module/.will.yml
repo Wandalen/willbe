@@ -163,4 +163,5 @@ build :
       withDisabledStem : 1
       to : [ '!master', '!gamma' ]
     steps :
+      - submodules.download
       - step::_submodules.update.*=1
