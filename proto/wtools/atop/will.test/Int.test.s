@@ -5259,6 +5259,115 @@ function moduleIsNotValid( test )
   return a.ready;
 }
 
+//
+
+function hookFindAt( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'dos' );
+  let opener;
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'string, path with only name of hook';
+    var got = a.will.hookFindAt( a.abs( '.will/hook/clean' ) );
+    test.identical( got, a.abs( '.will/hook/clean.js' ) );
+
+    test.case = 'string, path to terminal file';
+    var got = a.will.hookFindAt( a.abs( '.will/hook/clean.js' ) );
+    test.identical( got, a.abs( '.will/hook/clean.js' ) );
+
+    test.case = 'string, path to file with glob';
+    var got = a.will.hookFindAt( a.abs( '.will/hook/clea*' ) );
+    test.identical( got, a.abs( '.will/hook/clean.js' ) );
+
+    /* */
+
+    test.case = 'map, path with only name of hook, single - 1';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/clean' ), single : 1 });
+    test.identical( got, a.abs( '.will/hook/clean.js' ) );
+
+    test.case = 'map, path to terminal file, single - 1';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/clean.js' ), single : 1 });
+    test.identical( got, a.abs( '.will/hook/clean.js' ) );
+
+    test.case = 'map, path to file with glob, single - 1';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/clea*' ), single : 1 });
+    test.identical( got, a.abs( '.will/hook/clean.js' ) );
+
+    /* */
+
+    test.case = 'map, path with only name of hook, single - 0';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/clean' ), single : 0 });
+    test.identical( got, [ a.abs( '.will/hook/clean.js' ) ] );
+
+    test.case = 'map, path to terminal file, single - 0';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/clean.js' ), single : 0 });
+    test.identical( got, [ a.abs( '.will/hook/clean.js' ) ] );
+
+    test.case = 'map, path to file with glob, single - 0';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/clea*' ), single : 0 });
+    test.identical( got, [ a.abs( '.will/hook/clean.js' ) ] );
+
+    test.case = 'map, path with glob, selects more than 1 hook, single - 0';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/*' ), single : 0 });
+    test.ge( got.length, 10 );
+
+    test.case = 'map, path which selects no hooks, single - 0';
+    var got = a.will.hookFindAt({ execPath : a.abs( '.will/hook/unknown' ), single : 0 });
+    test.ge( got, [] );
+
+    /* - */
+
+    if( !Config.debug )
+    return null;
+
+    test.case = 'without arguments';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt() );
+
+    test.case = 'extra arguments';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt( a.abs( '.will/hook/clean.js' ), a.abs( '.will/hook/clean' ) ) );
+
+    test.case = 'path to directory with hooks, no hooks found';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt( a.abs( '.will/hook/' ) ) );
+
+    test.case = 'path with name, no hooks found';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt( a.abs( '.will/hook/cleanUnknown' ) ) );
+
+    test.case = 'execPath gets more than 1 hook, single - 1';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt({ execPath : '.will/hook/*', single : 1 }) );
+
+    test.case = 'wrong type of options map';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt([ { execPath : a.abs( '.will/hook/' ) } ]) );
+
+    test.case = 'unknown option in options map';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt({ execPath : a.abs( '.will/hook/' ), unknown : 1 }) );
+
+    test.case = 'execPath is not absolute path';
+    test.shouldThrowErrorSync( () => a.will.hookFindAt({ execPath : '.will/hook/' }) );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    return a.ready.then( () =>
+    {
+      a.reflect();
+      opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+      return null;
+    });
+  }
+}
+
 // --
 // resolve
 // --
@@ -13130,6 +13239,7 @@ const Proto =
     framePerform,
     customLogger,
     moduleIsNotValid,
+    hookFindAt,
 
     // resolve
 
