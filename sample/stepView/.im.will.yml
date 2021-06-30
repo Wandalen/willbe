@@ -2,17 +2,18 @@
 path :
 
   google : http:///www.google.com
-  local : File.html
+  localPath : File.html
 
 step :
 
   view1 :
     inherit : file.view
     filePath : path::google
+    delay : 3000
 
   view2 :
     inherit : file.view
-    filePath : path::local
+    filePath : path::localPath
 
 build :
 

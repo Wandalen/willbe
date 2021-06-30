@@ -6348,7 +6348,8 @@ commandNpmInstall.defaults =
 {
   to : null,
   locked : null,
-  linkingSelf : 1,
+  linkingSelf : null,
+  // linkingSelf : 1,
   dry : 0,
   verbosity : 2,
 };
