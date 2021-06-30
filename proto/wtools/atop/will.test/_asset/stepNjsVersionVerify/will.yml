@@ -1,0 +1,117 @@
+about :
+
+  name : 'stepNjsVersionVerify'
+
+step :
+
+  strict.version.str :
+    version : '0.0.0'
+
+  strict.version.array :
+    version :
+      - '0.0.0'
+
+  strict.versions.str :
+    version : '0.0.0 1.1.1 2.2.2'
+
+  strict.versions.array :
+    version :
+      - '0.0.0'
+      - '1.1.1'
+      - '2.2.2'
+
+  one.bound.left :
+    version : '> 6.0.0'
+
+  one.bound.left.throwing :
+    version : '> 30.0.0'
+
+  one.bound.left.equivalent :
+    version : '>= 6.0.0'
+
+  one.bound.left.equivalent.throwing :
+    version : '>= 30.0.0'
+
+  one.bound.right :
+    version : '< 30.0.0'
+
+  one.bound.right.throwing :
+    version : '< 1.0.0'
+
+  one.bound.right.equivalent :
+    version : '<= 30.0.0'
+
+  one.bound.right.equivalent.throwing :
+    version : '<= 1.0.0'
+
+  range.versions :
+    version : '> 6.0.0 <= 30.0.0'
+
+  range.versions.left.bound.throwing :
+    version : '> 30.0.0 <= 40.0.0'
+
+  range.versions.right.bound.throwing :
+    version : '> 1.0.0 <= 6.0.0'
+
+build :
+
+  strict.version.str :
+    steps :
+      - step::strict.version.str
+
+  strict.version.array :
+    steps :
+      - step::strict.version.array
+
+  strict.versions.str :
+    steps :
+      - step::strict.versions.str
+
+  strict.versions.array :
+    steps :
+      - step::strict.versions.array
+
+  one.bound.left :
+    steps :
+      - step::one.bound.left
+
+  one.bound.left.throwing :
+    steps :
+      - step::one.bound.left.throwing
+
+  one.bound.left.equivalent :
+    steps :
+      - step::one.bound.left.equivalent
+
+  one.bound.left.equivalent.throwing :
+    steps :
+      - step::one.bound.left.equivalent.throwing
+
+  one.bound.right :
+    steps :
+      - step::one.bound.right
+
+  one.bound.right.throwing :
+    steps :
+      - step::one.bound.right.throwing
+
+  one.bound.right.equivalent :
+    steps :
+      - step::one.bound.right.equivalent
+
+  one.bound.right.equivalent.throwing :
+    steps :
+      - step::one.bound.right.equivalent.throwing
+
+  range.versions :
+    steps :
+      - step::range.versions
+
+  range.versions.left.bound.throwing :
+    steps :
+      - step::range.versions.left.bound.throwing
+
+  range.versions.right.bound.throwing :
+    steps :
+      - step::range.versions.right.bound.throwing
+
