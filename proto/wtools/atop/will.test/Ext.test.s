@@ -4182,13 +4182,11 @@ function reflectNpmModules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     return null;
-  })
+  });
 
   /* */
 
@@ -4217,12 +4215,12 @@ function reflectNpmModules( test )
       './proto/wtools/testing/l4/testing12ab',
       './proto/wtools/testing/l4/testing12ab/Include.s',
       './proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
-    ]
-    var files = a.find( a.abs( 'out' ) )
+    ];
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
   /*  */
 
