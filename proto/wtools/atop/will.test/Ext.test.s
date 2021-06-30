@@ -26020,6 +26020,234 @@ function stepGitTag( test )
 
 stepGitTag.rapidity = -1;
 
+//
+
+function stepNjsVersionVerify( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNjsVersionVerify' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStartNonThrowing( '.build strict.version.str' )
+  .then( ( op ) =>
+  {
+    test.case = 'strict version as string, cannot be matched, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build strict.version.str"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, /Expects NodeJS with versions :\n\s*0\.0\.0/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build strict.version.array' )
+  .then( ( op ) =>
+  {
+    test.case = 'strict version as array with single string, cannot be matched, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build strict.version.array"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, /Expects NodeJS with versions :\n\s*0\.0\.0/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build strict.versions.str' )
+  .then( ( op ) =>
+  {
+    test.case = 'strict versions as string, cannot be matched, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build strict.versions.str"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, /Expects NodeJS with versions :\n\s*0\.0\.0\n\s*1\.1\.1\n\s*2\.2\.2/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build strict.versions.array' )
+  .then( ( op ) =>
+  {
+    test.case = 'strict versions as array with strings, cannot be matched, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build strict.versions.array"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, /Expects NodeJS with versions :\n\s*0\.0\.0\n\s*1\.1\.1\n\s*2\.2\.2/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build one.bound.left' )
+  .then( ( op ) =>
+  {
+    test.case = 'left bound, version of njs should be bigger, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.left"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build one.bound.left.throwing' )
+  .then( ( op ) =>
+  {
+    test.case = 'left bound is bigger, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.left.throwing"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer or equivalent' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build one.bound.left.equivalent' )
+  .then( ( op ) =>
+  {
+    test.case = 'left bound, version of njs should be bigger, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.left.equivalent"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build one.bound.left.equivalent.throwing' )
+  .then( ( op ) =>
+  {
+    test.case = 'left bound is bigger, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.left.equivalent.throwing"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer or equivalent' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build one.bound.right' )
+  .then( ( op ) =>
+  {
+    test.case = 'right bound, version of njs should be less, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.right"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build one.bound.right.throwing' )
+  .then( ( op ) =>
+  {
+    test.case = 'right bound is less, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.right.throwing"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older or equivalent' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build one.bound.right.equivalent' )
+  .then( ( op ) =>
+  {
+    test.case = 'right bound, version of njs should be less, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.right.equivalent"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build one.bound.right.equivalent.throwing' )
+  .then( ( op ) =>
+  {
+    test.case = 'right bound is less, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build one.bound.right.equivalent.throwing"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older or equivalent' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build range.versions' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build range.versions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build range.versions.left.bound.throwing' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build range.versions.left.bound.throwing"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.build range.versions.right.bound.throwing' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build range.versions.right.bound.throwing"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepNjsVersionVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version newer' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects NodeJS version older' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
 // --
 // command
 // --
@@ -43370,6 +43598,7 @@ const Proto =
     stepGitSync,
     stepGitStatus,
     stepGitTag,
+    stepNjsVersionVerify,
 
     /* xxx : cover "will .module.new.with prepare" */
 
