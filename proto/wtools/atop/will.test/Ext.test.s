@@ -14238,6 +14238,35 @@ Current willbe should alert user about unexpected fields.
 
 //
 
+function exportCreatesOutDir( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportCreatesOutDir' );
+  a.reflectMinimal();
+
+  a.appStartNonThrowing({ args : '.export' })
+  .then( ( op ) => 
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, /No file found at .*\/out/ ) )
+    test.true( a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+}
+
+exportCreatesOutDir.description =
+`
+Reproduces situation when out directory is not present and should be created by willbe.
+`
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -43474,6 +43503,7 @@ const Proto =
     exportMainIsGitRepository,
     exportTwoFirstIsDepOfSecond,
     exportWithOutdatedWillbe,
+    exportCreatesOutDir,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
