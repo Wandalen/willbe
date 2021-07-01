@@ -21339,6 +21339,34 @@ function submodulesVerify( test )
 
 //
 
+function submodulesVerifyOutdatedBranch( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesVerifyOutdatedBranch' );
+  a.reflect();
+
+  a.appStart( '.submodules.download' );
+  a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
+  a.appStart( '.submodules.versions.verify' )
+  .then( ( op ) => 
+  {
+    test.identical( op.exitCode, 0 );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+submodulesVerifyOutdatedBranch.description = 
+`
+Checks if command .submodules.versions.verify detects that current branch is outdated.
+`
+
+
+//
+
 function submodulesVersionsAgree( test )
 {
   let context = this;
@@ -43577,6 +43605,7 @@ const Proto =
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     submodulesVerify,
+    submodulesVerifyOutdatedBranch,
     submodulesVersionsAgree,
     submodulesVersionsAgreeNpm,
 
