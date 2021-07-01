@@ -14205,6 +14205,39 @@ Out will-file of the second module should contain updated hash and size of the i
 
 //
 
+function exportWithOutdatedWillbe( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithOutdatedWillbe' );
+  a.reflectMinimal();
+  a.fileProvider.dirMake( a.abs( 'out' ) ) /* Vova xxx: temporary step until problem with missing out dir will be resolved */
+
+  a.shell( 'npm i' );
+  a.shell( 'npm run will .export' )
+  a.appStart({ args : '.export' })
+  .then( ( op ) => 
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ) )
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+}
+
+exportWithOutdatedWillbe.description =
+`
+Reproduces situation when out file contains field that were renamed in newer version of willbe.
+Uses older version of will to export the module and then tries to export module using current willbe.
+Current willbe should alert user about unexpected fields.
+`
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -43440,6 +43473,7 @@ const Proto =
     exportWithSubmoduleWithNotDownloadedSubmodule,
     exportMainIsGitRepository,
     exportTwoFirstIsDepOfSecond,
+    exportWithOutdatedWillbe,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
