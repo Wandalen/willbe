@@ -661,6 +661,60 @@ etcRunDebugWill.experimental = 1;
 
 //
 
+function etcCommandsSeveral( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'open' );
+  a.reflect();
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+
+  /* - */
+
+  a.appStart( '".with . .export ; .clean"' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .export ; .clean';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
+    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
+    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
+
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './doc.ex.will.yml',
+      './doc.im.will.yml',
+      './doc',
+      './doc/.ex.will.yml',
+      './doc/.im.will.yml',
+      './doc/doc.ex.will.yml',
+      './doc/doc.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var got = a.find( a.routinePath );
+    test.identical( got, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function etcCommandsSeveral */
+
+etcCommandsSeveral.description =
+`
+- check internal stat of will
+- several commands separated with ";"" should works
+`
+
+//
+
 /*
 
 Performance issue. Related with
@@ -27854,60 +27908,6 @@ function commandImplyWithAsterisk( test )
 
 //
 
-function etcCommandsSeveral( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'open' );
-  a.reflect();
-  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
-
-  /* - */
-
-  a.appStart( '".with . .export ; .clean"' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .export ; .clean';
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
-    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
-    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
-
-    var exp =
-    [
-      '.',
-      './.ex.will.yml',
-      './.im.will.yml',
-      './doc.ex.will.yml',
-      './doc.im.will.yml',
-      './doc',
-      './doc/.ex.will.yml',
-      './doc/.im.will.yml',
-      './doc/doc.ex.will.yml',
-      './doc/doc.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ]
-    var got = a.find( a.routinePath );
-    test.identical( got, exp );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-} /* end of function etcCommandsSeveral */
-
-etcCommandsSeveral.description =
-`
-- check internal stat of will
-- several commands separated with ";"" should works
-`
-
-//
-
 function commandImplyWithSubmodulesModulesList( test )
 {
   let context = this;
@@ -43297,6 +43297,8 @@ const Proto =
     etcKillWillbe,
     etcRunDebugWill,
 
+    etcCommandsSeveral,
+
     // etcResourcesFormReflectorsExperiment, // xxx : look
 
     // build
@@ -43565,7 +43567,6 @@ const Proto =
     commandImplyWithDot,
     commandImplyWithAsterisk,
 
-    etcCommandsSeveral,
     commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     commandImplyPropertyWithDisabled,
