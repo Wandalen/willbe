@@ -1983,6 +1983,8 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module/proto/File1.s
           - >-
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module/proto/File2.s
+          - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir
+          - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/.will.yml
           - ../proto/wtools/atop/will.test/_asset/exportDefaultPath
           - ../proto/wtools/atop/will.test/_asset/exportDefaultPath/File.txt
           - >-
@@ -2217,6 +2219,11 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/proto/file.txt
+          - ../proto/wtools/atop/will.test/_asset/exportWithOutdatedWillbe
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithOutdatedWillbe/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithOutdatedWillbe/package.json
           - ../proto/wtools/atop/will.test/_asset/exportWithReflector
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithReflector/.ex.will.yml
@@ -3400,6 +3407,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/module/out
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/module/out/wModuleForTesting.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesVerifyOutdatedBranch
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesVerifyOutdatedBranch/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/.ex.will.yml
