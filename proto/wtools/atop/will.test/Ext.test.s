@@ -14205,6 +14205,68 @@ Out will-file of the second module should contain updated hash and size of the i
 
 //
 
+function exportWithOutdatedWillbe( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportWithOutdatedWillbe' );
+  a.reflectMinimal();
+  a.fileProvider.dirMake( a.abs( 'out' ) ) /* Vova xxx: temporary step until problem with missing out dir will be resolved */
+
+  a.shell( 'npm i' );
+  a.shell( 'npm run will .export' )
+  a.appStart({ args : '.export' })
+  .then( ( op ) => 
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ) )
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+}
+
+exportWithOutdatedWillbe.description =
+`
+Reproduces situation when out file contains field that were renamed in newer version of willbe.
+Uses older version of will to export the module and then tries to export module using current willbe.
+Current willbe should alert user about unexpected fields.
+`
+
+//
+
+function exportCreatesOutDir( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportCreatesOutDir' );
+  a.reflectMinimal();
+
+  a.appStartNonThrowing({ args : '.export' })
+  .then( ( op ) => 
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, /No file found at .*\/out/ ) )
+    test.true( a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+
+  /* */
+}
+
+exportCreatesOutDir.description =
+`
+Reproduces situation when out directory is not present and should be created by willbe.
+`
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -21274,6 +21336,34 @@ function submodulesVerify( test )
 
   return a.ready;
 }
+
+//
+
+function submodulesVerifyOutdatedBranch( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesVerifyOutdatedBranch' );
+  a.reflect();
+
+  a.appStart( '.submodules.download' );
+  a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
+  a.appStart( '.submodules.versions.verify' )
+  .then( ( op ) => 
+  {
+    test.identical( op.exitCode, 0 );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+submodulesVerifyOutdatedBranch.description = 
+`
+Checks if command .submodules.versions.verify detects that current branch is outdated.
+`
+
 
 //
 
@@ -43440,6 +43530,8 @@ const Proto =
     exportWithSubmoduleWithNotDownloadedSubmodule,
     exportMainIsGitRepository,
     exportTwoFirstIsDepOfSecond,
+    exportWithOutdatedWillbe,
+    exportCreatesOutDir,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
@@ -43513,6 +43605,7 @@ const Proto =
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     submodulesVerify,
+    submodulesVerifyOutdatedBranch,
     submodulesVersionsAgree,
     submodulesVersionsAgreeNpm,
 

@@ -1,0 +1,31 @@
+about :
+
+  name : testModule
+  version : 1.0.0
+
+path :
+
+  in : .
+  out : out
+  export : .
+
+reflector :
+
+ export :
+    src :
+      filePath : path::in
+
+step :
+
+  export :
+    export : reflector::export
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export
