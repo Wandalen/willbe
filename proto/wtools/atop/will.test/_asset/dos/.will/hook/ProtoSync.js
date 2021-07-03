@@ -6,10 +6,10 @@ function onModule( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  if( o.v !== null && o.v !== undefined ) o.verbosity = o.v;
+  if( o.v !== null && o.v !== undefined )
+  o.verbosity = o.v;
   _.routine.options( onModule, o );
 
-  // debugger; return; xxx
   let config = _.censor.configRead();
   if( !config )
   return null;
@@ -46,10 +46,12 @@ function onModule( context )
 
   /* */
 
+  debugger;
   let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
   if( fileProvider.fileExists( moduleProtoPath ) )
   {
-    fileProvider.filesReflect
+    debugger;
+    let reocrds = fileProvider.filesReflect
     ({
       filter : { filePath : { [ moduleProtoPath ] : protoPath }, maskAll },
       dstRewritingOnlyPreserving : 1,
@@ -58,6 +60,7 @@ function onModule( context )
       linkingAction : 'hardLink',
       verbosity
     });
+    debugger;
   }
 
   let moduleStepPath = path.join( context.junction.dirPath, 'step' );
