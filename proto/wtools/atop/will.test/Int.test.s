@@ -5103,6 +5103,7 @@ function exportReflectorForm( test )
   return a.ready;
 }
 
+exportReflectorForm.experimental = 1;
 exportReflectorForm.description = 
 `
   - prefix path of the formed export reflector is equal to the in path
