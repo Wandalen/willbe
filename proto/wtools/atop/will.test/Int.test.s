@@ -5058,6 +5058,58 @@ exportCourrputedSubmoduleOutfileFormatVersion.description =
   - recursive export works
 `
 
+//
+
+function exportReflectorForm( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'exportCreatesOutDir' );
+  let opener;
+  let module;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( '.will.yml' ) });
+    return opener.open();
+  })
+
+  .then( () =>
+  {
+    module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    return module.exportedMake({ build, purging : false })
+  })
+
+  .then( ( exported ) => 
+  {
+    let reflector = opener.openedModule.resolve( 'reflector::export' );
+    let exportedReflector = reflector.cloneExtending
+    ({
+      name : exported.inModule.resourceNameGenerate( 'reflector', 'exported.' + exported.name ),
+      module : exported.outModule,
+    });
+    exportedReflector.form();
+    test.identical( _.props.keys( exportedReflector.src.filePath ), [ '**' ] )
+    test.identical( exportedReflector.src.prefixPath, module.inPath )
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+exportReflectorForm.experimental = 1;
+exportReflectorForm.description = 
+`
+  - prefix path of the formed export reflector is equal to the in path
+`
+
+
 // --
 // etc
 // --
@@ -13231,7 +13283,8 @@ const Proto =
     exportCourruptedSubmodulesDisabled,
     exportCourrputedSubmoduleOutfileUnknownSection,
     exportCourrputedSubmoduleOutfileFormatVersion,
-
+    exportReflectorForm,
+    
     // etc
 
     framePerform,

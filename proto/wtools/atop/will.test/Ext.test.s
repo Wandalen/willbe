@@ -14260,6 +14260,7 @@ function exportCreatesOutDir( test )
   /* */
 }
 
+exportCreatesOutDir.experimental = 1;
 exportCreatesOutDir.description =
 `
 Reproduces situation when out directory is not present and should be created by willbe.
