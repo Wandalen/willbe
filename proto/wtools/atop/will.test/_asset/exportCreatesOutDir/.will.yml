@@ -7,13 +7,13 @@ path :
 
   in : .
   out : out
-  export : .
 
 reflector :
 
  export :
     src :
-      filePath : path::in
+      filePath : '**'
+      prefixPath : path::in
 
 step :
 
