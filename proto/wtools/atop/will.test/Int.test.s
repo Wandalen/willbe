@@ -11608,8 +11608,7 @@ function isRepositoryReformSeveralTimes( test )
   });
 
   a.ready.then( () => opener.openedModule.subModulesDownload() )
-
-  .then( () =>
+  a.ready.then( () =>
   {
     var repo = opener.openedModule.submoduleMap.ModuleForTesting2.opener.repo;
     return repo.status({ all : 1, invalidating : 0 });
@@ -12559,19 +12558,18 @@ function repoStatusForInvalidRepo( test )
   let a = context.assetFor( test, 'submodulesRemoteGitHd' );
   let opener;
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
+  });
 
   /* origin of repo is changed, repo is not longer valid */
 
-  .tap( () => test.open( 'repo is valid' ) )
+  a.ready.tap( () => test.open( 'repo is valid' ) );
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not valid'
     a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
@@ -12591,7 +12589,7 @@ function repoStatusForInvalidRepo( test )
     return con;
   })
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -12620,9 +12618,9 @@ function repoStatusForInvalidRepo( test )
     return null;
   })
 
-  //
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not valid, all:1, invalidating:1'
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
@@ -12649,7 +12647,7 @@ function repoStatusForInvalidRepo( test )
     return null;
   })
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -12678,7 +12676,7 @@ function repoStatusForInvalidRepo( test )
     return null;
   })
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -12694,7 +12692,7 @@ function repoStatusForInvalidRepo( test )
     return null;
   })
 
-  //
+  /* */
 
   .then( () =>
   {
