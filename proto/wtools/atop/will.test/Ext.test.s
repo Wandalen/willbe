@@ -14215,7 +14215,7 @@ function exportWithOutdatedWillbe( test )
   a.shell( 'npm i' );
   a.shell( 'npm run will .export' )
   a.appStart({ args : '.export' })
-  .then( ( op ) => 
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ) )
@@ -14245,7 +14245,7 @@ function exportCreatesOutDir( test )
   a.reflectMinimal();
 
   a.appStartNonThrowing({ args : '.export' })
-  .then( ( op ) => 
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, /No file found at .*\/out/ ) )
@@ -21348,7 +21348,7 @@ function submodulesVerifyOutdatedBranch( test )
   a.appStart( '.submodules.download' );
   a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
   a.appStart( '.submodules.versions.verify' )
-  .then( ( op ) => 
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
@@ -21359,7 +21359,7 @@ function submodulesVerifyOutdatedBranch( test )
   return a.ready;
 }
 
-submodulesVerifyOutdatedBranch.description = 
+submodulesVerifyOutdatedBranch.description =
 `
 Checks if command .submodules.versions.verify detects that current branch is outdated.
 `
@@ -27574,14 +27574,14 @@ function commandEachBrokenCommand( test )
 
   /* - */
 
-  a.appStartNonThrowing( `.each */* .resource.list path::module.common` );
+  a.appStartNonThrowing( `.each */* .resources path::module.common` );
   a.ready.then( ( op ) =>
   {
-    test.case = '.each */* .resource.list path::module.common';
+    test.case = '.each */* .resources path::module.common';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
+    test.identical( _.strCount( op.output, 'Ambiguity ".resources"' ), 1 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
   });
