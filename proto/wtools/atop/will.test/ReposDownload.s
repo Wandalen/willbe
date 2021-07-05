@@ -118,8 +118,7 @@ function repositoryDownload( name )
 function repositoryTagSetUp( name, tag )
 {
   let localPath = _.path.join( repoDirPath, name );
-  ready.then( () => _.git.tagLocalChange ({ localPath, tag }) );
-  ready.then( () => _.git.reset({ localPath }) );
+  ready.then( () => _.git.reset({ localPath, state2 : `!${ tag }` }) );
   return ready;
 }
 
