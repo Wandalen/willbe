@@ -14381,24 +14381,30 @@ function exportWithOutdatedWillbe( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithOutdatedWillbe' );
-  a.reflectMinimal();
-  a.fileProvider.dirMake( a.abs( 'out' ) ) /* Vova xxx: temporary step until problem with missing out dir will be resolved */
 
-  a.shell( 'npm i' );
-  a.shell( 'npm run will .export' )
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export from module with outdated format of exported willfile';
+    a.reflectMinimal();
+    return null;
+  });
   a.appStart({ args : '.export' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ) )
+    test.identical( _.strCount( op.output, 'Exporting module::testModule / build::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to import willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::testModule' ), 1 );
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
-
-  /* */
 }
 
 exportWithOutdatedWillbe.description =
