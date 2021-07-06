@@ -5064,8 +5064,7 @@ function exportReflectorForm( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportCreatesOutDir' );
-  let opener;
-  let module;
+  let opener, module;
 
   a.ready
   .then( () =>
@@ -5083,7 +5082,7 @@ function exportReflectorForm( test )
     return module.exportedMake({ build, purging : false })
   })
 
-  .then( ( exported ) => 
+  .then( ( exported ) =>
   {
     let reflector = opener.openedModule.resolve( 'reflector::export' );
     let exportedReflector = reflector.cloneExtending
@@ -5104,7 +5103,7 @@ function exportReflectorForm( test )
 }
 
 exportReflectorForm.experimental = 1;
-exportReflectorForm.description = 
+exportReflectorForm.description =
 `
   - prefix path of the formed export reflector is equal to the in path
 `
@@ -13284,7 +13283,7 @@ const Proto =
     exportCourrputedSubmoduleOutfileUnknownSection,
     exportCourrputedSubmoduleOutfileFormatVersion,
     exportReflectorForm,
-    
+
     // etc
 
     framePerform,
