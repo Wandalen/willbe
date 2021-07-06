@@ -2468,6 +2468,178 @@ openWith.rapidity = -1;
 
 //
 
+function openInDirWithUnderscore( test )
+{
+  let context = this;
+  let a = context.assetFor( test, '_openInDirWithUnderscore' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ execPath : '.build' })
+  .then( ( op ) =>
+  {
+    test.case = '.build - only root module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with . .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with . .build - only root module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with * .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with * .build - root module and root named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with ** .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with * .build - root module, root named module, runned module, runned named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::runned / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-runned / build::run in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with */* .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with */* .build - root module, root named module, runned module, runned named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::runned / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-runned / build::run in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with _skipped/ .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with _skipped/ .build - skipped module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo skipped' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::skipped / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with _skipped/* .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with _skipped/* .build - skipped module and skipped named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo skipped' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::skipped / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-skipped' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-skipped / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function openEach( test )
 {
   let context = this;
@@ -43437,6 +43609,7 @@ const Proto =
     openModuleWithLostSubmodule,
 
     openWith,
+    openInDirWithUnderscore,
     openEach,
 
     // reflect
