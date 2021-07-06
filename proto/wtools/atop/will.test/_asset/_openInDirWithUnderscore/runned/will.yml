@@ -1,0 +1,14 @@
+
+about :
+  name : runned
+
+step :
+  shell :
+    shell : echo runned
+
+build :
+  run :
+    criterion :
+      default : 1
+    steps :
+      - step::shell
