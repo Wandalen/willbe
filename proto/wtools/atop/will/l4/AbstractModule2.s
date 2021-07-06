@@ -722,7 +722,7 @@ function repoVerify( o )
       return false;
 
       let remoteParsed = remoteProvider.pathParse( module.repo.remotePath );
-      let remoteVersion = remoteParsed.hash || 'master';
+      let remoteVersion = remoteParsed.hash || remoteParsed.tag || 'master';
       let localVersion = remoteProvider.versionLocalRetrive( module.repo.downloadPath );
 
       if( remoteVersion === localVersion )

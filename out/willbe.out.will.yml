@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: 639b1b5df049ae2c602b357574a26042
-    size: 9043
+    hash: 24f2f7fb0c1f7a4bb646e61cb5a4fab0
+    size: 9111
 module:
   willbe.out:
     about:
@@ -14,23 +14,26 @@ module:
       enabled: 1
       version: 0.6.0
       license: MIT
+      npm.engine-strict: true
+      npm.engines: &ref_1
+        node: '>=10.21.0 <=16'
       npm.name: willbe
-      npm.bin: &ref_1
+      npm.bin: &ref_2
         single-process-will: proto/wtools/atop/will/entry/Exec
         debug-will: proto/wtools/atop/will/entry/ExecDebug
         will: proto/wtools/atop/will/entry/ExecUnrestricted
       author: Kostiantyn Wandalen <wanalen@01.school>
-      keywords: &ref_2
+      keywords: &ref_3
         - wTools
-      contributors: &ref_3
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
-      interpreters: &ref_4
+      interpreters: &ref_5
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      npm.scripts: &ref_5
+      npm.scripts: &ref_6
         test: 'wtest .run proto/** rapidity:-1'
         docgen: wdocgen .build proto
         single-process-will: node proto/wtools/atop/will/entry/Exec
@@ -1980,6 +1983,11 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module/proto/File1.s
           - >-
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module/proto/File2.s
+          - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir
+          - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/proto/File1.js
           - ../proto/wtools/atop/will.test/_asset/exportDefaultPath
           - ../proto/wtools/atop/will.test/_asset/exportDefaultPath/File.txt
           - >-
@@ -2214,6 +2222,11 @@ module:
           - ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithDefaultPaths/proto/file.txt
+          - ../proto/wtools/atop/will.test/_asset/exportWithOutdatedWillbe
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithOutdatedWillbe/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportWithOutdatedWillbe/package.json
           - ../proto/wtools/atop/will.test/_asset/exportWithReflector
           - >-
             ../proto/wtools/atop/will.test/_asset/exportWithReflector/.ex.will.yml
@@ -3114,8 +3127,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView
-          - ../proto/wtools/atop/will.test/_asset/stepView/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepView/File.html
+          - ../proto/wtools/atop/will.test/_asset/stepView/will.yml
           - ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck
           - >-
             ../proto/wtools/atop/will.test/_asset/stepWillbeVersionCheck/will.yml
@@ -3397,6 +3410,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/module/out
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateTo/module/out/wModuleForTesting.out.will.yml
+          - ../proto/wtools/atop/will.test/_asset/submodulesVerifyOutdatedBranch
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesVerifyOutdatedBranch/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesWithCriterion/.ex.will.yml
@@ -4538,13 +4554,15 @@ module:
       enabled: 1
       version: 0.6.0
       license: MIT
+      npm.engine-strict: true
+      npm.engines: *ref_1
       npm.name: willbe
-      npm.bin: *ref_1
+      npm.bin: *ref_2
       author: Kostiantyn Wandalen <wanalen@01.school>
-      keywords: *ref_2
-      contributors: *ref_3
-      interpreters: *ref_4
-      npm.scripts: *ref_5
+      keywords: *ref_3
+      contributors: *ref_4
+      interpreters: *ref_5
+      npm.scripts: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -5331,5 +5349,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 639b1b5df049ae2c602b357574a26042
-        size: 9043
+        hash: 24f2f7fb0c1f7a4bb646e61cb5a4fab0
+        size: 9111

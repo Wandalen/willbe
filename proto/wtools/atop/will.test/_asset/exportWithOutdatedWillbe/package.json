@@ -1,0 +1,9 @@
+{
+  "name": "name",
+  "scripts": {
+    "will": "node node_modules/willbe/proto/wtools/atop/will/entry/ExecUnrestricted"
+  },
+  "dependencies": {
+    "willbe": "alpha"
+  }
+}
