@@ -4228,7 +4228,7 @@ function _willfilesReadLog()
 function WillfilesFind( o )
 {
   if( _.strIs( o ) )
-  o = { commonPath : o }
+  o = { commonPath : o };
 
   _.routine.options_( WillfilesFind, o );
 
@@ -4251,7 +4251,9 @@ function WillfilesFind( o )
   o.commonPath = _.strRemoveEnd( o.commonPath, '.' );
   o.commonPath = path.resolve( o.commonPath );
 
-  _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
+  const commonLocalPath = path.fromGlob( o.commonPath );
+
+  _.assert( !path.isGlobal( commonLocalPath ), 'Expects local path.' );
 
   /* */
 
@@ -4300,9 +4302,11 @@ function WillfilesFind( o )
     let excludeRegexps = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
     return _.filter_( paths, paths, ( record ) =>
     {
-      let found = _.any( excludeRegexps, ( regexp ) => regexp.test( record.filePath ) );
-      if( found )
-      return;
+      const found = _.any( excludeRegexps, ( regexp ) =>
+      {
+        return regexp.test( _.strRemoveBegin( record.filePath, commonLocalPath ) );
+      });
+      if( !found )
       return record;
     });
   }
