@@ -1985,6 +1985,9 @@ module:
             ../proto/wtools/atop/will.test/_asset/exportBrokenNoreflector/module/proto/File2.s
           - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir
           - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/exportCreatesOutDir/proto/File1.js
           - ../proto/wtools/atop/will.test/_asset/exportDefaultPath
           - ../proto/wtools/atop/will.test/_asset/exportDefaultPath/File.txt
           - >-

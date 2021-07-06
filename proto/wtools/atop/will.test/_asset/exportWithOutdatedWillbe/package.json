@@ -4,6 +4,6 @@
     "will": "node node_modules/willbe/proto/wtools/atop/will/entry/ExecUnrestricted"
   },
   "dependencies": {
-    "willbe": "0.5.416"
+    "willbe": "alpha"
   }
 }

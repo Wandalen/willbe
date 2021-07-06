@@ -14267,7 +14267,7 @@ function exportWithOutdatedWillbe( test )
   a.shell( 'npm i' );
   a.shell( 'npm run will .export' )
   a.appStart({ args : '.export' })
-  .then( ( op ) => 
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ) )
@@ -14297,7 +14297,7 @@ function exportCreatesOutDir( test )
   a.reflectMinimal();
 
   a.appStartNonThrowing({ args : '.export' })
-  .then( ( op ) => 
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, /No file found at .*\/out/ ) )
@@ -14312,6 +14312,7 @@ function exportCreatesOutDir( test )
   /* */
 }
 
+exportCreatesOutDir.experimental = 1;
 exportCreatesOutDir.description =
 `
 Reproduces situation when out directory is not present and should be created by willbe.
@@ -21395,23 +21396,50 @@ function submodulesVerifyOutdatedBranch( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesVerifyOutdatedBranch' );
-  a.reflect();
 
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'another branch is up to date';
+    a.reflectMinimal();
+    return null;
+  });
   a.appStart( '.submodules.download' );
-  a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
   a.appStart( '.submodules.versions.verify' )
-  .then( ( op ) => 
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /1 \/ 1 submodule\(s\) of module::.* were verified/ ), 1 );
     return null;
-  })
+  });
 
   /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'another branch is not up to date';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.submodules.download' );
+  a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
+  a.appStartNonThrowing( '.submodules.versions.verify' )
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /! Submodule module::.* is not up to date!/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to verify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to submodules versions verify at' ), 1 );
+    return null;
+  });
+
+  /* - */
 
   return a.ready;
 }
 
-submodulesVerifyOutdatedBranch.description = 
+submodulesVerifyOutdatedBranch.description =
 `
 Checks if command .submodules.versions.verify detects that current branch is outdated.
 `
@@ -27626,14 +27654,14 @@ function commandEachBrokenCommand( test )
 
   /* - */
 
-  a.appStartNonThrowing( `.each */* .resource.list path::module.common` );
+  a.appStartNonThrowing( `.each */* .resources path::module.common` );
   a.ready.then( ( op ) =>
   {
-    test.case = '.each */* .resource.list path::module.common';
+    test.case = '.each */* .resources path::module.common';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-    test.identical( _.strCount( op.output, 'Ambiguity ".resource.list"' ), 1 );
+    test.identical( _.strCount( op.output, 'Ambiguity ".resources"' ), 1 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
   });
