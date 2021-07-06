@@ -21347,7 +21347,7 @@ function submodulesVerifyOutdatedBranch( test )
   a.reflect();
 
   a.appStart( '.submodules.download' );
-  a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
+  // a.shell( 'git -C .module/ModuleForTesting1 reset --hard HEAD~1' )
   a.appStart( '.submodules.versions.verify' )
   .then( ( op ) =>
   {
