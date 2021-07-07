@@ -14515,6 +14515,8 @@ Out will-file of the second module should contain updated hash and size of the i
 
 //
 
+/* aaa : Dmytro : updated test routine, used test asset without extra exporting */
+
 function exportWithOutdatedWillbe( test )
 {
   let context = this;
@@ -14553,6 +14555,8 @@ Current willbe should alert user about unexpected fields.
 `
 
 //
+
+/* qqq : for Dmytro : fix it */
 
 function exportCreatesOutDir( test )
 {
