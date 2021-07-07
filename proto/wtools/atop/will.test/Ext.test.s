@@ -23748,7 +23748,7 @@ function stepSubmodulesUpdate( test )
   }
 }
 
-stepSubmodulesUpdate.timeOut = 600000;
+stepSubmodulesUpdate.timeOut = 800000;
 
 //
 
