@@ -5060,6 +5060,8 @@ exportCourrputedSubmoduleOutfileFormatVersion.description =
 
 //
 
+/* qqq : for Dmytro : fix it */
+
 function exportReflectorForm( test )
 {
   let context = this;
