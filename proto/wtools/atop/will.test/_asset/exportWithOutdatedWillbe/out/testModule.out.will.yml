@@ -1,0 +1,210 @@
+format: outwillfile-2.0
+root:
+  - testModule.out
+consistency:
+  ../.will.yml: &ref_0
+    hash: fc1cf8ebe8ca411aee4ad26d4fa4ae78
+    size: 478
+module:
+  testModule.out:
+    about:
+      name: testModule
+      org: noorg
+      enabled: 1
+      version: 1.0.0
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: testModule.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: testModule.out
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: ../.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: ../.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: ..
+      download:
+        criterion:
+          predefined: 1
+      in:
+        path: .
+      out:
+        path: .
+      export:
+        path: ..
+      exported.dir.export:
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        path: .
+      exported.files.export:
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        path:
+          - .
+    submodule: {}
+    reflector:
+      export:
+        src:
+          filePath:
+            'path::in': ''
+          prefixPath: ''
+          maskTransientDirectory:
+            excludeAny:
+              - .vscode
+              - .circleci
+              - test
+              - .git
+              - out
+          maskTerminal:
+            excludeAny:
+              - .gitignore
+              - .will.yml
+      exported.export:
+        src:
+          filePath:
+            .: ''
+          prefixPath: .
+          maskTransientDirectory:
+            excludeAny:
+              - !<tag:yaml.org,2002:js/regexp> /\.vscode/
+              - !<tag:yaml.org,2002:js/regexp> /\.circleci/
+              - !<tag:yaml.org,2002:js/regexp> /test/
+              - !<tag:yaml.org,2002:js/regexp> /\.git/
+              - !<tag:yaml.org,2002:js/regexp> /out/
+          maskTerminal:
+            excludeAny:
+              - !<tag:yaml.org,2002:js/regexp> /\.gitignore/
+              - !<tag:yaml.org,2002:js/regexp> /\.will\.yml/
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+    step:
+      export:
+        opts:
+          export: 'reflector::export'
+          tar: 0
+        inherit:
+          - module.export
+    build:
+      export:
+        steps:
+          - 'step::export'
+        criterion:
+          default: 1
+          export: 1
+    exported:
+      export:
+        version: 1.0.0
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      ../.will.yml: *ref_0
+  ../:
+    about:
+      name: testModule
+      org: noorg
+      enabled: 1
+      version: 1.0.0
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: .will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: .will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: out/testModule.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      download:
+        criterion:
+          predefined: 1
+      in:
+        path: .
+      out:
+        path: out
+      export:
+        path: .
+    submodule: {}
+    reflector:
+      export:
+        src:
+          filePath:
+            'path::in': ''
+          maskTransientDirectory:
+            excludeAny:
+              - .vscode
+              - .circleci
+              - test
+              - .git
+              - out
+          maskTerminal:
+            excludeAny:
+              - .gitignore
+              - .will.yml
+    step:
+      export:
+        opts:
+          export: 'reflector::export'
+          tar: 0
+        inherit:
+          - module.export
+    build:
+      export:
+        steps:
+          - 'step::export'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      ../.will.yml:
+        hash: fc1cf8ebe8ca411aee4ad26d4fa4ae78
+        size: 478

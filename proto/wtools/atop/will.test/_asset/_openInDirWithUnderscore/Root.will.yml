@@ -1,0 +1,16 @@
+
+about :
+  name : 'named-root'
+
+step :
+  shell :
+    shell : echo named-root
+
+
+build :
+
+  run :
+    criterion :
+      default : 1
+    steps :
+      - step::shell

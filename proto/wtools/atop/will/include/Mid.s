@@ -10,6 +10,7 @@ if( typeof module !== 'undefined' )
   require( '../l1/Basic.s' );
   require( '../l1/Extra.s' );
   require( '../l1/File.s' );
+  require( '../l1/Transform.s' );
 
   require( '../l2/Main.s' );
   require( '../l2/Transaction.s' );

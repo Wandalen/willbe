@@ -4225,7 +4225,7 @@ function _willfilesReadLog()
 function WillfilesFind( o )
 {
   if( _.strIs( o ) )
-  o = { commonPath : o }
+  o = { commonPath : o };
 
   _.routine.options_( WillfilesFind, o );
 
@@ -4248,7 +4248,9 @@ function WillfilesFind( o )
   o.commonPath = _.strRemoveEnd( o.commonPath, '.' );
   o.commonPath = path.resolve( o.commonPath );
 
-  _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
+  const commonLocalPath = path.fromGlob( o.commonPath );
+
+  _.assert( !path.isGlobal( commonLocalPath ), 'Expects local path.' );
 
   /* */
 
@@ -4297,9 +4299,11 @@ function WillfilesFind( o )
     let excludeRegexps = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
     return _.filter_( paths, paths, ( record ) =>
     {
-      let found = _.any( excludeRegexps, ( regexp ) => regexp.test( record.filePath ) );
-      if( found )
-      return;
+      const found = _.any( excludeRegexps, ( regexp ) =>
+      {
+        return regexp.test( _.strRemoveBegin( record.filePath, commonLocalPath ) );
+      });
+      if( !found )
       return record;
     });
   }
@@ -4885,6 +4889,815 @@ function willfileRegister( willf )
   _.arrayAppendOnceStrictly( will.willfileWithCommonPathMap[ willf.commonPath ], willf );
 
 }
+
+// --
+// convert
+// --
+
+function npmGenerateFromWillfile( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( npmGenerateFromWillfile, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+
+  /* */
+
+  const module = o.modules[ 0 ];
+  const currentContext = o.currentContext;
+  _.assert( o.modules.length === 1 );
+
+  const packagePath = module.pathResolve
+  ({
+    selector : o.packagePath || '{path::out}/package.json',
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext,
+  });
+
+  const willfilesMap = _.will.fileReadAt( path.common( module.willfilesPath ) );
+  const config = Object.create( null );
+  for( let willfile in willfilesMap )
+  _.will.transform.willfilesMerge
+  ({
+    dst : config,
+    src : willfilesMap[ willfile ],
+    onSection : _.map.extend.bind( _.map )
+  });
+
+  const data = _.will.transform.npmFromWillfile
+  ({
+    config,
+    withDisabledSubmodules : o.withDisabledSubmodules,
+  });
+
+  if( o.entryPath )
+  {
+    const entryPath = module.pathResolve({ selector : o.entryPath, prefixlessAction : 'resolved', currentContext });
+    data.main = path.relative( path.dir( packagePath ), entryPath );
+  }
+  if( o.filesPath )
+  {
+    const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+    data.files = path.s.relative( path.dir( packagePath ), files );
+  }
+
+  _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
+
+  fileProvider.fileWrite
+  ({
+    filePath : packagePath,
+    data,
+    encoding : 'json.fine',
+    logger,
+  });
+
+  return null;
+}
+
+npmGenerateFromWillfile.defaults =
+{
+  packagePath : null,
+  entryPath : null,
+  filesPath : null,
+
+  modules : null,
+  currentContext : null,
+  withDisabledSubmodules : 0,
+
+  logger : 2,
+};
+
+//
+
+function willfileGenerateFromNpm( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfileGenerateFromNpm, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+  const inPath = will.inPath ? will.inPath : path.current();
+
+  /* */
+
+  _.assert( o.modules === null || o.modules.length <= 1 );
+  const module = o.modules ? o.modules[ 0 ] : o.modules;
+  const packagePath = pathResolveConditional( o.packagePath, '{path::in}/package.json', 'package.json' );
+  const willfilePath = pathResolveConditional( o.willfilePath, '{path::out}/will.yml', 'will.yml' );
+
+  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+  _.sure( _.will.filePathIs( willfilePath ), () => `Expexts path to willfile, but got : ${ willfilePath }` );
+
+  const config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger })
+  const data = _.will.transform.willfileFromNpm({ config });
+
+  fileProvider.fileWrite
+  ({
+    filePath : willfilePath,
+    data,
+    encoding : 'yaml',
+    logger,
+  });
+
+  return null;
+
+  /* */
+
+  function pathResolveConditional( src, alternative1, alternative2 )
+  {
+    if( module )
+    return module.pathResolve
+    ({
+      selector : src || alternative1,
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : o.currentContext || module,
+    });
+    else
+    return path.join( inPath, src || alternative2 );
+  }
+}
+
+willfileGenerateFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+
+  modules : null,
+  currentContext : null,
+  logger : 2,
+};
+
+//
+
+function _requestParsePathAndSelectors( o )
+{
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+
+  if( !o.request )
+  return null;
+
+  let selectorsString = o.request;
+  if( !o.commonPath || fileProvider.isDir( o.commonPath ) )
+  {
+    let isolated = _.strIsolateLeftOrAll( o.request, /\s+/ );
+    selectorsString = isolated[ 2 ];
+
+    if( path.isGlob( isolated[ 0 ] ) )
+    {
+      o.commonPath = isolated[ 0 ];
+    }
+    else if( isolated[ 0 ] === '.' )
+    {
+      o.commonPath = './';
+    }
+    else
+    {
+      let firstKey = isolated[ 0 ].split( '/' )[ 0 ];
+      if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
+      {
+        selectorsString = o.request;
+        o.commonPath = './';
+      }
+      else
+      {
+        o.commonPath = isolated[ 0 ];
+      }
+    }
+  }
+
+  if( _.strDefined( selectorsString ) )
+  {
+    let splits = selectorsString.split( /\s+/ );
+    for( let i = 0 ; i < splits.length ; i++ )
+    o.selectorsMap[ splits[ i ] ] = 1;
+  }
+}
+
+//
+
+function willfilePropertyGet( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfilePropertyGet, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+
+  _requestParsePathAndSelectors.call( will, o );
+
+  if( _.props.keys( o.selectorsMap ).length === 0 )
+  o.selectorsMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
+
+  /* */
+
+  let willfile = willfileFromConfigsRead( o.commonPath );
+  const result = Object.create( null );
+  for( let selector in o.selectorsMap )
+  {
+    _.assert
+    (
+      _.strBegins( selector, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] ),
+      `Invalid property selector "${ selector }". Please, improve property selector.`
+    );
+    if( o.selectorsMap[ selector ] )
+    result[ selector ] = _.select({ src : willfile, selector });
+  }
+
+  resultLog( result );
+
+  return null;
+
+  /* */
+
+  function willfileFromConfigsRead( src )
+  {
+    src = path.join( will.inPath ? will.inPath : path.current(), src );
+    const willfilesMap = _.will.fileReadAt( src );
+    const willfile = Object.create( null );
+    _.each( willfilesMap, ( config ) =>
+    {
+      _.will.transform.willfilesMerge({ dst : willfile, src : config, onSection : _.map.extend.bind( _.map ) })
+    });
+    return willfile;
+  }
+
+  /* */
+
+  function resultLog( src )
+  {
+    for( let selector in src )
+    if( src[ selector ] === undefined )
+    {
+      logger.log( `${ selector } :: {-undefined-}` );
+    }
+    else
+    {
+      let value = _.entity.exportStringNice( src[ selector ] );
+      if( _.primitive.is( src[ selector ] ) )
+      logger.log( `${ selector } :: ${ value }` );
+      else
+      logger.log( `${ selector } ::\n${ value }` );
+    }
+  }
+}
+
+willfilePropertyGet.defaults =
+{
+  commonPath : null,
+  request : null,
+  selectorsMap : null,
+  logger : 3,
+};
+
+//
+
+function willfilePropertySet( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfilePropertySet, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+
+  /* */
+
+  _requestParsePathAndSelectors.call( will, o );
+  selectorsMapVerify();
+
+  o.commonPath = o.commonPath === '.' ? './' : o.commonPath;
+  const willfilesMap = _.will.fileReadAt( path.join( will.inPath || path.current(), o.commonPath || './' ) );
+  const willfileSet = o.structureParse ? willfileSetParsed : willfileSetPrimitive;
+
+  for( let selector in o.selectorsMap )
+  willfileSet( o.selectorsMap[ selector ], selector, willfileGetBySelector( selector ) );
+
+  _.each( willfilesMap, ( willfile, willfilePath ) =>
+  {
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile, logger });
+  });
+
+  return null;
+
+  /* */
+
+  function selectorsMapVerify()
+  {
+    let count = 0;
+    for( let selector in o.selectorsMap )
+    {
+      ++count;
+      break;
+    }
+    _.assert( count === 1, 'Expects options to set.' );
+  }
+
+  /* */
+
+  function willfileSetParsed( set, selector, src )
+  {
+    _.selectSet
+    ({
+      src,
+      selector,
+      set : _.strStructureParse( set ),
+    });
+  }
+
+  /* */
+
+  function willfileSetPrimitive( set, selector, src )
+  {
+    _.selectSet({ src, selector, set });
+  }
+
+  /* */
+
+  function willfileGetBySelector( selector )
+  {
+    _.assert
+    (
+      _.strBegins( selector, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] ),
+      `Invalid property selector "${ selector }". Please, improve property selector.`
+    );
+
+    while( selector !== '.' )
+    {
+      const willfile = _.any( willfilesMap, ( willfile ) =>
+      {
+        if( _.select( willfile, selector ) !== undefined )
+        return willfile;
+      });
+      if( willfile )
+      return willfile;
+      selector = path.dir( selector );
+    }
+
+    for( let willfile in willfilesMap )
+    return willfilesMap[ willfile ];
+  }
+}
+
+willfilePropertySet.defaults =
+{
+  commonPath : null,
+  request : null,
+  selectorsMap : null,
+  structureParse : 0,
+  logger : 3,
+};
+
+//
+
+function willfilePropertyDelete( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfilePropertyDelete, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+  const selectorsCache = Object.create( null );
+
+  /* */
+
+  _requestParsePathAndSelectors.call( will, o );
+
+  if( _.props.keys( o.selectorsMap ).length === 0 )
+  o.selectorsMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
+
+  const willfilesMap = _.will.fileReadAt( path.join( will.inPath || path.current(), o.commonPath || './' ) );
+
+  selectorsCacheMake();
+
+  _.each( willfilesMap, ( willfile, willfilePath ) =>
+  {
+    willfileDeleteProperties( willfile );
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile, logger });
+  });
+
+  return null;
+
+  /* */
+
+  function selectorsCacheMake()
+  {
+    for( let selector in o.selectorsMap )
+    {
+      _.assert
+      (
+        _.strBegins( selector, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] ),
+        `Invalid property selector "${ selector }". Please, improve property selector.`
+      );
+      if( o.selectorsMap[ selector ] )
+      selectorsCache[ selector ] = o.selectorsMap[ selector ];
+    }
+  }
+
+  /* */
+
+  function willfileDeleteProperties( willfile )
+  {
+    for( let selector in selectorsCache )
+    _.select
+    ({
+      src : willfile,
+      selector,
+      action : _.selector.Action.del,
+    });
+  }
+}
+
+willfilePropertyDelete.defaults =
+{
+  commonPath : null,
+  request : null,
+  selectorsMap : null,
+  logger : 3,
+};
+
+//
+
+function willfilePropertyExtend( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfilePropertyExtend, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+
+  /* */
+
+  _requestParsePathAndSelectors.call( will, o );
+  selectorsMapVerify();
+
+  o.commonPath = o.commonPath === '.' ? './' : o.commonPath;
+  const willfilesMap = _.will.fileReadAt( path.join( will.inPath || path.current(), o.commonPath || './' ) );
+
+  for( let selector in o.selectorsMap )
+  {
+    let [ willfile, property ] = willfileAndPropertyGetBySelector( selector );
+    property = propertyExtend( property, o.selectorsMap[ selector ] );
+    _.selectSet({ src : willfile, selector, set : property });
+  }
+
+  _.each( willfilesMap, ( willfile, willfilePath ) =>
+  {
+    fileProvider.fileWriteUnknown({ filePath : willfilePath, data : willfile, logger });
+  });
+
+  return null;
+
+  /* */
+
+  function selectorsMapVerify()
+  {
+    let count = 0;
+    for( let selector in o.selectorsMap )
+    {
+      ++count;
+      break;
+    }
+    _.assert( count === 1, 'Expects options to set.' );
+  }
+
+  /* */
+
+  function willfileAndPropertyGetBySelector( selector )
+  {
+    _.assert
+    (
+      _.strBegins( selector, [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ] ),
+      `Invalid property selector "${ selector }". Please, improve property selector.`
+    );
+
+    let property;
+    const willfile = _.any( willfilesMap, ( willfile ) =>
+    {
+      property = _.select( willfile, selector );
+      if( property !== undefined )
+      return willfile;
+    });
+    if( willfile )
+    return [ willfile, property ];
+    selector = path.dir( selector );
+
+    /* */
+
+    selector = path.dir( selector );
+    while( selector !== '.' )
+    {
+      const willfile = _.any( willfilesMap, ( willfile ) =>
+      {
+        if( _.select( willfile, selector ) !== undefined )
+        return willfile;
+      });
+      if( willfile )
+      return [ willfile, undefined ];
+      selector = path.dir( selector );
+    }
+
+    for( let willfile in willfilesMap )
+    return [ willfilesMap[ willfile ], undefined ];
+  }
+
+  /* */
+
+  function propertyExtend( dst, src )
+  {
+    if( o.structureParse )
+    src = _.strStructureParse({ src, parsingArrays : 1 });
+
+    if( dst === undefined || dst === null )
+    return src;
+    if( _.array.is( dst ) )
+    return _.arrayAppendArrayOnce( dst, src );
+    if( _.primitive.is( dst ) || _.aux.is( dst ) )
+    return o.onProperty( { el : dst }, { el : src } ).el;
+    _.assert( false, 'Unexpected type of property' );
+  }
+}
+
+willfilePropertyExtend.defaults =
+{
+  commonPath : null,
+  request : null,
+  selectorsMap : null,
+  onProperty : null,
+  structureParse : 0,
+  logger : 3,
+};
+
+//
+
+function willfileExtendWillfile( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routine.options( willfileExtendWillfile, o );
+
+  const will = this;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+
+  /* */
+
+  _.assert( o.modules.length <= 1 );
+  const moduleDirPath = o.modules.length ? o.modules[ 0 ].dirPath : null;
+  o.dirPath = o.dirPath || moduleDirPath || will.inPath || path.current();
+
+  const splits = _.strSplit({ src : o.request, preservingEmpty : 0 });
+  for( let i = 0 ; i < splits.length ; i++ )
+  if( splits[ i ] === '.' )
+  splits[ i ] = './';
+  const configPaths = path.s.join( o.dirPath, splits );
+
+  const dstWillfiles = dstFilesFind( configPaths[ 0 ] );
+  if( o.format === 'json' )
+  _.sure( dstWillfiles.length === 0, 'not implemented' );
+  else
+  _.sure( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles.' );
+  const commonDstPath = dstCommonPathGet( dstWillfiles );
+
+  let willfile = Object.create( null );
+  if( dstWillfiles.length === 1 )
+  willfile = configRead( dstWillfiles[ 0 ].absolute );
+
+  for( let i = 1 ; i < configPaths.length ; i++ )
+  {
+    let files = configFilesFind( configPaths[ i ] );
+    _.sure( files.length !== 0, 'Source configuration file does not exist.' );
+
+    for( let j = 0 ; j < files.length ; j++ )
+    {
+      _.sure
+      (
+        _.longHasAny( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ),
+        'Unexpected configuration files. Please, improve selector.'
+      );
+
+      const encoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
+      let config = configRead( files[ j ].absolute, encoding );
+      if( !_.longHas( files[ j ].exts, 'will' ) )
+      config = _.will.transform.willfileFromNpm({ config });
+
+      willfilesMerge( willfile, config );
+    }
+  }
+
+  if( o.submodulesDisabling )
+  _.will.transform.submodulesSwitch( willfile.submodule, 0 );
+
+  if( o.format === 'json' )
+  {
+    let data = _.will.transform.npmFromWillfile({ config : willfile });
+    configWrite( commonDstPath, data, 'json' );
+  }
+  else if( dstWillfiles.length === 2 )
+  {
+    const exWillfile = configRead( dstWillfiles[ 0 ].absolute );
+    const imWillfile = configRead( dstWillfiles[ 1 ].absolute );
+
+    const [ exWillfileExtension, imWillfileExtension ] = splitWillfilesExtensionMake( exWillfile, imWillfile );
+
+    willfilesMerge( exWillfile, exWillfileExtension );
+    willfilesMerge( imWillfile, imWillfileExtension );
+
+    configWrite( dstWillfiles[ 0 ].absolute, exWillfile );
+    configWrite( dstWillfiles[ 1 ].absolute, imWillfile );
+  }
+  else
+  {
+    const filePath = dstWillfiles.length ? dstWillfiles[ 0 ].absolute : commonDstPath;
+    configWrite( filePath, willfile );
+  }
+  return null;
+
+  /* */
+
+  function dstFilesFind( src )
+  {
+    _.assert( !path.isGlob( src ), 'Path to destination file should have not globs.' );
+
+    return will.willfilesFind
+    ({
+      commonPath : src,
+      withIn : 1,
+      withOut : 0,
+    });
+  }
+
+  /* */
+
+  function dstCommonPathGet( files )
+  {
+    if( files.length === 1 )
+    {
+      return files[ 0 ].absolute;
+    }
+    else if( files.length === 2 )
+    {
+      return path.join( files[ 0 ].dir, _.strCommonLeft( files[ 0 ].fullName, files[ 1 ].fullName ) + '*' );
+    }
+    else
+    {
+      if( path.isTrailed( configPaths[ 0 ] ) )
+      {
+        const fileName = o.format === 'json' ? 'package.json' : 'will.yml';
+        return path.join( configPaths[ 0 ], fileName );
+      }
+      else
+      {
+        const dir = path.dir( configPaths[ 0 ] );
+        const name = _.strSplit( path.name( configPaths[ 0 ] ), '.' )[ 0 ];
+        const exts = path.exts( configPaths[ 0 ] );
+        _.arrayRemoveArrayOnce( exts, [ 'will', 'yml', 'yaml', 'json' ] );
+        const extsArray = o.format === 'json' ? [ 'json' ] : [ 'will', 'yml' ];
+        _.arrayAppendArray( exts, extsArray );
+        return path.join( dir, `${ name }.${ exts.join( '.' ) }` );
+      }
+    }
+  }
+
+  /* */
+
+  function configRead( filePath, encoding )
+  {
+    return fileProvider.fileRead({ filePath, encoding : encoding || 'yaml', logger });
+  }
+
+  /* */
+
+  function configFilesFind( srcPath )
+  {
+    let filePath = srcPath;
+    if( fileProvider.isTerminal( filePath ) )
+    {
+      if( dstWillfiles.length )
+      if( _.longHasAny( _.select( dstWillfiles, '*/absolute' ), filePath ) )
+      return [];
+      return [ fileProvider.record( filePath ) ];
+    }
+
+    if( path.isTrailed( srcPath ) )
+    return _.will.fileAt({ commonPath : srcPath });
+
+    if( !path.isGlob( filePath ) )
+    filePath = filePath + '*';
+
+    let filter =
+    {
+      filePath : { [ filePath ] : true, [ commonDstPath ] : 0 },
+      maskTerminal : { includeAny : /(.will){0,1}\.(yml|yaml|json)/ },
+    };
+
+    return fileProvider.filesFind
+    ({
+      filePath,
+      withStem : 0,
+      withDirs : 0,
+      mode : 'distinct',
+      mandatory : 0,
+      filter,
+    });
+  }
+
+  /* */
+
+  function willfilesMerge( dst, src )
+  {
+    _.will.transform.willfilesMerge
+    ({
+      ... _.mapOnly_( null, o, _.will.transform.willfilesMerge.defaults ),
+      dst,
+      src,
+    });
+  }
+
+  /* */
+
+  function splitWillfilesExtensionMake( exWillfile, imWillfile )
+  {
+    const imWillfileExtension = Object.create( null );
+    const exWillfileExtension = Object.create( null );
+    for( let section in exWillfile )
+    {
+      if( ( section in imWillfile ) && ( section in willfile ) )
+      {
+        exWillfileExtension[ section ] = _.mapOnly_( null, willfile[ section ], exWillfile[ section ] );
+        imWillfileExtension[ section ] = _.mapBut_( willfile[ section ], willfile[ section ], exWillfile[ section ] );
+      }
+      else if( section in willfile )
+      {
+        exWillfileExtension[ section ] = willfile[ section ];
+      }
+      delete willfile[ section ];
+    }
+    _.map.extend( imWillfileExtension, willfile );
+    return [ exWillfileExtension, imWillfileExtension ];
+  }
+
+  /* */
+
+  function configWrite( filePath, data, encoding )
+  {
+    fileProvider.fileWrite
+    ({
+      filePath,
+      data,
+      encoding : encoding || 'yaml',
+      logger,
+    });
+  }
+}
+
+willfileExtendWillfile.defaults =
+{
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
+
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
+  'npm.name' : 1,
+  'npm.scripts' : 1,
+
+  'modules' : null,
+  'dirPath' : null,
+  'request' : null,
+  'onSection' : null,
+  'submodulesDisabling' : 0,
+  'format' : 'willfile',
+  'logger' : 3,
+};
 
 // --
 // clean
@@ -5923,6 +6736,17 @@ let Extension =
   willfileFor,
   willfileUnregister,
   willfileRegister,
+
+  // convert
+
+  npmGenerateFromWillfile,
+  willfileGenerateFromNpm,
+
+  willfilePropertyGet,
+  willfilePropertySet,
+  willfilePropertyDelete,
+  willfilePropertyExtend,
+  willfileExtendWillfile,
 
   // clean
 

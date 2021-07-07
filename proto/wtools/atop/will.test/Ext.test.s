@@ -2522,6 +2522,178 @@ openWith.rapidity = -1;
 
 //
 
+function openInDirWithUnderscore( test )
+{
+  let context = this;
+  let a = context.assetFor( test, '_openInDirWithUnderscore' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ execPath : '.build' })
+  .then( ( op ) =>
+  {
+    test.case = '.build - only root module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with . .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with . .build - only root module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with * .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with * .build - root module and root named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with ** .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with * .build - root module, root named module, runned module, runned named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::runned / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-runned / build::run in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with */* .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with */* .build - root module, root named module, runned module, runned named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-root' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-root / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::runned / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-runned' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-runned / build::run in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with _skipped/ .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with _skipped/ .build - skipped module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo skipped' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::skipped / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.with _skipped/* .build' })
+  .then( ( op ) =>
+  {
+    test.case = '.with _skipped/* .build - skipped module and skipped named module';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::root / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-root / build::run' ), 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::skipped / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo skipped' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::skipped / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::named-skipped / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> echo named-skipped' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::named-skipped / build::run in' ), 1 );
+
+    test.identical( _.strCount( op.output, 'Building module::runned / build::run' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::named-runned / build::run' ), 0 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function openEach( test )
 {
   let context = this;
@@ -6960,18 +7132,18 @@ function hookWasPackageExtendWillfile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '+ writing' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about.name, 'NpmFromWillfile' );
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.description, 'To check the conversion' );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
-    test.identical( _.props.keys( config.submodule ).length, 4 );
-    test.identical( config.submodule.eslint.enabled, 1 );
+    test.identical( _.props.keys( config.submodule ).length, 3 );
+    test.identical( config.submodule.eslint.enabled, 0 );
 
     return null;
   });
@@ -6988,17 +7160,17 @@ function hookWasPackageExtendWillfile( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
-    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '+ writing' ), 1 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about.name, 'NpmFromWillfile' );
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.description, 'To check the conversion' );
 
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
-    test.identical( _.props.keys( config.submodule ).length, 4 );
+    test.identical( _.props.keys( config.submodule ).length, 3 );
     test.identical( config.submodule.eslint.enabled, 0 );
 
     return null;
@@ -7035,6 +7207,144 @@ function hookWasPackageExtendWillfile( test )
       });
       return null;
     });
+  }
+}
+
+//
+
+function hookPublishCheckPackageJsonFormatting( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  let config, tagOriginal, tag, moduleName;
+  a.fileProvider.dirMake( a.abs( '.' ) );
+
+  let botUser = 'wtools-bot';
+  let botRepo = 'PublishCommandTest1';
+  let botPass = process.env.PRIVATE_WTOOLS_BOT_NPM_PASS;
+  let botEmail = process.env.PRIVATE_WTOOLS_BOT_EMAIL;
+  if( !_.process.insideTestContainer() || !botPass || !botEmail )
+  return test.true( true );
+
+  a.start = _.process.starter
+  ({
+    execPath : 'node ' + context.appJsPath,
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    mode : 'spawn',
+    outputGraying : 1,
+    throwingExitCode : 1,
+  });
+
+  /* - */
+
+  repoPrepare();
+  setVersionInWasPackageJson();
+  a.shell( 'git commit -am .' )
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repo is changed, should publish';
+    config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    a.fileProvider.fileAppend( a.abs( 'doc/VersionLog.txt' ), `${ config.version }\n` );
+    return null;
+  });
+
+  a.appStart( `.imply withSubmodules:0 .call publish tag:latest` );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    let configAfter = a.fileProvider.fileReadUnknown( a.abs( 'package.json' ) );
+    let moduleName = a.fileProvider.fileReadUnknown( a.abs( '.ex.will.yml' ) ).about.name;
+
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .call publish tag:latest"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 2 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
+    test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
+    test.identical( _.strCount( op.output, `Creating tag latest` ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check formatting of package.json';
+    return null;
+  });
+
+  a.shell( 'npm i' );
+  a.shell( 'git diff' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( op.output, '' );
+    return null;
+  });
+
+  /* */
+
+  npmLogout();
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function repoPrepare()
+  {
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null } );
+    a.shell( `git clone https://github.com/${ botUser }/${ botRepo }.git .` );
+    a.shell( 'npm i -g npm-cli-login' );
+    a.shell
+    ({
+      execPath : `npm-cli-login -u ${ botUser } -p ${ botPass } -e ${ botEmail } --quotes`,
+      outputPiping : 0,
+      inputMirroring : 0
+    });
+
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+    return a.ready;
+  }
+
+  /* */
+
+  function setVersionInWasPackageJson()
+  {
+    return a.ready.then( () =>
+    {
+      let moduleName = botRepo.toLowerCase();
+      let filePath = a.abs( 'was.package.json' );
+      let config = a.fileProvider.fileReadUnknown( filePath );
+      let lastVersion = _.npm.remoteVersion( `npm:///${ moduleName }!latest` );
+      config.version = lastVersion;
+      a.fileProvider.fileWriteUnknown({ filePath, data : config });
+      return null;
+    });
+  }
+
+  /* */
+
+  function npmLogout()
+  {
+    a.shell( 'npm logout' );
   }
 }
 
@@ -14261,24 +14571,30 @@ function exportWithOutdatedWillbe( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithOutdatedWillbe' );
-  a.reflectMinimal();
-  a.fileProvider.dirMake( a.abs( 'out' ) ) /* Vova xxx: temporary step until problem with missing out dir will be resolved */
 
-  a.shell( 'npm i' );
-  a.shell( 'npm run will .export' )
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export from module with outdated format of exported willfile';
+    a.reflectMinimal();
+    return null;
+  });
   a.appStart({ args : '.export' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ) )
+    test.identical( _.strCount( op.output, 'Exporting module::testModule / build::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Options map for reflector::exported.export should not have fields : "linking"' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to import willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::testModule' ), 1 );
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
-
-  /* */
 }
 
 exportWithOutdatedWillbe.description =
@@ -36799,7 +37115,7 @@ function commandNpmFromWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -36810,8 +37126,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.author, 'Author <author@dot.com>' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36825,8 +37141,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36840,8 +37156,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.description, 'To check the conversion' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36854,7 +37170,7 @@ function commandNpmFromWillfile( test )
     test.case = 'check field `enabled`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.name, null );
+    test.identical( config.name, undefined );
     test.identical( config.enabled, 0 );
 
     return null;
@@ -36869,8 +37185,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.interpreters, undefined );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36884,8 +37200,8 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.keywords, [ 'tools', 'export' ] );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36899,11 +37215,11 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.license, 'MIT' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36914,7 +37230,7 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.name, 'NpmFromWillfile' );
-    test.identical( config.enabled, 1 );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36928,7 +37244,7 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.name, 'npmfromwillfile' );
-    test.identical( config.enabled, 1 );
+    test.identical( config.enabled, undefined );
 
     return null;
   })
@@ -36942,11 +37258,11 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.scripts, { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36956,12 +37272,12 @@ function commandNpmFromWillfile( test )
     test.case = 'check field `main`, should not read path';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.main, undefined );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.main, 'proto' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36971,13 +37287,13 @@ function commandNpmFromWillfile( test )
     test.case = 'check fields `repository` and `bugs`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.repository, 'git+https://github.com/author/NpmFromWillfile.git' );
+    test.identical( config.repository, 'https://github.com/author/NpmFromWillfile.git' );
     test.identical( config.bugs, 'https://github.com/author/NpmFromWillfile/issues' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36988,12 +37304,12 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.dependencies, { eslint : '7.1.0', babel : '^0.3.0' } );
-    test.identical( config.devDependencies, { npmfromwillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
+    test.identical( config.devDependencies, { NpmFromWillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
     test.identical( config.name, 'npmfromwillfile' );
-    test.identical( config.enabled, 1 );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37004,15 +37320,15 @@ function commandNpmFromWillfile( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( config.version, '0.0.0' );
-    test.identical( config.name, null );
-    test.identical( config.enabled, 1 );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.npm.from.willfile' })
+  a.appStart({ args : '.npm.from.willfile withDisabledSubmodules:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check unnamed willfiles, full config';
@@ -37020,24 +37336,26 @@ function commandNpmFromWillfile( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { node : '>= 6.0.0', chrome : '>= 60.0.0', firefox : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { test : 'wtest .run proto/** v:5', docgen : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37052,11 +37370,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"out/debug/package.json"' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"out/debug/package.json" withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, direct link to directory';
@@ -37066,30 +37384,32 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'out/' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out}/package.json"' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out}/package.json" withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path without criterions';
@@ -37099,30 +37419,32 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'out/' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out.*=1}/package.json" debug:1' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out.*=1}/package.json" debug:1 withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
@@ -37132,30 +37454,32 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : 'npmfromwillfile',
-      description : 'To check the conversion',
-      version : '0.0.0',
-      enabled : 1,
-      license : 'MIT',
-      author : 'Author <author@dot.com>',
-      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { 'eslint' : '7.1.0' },
-      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
-      bugs : 'https://github.com/author/NpmFromWillfile/issues',
-      keywords : [ 'tools', 'export' ],
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'out/' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"proto/File.s"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"proto/File.s" withDisabledSubmodules:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, direct link to file';
@@ -37163,22 +37487,17 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      main : 'proto/File.s',
-    };
+    var exp = { main : 'proto/File.s' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::proto}/File.s"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::proto}/File.s"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37186,22 +37505,17 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      main : 'proto/File.s',
-    };
+    var exp = { main : 'proto/File.s' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:debug' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:debug' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37209,22 +37523,17 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      main : 'proto/File.s',
-    };
+    var exp = { main : 'proto/File.s' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"proto/**"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"proto/**"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `filesPath`, direct link to file';
@@ -37232,22 +37541,17 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      files : [ 'proto/File.s' ]
-    };
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::proto}/**"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::proto}/**"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37255,22 +37559,17 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      files : [ 'proto/File.s' ]
-    };
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
     test.identical( config, exp );
 
     a.fileProvider.filesDelete( a.abs( 'package.json' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:debug' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:debug' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -37278,16 +37577,11 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    var exp =
-    {
-      name : null,
-      enabled : 1,
-      files : [ 'proto/File.s' ]
-    };
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -37317,7 +37611,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37334,7 +37628,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37351,7 +37645,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37367,7 +37661,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37377,14 +37671,14 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `interpreters`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
-    test.identical( config.about.interpreters, 'njs >= 10.0.0' );
+    test.identical( config.about.interpreters, [ 'njs >= 10.0.0' ] );
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37401,7 +37695,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37418,7 +37712,7 @@ function commandWillfileFromNpm( test )
     a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
-  })
+  });
 
   /* */
 
@@ -37501,12 +37795,12 @@ function commandWillfileFromNpm( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 1
       },
       'babel' :
       {
-        'path' : 'npm:///babel#^0.3.0',
+        'path' : 'npm:///babel!^0.3.0',
         'enabled' : 1
       },
       'npmfromwillfile' :
@@ -37523,7 +37817,7 @@ function commandWillfileFromNpm( test )
       },
       'willbe' :
       {
-        'path' : 'npm:///willbe#alpha',
+        'path' : 'npm:///willbe!alpha',
         'enabled' : 1,
         'criterion' : { 'development' : 1 }
       }
@@ -37590,7 +37884,7 @@ function commandWillfileFromNpm( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -37661,7 +37955,7 @@ function commandWillfileFromNpmDoubleConversion( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -37702,7 +37996,7 @@ function commandWillfileFromNpmDoubleConversion( test )
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' },
-      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
@@ -37756,16 +38050,16 @@ function commandWillfileGet( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.willfile.get' })
+  a.appStart({ args : '.willfile.get' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - without name, without options and subject';
     test.identical( op.exitCode, 0 );
-    test.ge( _.strLinesCount( op.output ), 100 );
+    test.ge( _.strLinesCount( op.output ), 80 );
     test.true( _.strHas( op.output, 'about ::' ) );
     test.true( _.strHas( op.output, 'build ::' ) );
     test.true( _.strHas( op.output, 'path ::' ) );
@@ -37774,9 +38068,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'submodule ::' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get about/author' })
+  a.appStart({ args : '.willfile.get about/author' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - without name, only subject';
@@ -37784,9 +38078,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get about/author:1' })
+  a.appStart({ args : '.willfile.get about/author:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - without name, only enabled option';
@@ -37794,9 +38088,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get Author about/author about/name v:4' })
+  a.appStart({ args : '.willfile.get Author about/author about/name v:4' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - only name and subjects';
@@ -37805,9 +38099,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get Author.will.yml about/author:1 about/name:1 v:5' })
+  a.appStart({ args : '.willfile.get Author.will.yml about/author:1 about/name:1 v:5' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile with - full form and enabled options';
@@ -37816,24 +38110,24 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.get ForExtension.will submodule/eslint about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and enabled options';
+    test.case = 'source willfile, subject and enabled options';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'about/author :: Author <author1@dot.com>' ) );
     test.true( _.strHas( op.output, 'about/name :: Extension willfile' ) );
     test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get ForExtension* submodule/eslint about/author:0 about/name:0' })
+  a.appStart({ args : '.willfile.get ForExtension submodule/eslint about/author:0 about/name:0' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and disabled options';
+    test.case = 'source willfile, subject and disabled options';
     test.identical( op.exitCode, 0 );
     test.false( _.strHas( op.output, 'about/author :: Author1 some.nickname@dot.com' ) );
     test.false( _.strHas( op.output, 'about/name :: Extension willfile' ) );
@@ -37841,43 +38135,43 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'path : npm:///eslint#7.1.0' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.get .* path/in' })
+  a.appStart({ args : '.willfile.get ./ path/in' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.case = 'source willfile for two unnamed willfiles';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'path/in :: .' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with Author .willfile.get about/author about/name' })
+  a.appStart({ args : '.with Author .willfile.get about/author about/name' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, subjects';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with Author.will.yml .willfile.get about/author:1 about/name:1' })
+  a.appStart({ args : '.with Author.will.yml .willfile.get about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, enabled options';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.false( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.true( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with .* .willfile.get submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.with ./ .willfile.get submodule/eslint about/author:1 about/name:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, enabled options';
@@ -37886,9 +38180,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'about/name :: NpmFromWillfile' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with . .willfile.get submodule/eslint about/author:0 about/name:0' })
+  a.appStart({ args : '.with . .willfile.get submodule/eslint about/author:0 about/name:0' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context module, disabled options';
@@ -37898,9 +38192,9 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'submodule/eslint ::\n ' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.with .* .willfile.get path/in' })
+  a.appStart({ args : '.with ./ .willfile.get path/in' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - two unnamed willfiles from context';
@@ -37908,29 +38202,29 @@ function commandWillfileGet( test )
     test.true( _.strHas( op.output, 'path/in :: .' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.willfile.get Unknown* about' })
+  a.appStartNonThrowing({ args : '.willfile.get Unknown* about' });
   a.ready.then( ( op ) =>
   {
     test.case = 'call not existed file';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' })
+  a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' });
   a.ready.then( ( op ) =>
   {
     test.case = 'unknown section';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -37941,7 +38235,7 @@ function commandWillfileSet( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -37982,10 +38276,10 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.set Name* about/author:Author author@some.dot.com about/name:author' })
+  a.appStart({ args : '.willfile.set Name.will about/author:Author author@some.dot.com about/name:author' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, options';
+    test.case = 'source willfile, options';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author author@some.dot.com' );
@@ -37994,10 +38288,10 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.set .* path/in:in' })
+  a.appStart({ args : '.willfile.set . path/in:in' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.case = 'source willfile - two unnamed willfiles';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38016,19 +38310,19 @@ function commandWillfileSet( test )
     test.identical( config.path.in.criterion, { debug : 1 } );
 
     return null;
-  })
+  });
 
   /* */
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with PathMain.will.yml .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.appStart({ args : '.with PathMain.will.yml .willfile.set about/author:"Author author@some.dot.com" about/name:author' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, options';
@@ -38052,7 +38346,7 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.with Name* .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.appStart({ args : '.with Name .willfile.set about/author:Author author@some.dot.com about/name:author' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, options';
@@ -38064,7 +38358,7 @@ function commandWillfileSet( test )
     return null;
   })
 
-  a.appStart({ args : '.with .* .willfile.set path/in:in' })
+  a.appStart({ args : '.with ./ .willfile.set path/in:in' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, two unnamed willfiles';
@@ -38128,7 +38422,7 @@ function commandWillfileDel( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -38147,7 +38441,7 @@ function commandWillfileDel( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -38189,12 +38483,11 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.props.keys( config.about ).length, 0 );
-    test.true( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1 verbosity:5' })
+  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1 verbosity:5' });
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile with - full form and enabled options';
@@ -38202,15 +38495,14 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, undefined );
     test.identical( _.props.keys( config.about ).length, 0 );
-    test.true( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.del ForExtension.will submodule/eslint about/author:1 about/name:1' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and enabled options';
+    test.case = 'source willfile, subject and enabled options';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
@@ -38220,12 +38512,12 @@ function commandWillfileDel( test )
     test.identical( _.props.keys( config.submodule ).length, 2 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
+  a.appStart({ args : '.willfile.del ForExtension submodule/NpmFromWillfile about/description:0 about/version:0' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob, subject and disabled options';
+    test.case = 'source willfile, subject and disabled options';
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.description, 'To check the extension' );
     test.identical( config.about.version, '1.1.1' );
@@ -38234,12 +38526,12 @@ function commandWillfileDel( test )
     test.ge( _.props.keys( config.submodule ).length, 1 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del .* path/in' })
+  a.appStart({ args : '.willfile.del . path/in' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.case = 'source willfile - two unnamed willfiles';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38248,15 +38540,15 @@ function commandWillfileDel( test )
     test.ge( _.props.keys( config.path ).length, 3 );
 
     return null;
-  })
+  });
 
   /* */
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   /* */
 
@@ -38268,7 +38560,6 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.props.keys( config.about ).length, 0 );
-    test.false( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
   })
@@ -38286,7 +38577,7 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.del ForExtension.will submodule/eslint about/author:1 about/name:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, enabled options';
@@ -38299,9 +38590,9 @@ function commandWillfileDel( test )
     test.identical( _.props.keys( config.submodule ).length, 2 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
+  a.appStart({ args : '.willfile.del ForExtension submodule/NpmFromWillfile about/description:0 about/version:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, subject and disabled options';
@@ -38315,7 +38606,7 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.del .* path/in' })
+  a.appStart({ args : '.willfile.del . path/in' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, two unnamed willfiles';
@@ -38327,11 +38618,11 @@ function commandWillfileDel( test )
     test.ge( _.props.keys( config.path ).length, 3 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.willfile.del Unknown* about' })
+  a.appStartNonThrowing({ args : '.willfile.del Unknown about' })
   a.ready.then( ( op ) =>
   {
     test.case = 'call not existed file';
@@ -38340,16 +38631,16 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStartNonThrowing({ args : '.willfile.del .* notSection/option:1' })
+  a.appStartNonThrowing({ args : '.willfile.del . notSection/option:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'unknown section';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -38360,11 +38651,11 @@ function commandWillfileExtend( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend Author about/author:"Author1 some.nickname@dot.com"' })
+  a.appStart({ args : '.willfile.extend Author about/author:"Author1 some.nickname@dot.com"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'dstFile - only first part of willfile name, replace existing property';
@@ -38374,9 +38665,9 @@ function commandWillfileExtend( test )
     test.identical( _.props.keys( config.about ).length, 1 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend Author.will.yml about/author:"Author author@dot.com"' })
+  a.appStart({ args : '.willfile.extend Author.will.yml about/author:"Author author@dot.com"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'dstFile - full willfile name, replace existing property';
@@ -38386,12 +38677,12 @@ function commandWillfileExtend( test )
     test.identical( _.props.keys( config.about ).length, 1 );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend .*.will.* about/author:"Author author@dot.com"' })
+  a.appStart({ args : '.willfile.extend . about/author:"Author author@dot.com"' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace existing property';
+    test.case = 'dstFile - two unnamed willfiles, replace existing property';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author author@dot.com' );
@@ -38401,12 +38692,12 @@ function commandWillfileExtend( test )
     test.identical( config.about, undefined );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend .*.will.* path/in:./' })
+  a.appStart({ args : '.willfile.extend . path/in:./' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace property that exists in both files';
+    test.case = 'dstFile - two unnamed willfiles, replace property that exists in both files';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38415,24 +38706,12 @@ function commandWillfileExtend( test )
     test.identical( config.path.in, './' );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.extend PathMain* path/proto/path:proto/wtools' })
+  a.appStart({ args : '.willfile.extend PathMain path/proto:proto/wtools' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, replace single field of resource';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
-    test.identical( config.path.proto.path, 'proto/wtools' );
-    test.identical( _.props.keys( config.path ).length, 2 );
-
-    return null;
-  })
-
-  a.appStart({ args : '.willfile.extend PathMain* path/proto:proto/wtools' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'dstFile - glob that find willfile, replace resource data';
+    test.case = 'replace resource data';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.proto, 'proto/wtools' );
@@ -38444,10 +38723,10 @@ function commandWillfileExtend( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend PathMain* about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
+  a.appStart({ args : '.willfile.extend PathMain about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add few new sections and resources';
+    test.case = 'add few new sections and resources';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38459,10 +38738,10 @@ function commandWillfileExtend( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
+  a.appStart({ args : '.willfile.extend PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38470,14 +38749,14 @@ function commandWillfileExtend( test )
     test.identical( _.props.keys( config.path ).length, 2 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' })
+  a.appStart({ args : '.willfile.extend PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38507,15 +38786,6 @@ function commandWillfileExtend( test )
     return null;
   })
 
-  a.appStartNonThrowing({ args : '.willfile.extend PathMain path/entry/path/criterion/throwing:1' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'replace existing property which is not a map';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
-
   /* */
 
   return a.ready;
@@ -38527,7 +38797,7 @@ function commandWillfileSupplement( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -38555,10 +38825,10 @@ function commandWillfileSupplement( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .*.will.* about/author:"Author author@dot.com"' })
+  a.appStart({ args : '.willfile.supplement . about/author:"Author author@dot.com"' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace existing property';
+    test.case = 'dstFile - two unnamed willfiles, replace existing property';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author <author@dot.com>' );
@@ -38570,10 +38840,10 @@ function commandWillfileSupplement( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .*.will.* path/in:./' })
+  a.appStart({ args : '.willfile.supplement . path/in:./' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find two unnamed willfiles, replace property that exists in both files';
+    test.case = 'dstFile - two unnamed willfiles, replace property that exists in both files';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
@@ -38582,12 +38852,12 @@ function commandWillfileSupplement( test )
     test.identical( config.path.in, '.' );
 
     return null;
-  })
+  });
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/proto/path:proto/wtools' })
+  a.appStart({ args : '.willfile.supplement PathMain path/proto/path:proto/wtools' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, replace single field of resource';
+    test.case = 'replace single field of resource';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.proto.path, 'proto' );
@@ -38596,10 +38866,10 @@ function commandWillfileSupplement( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/proto:proto/wtools' })
+  a.appStart({ args : '.willfile.supplement PathMain path/proto:proto/wtools' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, replace resource data';
+    test.case = 'replace resource data';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.proto, { path : 'proto' } );
@@ -38610,10 +38880,10 @@ function commandWillfileSupplement( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement PathMain* about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
+  a.appStart({ args : '.willfile.supplement PathMain about/name:WillfileExtend submodule/ModuleForTesting1:"git+http:///github.com/..."' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add few new sections and resources';
+    test.case = 'add few new sections and resources';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38625,10 +38895,10 @@ function commandWillfileSupplement( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
+  a.appStart({ args : '.willfile.supplement PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend' })
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38636,14 +38906,14 @@ function commandWillfileSupplement( test )
     test.identical( _.props.keys( config.path ).length, 2 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement PathMain* path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' })
+  a.appStart({ args : '.willfile.supplement PathMain path/entry/criterion:"debug:[0,1]" about/name:WillfileExtend structureParse:1' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'dstFile - glob that find willfile, add new field to resource, array, not parsing';
+    test.case = 'add new field to resource, array, not parsing';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
     test.identical( config.about, { name : 'WillfileExtend' } );
@@ -38651,38 +38921,29 @@ function commandWillfileSupplement( test )
     test.identical( _.props.keys( config.path ).length, 2 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.appStartNonThrowing({ args : '.willfile.supplement NotExisted about/name:throwing' })
+  a.appStartNonThrowing({ args : '.willfile.supplement NotExisted about/name:throwing' });
   a.ready.then( ( op ) =>
   {
     test.case = 'dstFile not exists';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ args : '.willfile.supplement "**" about/name:throwing' })
+  a.appStartNonThrowing({ args : '.willfile.supplement "**" about/name:throwing' });
   a.ready.then( ( op ) =>
   {
     test.case = 'too many dstFiles';
     test.notIdentical( op.exitCode, 0 );
 
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ args : '.willfile.supplement PathMain path/entry/path/criterion/throwing:1' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'replace existing property which is not a map';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
-
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -38693,11 +38954,11 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend.willfile ./ Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile ./ Author.will Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -38712,11 +38973,11 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.true( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile NewFile Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile Author.will Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named willfile, unical data in each file';
@@ -38795,7 +39056,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -38860,7 +39121,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -38880,7 +39141,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -38900,10 +39161,10 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
         'enabled' : 0,
         'interpreters' :
         [
+          'njs = 6.0.0',
           'chrome >= 60.0.0',
           'firefox >= 67.0.0',
-          'njs = 6.0.0',
-          'chromium >= 67.0.0'
+          'chromium >= 67.0.0',
         ],
         'keywords' :
         [
@@ -39135,7 +39396,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend.willfile package.json Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.appStart({ args : '.willfile.extend.willfile package.json Author* Contributors.will Description* Interpreters.will.yml format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -39146,14 +39407,15 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( _.props.keys( config[ 'npm.engines' ] ).length, 3 );
+    test.identical( config[ 'npm.engines' ].node, '>= 10.0.0' );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile Author.will Contributors Description* Interpreters format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named json file, unical data in each file';
@@ -39164,14 +39426,15 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( _.props.keys( config[ 'npm.engines' ] ).length, 3 );
+    test.identical( config[ 'npm.engines' ].node, '>= 10.0.0' );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile Author Contributors Description* Interpreters format:"json"' })
+  a.appStart({ args : '.willfile.extend.willfile Author.json Contributors Description* Interpreters format:"json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -39182,10 +39445,11 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( _.props.keys( config[ 'npm.engines' ] ).length, 3 );
+    test.identical( config[ 'npm.engines' ].node, '>= 10.0.0' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39196,7 +39460,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./ files/p* format:json' })
   a.ready.then( ( op ) =>
@@ -39214,7 +39478,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -39222,7 +39486,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39231,7 +39495,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile NewFile files/p* format:json' })
   a.ready.then( ( op ) =>
@@ -39249,7 +39513,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -39257,7 +39521,7 @@ function commandWillfileExtendWillfileDstIsJson( test )
     test.identical( config, exp );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -39283,7 +39547,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.author, 'Author <author1@dot.com>' );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39296,7 +39560,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.keywords, [ 'wtools', 'common' ] );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39310,7 +39574,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.contributors, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39324,15 +39588,15 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about.interpreters, exp );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./.ex ForExtension about:0' })
   a.ready.then( ( op ) =>
@@ -39346,7 +39610,7 @@ function commandWillfileExtendWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'interpreters' : [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
       'keywords' : [ 'tools', 'export' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -39357,7 +39621,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.about, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39365,7 +39629,7 @@ function commandWillfileExtendWillfileWithOptions( test )
   {
     a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./.ex ForExtension build:0' })
   a.ready.then( ( op ) =>
@@ -39384,7 +39648,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.build, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39392,7 +39656,7 @@ function commandWillfileExtendWillfileWithOptions( test )
   {
     a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ args : '.willfile.extend.willfile ./.ex ForExtension step:0 contributors:0 name:0' })
   a.ready.then( ( op ) =>
@@ -39406,7 +39670,7 @@ function commandWillfileExtendWillfileWithOptions( test )
       'description' : 'To check the extension',
       'version' : '1.1.1',
       'enabled' : 0,
-      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'njs = 6.0.0', 'chromium >= 67.0.0' ],
+      'interpreters' : [ 'njs = 6.0.0', 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'GPL',
       'author' : 'Author <author1@dot.com>',
@@ -39427,7 +39691,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.step, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39467,7 +39731,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.identical( config.submodule, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39479,7 +39743,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.true( _.strHas( op.output, '+ writing' ) );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39491,7 +39755,7 @@ function commandWillfileExtendWillfileWithOptions( test )
     test.true( !_.strHas( op.output, '+ writing' ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -39506,7 +39770,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39569,7 +39833,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -39608,7 +39872,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -39634,7 +39898,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -39673,7 +39937,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint#7.1.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -39713,10 +39977,10 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
         'enabled' : 1,
         'interpreters' :
         [
+          'njs >= 6.0.0',
           'chrome >= 60.0.0',
           'firefox >= 60.0.0',
-          'njs >= 6.0.0',
-          'chromium >= 67.0.0'
+          'chromium >= 67.0.0',
         ],
         'keywords' :
         [
@@ -39784,7 +40048,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         eslint :
         {
-          path : 'npm:///eslint#7.1.0',
+          path : 'npm:///eslint!7.1.0',
           enabled : 0,
           criterion : { debug : 1 },
         },
@@ -39943,7 +40207,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -39958,10 +40222,10 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( config[ 'npm.engines' ], { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39976,14 +40240,14 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( config[ 'npm.engines' ], { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   })
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Author Contributors Description* Interpreters format:"json"' })
+  a.appStart({ args : '.willfile.supplement.willfile Author.json Contributors Description* Interpreters format:"json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -39994,7 +40258,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     test.identical( config.enabled, undefined );
     test.identical( config.contributors.length, 2 );
     test.true( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
-    test.identical( config.engine, 'node >= 10.0.0' );
+    test.identical( config[ 'npm.engines' ], { 'node' : '>= 10.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' } );
 
     return null;
   })
@@ -40003,7 +40267,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
     a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
@@ -40026,7 +40290,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -40040,7 +40304,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm' ) ] : a.abs( 'files' ) } });
     return null;
   })
@@ -40061,7 +40325,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
       'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
-      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
       'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
       'dependencies' : { 'eslint' : '7.1.0' },
       'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
@@ -40082,7 +40346,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -40142,7 +40406,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -40158,7 +40422,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'interpreters' : [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
       'keywords' : [ 'tools', 'export' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -40175,7 +40439,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -40202,7 +40466,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     return null;
   })
 
@@ -40218,7 +40482,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ],
+      'interpreters' : [ 'njs = 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -40253,7 +40517,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 0,
         'criterion' : { 'debug' : 1 }
       },
@@ -40279,7 +40543,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     test.identical( config.submodule, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -40323,7 +40587,7 @@ function commandWillfileMergeIntoSingle( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
@@ -40355,8 +40619,8 @@ function commandWillfileMergeIntoSingle( test )
     test.identical( partIm, oldIm );
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    test.identical( config.about.interpreters, [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
@@ -40373,14 +40637,17 @@ function commandWillfileMergeIntoSingle( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
-    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
+    a.reflectMinimal();
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'NamedWillfile.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'NamedWillfile.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-NamedWillfile.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-NamedWillfile.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     return null;
   });
 
@@ -40390,23 +40657,23 @@ function commandWillfileMergeIntoSingle( test )
     test.case = 'primaryPath - name';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-NamedWillfile.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-NamedWillfile.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-NamedWillfile.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-NamedWillfile.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'NamedWillfile.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    test.identical( config.about.interpreters, [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
@@ -40422,7 +40689,7 @@ function commandWillfileMergeIntoSingle( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect
     ({
       reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ) }
@@ -40462,8 +40729,9 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
-        'enabled' : 0
+        'path' : 'npm:///eslint!7.1.0',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
       },
       'NpmFromWillfile' :
       {
@@ -40477,18 +40745,6 @@ function commandWillfileMergeIntoSingle( test )
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
-      'babel' :
-      {
-        'path' : 'npm:///babel#^0.3.0',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
-      'willbe' :
-      {
-        'path' : 'npm:///willbe#alpha',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
     };
     test.identical( config.submodule, submodulesSection );
 
@@ -40499,18 +40755,21 @@ function commandWillfileMergeIntoSingle( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect
     ({
       reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ) }
     });
-    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'NamedWillfile.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'NamedWillfile.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-NamedWillfile.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-NamedWillfile.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     return null;
   });
 
@@ -40520,16 +40779,16 @@ function commandWillfileMergeIntoSingle( test )
     test.case = 'primaryPath - name, secondaryPath - path to json file';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-NamedWillfile.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-NamedWillfile.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-NamedWillfile.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-NamedWillfile.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40539,8 +40798,9 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
-        'enabled' : 0
+        'path' : 'npm:///eslint!7.1.0',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
       },
       'NpmFromWillfile' :
       {
@@ -40551,18 +40811,6 @@ function commandWillfileMergeIntoSingle( test )
       'wTesting' :
       {
         'path' : 'npm:///wTesting',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
-      'babel' :
-      {
-        'path' : 'npm:///babel#^0.3.0',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
-      'willbe' :
-      {
-        'path' : 'npm:///willbe#alpha',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -40576,18 +40824,21 @@ function commandWillfileMergeIntoSingle( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect
     ({
       reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfileFromNpm/package.json' ) ] : a.abs( 'was.package.json' ) }
     });
-    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
     a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'NamedWillfile.im.will.yml' ), a.abs( '.im.will.yml' ) );
+    a.fileProvider.fileCopy( a.abs( 'NamedWillfile.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
+
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-NamedWillfile.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-NamedWillfile.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
     return null;
   });
 
@@ -40597,16 +40848,16 @@ function commandWillfileMergeIntoSingle( test )
     test.case = 'primaryPath - name, secondaryPath - path to json file, submodulesDisabling - 0';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'NamedWillfile.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-NamedWillfile.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '-NamedWillfile.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'NamedWillfile.will.yml' ) ) );
 
     let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
     let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-NamedWillfile.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-NamedWillfile.im.will.yml' ), encoding : 'yaml' });
 
     test.identical( partEx, oldEx );
     test.identical( partIm, oldIm );
@@ -40616,8 +40867,9 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint#7.1.0',
-        'enabled' : 1
+        'path' : 'npm:///eslint!7.1.0',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
       },
       'NpmFromWillfile' :
       {
@@ -40628,18 +40880,6 @@ function commandWillfileMergeIntoSingle( test )
       'wTesting' :
       {
         'path' : 'npm:///wTesting',
-        'enabled' : 1,
-        'criterion' : { 'development' : 1 }
-      },
-      'babel' :
-      {
-        'path' : 'npm:///babel#^0.3.0',
-        'enabled' : 0,
-        'criterion' : { 'development' : 1 }
-      },
-      'willbe' :
-      {
-        'path' : 'npm:///willbe#alpha',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -40665,7 +40905,7 @@ function commandWillfileMergeIntoSingleRunWith( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
@@ -40697,8 +40937,8 @@ function commandWillfileMergeIntoSingleRunWith( test )
     test.identical( partIm, oldIm );
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    test.identical( config.about.interpreters, [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
+    test.identical( partEx.about.interpreters, [ 'njs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
     delete config.about.interpreters;
     delete partEx.about.interpreters;
     test.contains( config, partEx );
@@ -40727,7 +40967,7 @@ function commandWillfileMergeIntoSingleWithSeveralRuns( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
@@ -40747,7 +40987,8 @@ function commandWillfileMergeIntoSingleWithSeveralRuns( test )
     test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'will.yml' ) ) );
 
-    test.identical( _.strCount( op.output, 'Destination file `will.yml` already exists. Please, rename or delete file before merge' ), 1 );
+    var exp = 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}';
+    test.identical( _.strCount( op.output, exp ), 1 );
     return null;
   });
 
@@ -40767,47 +41008,35 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
     return null;
   });
 
-  a.appStart({ args : '.willfile.merge.into.single primaryPath:out/' });
+  a.appStart({ args : '.willfile.merge.into.single primaryPath:out/ secondaryPath:./' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'primaryPath - directory';
+    test.case = 'primaryPath - directory, willfile does not exists, secondaryPath - path to unnamed willfiles';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
 
-    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
-    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
-
-    test.identical( partEx, oldEx );
-    test.identical( partIm, oldIm );
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
-    delete config.about.interpreters;
-    delete partEx.about.interpreters;
-    test.contains( config, partEx );
-    test.identical( config.submodule.eslint.criterion.development, 1 );
-    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
-    delete config.submodule.eslint.criterion.development;
-    delete partIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldEx );
+    oldIm.submodule.eslint.criterion.development = 1;
+    delete oldIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldIm );
 
     return null;
   });
@@ -40816,47 +41045,94 @@ function commandWillfileMergeIntoSinglePrimaryPathIsDirectory( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.false( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.ex.will.yml' ), a.abs( '.ex.will.yml' ) );
-    a.fileProvider.fileCopy( a.abs( 'Copy.im.will.yml' ), a.abs( '.im.will.yml' ) );
     return null;
   });
 
-  a.appStart({ args : '.willfile.merge.into.single primaryPath:out/Named' });
+  a.appStart({ args : '.willfile.merge.into.single primaryPath:out/Named secondaryPath:.' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'primaryPath - directory with named willfile';
+    test.case = 'primaryPath - directory with named willfile, willfile does not exists, secondaryPath - path to unnamed willfiles';
     test.identical( op.exitCode, 0 );
 
-    test.false( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
-    test.false( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/Named.will.yml' ) ) );
 
-    let partEx = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.ex.will.yml' ), encoding : 'yaml' });
-    let partIm = a.fileProvider.fileRead({ filePath : a.abs( 'Copy.im.will.yml' ), encoding : 'yaml' });
-    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '-.ex.will.yml' ), encoding : 'yaml' });
-    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '-.im.will.yml' ), encoding : 'yaml' });
-
-    test.identical( partEx, oldEx );
-    test.identical( partIm, oldIm );
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
 
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/Named.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.interpreters, [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ] );
-    test.identical( partEx.about.interpreters, [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ] );
-    delete config.about.interpreters;
-    delete partEx.about.interpreters;
-    test.contains( config, partEx );
-    test.identical( config.submodule.eslint.criterion.development, 1 );
-    test.identical( partIm.submodule.eslint.criterion.debug, 1 );
-    delete config.submodule.eslint.criterion.development;
-    delete partIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldEx );
+    oldIm.submodule.eslint.criterion.development = 1;
+    delete oldIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldIm );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    a.fileProvider.dirMake( a.abs( 'out' ) );
+    a.fileProvider.fileCopy( a.abs( 'out/will.yml' ), a.abs( 'Author.will.yml' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.willfile.merge.into.single primaryPath:out/ secondaryPath:./' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - directory, unnamed willfile exists, force - 0, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    var exp = /Destination file .* already exists\. Please, rename or delete file before merge/;
+    test.identical( _.strCount( op.output, exp ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflectMinimal();
+    a.fileProvider.dirMake( a.abs( 'out' ) );
+    a.fileProvider.fileCopy( a.abs( 'out/will.yml' ), a.abs( 'Author.will.yml' ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.ex.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.im.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( '-.ex.will.yml' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( 'out/will.yml' ) ) );
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.willfile.merge.into.single primaryPath:out/ secondaryPath:./ force:1' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'primaryPath - directory, unnamed willfile exists, force - 1, should overwrite willfile';
+    test.identical( op.exitCode, 0 );
+
+    let oldEx = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let oldIm = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/will.yml' ), encoding : 'yaml' });
+    test.contains( config, oldEx );
+    oldIm.submodule.eslint.criterion.development = 1;
+    delete oldIm.submodule.eslint.criterion.debug;
+    test.contains( config, oldIm );
 
     return null;
   });
@@ -40877,7 +41153,7 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     submodulesDuplicate();
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
@@ -40934,7 +41210,7 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     submodulesDuplicate();
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
@@ -40968,7 +41244,6 @@ function commandWillfileMergeIntoSingleWithDuplicatedSubmodules( test )
       'eslint',
       'NpmFromWillfile',
       'wTesting',
-      'newsubmodule',
       'babel',
       'willbe',
       'ESLINT',
@@ -41145,7 +41420,7 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
 
   a.ready.then( () =>
   {
-    a.reflect();
+    a.reflectMinimal();
     npmScriptsDuplicate();
 
     test.true( a.fileProvider.fileExists( a.abs( '.im.will.yml' ) ) );
@@ -41174,7 +41449,7 @@ function commandWillfileMergeIntoSingleFilterNpmFields( test )
     let npmScriptsConfig = a.fileProvider.fileRead({ filePath : a.abs( 'NpmScripts.will.yml' ), encoding : 'yaml' });
 
     let willConfigKeys = _.props.keys( willConfig.about[ 'npm.scripts' ] );
-    var exp = [ 'eslint', 'test.test', 'TEST', 'docgen.docgen', 'DOCGEN' ];
+    var exp = [ 'test.test', 'TEST', 'docgen.docgen', 'DOCGEN' ];
     test.identical( willConfigKeys, exp );
     let exWillConfigKeys = _.props.keys( exWillConfig.about[ 'npm.scripts' ] );
     var exp = [ 'test', 'docgen' ];
@@ -41222,7 +41497,7 @@ function commandNpmPublish( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npmFromWillfile' );
-  let config, tagOriginal, tag;
+  let config, tagOriginal, tag, moduleName;
   a.fileProvider.dirMake( a.abs( '.' ) );
 
   let botUser = 'wtools-bot';
@@ -41245,6 +41520,7 @@ function commandNpmPublish( test )
   /* - */
 
   repoPrepare();
+  tagsAndModuleNameGet();
 
   /* */
 
@@ -41255,16 +41531,16 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tagOriginal }` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal }"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal }"` ), 1 );
     test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 1 );
 
     return null;
   });
@@ -41278,16 +41554,16 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tagOriginal } v:7` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal } v:7` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal } v:7"` ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal } v:7"` ), 1 );
     test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 1 );
 
     return null;
   });
@@ -41301,19 +41577,19 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tag } dry:1` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tag } dry:1` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tag } dry:1"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tag } dry:1"` ), 1 );
+    test.ge( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
 
     return null;
   });
@@ -41327,25 +41603,25 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( ( op ) => a.start( `.npm.publish tag:${ tag }` ) );
+  a.ready.then( ( op ) => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tag }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tag }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tag }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 2 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tag }` ), 1 );
 
@@ -41361,25 +41637,25 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish force:1 tag:${ tagOriginal }` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish force:1 tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish force:1 tag:${ tagOriginal }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish force:1 tag:${ tagOriginal }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 2 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
 
@@ -41390,32 +41666,32 @@ function commandNpmPublish( test )
 
   a.ready.then( () =>
   {
-    test.case = 'repo is changed, dry - 1, publish shoud exit with committing';
+    test.case = 'repo is changed, dry - 1, publish should exit with committing';
     config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     a.fileProvider.fileAppend( a.abs( 'doc/VersionLog.txt' ), `${ config.version }\n` );
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish tag:${ tagOriginal } dry:1` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal } dry:1` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.identical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal } dry:1"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 2 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 1 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal } dry:1"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 0 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 1 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 0 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 1 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 0 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 1 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 0 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 0 );
 
@@ -41432,26 +41708,26 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish tag:${ tagOriginal }` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( `package.json` ), encoding : `json` });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:${ tagOriginal }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 2 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:${ tagOriginal }"` ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
 
@@ -41468,26 +41744,27 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish -am 'Update module' tag:${ tagOriginal }` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish -am 'Update module' tag:${ tagOriginal }` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish -am "Update module" tag:${ tagOriginal }"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 2 );
+    var exp = `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal }"`;
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 0 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "Update module"` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 1 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
 
@@ -41504,33 +41781,34 @@ function commandNpmPublish( test )
     return null;
   });
 
-  a.ready.then( () => a.start( `.npm.publish -am 'Update module' tag:${ tagOriginal } v:7` ) );
+  a.ready.then( () => a.start( `.imply withSubmodules:0 .npm.publish -am 'Update module' tag:${ tagOriginal } v:7` ) );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let configAfter = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     test.notIdentical( configAfter.version, config.version );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish -am "Update module" tag:${ tagOriginal } v:7"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, '. Read 3 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'x Nothing to publish in module::WillbeNpmPublishTest' ), 0 );
-    test.identical( _.strCount( op.output, 'Committing module::WillbeNpmPublishTest' ), 2 );
+    var exp = `Command ".imply withSubmodules:0 .npm.publish -am "Update module" tag:${ tagOriginal } v:7"`;
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.ge( _.strCount( op.output, `. Opened .` ), 6 );
+    test.identical( _.strCount( op.output, `. Read 3 willfile(s)` ), 1 );
+    test.identical( _.strCount( op.output, `x Nothing to publish in module::${ moduleName }` ), 0 );
+    test.identical( _.strCount( op.output, `Committing module::${ moduleName }` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "Update module"` ), 1 );
-    test.identical( _.strCount( op.output, '+ Publishing module::WillbeNpmPublishTest at' ), 1 );
-    test.identical( _.strCount( op.output, '+ writing' ), 2 );
-    test.identical( _.strCount( op.output, 'Exporting module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::WillbeNpmPublishTest' ), 1 );
-    test.identical( _.strCount( op.output, '"name" : "WillbeNpmPublishTest"' ), 1 );
-    test.identical( _.strCount( op.output, '"keywords" : [ "willbe", "test" ]' ), 1 );
-    test.identical( _.strCount( op.output, '"license" : "MIT"' ), 1 );
-    test.identical( _.strCount( op.output, '> git add --all' ), 2 );
+    test.identical( _.strCount( op.output, `+ Publishing module::${ moduleName } at` ), 1 );
+    test.identical( _.strCount( op.output, `+ writing` ), 3 );
+    test.identical( _.strCount( op.output, `Exporting module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `Exported module::${ moduleName }` ), 1 );
+    test.identical( _.strCount( op.output, `"name" : "${ configAfter.name }"` ), 1 );
+    test.identical( _.strCount( op.output, `"keywords" : [ "wTools" ]` ), 1 );
+    test.identical( _.strCount( op.output, `"license" : "MIT"` ), 1 );
+    test.identical( _.strCount( op.output, `> git add --all` ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "version ${ configAfter.version }"` ), 1 );
-    test.identical( _.strCount( op.output, `Pushing module::WillbeNpmPublishTest` ), 3 );
+    test.identical( _.strCount( op.output, `Pushing module::${ moduleName }` ), 3 );
     test.identical( _.strCount( op.output, `Creating tag v${ configAfter.version }` ), 1 );
     test.identical( _.strCount( op.output, `Creating tag ${ tagOriginal }` ), 1 );
     test.identical( _.strCount( op.output, `> npm publish --tag ${ tagOriginal }` ), 1 );
-    test.identical( _.strCount( op.output, `+ willbe.npm.publish.test@${ configAfter.version }` ), 1 );
+    test.identical( _.strCount( op.output, `+ ${ configAfter.name }@${ configAfter.version }` ), 1 );
 
     return null;
   });
@@ -41555,11 +41833,20 @@ function commandNpmPublish( test )
       outputPiping : 0,
       inputMirroring : 0
     });
+    return a.ready;
+  }
+
+  /* */
+
+  function tagsAndModuleNameGet()
+  {
     a.ready.then( () =>
     {
-      config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-      tagOriginal = config.devDependencies.wTesting;
+      const pkgConfig = a.fileProvider.fileReadUnknown( a.abs( 'package.json' ) );
+      tagOriginal = pkgConfig.devDependencies.wTesting;
       tag = tagOriginal === 'alpha' ? 'gamma' : 'alpha';
+      const willConfig = a.fileProvider.fileReadUnknown( a.abs( '.ex.will.yml' ) );
+      moduleName = willConfig.about.name;
       return null;
     });
     return a.ready;
@@ -41572,6 +41859,8 @@ function commandNpmPublish( test )
     a.shell( 'npm logout' );
   }
 }
+
+commandNpmPublish.timeOut = 500000;
 
 //
 
@@ -41624,7 +41913,7 @@ function commandNpmPublishFullModuleFromUtility( test )
     return null;
   });
 
-  a.appStart( `.npm.publish tag:latest` );
+  a.appStart( `.imply withSubmodules:0 .npm.publish tag:latest` );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -41654,8 +41943,8 @@ function commandNpmPublishFullModuleFromUtility( test )
     let wasPackageDevDepKeys = _.props.keys( configWasPackage.devDependencies );
     test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:latest"` ), 1 );
+    test.ge( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'x Nothing to publish in module::PublishCommandTest1' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::PublishCommandTest1' ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
@@ -41780,7 +42069,7 @@ function commandNpmPublishFullRegularModule( test )
     return null;
   });
 
-  a.appStart( `.npm.publish tag:latest` );
+  a.appStart( `.imply withSubmodules:0 .npm.publish tag:latest` );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -41811,8 +42100,8 @@ function commandNpmPublishFullRegularModule( test )
     let wasPackageDevDepKeys = _.mapKeys( configWasPackage.devDependencies );
     test.true( _.longHasAll( packageDevDepKeys, wasPackageDevDepKeys ) );
 
-    test.identical( _.strCount( op.output, `Command ".npm.publish tag:latest"` ), 1 );
-    test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( op.output, `Command ".imply withSubmodules:0 .npm.publish tag:latest"` ), 1 );
+    test.ge( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'x Nothing to publish in module::PublishCommandTest2' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::PublishCommandTest2' ), 2 );
     test.identical( _.strCount( op.output, `> git commit -am "."` ), 1 );
@@ -43437,6 +43726,7 @@ const Proto =
     openModuleWithLostSubmodule,
 
     openWith,
+    openInDirWithUnderscore,
     openEach,
 
     // reflect
@@ -43486,6 +43776,7 @@ const Proto =
     hookGitSyncArguments,
     hookGitTag,
     hookWasPackageExtendWillfile,
+    hookPublishCheckPackageJsonFormatting,
     // hookPublish2, /* Dmytro : hook was commented out */
 
     // output
@@ -43765,6 +44056,7 @@ const Proto =
     commandWillfileSupplementWillfileDstIsWillfile,
     commandWillfileSupplementWillfileDstIsJson,
     commandWillfileSupplementWillfileWithOptions,
+
     commandWillfileMergeIntoSingle,
     commandWillfileMergeIntoSingleRunWith,
     commandWillfileMergeIntoSingleWithSeveralRuns,

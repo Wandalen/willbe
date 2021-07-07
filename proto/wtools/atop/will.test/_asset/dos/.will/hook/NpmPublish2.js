@@ -81,7 +81,7 @@
 //   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
 //
 //   let currentContext = context.junction.module.stepMap[ 'willfile.generate' ];
-//   context.junction.module.npmGenerateFromWillfile
+//   context.junction.module.will.npmGenerateFromWillfile
 //   ({
 //     packagePath : '{path::in}/package.json',
 //     currentContext,
