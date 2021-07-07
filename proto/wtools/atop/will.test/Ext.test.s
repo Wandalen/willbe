@@ -4401,7 +4401,7 @@ function reflectNpmModules( test )
   return a.ready;
 }
 
-reflectNpmModules.timeOut = 150000;
+reflectNpmModules.timeOut = 300000;
 
 //
 
