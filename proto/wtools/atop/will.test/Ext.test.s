@@ -24083,7 +24083,7 @@ function stepModulesUpdate( test )
   }
 }
 
-stepModulesUpdate.timeOut = 600000;
+stepModulesUpdate.timeOut = 800000;
 stepModulesUpdate.rapidity = -1;
 
 //
