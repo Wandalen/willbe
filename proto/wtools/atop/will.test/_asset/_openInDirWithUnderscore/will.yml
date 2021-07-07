@@ -1,0 +1,16 @@
+
+about :
+  name : 'root'
+
+step :
+  shell :
+    shell : echo root
+
+
+build :
+
+  run :
+    criterion :
+      default : 1
+    steps :
+      - step::shell

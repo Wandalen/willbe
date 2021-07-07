@@ -1,0 +1,17 @@
+
+about :
+  name : 'named-skipped'
+
+step :
+  shell :
+    shell : echo named-skipped
+
+
+build :
+
+  run :
+    criterion :
+      default : 1
+    steps :
+      - step::shell
+
