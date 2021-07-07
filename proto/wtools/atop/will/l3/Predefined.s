@@ -633,11 +633,12 @@ function stepRoutineNpmGenerate( frame )
   let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
   opts.currentContext = step;
+  opts.modules = [ module ];
 
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
 
-  return module.npmGenerateFromWillfile( opts );
+  return module.will.npmGenerateFromWillfile( opts );
 }
 
 stepRoutineNpmGenerate.stepOptions =
@@ -661,11 +662,12 @@ function stepRoutineWillfileFromNpm( frame )
   let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
   opts.currentContext = step;
+  opts.modules = [ module ];
 
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
 
-  return module.willfileGenerateFromNpm( opts );
+  return module.will.willfileGenerateFromNpm( opts );
 }
 
 stepRoutineWillfileFromNpm.stepOptions =
@@ -1215,7 +1217,7 @@ function stepRoutineWillfileVersionBump( frame )
   let run = frame.run;
   let module = run.module;
   let opts = _.props.extend( null, step.opts );
-  opts.verbosity = step.verbosityWithDelta( -1 );
+  opts.logger = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
 

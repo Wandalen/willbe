@@ -7292,1433 +7292,1823 @@ resourceImport.defaults =
   overriding : 1,
 }
 
+// //
+//
+// function _npmGenerateFromWillfile( o )
+// {
+//   let will = this;
+//   let path = will.fileProvider.path;
+//
+//   /* */
+//
+//   let config = Object.create( null );
+//   if( o.srcConfig.about )
+//   {
+//     config.name = o.srcConfig.about.name;
+//     config.version = o.srcConfig.about.version;
+//     config.enabled = o.srcConfig.about.enabled;
+//
+//     if( o.srcConfig.about.description )
+//     config.description = o.srcConfig.about.description;
+//     if( o.srcConfig.about.keywords )
+//     config.keywords = o.srcConfig.about.keywords;
+//     if( o.srcConfig.about.license )
+//     config.license = o.srcConfig.about.license;
+//
+//     if( o.srcConfig.about.interpreters )
+//     {
+//       let interpreters = _.array.as( o.srcConfig.about.interpreters );
+//       interpreters.forEach( ( interpreter ) =>
+//       {
+//         if( _.strHas( interpreter, 'njs' ) )
+//         config.engine = _.strReplace( interpreter, 'njs', 'node' );
+//       });
+//     }
+//
+//     if( o.srcConfig.about.author )
+//     config.author = o.srcConfig.about.author;
+//     if( o.srcConfig.about.contributors )
+//     config.contributors = o.srcConfig.about.contributors;
+//
+//     for( let n in o.srcConfig.about )
+//     {
+//       if( !_.strBegins( n, 'npm.' ) )
+//       continue;
+//       config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.about[ n ];
+//     }
+//   }
+//
+//   if( o.entryPath && o.entryPath.length )
+//   {
+//     config.main = _.scalarFrom( path.s.relative( path.dir( o.packagePath ), o.entryPath ) );
+//   }
+//
+//   if( o.filesPath && o.filesPath.length )
+//   {
+//     config.files = path.s.relative( path.dir( o.packagePath ), o.filesPath );
+//   }
+//
+//   if( o.srcConfig.path )
+//   {
+//     if( o.srcConfig.path.repository )
+//     config.repository = _.git.path.nativize( o.srcConfig.path.repository );
+//     // config.repository = pathSimplify( o.srcConfig.path.repository );
+//     if( o.srcConfig.path.bugtracker )
+//     config.bugs = _.git.path.nativize( o.srcConfig.path.bugtracker );
+//     // config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
+//     if( o.srcConfig.path.entry && !config.main )
+//     config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
+//
+//     for( let n in o.srcConfig.path )
+//     {
+//       if( !_.strBegins( n, 'npm.' ) )
+//       continue;
+//       config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.path[ n ];
+//     }
+//   }
+//
+//   if( o.srcConfig.submodule )
+//   {
+//     for( let s in o.srcConfig.submodule )
+//     {
+//       let submodule = o.srcConfig.submodule[ s ];
+//       let p = submodule.path;
+//       p = _.git.path.parseFull( p );
+//
+//       _.assert
+//       (
+//         p.protocol === 'npm' || p.protocol === 'hd',
+//         () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+//       );
+//
+//       if( p.protocol === 'npm' )
+//       {
+//         depAdd( submodule, path.relative( '/', p.longPath ), p.tag );
+//       }
+//       else if( p.protocol === 'hd' )
+//       {
+//         depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath );
+//       }
+//       else _.assert( 0 );
+//     }
+//   }
+//
+//   return config;
+//
+//   /* */
+//
+//   // function pathSimplify( src )
+//   // {
+//   //   let r = src;
+//   //   if( !_.strIs( r ) )
+//   //   return r;
+//   //
+//   //   r = r.replace( '///', '//' );
+//   //   r = r.replace( 'npm://', '' );
+//   //
+//   //   return r;
+//   // }
+//
+//   function depAdd( submodule, name, hash )
+//   {
+//     if( submodule.criterion )
+//     {
+//       if( submodule.criterion.optional )
+//       return _depAdd( 'optionalDependencies', name, hash );
+//       else if( submodule.criterion.development )
+//       return _depAdd( 'devDependencies', name, hash );
+//     }
+//     return _depAdd( 'dependencies', name, hash );
+//   }
+//
+//   function _depAdd( section, name, hash )
+//   {
+//     config[ section ] = config[ section ] || Object.create( null );
+//     config[ section ][ name ] = hash ? hash : '';
+//   }
+//
+// }
+//
+// //
+//
+// function npmGenerateFromWillfile( o )
+// {
+//   _.assert( arguments.length === 1 );
+//   _.routine.options( npmGenerateFromWillfile, o );
+//
+//   const module = this;
+//   const will = module.will;
+//   const fileProvider = will.fileProvider;
+//   const path = fileProvider.path;
+//   const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+//
+//   /* */
+//
+//   const currentContext = o.currentContext || module;
+//   const packagePath = module.pathResolve
+//   ({
+//     selector : o.packagePath || '{path::out}/package.json',
+//     prefixlessAction : 'resolved',
+//     pathNativizing : 0,
+//     selectorIsPath : 1,
+//     currentContext,
+//   });
+//
+//   const data = _.will.transform.npmFromWillfile
+//   ({
+//     config :
+//     {
+//       about : module.about.exportStructure(),
+//       path : module.pathMap,
+//       submodule : module.submoduleMap,
+//     },
+//     withDisabledSubmodules : o.withDisabledSubmodules,
+//   });
+//
+//   if( o.entryPath )
+//   {
+//     const entryPath = module.pathResolve({ selector : o.entryPath, prefixlessAction : 'resolved', currentContext });
+//     data.main = path.relative( path.dir( packagePath ), entryPath );
+//   }
+//   if( o.filesPath )
+//   {
+//     const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+//     data.files = path.s.relative( path.dir( packagePath ), files );
+//   }
+//
+//   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : packagePath,
+//     data,
+//     encoding : 'json.fine',
+//     logger,
+//   });
+//
+//   return null;
+// }
+//
+// npmGenerateFromWillfile.defaults =
+// {
+//   packagePath : null,
+//   entryPath : null,
+//   filesPath : null,
+//
+//   currentContext : null,
+//   withDisabledSubmodules : 0,
+//
+//   logger : 2,
+// };
+//
+// function npmGenerateFromWillfile( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let opts = _.props.extend( null, o );
+//   let verbosity = o.verbosity;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( opts ) );
+//
+//   let currentContext = o.currentContext ? o.currentContext : module;
+//   opts.packagePath = module.pathResolve
+//   ({
+//     selector : opts.packagePath || '{path::out}/package.json',
+//     prefixlessAction : 'resolved',
+//     pathNativizing : 0,
+//     selectorIsPath : 1,
+//     currentContext,
+//   });
+//
+//   if( opts.entryPath )
+//   opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
+//   if( opts.filesPath )
+//   opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext });
+//
+//   /* */
+//
+//   let o2 =
+//   {
+//     srcConfig :
+//     {
+//       about : module.about.exportStructure(),
+//       path : module.pathMap,
+//       submodule : module.submoduleMap,
+//     },
+//     ... opts,
+//   };
+//   let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o2 );
+//
+//   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : opts.packagePath,
+//     data : config,
+//     encoding : 'json.fine',
+//     verbosity : verbosity ? 5 : 0,
+//   });
+//
+//   return null;
+// }
+//
+// npmGenerateFromWillfile.defaults =
+// {
+//   packagePath : null,
+//   entryPath : null,
+//   filesPath : null,
+//   verbosity : null,
+// }
+
+// //
+//
+// function _willfileGenerateFromNpm( o )
+// {
+//   let will = this;
+//
+//   /* */
+//
+//   let config = o.srcConfig;
+//   let willfile = willfileStructureForm();
+//
+//   let propertiesMap =
+//   {
+//     name :          { propertyAdd : propertyAdd, section : 'about', name : 'name' },
+//     version :       { propertyAdd : propertyAdd, section : 'about', name : 'version' },
+//     enabled :       { propertyAdd : propertyAdd, section : 'about', name : 'enabled' },
+//     description :   { propertyAdd : propertyAdd, section : 'about', name : 'description' },
+//     keywords :      { propertyAdd : propertyAdd, section : 'about', name : 'keywords' },
+//     license :       { propertyAdd : propertyAdd, section : 'about', name : 'license' },
+//     author :        { propertyAdd : aboutAuthorPropertyAdd, section : 'about', name : 'author' },
+//     contributors :  { propertyAdd : aboutContributorsPropertyAdd, section : 'about', name : 'contributors' },
+//     scripts :       { propertyAdd : propertyAdd, section : 'about', name : 'npm.scripts' },
+//     interpreters :  { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+//     engines :       { propertyAdd : interpretersAdd, section : 'about', name : 'interpreters' },
+//
+//     repository :    { propertyAdd : pathRepositoryPropertyAdd, section : 'path', name : 'repository' },
+//     bugs :          { propertyAdd : pathBugtrackerPropertyAdd, section : 'path', name : 'bugs' },
+//     main :          { propertyAdd : propertyAdd, section : 'path', name : 'entry' },
+//     files :         { propertyAdd : propertyAdd, section : 'path', name : 'npm.files' },
+//
+//     dependencies :          { propertyAdd : submodulePropertyAdd, section : 'submodule', name : undefined },
+//     devDependencies :       { propertyAdd : submodulePropertyAdd, section : 'submodule', name : 'development' },
+//     optionalDependencies :  { propertyAdd : submodulePropertyAdd, section : 'submodule', name : 'optional' },
+//   };
+//
+//   for( let key in config )
+//   if( key in propertiesMap )
+//   propertiesMap[ key ].propertyAdd( key, propertiesMap[ key ].name, propertiesMap[ key ].section );
+//   else
+//   willfile.about[ `npm.${ key }` ] = config[ key ];
+//
+//   // for( let property in propertiesMap )
+//   // if( property in config )
+//   // propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
+//   //
+//   // for( let property in config )
+//   // if( !( property in propertiesMap ) )
+//   // willfile.about[ `npm.${ property }` ] = config[ property ];
+//
+//   if( willfile.about.name )
+//   {
+//     if( !willfile.about[ 'npm.name' ] )
+//     willfile.about[ 'npm.name' ] = willfile.about.name;
+//     willfile.path.origins.push( `npm:///${ willfile.about[ 'npm.name' ] }` );
+//   }
+//
+//   willfile = willfileFilterFields();
+//
+//   return willfile;
+//
+//   /* */
+//
+//   function willfileStructureForm()
+//   {
+//     let willfile = Object.create( null );
+//     willfile.about = Object.create( null );
+//     willfile.path = Object.create( null );
+//     willfile.path.origins = [];
+//     willfile.submodule = Object.create( null );
+//     return willfile;
+//   }
+//
+//   /* */
+//
+//   function propertyAdd( property, name, section )
+//   {
+//     willfile[ section ][ name ] = config[ property ];
+//   }
+//
+//   /* */
+//
+//   function aboutAuthorPropertyAdd( property, name )
+//   {
+//     willfile.about.author = _.will.transform.authorRecordNormalize( config.author );
+//   }
+//
+//   /* */
+//
+//   function aboutContributorsPropertyAdd( property, name )
+//   {
+//     willfile.about.contributors = [];
+//     for( let i = 0 ; i < config.contributors.length ; i++ )
+//     willfile.about.contributors[ i ] = _.will.transform.authorRecordNormalize( config.contributors[ i ] );
+//   }
+//
+//   /* */
+//
+//   function interpretersAdd( property, name )
+//   {
+//     willfile.about.interpreters = [];
+//     for( let name in config.engines )
+//     if( name === 'node' )
+//     willfile.about.interpreters.push( `njs ${ config.engines[ name ] }` );
+//     else
+//     willfile.about.interpreters.push( `${ name } ${ config.engines[ name ] }` );
+//     // if( _.strHas( config[ property ], 'node' ) )
+//     // willfile.about[ name ] = _.strReplace( config[ property ], 'node', 'njs' );
+//     // else
+//     // willfile.about[ name ] = config[ property ];
+//   }
+//
+//   /* */
+//
+//   function pathRepositoryPropertyAdd( property )
+//   {
+//     willfile.path.repository = _.git.path.normalize( config.repository );
+//     willfile.path.origins.push( willfile.path.repository );
+//   }
+//
+//   /* */
+//
+//   function pathBugtrackerPropertyAdd( property )
+//   {
+//     if( !_.strHas( config.bugs, '///' ) )
+//     willfile.path.bugtracker = _.strReplace( config.bugs, '//', '///' );
+//     else
+//     willfile.path.bugtracker = config.bugs;
+//   }
+//
+//   /* */
+//
+//   // function pathPropertyAdd( property )
+//   // {
+//   //   if( property === 'repository' )
+//   //   {
+//   //     // willfile.path.repository = pathNormalize( config.repository );
+//   //     willfile.path.repository = _.git.path.normalize( config.repository );
+//   //     willfile.path.origins.push( willfile.path.repository );
+//   //   }
+//   //   if( property === 'bugs' )
+//   //   {
+//   //     willfile.path.bugtracker = pathNormalize( config.bugs );
+//   //   }
+//   //   if( property === 'main' )
+//   //   {
+//   //     willfile.path.entry = config.main;
+//   //   }
+//   //   if( property === 'files' )
+//   //   {
+//   //     willfile.path[ 'npm.files' ] = config.files;
+//   //   }
+//   // }
+//
+//   /* */
+//
+//   function submodulePropertyAdd( property, criterion )
+//   {
+//     addDependency( config[ property ], criterion );
+//   }
+//
+//   /* */
+//
+//   // function pathNormalize( src )
+//   // {
+//   //   if( _.strIs( src ) )
+//   //   {
+//   //     if( !_.strHas( src, '///' ) )
+//   //     return _.strReplace( src, '//', '///' );
+//   //     return str;
+//   //   }
+//   //
+//   //   let result = '';
+//   //   if( src.type )
+//   //   result = src.type + '+';
+//   //   result += src.url.replace( '//', '///' );
+//   //   return result;
+//   // }
+//
+//   /* */
+//
+//   function addDependency( dependenciesMap, criterion )
+//   {
+//     for( let dependency in dependenciesMap )
+//     {
+//       if( _.strHas( dependenciesMap[ dependency ], /file:/ ) )
+//       willfile.submodule[ dependency ] = addHdDependency( dependenciesMap[ dependency ], criterion );
+//       else
+//       willfile.submodule[ dependency ] = addNpmDependency( dependency, dependenciesMap[ dependency ], criterion );
+//     }
+//   }
+//
+//   /* */
+//
+//   function addHdDependency( path, criterion )
+//   {
+//     let result = Object.create( null );
+//     result.path = `hd://${ _.strRemoveBegin( path, 'file:' ) }`;
+//     result.enabled = 1;
+//     if( criterion )
+//     {
+//       result.criterion = Object.create( null );
+//       result.criterion[ criterion ] = 1;
+//     }
+//     return result;
+//   }
+//
+//   /* */
+//
+//   function addNpmDependency( name, hash, criterion )
+//   {
+//     let result = Object.create( null );
+//     hash = hash === '' ? hash : `#${ hash }`;
+//     result.path = `npm:///${ name }${ hash }`;
+//     result.enabled = 1;
+//     if( criterion )
+//     {
+//       result.criterion = Object.create( null );
+//       result.criterion[ criterion ] = 1;
+//     }
+//     return result;
+//   }
+//
+//   /* */
+//
+//   function willfileFilterFields()
+//   {
+//     if( willfile.path.origins.length === 0 )
+//     delete willfile.path.origins;
+//     if( _.props.keys( willfile.submodule ).length === 0 )
+//     delete willfile.submodule;
+//     if( _.props.keys( willfile.path ).length === 0 )
+//     delete willfile.path;
+//     return willfile;
+//   }
+// }
+//
+// _willfileGenerateFromNpm.defaults =
+// {
+//   packagePath : null,
+//   willfilePath : null,
+//   verbosity : null,
+// };
+//
+// //
+//
+// function willfileGenerateFromNpm( o )
+// {
+//   _.assert( arguments.length === 1 );
+//   _.routine.options( willfileGenerateFromNpm, o );
+//
+//   const module = this;
+//   const will = module.will || module;
+//   const fileProvider = will.fileProvider;
+//   const path = fileProvider.path;
+//   const logger = _.logger.relativeMaybe( will.transaction.logger, o.logger );
+//   const inPath = will.inPath ? will.inPath : path.current();
+//
+//   /* */
+//
+//   const packagePath = packagePathGet();
+//   let willfilePath = willfilePathGet();
+//
+//   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+//   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+//   _.sure( _.will.filePathIs( willfilePath ), () => `Expexts path to willfile, but got : ${ willfilePath }` );
+//
+//   const config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger })
+//   const data = _.will.transform.willfileFromNpm({ config });
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : willfilePath,
+//     data,
+//     encoding : 'yaml',
+//     logger,
+//   });
+//
+//   return null;
+//
+//   /* */
+//
+//   function packagePathGet()
+//   {
+//     if( o.currentContext )
+//     return module.pathResolve
+//     ({
+//       selector : o.packagePath || '{path::in}/package.json',
+//       prefixlessAction : 'resolved',
+//       pathNativizing : 0,
+//       selectorIsPath : 1,
+//       currentContext : o.currentContext || module,
+//     });
+//     else
+//     return path.join( inPath, o.packagePath || 'package.json' );
+//   }
+//
+//   /* */
+//
+//   function willfilePathGet()
+//   {
+//     if( o.currentContext )
+//     return module.pathResolve
+//     ({
+//       selector : o.willfilePath || '{path::out}/will.yml',
+//       prefixlessAction : 'resolved',
+//       pathNativizing : 0,
+//       selectorIsPath : 1,
+//       currentContext : o.currentContext || module,
+//     });
+//     else
+//     return path.join( inPath, o.willfilePath || 'will.yml' );
+//   }
+// }
+//
+// willfileGenerateFromNpm.defaults =
+// {
+//   packagePath : null,
+//   willfilePath : null,
+//   currentContext : null,
+//   logger : 2,
+// };
+//
+// function willfileGenerateFromNpm( o )
+// {
+//   let module = this;
+//   let will = module.will ? module.will : module;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.transaction.logger;
+//   let opts = _.props.extend( null, o );
+//   let verbosity = o.verbosity;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( opts ) );
+//
+//   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+//   let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
+//   if( opts.currentContext )
+//   {
+//     packagePath = module.pathResolve
+//     ({
+//       selector : opts.packagePath || '{path::in}/package.json',
+//       prefixlessAction : 'resolved',
+//       pathNativizing : 0,
+//       selectorIsPath : 1,
+//       currentContext : opts.currentContext,
+//     });
+//     willfilePath = module.pathResolve
+//     ({
+//       selector : opts.willfilePath || '{path::out}/will.yml',
+//       prefixlessAction : 'resolved',
+//       pathNativizing : 0,
+//       selectorIsPath : 1,
+//       currentContext : opts.currentContext,
+//     });
+//   }
+//   else
+//   {
+//     packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+//     willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+//   }
+//
+//   if( !fileProvider.isTerminal( willfilePath ) || fileProvider.isDir( willfilePath ) )
+//   {
+//     let ext = path.ext( willfilePath );
+//     if( ext === '' || ( ext !== 'will' && !_.longHasAny( [ 'yml', 'yaml' ], ext ) ) )
+//     willfilePath += '.will.yml';
+//     else if( ext === 'will' )
+//     willfilePath += '.yml';
+//   }
+//
+//   /* */
+//
+//   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+//   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+//
+//   let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) })
+//   let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
+//
+//   /* */
+//
+//   fileProvider.fileWrite
+//   ({
+//     filePath : willfilePath,
+//     data : willfile,
+//     encoding : 'yaml',
+//     verbosity : o.verbosity ? 5 : 0,
+//   });
+//
+//   return null;
+// }
+//
+// //
+//
+// function willfileExtendWillfile( o )
+// {
+//   _.assert( arguments.length === 1 );
+//   _.routine.options( willfileExtendWillfile, o );
+//
+//   const module = this;
+//   const will = module.will || module;
+//   const fileProvider = will.fileProvider;
+//   const path = fileProvider.path;
+//   const logger = will.transaction.logger;
+//
+//   /* */
+//
+//   o.dirPath = o.dirPath || module.dirPath || will.inPath || path.current();
+//
+//   const splits = _.strSplit({ src : o.request, preservingEmpty : 0 });
+//   for( let i = 0 ; i < splits.length ; i++ )
+//   if( splits[ i ] === '.' )
+//   splits[ i ] = './';
+//   const configPaths = path.s.join( o.dirPath, splits );
+//
+//   const dstWillfiles = dstFilesFind( configPaths[ 0 ] );
+//   if( o.format === 'json' )
+//   _.sure( dstWillfiles.length === 0, 'not implemented' );
+//   else
+//   _.sure( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles.' );
+//   const commonDstPath = dstCommonPathGet( dstWillfiles );
+//
+//   let willfile = Object.create( null );
+//   if( dstWillfiles.length === 1 )
+//   willfile = configRead( dstWillfiles[ 0 ].absolute );
+//
+//   for( let i = 1 ; i < configPaths.length ; i++ )
+//   {
+//     let files = configFilesFind( configPaths[ i ] );
+//     _.sure( files.length !== 0, 'Source configuration file does not exist.' );
+//
+//     for( let j = 0 ; j < files.length ; j++ )
+//     {
+//       _.sure
+//       (
+//         _.longHasAny( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ),
+//         'Unexpected configuration files. Please, improve selector.'
+//       );
+//
+//       const encoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
+//       let config = configRead( files[ j ].absolute, encoding );
+//       if( !_.longHas( files[ j ].exts, 'will' ) )
+//       config = _.will.transform.willfileFromNpm({ config });
+//
+//       willfilesMerge( willfile, config );
+//     }
+//   }
+//
+//   if( o.submodulesDisabling )
+//   _.will.transform.submodulesSwitch( willfile.submodule, 0 );
+//
+//   if( o.format === 'json' )
+//   {
+//     let data = _.will.transform.npmFromWillfile({ config : willfile });
+//     configWrite( commonDstPath, data, 'json' );
+//   }
+//   else if( dstWillfiles.length === 2 )
+//   {
+//     const exWillfile = configRead( dstWillfiles[ 0 ].absolute );
+//     const imWillfile = configRead( dstWillfiles[ 1 ].absolute );
+//
+//     const [ exWillfileExtension, imWillfileExtension ] = splitWillfilesExtensionMake( exWillfile, imWillfile );
+//
+//     willfilesMerge( exWillfile, exWillfileExtension );
+//     willfilesMerge( imWillfile, imWillfileExtension );
+//
+//     configWrite( dstWillfiles[ 0 ].absolute, exWillfile );
+//     configWrite( dstWillfiles[ 1 ].absolute, imWillfile );
+//   }
+//   else
+//   {
+//     const filePath = dstWillfiles.length ? dstWillfiles[ 0 ].absolute : commonDstPath;
+//     configWrite( filePath, willfile );
+//   }
+//   return null;
+//
+//   /* */
+//
+//   function dstFilesFind( src )
+//   {
+//     _.assert( !path.isGlob( src ), 'Path to destination file should have not globs.' );
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : src,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function dstCommonPathGet( files )
+//   {
+//     if( files.length === 1 )
+//     {
+//       return files[ 0 ].absolute;
+//     }
+//     else if( files.length === 2 )
+//     {
+//       return path.join( files[ 0 ].dir, _.strCommonLeft( files[ 0 ].fullName, files[ 1 ].fullName ) + '*' );
+//     }
+//     else
+//     {
+//       if( path.isTrailed( configPaths[ 0 ] ) )
+//       {
+//         const fileName = o.format === 'json' ? 'package.json' : 'will.yml';
+//         return path.join( configPaths[ 0 ], fileName );
+//       }
+//       else
+//       {
+//         const dir = path.dir( configPaths[ 0 ] );
+//         const name = _.strSplit( path.name( configPaths[ 0 ] ), '.' )[ 0 ];
+//         const exts = path.exts( configPaths[ 0 ] );
+//         _.arrayRemoveArrayOnce( exts, [ 'will', 'yml', 'yaml', 'json' ] );
+//         const extsArray = o.format === 'json' ? [ 'json' ] : [ 'will', 'yml' ];
+//         _.arrayAppendArray( exts, extsArray );
+//         return path.join( dir, `${ name }.${ exts.join( '.' ) }` );
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configRead( filePath, encoding )
+//   {
+//     return fileProvider.fileRead({ filePath, encoding : encoding || 'yaml', logger });
+//   }
+//
+//   /* */
+//
+//   function configFilesFind( srcPath )
+//   {
+//     let filePath = srcPath;
+//     if( fileProvider.isTerminal( filePath ) )
+//     {
+//       if( dstWillfiles.length )
+//       if( _.longHasAny( _.select( dstWillfiles, '*/absolute' ), filePath ) )
+//       return [];
+//       return [ fileProvider.record( filePath ) ];
+//     }
+//
+//     if( path.isTrailed( srcPath ) )
+//     return _.will.fileAt({ commonPath : srcPath });
+//
+//     if( !path.isGlob( filePath ) )
+//     filePath = filePath + '*';
+//
+//     let filter =
+//     {
+//       filePath : { [ filePath ] : true, [ commonDstPath ] : 0 },
+//       maskTerminal : { includeAny : /(.will){0,1}\.(yml|yaml|json)/ },
+//     };
+//
+//     return fileProvider.filesFind
+//     ({
+//       filePath,
+//       withStem : 0,
+//       withDirs : 0,
+//       mode : 'distinct',
+//       mandatory : 0,
+//       filter,
+//     });
+//   }
+//
+//   /* */
+//
+//   function willfilesMerge( dst, src )
+//   {
+//     _.will.transform.willfilesMerge
+//     ({
+//       ... _.mapOnly_( null, o, _.will.transform.willfilesMerge.defaults ),
+//       dst,
+//       src,
+//     });
+//   }
+//
+//   /* */
+//
+//   function splitWillfilesExtensionMake( exWillfile, imWillfile )
+//   {
+//     const imWillfileExtension = Object.create( null );
+//     const exWillfileExtension = Object.create( null );
+//     for( let section in exWillfile )
+//     {
+//       if( ( section in imWillfile ) && ( section in willfile ) )
+//       {
+//         exWillfileExtension[ section ] = _.mapOnly_( null, willfile[ section ], exWillfile[ section ] );
+//         imWillfileExtension[ section ] = _.mapBut_( willfile[ section ], willfile[ section ], exWillfile[ section ] );
+//       }
+//       else if( section in willfile )
+//       {
+//         exWillfileExtension[ section ] = willfile[ section ];
+//       }
+//       delete willfile[ section ];
+//     }
+//     _.map.extend( imWillfileExtension, willfile );
+//     return [ exWillfileExtension, imWillfileExtension ];
+//   }
+//
+//   /* */
+//
+//   function configWrite( filePath, data, encoding )
+//   {
+//     fileProvider.fileWrite
+//     ({
+//       filePath,
+//       data,
+//       encoding : encoding || 'yaml',
+//       logger,
+//     });
+//   }
+// }
+//
+// willfileExtendWillfile.defaults =
+// {
+//   'about' : 1,
+//   'build' : 1,
+//   'path' : 1,
+//   'reflector' : 1,
+//   'step' : 1,
+//   'submodule' : 1,
+//
+//   'name' : 1,
+//   'version' : 1,
+//   'author' : 1,
+//   'enabled' : 1,
+//   'description' : 1,
+//   'contributors' : 1,
+//   'interpreters' : 1,
+//   'license' : 1,
+//   'keywords' : 1,
+//   'npm.name' : 1,
+//   'npm.scripts' : 1,
+//
+//   'dirPath' : null,
+//   'request' : null,
+//   'onSection' : null,
+//   'submodulesDisabling' : 0,
+//   'format' : 'willfile',
+//   'logger' : 3,
+// };
+//
+// function willfileExtendWillfile( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let opts = _.routine.options( willfileExtendWillfile, o );
+//   let request = opts.request.split( /\s+/ );
+//   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+//
+//   o.dirPath = o.dirPath ? o.dirPath : will.inPath;
+//   if( !o.dirPath )
+//   o.dirPath = path.current();
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( opts ) );
+//
+//   let dstWillfiles = dstFilesFind( request[ 0 ] );
+//   if( dstWillfiles.length > 2 )
+//   throw _.errBrief( 'Please, improve selector, cannot choose willfiles.' );
+//
+//   let ext;
+//   if( dstWillfiles.length )
+//   ext = dstWillfiles[ 0 ].ext;
+//   else
+//   ext = opts.format === 'json' ? 'json' : 'yaml';
+//   let dstEncoding = ext === 'json' ? 'json.fine' : ext;
+//
+//   let dstPath = dstPathFind();
+//
+//   if( opts.format === 'json' )
+//   _.assert( dstWillfiles.length === 0, 'not implemented' );
+//
+//   /* extension */
+//
+//   let sectionMap =
+//   {
+//     about : aboutSectionExtend,
+//     build : sectionExtend,
+//     path : sectionExtend,
+//     reflector : sectionExtend,
+//     step : sectionExtend,
+//     submodule : sectionExtend,
+//   };
+//
+//   let willfile = Object.create( null );
+//   for( let sectionName in sectionMap )
+//   willfile[ sectionName ] = Object.create( null );
+//
+//   for( let i = 1 ; i < request.length ; i++ )
+//   {
+//     let files = configFilesFind( request[ i ] );
+//
+//     if( files.length === 0 )
+//     throw _.errBrief( 'Source configuration files does not exist.' )
+//
+//     for( let j = 0 ; j < files.length ; j++ )
+//     {
+//       if( _.longHasNone( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ) )
+//       throw _.errBrief( 'Unexpected configuration files. Please, improve selector.' );
+//
+//       let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
+//       let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding, logger });
+//       if( !_.longHas( files[ j ].exts, 'will' ) )
+//       srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig });
+//
+//       for( let sectionName in srcConfig )
+//       sectionMap[ sectionName ]( willfile, srcConfig, sectionName );
+//     }
+//   }
+//
+//   if( opts.submodulesDisabling )
+//   {
+//     for( let dependency in willfile.submodule )
+//     willfile.submodule[ dependency ].enabled = 0;
+//   }
+//
+//   for( let sectionName in sectionMap )
+//   {
+//     if( _.props.keys( willfile[ sectionName ] ).length === 0 )
+//     delete willfile[ sectionName ];
+//   }
+//
+//   /* write destination willfile */
+//
+//   dstWillfilesWrite( dstWillfiles );
+//
+//   return null;
+//
+//   /* */
+//
+//   function dstFilesFind( dstPath )
+//   {
+//     if( path.isGlob( dstPath ) )
+//     throw _.err( 'Path to destination file should have not globs.' );
+//
+//     dstPath = path.join( o.dirPath, dstPath );
+//
+//     if( fileProvider.isDir( dstPath ) )
+//     dstPath = path.join( dstPath, './' );
+//     else if( !fileProvider.isTerminal( dstPath ) && opts.format === 'json' )
+//     dstPath = dstPath + '*.json';
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : dstPath,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function dstPathFind()
+//   {
+//     if( dstWillfiles.length === 1 )
+//     {
+//       return dstWillfiles[ 0 ].absolute;
+//     }
+//     else if( dstWillfiles.length === 2 )
+//     {
+//       return path.join( dstWillfiles[ 0 ].dir, _.strCommonLeft( dstWillfiles[ 0 ].fullName, dstWillfiles[ 1 ].fullName ) + '*' );
+//     }
+//     else
+//     {
+//       let willPath = o.dirPath;
+//       let firstExt = ext === 'yaml' ? 'yml' : ext;
+//       let secondExt = opts.format === 'json' ? '.' : '.will.';
+//
+//       let splits = _.strIsolateRightOrAll( request[ 0 ], path.upToken );
+//
+//       if( splits[ 2 ] === request[ 0 ] )
+//       return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
+//
+//       if( splits[ 2 ] === '' )
+//       return path.join( willPath, splits[ 0 ], opts.format === 'json' ? 'package.json' : 'will.yml' );
+//       else
+//       return path.join( willPath, splits[ 0 ], path.name( splits[ 2 ] ) + secondExt + firstExt );
+//
+//       // if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
+//       // return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
+//       // else
+//       // return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
+//     }
+//   }
+//
+//   /* */
+//
+//   function configFilesFind( selector )
+//   {
+//     let filePath = selector;
+//     if( !path.isAbsolute( filePath ) )
+//     filePath = path.join( o.dirPath, selector );
+//
+//     if( fileProvider.isTerminal( filePath ) )
+//     {
+//       if( dstWillfiles.length )
+//       {
+//         if( dstWillfiles[ 0 ].absolute === filePath )
+//         return [];
+//         if( dstWillfiles[ 1 ] && dstWillfiles[ 1 ].absolute === filePath )
+//         return [];
+//       }
+//       return [ fileProvider.record( filePath ) ];
+//     }
+//
+//     if( !path.isGlob( filePath ) )
+//     {
+//       if( fileProvider.isDir( filePath ) )
+//       filePath = path.join( filePath, '*.will.(yml|yaml|json)' );
+//       else
+//       filePath = filePath + '*.will.(yml|yaml|json)';
+//     }
+//
+//     let filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
+//
+//     return fileProvider.filesFind
+//     ({
+//       filePath,
+//       withStem : 0,
+//       withDirs : 0,
+//       mode : 'distinct',
+//       mandatory : 0,
+//       filter,
+//     });
+//   }
+//
+//   /* */
+//
+//   function aboutSectionExtend( dst, src, name )
+//   {
+//     if( !opts.about )
+//     return;
+//
+//     let exclusionMap =
+//     {
+//       'author' : 1,
+//       'keywords' : 1,
+//       'contributors' : 1,
+//       'interpreters' : 1,
+//       'npm.scripts' : 1,
+//     };
+//
+//     let extendingMap = Object.create( null );
+//     for( let property in src.about )
+//     {
+//       if( !( property in exclusionMap ) )
+//       {
+//         if( ( property in willfileExtendWillfile.defaults ) && opts[ property ] )
+//         extendingMap[ property ] = src.about[ property ];
+//         else if( !( property in willfileExtendWillfile.defaults ) )
+//         extendingMap[ property ] = src.about[ property ];
+//       }
+//     }
+//     opts.onSection( dst.about, extendingMap );
+//
+//     /* */
+//
+//     if( opts.author && src.about.author )
+//     {
+//       if( _.strIs( src.about.author ) )
+//       opts.onSection( dst.about, { author : src.about.author } );
+//       else
+//       opts.onSection( dst.about, { author : `${ src.about.author.name } <${ src.about.author.email }>` } );
+//     }
+//     if( opts.keywords && src.about.keywords )
+//     {
+//       dst.about.keywords = _.scalarAppendOnce( dst.about.keywords, src.about.keywords );
+//     }
+//     if( opts.contributors && src.about.contributors )
+//     {
+//       dst.about.contributors = arrayPropertyParse( dst.about.contributors, _.strIsolateRightOrAll );
+//       src.about.contributors = arrayPropertyParse( src.about.contributors, _.strIsolateRightOrAll );
+//       opts.onSection( dst.about.contributors, src.about.contributors );
+//     }
+//     if( opts.interpreters && src.about.interpreters )
+//     {
+//       dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
+//       propertyReplace( dst.about.interpreters, 'njs', 'nodejs' );
+//       src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
+//       propertyReplace( src.about.interpreters, 'njs', 'nodejs' );
+//       opts.onSection( dst.about.interpreters, src.about.interpreters );
+//     }
+//     if( opts[ 'npm.scripts' ] && src.about[ 'npm.scripts' ] )
+//     {
+//       if( dst.about[ 'npm.scripts' ] === undefined )
+//       dst.about[ 'npm.scripts' ] = Object.create( null );
+//       opts.onSection( dst.about[ 'npm.scripts' ], src.about[ 'npm.scripts' ] );
+//     }
+//   }
+//
+//   /* */
+//
+//   function arrayPropertyParse( src, parser )
+//   {
+//     let result = Object.create( null );
+//
+//     if( _.strIs( src ) )
+//     src = [ src ];
+//
+//     if( _.longIs( src ) )
+//     {
+//       for( let i = 0 ; i < src.length ; i++ )
+//       {
+//         if( _.mapIs( src[ i ] ) )
+//         {
+//           result[ src[ i ].name ] = `<${ src[ i ].email }>`;
+//         }
+//         else
+//         {
+//           let splits = parser({ src : src[ i ] });
+//           result[ splits[ 0 ] ] = splits[ 2 ];
+//         }
+//       }
+//       return result;
+//     }
+//     else if( src === undefined )
+//     {
+//       return result;
+//     }
+//     return src;
+//   }
+//
+//   /* */
+//
+//   function propertyReplace( srcMap, dstProperty, srcProperty )
+//   {
+//     if( srcMap[ srcProperty ] !== undefined )
+//     {
+//       srcMap[ dstProperty ] = srcMap[ srcProperty ];
+//       delete srcMap[ srcProperty ];
+//     }
+//   }
+//
+//   /* */
+//
+//   function sectionExtend( dst, src, name )
+//   {
+//     if( !opts[ name ] )
+//     return;
+//     opts.onSection( dst[ name ], src[ name ] );
+//   }
+//
+//   /* */
+//
+//   function dstWillfilesWrite( dstWillfiles )
+//   {
+//     if( dstWillfiles.length !== 0 )
+//     {
+//       let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding, logger });
+//       if( dstWillfiles.length === 2 )
+//       {
+//         let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding, logger });
+//         for( let sectionName in config2 )
+//         {
+//           if( sectionName in willfile )
+//           {
+//             if( sectionName in config )
+//             {
+//               let screenMap = _.mapBut_( null, willfile[ sectionName ], config[ sectionName ] );
+//               let srcMap = _.mapBut_( null, willfile[ sectionName ], screenMap );
+//               opts.onSection( config[ sectionName ], srcMap );
+//               willfile[ sectionName ] = screenMap;
+//             }
+//
+//             sectionMap[ sectionName ]( config2, willfile, sectionName );
+//             delete willfile[ sectionName ];
+//           }
+//         }
+//         willfileWrite( dstWillfiles[ 1 ].absolute, config2, dstEncoding );
+//       }
+//
+//       for( let sectionName in willfile )
+//       {
+//         if( config[ sectionName ] === undefined )
+//         config[ sectionName ] = Object.create( null );
+//         sectionMap[ sectionName ]( config, willfile, sectionName );
+//       }
+//       willfileWrite( dstWillfiles[ 0 ].absolute, config, dstEncoding );
+//
+//     }
+//     else
+//     {
+//       willfileWrite( dstPath, willfile, dstEncoding );
+//     }
+//   }
+//
+//   /* */
+//
+//   function willfileWrite( path, data, encoding )
+//   {
+//     if( data.about )
+//     {
+//       if( data.about.contributors )
+//       data.about.contributors = mapToArrayOfStrings( data.about.contributors );
+//       if( data.about.interpreters )
+//       data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
+//     }
+//
+//
+//     if( opts.format === 'json' )
+//     {
+//       let o =
+//       {
+//         srcConfig : data,
+//         packagePath : path,
+//       };
+//       data = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o );
+//     }
+//
+//     fileProvider.fileWrite
+//     ({
+//       filePath : path,
+//       data,
+//       encoding,
+//       logger,
+//     });
+//
+//   }
+//
+//   function mapToArrayOfStrings( src )
+//   {
+//     if( _.longIs( src ) )
+//     return src;
+//
+//     debugger; /* xxx : aaa : check */ /* Dmytro : removed */
+//     src = _.props.pairs( src );
+//     for( let i = 0 ; i < src.length ; i++ )
+//     src[ i ] = src[ i ].join( ' ' );
+//     return src;
+//   }
+// }
+//
+// willfileExtendWillfile.defaults =
+// {
+//   'about' : 1,
+//   'build' : 1,
+//   'path' : 1,
+//   'reflector' : 1,
+//   'step' : 1,
+//   'submodule' : 1,
+//
+//   'name' : 1,
+//   'version' : 1,
+//   'author' : 1,
+//   'enabled' : 1,
+//   'description' : 1,
+//   'contributors' : 1,
+//   'interpreters' : 1,
+//   'license' : 1,
+//   'keywords' : 1,
+//   'npm.name' : 1,
+//   'npm.scripts' : 1,
+//
+//   'dirPath' : null,
+//   'request' : null,
+//   'onSection' : null,
+//   'submodulesDisabling' : 0,
+//   'format' : 'willfile',
+//   'logger' : 3,
+//   // 'v' : null,
+// }
+//
+// //
+//
+// function _willfileOnPropertyAct( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.transaction.logger;
+//   let loggerForProvider = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+//
+//   _.routine.options( _willfileOnPropertyAct, o );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.object.isBasic( o ) );
+//
+//   let dstWillfileRecords = dstRecordsFind( o.request );
+//   _.assert
+//   (
+//     1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
+//     `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
+//   );
+//   _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ) || dstWillfileRecords[ 0 ].name === 'will', 'Expexts willfiles' );
+//
+//   let willfile, willfile2;
+//   let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
+//   willfile =
+//     fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
+//   if( dstWillfileRecords.length === 2 )
+//   willfile2 =
+//     fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
+//
+//   /* */
+//
+//   let sectionMap =
+//   {
+//     about : 'about',
+//     build : 'build',
+//     path : 'path',
+//     reflector : 'reflector',
+//     step : 'step',
+//     submodule : 'submodule',
+//   };
+//
+//   for( let option in o.selectorsMap )
+//   {
+//
+//     let splits = option.split( '/' );
+//
+//     if( splits[ 0 ] === '' )
+//     splits.shift();
+//
+//     if( !( splits[ 0 ] in sectionMap ) )
+//     throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
+//
+//     let dstConfig = o.onConfig( willfile, willfile2, splits );
+//     o.act( dstConfig, splits, option );
+//
+//   }
+//
+//   /* */
+//
+//   if( o.writing )
+//   {
+//     configWrite( dstWillfileRecords[ 0 ].absolute, willfile );
+//     if( dstWillfileRecords.length === 2 )
+//     configWrite( dstWillfileRecords[ 1 ].absolute, willfile2 );
+//   }
+//
+//   return null;
+//
+//   /* */
+//
+//   function dstRecordsFind( dstPath )
+//   {
+//     if( !path.isAbsolute( dstPath ) )
+//     dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+//
+//     if( fileProvider.isDir( dstPath ) )
+//     dstPath = path.join( dstPath, './' );
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : dstPath,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function configWrite( path, data )
+//   {
+//     fileProvider.fileWrite
+//     ({
+//       filePath : path,
+//       data,
+//       encoding : dstEncoding,
+//       verbosity : o.verbosity,
+//     });
+//   }
+//
+// }
+//
+// _willfileOnPropertyAct.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   onProperty : null,
+//   onConfig : null,
+//   act : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// };
+//
+// //
+//
+// function willfilePropertyGet( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let logger = will.transaction.logger;
+//
+//   _.routine.options( willfilePropertyGet, o );
+//
+//   o.act = getProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function getProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( o.verbosity > 3 )
+//         logger.log( `${ option } :: {-undefined-}` );
+//         break;
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         dstConfig = dstConfig[ key ];
+//       }
+//       else if( o.selectorsMap[ option ] )
+//       {
+//         let value = _.entity.exportStringNice( dstConfig[ key ] );
+//         if( _.strLinesCount( value ) > 1 )
+//         logger.log( `${ option } ::\n${ value }` );
+//         else
+//         logger.log( `${ option } :: ${ value }` );
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+//     return config2;
+//
+//     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+//     _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
+//
+//     return config;
+//   }
+//
+// }
+//
+// willfilePropertyGet.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   structureParse : 0,
+//   writing : 0,
+//   verbosity : 3,
+//   // v : 3,
+// }
+//
+// //
+//
+// function willfilePropertySet( o )
+// {
+//   let will = this.will ? this.will : this;
+//
+//   _.routine.options( willfilePropertySet, o );
+//
+//   o.act = setProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function setProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( i === splits.length - 1 )
+//         {
+//           let value = o.selectorsMap[ option ];
+//           if( o.structureParse )
+//           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//           dstConfig[ key ] = value;
+//         }
+//         else
+//         {
+//           dstConfig[ key ] = Object.create( null );
+//           dstConfig = dstConfig[ key ];
+//         }
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         if( _.mapIs( dstConfig[ key ] ) )
+//         {
+//           dstConfig = dstConfig[ key ];
+//         }
+//         else
+//         {
+//           if( o.verbosity > 3 )
+//           logger.log( `${ dstConfig[ key ] } is removed` );
+//           dstConfig = Object.create( null );
+//         }
+//       }
+//       else
+//       {
+//         let value = o.selectorsMap[ option ];
+//         if( o.structureParse )
+//         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//         dstConfig[ key ] = value;
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+//     return config2;
+//
+//     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+//     {
+//       if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+//       return config2;
+//       return config;
+//     }
+//
+//     return config;
+//   }
+//
+// }
+//
+// willfilePropertySet.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// }
+//
+// //
+//
+// function willfilePropertyDelete( o )
+// {
+//   let will = this.will ? this.will : this;
+//   let logger = will.transaction.logger;
+//
+//   _.routine.options( willfilePropertyDelete, o );
+//
+//   o.act = deleteProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function deleteProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( o.verbosity > 3 )
+//         logger.log( `Option "${ option }" does not exist.` );
+//         break;
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         dstConfig = dstConfig[ key ];
+//       }
+//       else if( o.selectorsMap[ option ] )
+//       {
+//         if( o.verbosity > 3 )
+//         logger.log( `Option "${ option }" is deleted.` );
+//         delete dstConfig[ key ];
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+//     return config2;
+//
+//     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+//     {
+//       if( !keys[ 1 ] )
+//       {
+//         _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
+//         delete config2[ keys[ 0 ] ];
+//         return config;
+//       }
+//       if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+//       return config2;
+//       return config;
+//     }
+//
+//     return config;
+//   }
+// }
+//
+// willfilePropertyDelete.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// }
+//
+// //
+//
+// function willfilePropertyExtend( o )
+// {
+//   let will = this;
+//
+//   _.routine.options( willfilePropertyExtend, o );
+//   o.act = extendProperty;
+//   o.onConfig = configChooseByKeys;
+//
+//   return _willfileOnPropertyAct.call( will, o );
+//
+//   /* */
+//
+//   function extendProperty( dstConfig, splits, option )
+//   {
+//     for( let i = 0 ; i < splits.length ; i++ )
+//     {
+//       let key = splits[ i ];
+//       if( dstConfig[ key ] === undefined )
+//       {
+//         if( i === splits.length - 1 )
+//         {
+//           let value = o.selectorsMap[ option ];
+//           if( o.structureParse )
+//           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//           o.onProperty( dstConfig, { [ key ] : value } );
+//         }
+//         else
+//         {
+//           dstConfig[ key ] = Object.create( null );
+//           dstConfig = dstConfig[ key ];
+//         }
+//       }
+//       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+//       {
+//         _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
+//         dstConfig = dstConfig[ key ];
+//       }
+//       else
+//       {
+//         let value = o.selectorsMap[ option ];
+//         if( o.structureParse )
+//         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+//         o.onProperty( dstConfig, { [ key ] : value } );
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function configChooseByKeys( config, config2, keys )
+//   {
+//     if( !config2 )
+//     return config;
+//
+//     if( keys[ 0 ] in config2 )
+//     return config2;
+//
+//     return config;
+//   }
+//
+// }
+//
+// willfilePropertyExtend.defaults =
+// {
+//   request : null,
+//   selectorsMap : null,
+//   onProperty : null,
+//   structureParse : 0,
+//   writing : 1,
+//   verbosity : 3,
+//   // v : 3,
+// }
+
 //
 
-function _npmGenerateFromWillfile( o )
-{
-  let will = this;
-  let path = will.fileProvider.path;
-
-  /* */
-
-  let config = Object.create( null );
-  if( o.srcConfig.about )
-  {
-    config.name = o.srcConfig.about.name;
-    config.version = o.srcConfig.about.version;
-    config.enabled = o.srcConfig.about.enabled;
-
-    if( o.srcConfig.about.description )
-    config.description = o.srcConfig.about.description;
-    if( o.srcConfig.about.keywords )
-    config.keywords = o.srcConfig.about.keywords;
-    if( o.srcConfig.about.license )
-    config.license = o.srcConfig.about.license;
-
-    if( o.srcConfig.about.interpreters )
-    {
-      let interpreters = _.array.as( o.srcConfig.about.interpreters );
-      interpreters.forEach( ( interpreter ) =>
-      {
-        if( _.strHas( interpreter, 'njs' ) )
-        config.engine = _.strReplace( interpreter, 'njs', 'node' );
-      });
-    }
-
-    if( o.srcConfig.about.author )
-    config.author = o.srcConfig.about.author;
-    if( o.srcConfig.about.contributors )
-    config.contributors = o.srcConfig.about.contributors;
-
-    for( let n in o.srcConfig.about )
-    {
-      if( !_.strBegins( n, 'npm.' ) )
-      continue;
-      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.about[ n ];
-    }
-  }
-
-  if( o.entryPath && o.entryPath.length )
-  {
-    config.main = _.scalarFrom( path.s.relative( path.dir( o.packagePath ), o.entryPath ) );
-  }
-
-  if( o.filesPath && o.filesPath.length )
-  {
-    config.files = path.s.relative( path.dir( o.packagePath ), o.filesPath );
-  }
-
-  if( o.srcConfig.path )
-  {
-    if( o.srcConfig.path.repository )
-    config.repository = pathSimplify( o.srcConfig.path.repository );
-    if( o.srcConfig.path.bugtracker )
-    config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
-    if( o.srcConfig.path.entry && !config.main )
-    config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
-
-    for( let n in o.srcConfig.path )
-    {
-      if( !_.strBegins( n, 'npm.' ) )
-      continue;
-      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.path[ n ];
-    }
-  }
-
-  if( o.srcConfig.submodule )
-  {
-    for( let s in o.srcConfig.submodule )
-    {
-      let submodule = o.srcConfig.submodule[ s ];
-      let p = submodule.path;
-      p = path.parseFull( p );
-
-      _.assert
-      (
-        p.protocol === 'npm' || p.protocol === 'hd',
-        () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
-      );
-
-      if( p.protocol === 'npm' )
-      {
-        depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
-      }
-      else if( p.protocol === 'hd' )
-      {
-        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath );
-      }
-      else _.assert( 0 );
-    }
-  }
-
-  return config;
-
-  /* */
-
-  function pathSimplify( src )
-  {
-    let r = src;
-    if( !_.strIs( r ) )
-    return r;
-
-    r = r.replace( '///', '//' );
-    r = r.replace( 'npm://', '' );
-
-    return r;
-  }
-
-  function depAdd( submodule, name, hash )
-  {
-    if( submodule.criterion )
-    {
-      if( submodule.criterion.optional )
-      return _depAdd( 'optionalDependencies', name, hash );
-      else if( submodule.criterion.development )
-      return _depAdd( 'devDependencies', name, hash );
-    }
-    return _depAdd( 'dependencies', name, hash );
-  }
-
-  function _depAdd( section, name, hash )
-  {
-    config[ section ] = config[ section ] || Object.create( null );
-    config[ section ][ name ] = hash ? hash : '';
-  }
-
-}
-
-//
-
-function npmGenerateFromWillfile( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let opts = _.props.extend( null, o );
-  let verbosity = o.verbosity;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( opts ) );
-
-  let currentContext = o.currentContext ? o.currentContext : module;
-  opts.packagePath = module.pathResolve
-  ({
-    selector : opts.packagePath || '{path::out}/package.json',
-    prefixlessAction : 'resolved',
-    pathNativizing : 0,
-    selectorIsPath : 1,
-    currentContext,
-  });
-
-  if( opts.entryPath )
-  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
-  if( opts.filesPath )
-  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext });
-
-  /* */
-
-  let o2 =
-  {
-    srcConfig :
-    {
-      about : module.about.exportStructure(),
-      path : module.pathMap,
-      submodule : module.submoduleMap,
-    },
-    ... opts,
-  };
-  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o2 );
-
-  _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
-
-  fileProvider.fileWrite
-  ({
-    filePath : opts.packagePath,
-    data : config,
-    encoding : 'json.fine',
-    verbosity : verbosity ? 5 : 0,
-  });
-
-  return null;
-}
-
-npmGenerateFromWillfile.defaults =
-{
-  packagePath : null,
-  entryPath : null,
-  filesPath : null,
-  verbosity : null,
-}
-
-//
-
-function _willfileGenerateFromNpm( o )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-
-  /* */
-
-  let config = o.srcConfig;
-  let willfile = Object.create( null );
-  willfile.about = Object.create( null );
-  willfile.path = Object.create( null );
-  willfile.path.origins = [];
-  willfile.submodule = Object.create( null );
-
-  /* */
-
-  let propertiesMap =
-  {
-    name :          { propertyAdd : aboutPropertyAdd, name : 'name' },
-    version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
-    enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
-    description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
-    keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
-    license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
-    author :        { propertyAdd : aboutFormattedPropertyAdd, name : 'author' },
-    contributors :  { propertyAdd : aboutFormattedPropertyAdd, name : 'contributors' },
-    scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
-    interpreters :  { propertyAdd : interpretersAdd, name : 'interpreters' },
-    engine :        { propertyAdd : interpretersAdd, name : 'interpreters' },
-    repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
-    bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
-    main :          { propertyAdd : pathPropertyAdd, name : 'main' },
-    files :         { propertyAdd : pathPropertyAdd, name : 'files' },
-    dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
-    devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
-    optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
-  };
-
-  for( let property in propertiesMap )
-  if( property in config )
-  propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
-
-  for( let property in config )
-  if( !( property in propertiesMap ) )
-  willfile.about[ `npm.${ property }` ] = config[ property ];
-
-  if( willfile.about.name )
-  {
-    if( !willfile.about[ 'npm.name' ] )
-    willfile.about[ 'npm.name' ] = willfile.about.name;
-    willfile.path.origins.push( `npm:///${ willfile.about[ 'npm.name' ] }` );
-  }
-  if( willfile.path.origins.length === 0 )
-  {
-    delete willfile.path.origins;
-  }
-  if( _.props.keys( willfile.submodule ).length === 0 )
-  {
-    delete willfile.submodule;
-  }
-  if( _.props.keys( willfile.path ).length === 0 )
-  {
-    delete willfile.path;
-  }
-
-  /* */
-
-  function aboutPropertyAdd( property, name )
-  {
-    willfile.about[ name ] = config[ property ];
-  }
-
-  /* */
-
-  function aboutFormattedPropertyAdd( property, name )
-  {
-    if( _.strIs( config[ property ] ) || ( _.arrayIs( config[ property ] ) && _.strIs( config[ property ][ 0 ] ) ) )
-    {
-      willfile.about[ name ] = config[ property ];
-    }
-    else if( _.mapIs( config[ property ][ 0 ] ) )
-    {
-      willfile.about[ name ] = [];
-      for( let i = 0; i < config[ property ].length; i++ )
-      willfile.about[ name ][ i ] = `${ config[ property ][ i ].name } <${ config[ property ][ i ].email }>`;
-    }
-  }
-
-  /* */
-
-  function interpretersAdd( property, name )
-  {
-    if( _.strHas( config[ property ], 'node' ) )
-    willfile.about[ name ] = _.strReplace( config[ property ], 'node', 'njs' );
-    else
-    willfile.about[ name ] = config[ property ];
-  }
-
-  /* */
-
-  function pathPropertyAdd( property )
-  {
-    if( property === 'repository' )
-    {
-      willfile.path.repository = pathNormalize( config.repository );
-      willfile.path.origins.push( willfile.path.repository );
-    }
-    if( property === 'bugs' )
-    {
-      willfile.path.bugtracker = pathNormalize( config.bugs );
-    }
-    if( property === 'main' )
-    {
-      willfile.path.entry = config.main;
-    }
-    if( property === 'files' )
-    {
-      willfile.path[ 'npm.files' ] = config.files;
-    }
-  }
-
-  /* return config */
-
-  return willfile;
-
-  /* */
-
-  function submodulePropertyAdd( property, criterion )
-  {
-    addDependency( config[ property ], criterion );
-  }
-
-  /* */
-
-  function pathNormalize( src )
-  {
-    if( _.strIs( src ) )
-    {
-      if( !_.strHas( src, '///' ) )
-      return _.strReplace( src, '//', '///' );
-      return str;
-    }
-
-    let result = '';
-    if( src.type )
-    result = src.type + '+';
-    result += src.url.replace( '//', '///' );
-    return result;
-  }
-
-  /* */
-
-  function addDependency( dependenciesMap, criterion )
-  {
-    for( let dependency in dependenciesMap )
-    {
-      if( _.strHas( dependenciesMap[ dependency ], /file:/ ) )
-      willfile.submodule[ dependency ] = addHdDependency( dependenciesMap[ dependency ], criterion );
-      else
-      willfile.submodule[ dependency ] = addNpmDependency( dependency, dependenciesMap[ dependency ], criterion );
-    }
-  }
-
-  /* */
-
-  function addHdDependency( path, criterion )
-  {
-    let result = Object.create( null );
-    result.path = `hd://${ _.strRemoveBegin( path, 'file:' ) }`;
-    result.enabled = 1;
-    if( criterion )
-    {
-      result.criterion = Object.create( null );
-      result.criterion[ criterion ] = 1;
-    }
-    return result;
-  }
-
-  /* */
-
-  function addNpmDependency( name, hash, criterion )
-  {
-    let result = Object.create( null );
-    hash = hash === '' ? hash : `#${ hash }`;
-    result.path = `npm:///${ name }${ hash }`;
-    result.enabled = 1;
-    if( criterion )
-    {
-      result.criterion = Object.create( null );
-      result.criterion[ criterion ] = 1;
-    }
-    return result;
-  }
-
-}
-
-_willfileGenerateFromNpm.defaults =
-{
-  packagePath : null,
-  willfilePath : null,
-  verbosity : null,
-};
-
-//
-
-function willfileGenerateFromNpm( o )
-{
-  let module = this;
-  let will = module.will ? module.will : module;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.transaction.logger;
-  let opts = _.props.extend( null, o );
-  let verbosity = o.verbosity;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( opts ) );
-
-  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
-  if( opts.currentContext )
-  {
-    packagePath = module.pathResolve
-    ({
-      selector : opts.packagePath || '{path::in}/package.json',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-    willfilePath = module.pathResolve
-    ({
-      selector : opts.willfilePath || '{path::out}/will.yml',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-  }
-  else
-  {
-    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
-    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
-  }
-
-  if( !fileProvider.isTerminal( willfilePath ) || fileProvider.isDir( willfilePath ) )
-  {
-    let ext = path.ext( willfilePath );
-    if( ext === '' || ( ext !== 'will' && !_.longHasAny( [ 'yml', 'yaml' ], ext ) ) )
-    willfilePath += '.will.yml';
-    else if( ext === 'will' )
-    willfilePath += '.yml';
-  }
-
-  /* */
-
-  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
-  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
-
-  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json', logger : _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta ) })
-  let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
-
-  /* */
-
-  fileProvider.fileWrite
-  ({
-    filePath : willfilePath,
-    data : willfile,
-    encoding : 'yaml',
-    verbosity : o.verbosity ? 5 : 0,
-  });
-
-  return null;
-}
-
-//
-
-function willfileExtendWillfile( o )
-{
-  let will = this.will ? this.will : this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let opts = _.routine.options( willfileExtendWillfile, o );
-  let request = opts.request.split( /\s+/ );
-  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
-
-  o.dirPath = o.dirPath ? o.dirPath : will.inPath;
-  if( !o.dirPath )
-  o.dirPath = path.current();
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( opts ) );
-
-  let dstWillfiles = dstFilesFind( request[ 0 ] );
-  if( dstWillfiles.length > 2 )
-  throw _.errBrief( 'Please, improve selector, cannot choose willfiles.' );
-
-  let ext;
-  if( dstWillfiles.length )
-  ext = dstWillfiles[ 0 ].ext;
-  else
-  ext = opts.format === 'json' ? 'json' : 'yaml';
-  let dstEncoding = ext === 'json' ? 'json.fine' : ext;
-
-  let dstPath = dstPathFind();
-
-  if( opts.format === 'json' )
-  _.assert( dstWillfiles.length === 0, 'not implemented' );
-
-  /* extension */
-
-  let sectionMap =
-  {
-    about : aboutSectionExtend,
-    build : sectionExtend,
-    path : sectionExtend,
-    reflector : sectionExtend,
-    step : sectionExtend,
-    submodule : sectionExtend,
-  };
-
-  let willfile = Object.create( null );
-  for( let sectionName in sectionMap )
-  willfile[ sectionName ] = Object.create( null );
-
-  for( let i = 1 ; i < request.length ; i++ )
-  {
-    let files = configFilesFind( request[ i ] );
-
-    if( files.length === 0 )
-    throw _.errBrief( 'Source configuration files does not exist.' )
-
-    for( let j = 0 ; j < files.length ; j++ )
-    {
-      if( _.longHasNone( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ) )
-      throw _.errBrief( 'Unexpected configuration files. Please, improve selector.' );
-
-      let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
-      let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding, logger });
-      if( !_.longHas( files[ j ].exts, 'will' ) )
-      srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig });
-
-      for( let sectionName in srcConfig )
-      sectionMap[ sectionName ]( willfile, srcConfig, sectionName );
-    }
-  }
-
-  if( opts.submodulesDisabling )
-  {
-    for( let dependency in willfile.submodule )
-    willfile.submodule[ dependency ].enabled = 0;
-  }
-
-  for( let sectionName in sectionMap )
-  {
-    if( _.props.keys( willfile[ sectionName ] ).length === 0 )
-    delete willfile[ sectionName ];
-  }
-
-  /* write destination willfile */
-
-  dstWillfilesWrite( dstWillfiles );
-
-  return null;
-
-  /* */
-
-  function dstFilesFind( dstPath )
-  {
-    if( path.isGlob( dstPath ) )
-    throw _.err( 'Path to destination file should have not globs.' );
-
-    dstPath = path.join( o.dirPath, dstPath );
-
-    if( fileProvider.isDir( dstPath ) )
-    dstPath = path.join( dstPath, './' );
-    else if( !fileProvider.isTerminal( dstPath ) && opts.format === 'json' )
-    dstPath = dstPath + '*.json';
-
-    return will.willfilesFind
-    ({
-      commonPath : dstPath,
-      withIn : 1,
-      withOut : 0,
-    });
-  }
-
-  /* */
-
-  function dstPathFind()
-  {
-    if( dstWillfiles.length === 1 )
-    {
-      return dstWillfiles[ 0 ].absolute;
-    }
-    else if( dstWillfiles.length === 2 )
-    {
-      return path.join( dstWillfiles[ 0 ].dir, _.strCommonLeft( dstWillfiles[ 0 ].fullName, dstWillfiles[ 1 ].fullName ) + '*' );
-    }
-    else
-    {
-      let willPath = o.dirPath;
-      let firstExt = ext === 'yaml' ? 'yml' : ext;
-      let secondExt = opts.format === 'json' ? '.' : '.will.';
-
-      let splits = _.strIsolateRightOrAll( request[ 0 ], path.upToken );
-
-      if( splits[ 2 ] === request[ 0 ] )
-      return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
-
-      if( splits[ 2 ] === '' )
-      return path.join( willPath, splits[ 0 ], opts.format === 'json' ? 'package.json' : 'will.yml' );
-      else
-      return path.join( willPath, splits[ 0 ], path.name( splits[ 2 ] ) + secondExt + firstExt );
-
-      // if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
-      // return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
-      // else
-      // return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
-    }
-  }
-
-  /* */
-
-  function configFilesFind( selector )
-  {
-    let filePath = selector;
-    if( !path.isAbsolute( filePath ) )
-    filePath = path.join( o.dirPath, selector );
-
-    if( fileProvider.isTerminal( filePath ) )
-    {
-      if( dstWillfiles.length )
-      {
-        if( dstWillfiles[ 0 ].absolute === filePath )
-        return [];
-        if( dstWillfiles[ 1 ] && dstWillfiles[ 1 ].absolute === filePath )
-        return [];
-      }
-      return [ fileProvider.record( filePath ) ];
-    }
-
-    if( !path.isGlob( filePath ) )
-    {
-      if( fileProvider.isDir( filePath ) )
-      filePath = path.join( filePath, '*.will.(yml|yaml|json)' );
-      else
-      filePath = filePath + '*.will.(yml|yaml|json)';
-    }
-
-    let filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
-
-    return fileProvider.filesFind
-    ({
-      filePath,
-      withStem : 0,
-      withDirs : 0,
-      mode : 'distinct',
-      mandatory : 0,
-      filter,
-    });
-  }
-
-  /* */
-
-  function aboutSectionExtend( dst, src, name )
-  {
-    if( !opts.about )
-    return;
-
-    let exclusionMap =
-    {
-      'author' : 1,
-      'keywords' : 1,
-      'contributors' : 1,
-      'interpreters' : 1,
-      'npm.scripts' : 1,
-    };
-
-    let extendingMap = Object.create( null );
-    for( let property in src.about )
-    {
-      if( !( property in exclusionMap ) )
-      {
-        if( ( property in willfileExtendWillfile.defaults ) && opts[ property ] )
-        extendingMap[ property ] = src.about[ property ];
-        else if( !( property in willfileExtendWillfile.defaults ) )
-        extendingMap[ property ] = src.about[ property ];
-      }
-    }
-    opts.onSection( dst.about, extendingMap );
-
-    /* */
-
-    if( opts.author && src.about.author )
-    {
-      if( _.strIs( src.about.author ) )
-      opts.onSection( dst.about, { author : src.about.author } );
-      else
-      opts.onSection( dst.about, { author : `${ src.about.author.name } <${ src.about.author.email }>` } );
-    }
-    if( opts.keywords && src.about.keywords )
-    {
-      dst.about.keywords = _.scalarAppendOnce( dst.about.keywords, src.about.keywords );
-    }
-    if( opts.contributors && src.about.contributors )
-    {
-      dst.about.contributors = arrayPropertyParse( dst.about.contributors, _.strIsolateRightOrAll );
-      src.about.contributors = arrayPropertyParse( src.about.contributors, _.strIsolateRightOrAll );
-      opts.onSection( dst.about.contributors, src.about.contributors );
-    }
-    if( opts.interpreters && src.about.interpreters )
-    {
-      dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
-      propertyReplace( dst.about.interpreters, 'njs', 'nodejs' );
-      src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
-      propertyReplace( src.about.interpreters, 'njs', 'nodejs' );
-      opts.onSection( dst.about.interpreters, src.about.interpreters );
-    }
-    if( opts[ 'npm.scripts' ] && src.about[ 'npm.scripts' ] )
-    {
-      if( dst.about[ 'npm.scripts' ] === undefined )
-      dst.about[ 'npm.scripts' ] = Object.create( null );
-      opts.onSection( dst.about[ 'npm.scripts' ], src.about[ 'npm.scripts' ] );
-    }
-  }
-
-  /* */
-
-  function arrayPropertyParse( src, parser )
-  {
-    let result = Object.create( null );
-
-    if( _.strIs( src ) )
-    src = [ src ];
-
-    if( _.longIs( src ) )
-    {
-      for( let i = 0 ; i < src.length ; i++ )
-      {
-        if( _.mapIs( src[ i ] ) )
-        {
-          result[ src[ i ].name ] = `<${ src[ i ].email }>`;
-        }
-        else
-        {
-          let splits = parser({ src : src[ i ] });
-          result[ splits[ 0 ] ] = splits[ 2 ];
-        }
-      }
-      return result;
-    }
-    else if( src === undefined )
-    {
-      return result;
-    }
-    return src;
-  }
-
-  /* */
-
-  function propertyReplace( srcMap, dstProperty, srcProperty )
-  {
-    if( srcMap[ srcProperty ] !== undefined )
-    {
-      srcMap[ dstProperty ] = srcMap[ srcProperty ];
-      delete srcMap[ srcProperty ];
-    }
-  }
-
-  /* */
-
-  function sectionExtend( dst, src, name )
-  {
-    if( !opts[ name ] )
-    return;
-    opts.onSection( dst[ name ], src[ name ] );
-  }
-
-  /* */
-
-  function dstWillfilesWrite( dstWillfiles )
-  {
-    if( dstWillfiles.length === 0 )
-    {
-      willfileWrite( dstPath, willfile, dstEncoding );
-    }
-    else
-    {
-      let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding, logger });
-      if( dstWillfiles.length === 2 )
-      {
-        let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding, logger });
-        for( let sectionName in config2 )
-        {
-          if( sectionName in willfile )
-          {
-            if( sectionName in config )
-            {
-              let screenMap = _.mapBut_( null, willfile[ sectionName ], config[ sectionName ] );
-              let srcMap = _.mapBut_( null, willfile[ sectionName ], screenMap );
-              opts.onSection( config[ sectionName ], srcMap );
-              willfile[ sectionName ] = screenMap;
-            }
-
-            sectionMap[ sectionName ]( config2, willfile, sectionName );
-            delete willfile[ sectionName ];
-          }
-        }
-        willfileWrite( dstWillfiles[ 1 ].absolute, config2, dstEncoding );
-      }
-
-      for( let sectionName in willfile )
-      {
-        if( config[ sectionName ] === undefined )
-        config[ sectionName ] = Object.create( null );
-        sectionMap[ sectionName ]( config, willfile, sectionName );
-      }
-      willfileWrite( dstWillfiles[ 0 ].absolute, config, dstEncoding );
-    }
-    // if( dstWillfiles.length !== 0 )
-    // {
-    //   let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding, logger });
-    //   if( dstWillfiles.length === 2 )
-    //   {
-    //     let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding, logger });
-    //     for( let sectionName in config2 )
-    //     {
-    //       if( sectionName in willfile )
-    //       {
-    //         if( sectionName in config )
-    //         {
-    //           let screenMap = _.mapBut_( null, willfile[ sectionName ], config[ sectionName ] );
-    //           let srcMap = _.mapBut_( null, willfile[ sectionName ], screenMap );
-    //           opts.onSection( config[ sectionName ], srcMap );
-    //           willfile[ sectionName ] = screenMap;
-    //         }
-    //
-    //         sectionMap[ sectionName ]( config2, willfile, sectionName );
-    //         delete willfile[ sectionName ];
-    //       }
-    //     }
-    //     willfileWrite( dstWillfiles[ 1 ].absolute, config2, dstEncoding );
-    //   }
-    //
-    //   for( let sectionName in willfile )
-    //   {
-    //     if( config[ sectionName ] === undefined )
-    //     config[ sectionName ] = Object.create( null );
-    //     sectionMap[ sectionName ]( config, willfile, sectionName );
-    //   }
-    //   willfileWrite( dstWillfiles[ 0 ].absolute, config, dstEncoding );
-    //
-    // }
-    // else
-    // {
-    //   willfileWrite( dstPath, willfile, dstEncoding );
-    // }
-  }
-
-  /* */
-
-  function willfileWrite( path, data, encoding )
-  {
-    if( data.about )
-    {
-      if( data.about.contributors )
-      data.about.contributors = mapToArrayOfStrings( data.about.contributors );
-      if( data.about.interpreters )
-      data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
-    }
-
-
-    if( opts.format === 'json' )
-    {
-      let o =
-      {
-        srcConfig : data,
-        packagePath : path,
-      };
-      data = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o );
-    }
-
-    fileProvider.fileWrite
-    ({
-      filePath : path,
-      data,
-      encoding,
-      logger,
-    });
-
-  }
-
-  function mapToArrayOfStrings( src )
-  {
-    if( _.longIs( src ) )
-    return src;
-
-    // debugger; /* xxx : qqq : check */
-    src = _.props.pairs( src );
-    for( let i = 0 ; i < src.length ; i++ )
-    src[ i ] = src[ i ].join( ' ' );
-    return src;
-  }
-}
-
-willfileExtendWillfile.defaults =
-{
-  'about' : 1,
-  'build' : 1,
-  'path' : 1,
-  'reflector' : 1,
-  'step' : 1,
-  'submodule' : 1,
-
-  'name' : 1,
-  'version' : 1,
-  'author' : 1,
-  'enabled' : 1,
-  'description' : 1,
-  'contributors' : 1,
-  'interpreters' : 1,
-  'license' : 1,
-  'keywords' : 1,
-  'npm.name' : 1,
-  'npm.scripts' : 1,
-
-  'dirPath' : null,
-  'request' : null,
-  'onSection' : null,
-  'submodulesDisabling' : 0,
-  'format' : 'willfile',
-  'logger' : 3,
-  // 'v' : null,
-}
-
-//
-
-function _willfileOnPropertyAct( o )
-{
-  let will = this.will ? this.will : this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.transaction.logger;
-  let loggerForProvider = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
-
-  _.routine.options( _willfileOnPropertyAct, o );
-  _.assert( arguments.length === 1 );
-  _.assert( _.object.isBasic( o ) );
-
-  let dstWillfileRecords = dstRecordsFind( o.request );
-  _.assert
-  (
-    1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
-    `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
-  );
-  _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ) || dstWillfileRecords[ 0 ].name === 'will', 'Expexts willfiles' );
-
-  let willfile, willfile2;
-  let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
-  willfile =
-    fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
-  if( dstWillfileRecords.length === 2 )
-  willfile2 =
-    fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding, logger : loggerForProvider });
-
-  /* */
-
-  let sectionMap =
-  {
-    about : 'about',
-    build : 'build',
-    path : 'path',
-    reflector : 'reflector',
-    step : 'step',
-    submodule : 'submodule',
-  };
-
-  for( let option in o.willfilePropertiesMap )
-  {
-
-    let splits = option.split( '/' );
-
-    if( splits[ 0 ] === '' )
-    splits.shift();
-
-    if( !( splits[ 0 ] in sectionMap ) )
-    throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
-
-    let dstConfig = o.onConfig( willfile, willfile2, splits );
-    o.act( dstConfig, splits, option );
-
-  }
-
-  /* */
-
-  if( o.writing )
-  {
-    configWrite( dstWillfileRecords[ 0 ].absolute, willfile );
-    if( dstWillfileRecords.length === 2 )
-    configWrite( dstWillfileRecords[ 1 ].absolute, willfile2 );
-  }
-
-  return null;
-
-  /* */
-
-  function dstRecordsFind( dstPath )
-  {
-    if( !path.isAbsolute( dstPath ) )
-    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
-
-    if( fileProvider.isDir( dstPath ) )
-    dstPath = path.join( dstPath, './' );
-
-    return will.willfilesFind
-    ({
-      commonPath : dstPath,
-      withIn : 1,
-      withOut : 0,
-    });
-  }
-
-  /* */
-
-  function configWrite( path, data )
-  {
-    fileProvider.fileWrite
-    ({
-      filePath : path,
-      data,
-      encoding : dstEncoding,
-      verbosity : o.verbosity,
-    });
-  }
-
-}
-
-_willfileOnPropertyAct.defaults =
-{
-  request : null,
-  willfilePropertiesMap : null,
-  onProperty : null,
-  onConfig : null,
-  act : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-};
-
-//
-
-function willfileGetProperty( o )
-{
-  let will = this.will ? this.will : this;
-  let logger = will.transaction.logger;
-
-  _.routine.options( willfileGetProperty, o );
-
-  o.act = getProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function getProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( o.verbosity > 3 )
-        logger.log( `${ option } :: {-undefined-}` );
-        break;
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        dstConfig = dstConfig[ key ];
-      }
-      else if( o.willfilePropertiesMap[ option ] )
-      {
-        let value = _.entity.exportStringNice( dstConfig[ key ] );
-        if( _.strLinesCount( value ) > 1 )
-        logger.log( `${ option } ::\n${ value }` );
-        else
-        logger.log( `${ option } :: ${ value }` );
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
-    return config2;
-
-    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
-
-    return config;
-  }
-
-}
-
-willfileGetProperty.defaults =
-{
-  request : null,
-  willfilePropertiesMap : null,
-  structureParse : 0,
-  writing : 0,
-  verbosity : 3,
-  // v : 3,
-}
-
-//
-
-function willfileSetProperty( o )
-{
-  let will = this.will ? this.will : this;
-
-  _.routine.options( willfileSetProperty, o );
-
-  o.act = setProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function setProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( i === splits.length - 1 )
-        {
-          let value = o.willfilePropertiesMap[ option ];
-          if( o.structureParse )
-          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-          dstConfig[ key ] = value;
-        }
-        else
-        {
-          dstConfig[ key ] = Object.create( null );
-          dstConfig = dstConfig[ key ];
-        }
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        if( _.mapIs( dstConfig[ key ] ) )
-        {
-          dstConfig = dstConfig[ key ];
-        }
-        else
-        {
-          if( o.verbosity > 3 )
-          logger.log( `${ dstConfig[ key ] } is removed` );
-          dstConfig = Object.create( null );
-        }
-      }
-      else
-      {
-        let value = o.willfilePropertiesMap[ option ];
-        if( o.structureParse )
-        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-        dstConfig[ key ] = value;
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
-    return config2;
-
-    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    {
-      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
-      return config2;
-      return config;
-    }
-
-    return config;
-  }
-
-}
-
-willfileSetProperty.defaults =
-{
-  request : null,
-  willfilePropertiesMap : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-}
-
-//
-
-function willfileDeleteProperty( o )
-{
-  let will = this.will ? this.will : this;
-  let logger = will.transaction.logger;
-
-  _.routine.options( willfileDeleteProperty, o );
-
-  o.act = deleteProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function deleteProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( o.verbosity > 3 )
-        logger.log( `Option "${ option }" does not exist.` );
-        break;
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        dstConfig = dstConfig[ key ];
-      }
-      else if( o.willfilePropertiesMap[ option ] )
-      {
-        if( o.verbosity > 3 )
-        logger.log( `Option "${ option }" is deleted.` );
-        delete dstConfig[ key ];
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
-    return config2;
-
-    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
-    {
-      if( !keys[ 1 ] )
-      {
-        _.props.extend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
-        delete config2[ keys[ 0 ] ];
-        return config;
-      }
-      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
-      return config2;
-      return config;
-    }
-
-    return config;
-  }
-}
-
-willfileDeleteProperty.defaults =
-{
-  request : null,
-  willfilePropertiesMap : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-}
-
-//
-
-function willfileExtendProperty( o )
-{
-  let will = this;
-
-  _.routine.options( willfileExtendProperty, o );
-  o.act = extendProperty;
-  o.onConfig = configChooseByKeys;
-
-  return _willfileOnPropertyAct.call( will, o );
-
-  /* */
-
-  function extendProperty( dstConfig, splits, option )
-  {
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( i === splits.length - 1 )
-        {
-          let value = o.willfilePropertiesMap[ option ];
-          if( o.structureParse )
-          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-          o.onProperty( dstConfig, { [ key ] : value } );
-        }
-        else
-        {
-          dstConfig[ key ] = Object.create( null );
-          dstConfig = dstConfig[ key ];
-        }
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
-        dstConfig = dstConfig[ key ];
-      }
-      else
-      {
-        let value = o.willfilePropertiesMap[ option ];
-        if( o.structureParse )
-        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-        o.onProperty( dstConfig, { [ key ] : value } );
-      }
-    }
-  }
-
-  /* */
-
-  function configChooseByKeys( config, config2, keys )
-  {
-    if( !config2 )
-    return config;
-
-    if( keys[ 0 ] in config2 )
-    return config2;
-
-    return config;
-  }
-
-}
-
-willfileExtendProperty.defaults =
-{
-  request : null,
-  willfilePropertiesMap : null,
-  onProperty : null,
-  structureParse : 0,
-  writing : 1,
-  verbosity : 3,
-  // v : 3,
-}
-
-//
-
-/* qqq : for Dmytro : bad, refactor, rewrite */
+/* aaa : for Dmytro : bad, refactor, rewrite */ /* Dmytro : reimplemented using new functional namespace `_.will.transform`, simplified, fixed bugs */
 
 function willfileMergeIntoSingle( o )
 {
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-
+  _.assert( arguments.length === 1, 'Expexts exactly one argument.' );
   _.routine.options( willfileMergeIntoSingle, o );
 
-  let primaryWillfilePath = o.primaryPath || 'CommandWillfileMergeIntoSingle';
+  const module = this;
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  const path = will.fileProvider.path;
+  const logger = will.transaction.logger;
 
-  let o2 =
-  {
-    request : primaryWillfilePath + ' ./',
-    onSection : _.props.supplement.bind( _.props ),
-    dirPath : module.dirPath,
-  };
-  try
-  {
-    willfileExtendWillfile.call( will, o2 );
-  }
-  catch( err )
-  {
-    _.error.attend( err );
-  }
+  /* */
 
-  if( o.secondaryPath )
-  {
-    let o3 =
-    {
-      request : `${ primaryWillfilePath } ${ o.secondaryPath }`,
-      name : 0,
-      onSection : _.props.extend.bind( _.props ),
-      dirPath : module.dirPath,
-    };
-    module.willfileExtendWillfile( o3 );
-  }
+  const primaryPath = path.join( module.dirPath, o.primaryPath || './' );
 
-  let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
-
-  let dstPath = filesFind( primaryWillfilePath, 1 );
-  if( dstPath.length === 0 )
+  const willfiles = willfilesFind( primaryPath );
+  if( willfiles.length < 2 && !o.secondaryPath )
   {
     if( logger.verbosity >= 2 )
     logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
     return null;
   }
-  _.assert( dstPath.length === 1 );
-  dstPath = dstPath[ 0 ];
 
-  let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger : 0 });
-  filterAboutNpmFields();
-  filterSubmodulesCriterions();
-  if( o.filterSameSubmodules )
-  filterSameSubmodules()
-  if( o.submodulesDisabling )
-  submodulesDisable();
-  fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
+  let mergedWillfile = willfiles.length ? configRead( willfiles[ 0 ].absolute ) : Object.create( null );
+  if( willfiles.length === 2 )
+  mergedWillfile = configsMerge( configRead ( willfiles[ 1 ].absolute ), _.map.supplement.bind( _.map ) );
+
+  if( o.secondaryPath )
+  mergedWillfileExtendBySecondaryConfig();
+
+  let dstPath = dstPathGet();
+
+  if( !o.force )
+  _.sure
+  (
+    !fileProvider.fileExists( dstPath ),
+    `Destination file ${ dstPath } already exists. Please, rename or delete file before merge.`
+  );
+
+  willfileFilterSameNpmScripts();
+  if( mergedWillfile.submodule )
+  {
+    willfileFilterSubmodulesCriterions();
+    if( o.filterSameSubmodules )
+    willfileFilterSameSubmodules()
+    if( o.submodulesDisabling )
+      _.will.transform.submodulesSwitch( mergedWillfile.submodule, 0 );
+  }
+
+  fileProvider.fileWrite({ filePath : dstPath, data : mergedWillfile, encoding : 'yaml', logger });
 
   /* */
 
@@ -8728,19 +9118,13 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function filesFind( srcPath, dst )
+  function willfilesFind( commonPath )
   {
-    if( dst && path.isGlob( srcPath ) )
-    throw _.err( 'Path to destination file should have not globs.' );
-
-    srcPath = path.join( module.dirPath, srcPath );
-
-    if( fileProvider.isDir( srcPath ) )
-    srcPath = path.join( srcPath, './' );
+    _.sure( !path.isGlob( commonPath ), 'Path to destination file should have not globs.' );
 
     return will.willfilesFind
     ({
-      commonPath : srcPath,
+      commonPath,
       withIn : 1,
       withOut : 0,
     });
@@ -8748,47 +9132,84 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function filterSubmodulesCriterions()
+  function configRead( filePath, encoding )
   {
-    let submodules = config.submodule;
-    for( let name in submodules )
+    return fileProvider.fileRead
+    ({
+      filePath,
+      encoding : encoding || 'yaml',
+      logger : 0
+    });
+  }
+
+  /* */
+
+  function configsMerge( src, onSection )
+  {
+    return _.will.transform.willfilesMerge
+    ({
+      onSection,
+      dst : mergedWillfile,
+      src,
+    });
+  }
+
+  /* */
+
+  function mergedWillfileExtendBySecondaryConfig()
+  {
+    const secondaryPath = path.join( module.dirPath, o.secondaryPath === '.' ? './' : o.secondaryPath );
+    let files = [];
+    if( path.isTrailed( secondaryPath ) )
+    files = willfilesFind( secondaryPath );
+    else
+    files.push( fileProvider.record( secondaryPath ) );
+
+    if( files.length )
+    for( let i = 0 ; i < files.length ; i++ )
     {
-      let criterions = submodules[ name ].criterion;
-      if( criterions )
-      if( criterions.debug )
-      if( !_.longHasAny( _.props.keys( criterions ), [ 'development', 'optional' ] ) )
-      {
-        delete criterions.debug;
-        criterions.development = 1;
-      }
+      const encoding = files[ i ].ext === 'json' ? 'json' : 'yaml';
+      let config = configRead( files[ i ].absolute, encoding );
+      if( encoding === 'json' )
+      config = _.will.transform.npmFromWillfile({ config });
+      configsMerge( config, _.map.extend.bind( _.map ) );
     }
   }
 
   /* */
 
-  function filterAboutNpmFields()
+  function dstPathGet()
   {
-    let about = config.about;
-    for( let name in about )
+    if( path.isTrailed( primaryPath ) )
+    return path.join( primaryPath, 'will.yml' );
+
+    if( !_.will.filePathIs( primaryPath ) )
     {
-      if( !_.strBegins( name, 'npm.' ) )
-      continue;
+      const dir = path.dir( primaryPath );
+      const name = path.name( o.primaryPath );
+      const exts = path.exts( o.primaryPath );
+      _.arrayAppendArray( exts, [ 'will', 'yml' ] );
+      return `${ path.join( dir, name ) }.${ exts.join( '.' ) }`;
+    }
 
-      if( _.arrayIs( about[ name ] ) )
-      {
-        about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
-      }
-      else if( _.aux.is( about[ name ] ) )
-      {
-        let npmMap = about[ name ];
-        let reversedMap = Object.create( null );
+    return primaryPath;
+  }
 
-        for( let property in npmMap )
-        if( npmMap[ property ] in reversedMap )
-        filterPropertyByName( npmMap, reversedMap, property )
-        else
-        reversedMap[ npmMap[ property ] ] = property;
-      }
+  /* */
+
+  function willfileFilterSameNpmScripts()
+  {
+    if( mergedWillfile.about )
+    if( 'npm.scripts' in mergedWillfile.about )
+    {
+      const npmMap = mergedWillfile.about[ 'npm.scripts' ];
+      const reversedMap = Object.create( null );
+
+      for( let property in npmMap )
+      if( npmMap[ property ] in reversedMap )
+      filterPropertyByName( npmMap, reversedMap, property );
+      else
+      reversedMap[ npmMap[ property ] ] = property;
     }
   }
 
@@ -8809,15 +9230,33 @@ function willfileMergeIntoSingle( o )
 
   /* */
 
-  function filterSameSubmodules()
+  function willfileFilterSubmodulesCriterions()
   {
-    let submodules = config.submodule;
-    let regularPaths = new Set();
-    let mergedSubmodules = Object.create( null );
+    for( let name in mergedWillfile.submodule )
+    {
+      const criterions = mergedWillfile.submodule[ name ].criterion;
+      if( criterions )
+      if( criterions.debug )
+      if( !_.longHasAny( _.props.keys( criterions ), [ 'development', 'optional' ] ) )
+      {
+        delete criterions.debug;
+        criterions.development = 1;
+      }
+    }
+  }
+
+  /* */
+
+  function willfileFilterSameSubmodules()
+  {
+    const submodules = mergedWillfile.submodule;
+    const regularPaths = new Set();
+    const mergedSubmodules = Object.create( null );
+
     for( let name in submodules )
     {
-      let path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
-      let parsed = _.uri.parse( path );
+      const path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
+      const parsed = _.uri.parse( path );
 
       let parsedModuleName;
       if( _.longHas( parsed.protocols, 'npm' ) )
@@ -8840,90 +9279,277 @@ function willfileMergeIntoSingle( o )
       if( !( parsedModuleName in mergedSubmodules ) )
       mergedSubmodules[ parsedModuleName ] = submodules[ name ];
     }
-    config.submodule = mergedSubmodules;
-  }
-
-  /* */
-
-  function submodulesDisable()
-  {
-    for( let dependency in config.submodule )
-    {
-      if( _.aux.is( config.submodule[ dependency ] ) )
-      {
-        config.submodule[ dependency ].enabled = 0;
-      }
-      else if( _.str.is( config.submodule[ dependency ] ) )
-      {
-        let dependencyMap = Object.create( null );
-        dependencyMap.path = config.submodule[ dependency ];
-        dependencyMap.enabled = 0;
-        config.submodule[ dependency ] = dependencyMap;
-      }
-    }
+    mergedWillfile.submodule = mergedSubmodules;
   }
 
   /* */
 
   function renameFiles()
   {
-    let unnamedWillfiles = filesFind( './.*' );
-    for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+    if( willfiles.length === 2 )
+    for( let i = 0 ; i < willfiles.length ; i++ )
     {
-      let oldName = unnamedWillfiles[ i ].absolute;
-      let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
+      let oldName = willfiles[ i ].absolute;
+      let newName = path.join( willfiles[ i ].dir, '-' + willfiles[ i ].fullName );
       fileProvider.fileRename( newName, oldName );
     }
-
-    if( o.primaryPath )
-    {
-      logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
-    }
-    else
-    {
-      let oldName = dstPath.absolute;
-      let newName = path.join( dstPath.dir, 'will.yml' );
-      try
-      {
-        fileProvider.fileRename( newName, oldName );
-        logger.log( `  + writing {- Map.pure -} to ${ newName }` )
-      }
-      catch( err )
-      {
-        logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
-        fileProvider.filesDelete( oldName );
-      }
-    }
-    // if( !o.primaryPath )
-    // {
-    //   let oldName = dstPath.absolute;
-    //   let newName = path.join( dstPath.dir, 'will.yml' );
-    //   try
-    //   {
-    //     fileProvider.fileRename( newName, oldName );
-    //     logger.log( `  + writing {- Map.pure -} to ${ newName }` )
-    //   }
-    //   catch( err )
-    //   {
-    //     logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
-    //     fileProvider.filesDelete( oldName );
-    //   }
-    // }
-    // else
-    // {
-    //   logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
-    // }
   }
 }
 
 willfileMergeIntoSingle.defaults =
 {
-  logger : 3,
   primaryPath : null,
   secondaryPath : null,
+  force : 0,
   submodulesDisabling : 1,
   filterSameSubmodules : 1,
+  logger : 3,
 };
+
+// function willfileMergeIntoSingle( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = will.fileProvider.path;
+//
+//   _.routine.options( willfileMergeIntoSingle, o );
+//
+//   let primaryWillfilePath = o.primaryPath || 'CommandWillfileMergeIntoSingle';
+//
+//   let o2 =
+//   {
+//     request : primaryWillfilePath + ' ./',
+//     onSection : _.props.supplement.bind( _.props ),
+//     dirPath : module.dirPath,
+//   };
+//   try
+//   {
+//     willfileExtendWillfile.call( will, o2 );
+//   }
+//   catch( err )
+//   {
+//     _.error.attend( err );
+//   }
+//
+//   if( o.secondaryPath )
+//   {
+//     let o3 =
+//     {
+//       request : `${ primaryWillfilePath } ${ o.secondaryPath }`,
+//       name : 0,
+//       onSection : _.props.extend.bind( _.props ),
+//       dirPath : module.dirPath,
+//     };
+//     module.willfileExtendWillfile( o3 );
+//   }
+//
+//   let logger = _.logger.relativeMaybe( will.transaction.logger, will.fileProviderVerbosityDelta );
+//
+//   let dstPath = filesFind( primaryWillfilePath, 1 );
+//   if( dstPath.length === 0 )
+//   {
+//     if( logger.verbosity >= 2 )
+//     logger.log( 'Directory has no willfiles to merge. Please, define valid {-primaryPath-} and {-secondaryPath-}' );
+//     return null;
+//   }
+//   _.assert( dstPath.length === 1 );
+//   dstPath = dstPath[ 0 ];
+//
+//   let config = fileProvider.fileRead({ filePath : dstPath.absolute, encoding : 'yaml', logger : 0 });
+//   filterAboutNpmFields();
+//   filterSubmodulesCriterions();
+//   if( o.filterSameSubmodules )
+//   filterSameSubmodules()
+//   if( o.submodulesDisabling )
+//   _.will.transform.submodulesSwitch( config.submodule, 0 );
+//   fileProvider.fileWrite({ filePath : dstPath.absolute, data : config, encoding : 'yaml', logger : 0 });
+//
+//   /* */
+//
+//   renameFiles();
+//
+//   return null;
+//
+//   /* */
+//
+//   function filesFind( srcPath, dst )
+//   {
+//     if( dst && path.isGlob( srcPath ) )
+//     throw _.err( 'Path to destination file should have not globs.' );
+//
+//     srcPath = path.join( module.dirPath, srcPath );
+//
+//     if( fileProvider.isDir( srcPath ) )
+//     srcPath = path.join( srcPath, './' );
+//
+//     return will.willfilesFind
+//     ({
+//       commonPath : srcPath,
+//       withIn : 1,
+//       withOut : 0,
+//     });
+//   }
+//
+//   /* */
+//
+//   function filterSubmodulesCriterions()
+//   {
+//     let submodules = config.submodule;
+//     for( let name in submodules )
+//     {
+//       let criterions = submodules[ name ].criterion;
+//       if( criterions )
+//       if( criterions.debug )
+//       if( !_.longHasAny( _.props.keys( criterions ) ), [ 'development', 'optional' ] )
+//       {
+//         delete criterions.debug;
+//         criterions.development = 1;
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function filterAboutNpmFields()
+//   {
+//     let about = config.about;
+//     for( let name in about )
+//     {
+//       if( !_.strBegins( name, 'npm.' ) )
+//       continue;
+//
+//       if( _.arrayIs( about[ name ] ) )
+//       {
+//         about[ name ] = _.arrayRemoveDuplicates( about[ name ] );
+//       }
+//       else if( _.aux.is( about[ name ] ) )
+//       {
+//         let npmMap = about[ name ];
+//         let reversedMap = Object.create( null );
+//
+//         for( let property in npmMap )
+//         if( npmMap[ property ] in reversedMap )
+//         filterPropertyByName( npmMap, reversedMap, property )
+//         else
+//         reversedMap[ npmMap[ property ] ] = property;
+//       }
+//     }
+//   }
+//
+//   /* */
+//
+//   function filterPropertyByName( srcMap, butMap, property )
+//   {
+//     if( _.strHas( property, '-' ) )
+//     delete srcMap[ property ];
+//     else if( _.strHas( butMap[ srcMap[ property ] ], '-' ) )
+//     delete srcMap[ butMap[ srcMap[ property ] ] ];
+//     else if( !_.strHasAny( property, [ '.', '-' ] ) )
+//     {
+//       if( !_.strHasAny( butMap[ srcMap[ property ] ], [ '.', '-' ] ) )
+//       delete srcMap[ butMap[ srcMap[ property ] ] ];
+//     }
+//   }
+//
+//   /* */
+//
+//   function filterSameSubmodules()
+//   {
+//     let submodules = config.submodule;
+//     let regularPaths = new Set();
+//     let mergedSubmodules = Object.create( null );
+//     for( let name in submodules )
+//     {
+//       let path = submodules[ name ].path ? submodules[ name ].path : submodules[ name ];
+//       let parsed = _.uri.parse( path );
+//
+//       let parsedModuleName;
+//       if( _.longHas( parsed.protocols, 'npm' ) )
+//       {
+//         parsedModuleName = _.npm.path.parse( path ).host;
+//       }
+//       else if( _.longHas( parsed.protocols, 'git' ) )
+//       {
+//         parsedModuleName = _.git.path.parse({ remotePath : path, full : 0, atomic : 0, objects : 1 }).repo;
+//       }
+//       else
+//       {
+//         if( regularPaths.has( path ) )
+//         continue;
+//
+//         regularPaths.add( path );
+//         parsedModuleName = name;
+//       }
+//
+//       if( !( parsedModuleName in mergedSubmodules ) )
+//       mergedSubmodules[ parsedModuleName ] = submodules[ name ];
+//     }
+//     config.submodule = mergedSubmodules;
+//   }
+//
+//   /* */
+//
+//   // function submodulesDisable()
+//   // {
+//   //   for( let dependency in config.submodule )
+//   //   {
+//   //     if( _.aux.is( config.submodule[ dependency ] ) )
+//   //     {
+//   //       config.submodule[ dependency ].enabled = 0;
+//   //     }
+//   //     else if( _.str.is( config.submodule[ dependency ] ) )
+//   //     {
+//   //       let dependencyMap = Object.create( null );
+//   //       dependencyMap.path = config.submodule[ dependency ];
+//   //       dependencyMap.enabled = 0;
+//   //       config.submodule[ dependency ] = dependencyMap;
+//   //     }
+//   //   }
+//   // }
+//
+//   /* */
+//
+//   function renameFiles()
+//   {
+//     let unnamedWillfiles = filesFind( './.*' );
+//     for( let i = 0 ; i < unnamedWillfiles.length ; i++ )
+//     {
+//       let oldName = unnamedWillfiles[ i ].absolute;
+//       let newName = path.join( unnamedWillfiles[ i ].dir, '-' + unnamedWillfiles[ i ].fullName );
+//       fileProvider.fileRename( newName, oldName );
+//     }
+//
+//     if( !o.primaryPath )
+//     {
+//       let oldName = dstPath.absolute;
+//       let newName = path.join( dstPath.dir, 'will.yml' );
+//       try
+//       {
+//         fileProvider.fileRename( newName, oldName );
+//         logger.log( `  + writing {- Map.pure -} to ${ newName }` )
+//       }
+//       catch( err )
+//       {
+//         logger.error( 'Destination file `will.yml` already exists. Please, rename or delete file before merge' );
+//         fileProvider.filesDelete( oldName );
+//       }
+//     }
+//     else
+//     {
+//       logger.log( `  + writing {- Map.pure -} to ${ dstPath.absolute }` )
+//     }
+//   }
+// }
+//
+// willfileMergeIntoSingle.defaults =
+// {
+//   logger : 3,
+//   primaryPath : null,
+//   secondaryPath : null,
+//   submodulesDisabling : 1,
+//   filterSameSubmodules : 1,
+// };
 
 //
 
@@ -8936,51 +9562,59 @@ function willfileVersionBump( o )
 
   _.routine.options( willfileVersionBump, o );
 
-  let version = module.willfilesArray[ 0 ].structure.about.version;
-  _.assert( _.strIs( version ), 'Expexts version in format "x.x.x".' );
+  let version = _.any( module.willfilesArray, ( willfile ) => _.select( willfile.structure, 'about/version' ) );
+  _.assert( _.str.is( version ), 'Expexts version in format "x.x.x".' );
 
   let versionArray = version.split( '.' );
+  let deltaArray = deltaArrayGet();
 
-  let deltaArray;
-  if( _.strIs( o.versionDelta ) )
-  deltaArray = o.versionDelta.split( '.' );
-  else if( _.numberIs( o.versionDelta ) )
-  deltaArray = _.array.as( o.versionDelta );
-  else
-  _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
+  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to bump version.' );
 
-  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to change version.' );
+  versionBump();
+  version = versionArray.join( '.' );
 
-  for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
-  {
-    let delta = Number( deltaArray[ i ] );
-    let versionArrayOffset = versionArray.length - 1 - offset;
-    _.assert( _.intIs( delta ), 'Expects integer as delta.' );
-    _.assert( delta >= 0, 'Expects positive delta.' );
-    versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
-  }
-
-  let extensionMap = Object.create( null );
-  version = extensionMap[ 'about/version' ] = versionArray.join( '.' );
-
-  let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
-
-  module.willfileSetProperty
+  will.willfilePropertySet
   ({
-    request : willfilePath,
-    willfilePropertiesMap : extensionMap,
+    commonPath : path.common( module.willfilesPath ),
+    selectorsMap : { 'about/version' : version },
     structureParse : 0,
-    verbosity : o.verbosity,
+    logger : o.logger,
   });
 
   /* */
 
   return version;
+
+  /* */
+
+  function deltaArrayGet()
+  {
+    if( _.str.is( o.versionDelta ) )
+    return o.versionDelta.split( '.' );
+    else if( _.number.is( o.versionDelta ) )
+    return _.array.as( o.versionDelta );
+    else
+    _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
+  }
+
+  /* */
+
+  function versionBump()
+  {
+    for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+    {
+      let delta = Number( deltaArray[ i ] );
+      let versionArrayOffset = versionArray.length - 1 - offset;
+      _.assert( _.intIs( delta ), 'Expects integer as delta.' );
+      _.assert( delta >= 0, 'Expects positive delta.' );
+      versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+    }
+  }
 }
 
 willfileVersionBump.defaults =
 {
-  verbosity : 3,
+  logger : 3,
   versionDelta : 1,
 };
 
@@ -8989,10 +9623,11 @@ willfileVersionBump.defaults =
 function npmModulePublish( o )
 {
   let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let packagePath = path.join( module.dirPath, 'package.json' );
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const packagePath = path.join( module.dirPath, 'package.json' );
+  const logger = will.transaction.logger;
 
   _.routine.options_( npmModulePublish, o );
   _.assert( path.isTrailed( module.localPath ), 'not tested' );
@@ -9000,11 +9635,11 @@ function npmModulePublish( o )
   if( !module.about.enabled )
   return;
 
-  let ready = moduleSync( o.message );
+  const ready = moduleSync( o.message );
   ready.deasync();
-  let diff = moduleDiffsGet();
+  const diff = moduleDiffsGet();
 
-  let nameWithLocation = module._nameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() );
+  const nameWithLocation = module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() );
   if( o.force || !diff || diff.status )
   {
     if( o.verbosity )
@@ -9042,12 +9677,12 @@ function npmModulePublish( o )
 
   let aboutCache = Object.create( null );
   ready.then( () => npmFixate() );
-  ready.then( () => _.npm.fileFormat({ filePath : packagePath }) );
+  ready.then( () => _.npm.fileFormat({ configPath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
   ready.then( () => module.gitTag({ name : `v${ version }` }) );
   ready.then( () => module.gitTag({ name : o.tag }) );
-  ready.then( () => module.gitPush( Object.create( null ) ) );
+  ready.then( () => module.gitPush({ withTags : 1, force : 1 }) );
 
   ready.then( () => npmPublish() );
 
@@ -9061,7 +9696,7 @@ function npmModulePublish( o )
     ({
       message,
       restoringHardLinks : 1,
-      verbosity : 0,
+      verbosity : o.verbosity,
     });
   }
 
@@ -9095,11 +9730,13 @@ function npmModulePublish( o )
   function packageJsonGenerate()
   {
     let currentContext = module.stepMap[ 'willfile.generate' ];
-    module.npmGenerateFromWillfile
+    will.npmGenerateFromWillfile
     ({
       packagePath,
+      modules : [ module ],
       currentContext,
-      verbosity : o.verbosity,
+      withDisabledSubmodules : o.withDisabledSubmodules,
+      logger : o.verbosity,
     });
     return null;
   }
@@ -9131,7 +9768,7 @@ function npmModulePublish( o )
       configPath : packagePath,
       tag : o.tag,
       onDep,
-      verbosity : o.verbosity - 2,
+      logger : o.verbosity - 2,
     });
   }
 
@@ -9144,7 +9781,6 @@ function npmModulePublish( o )
       localPath : module.dirPath,
       tag : o.tag,
       logger : o.verbosity === 2 ? 2 : o.verbosity - 1,
-      // verbosity : o.verbosity === 2 ? 2 : o.verbosity - 1,
     });
   }
 
@@ -9176,6 +9812,7 @@ npmModulePublish.defaults =
   message : '-am "."',
   tag : '',
   force : 0,
+  withDisabledSubmodules : 1,
   dry : 0,
   verbosity : 1,
 };
@@ -10736,18 +11373,18 @@ let Extension =
 
   resourceImport,
 
-  _npmGenerateFromWillfile,
-  npmGenerateFromWillfile,
-  _willfileGenerateFromNpm,
-  willfileGenerateFromNpm,
+  // _npmGenerateFromWillfile,
+  // npmGenerateFromWillfile,
+  // _willfileGenerateFromNpm,
+  // willfileGenerateFromNpm,
 
-  willfileExtendWillfile,
+  // willfileExtendWillfile,
 
-  _willfileOnPropertyAct,
-  willfileGetProperty,
-  willfileSetProperty,
-  willfileDeleteProperty,
-  willfileExtendProperty,
+  // _willfileOnPropertyAct,
+  // willfilePropertyGet,
+  // willfilePropertySet,
+  // willfilePropertyDelete,
+  // willfilePropertyExtend,
 
   willfileMergeIntoSingle,
 

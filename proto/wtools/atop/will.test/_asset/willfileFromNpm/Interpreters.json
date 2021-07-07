@@ -1,5 +1,6 @@
 {
   "name" : "interpreters",
   "enabled" : 1,
-  "engine" : "node >= 10.0.0"
+  "engine" : "node >= 10.0.0",
+  "npm.engines" : { "node" : ">= 10.0.0" }
 }

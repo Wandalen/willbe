@@ -5,28 +5,28 @@ about :
 submodule :
 
   eslint :
-    path : npm:///eslint#7.1.0
-    enabled : 0 # submodule
+    path : npm:///eslint!7.1.0
+    enabled : 1 # submodule
     criterion :
       debug : 1
   babel :
-    path : npm:///babel#^0.3.0
-    enabled : 0 # submodule
+    path : npm:///babel!^0.3.0
+    enabled : 1 # submodule
     criterion :
       debug : 1
   NpmFromWillfile :
     path : hd://.
-    enabled : 0 # submodule
+    enabled : 1 # submodule
     criterion :
       development : 1
   wTesting :
     path : npm:///wTesting
-    enabled : 0 # submodule
+    enabled : 1 # submodule
     criterion :
       development : 1
   willbe :
-    path : npm:///willbe#alpha
-    enabled : 0 # submodule
+    path : npm:///willbe!alpha
+    enabled : 1 # submodule
     criterion :
       development : 1
 

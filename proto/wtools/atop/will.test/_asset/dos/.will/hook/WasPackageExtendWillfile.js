@@ -3,6 +3,7 @@ function onModule( context )
 {
   let o = context.request.map;
   let _ = context.tools;
+  let will = context.junction.will;
   let module = context.junction.module;
 
   _.routine.options( onModule, o );
@@ -11,12 +12,13 @@ function onModule( context )
 
   let commonPath = module.commonPath + _.strCommonLeft( ... _.paths.name( module.willfilesPath ) );
 
-  module.willfileExtendWillfile
+  will.willfileExtendWillfile
   ({
     request : `${ commonPath } was.package.json`,
+    modules : [ module ],
     format : 'willfile',
     onSection : _.mapExtend,
-    ... _.mapOnly_( null, o, module.willfileExtendWillfile.defaults ),
+    ... _.mapOnly_( null, o, will.willfileExtendWillfile.defaults ),
   })
 }
 
