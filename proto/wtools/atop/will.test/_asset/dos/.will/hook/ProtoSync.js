@@ -12,15 +12,15 @@ function onModule( context )
 
   let config = _.censor.configRead();
   if( !config )
-  return null;
+  return exit( 'No censor config' );
   if( !config.path )
-  return null;
+  return exit( 'Censor config does not have either path::proto or path::module' );
   if( !config.path.proto || !config.path.module )
-  return null;
+  return exit( 'Censor config does not have either path::proto or path::module' );
 
   let protoPath = config.path.proto;
   if( !fileProvider.fileExists( protoPath ) )
-  return null;
+  return exit( `${protoPath} does not exist` );
 
   let isProto = path.begins( context.junction.dirPath, config.path.proto );
   if( isProto )
@@ -46,21 +46,18 @@ function onModule( context )
 
   /* */
 
-  debugger;
   let moduleProtoPath = path.join( context.junction.dirPath, 'proto' );
   if( fileProvider.fileExists( moduleProtoPath ) )
   {
-    debugger;
     let reocrds = fileProvider.filesReflect
     ({
       filter : { filePath : { [ moduleProtoPath ] : protoPath }, maskAll },
-      dstRewritingOnlyPreserving : 1,
+      dstRewritingOnlyPreserving : !o.force,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
       linkingAction : 'hardLink',
       verbosity
     });
-    debugger;
   }
 
   let moduleStepPath = path.join( context.junction.dirPath, 'step' );
@@ -69,7 +66,7 @@ function onModule( context )
     fileProvider.filesReflect
     ({
       filter : { filePath : { [ moduleStepPath ] : path.join( protoPath, 'common/step' ) }, maskAll },
-      dstRewritingOnlyPreserving : 1,
+      dstRewritingOnlyPreserving : !o.force,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
       linkingAction : 'hardLink',
@@ -83,7 +80,7 @@ function onModule( context )
     fileProvider.filesReflect
     ({
       filter : { filePath : { [ moduleWorkflowsPath ] : path.join( protoPath, 'common/github/workflows' ) }, maskAll },
-      dstRewritingOnlyPreserving : 1,
+      dstRewritingOnlyPreserving : !o.force,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
       linkingAction : 'hardLink',
@@ -97,7 +94,7 @@ function onModule( context )
     fileProvider.filesReflect
     ({
       filter : { filePath : { [ circleciPath ] : path.join( protoPath, 'common/circleci' ) }, maskAll },
-      dstRewritingOnlyPreserving : 1,
+      dstRewritingOnlyPreserving : !o.force,
       breakingSrcHardLink : 1,
       breakingDstHardLink : 0,
       linkingAction : 'hardLink',
@@ -105,10 +102,17 @@ function onModule( context )
     });
   }
 
+  function exit( msg )
+  {
+    console.error( msg );
+    return; null
+  }
+
 }
 
 var defaults = ( onModule.defaults = Object.create( null ) );
 defaults.v = null;
 defaults.verbosity = 3;
+defaults.force = 0;
 
 module.exports = onModule;
