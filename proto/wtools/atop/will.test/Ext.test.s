@@ -42627,7 +42627,7 @@ function commandNpmInstallFromPackageWithoutName( test )
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
     var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
-    if( files.length === 6 )
+    if( files.length === 5 )
     var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
     test.identical( files, exp );
 
@@ -42649,7 +42649,7 @@ function commandNpmInstallFromPackageWithoutName( test )
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
     var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
-    if( files.length === 6 )
+    if( files.length === 5 )
     var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
     test.identical( files, exp );
 
@@ -42671,7 +42671,7 @@ function commandNpmInstallFromPackageWithoutName( test )
     test.notIdentical( op.exitCode, 0 );
     var files = find( 'node_modules' );
     var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
-    if( files.length === 6 )
+    if( files.length === 5 )
     var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
     test.identical( files, exp );
 
