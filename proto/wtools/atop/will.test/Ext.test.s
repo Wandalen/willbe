@@ -4401,7 +4401,7 @@ function reflectNpmModules( test )
   return a.ready;
 }
 
-reflectNpmModules.timeOut = 150000;
+reflectNpmModules.timeOut = 300000;
 
 //
 
@@ -7586,7 +7586,7 @@ function verbositySet( test )
   return a.ready;
 }
 
-verbositySet.timeOut = 300000;
+verbositySet.timeOut = 600000;
 
 //
 
@@ -24083,7 +24083,7 @@ function stepModulesUpdate( test )
   }
 }
 
-stepModulesUpdate.timeOut = 600000;
+stepModulesUpdate.timeOut = 800000;
 stepModulesUpdate.rapidity = -1;
 
 //
