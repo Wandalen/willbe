@@ -7586,7 +7586,7 @@ function verbositySet( test )
   return a.ready;
 }
 
-verbositySet.timeOut = 300000;
+verbositySet.timeOut = 600000;
 
 //
 
