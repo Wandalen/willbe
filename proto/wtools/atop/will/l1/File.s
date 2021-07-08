@@ -536,6 +536,37 @@ function filePathIsOut( filePath )
 
 //
 
+function fileReadAt_body( o )
+{
+  let found = _.will.fileAt.body.call( _.will, _.mapOnly_( null, o, _.will.filesAt.defaults ) );
+
+  if( !found.length )
+  {
+    if( o.throwing )
+    throw _.err( `Found no willfile at ${o.commonPath}` );
+    return;
+  }
+
+  let cache = Object.create( null );
+  _.each( found, ( file ) =>
+  {
+    cache[ file.filePath ] = o.fileProvider.fileReadUnknown({ filePath : file.filePath });
+  });
+  return cache;
+}
+
+fileReadAt_body.defaults =
+{
+  ... filesAt.defaults,
+  throwing : 1,
+};
+
+//
+
+const fileReadAt = _.routine.unite( fileAt_head, fileReadAt_body );
+
+//
+
 function fileResource_head( routine, args )
 {
   let o = args[ 0 ];
@@ -801,6 +832,7 @@ let Extension =
   filePathIs,
   filePathIsOut,
 
+  fileReadAt,
   fileReadResource,
   fileReadPath,
   fileWriteResource,

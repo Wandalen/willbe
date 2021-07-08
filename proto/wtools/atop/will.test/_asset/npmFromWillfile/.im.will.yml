@@ -2,7 +2,7 @@
 submodule :
 
   eslint :
-    path : npm:///eslint#7.1.0
+    path : npm:///eslint!7.1.0
     enabled : 0
     criterion :
       debug : 1
