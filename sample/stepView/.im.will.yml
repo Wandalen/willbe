@@ -6,12 +6,12 @@ path :
 
 step :
 
-  view1 :
+  view.remote :
     inherit : file.view
     filePath : path::google
     delay : 3000
 
-  view2 :
+  view.local :
     inherit : file.view
     filePath : path::localPath
 
@@ -19,8 +19,8 @@ build :
 
   view1 :
     steps :
-      - step::view1
+      - step::view.remote
 
   view2 :
     steps :
-      - step::view2
+      - step::view.local
