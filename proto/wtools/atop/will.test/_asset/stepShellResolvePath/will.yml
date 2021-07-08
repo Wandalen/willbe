@@ -1,0 +1,17 @@
+
+submodule :
+
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1
+
+step :
+
+  module.dir :
+    currentPath : .module/ModuleForTesting1/sample/trivial
+    shell : node Sample.s
+
+build :
+
+  module.dir :
+    steps :
+      - submodules.download
+      - step::module.dir*=1
