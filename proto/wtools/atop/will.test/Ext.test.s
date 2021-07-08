@@ -961,6 +961,35 @@ build.rapidity = -1;
 
 //
 
+function buildStepShellAndViewWithoutAbout( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildStepShellAndView' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ execPath : '.build run' })
+  .then( ( op ) =>
+  {
+    test.case = '.build run';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::buildStepShellAndViewWithoutAbout were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, 'View http:///www.google.com' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 /*
 Test transpilation of JS files.
 */
@@ -1382,47 +1411,38 @@ function buildSingleStep( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepShell' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug1'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build debug1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug2'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build debug2' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -24636,6 +24656,84 @@ function stepBuild( test )
 
 //
 
+function stepShellWithPathResolving( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellResolvePath' );
+  a.reflect();
+  a.appStart( '.submodules.download' );
+
+  /* - */
+
+  a.appStart({ execPath : '.build module.dir.explicit' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.explicit' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.explicit' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build module.dir.resolve.from.path' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.resolve.from.path' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.resolve.from.path' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build module.dir.resolve.and.join' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.resolve.and.join' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.resolve.and.join' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build module.dir.resolve.with.criterion' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.resolve.with.criterion' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.resolve.with.criterion' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepShellWithSeveralCommands( test )
 {
   let context = this;
@@ -43725,6 +43823,7 @@ const Proto =
     // build
 
     build,
+    buildStepShellAndViewWithoutAbout,
     buildTranspile,
     buildTranspileWithOptions,
     buildTranspileExperiment,
@@ -43957,6 +44056,7 @@ const Proto =
     stepVersionBump,
     stepSubmodulesAreUpdated,
     stepBuild,
+    stepShellWithPathResolving,
     stepShellWithSeveralCommands,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,

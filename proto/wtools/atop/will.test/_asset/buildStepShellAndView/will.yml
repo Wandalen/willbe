@@ -1,0 +1,25 @@
+
+submodule :
+
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1
+
+step :
+
+  view.remote :
+    inherit : file.view
+    filePath : http:///www.google.com
+    delay : 3000
+
+  run.script :
+    currentPath : .module/ModuleForTesting1/sample/trivial
+    shell : node Sample.s
+
+build :
+
+  run :
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
+      - step::run.script
+      - step::view.remote
