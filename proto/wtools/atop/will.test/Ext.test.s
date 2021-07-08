@@ -961,6 +961,35 @@ build.rapidity = -1;
 
 //
 
+function buildStepShellAndViewWithoutAbout( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildStepShellAndView' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ execPath : '.build run' })
+  .then( ( op ) =>
+  {
+    test.case = '.build run';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::buildStepShellAndViewWithoutAbout were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, 'View http:///www.google.com' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 /*
 Test transpilation of JS files.
 */
@@ -43794,6 +43823,7 @@ const Proto =
     // build
 
     build,
+    buildStepShellAndViewWithoutAbout,
     buildTranspile,
     buildTranspileWithOptions,
     buildTranspileExperiment,
