@@ -1382,47 +1382,38 @@ function buildSingleStep( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepShell' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug1'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build debug1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug2'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build debug2' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -24636,6 +24627,36 @@ function stepBuild( test )
 
 //
 
+function stepShellWithPathResolving( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellResolvePath' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ execPath : '.build module.dir' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::stepShellWithPathResolving' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepShellWithSeveralCommands( test )
 {
   let context = this;
@@ -43957,6 +43978,7 @@ const Proto =
     stepVersionBump,
     stepSubmodulesAreUpdated,
     stepBuild,
+    stepShellWithPathResolving,
     stepShellWithSeveralCommands,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
