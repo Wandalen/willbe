@@ -16416,12 +16416,11 @@ function cleanDisabledModule( test )
   a.ready.then( () =>
   {
     test.case = '.clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16432,10 +16431,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.clean' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16446,21 +16444,18 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with . .clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16471,10 +16466,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with . .clean' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16485,21 +16479,18 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16510,10 +16501,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.with * .clean' )
-
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -16522,25 +16512,21 @@ function cleanDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 0 );
-    // test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
     test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with * .clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16551,10 +16537,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:1 ; .with * .clean' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16565,13 +16550,12 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function cleanDisabledModule */
+}
 
 cleanDisabledModule.rapidity = -1;
 cleanDisabledModule.timeOut = 300000;
