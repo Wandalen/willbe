@@ -1,17 +1,53 @@
 
+path :
+
+  script.dir : .module/ModuleForTesting1/sample/trivial
+  submodule.dir : .module/ModuleForTesting1
+  script.dir.criterion.debug :
+    path : .module/ModuleForTesting1/sample/trivial
+    criterion :
+      debug : 1
+
 submodule :
 
   ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1
 
 step :
 
-  module.dir :
+  module.dir.explicit :
     currentPath : .module/ModuleForTesting1/sample/trivial
+    shell : node Sample.s
+
+  module.dir.resolve.from.path :
+    currentPath : path::script.dir
+    shell : node Sample.s
+
+  module.dir.resolve.and.join :
+    currentPath : '{path::submodule.dir}/sample/trivial'
+    shell : node Sample.s
+
+  module.dir.resolve.with.criterion :
+    criterion :
+      debug : [ 0, 1 ]
+    currentPath : '{path::submodule.dir}/sample/trivial'
     shell : node Sample.s
 
 build :
 
-  module.dir :
+  module.dir.explicit :
     steps :
-      - submodules.download
-      - step::module.dir*=1
+      - step::module.dir.explicit
+
+  module.dir.resolve.from.path :
+    steps :
+      - step::module.dir.resolve.from.path
+
+  module.dir.resolve.and.join :
+    steps :
+      - step::module.dir.resolve.and.join
+
+  module.dir.resolve.with.criterion :
+    criterion :
+      debug : 1
+    steps :
+      - step::module.dir.resolve.with.criterion*=1
