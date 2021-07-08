@@ -11769,17 +11769,14 @@ function exportDisabledModule( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.export';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -11789,28 +11786,33 @@ function exportDisabledModule( test )
     test.identical( files, exp );
 
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/disabled.out.will.yml' ) );
-    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
+    var exp = _.setFrom
+    ([
+      'disabled.out',
+      '../',
+      '../.module/ModuleForTesting1/',
+      '../.module/ModuleForTesting1/out/wModuleForTesting1.out',
+      '../.module/ModuleForTesting2/',
+      '../.module/ModuleForTesting2/out/wModuleForTesting2.out'
+    ]);
     var got = _.setFrom( _.props.keys( outfile.module ) );
     test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with . .export';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.with . .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -11820,28 +11822,33 @@ function exportDisabledModule( test )
     test.identical( files, exp );
 
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/disabled.out.will.yml' ) );
-    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
+    var exp = _.setFrom
+    ([
+      'disabled.out',
+      '../',
+      '../.module/ModuleForTesting1/',
+      '../.module/ModuleForTesting1/out/wModuleForTesting1.out',
+      '../.module/ModuleForTesting2/',
+      '../.module/ModuleForTesting2/out/wModuleForTesting2.out'
+    ]);
     var got = _.setFrom( _.props.keys( outfile.module ) );
     test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .export';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.with * .export' )
-
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -11850,25 +11857,21 @@ function exportDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    // test.identical( _.strCount( op.output, 'No module sattisfy' ), 1 );
     test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1; .with * .export';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.imply withDisabled:1; .with * .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -11878,20 +11881,27 @@ function exportDisabledModule( test )
     test.identical( files, exp );
 
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/disabled.out.will.yml' ) );
-    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
+    var exp = _.setFrom
+    ([
+      'disabled.out',
+      '../',
+      '../.module/ModuleForTesting1/',
+      '../.module/ModuleForTesting1/out/wModuleForTesting1.out',
+      '../.module/ModuleForTesting2/',
+      '../.module/ModuleForTesting2/out/wModuleForTesting2.out'
+    ]);
     var got = _.setFrom( _.props.keys( outfile.module ) );
     test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportDisabledModule */
+}
 
 exportDisabledModule.rapidity = -1;
 exportDisabledModule.timeOut = 300000;
@@ -14567,6 +14577,8 @@ Out will-file of the second module should contain updated hash and size of the i
 
 //
 
+/* aaa : Dmytro : updated test routine, used test asset without extra exporting */
+
 function exportWithOutdatedWillbe( test )
 {
   let context = this;
@@ -14605,6 +14617,8 @@ Current willbe should alert user about unexpected fields.
 `
 
 //
+
+/* qqq : for Dmytro : fix it */
 
 function exportCreatesOutDir( test )
 {
@@ -23786,7 +23800,7 @@ function stepSubmodulesUpdate( test )
   }
 }
 
-stepSubmodulesUpdate.timeOut = 600000;
+stepSubmodulesUpdate.timeOut = 800000;
 
 //
 
@@ -42621,7 +42635,7 @@ function commandNpmInstallFromPackageWithoutName( test )
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
     var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
-    if( files.length === 6 )
+    if( files.length === 5 )
     var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
     test.identical( files, exp );
 
@@ -42643,7 +42657,7 @@ function commandNpmInstallFromPackageWithoutName( test )
     test.identical( op.exitCode, 0 );
     var files = find( 'node_modules' );
     var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
-    if( files.length === 6 )
+    if( files.length === 5 )
     var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
     test.identical( files, exp );
 
@@ -42665,7 +42679,7 @@ function commandNpmInstallFromPackageWithoutName( test )
     test.notIdentical( op.exitCode, 0 );
     var files = find( 'node_modules' );
     var exp = [ '.', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
-    if( files.length === 6 )
+    if( files.length === 5 )
     var exp = [ '.', './.package-lock.json', './wmodulefortesting1', './wmodulefortesting12', './wmodulefortesting2' ];
     test.identical( files, exp );
 
