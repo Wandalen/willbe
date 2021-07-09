@@ -972,9 +972,25 @@ function buildStepShellAndViewWithoutAbout( test )
   a.appStart({ execPath : '.build run' })
   .then( ( op ) =>
   {
-    test.case = '.build run';
+    test.case = 'module is not a git repository';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::buildStepShellAndViewWithoutAbout were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, 'View http:///www.google.com' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git remote add origin https://github.com/Wandalen/wModuleForTesting2.git' );
+  a.appStart({ execPath : '.build run' })
+  .then( ( op ) =>
+  {
+    test.case = 'module is a git repository';
+    test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
     test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
     test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
