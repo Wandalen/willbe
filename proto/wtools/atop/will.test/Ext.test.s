@@ -1001,7 +1001,7 @@ function buildStepShellAndViewWithoutAbout( test )
 
   /* - */
 
-  return a.ready;
+  return a.ready.delay( 1000 );
 }
 
 //
