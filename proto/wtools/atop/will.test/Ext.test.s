@@ -7913,6 +7913,7 @@ function verbosityStepDelete( test )
   return a.ready;
 }
 
+verbosityStepDelete.timeOut = 600000;
 verbosityStepDelete.rapidity = -1;
 
 //
