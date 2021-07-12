@@ -1176,9 +1176,14 @@ function _repoForm()
     opener._.localPath = opener.commonPath;
     downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
     remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet();
-    // isRemote = opener.repoIsRemote();
-    isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
-    _.assert( isRemote === true );
+    if( remotePath !== null )
+    {
+      isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
+      _.assert( isRemote === true );
+    }
+    // // isRemote = opener.repoIsRemote();
+    // isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
+    // _.assert( isRemote === true );
     /*
       xxx qqq :
         make it working for case when remote path is local
