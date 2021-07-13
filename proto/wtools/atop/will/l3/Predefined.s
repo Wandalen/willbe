@@ -1236,7 +1236,7 @@ stepRoutineWillfileVersionBump.uniqueOptions =
 
 //
 
-function stepRoutineNjsVersionVerify( frame )
+function stepRoutineInterpreterVerify( frame )
 {
   const step = this;
   const opts = _.props.extend( null, step.opts );
@@ -1245,44 +1245,111 @@ function stepRoutineNjsVersionVerify( frame )
 
   _.assert( arguments.length === 1 );
 
-  if( !opts.version )
-  opts.version = module.resolve( '{about::npm.engines/node}' );
+  if( !opts.interpreters )
+  {
+    opts.interpreters = module.resolve({ selector : '{about::npm.engines}', mapValsUnwrapping : 0, singleUnwrapping : 0 });
+  }
+  if( !opts.interpreters )
+  {
+    const interpreters = module.resolve({ selector : '{about::interpreters}', mapValsUnwrapping : 0, singleUnwrapping : 0 })
+    opts.interpreters = Object.create( null );
+    _.each( interpreters, ( record ) => _.map.extend( opts.interpreters, _.will.transform.interpreterParse( record ) ) );
+  }
 
-  _.assert( !!opts.version, 'Expects node version to verify. Please, add it to section `about` or to the step.' );
+  _.sure( !!opts.interpreters, 'Expects interpreters to verify. Please, add it to section `about` or to the step.' );
 
-  const versionsMap = versionParse( opts.version );
-  const currentNjsVersion = process.versions.node;
+  const currentInterpreters = currentInterpretersGet();
+  const interpretersVersionsMap = versionsParse( opts.interpreters );
 
-  versionVerify( currentNjsVersion, versionsMap );
+  _.each( interpretersVersionsMap, ( versionsMap, interpreter ) =>
+  {
+    versionVerify( currentInterpreters[ interpreter ], versionsMap );
+  });
 
   return true;
 
   /* */
 
-  function versionParse( version )
+  function currentInterpretersGet()
   {
-    const resultMap = Object.create( null );
-    resultMap[ '=' ] = _.array.make();
-    resultMap[ '>' ] = null;
-    resultMap[ '>=' ] = null;
-    resultMap[ '<' ] = null;
-    resultMap[ '<=' ] = null;
+    const result = Object.create( null );
 
-    let versionArray = null;
-    if( _.str.is( version ) )
-    versionArray = versionSplit( version );
-    else if( _.array.is( version ) )
-    _.each( version, ( el ) => { versionArray = _.arrayAppendArray( versionArray, versionSplit( el ) ) } );
+    if( typeof window === 'undefined' )
+    {
+      _.assert( typeof process !== 'undefined', 'Unknown interpreter' );
 
-    versionMapFill( resultMap, versionArray );
-    return resultMap;
+      result.node = process.versions.node;
+      if( opts.interpreters.npm )
+      result.npm = _.process.start
+      ({
+        execPath : 'npm --version',
+        outputCollecting : 1,
+        mode : 'shell',
+        sync : 1,
+        outputPiping : 0,
+        verbosity : 0,
+        logger : 0,
+      }).output;
+    }
+    else
+    {
+      const userAgent = navigator.userAgent;
+      const versionMatch = userAgent.match( /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\S+)/i );
+      result[ versionMatch[ 1 ].toLowerCase() ] = versionMatch[ 2 ];
+    }
+    return result;
+  }
+
+  /* */
+
+  function versionsParse()
+  {
+    const interpreterVersionsMap = Object.create( null );
+    for( let interpreter in currentInterpreters )
+    if( interpreter in opts.interpreters )
+    interpreterVersionsMap[ interpreter ] = versionsMapInit();
+
+    _.each( interpreterVersionsMap, ( map, interpreter ) =>
+    {
+      const version = opts.interpreters[ interpreter ]
+
+      let versionArray = null;
+      if( _.str.is( version ) )
+      versionArray = versionSplit( version );
+      else if( _.array.is( version ) )
+      _.each( version, ( el ) => { versionArray = _.arrayAppendArray( versionArray, versionSplit( el ) ) } );
+
+      versionMapFill( interpreterVersionsMap[ interpreter ], versionArray );
+    });
+
+    return interpreterVersionsMap;
+  }
+
+  /* */
+
+  function versionsMapInit()
+  {
+    const versionsMap = Object.create( null );
+    versionsMap[ '=' ] = _.array.make();
+    versionsMap[ '>' ] = null;
+    versionsMap[ '>=' ] = null;
+    versionsMap[ '<' ] = null;
+    versionsMap[ '<=' ] = null;
+    return versionsMap;
   }
 
   /* */
 
   function versionSplit( src )
   {
-    return _.strSplit({ src, delimeter : /\d+(\.\d+\.\d+){0,1}/, preservingEmpty : 0 });
+    let versionSplits = _.strSplit({ src, delimeter : [ /\d+(\.\d+)*/, ' ', '>=', '<=', '<', '>', '=' ], preservingEmpty : 0 });
+    if( versionSplits.length >= 4 )
+    _.sure
+    (
+      _.strHas( src, 'AND' ) || !_.strHasAny( src, [ '<', '>' ] ),
+      'Define strict versions for interpreter or use logical operator `AND` in range'
+    );
+    return versionSplits;
   }
 
   /* */
@@ -1290,7 +1357,7 @@ function stepRoutineNjsVersionVerify( frame )
   function versionMapFill( dstMap, versionArray )
   {
     for( let i = versionArray.length - 1 ; i >= 0 ; i-- )
-    if( _.strHas( versionArray[ i ], /\d+(\.\d+\.\d+){0,1}/ ) )
+    if( _.strHas( versionArray[ i ], /\d+(\.\d+)*/ ) )
     {
       if( versionArray[ i - 1 ] )
       {
@@ -1312,8 +1379,11 @@ function stepRoutineNjsVersionVerify( frame )
         }
       }
 
+      if( versionArray[ i ] === 'AND' )
+      continue;
+
       dstMap[ '=' ].unshift( versionArray[ i ] );
-      if( versionArray[ i - 1 ] && _.strHas( versionArray[ i - 1 ], /=+/ ) )
+      if( versionArray[ i - 1 ] && _.strHas( versionArray[ i - 1 ], /\=+/ ) )
       i -= 1;
     }
   }
@@ -1331,7 +1401,7 @@ function stepRoutineNjsVersionVerify( frame )
       const equivalent = versionIsEquivalent( currentVersion, versionsMap[ '>=' ] );
 
       const errorMsg =
-        opts.errorMsg || `Expects NodeJS version newer${ versionsMap[ '>=' ] ? ' or equivalent' : '' } than ${ version }`;
+        opts.errorMsg || `Expects interpreter version newer${ versionsMap[ '>=' ] ? ' or equivalent' : '' } than ${ version }`;
       _.sure ( greater || equivalent, errorMsg );
       if( !versionsMap[ '<' ] && !versionsMap[ '<=' ] )
       return;
@@ -1346,12 +1416,12 @@ function stepRoutineNjsVersionVerify( frame )
       const equivalent = versionIsEquivalent( currentVersion, versionsMap[ '<=' ] );
 
       const errorMsg =
-        opts.errorMsg || `Expects NodeJS version older${ versionsMap[ '<=' ] ? ' or equivalent' : '' } than ${ version }`;
+        opts.errorMsg || `Expects interpreter version older${ versionsMap[ '<=' ] ? ' or equivalent' : '' } than ${ version }`;
       _.sure ( !greater || equivalent, errorMsg );
       return;
     }
 
-    const errorMsg = opts.errorMsg || `Expects NodeJS with versions :\n${ _.entity.exportStringNice( versionsMap[ '=' ] ) }`;
+    const errorMsg = opts.errorMsg || `Expects interpreter with versions :\n${ _.entity.exportStringNice( versionsMap[ '=' ] ) }`;
     _.sure ( _.any( versionsMap[ '=' ], ( version ) => versionIsEquivalent( currentVersion, version ) ), errorMsg );
   }
 
@@ -1385,15 +1455,14 @@ function stepRoutineNjsVersionVerify( frame )
   }
 }
 
-stepRoutineNjsVersionVerify.stepOptions =
+stepRoutineInterpreterVerify.stepOptions =
 {
-  version : null,
+  interpreters : null,
   errorMsg : null,
 };
 
-stepRoutineNjsVersionVerify.uniqueOptions =
+stepRoutineInterpreterVerify.uniqueOptions =
 {
-  version : null,
 };
 
 // --
@@ -1443,7 +1512,7 @@ let Extension =
 
   stepRoutineWillfileVersionBump,
 
-  stepRoutineNjsVersionVerify,
+  stepRoutineInterpreterVerify,
 }
 
 /* _.props.extend */Object.assign( _.will.Predefined, Extension );

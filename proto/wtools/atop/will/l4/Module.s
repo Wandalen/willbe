@@ -1339,8 +1339,8 @@ function predefinedForm()
 
   step
   ({
-    name : 'njs.version.verify',
-    stepRoutine : Predefined.stepRoutineNjsVersionVerify,
+    name : 'interpreter.verify',
+    stepRoutine : Predefined.stepRoutineInterpreterVerify,
   })
 
   /* */
