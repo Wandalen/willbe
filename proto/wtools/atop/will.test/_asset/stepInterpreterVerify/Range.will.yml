@@ -1,0 +1,35 @@
+about :
+
+  name : 'stepInterpreterVerify'
+
+step :
+
+  range.versions :
+    inherit : interpreter.verify
+    interpreters :
+      node : '> 6.0.0 AND <= 30.0.0'
+
+  range.versions.left.bound.throwing :
+    inherit : interpreter.verify
+    interpreters :
+      node : '> 30.0.0 AND <= 40.0.0'
+
+  range.versions.right.bound.throwing :
+    inherit : interpreter.verify
+    interpreters :
+      node : '> 1.0.0 AND <= 6.0.0'
+
+build :
+
+  range.versions :
+    steps :
+      - step::range.versions
+
+  range.versions.left.bound.throwing :
+    steps :
+      - step::range.versions.left.bound.throwing
+
+  range.versions.right.bound.throwing :
+    steps :
+      - step::range.versions.right.bound.throwing
+
