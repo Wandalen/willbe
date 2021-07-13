@@ -26933,6 +26933,47 @@ function stepInterpreterVerifyWithRange( test )
 
 //
 
+function stepInterpreterVerifyWithSeveral( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepInterpreterVerify' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStartNonThrowing( '.with Several .build interpreter.verify.implicit' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '.with Several .build interpreter.verify.implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepInterpreterVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepInterpreterVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepInterpreterVerify' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing( '.with Several .build interpreter.verify.explicit' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '.with Several .build interpreter.verify.explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepInterpreterVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepInterpreterVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepInterpreterVerify' ), 0 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepInterpreterVerifyWithErrorMsg( test )
 {
   let context = this;
@@ -44412,6 +44453,7 @@ const Proto =
     stepInterpreterVerifyWithStrict,
     stepInterpreterVerifyWithOneBound,
     stepInterpreterVerifyWithRange,
+    stepInterpreterVerifyWithSeveral,
     stepInterpreterVerifyWithErrorMsg,
 
     /* xxx : cover "will .module.new.with prepare" */
