@@ -26974,6 +26974,33 @@ function stepInterpreterVerifyWithSeveral( test )
 
 //
 
+function stepInterpreterVerifyWithCommands( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepInterpreterVerify' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStartNonThrowing( '.with Commands .build interpreter.and.command' )
+  .then( ( op ) =>
+  {
+    test.case = 'njs version in range, should throw no error';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '.with Commands .build interpreter.and.command' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepInterpreterVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepInterpreterVerify' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed module::stepInterpreterVerify' ), 0 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepInterpreterVerifyWithErrorMsg( test )
 {
   let context = this;
@@ -44454,6 +44481,7 @@ const Proto =
     stepInterpreterVerifyWithOneBound,
     stepInterpreterVerifyWithRange,
     stepInterpreterVerifyWithSeveral,
+    stepInterpreterVerifyWithCommands,
     stepInterpreterVerifyWithErrorMsg,
 
     /* xxx : cover "will .module.new.with prepare" */

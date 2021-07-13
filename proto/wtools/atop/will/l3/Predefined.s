@@ -1274,30 +1274,38 @@ function stepRoutineInterpreterVerify( frame )
   {
     const result = Object.create( null );
 
-    if( typeof window === 'undefined' )
+    if( opts.commands === null )
     {
       _.assert( typeof process !== 'undefined', 'Unknown interpreter' );
-
       result.node = process.versions.node;
       if( opts.interpreters.npm )
-      result.npm = _.process.start
-      ({
-        execPath : 'npm --version',
-        outputCollecting : 1,
-        mode : 'shell',
-        sync : 1,
-        outputPiping : 0,
-        verbosity : 0,
-        logger : 0,
-      }).output;
+      result.npm = versionGet( 'npm --version' );
     }
     else
     {
-      const userAgent = navigator.userAgent;
-      const versionMatch = userAgent.match( /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\S+)/i );
-      result[ versionMatch[ 1 ].toLowerCase() ] = versionMatch[ 2 ];
+      _.sure( _.longHasAll( _.props.keys( opts.interpreters ), _.props.keys( opts.commands ) ) );
+      _.each( opts.commands, ( command, interpreter ) =>
+      {
+        result[ interpreter ] = versionGet( command );
+      });
     }
     return result;
+  }
+
+  /* */
+
+  function versionGet( execPath )
+  {
+    return _.process.start
+    ({
+      execPath,
+      outputCollecting : 1,
+      mode : 'shell',
+      sync : 1,
+      outputPiping : 0,
+      verbosity : 0,
+      logger : 0,
+    }).output;
   }
 
   /* */
@@ -1458,6 +1466,7 @@ function stepRoutineInterpreterVerify( frame )
 stepRoutineInterpreterVerify.stepOptions =
 {
   interpreters : null,
+  commands : null,
   errorMsg : null,
 };
 
