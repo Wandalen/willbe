@@ -965,6 +965,10 @@ function buildStepShellAndViewWithoutAbout( test )
 {
   let context = this;
   let a = context.assetFor( test, 'buildStepShellAndView' );
+
+  if( !_.process.insideTestContainer() )
+  return test.true( true );
+
   a.reflect();
 
   /* - */
@@ -26590,7 +26594,7 @@ function stepView( test )
   let context = this;
   let a = context.assetFor( test, 'stepView' );
 
-  if( process.platform !== 'linux' )
+  if( process.platform !== 'linux' || !_.process.insideTestContainer() )
   return test.true( true );
 
   /* - */
