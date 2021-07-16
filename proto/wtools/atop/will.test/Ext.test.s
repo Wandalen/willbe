@@ -28191,7 +28191,7 @@ function commandHookCallWithHookInfo( test )
 }
 
 commandHookCallWithHookInfo.rapidity = -1;
-commandHookCallWithHookInfo.timeOut = 300000;
+commandHookCallWithHookInfo.timeOut = 600000;
 commandHookCallWithHookInfo.description =
 `
 - do execute js script
@@ -28211,8 +28211,7 @@ function commandDoWithHookStatus( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.reflect();
@@ -28221,7 +28220,7 @@ function commandDoWithHookStatus( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.clean' );
   a.appStart( '.export' )
@@ -28293,7 +28292,7 @@ function commandDoWithHookStatus( test )
 }
 
 commandDoWithHookStatus.rapidity = -1;
-commandDoWithHookStatus.timeOut = 300000;
+commandDoWithHookStatus.timeOut = 600000;
 commandDoWithHookStatus.description =
 `
 - it.shell exposed for action
