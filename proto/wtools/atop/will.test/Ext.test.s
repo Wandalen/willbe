@@ -441,7 +441,7 @@ function etcKillWillbe( test )
   const context = this;
   const a = context.assetFor( test, 'simple' );
   const con = _.take( null );
-  const delay = 1500;
+  const delay = 2000;
   a.reflectMinimal();
 
   /* */
