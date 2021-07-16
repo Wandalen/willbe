@@ -14607,7 +14607,7 @@ Current willbe should alert user about unexpected fields.
 
 //
 
-/* qqq : for Dmytro : fix it */
+/* aaa : for Dmytro : fix it */ /* Dmytro : fixed */
 
 function exportCreatesOutDir( test )
 {
@@ -14627,11 +14627,8 @@ function exportCreatesOutDir( test )
   /* */
 
   return a.ready;
-
-  /* */
 }
 
-exportCreatesOutDir.experimental = 1;
 exportCreatesOutDir.description =
 `
 Reproduces situation when out directory is not present and should be created by willbe.
