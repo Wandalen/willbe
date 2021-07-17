@@ -57,6 +57,7 @@ build :
       default : 1
       export : 1
     steps :
+      - submodules.download
       - build::debug.raw
       - step::export.proto
 

@@ -22,5 +22,6 @@ build :
       export : 1
       default : 1
     steps :
+      - submodules.download
       - export.default
 
