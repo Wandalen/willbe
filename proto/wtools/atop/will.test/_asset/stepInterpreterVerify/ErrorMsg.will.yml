@@ -1,0 +1,18 @@
+about :
+
+  name : 'stepInterpreterVerify'
+
+step :
+
+  custom.error.message :
+    inherit : interpreter.verify
+    interpreters :
+      node : '> 1.0.0 AND <= 6.0.0'
+    errorMsg : 'user error message'
+
+build :
+
+  custom.error.message :
+    steps :
+      - step::custom.error.message
+

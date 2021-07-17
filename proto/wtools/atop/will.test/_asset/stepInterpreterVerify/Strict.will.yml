@@ -1,0 +1,47 @@
+about :
+
+  name : 'stepInterpreterVerify'
+
+step :
+
+  strict.version.str :
+    inherit : interpreter.verify
+    interpreters :
+      node : '0.0.0'
+
+  strict.version.array :
+    inherit : interpreter.verify
+    interpreters :
+      node :
+        - '0.0.0'
+
+  strict.versions.str :
+    inherit : interpreter.verify
+    interpreters :
+      node : '0.0.0 1.1.1 2.2.2'
+
+  strict.versions.array :
+    inherit : interpreter.verify
+    interpreters :
+      node :
+        - '0.0.0'
+        - '1.1.1'
+        - '2.2.2'
+
+build :
+
+  strict.version.str :
+    steps :
+      - step::strict.version.str
+
+  strict.version.array :
+    steps :
+      - step::strict.version.array
+
+  strict.versions.str :
+    steps :
+      - step::strict.versions.str
+
+  strict.versions.array :
+    steps :
+      - step::strict.versions.array

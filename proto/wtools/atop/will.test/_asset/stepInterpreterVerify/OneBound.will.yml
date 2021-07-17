@@ -1,0 +1,81 @@
+about :
+
+  name : 'stepInterpreterVerify'
+  npm.engines :
+    node : '>= 6.0.0 AND <= 30.0.0'
+
+step :
+
+  one.bound.left :
+    inherit : interpreter.verify
+    interpreters :
+      node : '> 6.0.0'
+
+  one.bound.left.throwing :
+    inherit : interpreter.verify
+    interpreters :
+      node : '> 30.0.0'
+
+  one.bound.left.equivalent :
+    inherit : interpreter.verify
+    interpreters :
+      node : '>= 6.0.0'
+
+  one.bound.left.equivalent.throwing :
+    inherit : interpreter.verify
+    interpreters :
+      node : '>= 30.0.0'
+
+  one.bound.right :
+    inherit : interpreter.verify
+    interpreters :
+      node : '< 30.0.0'
+
+  one.bound.right.throwing :
+    inherit : interpreter.verify
+    interpreters :
+      node : '< 1.0.0'
+
+  one.bound.right.equivalent :
+    inherit : interpreter.verify
+    interpreters :
+      node : '<= 30.0.0'
+
+  one.bound.right.equivalent.throwing :
+    inherit : interpreter.verify
+    interpreters :
+      node : '<= 1.0.0'
+
+build :
+
+  one.bound.left :
+    steps :
+      - step::one.bound.left
+
+  one.bound.left.throwing :
+    steps :
+      - step::one.bound.left.throwing
+
+  one.bound.left.equivalent :
+    steps :
+      - step::one.bound.left.equivalent
+
+  one.bound.left.equivalent.throwing :
+    steps :
+      - step::one.bound.left.equivalent.throwing
+
+  one.bound.right :
+    steps :
+      - step::one.bound.right
+
+  one.bound.right.throwing :
+    steps :
+      - step::one.bound.right.throwing
+
+  one.bound.right.equivalent :
+    steps :
+      - step::one.bound.right.equivalent
+
+  one.bound.right.equivalent.throwing :
+    steps :
+      - step::one.bound.right.equivalent.throwing

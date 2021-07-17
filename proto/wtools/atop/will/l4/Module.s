@@ -1337,6 +1337,12 @@ function predefinedForm()
     stepRoutine : Predefined.stepRoutineWillfileVersionBump,
   })
 
+  step
+  ({
+    name : 'interpreter.verify',
+    stepRoutine : Predefined.stepRoutineInterpreterVerify,
+  })
+
   /* */
 
   reflector

@@ -1,0 +1,27 @@
+about :
+
+  name : 'stepInterpreterVerify'
+  npm.engines :
+    node : '>= 6.0.0 AND <= 30.0.0'
+    npm : '>= 3.0.0 AND <= 30.0.0'
+
+step :
+
+  interpreter.verify.implicit :
+    inherit : interpreter.verify
+
+  interpreter.verify.explicit :
+    inherit : interpreter.verify
+    interpreters :
+      node : '>= 6.0.0 AND <= 30.0.0'
+      npm : '>= 3.0.0 AND <= 30.0.0'
+
+build :
+
+  interpreter.verify.implicit :
+    steps :
+      - step::interpreter.verify.implicit
+
+  interpreter.verify.explicit :
+    steps :
+      - step::interpreter.verify.explicit
