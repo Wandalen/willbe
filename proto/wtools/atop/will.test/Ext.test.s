@@ -19006,7 +19006,7 @@ function submodulesDownloadRecursive( test )
   return a.ready;
 }
 
-submodulesDownloadRecursive.timeOut = 500000;
+submodulesDownloadRecursive.timeOut = 1000000;
 // xxx
 
 //
