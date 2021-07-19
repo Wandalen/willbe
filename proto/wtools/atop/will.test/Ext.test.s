@@ -5526,7 +5526,7 @@ function hookHlink( test )
 
   a.ready.then( ( op ) =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
@@ -5549,7 +5549,7 @@ function hookHlink( test )
     test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
@@ -5562,12 +5562,12 @@ function hookHlink( test )
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookHlink */
+}
 
 hookHlink.description =
 `
