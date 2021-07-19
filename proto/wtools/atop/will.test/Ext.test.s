@@ -14886,7 +14886,7 @@ function importOutdated( test )
 {
   let context = this;
   let a = context.assetFor( test, 'importOutdated' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
