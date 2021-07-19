@@ -2129,21 +2129,17 @@ function openWith( test )
 {
   let context = this;
   let a = context.assetFor( test, 'open' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.export'
+    test.case = '.export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2158,21 +2154,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with . .export'
+    test.case = '.with . .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with . .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2187,21 +2180,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc .export'
+    test.case = '.with doc .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2216,23 +2206,20 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc .export -- deleted doc.will.yml'
-    a.reflect();
+    test.case = '.with doc .export -- deleted doc.will.yml';
+    a.reflectMinimal();
     a.fileProvider.fileDelete( a.abs( 'doc.ex.will.yml' ) );
     a.fileProvider.fileDelete( a.abs( 'doc.im.will.yml' ) );
     return null;
-  })
+  });
 
   a.appStartNonThrowing({ execPath : '.with doc .export' })
-
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -2246,24 +2233,19 @@ function openWith( test )
     var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
-    a.reflect();
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc. .export'
+    test.case = '.with doc. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2278,21 +2260,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/. .export'
+    test.case = '.with doc/. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2307,21 +2286,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with do .export'
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with do .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2339,21 +2315,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with docx .export'
+    test.case = '.with docx .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with docx .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2371,21 +2344,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/ .export'
+    test.case = '.with doc/ .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/ .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2400,26 +2370,22 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml'
+    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml';
 
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.fileDelete( a.abs( 'doc/.ex.will.yml' ) );
     a.fileProvider.fileDelete( a.abs( 'doc/.im.will.yml' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with doc/.will.yml .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2439,21 +2405,18 @@ function openWith( test )
     a.reflect();
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/doc .export'
+    test.case = '.with doc/doc .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/doc .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2468,21 +2431,18 @@ function openWith( test )
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/doc. .export'
+    test.case = '.with doc/doc. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/doc. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2497,7 +2457,7 @@ function openWith( test )
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -5186,7 +5146,7 @@ function hookCallInfo( test )
   // aaa : ?? /* Dmytro : a.appStart - mode : 'fork'; a.shell - mode : 'shell' */
   a.reflect();
 
-  /* - */
+  /* */
 
   a.appStart( '.clean' );
   a.appStart( '.export' )
@@ -5202,9 +5162,9 @@ function hookCallInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.hook.call info.js' )
   .then( ( op ) =>
@@ -5217,9 +5177,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with . .hook.call info.js' )
   .then( ( op ) =>
@@ -5232,9 +5192,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with * .hook.call info.js' )
   .then( ( op ) =>
@@ -5247,9 +5207,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5262,9 +5222,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 4 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5277,9 +5237,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5293,15 +5253,15 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookCallInfo */
+}
 
 hookCallInfo.rapidity = -1;
-hookCallInfo.timeOut = 300000;
+hookCallInfo.timeOut = 600000;
 hookCallInfo.description =
 `
 - do execute js script
@@ -5566,7 +5526,7 @@ function hookHlink( test )
 
   a.ready.then( ( op ) =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
@@ -5589,7 +5549,7 @@ function hookHlink( test )
     test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
@@ -5602,12 +5562,12 @@ function hookHlink( test )
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookHlink */
+}
 
 hookHlink.description =
 `
@@ -14926,7 +14886,7 @@ function importOutdated( test )
 {
   let context = this;
   let a = context.assetFor( test, 'importOutdated' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -19046,7 +19006,7 @@ function submodulesDownloadRecursive( test )
   return a.ready;
 }
 
-submodulesDownloadRecursive.timeOut = 500000;
+submodulesDownloadRecursive.timeOut = 1000000;
 // xxx
 
 //
