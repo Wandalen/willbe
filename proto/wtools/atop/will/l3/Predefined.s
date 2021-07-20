@@ -1084,7 +1084,7 @@ stepRoutineSubmodulesVersionsVerify.stepOptions =
   isValid : 1,
   hasRemote : 1,
   isUpToDate : 1,
-  isBehindRemote : 1
+  hasRemoteVersion : 1
 }
 
 stepRoutineSubmodulesVersionsVerify.uniqueOptions =
@@ -1095,7 +1095,7 @@ stepRoutineSubmodulesVersionsVerify.uniqueOptions =
   isValid : 1,
   hasRemote : 1,
   isUpToDate : 1,
-  isBehindRemote : 1
+  hasRemoteVersion : 1
 }
 
 

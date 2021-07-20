@@ -3731,7 +3731,7 @@ defaults.isValid = 1;
 defaults.isRepository = 1;
 defaults.hasRemote = 1;
 defaults.isUpToDate = 1;
-defaults.isBehindRemote = 1;
+defaults.hasRemoteVersion = 1;
 
 delete defaults.withStem;
 delete defaults.onEach;

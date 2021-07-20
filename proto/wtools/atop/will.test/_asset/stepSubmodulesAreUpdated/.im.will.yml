@@ -41,9 +41,9 @@ step :
     currentPath : path::downloadPath
     shell : git commit --allow-empty -m testmsg
 
-  submodules.are.updated.isBehindRemote.0:
+  submodules.are.updated.isUpToDate.0:
     inherit: submodules.are.updated
-    isBehindRemote : 0
+    isUpToDate : 0
 
 build :
 
@@ -107,4 +107,4 @@ build :
       debug : 1
       raw : 1
     steps :
-      - submodules.are.updated.isBehindRemote.0
+      - submodules.are.updated.isUpToDate.0
