@@ -725,15 +725,16 @@ function repoVerify( o )
       let remoteVersion = remoteParsed.hash || remoteParsed.tag || 'master';
       let localVersion = remoteProvider.versionLocalRetrive( module.repo.downloadPath );
 
-      if( remoteVersion === localVersion )
-      throw _.errBrief( '! Submodule', ( module.qualifiedName ), 'is not up to date!' );
-
+      if( remoteVersion !== localVersion )
       throw _.errBrief
       (
         '! Submodule', ( module.qualifiedName ), 'has version different from that is specified in will-file!',
         '\nCurrent:', localVersion,
         '\nExpected:', remoteVersion
       );
+
+      if( o.isBehindRemote ) 
+      throw _.errBrief( '! Submodule', ( module.qualifiedName ), 'is not up to date!' );
     }
 
     return true;
@@ -762,6 +763,7 @@ defaults.hasRemote = 1;
 defaults.isValid = 1;
 defaults.isRepository = 1;
 defaults.isUpToDate = 1
+defaults.isBehindRemote = 1;
 
 // --
 // relations

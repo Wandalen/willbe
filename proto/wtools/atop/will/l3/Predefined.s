@@ -1043,24 +1043,19 @@ function stepRoutineSubmodulesVersionsVerify( frame )
   let module = run.module;
   let will = module.will;
   let logger = will.transaction.logger;
+  let opts = _.props.extend( null, step.opts );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  return module.submodulesVerify
-  ({
-
-    recursive : 1,
+  let o = 
+  {
     throwing : 1,
     asMap : 1,
+  }
+  _.props.extend( o, opts );
 
-    hasFiles : 1,
-    isRepository : 1,
-    isValid : 1,
-    hasRemote : 1,
-    isUpToDate : 1,
-
-  })
+  return module.submodulesVerify( o )
   .finally( ( err, summary ) =>
   {
     if( err )
@@ -1083,7 +1078,26 @@ function stepRoutineSubmodulesVersionsVerify( frame )
 
 stepRoutineSubmodulesVersionsVerify.stepOptions =
 {
+  recursive : 1,
+  hasFiles : 1,
+  isRepository : 1,
+  isValid : 1,
+  hasRemote : 1,
+  isUpToDate : 1,
+  isBehindRemote : 1
 }
+
+stepRoutineSubmodulesVersionsVerify.uniqueOptions =
+{
+  recursive : 1,
+  hasFiles : 1,
+  isRepository : 1,
+  isValid : 1,
+  hasRemote : 1,
+  isUpToDate : 1,
+  isBehindRemote : 1
+}
+
 
 //
 
