@@ -473,7 +473,7 @@ function etcKillWillbe( test )
       test.identical( op.exitSignal, 'SIGTERM' );
 
       test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
-      test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
       test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
@@ -511,7 +511,7 @@ function etcKillWillbe( test )
       test.identical( op.exitSignal, 'SIGTERM' );
 
       test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
-      test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
       test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
@@ -587,7 +587,7 @@ function etcKillWillbe( test )
       test.identical( op.exitSignal, 'SIGINT' );
 
       test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
-      test.ge( _.strCount( op.output, '. Opened .' ), 3 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
       test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
