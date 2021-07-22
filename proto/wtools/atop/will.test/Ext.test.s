@@ -439,10 +439,10 @@ function etcRunWillbe( test )
 function etcKillWillbe( test )
 {
   const context = this;
-  const a = context.assetFor( test, 'simple' );
+  const a = context.assetFor( test, 'eachList' );
+  a.reflectMinimal();
   const con = _.take( null );
   const delay = 2000;
-  a.reflectMinimal();
 
   /* */
 
@@ -451,7 +451,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe without signal';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -472,9 +472,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGTERM' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
@@ -489,7 +489,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGTERM';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -510,9 +510,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGTERM' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
@@ -527,7 +527,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGKILL';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -548,9 +548,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGKILL' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 0 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
+      test.identical( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGKILL' ), 1 );
 
@@ -565,7 +565,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGINT';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -586,9 +586,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGINT' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
 
