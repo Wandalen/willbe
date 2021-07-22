@@ -24486,6 +24486,26 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, check is disabled via option';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.clean .submodules.download' )
+  a.appStartNonThrowing( '.submodules.download' )
+  a.appStart2( 'git commit --allow-empty -m test' )
+  a.appStartNonThrowing( '.build debug7' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
   return a.ready;
 }
 

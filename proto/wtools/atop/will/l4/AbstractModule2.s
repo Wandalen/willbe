@@ -713,6 +713,29 @@ function repoVerify( o )
 
     /* version check */
 
+    if( o.hasRemoteVersion )
+    {
+      if( module.repo.isUpToDate )
+      return true;
+
+      let remoteParsed = remoteProvider.pathParse( module.repo.remotePath );
+      let remoteVersion = remoteParsed.hash || remoteParsed.tag || 'master';
+      let localVersion = remoteProvider.versionLocalRetrive( module.repo.downloadPath );
+
+      if( remoteVersion !== localVersion )
+      {
+        if( !o.throwing )
+        return false;
+
+        throw _.errBrief
+        (
+          '! Submodule', ( module.qualifiedName ), 'has version different from that is specified in will-file!',
+          '\nCurrent:', localVersion,
+          '\nExpected:', remoteVersion
+        );
+      }
+    }
+
     if( o.isUpToDate )
     {
       if( module.repo.isUpToDate )
@@ -721,19 +744,7 @@ function repoVerify( o )
       if( !o.throwing )
       return false;
 
-      let remoteParsed = remoteProvider.pathParse( module.repo.remotePath );
-      let remoteVersion = remoteParsed.hash || remoteParsed.tag || 'master';
-      let localVersion = remoteProvider.versionLocalRetrive( module.repo.downloadPath );
-
-      if( remoteVersion === localVersion )
       throw _.errBrief( '! Submodule', ( module.qualifiedName ), 'is not up to date!' );
-
-      throw _.errBrief
-      (
-        '! Submodule', ( module.qualifiedName ), 'has version different from that is specified in will-file!',
-        '\nCurrent:', localVersion,
-        '\nExpected:', remoteVersion
-      );
     }
 
     return true;
@@ -762,6 +773,7 @@ defaults.hasRemote = 1;
 defaults.isValid = 1;
 defaults.isRepository = 1;
 defaults.isUpToDate = 1
+defaults.hasRemoteVersion = 1;
 
 // --
 // relations
