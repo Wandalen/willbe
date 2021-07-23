@@ -1048,11 +1048,11 @@ function stepRoutineSubmodulesVersionsVerify( frame )
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  let o = 
+  let o =
   {
     throwing : 1,
     asMap : 1,
-  }
+  };
   _.props.extend( o, opts );
 
   return module.submodulesVerify( o )
