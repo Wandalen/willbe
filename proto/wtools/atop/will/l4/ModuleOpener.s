@@ -1703,7 +1703,7 @@ function _repoDownload( o )
     if( _.longHas( vscTools.protocols, 'git' ) )
     o2.extra.fetchingDefaults =
     {
-      attemptLimit : 5,
+      attemptLimit : 6,
       attemptDelay : 250,
       attemptDelayMultiplier : 4,
     };
