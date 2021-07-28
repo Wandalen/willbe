@@ -41,6 +41,10 @@ step :
     currentPath : path::downloadPath
     shell : git commit --allow-empty -m testmsg
 
+  submodules.are.updated.isUpToDate.0:
+    inherit: submodules.are.updated
+    isUpToDate : 0
+
 build :
 
   debug:
@@ -97,3 +101,10 @@ build :
       - submodules.download
       - commit.local
       - submodules.are.updated
+
+  debug7 :
+    criterion :
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.are.updated.isUpToDate.0

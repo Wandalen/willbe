@@ -1442,6 +1442,8 @@ module:
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules2.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodulesDef.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView
+          - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView/will.yml
           - ../proto/wtools/atop/will.test/_asset/clean
           - ../proto/wtools/atop/will.test/_asset/clean/Build.will.yml
           - ../proto/wtools/atop/will.test/_asset/clean/NoBuild.will.yml
@@ -3108,16 +3110,17 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module/.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShell
-          - ../proto/wtools/atop/will.test/_asset/stepShell/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepShell/will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepShellResolvePath
+          - ../proto/wtools/atop/will.test/_asset/stepShellResolvePath/will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellSeveralCommands
           - >-
-            ../proto/wtools/atop/will.test/_asset/stepShellSeveralCommands/.will.yml
+            ../proto/wtools/atop/will.test/_asset/stepShellSeveralCommands/will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue
           - >-
-            ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue/.im.will.yml
+            ../proto/wtools/atop/will.test/_asset/stepShellUsingCriterionValue/will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellVerbosity
-          - >-
-            ../proto/wtools/atop/will.test/_asset/stepShellVerbosity/.im.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepShellVerbosity/will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion
           - >-
             ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/.im.will.yml

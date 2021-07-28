@@ -105,9 +105,9 @@ function onModule( context )
   _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
 
   if( o.submodulesUpdating )
-  context.start( 'will.local .imply withOut:0 .submodules.update' );
-  // context.start( 'will.local .submodules.update' );
-  context.start( 'will.local .export.purging' ); /* xxx */
+  context.start( 'will .imply withOut:0 .submodules.update' );
+  // context.start( 'will .submodules.update' );
+  context.start( 'will .export.purging' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )

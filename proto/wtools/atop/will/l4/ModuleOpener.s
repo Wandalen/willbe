@@ -1176,9 +1176,14 @@ function _repoForm()
     opener._.localPath = opener.commonPath;
     downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
     remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet();
-    // isRemote = opener.repoIsRemote();
-    isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
-    _.assert( isRemote === true );
+    if( remotePath !== null )
+    {
+      isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
+      _.assert( isRemote === true );
+    }
+    // // isRemote = opener.repoIsRemote();
+    // isRemote = will.pathIsRemote( opener.remotePath ? path.common( opener.remotePath ) : opener.commonPath );
+    // _.assert( isRemote === true );
     /*
       xxx qqq :
         make it working for case when remote path is local
@@ -1690,14 +1695,25 @@ function _repoDownload( o )
       {
         fetching : 0,
       },
-    }
+    };
+
+    let vscTools = _.repo.vcsFor( opener.remotePath );
+    _.assert( !!vscTools );
+
+    if( _.longHas( vscTools.protocols, 'git' ) )
+    o2.extra.fetchingDefaults =
+    {
+      attemptLimit : 6,
+      attemptDelay : 250,
+      attemptDelayMultiplier : 4,
+    };
 
     if( o.mode === 'update' )
     {
       // let vscTools = will.vcsToolsFor( opener.remotePath );
-      let vscTools = _.repo.vcsFor( opener.remotePath );
+      // let vscTools = _.repo.vcsFor( opener.remotePath );
 
-      _.assert( !!vscTools )
+      // _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
       {
         o2.extra.fetching = 1;

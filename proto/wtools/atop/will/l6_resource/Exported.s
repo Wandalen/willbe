@@ -525,12 +525,12 @@ function _performExportedReflectors()
       // maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
     }
 
+    exportedReflector.src.prefixPath = inModule.pathResolve( exportedReflector.src.prefixPath );
     exportedReflector.src.and( filter2 ).pathsSupplementJoining( filter2 );
     exportedReflector.src.filePath = exportedReflector.filePath;
     _.assert( !exportedReflector.src.prefixPath, 'not tested' );
     if( !exportedReflector.src.prefixPath )
     exportedReflector.src.prefixPath = inModule.inPath;
-
   }
   else if( _.arrayIs( exp ) )
   {

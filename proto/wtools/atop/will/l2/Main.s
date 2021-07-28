@@ -3401,6 +3401,7 @@ var defaults = modulesVerify_body.defaults =
   isRepository : 1,
   hasRemote : 1,
   isUpToDate : 1,
+  hasRemoteVersion : 1
 
 }
 

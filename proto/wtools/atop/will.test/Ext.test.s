@@ -439,10 +439,10 @@ function etcRunWillbe( test )
 function etcKillWillbe( test )
 {
   const context = this;
-  const a = context.assetFor( test, 'simple' );
-  const con = _.take( null );
-  const delay = 1500;
+  const a = context.assetFor( test, 'eachList' );
   a.reflectMinimal();
+  const con = _.take( null );
+  const delay = 2000;
 
   /* */
 
@@ -451,7 +451,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe without signal';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -472,9 +472,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGTERM' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
@@ -489,7 +489,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGTERM';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -510,9 +510,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGTERM' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
@@ -527,7 +527,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGKILL';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -548,9 +548,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGKILL' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 0 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
+      test.identical( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGKILL' ), 1 );
 
@@ -565,7 +565,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGINT';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -586,9 +586,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGINT' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
 
@@ -1015,6 +1015,55 @@ build.rapidity = -1;
 
 //
 
+function buildStepShellAndViewWithoutAbout( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildStepShellAndView' );
+
+  if( !_.process.insideTestContainer() )
+  return test.true( true );
+
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ execPath : '.build run' })
+  .then( ( op ) =>
+  {
+    test.case = 'module is not a git repository';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, 'View http:///www.google.com' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  a.shell( 'git init' );
+  a.shell( 'git remote add origin https://github.com/Wandalen/wModuleForTesting2.git' );
+  a.appStart({ execPath : '.build run' })
+  .then( ( op ) =>
+  {
+    test.case = 'module is a git repository';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::buildStepShellAndViewWithoutAbout / build::run' ), 1 );
+    test.identical( _.strCount( op.output, 'View http:///www.google.com' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready.delay( 1000 );
+}
+
+//
+
 /*
 Test transpilation of JS files.
 */
@@ -1436,47 +1485,38 @@ function buildSingleStep( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepShell' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug1'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build debug1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug2'
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.build debug2' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     return null;
-  })
+  });
 
   /* - */
 
@@ -2143,21 +2183,17 @@ function openWith( test )
 {
   let context = this;
   let a = context.assetFor( test, 'open' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.export'
+    test.case = '.export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2172,21 +2208,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with . .export'
+    test.case = '.with . .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with . .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2201,21 +2234,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc .export'
+    test.case = '.with doc .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2230,23 +2260,20 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc .export -- deleted doc.will.yml'
-    a.reflect();
+    test.case = '.with doc .export -- deleted doc.will.yml';
+    a.reflectMinimal();
     a.fileProvider.fileDelete( a.abs( 'doc.ex.will.yml' ) );
     a.fileProvider.fileDelete( a.abs( 'doc.im.will.yml' ) );
     return null;
-  })
+  });
 
   a.appStartNonThrowing({ execPath : '.with doc .export' })
-
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -2260,24 +2287,19 @@ function openWith( test )
     var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
-    a.reflect();
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc. .export'
+    test.case = '.with doc. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2292,21 +2314,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/. .export'
+    test.case = '.with doc/. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2321,21 +2340,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with do .export'
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with do .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2353,21 +2369,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with docx .export'
+    test.case = '.with docx .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with docx .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2385,21 +2398,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/ .export'
+    test.case = '.with doc/ .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/ .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2414,26 +2424,22 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml'
+    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml';
 
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.fileDelete( a.abs( 'doc/.ex.will.yml' ) );
     a.fileProvider.fileDelete( a.abs( 'doc/.im.will.yml' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with doc/.will.yml .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2453,21 +2459,18 @@ function openWith( test )
     a.reflect();
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/doc .export'
+    test.case = '.with doc/doc .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/doc .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2482,21 +2485,18 @@ function openWith( test )
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/doc. .export'
+    test.case = '.with doc/doc. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/doc. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2511,7 +2511,7 @@ function openWith( test )
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -4453,7 +4453,7 @@ function reflectNpmModules( test )
   return a.ready;
 }
 
-reflectNpmModules.timeOut = 150000;
+reflectNpmModules.timeOut = 300000;
 
 //
 
@@ -5198,7 +5198,7 @@ function hookCallInfo( test )
   // aaa : ?? /* Dmytro : a.appStart - mode : 'fork'; a.shell - mode : 'shell' */
   a.reflect();
 
-  /* - */
+  /* */
 
   a.appStart( '.clean' );
   a.appStart( '.export' )
@@ -5214,9 +5214,9 @@ function hookCallInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.hook.call info.js' )
   .then( ( op ) =>
@@ -5229,9 +5229,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with . .hook.call info.js' )
   .then( ( op ) =>
@@ -5244,9 +5244,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with * .hook.call info.js' )
   .then( ( op ) =>
@@ -5259,9 +5259,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5274,9 +5274,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 4 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5289,9 +5289,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5305,15 +5305,15 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookCallInfo */
+}
 
 hookCallInfo.rapidity = -1;
-hookCallInfo.timeOut = 300000;
+hookCallInfo.timeOut = 600000;
 hookCallInfo.description =
 `
 - do execute js script
@@ -5578,7 +5578,7 @@ function hookHlink( test )
 
   a.ready.then( ( op ) =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
@@ -5601,7 +5601,7 @@ function hookHlink( test )
     test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
@@ -5614,12 +5614,12 @@ function hookHlink( test )
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookHlink */
+}
 
 hookHlink.description =
 `
@@ -7638,7 +7638,7 @@ function verbositySet( test )
   return a.ready;
 }
 
-verbositySet.timeOut = 300000;
+verbositySet.timeOut = 600000;
 
 //
 
@@ -7929,6 +7929,7 @@ function verbosityStepDelete( test )
   return a.ready;
 }
 
+verbosityStepDelete.timeOut = 600000;
 verbosityStepDelete.rapidity = -1;
 
 //
@@ -14618,7 +14619,7 @@ Current willbe should alert user about unexpected fields.
 
 //
 
-/* qqq : for Dmytro : fix it */
+/* aaa : for Dmytro : fix it */ /* Dmytro : fixed */
 
 function exportCreatesOutDir( test )
 {
@@ -14638,11 +14639,8 @@ function exportCreatesOutDir( test )
   /* */
 
   return a.ready;
-
-  /* */
 }
 
-exportCreatesOutDir.experimental = 1;
 exportCreatesOutDir.description =
 `
 Reproduces situation when out directory is not present and should be created by willbe.
@@ -14940,7 +14938,7 @@ function importOutdated( test )
 {
   let context = this;
   let a = context.assetFor( test, 'importOutdated' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -19044,7 +19042,7 @@ function submodulesDownloadRecursive( test )
   return a.ready;
 }
 
-submodulesDownloadRecursive.timeOut = 500000;
+submodulesDownloadRecursive.timeOut = 1000000;
 // xxx
 
 //
@@ -24119,7 +24117,7 @@ function stepModulesUpdate( test )
   }
 }
 
-stepModulesUpdate.timeOut = 600000;
+stepModulesUpdate.timeOut = 800000;
 stepModulesUpdate.rapidity = -1;
 
 //
@@ -24524,6 +24522,26 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, check is disabled via option';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.clean .submodules.download' )
+  a.appStartNonThrowing( '.submodules.download' )
+  a.appStart2( 'git commit --allow-empty -m test' )
+  a.appStartNonThrowing( '.build debug7' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
   return a.ready;
 }
 
@@ -24663,6 +24681,84 @@ function stepBuild( test )
     test.identical( _.strCount( op.output, 'Instance build::step3 already exists' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to make resource build::step3' ), 1 );
     return op;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepShellWithPathResolving( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepShellResolvePath' );
+  a.reflect();
+  a.appStart( '.submodules.download' );
+
+  /* - */
+
+  a.appStart({ execPath : '.build module.dir.explicit' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.explicit' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.explicit' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build module.dir.resolve.from.path' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.resolve.from.path' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.resolve.from.path' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build module.dir.resolve.and.join' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.resolve.and.join' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.resolve.and.join' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.build module.dir.resolve.with.criterion' })
+  .then( ( op ) =>
+  {
+    test.case = 'run script from another directory';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, 'Building module::stepShellWithPathResolving / build::module.dir.resolve.with.criterion' ), 1 );
+    test.identical( _.strCount( op.output, '> node Sample.s' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'The sum of 1 and 2 is : 3' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepShellWithPathResolving / build::module.dir.resolve.with.criterion' ), 1 );
+    return null;
   });
 
   /* - */
@@ -26511,7 +26607,7 @@ function stepView( test )
   let context = this;
   let a = context.assetFor( test, 'stepView' );
 
-  if( process.platform !== 'linux' )
+  if( process.platform !== 'linux' || !_.process.insideTestContainer() )
   return test.true( true );
 
   /* - */
@@ -28108,7 +28204,7 @@ function commandHookCallWithHookInfo( test )
 }
 
 commandHookCallWithHookInfo.rapidity = -1;
-commandHookCallWithHookInfo.timeOut = 300000;
+commandHookCallWithHookInfo.timeOut = 600000;
 commandHookCallWithHookInfo.description =
 `
 - do execute js script
@@ -28128,8 +28224,7 @@ function commandDoWithHookStatus( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.reflect();
@@ -28138,7 +28233,7 @@ function commandDoWithHookStatus( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.clean' );
   a.appStart( '.export' )
@@ -28210,7 +28305,7 @@ function commandDoWithHookStatus( test )
 }
 
 commandDoWithHookStatus.rapidity = -1;
-commandDoWithHookStatus.timeOut = 300000;
+commandDoWithHookStatus.timeOut = 600000;
 commandDoWithHookStatus.description =
 `
 - it.shell exposed for action
@@ -43709,6 +43804,7 @@ const Proto =
     // build
 
     build,
+    buildStepShellAndViewWithoutAbout,
     buildTranspile,
     buildTranspileWithOptions,
     buildTranspileExperiment,
@@ -43941,6 +44037,7 @@ const Proto =
     stepVersionBump,
     stepSubmodulesAreUpdated,
     stepBuild,
+    stepShellWithPathResolving,
     stepShellWithSeveralCommands,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
