@@ -1701,12 +1701,14 @@ function _repoDownload( o )
     _.assert( !!vscTools );
 
     if( _.longHas( vscTools.protocols, 'git' ) )
-    o2.extra.fetchingDefaults =
     {
-      attemptLimit : 6,
-      attemptDelay : 250,
-      attemptDelayMultiplier : 4,
-    };
+      o2.extra.fetchingDefaults =
+      {
+        attemptLimit : 7,
+        attemptDelay : 600,
+        attemptDelayMultiplier : 3,
+      };
+    }
 
     if( o.mode === 'update' )
     {
@@ -1720,6 +1722,8 @@ function _repoDownload( o )
         o2.extra.fetchingTags = 1;
       }
     }
+
+    o2.verbosity = 5
 
     if( downloading && !o.dry )
     return _.will.Predefined._filesReflect.call( fileProvider, o2 );
