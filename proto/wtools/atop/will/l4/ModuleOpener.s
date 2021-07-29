@@ -1704,7 +1704,7 @@ function _repoDownload( o )
     {
       o2.extra.fetchingDefaults =
       {
-        attemptLimit : 7,
+        attemptLimit : 8,
         attemptDelay : 600,
         attemptDelayMultiplier : 3,
       };
