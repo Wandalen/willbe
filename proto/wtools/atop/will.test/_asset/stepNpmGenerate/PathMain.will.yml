@@ -1,0 +1,23 @@
+path :
+  proto :
+    path : 'proto'
+
+  entry :
+    path : 'proto'
+    criterion :
+      debug : [ debug, release ]
+
+step :
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1

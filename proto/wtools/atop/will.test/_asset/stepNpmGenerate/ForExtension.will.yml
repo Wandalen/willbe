@@ -1,0 +1,126 @@
+about :
+
+  name : 'Extension willfile'
+  description : 'To check the extension'
+  version : '1.1.1'
+  enabled : 0
+  interpreters :
+  - nodejs = 6.0.0
+  - firefox >= 67.0.0
+  - chromium >= 67.0.0
+  keywords :
+  - wtools
+  - common
+  license : GPL
+  author : 'Author <author1@dot.com>'
+  contributors :
+  - 'Contributor1 <contributor1@dot.com>'
+  - 'Contributor2 <contributor2@xxx.com>'
+  - 'Contributor3 <contributor3@dot.com>'
+  npm.name : 'willfileextend'
+  npm.scripts :
+    test : wtest .run proto/** v:5
+    docgen : wdocgen .build proto/wtools
+    eslint : eslint proto
+
+submodule :
+
+  eslint :
+    path : npm:///eslint#7.1.0
+    enabled : 1
+    criterion :
+      debug : 1
+
+  NpmFromWillfile :
+    path : npm:///npmfromwillfile
+    enabled : 1
+    criterion :
+      development : 0
+
+  newsubmodule :
+    path : hd://.
+    enabled : 1
+    criterion :
+      development : 1
+
+path :
+
+  in : '..'
+  out : 'out'
+  new : 'new'
+  repository : git+https:///github.com/author/WillfileExtend.git
+  origins :
+   - git+https:///github.com/author/WillfileExtend.git
+   - npm:///willfileextend
+  bugtracker : https:///github.com/author/WillfileExtend/issues
+
+reflector :
+
+  proto.debug :
+    inherit : predefined.*
+    criterion :
+      debug : 1
+    filePath :
+      path::proto : '{path::out.*=1}/source'
+
+  proto.release :
+    inherit : predefined.*
+    criterion :
+      debug : 'release'
+    filePath :
+      path::proto : '{path::out.*=1}/source'
+
+  proto.clean :
+    inherit : predefined.*
+    criterion :
+      debug : 'delete'
+    filePath : '{path::out}'
+
+step :
+
+  clean.debug :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : 1
+
+  clean.release :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : 'release'
+
+  git.sync :
+    inherit : 'git.sync'
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - step::clean.*=1
+      - proto.*=1
+
+  release :
+    criterion :
+      debug : 0
+    steps :
+      - step::clean.*=1
+      - proto.*=1
+
+  git.sync :
+    steps :
+      - git.sync
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1
