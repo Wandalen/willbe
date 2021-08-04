@@ -24775,6 +24775,261 @@ function stepShellWithSeveralCommands( test )
 
 //
 
+function stepNpmGenerate( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNpmGenerate' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ args : '.with Author .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `author`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Contributors .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `contributors`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Description .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `description`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.description, 'To check the conversion' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Enabled .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `enabled`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Interpreters .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `interpreters`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.interpreters, undefined );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Keywords .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `keywords`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.keywords, [ 'tools', 'export' ] );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with License .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `license`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.license, 'MIT' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `name`, name of willfile';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, 'NpmFromWillfile' );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with NpmName .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `name`, npm name';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, 'npmfromwillfile' );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with NpmScripts .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `scripts`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.scripts, { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `main`, should not read path';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.main, 'proto' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathRepository .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check fields `repository` and `bugs`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.repository, 'https://github.com/author/NpmFromWillfile.git' );
+    test.identical( config.bugs, 'https://github.com/author/NpmFromWillfile/issues' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with Submodule .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check fields `dependencies` and `devDependencies`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.dependencies, { eslint : '7.1.0', babel : '^0.3.0' } );
+    test.identical( config.devDependencies, { NpmFromWillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
+    test.identical( config.name, 'npmfromwillfile' );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `version`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.version, '0.0.0' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check unnamed willfiles, full config';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { node : '>= 6.0.0', chrome : '>= 60.0.0', firefox : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { test : 'wtest .run proto/** v:5', docgen : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  return a.ready;
+}
+
+stepNpmGenerate.rapidity = -1;
+
+//
+
 function stepGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -44055,6 +44310,7 @@ const Proto =
     stepBuild,
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
+    stepNpmGenerate,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
     stepGitPull,
