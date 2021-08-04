@@ -5,12 +5,40 @@ path :
   entry :
     path : 'proto'
     criterion :
-      debug : [ debug, release ]
+      debug : [ 0, 1 ]
 
 step :
 
   npm.generate :
     inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+  npm.entry.path.strict :
+    inherit : npm.generate
+    entryPath : proto/File.s
+
+  npm.entry.path.resolve.simple :
+    inherit : npm.generate
+    entryPath : '{path::proto}/File.s'
+
+  npm.entry.path.resolve.criterion :
+    inherit : npm.generate
+    entryPath : '{path::entry.*=1}/File.s'
+    criterion :
+      debug : [ 0, 1 ]
+
+  npm.files.path.strict :
+    inherit : npm.generate
+    filesPath : proto/**
+
+  npm.files.path.resolve.simple :
+    inherit : npm.generate
+    filesPath : '{path::proto}/**'
+
+  npm.files.path.resolve.criterion :
+    inherit : npm.generate
+    filesPath : '{path::proto}/**'
     criterion :
       debug : [ 0, 1 ]
 
@@ -21,3 +49,31 @@ build :
       debug : 1
     steps :
       - npm.generate.*=1
+
+  npm.entry.path.strict :
+    steps :
+      - npm.entry.path.strict
+
+  npm.entry.path.resolve.simple :
+    steps :
+      - npm.entry.path.resolve.simple
+
+  npm.entry.path.resolve.criterion :
+    criterion :
+      debug : 1
+    steps :
+      - npm.entry.path.resolve.criterion.*=1
+
+  npm.files.path.strict :
+    steps :
+      - npm.files.path.strict
+
+  npm.files.path.resolve.simple :
+    steps :
+      - npm.files.path.resolve.simple
+
+  npm.files.path.resolve.criterion :
+    criterion :
+      debug : 1
+    steps :
+      - npm.files.path.resolve.criterion.*=1

@@ -70,6 +70,23 @@ step :
     criterion :
       debug : [ 0, 1 ]
 
+  npm.package.path.strict :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    packagePath : out/debug/package.json
+
+  npm.package.path.resolve.simple :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    packagePath : '{path::out}/package.json'
+
+  npm.package.path.resolve.criterion :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    packagePath : '{path::out.*=1}/package.json'
+    criterion :
+      debug : [ 0, 1 ]
+
 build :
 
   debug :
@@ -92,3 +109,17 @@ build :
       debug : 1
     steps :
       - npm.generate.*=1
+
+  npm.package.path.strict :
+    steps :
+      - npm.package.path.strict
+
+  npm.package.path.resolve.simple :
+    steps :
+      - npm.package.path.resolve.simple
+
+  npm.package.path.resolve.criterion :
+    criterion :
+      debug : 1
+    steps :
+      - npm.package.path.resolve.criterion.*=1

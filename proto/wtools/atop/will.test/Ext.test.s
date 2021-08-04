@@ -25030,6 +25030,230 @@ stepNpmGenerate.rapidity = -1;
 
 //
 
+function stepNpmGenerateOptionsInStep( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNpmGenerate' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.package.path.strict' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, direct link to directory';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.package.path.resolve.simple' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out/' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.package.path.resolve.criterion' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.strict' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, direct link to file';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { main : 'proto/File.s' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.resolve.simple' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { main : 'proto/File.s' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.resolve.criterion' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { main : 'proto/File.s' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.strict' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `filesPath`, direct link to file';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.resolve.simple' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.resolve.criterion' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -44311,6 +44535,7 @@ const Proto =
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
     stepNpmGenerate,
+    stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
     stepGitPull,
