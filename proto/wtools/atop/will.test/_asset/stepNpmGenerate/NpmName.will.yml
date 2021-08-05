@@ -1,0 +1,17 @@
+about :
+  npm.name : 'npmfromwillfile'
+
+step :
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1

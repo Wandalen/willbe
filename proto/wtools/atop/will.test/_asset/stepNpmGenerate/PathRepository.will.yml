@@ -1,0 +1,22 @@
+path :
+
+  repository : git+https:///github.com/author/NpmFromWillfile.git
+  origins :
+   - git+https:///github.com/author/NpmFromWillfile.git
+   - npm:///npmfromwillfile
+  bugtracker : https:///github.com/author/NpmFromWillfile/issues
+
+step :
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1
