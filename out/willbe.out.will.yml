@@ -3109,6 +3109,39 @@ module:
           - ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module
           - >-
             ../proto/wtools/atop/will.test/_asset/stepModulesUpdate/module/.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/.ex.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/.im.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Author.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Contributors.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Description.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Enabled.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Interpreters.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Keywords.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/License.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Name.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/NpmName.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/NpmScripts.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/package.json
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/PathMain.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/PathRepository.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Submodule.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/Version.will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/proto
+          - ../proto/wtools/atop/will.test/_asset/stepNpmGenerate/proto/File.s
           - ../proto/wtools/atop/will.test/_asset/stepShell
           - ../proto/wtools/atop/will.test/_asset/stepShell/will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellResolvePath
