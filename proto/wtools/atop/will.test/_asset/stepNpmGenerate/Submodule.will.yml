@@ -1,0 +1,46 @@
+about :
+
+  npm.name : npmfromwillfile
+
+submodule :
+
+  eslint :
+    path : npm:///eslint!7.1.0
+    enabled : 1 # submodule
+    criterion :
+      debug : 1
+  babel :
+    path : npm:///babel!^0.3.0
+    enabled : 1 # submodule
+    criterion :
+      debug : 1
+  NpmFromWillfile :
+    path : hd://.
+    enabled : 1 # submodule
+    criterion :
+      development : 1
+  wTesting :
+    path : npm:///wTesting
+    enabled : 1 # submodule
+    criterion :
+      development : 1
+  willbe :
+    path : npm:///willbe!alpha
+    enabled : 1 # submodule
+    criterion :
+      development : 1
+
+step :
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1
