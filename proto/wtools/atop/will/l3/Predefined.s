@@ -646,6 +646,7 @@ stepRoutineNpmGenerate.stepOptions =
   packagePath : null,
   entryPath : null,
   filesPath : null,
+  moduleName : null,
   withDisabledSubmodules : 0,
 };
 
