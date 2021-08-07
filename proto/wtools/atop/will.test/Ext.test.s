@@ -38189,6 +38189,22 @@ function commandNpmFromWillfileOptionsInCommand( test )
     return null;
   });
 
+  /* */
+
+  a.appStart({ args : '.with Name .npm.from.willfile moduleName:"user.module.name"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `name`';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { name : 'user.module.name' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
   /* - */
 
   return a.ready;
