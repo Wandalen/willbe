@@ -25143,7 +25143,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.strict' });
+  a.appStart({ args : '.with PathMain .build npm.entry.path.strict' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, direct link to file';
@@ -25161,7 +25161,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.resolve.simple' });
+  a.appStart({ args : '.with PathMain .build npm.entry.path.resolve.simple' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25179,7 +25179,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.resolve.criterion' });
+  a.appStart({ args : '.with PathMain .build npm.entry.path.resolve.criterion' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25197,7 +25197,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.strict' });
+  a.appStart({ args : '.with PathMain .build npm.files.path.strict' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `filesPath`, direct link to file';
@@ -25215,7 +25215,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.resolve.simple' });
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.simple' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25233,7 +25233,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.resolve.criterion' });
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.criterion' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25242,6 +25242,22 @@ function stepNpmGenerateOptionsInStep( test )
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .build generate.with.module.name' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `name`';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { name : 'user.module.name' };
     test.identical( config, exp );
 
     return null;
