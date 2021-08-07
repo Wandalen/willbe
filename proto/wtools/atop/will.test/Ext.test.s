@@ -4351,18 +4351,9 @@ function reflectNpmModules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'reflectNpmModules' );
+  a.reflect();
 
   /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    a.reflect();
-    return null;
-  })
-
-  /* */
 
   a.appStart( '.build' )
   .then( ( op ) =>
@@ -4378,12 +4369,14 @@ function reflectNpmModules( test )
       './out/wModuleForTesting12ab.out.will.yml',
       './out/wModuleForTesting2a.out.will.yml',
       './proto',
+      './proto/node_modules',
+      './proto/node_modules/wmodulefortesting2a',
       './proto/wtools',
       './proto/wtools/testing',
       './proto/wtools/testing/Basic.s',
+      './proto/wtools/testing/Common.s',
       './proto/wtools/testing/l3',
       './proto/wtools/testing/l3/testing2a',
-      './proto/wtools/testing/l3/testing2a/Include.s',
       './proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './proto/wtools/testing/l4',
       './proto/wtools/testing/l4/testing12ab',
@@ -4394,9 +4387,9 @@ function reflectNpmModules( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  /*  */
+  /* - */
 
   return a.ready;
 }
