@@ -4950,8 +4950,8 @@ function npmGenerateFromWillfile( o )
     data.files = path.s.relative( path.dir( packagePath ), files );
   }
 
-  if( o.moduleName )
-  data.name = o.moduleName;
+  if( o.npmName )
+  data.name = o.npmName;
 
   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
 
@@ -4971,7 +4971,7 @@ npmGenerateFromWillfile.defaults =
   packagePath : null,
   entryPath : null,
   filesPath : null,
-  moduleName : null,
+  npmName : null,
 
   modules : null,
   currentContext : null,

@@ -38176,7 +38176,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.with Name .npm.from.willfile moduleName:"user.module.name"' });
+  a.appStart({ args : '.with Name .npm.from.willfile npmName:"user.module.name"' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `name`';

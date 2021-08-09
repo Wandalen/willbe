@@ -10,7 +10,7 @@ step :
 
   generate.with.module.name :
     inherit : npm.generate
-    moduleName : 'user.module.name'
+    npmName : 'user.module.name'
 
 build :
 
