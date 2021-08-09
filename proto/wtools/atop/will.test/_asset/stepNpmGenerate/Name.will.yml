@@ -8,6 +8,10 @@ step :
     criterion :
       debug : [ 0, 1 ]
 
+  generate.with.module.name :
+    inherit : npm.generate
+    npmName : 'user.module.name'
+
 build :
 
   npm.generate :
@@ -15,3 +19,7 @@ build :
       debug : 1
     steps :
       - npm.generate.*=1
+
+  generate.with.module.name :
+    steps :
+      - generate.with.module.name

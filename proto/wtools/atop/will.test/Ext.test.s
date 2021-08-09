@@ -4351,18 +4351,9 @@ function reflectNpmModules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'reflectNpmModules' );
+  a.reflect();
 
   /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    a.reflect();
-    return null;
-  })
-
-  /* */
 
   a.appStart( '.build' )
   .then( ( op ) =>
@@ -4378,12 +4369,14 @@ function reflectNpmModules( test )
       './out/wModuleForTesting12ab.out.will.yml',
       './out/wModuleForTesting2a.out.will.yml',
       './proto',
+      './proto/node_modules',
+      './proto/node_modules/wmodulefortesting2a',
       './proto/wtools',
       './proto/wtools/testing',
       './proto/wtools/testing/Basic.s',
+      './proto/wtools/testing/Common.s',
       './proto/wtools/testing/l3',
       './proto/wtools/testing/l3/testing2a',
-      './proto/wtools/testing/l3/testing2a/Include.s',
       './proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './proto/wtools/testing/l4',
       './proto/wtools/testing/l4/testing12ab',
@@ -4394,9 +4387,9 @@ function reflectNpmModules( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  /*  */
+  /* - */
 
   return a.ready;
 }
@@ -19458,127 +19451,119 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with c .clean recursive:2' )
   a.appStart( '.with c .submodules.download' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with c .submodules.download' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with c .clean recursive:2' )
   a.appStart( '.with c .submodules.download recursive:2' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with c .submodules.download recursive:2' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 
-} /* end of function submodulesDownloadDiffDownloadPathsIrregular */
+}
 
 submodulesDownloadDiffDownloadPathsIrregular.rapidity = -1;
 submodulesDownloadDiffDownloadPathsIrregular.timeOut = 400000;
@@ -25143,7 +25128,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.strict' });
+  a.appStart({ args : '.with PathMain .build npm.entry.path.strict' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, direct link to file';
@@ -25161,7 +25146,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.resolve.simple' });
+  a.appStart({ args : '.with PathMain .build npm.entry.path.resolve.simple' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25179,7 +25164,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.entry.path.resolve.criterion' });
+  a.appStart({ args : '.with PathMain .build npm.entry.path.resolve.criterion' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25197,7 +25182,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.strict' });
+  a.appStart({ args : '.with PathMain .build npm.files.path.strict' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `filesPath`, direct link to file';
@@ -25215,7 +25200,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.resolve.simple' });
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.simple' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25233,7 +25218,7 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
-  a.appStart({ args : '.imply withSubmodules:0 .with PathMain .build npm.files.path.resolve.criterion' });
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.criterion' });
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25242,6 +25227,22 @@ function stepNpmGenerateOptionsInStep( test )
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .build generate.with.module.name' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `name`';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { name : 'user.module.name' };
     test.identical( config, exp );
 
     return null;
@@ -38168,6 +38169,22 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .npm.from.willfile npmName:"user.module.name"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `name`';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { name : 'user.module.name' };
     test.identical( config, exp );
 
     return null;
