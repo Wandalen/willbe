@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: 24f2f7fb0c1f7a4bb646e61cb5a4fab0
-    size: 9111
+    hash: d88c252a20f9e19fec3799300239de34
+    size: 9117
 module:
   willbe.out:
     about:
@@ -3959,7 +3959,7 @@ module:
         autoExporting: 0
         enabled: 0
       eslint:
-        path: 'npm:///eslint#7.1.0'
+        path: 'npm:///eslint!7.1.0'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -3971,7 +3971,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar'
+        path: 'npm:///tar!6.1.7'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -4826,7 +4826,7 @@ module:
         autoExporting: 0
         enabled: 0
       eslint:
-        path: 'npm:///eslint#7.1.0'
+        path: 'npm:///eslint!7.1.0'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -4838,7 +4838,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar'
+        path: 'npm:///tar!6.1.7'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -5405,5 +5405,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 24f2f7fb0c1f7a4bb646e61cb5a4fab0
-        size: 9111
+        hash: d88c252a20f9e19fec3799300239de34
+        size: 9117
