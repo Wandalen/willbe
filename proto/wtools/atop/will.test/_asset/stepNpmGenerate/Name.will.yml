@@ -1,0 +1,25 @@
+about :
+  name : 'NpmFromWillfile'
+
+step :
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+  generate.with.module.name :
+    inherit : npm.generate
+    npmName : 'user.module.name'
+
+build :
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1
+
+  generate.with.module.name :
+    steps :
+      - generate.with.module.name

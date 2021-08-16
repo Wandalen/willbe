@@ -631,7 +631,7 @@ function stepRoutineNpmGenerate( frame )
   let run = frame.run;
   let module = run.module;
   let opts = _.props.extend( null, step.opts );
-  opts.verbosity = step.verbosityWithDelta( -1 );
+  opts.logger = step.verbosityWithDelta( -1 );
   opts.currentContext = step;
   opts.modules = [ module ];
 
@@ -643,14 +643,16 @@ function stepRoutineNpmGenerate( frame )
 
 stepRoutineNpmGenerate.stepOptions =
 {
-  packagePath : 'package.json',
-  entryPath : 'Index.js',
+  packagePath : null,
+  entryPath : null,
   filesPath : null,
-}
+  npmName : null,
+  withDisabledSubmodules : 0,
+};
 
 stepRoutineNpmGenerate.uniqueOptions =
 {
-}
+};
 
 //
 

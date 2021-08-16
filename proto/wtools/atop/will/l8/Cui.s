@@ -4328,6 +4328,7 @@ commandNpmFromWillfile.defaults =
   packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
+  npmName : null,
   withSubmodules : 0,
   withDisabledSubmodules : 0,
 };
@@ -4346,6 +4347,8 @@ command.properties =
   + '\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
   filesPath : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
   + '\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
+  npmName : 'A value for field "name" of "package.json". By default, module name generates from fields "npm.name" or "name" of section "about".'
+  + '\n\t"will .npm.from.willfile npmName:usermodule" - generate "package.json" from unnamed willfiles, field "name" will have value  "usermodule".',
 };
 
 //
