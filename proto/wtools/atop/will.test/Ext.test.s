@@ -15201,7 +15201,7 @@ function cleanOptionWithSubmodules( test )
 }
 
 cleanOptionWithSubmodules.rapidity = -1;
-cleanOptionWithSubmodules.timeOut = 300000;
+cleanOptionWithSubmodules.timeOut = 600000;
 
 //
 
