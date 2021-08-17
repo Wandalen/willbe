@@ -1213,6 +1213,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'sources.join',
+    stepRoutine : Predefined.stepRoutineSourcesJoin,
+  })
+
+  step
+  ({
     name : 'file.view',
     stepRoutine : Predefined.stepRoutineView,
   })
