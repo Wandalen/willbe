@@ -552,6 +552,86 @@ stepRoutineTranspile.uniqueOptions =
 
 //
 
+function stepRoutineSourcesJoin( frame )
+{
+  const step = this;
+  const run = frame.run;
+  const module = run.module;
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  const opts = _.props.extend( null, step.opts );
+
+  /* */
+
+  _.assert( _.str.defined( opts.entryPath ) );
+  _.assert( _.longHasAny( [ 'browser', 'njs' ], opts.interpreter ) );
+
+  opts.outPath = module.pathResolve( opts.outPath || '{path::out}/Main.s' );
+  opts.basePath = module.pathResolve( opts.basePath || '{path::in}' );
+
+  if( opts.modulesList === null )
+  opts.modulesList = [];
+  else
+  _.assert( _.array.is( opts.modulesList ), 'Expects modules list as array' );
+
+  if( opts.inPath === null )
+  opts.inPath =
+  {
+    filePath :
+    [
+      module.pathResolve( opts.entryPath ),
+      module.pathResolve( `proto/**/*.(js|s)` ),
+      module.pathResolve( `proto/node_modules/*` ),
+    ],
+    maskDirectory : { excludeAny : /test$/, includeAny : 'testing' },
+    maskTransientDirectory : { excludeAny : /test$/, includeAny : 'testing' },
+  };
+
+  opts.modulesList.forEach( ( mod ) =>
+  {
+    const omod = mod;
+    let modPath = module.pathResolve( `node_modules/${mod}` );
+    if( !fileProvider.fileExists( modPath ) )
+    {
+      mod = mod.toLowerCase();
+      modPath = module.pathResolve( `node_modules/${mod}` );
+    }
+
+    _.assert( fileProvider.fileExists( modPath ), `Module ${omod} doesn't exist.` );
+
+    const modJsScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/**/*.(js|s)` );
+    const modIncludeScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/node_modules/*` )
+
+    opts.inPath.filePath.push( modJsScriptsGlob, modIncludeScriptsGlob );
+  });
+
+  delete opts.modulesList;
+
+  opts.redirectingConsole = 0;
+
+  if( !_.starter )
+  _.include( 'wStarter' );
+
+  const starter = new _.starter.System().form();
+  return starter.sourcesJoinFiles( opts );
+}
+
+stepRoutineSourcesJoin.stepOptions =
+{
+  inPath : null,
+  modulesList : null,
+  basePath : null,
+  entryPath : null,
+  outPath : null,
+  interpreter : null,
+};
+
+stepRoutineSourcesJoin.uniqueOptions =
+{
+};
+
+//
+
 function stepRoutineView( frame )
 {
   let step = this;
@@ -1268,6 +1348,7 @@ let Extension =
   stepRoutineEcho,
   stepRoutineShell,
   stepRoutineTranspile,
+  stepRoutineSourcesJoin,
   stepRoutineView,
 
   stepRoutineNpmGenerate,
