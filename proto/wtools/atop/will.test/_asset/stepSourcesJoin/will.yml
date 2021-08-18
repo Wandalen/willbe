@@ -72,6 +72,15 @@ step :
     interpreter : njs
     outPath : out/Main.s
 
+  module.sources.join.for.browser:
+    inherit : sources.join
+    entryPath : Single.s
+    inPath :
+      filePath :
+        - ./Single.s
+    interpreter : browser
+    outPath : out/Main.s
+
 build :
 
   join.default :
@@ -94,3 +103,7 @@ build :
   join.without.modules.list :
     steps :
       - step::module.sources.join.without.modules.list
+
+  join.module.for.browser :
+    steps :
+      - step::module.sources.join.for.browser
