@@ -1,0 +1,31 @@
+
+about :
+  name : stepSourcesJoin
+
+step :
+
+  submodules.install :
+    shell : 'npm i --production'
+
+  module.sources.join:
+    inherit : sources.join
+    entryPath : proto/node_modules/wmodulefortesting12ab
+    modulesList :
+      - wModuleForTesting1
+      - wModuleForTesting1a
+      - wModuleForTesting1b
+      - wModuleForTesting2
+      - wModuleForTesting2a
+      - wModuleForTesting2b
+      - wModuleForTesting12
+    interpreter : njs
+    outPath : out/Main.s
+
+build :
+
+  join :
+    criterion :
+      default : 1
+    steps :
+      - step::submodules.install
+      - step::module.sources.join
