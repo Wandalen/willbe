@@ -575,17 +575,25 @@ function stepRoutineSourcesJoin( frame )
   _.assert( _.array.is( opts.modulesList ), 'Expects modules list as array' );
 
   if( opts.inPath === null )
-  opts.inPath =
   {
-    filePath :
-    [
-      module.pathResolve( opts.entryPath ),
-      module.pathResolve( `proto/**/*.(js|s)` ),
-      module.pathResolve( `proto/node_modules/*` ),
-    ],
-    maskDirectory : { excludeAny : /test$/, includeAny : 'testing' },
-    maskTransientDirectory : { excludeAny : /test$/, includeAny : 'testing' },
-  };
+    opts.inPath =
+    {
+      filePath :
+      [
+        module.pathResolve( opts.entryPath ),
+        module.pathResolve( `proto/**/*.(js|s)` ),
+        module.pathResolve( `proto/node_modules/*` ),
+      ],
+      maskDirectory : { excludeAny : /test$/, includeAny : 'testing' },
+      maskTransientDirectory : { excludeAny : /test$/, includeAny : 'testing' },
+    };
+  }
+  else
+  {
+    _.assert( _.array.is( opts.inPath.filePath ) );
+    for( let i = 0 ; i < opts.inPath.filePath.length ; i++ )
+    opts.inPath.filePath[ i ] = module.pathResolve( opts.inPath.filePath[ i ] );
+  }
 
   opts.modulesList.forEach( ( mod ) =>
   {
