@@ -24760,6 +24760,133 @@ function stepShellWithSeveralCommands( test )
 
 //
 
+function stepSourcesJoin( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSourcesJoin' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.default' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.default' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.default in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.with.in.path' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.with.in.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.in.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.in.path in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.with.base.path' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.with.base.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.base.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.base.path in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.without.modules.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.without.modules.list' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.without.modules.list' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.without.modules.list in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepSourcesJoinRunInBrowser( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSourcesJoin' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.build join.module.for.browser' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.module.for.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.module.for.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.module.for.browser in' ), 1 );
+    return null;
+  });
+  a.shell( 'npm i jsdom@17.0.0' );
+  a.shell( 'node Browser.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepNpmGenerate( test )
 {
   let context = this;
@@ -44551,6 +44678,8 @@ const Proto =
     stepBuild,
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
+    stepSourcesJoin,
+    stepSourcesJoinRunInBrowser,
     stepNpmGenerate,
     stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,

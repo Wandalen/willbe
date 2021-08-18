@@ -1,0 +1,109 @@
+
+about :
+  name : stepSourcesJoin
+
+path :
+  proto : proto
+
+step :
+
+  submodules.install :
+    shell : 'npm i --production'
+
+  module.sources.join:
+    inherit : sources.join
+    entryPath : proto/node_modules/wmodulefortesting12ab
+    modulesList :
+      - wModuleForTesting1
+      - wModuleForTesting1a
+      - wModuleForTesting1b
+      - wModuleForTesting2
+      - wModuleForTesting2a
+      - wModuleForTesting2b
+      - wModuleForTesting12
+    interpreter : njs
+    outPath : out/Main.s
+
+  module.sources.join.with.in.path:
+    inherit : sources.join
+    entryPath : proto/node_modules/wmodulefortesting12ab
+    inPath :
+      filePath :
+        - proto/node_modules/wmodulefortesting12ab
+        - proto/node_modules/**
+        - proto/wtools/**/*.(s|js)
+    modulesList :
+      - wModuleForTesting1
+      - wModuleForTesting1a
+      - wModuleForTesting1b
+      - wModuleForTesting2
+      - wModuleForTesting2a
+      - wModuleForTesting2b
+      - wModuleForTesting12
+    interpreter : njs
+    outPath : out/Main.s
+
+  module.sources.join.with.base.path:
+    inherit : sources.join
+    entryPath : proto/node_modules/wmodulefortesting12ab
+    inPath :
+      filePath :
+        - proto/node_modules/wmodulefortesting12ab
+        - proto/node_modules/**
+        - proto/wtools/**/*.(s|js)
+    modulesList :
+      - wModuleForTesting1
+      - wModuleForTesting1a
+      - wModuleForTesting1b
+      - wModuleForTesting2
+      - wModuleForTesting2a
+      - wModuleForTesting2b
+      - wModuleForTesting12
+    interpreter : njs
+    basePath : '.'
+    outPath : out/Main.s
+
+  module.sources.join.without.modules.list:
+    inherit : sources.join
+    entryPath : Single.s
+    inPath :
+      filePath :
+        - ./Single.s
+    interpreter : njs
+    outPath : out/Main.s
+
+  module.sources.join.for.browser:
+    inherit : sources.join
+    entryPath : Single.s
+    inPath :
+      filePath :
+        - ./Single.s
+    interpreter : browser
+    outPath : out/Main.s
+
+build :
+
+  join.default :
+    criterion :
+      default : 1
+    steps :
+      - step::submodules.install
+      - step::module.sources.join
+
+  join.with.in.path :
+    steps :
+      - step::submodules.install
+      - step::module.sources.join.with.in.path
+
+  join.with.base.path :
+    steps :
+      - step::submodules.install
+      - step::module.sources.join.with.base.path
+
+  join.without.modules.list :
+    steps :
+      - step::module.sources.join.without.modules.list
+
+  join.module.for.browser :
+    steps :
+      - step::module.sources.join.for.browser
