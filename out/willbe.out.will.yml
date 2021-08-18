@@ -3159,6 +3159,31 @@ module:
             ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/A.js
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/B.js
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Browser.html
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Browser.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/BrowserSample.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/package.json
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Single.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/node_modules/wmodulefortesting12ab
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s
           - ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated/.ex.will.yml
