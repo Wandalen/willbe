@@ -1279,6 +1279,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'repo.release',
+    stepRoutine : Predefined.stepRoutineRepoRelease,
+  })
+
+  step
+  ({
     name : 'modules.update',
     stepRoutine : Predefined.stepRoutineModulesUpdate,
   })
