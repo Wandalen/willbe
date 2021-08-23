@@ -10743,6 +10743,53 @@ let repoProgramList = _repoRequest_functor
   exportStringRoutine : _.routine.join( _.repo, _.repo.programCollectionExportString ),
 });
 
+//
+
+function repoRelease( o )
+{
+  const module = this;
+  const will = module.will;
+  const logger = will.transaction.logger;
+
+  if( !o.token )
+  {
+    const config = _.censor.configRead();
+    if( config !== null && config.about && config.about[ 'github.token' ] )
+    o.token = config.about[ 'github.token' ];
+  }
+
+  _.assert( _.str.defined( o.token ), 'Expects token. Please, define it directly in command line or by the Censor utility.' );
+  _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
+
+  const originalRemotePath = _.git.remotePathFromLocal({ localPath : module.dirPath });
+  _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
+
+  const remotePath = `${ originalRemotePath }!${ o.tag }`;
+
+  return _.repo.releaseMake
+  ({
+    name : o.name,
+    token : o.token,
+    remotePath,
+    descriptionBody : o.descriptionBody,
+    draft : o.draft,
+    prerelease : o.prerelease,
+    sync : 0,
+    logger,
+  });
+}
+
+repoRelease.defaults =
+{
+  name : null,
+  token : null,
+  tag : null,
+  draft : 0,
+  prerelease : 0,
+  descriptionBody : null,
+  logger : null,
+};
+
 // --
 // etc
 // --
@@ -11417,6 +11464,8 @@ let Extension =
 
   repoPullList,
   repoProgramList,
+
+  repoRelease,
 
   // etc
 
