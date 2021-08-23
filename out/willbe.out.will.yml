@@ -3010,6 +3010,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/.will.yml
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/File.js
+          - ../proto/wtools/atop/will.test/_asset/repoRelease
+          - ../proto/wtools/atop/will.test/_asset/repoRelease/.gitignore
+          - ../proto/wtools/atop/will.test/_asset/repoRelease/will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported
           - >-
