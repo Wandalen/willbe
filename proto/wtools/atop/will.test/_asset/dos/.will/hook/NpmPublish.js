@@ -19,6 +19,8 @@ function onModule( context )
   if( o.org === null )
   o.org = [ 'srt', 'wtools' ];
 
+  debugger;
+
   if( !context.junction.module )
   return;
 
