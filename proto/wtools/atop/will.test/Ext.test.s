@@ -27173,6 +27173,139 @@ stepGitTag.rapidity = -1;
 
 //
 
+function stepRepoReleaseRemote( test )
+{
+  const context = this;
+
+  const config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  return test.true( true );
+
+  /* */
+
+  const a = context.assetFor( test, 'repoRelease' );
+  a.reflectMinimal();
+  const user = config.about.user;
+  const token = config.about[ 'github.token' ];
+  const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
+
+  /* */
+
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository has no tags';
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am init' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.imply v:2 .build release.master' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.master"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "0.0.1" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with name and options';
+    a.fileProvider.fileWrite( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag first' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileWrite( a.abs( './file1.txt' ), 'file1.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag second' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.existed' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.existed"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "first" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with description';
+    a.fileProvider.fileWrite( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag v0.0.2' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.description' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.2" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () => repositoryDelete() );
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.ready.then( () =>
+    {
+      return _.git.repositoryInit
+      ({
+        remotePath : repository,
+        localPath : a.routinePath,
+        throwing : 1,
+        description : 'Test',
+        token,
+      });
+    });
+
+    return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token,
+    });
+  }
+}
+
+//
+
 function stepView( test )
 {
   let context = this;
@@ -37829,6 +37962,139 @@ function commandRepoPullOpenRemote( test )
 
 //
 
+function commandRepoReleaseRemote( test )
+{
+  const context = this;
+
+  const config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  return test.true( true );
+
+  /* */
+
+  const a = context.assetFor( test, 'repoRelease' );
+  a.reflectMinimal();
+  const user = config.about.user;
+  const token = config.about[ 'github.token' ];
+  const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
+
+  /* */
+
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository has no tags';
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am init' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.repo.release tag:v0.0.1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.1"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.1" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with name and options';
+    a.fileProvider.fileWrite( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag first' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileWrite( a.abs( './file1.txt' ), 'file1.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag second' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.repo.release v0.0.2 tag:first prerelease:0 draft:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release v0.0.2 tag:first prerelease:0 draft:0"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "first" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with description';
+    a.fileProvider.fileWrite( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag v0.0.2' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.repo.release tag:v0.0.2 descriptionBody:description' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.2 descriptionBody:description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.2" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () => repositoryDelete() );
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.ready.then( () =>
+    {
+      return _.git.repositoryInit
+      ({
+        remotePath : repository,
+        localPath : a.routinePath,
+        throwing : 1,
+        description : 'Test',
+        token,
+      });
+    });
+
+    return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token,
+    });
+  }
+}
+
+//
+
 function commandNpmFromWillfile( test )
 {
   let context = this;
@@ -44690,6 +44956,7 @@ const Proto =
     stepGitSync,
     stepGitStatus,
     stepGitTag,
+    stepRepoReleaseRemote,
     stepView,
 
     /* xxx : cover "will .module.new.with prepare" */
@@ -44777,6 +45044,7 @@ const Proto =
 
     commandRepoPullOpen,
     commandRepoPullOpenRemote,
+    commandRepoReleaseRemote,
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,

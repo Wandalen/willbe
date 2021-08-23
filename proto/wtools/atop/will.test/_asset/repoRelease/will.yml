@@ -1,0 +1,35 @@
+about :
+
+  name : release
+  version : 0.0.1
+
+step :
+
+  release.master :
+    inherit : repo.release
+    tag : '{about::version}'
+
+  release.existed :
+    inherit : repo.release
+    tag : first
+    prerelease : 0
+    draft : 0
+
+  release.description :
+    inherit : repo.release
+    tag : v0.0.2
+    descriptionBody : description
+
+build :
+
+  release.master :
+    steps :
+      - release.master
+
+  release.existed :
+    steps :
+      - release.existed
+
+  release.description :
+    steps :
+      - release.description

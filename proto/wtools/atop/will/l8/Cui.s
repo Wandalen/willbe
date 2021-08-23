@@ -585,6 +585,8 @@ function _commandsMake()
     'repo program list' :               { ro : _.routineJoin( cui, cui.commandRepoProgramList ) },
     'repo program process list' :       { ro : _.routineJoin( cui, cui.commandRepoProgramProcessList ) },
 
+    'repo release' :                    { ro : _.routineJoin( cui, cui.commandRepoRelease ) },
+
     'npm publish' :                     { ro : _.routineJoin( cui, cui.commandNpmPublish ) },
     'npm dep add' :                     { ro : _.routineJoin( cui, cui.commandNpmDepAdd ) },
     'npm install' :                     { ro : _.routineJoin( cui, cui.commandNpmInstall ) },
@@ -6219,6 +6221,67 @@ command.properties = _.props.extend( null,
   verbosity : 'Set verbosity. Default is 2.',
 });
 
+//
+
+function commandRepoRelease( e )
+{
+  const cui = this;
+
+  cui._command_head( commandRepoRelease, arguments );
+  cui._transactionExtend( commandRepoRelease, e.propertiesMap );
+  _.routine.options_( commandRepoRelease, e.propertiesMap );
+
+  _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
+  const o = e.propertiesMap;
+  o.logger = o.verbosity;
+  delete o.verbosity;
+  o.name = o.subject;
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'repo release',
+    onEachModule : handleEachModule,
+    commandRoutine : commandRepoRelease,
+    recursive : 0,
+  });
+
+  /* */
+
+  function handleEachModule( module, op )
+  {
+    return module.repoRelease( o );
+  }
+}
+
+commandRepoRelease.defaults = _.props.extend( null,
+{
+  token : null,
+  tag : null,
+  descriptionBody : null,
+  draft : 0,
+  prerelease : 0,
+  verbosity : 2,
+});
+
+var command = commandRepoRelease.command = Object.create( null );
+command.hint = 'Create release on Github.';
+command.subjectHint = 'A name of release.';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  name : 'Name of release',
+  descriptionBody : 'Description of release',
+  tag : 'Tag name to make release. If module has no tag, command creates new tag.',
+  draft : 'Nake draft release. Default is 0.',
+  prerelease : 'Make prerelease instead of release. Default is 0.',
+  token : 'An individual authorization token. By default reads from user config file.',
+  verbosity : 'Set verbosity. Default is 2.',
+};
+
 // --
 // npm
 // --
@@ -7214,6 +7277,8 @@ let Extension =
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,
+
+  commandRepoRelease,
 
   // npm
 

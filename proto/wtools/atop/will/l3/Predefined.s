@@ -981,6 +981,38 @@ stepRoutineGitTag.uniqueOptions =
 
 //
 
+function stepRoutineRepoRelease( frame )
+{
+  const step = this;
+  const run = frame.run;
+  const module = run.module;
+  const opts = _.props.extend( null, step.opts );
+  opts.logger = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.object.isBasic( opts ) );
+
+  opts.tag = module.resolve( opts.tag );
+
+  return module.repoRelease( opts );
+}
+
+stepRoutineRepoRelease.stepOptions =
+{
+  name : null,
+  descriptionBody : null,
+  token : null,
+  tag : null,
+  draft : 0,
+  prerelease : 0,
+};
+
+stepRoutineRepoRelease.uniqueOptions =
+{
+};
+
+//
+
 function stepRoutineModulesUpdate( frame )
 {
   let step = this;
@@ -1369,6 +1401,8 @@ let Extension =
   stepRoutineGitStatus,
   stepRoutineGitSync,
   stepRoutineGitTag,
+
+  stepRoutineRepoRelease,
 
   stepRoutineModulesUpdate,
 
