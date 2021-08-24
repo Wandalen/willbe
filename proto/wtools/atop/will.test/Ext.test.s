@@ -20171,7 +20171,7 @@ function submodulesDownloadNpm( test )
   return a.ready;
 }
 
-submodulesDownloadNpm.timeOut = 300000;
+submodulesDownloadNpm.timeOut = 600000;
 
 //
 
@@ -20389,7 +20389,7 @@ function submodulesDownloadUpdateNpm( test )
   return a.ready;
 }
 
-submodulesDownloadUpdateNpm.timeOut = 300000;
+submodulesDownloadUpdateNpm.timeOut = 600000;
 
 //
 
@@ -22104,7 +22104,7 @@ function submodulesVersionsAgreeNpm( test )
 }
 
 submodulesVersionsAgreeNpm.rapidity = -1;
-submodulesVersionsAgreeNpm.timeOut = 300000;
+submodulesVersionsAgreeNpm.timeOut = 600000;
 
 //
 
