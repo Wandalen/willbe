@@ -24856,6 +24856,13 @@ function stepSourcesJoin( test )
 function stepSourcesJoinRunInBrowser( test )
 {
   let context = this;
+
+  if( typeof process !== undefined && process.versions )
+  if( _.str.begins( process.versions.node, '10' ) )
+  return test.true( true );
+
+  /* */
+
   let a = context.assetFor( test, 'stepSourcesJoin' );
   a.reflectMinimal();
 
