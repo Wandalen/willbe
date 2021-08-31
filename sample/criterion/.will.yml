@@ -1,20 +1,19 @@
+
 about :
 
     name : buildModuleWithCriterion
     description : "Output of various phrases using criterions"
     version : 0.0.1
-    keywords :
-        - willbe
 
 step :
 
-  echo.one :
+  print.one :
     shell : echo "Debug is done"
     currentPath : '.'
     criterion :
        debug : 1
 
-  echo.two :
+  print.two :
     shell : echo "Operation is done"
     currentPath : '.'
     criterion :
@@ -22,15 +21,16 @@ step :
 
 build :
 
-  echo.debug:
+  print.debug :
     criterion :
        debug : 1
     steps :
-       - echo.*
-  
-  echo.test:
+       - print.*
+
+  print.test :
     criterion :
        debug : 1
     steps :
-       - echo.one
-       - echo.two
+       - print.one
+       - print.two
+
