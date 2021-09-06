@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: d88c252a20f9e19fec3799300239de34
-    size: 9117
+    hash: 6d3703873084a594549bd55ef3a8900f
+    size: 9118
 module:
   willbe.out:
     about:
@@ -3999,7 +3999,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar!6.1.7'
+        path: 'npm:///tar!6.1.11'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -4866,7 +4866,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar!6.1.7'
+        path: 'npm:///tar!6.1.11'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -5433,5 +5433,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: d88c252a20f9e19fec3799300239de34
-        size: 9117
+        hash: 6d3703873084a594549bd55ef3a8900f
+        size: 9118
