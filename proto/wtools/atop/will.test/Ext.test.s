@@ -27267,7 +27267,30 @@ function stepRepoReleaseRemote( test )
   a.ready.then( ( op ) =>
   {
     test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.description"' ), 1 );
-    test.identical( _.strCount( op.output, `Succefully created release "v0.0.2" in git+https:///github.com/${ user }` ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.3" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'release tag twice, force - 1';
+    a.fileProvider.fileAppend( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.force' );
+  a.appStart( '.imply v:2 .build release.force' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.force"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully deleted release "v0.0.4" in git+https:///github.com/${ user }` ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.4" in git+https:///github.com/${ user }` ), 1 );
     return null;
   });
 
