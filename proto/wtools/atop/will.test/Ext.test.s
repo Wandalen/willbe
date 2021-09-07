@@ -38048,15 +38048,36 @@ function commandRepoReleaseRemote( test )
   });
   a.shell( 'git add .' );
   a.shell( 'git commit -am commit' );
-  a.shell( 'git tag v0.0.2' );
+  a.shell( 'git tag v0.0.3' );
   a.shell( 'git push -u origin master' );
   a.shell( 'git push --tags' );
 
-  a.appStart( '.repo.release tag:v0.0.2 descriptionBody:description' );
+  a.appStart( '.repo.release tag:v0.0.3 descriptionBody:description' );
   a.ready.then( ( op ) =>
   {
-    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.2 descriptionBody:description"' ), 1 );
-    test.identical( _.strCount( op.output, `Succefully created release "v0.0.2" in git+https:///github.com/${ user }` ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.3 descriptionBody:description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.3" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'release the tag twice, force - 1';
+    a.fileProvider.fileAppend( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.repo.release tag:v0.0.4 force:1' );
+  a.appStart( '.repo.release tag:v0.0.4 force:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.4 force:1"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.4" in git+https:///github.com/${ user }` ), 1 );
     return null;
   });
 
