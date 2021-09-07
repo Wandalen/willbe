@@ -6,7 +6,7 @@ about :
 path :
   in : '.'
   out : 'out'
-  fileToExport : 'fileToExport'
+  fileToExport : 'fileToExport*'
 
 step  :
   export.single :

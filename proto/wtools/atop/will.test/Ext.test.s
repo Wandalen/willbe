@@ -4456,7 +4456,7 @@ function reflectNpmModules( test )
   return a.ready;
 }
 
-reflectNpmModules.timeOut = 300000;
+reflectNpmModules.timeOut = 600000;
 
 //
 
@@ -15263,7 +15263,7 @@ function cleanOptionWithSubmodules( test )
 }
 
 cleanOptionWithSubmodules.rapidity = -1;
-cleanOptionWithSubmodules.timeOut = 300000;
+cleanOptionWithSubmodules.timeOut = 600000;
 
 //
 
@@ -20217,7 +20217,7 @@ function submodulesDownloadNpm( test )
   return a.ready;
 }
 
-submodulesDownloadNpm.timeOut = 300000;
+submodulesDownloadNpm.timeOut = 600000;
 
 //
 
@@ -20435,7 +20435,7 @@ function submodulesDownloadUpdateNpm( test )
   return a.ready;
 }
 
-submodulesDownloadUpdateNpm.timeOut = 300000;
+submodulesDownloadUpdateNpm.timeOut = 600000;
 
 //
 
@@ -22150,7 +22150,7 @@ function submodulesVersionsAgreeNpm( test )
 }
 
 submodulesVersionsAgreeNpm.rapidity = -1;
-submodulesVersionsAgreeNpm.timeOut = 300000;
+submodulesVersionsAgreeNpm.timeOut = 600000;
 
 //
 
@@ -24806,6 +24806,140 @@ function stepShellWithSeveralCommands( test )
 
 //
 
+function stepSourcesJoin( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSourcesJoin' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.default' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.default' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.default in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.with.in.path' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.with.in.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.in.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.in.path in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.with.base.path' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.with.base.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.base.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.base.path in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.without.modules.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.without.modules.list' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.without.modules.list' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.without.modules.list in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepSourcesJoinRunInBrowser( test )
+{
+  let context = this;
+
+  if( typeof process !== undefined && process.versions )
+  if( _.str.begins( process.versions.node, '10' ) )
+  return test.true( true );
+
+  /* */
+
+  let a = context.assetFor( test, 'stepSourcesJoin' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.build join.module.for.browser' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.module.for.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.module.for.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.module.for.browser in' ), 1 );
+    return null;
+  });
+  a.shell( 'npm i jsdom@17.0.0' );
+  a.shell( 'node Browser.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepNpmGenerate( test )
 {
   let context = this;
@@ -27089,6 +27223,139 @@ function stepGitTag( test )
 }
 
 stepGitTag.rapidity = -1;
+
+//
+
+function stepRepoReleaseRemote( test )
+{
+  const context = this;
+
+  const config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  return test.true( true );
+
+  /* */
+
+  const a = context.assetFor( test, 'repoRelease' );
+  a.reflectMinimal();
+  const user = config.about.user;
+  const token = config.about[ 'github.token' ];
+  const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
+
+  /* */
+
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository has no tags';
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am init' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.imply v:2 .build release.master' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.master"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "0.0.1" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with name and options';
+    a.fileProvider.fileWrite( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag first' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileWrite( a.abs( './file1.txt' ), 'file1.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag second' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.existed' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.existed"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "first" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with description';
+    a.fileProvider.fileWrite( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag v0.0.2' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.description' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.2" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () => repositoryDelete() );
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.ready.then( () =>
+    {
+      return _.git.repositoryInit
+      ({
+        remotePath : repository,
+        localPath : a.routinePath,
+        throwing : 1,
+        description : 'Test',
+        token,
+      });
+    });
+
+    return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token,
+    });
+  }
+}
 
 //
 
@@ -37694,6 +37961,139 @@ function commandRepoPullOpenRemote( test )
 
 //
 
+function commandRepoReleaseRemote( test )
+{
+  const context = this;
+
+  const config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  return test.true( true );
+
+  /* */
+
+  const a = context.assetFor( test, 'repoRelease' );
+  a.reflectMinimal();
+  const user = config.about.user;
+  const token = config.about[ 'github.token' ];
+  const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
+
+  /* */
+
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository has no tags';
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am init' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.repo.release tag:v0.0.1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.1"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.1" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with name and options';
+    a.fileProvider.fileWrite( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag first' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileWrite( a.abs( './file1.txt' ), 'file1.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag second' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.repo.release v0.0.2 tag:first prerelease:0 draft:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release v0.0.2 tag:first prerelease:0 draft:0"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "first" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with description';
+    a.fileProvider.fileWrite( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag v0.0.2' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.repo.release tag:v0.0.2 descriptionBody:description' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.2 descriptionBody:description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.2" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () => repositoryDelete() );
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.ready.then( () =>
+    {
+      return _.git.repositoryInit
+      ({
+        remotePath : repository,
+        localPath : a.routinePath,
+        throwing : 1,
+        description : 'Test',
+        token,
+      });
+    });
+
+    return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token,
+    });
+  }
+}
+
+//
+
 function commandNpmFromWillfile( test )
 {
   let context = this;
@@ -44545,6 +44945,8 @@ const Proto =
     stepBuild,
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
+    stepSourcesJoin,
+    stepSourcesJoinRunInBrowser,
     stepNpmGenerate,
     stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,
@@ -44555,6 +44957,7 @@ const Proto =
     stepGitSync,
     stepGitStatus,
     stepGitTag,
+    stepRepoReleaseRemote,
     stepView,
 
     /* xxx : cover "will .module.new.with prepare" */
@@ -44641,6 +45044,7 @@ const Proto =
 
     commandRepoPullOpen,
     commandRepoPullOpenRemote,
+    commandRepoReleaseRemote,
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,

@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: d88c252a20f9e19fec3799300239de34
-    size: 9117
+    hash: 6d3703873084a594549bd55ef3a8900f
+    size: 9118
 module:
   willbe.out:
     about:
@@ -3010,6 +3010,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/.will.yml
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/File.js
+          - ../proto/wtools/atop/will.test/_asset/repoRelease
+          - ../proto/wtools/atop/will.test/_asset/repoRelease/.gitignore
+          - ../proto/wtools/atop/will.test/_asset/repoRelease/will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported
           - >-
@@ -3159,6 +3162,31 @@ module:
             ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/A.js
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/B.js
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Browser.html
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Browser.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/BrowserSample.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/package.json
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Single.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/node_modules/wmodulefortesting12ab
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s
           - ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated/.ex.will.yml
@@ -3971,7 +3999,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar!6.1.7'
+        path: 'npm:///tar!6.1.11'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -4838,7 +4866,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar!6.1.7'
+        path: 'npm:///tar!6.1.11'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -5405,5 +5433,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: d88c252a20f9e19fec3799300239de34
-        size: 9117
+        hash: 6d3703873084a594549bd55ef3a8900f
+        size: 9118
