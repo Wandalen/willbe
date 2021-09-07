@@ -17,8 +17,14 @@ step :
 
   release.description :
     inherit : repo.release
-    tag : v0.0.2
+    tag : v0.0.3
     descriptionBody : description
+
+  release.force :
+    inherit : repo.release
+    tag : v0.0.4
+    force : 1
+
 
 build :
 
@@ -33,3 +39,7 @@ build :
   release.description :
     steps :
       - release.description
+
+  release.force :
+    steps :
+      - release.force
