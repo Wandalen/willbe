@@ -10781,6 +10781,8 @@ function repoRelease( o )
     draft : o.draft,
     prerelease : o.prerelease,
     sync : 0,
+    force : o.force,
+    localPath : module.dirPath,
     logger,
   });
 }
@@ -10793,6 +10795,7 @@ repoRelease.defaults =
   draft : 0,
   prerelease : 0,
   descriptionBody : null,
+  force : 0,
   logger : null,
 };
 
