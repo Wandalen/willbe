@@ -5551,8 +5551,10 @@ function _buildsResolve_body( o )
 
   if( o.kind === 'export' )
   elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
+  else if( o.kind === 'publish' )
+  elements = elements.filter( ( element ) => element.criterion && element.criterion.publish );
   else if( o.kind === 'build' )
-  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
+  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export && !element.criterion.publish );
 
   return elements;
 
