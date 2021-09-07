@@ -3309,6 +3309,10 @@ let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, mo
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
+let modulesPublish = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
+modulesPublish.defaults.kind = 'publish';
+modulesPublish.defaults.downloading = 0;
+
 //
 
 function modulesVerify_head( routine, args )
@@ -6677,6 +6681,7 @@ let Extension =
   modulesClean,
   modulesBuild,
   modulesExport,
+  modulesPublish,
   modulesVerify,
 
   // object
