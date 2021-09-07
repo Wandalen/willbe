@@ -3953,7 +3953,7 @@ function commandPublish( e )
       name : e.subject,
       criterion : e.propertiesMap,
       recursive : 0,
-      kind : 'export',
+      kind : 'publish',
     });
   }
 

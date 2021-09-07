@@ -5500,7 +5500,7 @@ function _buildsResolve_head( routine, args )
   // o = args[ 0 ] || null;
 
   o = _.routine.options( routine, o );
-  _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
+  _.assert( _.longHas( [ 'build', 'export', 'publish' ], o.kind ) );
   _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
 
