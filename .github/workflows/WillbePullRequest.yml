@@ -29,6 +29,7 @@ jobs :
           - 'Int.test.s'
           - 'Ext.Package.test.s'
           - 'File.test.s'
+          - 'Transform.test.s'
           - 'Ext.test.s r:"build*"'
           - 'Ext.test.s r:"reflect*"'
           - 'Ext.test.s r:"[ export*, import*, open* ]"'
@@ -49,9 +50,13 @@ jobs :
       with :
         fetch-depth: 2
     - name : ${{ matrix.node-version }}
-      uses : actions/setup-node@v1
+      uses : Wandalen/wretry.action@0.2.0
       with :
-        node-version : ${{ matrix.node-version }}
+        action : actions/setup-node@v1
+        with : |
+          node-version : ${{ matrix.node-version }}
+        attempt_limit : 3
+        attempt_delay: 1000
     - name : Save npm version
       id : getnpmver
       run : |
