@@ -9570,12 +9570,11 @@ function willfileVersionBump( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  let path = will.fileProvider.path;
 
   _.routine.options( willfileVersionBump, o );
 
-  let version = _.any( module.willfilesArray, ( willfile ) => _.select( willfile.structure, 'about/version' ) );
+  let version = module.resolve( 'about::version' );
   _.assert( _.str.is( version ), 'Expexts version in format "x.x.x".' );
 
   let versionArray = version.split( '.' );
@@ -9584,7 +9583,7 @@ function willfileVersionBump( o )
   _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to bump version.' );
 
   versionBump();
-  version = versionArray.join( '.' );
+  version = module.about.version = versionArray.join( '.' );
 
   will.willfilePropertySet
   ({
@@ -9607,7 +9606,7 @@ function willfileVersionBump( o )
     else if( _.number.is( o.versionDelta ) )
     return _.array.as( o.versionDelta );
     else
-    _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
+    _.assert( false, 'Not known how to handle delta.', o.versionDelta );
   }
 
   /* */
