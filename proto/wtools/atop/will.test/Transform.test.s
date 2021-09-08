@@ -836,12 +836,13 @@ function npmFromWillfile( test )
     {
       submodule :
       {
-        wTools : { path : 'npm:///wTools', enabled : 1 },
-        next : { path : 'npm:///next!0.0.1', enabled : 1 },
-        https : { path : 'https://domain/https.tar.gz', enabled : 1 },
-        git : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1 },
-        disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0 },
-        hd : { path : 'hd://./user/hd', enabled : 1 },
+        'wTools' : { path : 'npm:///wTools', enabled : 1 },
+        'next' : { path : 'npm:///next!0.0.1', enabled : 1 },
+        '@module/core' : { path : 'npm:///@module/core!0.0.1', enabled : 1 },
+        'https' : { path : 'https://domain/https.tar.gz', enabled : 1 },
+        'git' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1 },
+        'disabled' : { path : 'git+https:///github.com/user/disabled', enabled : 0 },
+        'hd' : { path : 'hd://./user/hd', enabled : 1 },
       }
     }
   };
@@ -850,11 +851,12 @@ function npmFromWillfile( test )
   {
     dependencies :
     {
-      wTools : '',
-      next : '0.0.1',
-      https : 'https://domain/https.tar.gz',
-      git : 'https://github.com/user/repo.git#0.0.1',
-      hd : 'file:./user/hd',
+      'wTools' : '',
+      'next' : '0.0.1',
+      '@module/core' : '0.0.1',
+      'https' : 'https://domain/https.tar.gz',
+      'git' : 'https://github.com/user/repo.git#0.0.1',
+      'hd' : 'file:./user/hd',
     },
   };
   test.identical( got, exp );
@@ -879,12 +881,13 @@ function npmFromWillfile( test )
     {
       submodule :
       {
-        wTools : { path : 'npm:///wTools', enabled : 1, criterion : { development : 1 } },
-        next : { path : 'npm:///next!0.0.1', enabled : 1, criterion : { development : 1 } },
-        https : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { development : 1 } },
-        git : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { development : 1 } },
-        disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { development : 1 } },
-        hd : { path : 'hd://./user/hd', enabled : 1, criterion : { development : 1 } },
+        'wTools' : { path : 'npm:///wTools', enabled : 1, criterion : { development : 1 } },
+        'next' : { path : 'npm:///next!0.0.1', enabled : 1, criterion : { development : 1 } },
+        '@module/core' : { path : 'npm:///@module/core!0.0.1', enabled : 1, criterion : { development : 1 } },
+        'https' : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { development : 1 } },
+        'git' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { development : 1 } },
+        'disabled' : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { development : 1 } },
+        'hd' : { path : 'hd://./user/hd', enabled : 1, criterion : { development : 1 } },
       }
     }
   };
@@ -893,11 +896,12 @@ function npmFromWillfile( test )
   {
     devDependencies :
     {
-      wTools : '',
-      next : '0.0.1',
-      https : 'https://domain/https.tar.gz',
-      git : 'https://github.com/user/repo.git#0.0.1',
-      hd : 'file:./user/hd',
+      'wTools' : '',
+      'next' : '0.0.1',
+      '@module/core' : '0.0.1',
+      'https' : 'https://domain/https.tar.gz',
+      'git' : 'https://github.com/user/repo.git#0.0.1',
+      'hd' : 'file:./user/hd',
     },
   };
   test.identical( got, exp );
@@ -922,12 +926,13 @@ function npmFromWillfile( test )
     {
       submodule :
       {
-        wTools : { path : 'npm:///wTools', enabled : 1, criterion : { optional : 1 } },
-        next : { path : 'npm:///next!0.0.1', enabled : 1, criterion : { optional : 1 } },
-        https : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { optional : 1 } },
-        git : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { optional : 1 } },
-        disabled : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { optional : 1 } },
-        hd : { path : 'hd://./user/hd', enabled : 1, criterion : { optional : 1 } },
+        'wTools' : { path : 'npm:///wTools', enabled : 1, criterion : { optional : 1 } },
+        'next' : { path : 'npm:///next!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        '@module/core' : { path : 'npm:///@module/core!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        'https' : { path : 'https://domain/https.tar.gz', enabled : 1, criterion : { optional : 1 } },
+        'git' : { path : 'git+https:///github.com/user/repo.git!0.0.1', enabled : 1, criterion : { optional : 1 } },
+        'disabled' : { path : 'git+https:///github.com/user/disabled', enabled : 0, criterion : { optional : 1 } },
+        'hd' : { path : 'hd://./user/hd', enabled : 1, criterion : { optional : 1 } },
       }
     }
   };
@@ -936,11 +941,12 @@ function npmFromWillfile( test )
   {
     optionalDependencies :
     {
-      wTools : '',
-      next : '0.0.1',
-      https : 'https://domain/https.tar.gz',
-      git : 'https://github.com/user/repo.git#0.0.1',
-      hd : 'file:./user/hd',
+      'wTools' : '',
+      'next' : '0.0.1',
+      '@module/core' : '0.0.1',
+      'https' : 'https://domain/https.tar.gz',
+      'git' : 'https://github.com/user/repo.git#0.0.1',
+      'hd' : 'file:./user/hd',
     },
   };
   test.identical( got, exp );
