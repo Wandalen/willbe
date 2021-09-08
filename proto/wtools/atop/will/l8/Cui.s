@@ -6262,6 +6262,7 @@ commandRepoRelease.defaults = _.props.extend( null,
   draft : 0,
   prerelease : 0,
   verbosity : 2,
+  force : 0,
 });
 
 var command = commandRepoRelease.command = Object.create( null );
@@ -6279,6 +6280,7 @@ command.properties =
   draft : 'Nake draft release. Default is 0.',
   prerelease : 'Make prerelease instead of release. Default is 0.',
   token : 'An individual authorization token. By default reads from user config file.',
+  force : 'Create release force. Allows to delete existed release and tag and create a new one. Default is 0.',
   verbosity : 'Set verbosity. Default is 2.',
 };
 

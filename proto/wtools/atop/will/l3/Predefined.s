@@ -1005,6 +1005,7 @@ stepRoutineRepoRelease.stepOptions =
   tag : null,
   draft : 0,
   prerelease : 0,
+  force : 0,
 };
 
 stepRoutineRepoRelease.uniqueOptions =
