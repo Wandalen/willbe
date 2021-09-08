@@ -24158,7 +24158,7 @@ function stepVersionBump( test )
     test.identical( config.about.version, '0.0.0' );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump' })
   .then( ( op ) =>
@@ -24172,7 +24172,7 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump.number' })
   .then( ( op ) =>
@@ -24186,7 +24186,7 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump.string' })
   .then( ( op ) =>
@@ -24200,7 +24200,7 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump.string.partial' })
   .then( ( op ) =>
@@ -24214,8 +24214,22 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
+  a.appStart({ args : '.with Version .build bump.check.module' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.check.module", check that module has same version as new willfile';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+    test.identical( _.strCount( op.output, '> echo 0.0.1' ), 1 );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   /* - */
 

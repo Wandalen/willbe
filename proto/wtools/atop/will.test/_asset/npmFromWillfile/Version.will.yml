@@ -18,6 +18,9 @@ step :
   bump.throwing.negative :
     versionDelta : -1
 
+  echo.version :
+    shell : 'echo {about::version}'
+
 build :
 
   bump :
@@ -43,4 +46,9 @@ build :
   bump.throwing.negative :
     steps :
       - bump.throwing.negative
+
+  bump.check.module :
+    steps :
+      - version.bump
+      - echo.version
 
