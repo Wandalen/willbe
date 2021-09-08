@@ -544,6 +544,7 @@ function _commandsMake()
     'export' :                          { ro : _.routineJoin( cui, cui.commandExport ) },
     'export purging' :                  { ro : _.routineJoin( cui, cui.commandExportPurging ) },
     'export recursive' :                { ro : _.routineJoin( cui, cui.commandExportRecursive ) },
+    'publish' :                         { ro : _.routineJoin( cui, cui.commandPublish ) },
 
     'module new' :                      { ro : _.routineJoin( cui, cui.commandModuleNew ) },
     'module new with' :                 { ro : _.routineJoin( cui, cui.commandModuleNewWith ) },
@@ -3926,6 +3927,43 @@ command.hint = 'Export selected the module with spesified criterion and its subm
 command.longHint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 command.subjectHint = 'A name of export scenario.';
 
+//
+
+function commandPublish( e )
+{
+  let cui = this;
+  cui._command_head( commandPublish, arguments );
+  let doneContainer = [];
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'publish',
+    onEach : handleEach,
+    commandRoutine : commandPublish,
+  });
+
+  function handleEach( it )
+  {
+    let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
+    return it.opener.openedModule.modulesPublish
+    ({
+      ... filterProperties,
+      doneContainer,
+      name : e.subject,
+      criterion : e.propertiesMap,
+      recursive : 0,
+      kind : 'publish',
+    });
+  }
+
+}
+
+var command = commandPublish.command = Object.create( null );
+command.hint = 'Publish selected module with spesified criterion.';
+command.longHint = 'Publish selected module with spesified criterion.';
+command.subjectHint = 'A name of export scenario.';
+
 // --
 // command iterator
 // --
@@ -7240,6 +7278,7 @@ let Extension =
   commandExport,
   commandExportPurging,
   commandExportRecursive,
+  commandPublish,
 
   // command iterator
 

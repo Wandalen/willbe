@@ -2884,6 +2884,10 @@ let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, mo
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
+let modulesPublish = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
+modulesPublish.defaults.kind = 'publish';
+modulesPublish.defaults.downloading = 0;
+
 //
 
 function modulesUpform( o )
@@ -5496,7 +5500,7 @@ function _buildsResolve_head( routine, args )
   // o = args[ 0 ] || null;
 
   o = _.routine.options( routine, o );
-  _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
+  _.assert( _.longHas( [ 'build', 'export', 'publish' ], o.kind ) );
   _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
 
@@ -5547,8 +5551,10 @@ function _buildsResolve_body( o )
 
   if( o.kind === 'export' )
   elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
+  else if( o.kind === 'publish' )
+  elements = elements.filter( ( element ) => element.criterion && element.criterion.publish );
   else if( o.kind === 'build' )
-  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
+  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export && !element.criterion.publish );
 
   return elements;
 
@@ -11253,6 +11259,7 @@ let Extension =
 
   modulesBuild,
   modulesExport,
+  modulesPublish,
   modulesUpform,
 
   // submodule

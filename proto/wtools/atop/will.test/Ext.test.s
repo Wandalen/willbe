@@ -764,6 +764,204 @@ function etcResourcesFormReflectorsExperiment( test )
   return a.ready;
 }
 
+//
+
+function etcCommandsSeveral( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'open' );
+  a.reflect();
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+
+  /* - */
+
+  a.appStart( '".with . .export ; .clean"' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .export ; .clean';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
+    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
+    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
+
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './doc.ex.will.yml',
+      './doc.im.will.yml',
+      './doc',
+      './doc/.ex.will.yml',
+      './doc/.im.will.yml',
+      './doc/doc.ex.will.yml',
+      './doc/doc.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var got = a.find( a.routinePath );
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcCommandsSeveral.description =
+`
+- check internal stat of will
+- several commands separated with ";"" should works
+`;
+
+//
+
+function etcResolveDefaultBuilds( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildsResolve' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart( '.build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::build in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".export"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::implicit / build::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::implicit / build::export in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.publish' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".publish"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 1 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::publish in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with SeveralCriterions .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with SeveralCriterions .build"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::build' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::explicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::explicit / build::build in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with SeveralCriterions .export' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with SeveralCriterions .export"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::explicit / build::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::explicit / build::export in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with SeveralCriterions .publish' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with SeveralCriterions .publish"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::explicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::publish' ), 1 );
+    test.identical( _.strCount( op.output, '> echo explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::explicit / build::publish in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build no.criterions' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build no.criterions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.export no.criterions' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".export no.criterions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.publish no.criterions' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".publish no.criterions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build:: build' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcResolveDefaultBuilds.description =
+`
+check that utility resolves next builds with criterion default:
+  - trivial;
+  - export;
+  - publish;
+`;
+
 // --
 // build
 // --
@@ -29183,60 +29381,6 @@ function commandImplyWithAsterisk( test )
 
 //
 
-function etcCommandsSeveral( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'open' );
-  a.reflect();
-  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
-
-  /* - */
-
-  a.appStart( '".with . .export ; .clean"' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .export ; .clean';
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
-    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
-    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
-
-    var exp =
-    [
-      '.',
-      './.ex.will.yml',
-      './.im.will.yml',
-      './doc.ex.will.yml',
-      './doc.im.will.yml',
-      './doc',
-      './doc/.ex.will.yml',
-      './doc/.im.will.yml',
-      './doc/doc.ex.will.yml',
-      './doc/doc.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ]
-    var got = a.find( a.routinePath );
-    test.identical( got, exp );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-} /* end of function etcCommandsSeveral */
-
-etcCommandsSeveral.description =
-`
-- check internal stat of will
-- several commands separated with ";"" should works
-`
-
-//
-
 function commandImplyWithSubmodulesModulesList( test )
 {
   let context = this;
@@ -44771,6 +44915,10 @@ const Proto =
 
     // etcResourcesFormReflectorsExperiment, // xxx : look
 
+    etcCommandsSeveral,
+
+    etcResolveDefaultBuilds,
+
     // build
 
     build,
@@ -45049,7 +45197,6 @@ const Proto =
     commandImplyWithDot,
     commandImplyWithAsterisk,
 
-    etcCommandsSeveral,
     commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     commandImplyPropertyWithDisabled,
