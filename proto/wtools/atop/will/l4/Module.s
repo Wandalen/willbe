@@ -10685,6 +10685,7 @@ function gitTag( o )
 
   if( !_.strDefined( o.name ) )
   throw _.errBrief( 'Expects defined name of tag' );
+  o.name = module.resolve( o.name );
 
   if( o.description === null )
   o.description = o.name;
