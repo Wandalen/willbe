@@ -1442,6 +1442,10 @@ module:
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules2.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodulesDef.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildsResolve
+          - >-
+            ../proto/wtools/atop/will.test/_asset/buildsResolve/SeveralCriterions.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildsResolve/will.yml
           - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView
           - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView/will.yml
           - ../proto/wtools/atop/will.test/_asset/clean
