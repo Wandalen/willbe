@@ -24414,6 +24414,90 @@ function stepVersionBump( test )
     return null;
   });
 
+  a.appStart({ args : '.with Version .build bump.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.patch", bump string patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.minor", bump string minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.major", bump string major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion.patch", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:minor", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:major", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
   a.appStart({ args : '.with Version .build bump.check.module' })
   .then( ( op ) =>
   {
