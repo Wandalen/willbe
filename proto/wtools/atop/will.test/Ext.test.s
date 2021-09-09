@@ -30476,7 +30476,7 @@ function commandVersionBump( test )
     test.identical( config.about.version, '0.0.0' );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump' })
   .then( ( op ) =>
@@ -30490,7 +30490,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 1' })
   .then( ( op ) =>
@@ -30504,7 +30504,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 0.1.1' })
   .then( ( op ) =>
@@ -30518,7 +30518,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 1.1' })
   .then( ( op ) =>
@@ -30532,7 +30532,49 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
+
+  a.appStart({ args : '.with Version .version.bump patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:1' })
   .then( ( op ) =>
@@ -30546,7 +30588,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:0.1.1' })
   .then( ( op ) =>
@@ -30560,7 +30602,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:1.1' })
   .then( ( op ) =>
@@ -30574,7 +30616,49 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   /* - */
 

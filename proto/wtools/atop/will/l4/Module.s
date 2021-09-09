@@ -9618,6 +9618,8 @@ function willfileVersionBump( o )
         return [ 0, 1, 0 ];
         else if( o.versionDelta === 'patch' )
         return [ 0, 0, 1 ];
+        else if( _.number.isNotNan( _.number.from( o.versionDelta ) ) )
+        return result;
         else
         throw _.error.brief
         (
