@@ -4959,13 +4959,7 @@ function npmGenerateFromWillfile( o )
 
   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
 
-  fileProvider.fileWrite
-  ({
-    filePath : packagePath,
-    data,
-    encoding : 'json.fine',
-    logger,
-  });
+  _.npm.fileFormat({ configPath : packagePath, config : data });
 
   return null;
 }
