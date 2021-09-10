@@ -5777,7 +5777,7 @@ function hookGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -5926,7 +5926,7 @@ function hookGitPullConflict( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6695,7 +6695,7 @@ function hookGitSyncConflict( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6886,7 +6886,7 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -7030,7 +7030,7 @@ function hookGitSyncArguments( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -25695,7 +25695,7 @@ function stepGitCheckHardLinkRestoring( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -26005,7 +26005,7 @@ function stepGitDifferentCommands( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -26123,7 +26123,7 @@ function stepGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -27136,7 +27136,7 @@ function stepGitSync( test )
 
   /* */
 
-  let config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+  let config = { path : { hlink : a.abs( '..' ) } };
   let profile = 'test-profile';
   _.censor.configSet({ profileDir : profile, set : config });
 
@@ -30900,7 +30900,7 @@ function commandSubmodulesGit( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31082,7 +31082,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31176,7 +31176,7 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32181,7 +32181,7 @@ function commandSubmodulesGitSync( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32667,7 +32667,7 @@ function commandModulesGit( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32899,7 +32899,7 @@ function commandModulesGitRemoteSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32996,7 +32996,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34187,7 +34187,7 @@ function commandModulesGitSync( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34983,7 +34983,7 @@ function commandModules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35145,7 +35145,7 @@ function commandSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35440,7 +35440,7 @@ function commandGitCheckHardLinkRestoring( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35798,7 +35798,7 @@ function commandGitDifferentCommands( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -36071,7 +36071,7 @@ function commandGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -36342,7 +36342,7 @@ function commandGitPullRestoreHardlinkOnFail( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -37399,15 +37399,9 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  let config = { path : { hlink : a.abs( '..' ) } };
+  let profile = 'test-profile';
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* */
 
@@ -37570,18 +37564,20 @@ function commandGitSync( test )
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "seventh"' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( `.with original/ .git.sync -am seventh dry:1 profile:${ profile }` )
+  a.appStart( `.with original/ .git.sync "-am {about::name}" profile:${ profile }` )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
+    test.case = '.with original/ .git.sync -am {about::name} - resolving of commit message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am {about::name}' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
   });
 
@@ -37589,8 +37585,7 @@ function commandGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
@@ -37630,7 +37625,7 @@ function commandGitSyncRestoringHardlinks( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
