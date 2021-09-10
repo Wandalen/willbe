@@ -5994,7 +5994,7 @@ function commandGitTag( e )
 commandGitTag.defaults =
 {
   ... commandImply.defaults,
-  name : '.',
+  tag : null,
   description : '',
   toVersion : null,
   dry : 0,
@@ -6012,7 +6012,7 @@ command.propertiesAliases =
 command.properties =
 {
   ... commandImply.command.properties,
-  name : 'Tag name. Default is name:".".',
+  tag : 'Tag name.',
   description : 'Description of annotated tag. Default is description:"".',
   toVersion : 'The commit to add tag. Default is current HEAD commit.',
   dry : 'Dry run without tagging. Default is dry:0.',
