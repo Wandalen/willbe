@@ -27353,7 +27353,7 @@ function stepGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/GitTag .build git.tag.default' )
@@ -27454,6 +27454,46 @@ function stepGitTag( test )
     return null;
   });
 
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion* tag:alpha' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion* tag:alpha - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag alpha' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'alpha' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion.beta' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion.beta - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag beta' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'beta' ), 1 );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -27463,7 +27503,6 @@ function stepGitTag( test )
   function begin()
   {
     a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
