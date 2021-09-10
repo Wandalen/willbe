@@ -955,10 +955,11 @@ function stepRoutineGitTag( frame )
   let module = run.module;
   let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
-  opts.name = opts[ 'tag.name' ];
-  opts.description = opts[ 'tag.description' ];
-  delete opts[ 'tag.name' ];
-  delete opts[ 'tag.description' ];
+  opts.description = opts.tagDescription;
+  delete opts.tagDescription;
+
+  if( opts.tag === null && 'tag' in step.criterion )
+  opts.tag = step.criterion.tag;
 
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
@@ -968,16 +969,15 @@ function stepRoutineGitTag( frame )
 
 stepRoutineGitTag.stepOptions =
 {
-  'tag.name' : '.',
-  'tag.description' : '',
-  'dry' : 0,
-  'light' : 0,
-}
+  tag : null,
+  tagDescription : '',
+  dry : 0,
+  light : 0,
+};
 
 stepRoutineGitTag.uniqueOptions =
 {
-  'tag.name' : '.',
-}
+};
 
 //
 
