@@ -1358,17 +1358,23 @@ function stepRoutineWillfileVersionBump( frame )
 
   _.assert( arguments.length === 1 );
 
+  if( opts.versionDelta === null )
+  if( 'bump' in step.criterion )
+  opts.versionDelta = step.criterion.bump;
+  else
+  opts.versionDelta = 1;
+
   return module.willfileVersionBump( opts );
 }
 
 stepRoutineWillfileVersionBump.stepOptions =
 {
-  versionDelta : 1,
+  versionDelta : null,
 }
 
 stepRoutineWillfileVersionBump.uniqueOptions =
 {
-  versionDelta : 1,
+  versionDelta : null,
 }
 
 // --

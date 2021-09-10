@@ -1,54 +1,68 @@
-about :
-  version : '0.0.0'
-
-step :
-
-  bump.number :
-    versionDelta : 1
-
-  bump.string :
-    versionDelta : 0.1.1
-
-  bump.string.partial :
-    versionDelta : '1.1'
-
-  bump.throwing.notInt :
-    versionDelta : 1.1
-
-  bump.throwing.negative :
-    versionDelta : -1
-
-  echo.version :
-    shell : 'echo {about::version}'
-
-build :
-
-  bump :
-    steps :
+about:
+  version: 0.0.0
+step:
+  bump.number:
+    versionDelta: 1
+  bump.string:
+    versionDelta: 0.1.1
+  bump.string.partial:
+    versionDelta: '1.1'
+  bump.patch:
+    versionDelta: patch
+  bump.minor:
+    versionDelta: minor
+  bump.major:
+    versionDelta: major
+  bump.with.criterion:
+    inherit: version.bump
+    criterion:
+      bump:
+        - major
+        - minor
+        - patch
+  bump.throwing.notInt:
+    versionDelta: 1.1
+  bump.throwing.negative:
+    versionDelta: -1
+  echo.version:
+    shell: 'echo {about::version}'
+build:
+  bump:
+    steps:
       - version.bump
-
-  bump.number :
-    steps :
+  bump.number:
+    steps:
       - bump.number
-
-  bump.string :
-    steps :
+  bump.string:
+    steps:
       - bump.string
-
-  bump.string.partial :
-    steps :
+  bump.string.partial:
+    steps:
       - bump.string.partial
-
-  bump.throwing.notInt :
-    steps :
-      - bump.throwing.notInt
-
-  bump.throwing.negative :
-    steps :
-      - bump.throwing.negative
-
-  bump.check.module :
-    steps :
+  bump.patch:
+    steps:
+      - bump.patch
+  bump.minor:
+    steps:
+      - bump.minor
+  bump.major:
+    steps:
+      - bump.major
+  bump.with.criterion:
+    criterion:
+      bump:
+        - major
+        - minor
+        - patch
+    steps:
+      - bump.with.criterion.*=1
+  bump.check.module:
+    steps:
       - version.bump
       - echo.version
-
+  bump.throwing.notInt:
+    steps:
+      - bump.throwing.notInt
+  bump.throwing.negative:
+    steps:
+      - bump.throwing.negative
