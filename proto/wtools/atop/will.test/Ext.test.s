@@ -25667,7 +25667,7 @@ function stepNpmGenerateOptionsInStep( test )
   a.appStart({ args : '.with PathMain .build npm.files.path.resolve.array' });
   a.ready.then( ( op ) =>
   {
-    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.case = 'resolve files path from array of paths';
     test.identical( op.exitCode, 0 );
     let files = a.find( a.routinePath );
     test.true( _.longHas( files, './package.json' ) );
@@ -38955,6 +38955,22 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"[ {path::proto}/**, proto ]"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'resolve list of files paths';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s', 'proto' ], main : 'proto' };
     test.identical( config, exp );
 
     return null;
