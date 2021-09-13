@@ -10713,12 +10713,12 @@ function gitTag( o )
   if( !module.about.name )
   throw _.errBrief( 'Module should be local, opened and have name' );
 
-  if( !_.strDefined( o.name ) )
+  if( !_.strDefined( o.tag ) )
   throw _.errBrief( 'Expects defined name of tag' );
-  o.name = module.resolve( o.name );
+  o.tag = module.resolve( o.tag );
 
   if( o.description === null )
-  o.description = o.name;
+  o.description = o.tag;
 
   let localPath = _.git.localPathFromInside( o.dirPath );
 
@@ -10732,13 +10732,13 @@ function gitTag( o )
   {
     logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
     logger.up();
-    logger.log( `Creating tag ${ _.ct.format( o.name, 'entity' ) }` );
+    logger.log( `Creating tag ${ _.ct.format( o.tag, 'entity' ) }` );
   }
 
   let result = _.git.tagMake
   ({
     localPath,
-    tag : o.name,
+    tag : o.tag,
     description : o.description || '',
     toVersion : o.toVersion,
     light : o.light,
@@ -10755,7 +10755,7 @@ function gitTag( o )
 
 gitTag.defaults =
 {
-  name : null,
+  tag : null,
   description : '',
   toVersion : null,
   dry : 0,

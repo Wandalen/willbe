@@ -27385,7 +27385,7 @@ function stepGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/GitTag .build git.tag.default' )
@@ -27486,6 +27486,46 @@ function stepGitTag( test )
     return null;
   });
 
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion* tag:alpha' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion* tag:alpha - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag alpha' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'alpha' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion.beta' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion.beta - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag beta' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'beta' ), 1 );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -27495,7 +27535,6 @@ function stepGitTag( test )
   function begin()
   {
     a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -37951,10 +37990,10 @@ function commandGitTag( test )
   /* - */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v1.0' )
+  a.appStart( '.with original/ .git.tag tag:v1.0' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v1.0 - add tag, only option name';
+    test.case = '.with original/ .git.tag tag:v1.0 - add tag, only option name';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
@@ -37971,10 +38010,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v2.0 description:"Version 2.0"' )
+  a.appStart( '.with original/ .git.tag tag:v2.0 description:"Version 2.0"' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v2.0 description:"Version 2.0" - add tag with description';
+    test.case = '.with original/ .git.tag tag:v2.0 description:"Version 2.0" - add tag with description';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
@@ -37991,10 +38030,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1' )
+  a.appStart( '.with original/ .git.tag tag:v3.0 description:"Version 3.0" light:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
+    test.case = '.with original/ .git.tag tag:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
@@ -38011,10 +38050,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0" dry:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
+    test.case = '.with original/ .git.tag tag:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
@@ -38031,10 +38070,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0" v:0' )
   a.ready.then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
+    test.case = '.with original/ .git.tag tag:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -38052,8 +38091,8 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0"' )
   a.ready.then( ( op ) =>
   {
     test.case = 'add same tag twice, should not throw error';
@@ -38086,7 +38125,7 @@ function commandGitTag( test )
     let ready = _.take( null );
     a.appStart
     ({
-      execPath : `.with original/ .git.tag name:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
+      execPath : `.with original/ .git.tag tag:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
       ready
     });
     return ready;

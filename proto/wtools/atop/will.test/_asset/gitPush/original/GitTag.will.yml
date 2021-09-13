@@ -9,29 +9,36 @@ path :
 step :
 
   git.tag.default :
-    tag.name : v1.0
+    inherit : git.tag
+    tag : v1.0
 
   git.tag.description :
-    tag.name : 'v2.0'
-    tag.description : 'Version 2.0'
+    inherit : git.tag
+    tag : 'v2.0'
+    tagDescription : 'Version 2.0'
 
   git.tag.light :
     inherit : git.tag
-    tag.name : 'v3.0'
-    tag.description : 'Version 3.0'
+    tag : 'v3.0'
+    tagDescription : 'Version 3.0'
     light : 1
 
   git.tag.dry :
     inherit : git.tag
-    tag.name : 'v4.0'
-    tag.description : 'Version 4.0'
+    tag : 'v4.0'
+    tagDescription : 'Version 4.0'
     dry : 1
 
   git.tag.nodry :
     inherit : git.tag
-    tag.name : 'v4.0'
-    tag.description : 'Version 4.0'
+    tag : 'v4.0'
+    tagDescription : 'Version 4.0'
     dry : 0
+
+  git.tag.with.criterion :
+    inherit : git.tag
+    criterion :
+      tag : [ alpha, beta ]
 
 build :
 
@@ -54,4 +61,10 @@ build :
   git.tag.nodry :
     steps :
       - git.tag.nodry
+
+  git.tag.with.criterion :
+    criterion :
+      tag : [ alpha, beta ]
+    steps :
+      - git.tag.with.criterion.*=1
 
