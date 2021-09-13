@@ -10665,9 +10665,14 @@ function gitSync( o )
 
     start( `git add --all` );
     if( o.message )
-    start( `git commit ${ o.message }` );
+    {
+      o.message = module.resolve( o.message );
+      start( `git commit ${ o.message }` );
+    }
     else
-    start( 'git commit -am "."' );
+    {
+      start( 'git commit -am "."' );
+    }
 
     return con;
   }
