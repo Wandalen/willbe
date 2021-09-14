@@ -566,6 +566,8 @@ function stepRoutineSourcesJoin( frame )
   _.assert( _.str.defined( opts.entryPath ) );
   _.assert( _.longHasAny( [ 'browser', 'njs' ], opts.interpreter ) );
 
+  const exts = opts.interpreter === 'browser' ? 'js|s' : 's|ss'
+
   opts.outPath = module.pathResolve( opts.outPath || '{path::out}/Main.s' );
   opts.basePath = module.pathResolve( opts.basePath || '{path::in}' );
 
@@ -581,7 +583,7 @@ function stepRoutineSourcesJoin( frame )
       filePath :
       [
         module.pathResolve( opts.entryPath ),
-        module.pathResolve( `proto/**/*.(js|s)` ),
+        module.pathResolve( `proto/**/*.(${ exts })` ),
         module.pathResolve( `proto/node_modules/*` ),
       ],
       maskDirectory : { excludeAny : /test$/, includeAny : 'testing' },
@@ -607,7 +609,7 @@ function stepRoutineSourcesJoin( frame )
 
     _.assert( fileProvider.fileExists( modPath ), `Module ${omod} doesn't exist.` );
 
-    const modJsScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/**/*.(js|s)` );
+    const modJsScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/**/*.(${ exts })` );
     const modIncludeScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/node_modules/*` )
 
     opts.inPath.filePath.push( modJsScriptsGlob, modIncludeScriptsGlob );
