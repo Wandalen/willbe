@@ -4950,7 +4950,10 @@ function npmGenerateFromWillfile( o )
   }
   if( o.filesPath )
   {
-    const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+    const files = [];
+    o.filesPath = _.array.as( o.filesPath );
+    for( let i = 0 ; i < o.filesPath.length ; i++ )
+    files.push( ... module.filesFromResource({ selector : o.filesPath[ i ], currentContext }) );
     data.files = path.s.relative( path.dir( packagePath ), files );
   }
 
@@ -4959,13 +4962,7 @@ function npmGenerateFromWillfile( o )
 
   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
 
-  fileProvider.fileWrite
-  ({
-    filePath : packagePath,
-    data,
-    encoding : 'json.fine',
-    logger,
-  });
+  _.npm.fileFormat({ configPath : packagePath, config : data });
 
   return null;
 }

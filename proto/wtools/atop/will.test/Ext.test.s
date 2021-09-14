@@ -5777,7 +5777,7 @@ function hookGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -5926,7 +5926,7 @@ function hookGitPullConflict( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6695,7 +6695,7 @@ function hookGitSyncConflict( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6886,7 +6886,7 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -7030,7 +7030,7 @@ function hookGitSyncArguments( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -24414,6 +24414,90 @@ function stepVersionBump( test )
     return null;
   });
 
+  a.appStart({ args : '.with Version .build bump.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.patch", bump string patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.minor", bump string minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.major", bump string major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion.patch", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:minor", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:major", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
   a.appStart({ args : '.with Version .build bump.check.module' })
   .then( ( op ) =>
   {
@@ -25069,7 +25153,7 @@ function stepSourcesJoinRunInBrowser( test )
 {
   let context = this;
 
-  if( typeof process !== undefined && process.versions )
+  if( Config.interpreter === 'njs' )
   if( _.str.begins( process.versions.node, '10' ) )
   return test.true( true );
 
@@ -25096,6 +25180,101 @@ function stepSourcesJoinRunInBrowser( test )
     test.identical( op.exitCode, 0 );
     var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
     test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepSourcesJoinRunWithExts( test )
+{
+  let context = this;
+
+  if( Config.interpreter === 'njs' )
+  if( _.str.begins( process.versions.node, '10' ) )
+  return test.true( true );
+
+  /* */
+
+  let a = context.assetFor( test, 'stepSourcesJoinWithExts' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run sample that use only include files';
+    return null;
+  });
+
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 1 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 1 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run compiled file for njs, should not compile file with ext `js`';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+  a.appStart( '.build module.sources.join.njs' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoinWithExts / build::module.sources.join.njs' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.njs' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.njs in' ), 1 );
+    return null;
+  });
+  a.shellNonThrowing( 'node NjsSample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 0 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
+    test.identical( _.strCount( op.output, /rror: Cannot find module.*Test\.js/ ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run compiled file for browser, should not compile file with ext `ss`';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+  a.appStart( '.build module.sources.join.browser' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoinWithExts / build::module.sources.join.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.browser in' ), 1 );
+    return null;
+  });
+  a.shell( 'npm i jsdom@17.0.0' );
+  a.shellNonThrowing( 'node Browser.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 0 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
+    test.ge( _.strCount( op.output, /Failed to resolve path:.*Test\.ss, file doesn\'t exist/ ), 1 );
     return null;
   });
 
@@ -25580,6 +25759,22 @@ function stepNpmGenerateOptionsInStep( test )
 
   /* */
 
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.array' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'resolve files path from array of paths';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s', 'proto' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
   a.appStart({ args : '.with Name .build generate.with.module.name' });
   a.ready.then( ( op ) =>
   {
@@ -25611,7 +25806,7 @@ function stepGitCheckHardLinkRestoring( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -25921,7 +26116,7 @@ function stepGitDifferentCommands( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -26039,7 +26234,7 @@ function stepGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -27052,15 +27247,9 @@ function stepGitSync( test )
 
   /* */
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  let config = { path : { hlink : a.abs( '..' ) } };
+  let profile = 'test-profile';
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* */
 
@@ -27230,10 +27419,33 @@ function stepGitSync( test )
 
   /* */
 
+  begin().then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "seventh"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+  a.appStart( '.with original/GitSync .build git.sync.resolve' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitSync .build git.sync.resolve - checking resolving of message';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am {about::name}' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+    return null;
+  });
+
+  /* */
+
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
@@ -27246,7 +27458,6 @@ function stepGitSync( test )
   function begin()
   {
     a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
@@ -27269,7 +27480,7 @@ function stepGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/GitTag .build git.tag.default' )
@@ -27370,6 +27581,46 @@ function stepGitTag( test )
     return null;
   });
 
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion* tag:alpha' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion* tag:alpha - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag alpha' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'alpha' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion.beta' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion.beta - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag beta' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'beta' ), 1 );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -27379,7 +27630,6 @@ function stepGitTag( test )
   function begin()
   {
     a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -30392,7 +30642,7 @@ function commandVersionBump( test )
     test.identical( config.about.version, '0.0.0' );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump' })
   .then( ( op ) =>
@@ -30406,7 +30656,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 1' })
   .then( ( op ) =>
@@ -30420,7 +30670,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 0.1.1' })
   .then( ( op ) =>
@@ -30434,7 +30684,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 1.1' })
   .then( ( op ) =>
@@ -30448,7 +30698,49 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
+
+  a.appStart({ args : '.with Version .version.bump patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:1' })
   .then( ( op ) =>
@@ -30462,7 +30754,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:0.1.1' })
   .then( ( op ) =>
@@ -30476,7 +30768,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:1.1' })
   .then( ( op ) =>
@@ -30490,7 +30782,49 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   /* - */
 
@@ -30716,7 +31050,7 @@ function commandSubmodulesGit( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30898,7 +31232,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30992,7 +31326,7 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31997,7 +32331,7 @@ function commandSubmodulesGitSync( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32483,7 +32817,7 @@ function commandModulesGit( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32715,7 +33049,7 @@ function commandModulesGitRemoteSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32812,7 +33146,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34003,7 +34337,7 @@ function commandModulesGitSync( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34799,7 +35133,7 @@ function commandModules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34961,7 +35295,7 @@ function commandSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35256,7 +35590,7 @@ function commandGitCheckHardLinkRestoring( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35614,7 +35948,7 @@ function commandGitDifferentCommands( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35887,7 +36221,7 @@ function commandGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -36158,7 +36492,7 @@ function commandGitPullRestoreHardlinkOnFail( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -37215,15 +37549,9 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  let config = { path : { hlink : a.abs( '..' ) } };
+  let profile = 'test-profile';
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* */
 
@@ -37386,18 +37714,20 @@ function commandGitSync( test )
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "seventh"' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( `.with original/ .git.sync -am seventh dry:1 profile:${ profile }` )
+  a.appStart( `.with original/ .git.sync "-am {about::name}" profile:${ profile }` )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
+    test.case = '.with original/ .git.sync -am {about::name} - resolving of commit message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am {about::name}' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
   });
 
@@ -37405,8 +37735,7 @@ function commandGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
@@ -37446,7 +37775,7 @@ function commandGitSyncRestoringHardlinks( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -37756,10 +38085,10 @@ function commandGitTag( test )
   /* - */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v1.0' )
+  a.appStart( '.with original/ .git.tag tag:v1.0' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v1.0 - add tag, only option name';
+    test.case = '.with original/ .git.tag tag:v1.0 - add tag, only option name';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
@@ -37776,10 +38105,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v2.0 description:"Version 2.0"' )
+  a.appStart( '.with original/ .git.tag tag:v2.0 description:"Version 2.0"' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v2.0 description:"Version 2.0" - add tag with description';
+    test.case = '.with original/ .git.tag tag:v2.0 description:"Version 2.0" - add tag with description';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
@@ -37796,10 +38125,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1' )
+  a.appStart( '.with original/ .git.tag tag:v3.0 description:"Version 3.0" light:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
+    test.case = '.with original/ .git.tag tag:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
@@ -37816,10 +38145,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0" dry:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
+    test.case = '.with original/ .git.tag tag:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
@@ -37836,10 +38165,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0" v:0' )
   a.ready.then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
+    test.case = '.with original/ .git.tag tag:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -37857,8 +38186,8 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0"' )
   a.ready.then( ( op ) =>
   {
     test.case = 'add same tag twice, should not throw error';
@@ -37891,7 +38220,7 @@ function commandGitTag( test )
     let ready = _.take( null );
     a.appStart
     ({
-      execPath : `.with original/ .git.tag name:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
+      execPath : `.with original/ .git.tag tag:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
       ready
     });
     return ready;
@@ -38771,6 +39100,22 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"[ {path::proto}/**, proto ]"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'resolve list of files paths';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s', 'proto' ], main : 'proto' };
     test.identical( config, exp );
 
     return null;
@@ -45159,6 +45504,7 @@ const Proto =
     stepShellWithSeveralCommands,
     stepSourcesJoin,
     stepSourcesJoinRunInBrowser,
+    stepSourcesJoinRunWithExts,
     stepNpmGenerate,
     stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,

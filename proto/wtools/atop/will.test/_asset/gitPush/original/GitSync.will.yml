@@ -25,6 +25,10 @@ step :
     profile : 'test-profile'
     dry : 1
 
+  git.sync.resolve :
+    message : '-am {about::name}'
+    profile : 'test-profile'
+
 build :
 
   git.sync.default :
@@ -38,4 +42,8 @@ build :
   git.sync.dry :
     steps :
       - git.sync.dry
+
+  git.sync.resolve :
+    steps :
+      - git.sync.resolve
 

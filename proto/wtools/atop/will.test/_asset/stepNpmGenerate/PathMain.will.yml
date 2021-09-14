@@ -42,6 +42,12 @@ step :
     criterion :
       debug : [ 0, 1 ]
 
+  npm.files.path.resolve.array :
+    inherit : npm.generate
+    filesPath :
+      - '{path::proto}/**'
+      - 'proto'
+
 build :
 
   npm.generate :
@@ -77,3 +83,7 @@ build :
       debug : 1
     steps :
       - npm.files.path.resolve.criterion.*=1
+
+  npm.files.path.resolve.array :
+    steps :
+      - npm.files.path.resolve.array
