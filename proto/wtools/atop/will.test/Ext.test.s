@@ -1203,7 +1203,7 @@ function buildStepShellAndViewWithoutAbout( test )
 
   /* - */
 
-  return a.ready.delay( 1000 );
+  return a.ready.delay( 5000 );
 }
 
 //
