@@ -1203,7 +1203,7 @@ function buildStepShellAndViewWithoutAbout( test )
 
   /* - */
 
-  return a.ready.delay( 1000 );
+  return a.ready.delay( 5000 );
 }
 
 //
@@ -25153,7 +25153,7 @@ function stepSourcesJoinRunInBrowser( test )
 {
   let context = this;
 
-  if( typeof process !== undefined && process.versions )
+  if( Config.interpreter === 'njs' )
   if( _.str.begins( process.versions.node, '10' ) )
   return test.true( true );
 
@@ -25180,6 +25180,101 @@ function stepSourcesJoinRunInBrowser( test )
     test.identical( op.exitCode, 0 );
     var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
     test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepSourcesJoinRunWithExts( test )
+{
+  let context = this;
+
+  if( Config.interpreter === 'njs' )
+  if( _.str.begins( process.versions.node, '10' ) )
+  return test.true( true );
+
+  /* */
+
+  let a = context.assetFor( test, 'stepSourcesJoinWithExts' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run sample that use only include files';
+    return null;
+  });
+
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 1 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 1 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run compiled file for njs, should not compile file with ext `js`';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+  a.appStart( '.build module.sources.join.njs' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoinWithExts / build::module.sources.join.njs' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.njs' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.njs in' ), 1 );
+    return null;
+  });
+  a.shellNonThrowing( 'node NjsSample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 0 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
+    test.identical( _.strCount( op.output, /rror: Cannot find module.*Test\.js/ ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run compiled file for browser, should not compile file with ext `ss`';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+  a.appStart( '.build module.sources.join.browser' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoinWithExts / build::module.sources.join.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.browser in' ), 1 );
+    return null;
+  });
+  a.shell( 'npm i jsdom@17.0.0' );
+  a.shellNonThrowing( 'node Browser.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 0 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
+    test.ge( _.strCount( op.output, /Failed to resolve path:.*Test\.ss, file doesn\'t exist/ ), 1 );
     return null;
   });
 
@@ -45409,6 +45504,7 @@ const Proto =
     stepShellWithSeveralCommands,
     stepSourcesJoin,
     stepSourcesJoinRunInBrowser,
+    stepSourcesJoinRunWithExts,
     stepNpmGenerate,
     stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,
