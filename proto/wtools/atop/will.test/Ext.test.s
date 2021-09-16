@@ -13439,7 +13439,7 @@ function exportWithRemoteSubmodulesRecursive( test )
 }
 
 exportWithRemoteSubmodulesRecursive.rapidity = -1;
-exportWithRemoteSubmodulesRecursive.timeOut = 400000;
+exportWithRemoteSubmodulesRecursive.timeOut = 800000;
 exportWithRemoteSubmodulesRecursive.description =
 `
 check there is no annoying information about lack of remote submodules of submodules
