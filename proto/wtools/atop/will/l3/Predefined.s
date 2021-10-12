@@ -566,6 +566,8 @@ function stepRoutineSourcesJoin( frame )
   _.assert( _.str.defined( opts.entryPath ) );
   _.assert( _.longHasAny( [ 'browser', 'njs' ], opts.interpreter ) );
 
+  const exts = opts.interpreter === 'browser' ? 'js|s' : 's|ss'
+
   opts.outPath = module.pathResolve( opts.outPath || '{path::out}/Main.s' );
   opts.basePath = module.pathResolve( opts.basePath || '{path::in}' );
 
@@ -581,7 +583,7 @@ function stepRoutineSourcesJoin( frame )
       filePath :
       [
         module.pathResolve( opts.entryPath ),
-        module.pathResolve( `proto/**/*.(js|s)` ),
+        module.pathResolve( `proto/**/*.(${ exts })` ),
         module.pathResolve( `proto/node_modules/*` ),
       ],
       maskDirectory : { excludeAny : /test$/, includeAny : 'testing' },
@@ -607,7 +609,7 @@ function stepRoutineSourcesJoin( frame )
 
     _.assert( fileProvider.fileExists( modPath ), `Module ${omod} doesn't exist.` );
 
-    const modJsScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/**/*.(js|s)` );
+    const modJsScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/**/*.(${ exts })` );
     const modIncludeScriptsGlob = module.pathResolve( `node_modules/${mod}/proto/node_modules/*` )
 
     opts.inPath.filePath.push( modJsScriptsGlob, modIncludeScriptsGlob );
@@ -955,10 +957,11 @@ function stepRoutineGitTag( frame )
   let module = run.module;
   let opts = _.props.extend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
-  opts.name = opts[ 'tag.name' ];
-  opts.description = opts[ 'tag.description' ];
-  delete opts[ 'tag.name' ];
-  delete opts[ 'tag.description' ];
+  opts.description = opts.tagDescription;
+  delete opts.tagDescription;
+
+  if( opts.tag === null && 'tag' in step.criterion )
+  opts.tag = step.criterion.tag;
 
   _.assert( arguments.length === 1 );
   _.assert( _.object.isBasic( opts ) );
@@ -968,16 +971,15 @@ function stepRoutineGitTag( frame )
 
 stepRoutineGitTag.stepOptions =
 {
-  'tag.name' : '.',
-  'tag.description' : '',
-  'dry' : 0,
-  'light' : 0,
-}
+  tag : null,
+  tagDescription : '',
+  dry : 0,
+  light : 0,
+};
 
 stepRoutineGitTag.uniqueOptions =
 {
-  'tag.name' : '.',
-}
+};
 
 //
 
@@ -1005,6 +1007,7 @@ stepRoutineRepoRelease.stepOptions =
   tag : null,
   draft : 0,
   prerelease : 0,
+  force : 0,
 };
 
 stepRoutineRepoRelease.uniqueOptions =
@@ -1357,17 +1360,23 @@ function stepRoutineWillfileVersionBump( frame )
 
   _.assert( arguments.length === 1 );
 
+  if( opts.versionDelta === null )
+  if( 'bump' in step.criterion )
+  opts.versionDelta = step.criterion.bump;
+  else
+  opts.versionDelta = 1;
+
   return module.willfileVersionBump( opts );
 }
 
 stepRoutineWillfileVersionBump.stepOptions =
 {
-  versionDelta : 1,
+  versionDelta : null,
 }
 
 stepRoutineWillfileVersionBump.uniqueOptions =
 {
-  versionDelta : 1,
+  versionDelta : null,
 }
 
 // --

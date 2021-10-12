@@ -1,0 +1,36 @@
+
+about :
+
+  name : implicit
+
+step :
+
+  echo :
+    shell : echo implicit
+
+build :
+
+  build :
+    criterion :
+      default : 1
+    steps :
+      - echo
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - echo
+
+  publish :
+    criterion :
+      default : 1
+      publish : 1
+    steps :
+      - echo
+
+  no.criterions :
+    steps :
+      - echo
+

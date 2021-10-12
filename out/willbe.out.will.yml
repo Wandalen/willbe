@@ -1442,6 +1442,10 @@ module:
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules2.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodulesDef.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildsResolve
+          - >-
+            ../proto/wtools/atop/will.test/_asset/buildsResolve/SeveralCriterions.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildsResolve/will.yml
           - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView
           - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView/will.yml
           - ../proto/wtools/atop/will.test/_asset/clean
@@ -3187,6 +3191,46 @@ module:
             ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/Browser.html
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/Browser.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/BrowserSample.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/NjsSample.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/Sample.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/node_modules/testmodule
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/entry
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/entry/TestModule.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/include
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/include/Mid.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1/Test.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1/Test.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1/Test.ss
           - ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated/.ex.will.yml
