@@ -15,11 +15,12 @@ jobs :
       fail-fast : false
       matrix :
         os : [ ubuntu, windows, macos ]
-        node-version : [ 10.x, 12.9.1, 14.x, 16.x ]
+        node-version : [ 10.x, 12.9.1, 14.x, 15.x, 16.x ]
         test-job :
           - 'Int.test.s'
           - 'Ext.Package.test.s'
           - 'File.test.s'
+          - 'Transform.test.s'
           - 'Ext.test.s r:"build*"'
           - 'Ext.test.s r:"reflect*"'
           - 'Ext.test.s r:"[ export*, import*, open* ]"'
@@ -41,9 +42,13 @@ jobs :
       with :
         fetch-depth: 2
     - name : ${{ matrix.node-version }}
-      uses : actions/setup-node@v1
+      uses : Wandalen/wretry.action@0.2.2
       with :
-        node-version : ${{ matrix.node-version }}
+        action : actions/setup-node@v1
+        with : |
+          node-version : ${{ matrix.node-version }}
+        attempt_limit : 3
+        attempt_delay: 1000
     - name : Save npm version
       id : getnpmver
       run : |
@@ -51,7 +56,7 @@ jobs :
     - name : Update npm if current version is 6
       if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
       run : npm install -g npm@latest-6
-    - run : npm -g i willbe@stable
+    - run : npm -g i willbe@delta
     - run : will .npm.install
     - name : Environment
       run : env
@@ -71,7 +76,7 @@ jobs :
       fail-fast : false
       matrix :
         os : [ ubuntu ]
-        node-version : [ 10.x, 12.9.1, 14.x, 16.x ]
+        node-version : [ 10.x, 12.9.1, 14.x, 15.x, 16.x ]
     if : "( startsWith( github.event.head_commit.message, 'version' ) && startsWith( github.ref, 'refs/tags/v' ) ) || contains( github.event.head_commit.message, '[publish]' )"
     runs-on : ${{ matrix.os }}-latest
     name : ${{ matrix.os }} ${{ matrix.node-version }} Ext
@@ -95,7 +100,7 @@ jobs :
     - name : Update npm if current version is 6
       if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
       run : npm install -g npm@latest-6
-    - run : npm -g i willbe@stable
+    - run : npm -g i willbe@delta
     - run : will .npm.install
     - name : Environment
       run : env
@@ -114,7 +119,7 @@ jobs :
       fail-fast : false
       matrix :
         os : [ ubuntu, windows, macos ]
-        node-version : [ 10.x, 12.9.1, 14.x, 16.x ]
+        node-version : [ 10.x, 12.9.1, 14.x, 15.x, 16.x ]
     if : "( startsWith( github.event.head_commit.message, 'version' ) && startsWith( github.ref, 'refs/tags/v' ) ) || contains( github.event.head_commit.message, '[publish]' )"
     runs-on : ${{ matrix.os }}-latest
     name : ${{ matrix.os }} ${{ matrix.node-version }} Integration
@@ -138,7 +143,7 @@ jobs :
     - name : Update npm if current version is 6
       if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
       run : npm install -g npm@latest-6
-    - run : npm -g i willbe@stable
+    - run : npm -g i willbe@delta
     - run : will .npm.install
     - name : Environment
       run : env

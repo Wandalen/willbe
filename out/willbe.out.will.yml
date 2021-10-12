@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: 24f2f7fb0c1f7a4bb646e61cb5a4fab0
-    size: 9111
+    hash: 6d3703873084a594549bd55ef3a8900f
+    size: 9118
 module:
   willbe.out:
     about:
@@ -1442,6 +1442,10 @@ module:
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules2.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodulesDef.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildsResolve
+          - >-
+            ../proto/wtools/atop/will.test/_asset/buildsResolve/SeveralCriterions.will.yml
+          - ../proto/wtools/atop/will.test/_asset/buildsResolve/will.yml
           - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView
           - ../proto/wtools/atop/will.test/_asset/buildStepShellAndView/will.yml
           - ../proto/wtools/atop/will.test/_asset/clean
@@ -3010,6 +3014,9 @@ module:
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/.will.yml
           - ../proto/wtools/atop/will.test/_asset/renormalization/repo/File.js
+          - ../proto/wtools/atop/will.test/_asset/repoRelease
+          - ../proto/wtools/atop/will.test/_asset/repoRelease/.gitignore
+          - ../proto/wtools/atop/will.test/_asset/repoRelease/will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/resolvePathOfSubmodulesExported
           - >-
@@ -3159,6 +3166,71 @@ module:
             ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/.im.will.yml
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/A.js
           - ../proto/wtools/atop/will.test/_asset/stepShellWithCriterion/B.js
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Browser.html
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Browser.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/BrowserSample.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/package.json
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Sample.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/Single.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/node_modules/wmodulefortesting12ab
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/Common.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoin/proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/Browser.html
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/Browser.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/BrowserSample.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/NjsSample.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/Sample.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/will.yml
+          - ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/node_modules
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/node_modules/testmodule
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/entry
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/entry/TestModule.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/include
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/include/Mid.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1/Test.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1/Test.s
+          - >-
+            ../proto/wtools/atop/will.test/_asset/stepSourcesJoinWithExts/proto/wtools/base/l1/l1/Test.ss
           - ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated
           - >-
             ../proto/wtools/atop/will.test/_asset/stepSubmodulesAreUpdated/.ex.will.yml
@@ -3959,7 +4031,7 @@ module:
         autoExporting: 0
         enabled: 0
       eslint:
-        path: 'npm:///eslint#7.1.0'
+        path: 'npm:///eslint!7.1.0'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -3971,7 +4043,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar'
+        path: 'npm:///tar!6.1.11'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -4826,7 +4898,7 @@ module:
         autoExporting: 0
         enabled: 0
       eslint:
-        path: 'npm:///eslint#7.1.0'
+        path: 'npm:///eslint!7.1.0'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -4838,7 +4910,7 @@ module:
         criterion:
           development: 1
       tar:
-        path: 'npm:///tar'
+        path: 'npm:///tar!6.1.11'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -5405,5 +5477,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 24f2f7fb0c1f7a4bb646e61cb5a4fab0
-        size: 9111
+        hash: 6d3703873084a594549bd55ef3a8900f
+        size: 9118
