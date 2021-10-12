@@ -1743,7 +1743,6 @@ command.properties =
   verbosity : 'Set verbosity. Default is 3.',
 };
 
-
 //
 
 function commandResourcesList( e )
