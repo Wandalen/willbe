@@ -1,0 +1,29 @@
+
+about :
+
+  name : stepSourcesJoinWithExts
+
+step :
+
+  module.sources.join.njs :
+    inherit : sources.join
+    entryPath : proto/node_modules/testmodule
+    interpreter : njs
+    outPath : out/Main.s
+
+  module.sources.join.browser :
+    inherit : sources.join
+    entryPath : proto/node_modules/testmodule
+    interpreter : browser
+    outPath : out/Main.s
+
+build :
+
+  module.sources.join.njs :
+    steps :
+      - step::module.sources.join.njs
+
+  module.sources.join.browser :
+    steps :
+      - step::module.sources.join.browser
+

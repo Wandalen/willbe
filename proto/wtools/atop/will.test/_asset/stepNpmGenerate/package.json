@@ -1,0 +1,16 @@
+{
+  "name" : "npmfromwillfile", 
+  "description" : "To check the conversion", 
+  "version" : "0.0.0", 
+  "enabled" : 1, 
+  "npm.engines" : { "node" : ">= 6.0.0", "chrome" : ">= 60.0.0", "firefox" : ">= 60.0.0" }, 
+  "engine" : "node >= 6.0.0", 
+  "keywords" : [ "tools", "export" ], 
+  "license" : "MIT", 
+  "author" : "Author <author@dot.com>", 
+  "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ], 
+  "scripts" : { "test" : "wtest .run proto/** v:5", "docgen" : "wdocgen .build proto" }, 
+  "repository" : "https://github.com/author/NpmFromWillfile.git", 
+  "bugs" : "https://github.com/author/NpmFromWillfile/issues", 
+  "main" : "Index.js"
+}

@@ -3309,6 +3309,10 @@ let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, mo
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
+let modulesPublish = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
+modulesPublish.defaults.kind = 'publish';
+modulesPublish.defaults.downloading = 0;
+
 //
 
 function modulesVerify_head( routine, args )
@@ -3404,6 +3408,7 @@ var defaults = modulesVerify_body.defaults =
   isRepository : 1,
   hasRemote : 1,
   isUpToDate : 1,
+  hasRemoteVersion : 1
 
 }
 
@@ -4945,19 +4950,19 @@ function npmGenerateFromWillfile( o )
   }
   if( o.filesPath )
   {
-    const files = module.filesFromResource({ selector : o.filesPath, currentContext });
+    const files = [];
+    o.filesPath = _.array.as( o.filesPath );
+    for( let i = 0 ; i < o.filesPath.length ; i++ )
+    files.push( ... module.filesFromResource({ selector : o.filesPath[ i ], currentContext }) );
     data.files = path.s.relative( path.dir( packagePath ), files );
   }
 
+  if( o.npmName )
+  data.name = o.npmName;
+
   _.sure( !fileProvider.isDir( packagePath ), () => `${ packagePath } is dir, not safe to delete` );
 
-  fileProvider.fileWrite
-  ({
-    filePath : packagePath,
-    data,
-    encoding : 'json.fine',
-    logger,
-  });
+  _.npm.fileFormat({ configPath : packagePath, config : data });
 
   return null;
 }
@@ -4967,6 +4972,7 @@ npmGenerateFromWillfile.defaults =
   packagePath : null,
   entryPath : null,
   filesPath : null,
+  npmName : null,
 
   modules : null,
   currentContext : null,
@@ -6672,6 +6678,7 @@ let Extension =
   modulesClean,
   modulesBuild,
   modulesExport,
+  modulesPublish,
   modulesVerify,
 
   // object

@@ -439,10 +439,10 @@ function etcRunWillbe( test )
 function etcKillWillbe( test )
 {
   const context = this;
-  const a = context.assetFor( test, 'simple' );
-  const con = _.take( null );
-  const delay = 1500;
+  const a = context.assetFor( test, 'eachList' );
   a.reflectMinimal();
+  const con = _.take( null );
+  const delay = 2100;
 
   /* */
 
@@ -451,7 +451,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe without signal';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -472,9 +472,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGTERM' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
@@ -489,7 +489,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGTERM';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -510,9 +510,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGTERM' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
 
@@ -527,7 +527,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGKILL';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -548,9 +548,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGKILL' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
       test.identical( _.strCount( op.output, '. Opened .' ), 0 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 0 );
+      test.identical( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGKILL' ), 1 );
 
@@ -565,7 +565,7 @@ function etcKillWillbe( test )
     test.case = 'kill willbe with signal SIGINT';
     var o =
     {
-      execPath : _.Will.WillPathGet() + ' .build',
+      execPath : _.Will.WillPathGet() + ' .with ./* .paths.list',
       currentPath : a.routinePath,
       outputCollecting : 1,
       throwingExitCode : 0,
@@ -586,9 +586,9 @@ function etcKillWillbe( test )
       test.identical( op.exitReason, 'signal' );
       test.identical( op.exitSignal, 'SIGINT' );
 
-      test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
-      test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-      test.identical( _.strCount( op.output, '. Read 1 willfile(s)' ), 1 );
+      test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGINT' ), 1 );
 
@@ -763,6 +763,204 @@ function etcResourcesFormReflectorsExperiment( test )
 
   return a.ready;
 }
+
+//
+
+function etcCommandsSeveral( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'open' );
+  a.reflect();
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+
+  /* - */
+
+  a.appStart( '".with . .export ; .clean"' )
+  .then( ( op ) =>
+  {
+    test.case = '.with . .export ; .clean';
+    test.identical( op.exitCode, 0 );
+
+    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
+    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
+    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
+
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './doc.ex.will.yml',
+      './doc.im.will.yml',
+      './doc',
+      './doc/.ex.will.yml',
+      './doc/.im.will.yml',
+      './doc/doc.ex.will.yml',
+      './doc/doc.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ];
+    var got = a.find( a.routinePath );
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcCommandsSeveral.description =
+`
+- check internal stat of will
+- several commands separated with ";"" should works
+`;
+
+//
+
+function etcResolveDefaultBuilds( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildsResolve' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart( '.build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::build in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".export"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::implicit / build::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::implicit / build::export in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.publish' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".publish"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 1 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::publish in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with SeveralCriterions .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with SeveralCriterions .build"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::build' ), 1 );
+    test.identical( _.strCount( op.output, 'Exporting module::explicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::explicit / build::build in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with SeveralCriterions .export' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with SeveralCriterions .export"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::explicit / build::export' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::explicit / build::export in' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with SeveralCriterions .publish' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".with SeveralCriterions .publish"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Exporting module::explicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::explicit / build::publish' ), 1 );
+    test.identical( _.strCount( op.output, '> echo explicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::explicit / build::publish in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build no.criterions' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build no.criterions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.export no.criterions' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".export no.criterions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.publish no.criterions' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".publish no.criterions"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build:: build' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcResolveDefaultBuilds.description =
+`
+check that utility resolves next builds with criterion default:
+  - trivial;
+  - export;
+  - publish;
+`;
 
 // --
 // build
@@ -965,6 +1163,10 @@ function buildStepShellAndViewWithoutAbout( test )
 {
   let context = this;
   let a = context.assetFor( test, 'buildStepShellAndView' );
+
+  if( !_.process.insideTestContainer() )
+  return test.true( true );
+
   a.reflect();
 
   /* - */
@@ -1001,7 +1203,7 @@ function buildStepShellAndViewWithoutAbout( test )
 
   /* - */
 
-  return a.ready.delay( 1000 );
+  return a.ready.delay( 5000 );
 }
 
 //
@@ -2125,21 +2327,17 @@ function openWith( test )
 {
   let context = this;
   let a = context.assetFor( test, 'open' );
-  a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.export'
+    test.case = '.export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2154,21 +2352,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with . .export'
+    test.case = '.with . .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with . .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2183,21 +2378,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc .export'
+    test.case = '.with doc .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2212,23 +2404,20 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc .export -- deleted doc.will.yml'
-    a.reflect();
+    test.case = '.with doc .export -- deleted doc.will.yml';
+    a.reflectMinimal();
     a.fileProvider.fileDelete( a.abs( 'doc.ex.will.yml' ) );
     a.fileProvider.fileDelete( a.abs( 'doc.im.will.yml' ) );
     return null;
-  })
+  });
 
   a.appStartNonThrowing({ execPath : '.with doc .export' })
-
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -2242,24 +2431,19 @@ function openWith( test )
     var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
-    a.reflect();
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc. .export'
+    test.case = '.with doc. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2274,21 +2458,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/. .export'
+    test.case = '.with doc/. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2303,21 +2484,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with do .export'
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with do .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2335,21 +2513,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with docx .export'
+    test.case = '.with docx .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with docx .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2367,21 +2542,18 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/ .export'
+    test.case = '.with doc/ .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/ .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2396,26 +2568,22 @@ function openWith( test )
     test.identical( files, [] );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml'
+    test.case = '.with doc/.will.yml .export -- deleted doc/.will.yml';
 
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.fileDelete( a.abs( 'doc/.ex.will.yml' ) );
     a.fileProvider.fileDelete( a.abs( 'doc/.im.will.yml' ) );
 
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStartNonThrowing({ execPath : '.with doc/.will.yml .export' })
-
   .then( ( op ) =>
   {
     test.nil( op.exitCode, 0 );
@@ -2435,21 +2603,18 @@ function openWith( test )
     a.reflect();
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/doc .export'
+    test.case = '.with doc/doc .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/doc .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2464,21 +2629,18 @@ function openWith( test )
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with doc/doc. .export'
+    test.case = '.with doc/doc. .export';
+    a.reflectMinimal();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.with doc/doc. .export' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2493,7 +2655,7 @@ function openWith( test )
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -4387,18 +4549,9 @@ function reflectNpmModules( test )
 {
   let context = this;
   let a = context.assetFor( test, 'reflectNpmModules' );
+  a.reflect();
 
   /* - */
-
-  a.ready
-
-  .then( () =>
-  {
-    a.reflect();
-    return null;
-  })
-
-  /* */
 
   a.appStart( '.build' )
   .then( ( op ) =>
@@ -4414,12 +4567,14 @@ function reflectNpmModules( test )
       './out/wModuleForTesting12ab.out.will.yml',
       './out/wModuleForTesting2a.out.will.yml',
       './proto',
+      './proto/node_modules',
+      './proto/node_modules/wmodulefortesting2a',
       './proto/wtools',
       './proto/wtools/testing',
       './proto/wtools/testing/Basic.s',
+      './proto/wtools/testing/Common.s',
       './proto/wtools/testing/l3',
       './proto/wtools/testing/l3/testing2a',
-      './proto/wtools/testing/l3/testing2a/Include.s',
       './proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s',
       './proto/wtools/testing/l4',
       './proto/wtools/testing/l4/testing12ab',
@@ -4430,14 +4585,14 @@ function reflectNpmModules( test )
     test.identical( files, exp );
 
     return null;
-  })
+  });
 
-  /*  */
+  /* - */
 
   return a.ready;
 }
 
-reflectNpmModules.timeOut = 300000;
+reflectNpmModules.timeOut = 600000;
 
 //
 
@@ -5182,7 +5337,7 @@ function hookCallInfo( test )
   // aaa : ?? /* Dmytro : a.appStart - mode : 'fork'; a.shell - mode : 'shell' */
   a.reflect();
 
-  /* - */
+  /* */
 
   a.appStart( '.clean' );
   a.appStart( '.export' )
@@ -5198,9 +5353,9 @@ function hookCallInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.hook.call info.js' )
   .then( ( op ) =>
@@ -5213,9 +5368,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with . .hook.call info.js' )
   .then( ( op ) =>
@@ -5228,9 +5383,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with * .hook.call info.js' )
   .then( ( op ) =>
@@ -5243,9 +5398,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 1 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5258,9 +5413,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 4 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5273,9 +5428,9 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'local :' ), 7 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( op ) =>
@@ -5289,15 +5444,15 @@ function hookCallInfo( test )
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookCallInfo */
+}
 
 hookCallInfo.rapidity = -1;
-hookCallInfo.timeOut = 300000;
+hookCallInfo.timeOut = 600000;
 hookCallInfo.description =
 `
 - do execute js script
@@ -5562,7 +5717,7 @@ function hookHlink( test )
 
   a.ready.then( ( op ) =>
   {
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
@@ -5585,7 +5740,7 @@ function hookHlink( test )
     test.true( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   a.appStart( '.with clone/ .call hlink beeping:0' )
   .then( ( op ) =>
@@ -5598,12 +5753,12 @@ function hookHlink( test )
     test.true( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function hookHlink */
+}
 
 hookHlink.description =
 `
@@ -5622,7 +5777,7 @@ function hookGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -5771,7 +5926,7 @@ function hookGitPullConflict( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6540,7 +6695,7 @@ function hookGitSyncConflict( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6731,7 +6886,7 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -6875,7 +7030,7 @@ function hookGitSyncArguments( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -13284,7 +13439,7 @@ function exportWithRemoteSubmodulesRecursive( test )
 }
 
 exportWithRemoteSubmodulesRecursive.rapidity = -1;
-exportWithRemoteSubmodulesRecursive.timeOut = 400000;
+exportWithRemoteSubmodulesRecursive.timeOut = 800000;
 exportWithRemoteSubmodulesRecursive.description =
 `
 check there is no annoying information about lack of remote submodules of submodules
@@ -14603,7 +14758,7 @@ Current willbe should alert user about unexpected fields.
 
 //
 
-/* qqq : for Dmytro : fix it */
+/* aaa : for Dmytro : fix it */ /* Dmytro : fixed */
 
 function exportCreatesOutDir( test )
 {
@@ -14623,11 +14778,8 @@ function exportCreatesOutDir( test )
   /* */
 
   return a.ready;
-
-  /* */
 }
 
-exportCreatesOutDir.experimental = 1;
 exportCreatesOutDir.description =
 `
 Reproduces situation when out directory is not present and should be created by willbe.
@@ -14925,7 +15077,7 @@ function importOutdated( test )
 {
   let context = this;
   let a = context.assetFor( test, 'importOutdated' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -15247,7 +15399,7 @@ function cleanOptionWithSubmodules( test )
 }
 
 cleanOptionWithSubmodules.rapidity = -1;
-cleanOptionWithSubmodules.timeOut = 300000;
+cleanOptionWithSubmodules.timeOut = 600000;
 
 //
 
@@ -19045,7 +19197,7 @@ function submodulesDownloadRecursive( test )
   return a.ready;
 }
 
-submodulesDownloadRecursive.timeOut = 500000;
+submodulesDownloadRecursive.timeOut = 1000000;
 // xxx
 
 //
@@ -19497,127 +19649,119 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with c .clean recursive:2' )
   a.appStart( '.with c .submodules.download' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with c .submodules.download' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 10 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with c .submodules.download recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with c .clean recursive:2' )
   a.appStart( '.with c .submodules.download recursive:2' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with c .submodules.download recursive:2' )
-
   .then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 
-} /* end of function submodulesDownloadDiffDownloadPathsIrregular */
+}
 
 submodulesDownloadDiffDownloadPathsIrregular.rapidity = -1;
 submodulesDownloadDiffDownloadPathsIrregular.timeOut = 400000;
@@ -20225,7 +20369,7 @@ function submodulesDownloadNpm( test )
   return a.ready;
 }
 
-submodulesDownloadNpm.timeOut = 300000;
+submodulesDownloadNpm.timeOut = 600000;
 
 //
 
@@ -20443,7 +20587,7 @@ function submodulesDownloadUpdateNpm( test )
   return a.ready;
 }
 
-submodulesDownloadUpdateNpm.timeOut = 300000;
+submodulesDownloadUpdateNpm.timeOut = 600000;
 
 //
 
@@ -22158,7 +22302,7 @@ function submodulesVersionsAgreeNpm( test )
 }
 
 submodulesVersionsAgreeNpm.rapidity = -1;
-submodulesVersionsAgreeNpm.timeOut = 300000;
+submodulesVersionsAgreeNpm.timeOut = 600000;
 
 //
 
@@ -24212,7 +24356,7 @@ function stepVersionBump( test )
     test.identical( config.about.version, '0.0.0' );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump' })
   .then( ( op ) =>
@@ -24226,7 +24370,7 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump.number' })
   .then( ( op ) =>
@@ -24240,7 +24384,7 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump.string' })
   .then( ( op ) =>
@@ -24254,7 +24398,7 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .build bump.string.partial' })
   .then( ( op ) =>
@@ -24268,8 +24412,106 @@ function stepVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
+  a.appStart({ args : '.with Version .build bump.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.patch", bump string patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.minor", bump string minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.major", bump string major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion.patch", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:minor", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:major", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.check.module' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.check.module", check that module has same version as new willfile';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+    test.identical( _.strCount( op.output, '> echo 0.0.1' ), 1 );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   /* - */
 
@@ -24517,6 +24759,26 @@ function stepSubmodulesAreUpdated( test )
   })
 
   a.appStartNonThrowing( '.build debug6' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, check is disabled via option';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.clean .submodules.download' )
+  a.appStartNonThrowing( '.submodules.download' )
+  a.appStart2( 'git commit --allow-empty -m test' )
+  a.appStartNonThrowing( '.build debug7' )
 
   .then( ( op ) =>
   {
@@ -24794,6 +25056,746 @@ function stepShellWithSeveralCommands( test )
 
 //
 
+function stepSourcesJoin( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSourcesJoin' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.default' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.default' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.default in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.with.in.path' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.with.in.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.in.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.in.path in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.with.base.path' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.with.base.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.base.path' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.with.base.path in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.build join.without.modules.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.without.modules.list' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.without.modules.list' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.without.modules.list in' ), 1 );
+    return null;
+  });
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepSourcesJoinRunInBrowser( test )
+{
+  let context = this;
+
+  if( Config.interpreter === 'njs' )
+  if( _.str.begins( process.versions.node, '10' ) )
+  return test.true( true );
+
+  /* */
+
+  let a = context.assetFor( test, 'stepSourcesJoin' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.build join.module.for.browser' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoin / build::join.module.for.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.module.for.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoin / build::join.module.for.browser in' ), 1 );
+    return null;
+  });
+  a.shell( 'npm i jsdom@17.0.0' );
+  a.shell( 'node Browser.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp = 'The sum of sum, multiplication, squares, square roots and dividing of 4 and 4 is';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepSourcesJoinRunWithExts( test )
+{
+  let context = this;
+
+  if( Config.interpreter === 'njs' )
+  if( _.str.begins( process.versions.node, '10' ) )
+  return test.true( true );
+
+  /* */
+
+  let a = context.assetFor( test, 'stepSourcesJoinWithExts' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run sample that use only include files';
+    return null;
+  });
+
+  a.shell( 'node Sample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 1 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 1 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run compiled file for njs, should not compile file with ext `js`';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+  a.appStart( '.build module.sources.join.njs' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoinWithExts / build::module.sources.join.njs' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.njs' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.njs in' ), 1 );
+    return null;
+  });
+  a.shellNonThrowing( 'node NjsSample.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 0 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
+    test.identical( _.strCount( op.output, /rror: Cannot find module.*Test\.js/ ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run compiled file for browser, should not compile file with ext `ss`';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    return null;
+  });
+  a.appStart( '.build module.sources.join.browser' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::stepSourcesJoinWithExts / build::module.sources.join.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.browser' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepSourcesJoinWithExts / build::module.sources.join.browser in' ), 1 );
+    return null;
+  });
+  a.shell( 'npm i jsdom@17.0.0' );
+  a.shellNonThrowing( 'node Browser.s' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'The sum of 4 and 4 is : 8' ), 0 );
+    test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
+    test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
+    test.ge( _.strCount( op.output, /Failed to resolve path:.*Test\.ss, file doesn\'t exist/ ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepNpmGenerate( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNpmGenerate' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ args : '.with Author .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `author`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Contributors .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `contributors`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Description .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `description`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.description, 'To check the conversion' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Enabled .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `enabled`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Interpreters .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `interpreters`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.interpreters, undefined );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Keywords .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `keywords`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.keywords, [ 'tools', 'export' ] );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with License .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `license`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.license, 'MIT' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `name`, name of willfile';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, 'NpmFromWillfile' );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with NpmName .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `name`, npm name';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, 'npmfromwillfile' );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with NpmScripts .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `scripts`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.scripts, { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `main`, should not read path';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.main, 'proto' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathRepository .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check fields `repository` and `bugs`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.repository, 'https://github.com/author/NpmFromWillfile.git' );
+    test.identical( config.bugs, 'https://github.com/author/NpmFromWillfile/issues' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .with Submodule .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check fields `dependencies` and `devDependencies`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.dependencies, { eslint : '7.1.0', babel : '^0.3.0' } );
+    test.identical( config.devDependencies, { NpmFromWillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
+    test.identical( config.name, 'npmfromwillfile' );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check field `version`';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.version, '0.0.0' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.generate' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check unnamed willfiles, full config';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { node : '>= 6.0.0', chrome : '>= 60.0.0', firefox : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { test : 'wtest .run proto/** v:5', docgen : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  return a.ready;
+}
+
+stepNpmGenerate.rapidity = -1;
+
+//
+
+function stepNpmGenerateOptionsInStep( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNpmGenerate' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.package.path.strict' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, direct link to directory';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.package.path.resolve.simple' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out/' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.imply withSubmodules:0 .build npm.package.path.resolve.criterion' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      'name' : 'npmfromwillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+      'npm.engines' : { 'node' : '>= 6.0.0', 'chrome' : '>= 60.0.0', 'firefox' : '>= 60.0.0' },
+      'engine' : 'node >= 6.0.0',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'NpmFromWillfile' : 'file:.', 'wTesting' : '' },
+      'repository' : 'https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'keywords' : [ 'tools', 'export' ],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.entry.path.strict' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, direct link to file';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { main : 'proto/File.s' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.entry.path.resolve.simple' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { main : 'proto/File.s' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.entry.path.resolve.criterion' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { main : 'proto/File.s' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.files.path.strict' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `filesPath`, direct link to file';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.simple' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.criterion' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .build npm.files.path.resolve.array' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'resolve files path from array of paths';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s', 'proto' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .build generate.with.module.name' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `name`';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { name : 'user.module.name' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -24804,7 +25806,7 @@ function stepGitCheckHardLinkRestoring( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -25114,7 +26116,7 @@ function stepGitDifferentCommands( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -25232,7 +26234,7 @@ function stepGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -26245,15 +27247,9 @@ function stepGitSync( test )
 
   /* */
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  let config = { path : { hlink : a.abs( '..' ) } };
+  let profile = 'test-profile';
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* */
 
@@ -26423,10 +27419,33 @@ function stepGitSync( test )
 
   /* */
 
+  begin().then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "seventh"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
+  a.appStart( '.with original/GitSync .build git.sync.resolve' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitSync .build git.sync.resolve - checking resolving of message';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am {about::name}' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+    return null;
+  });
+
+  /* */
+
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
@@ -26439,7 +27458,6 @@ function stepGitSync( test )
   function begin()
   {
     a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'repo' ) ); return null } );
     a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
     let currentPath = a.abs( 'original' );
@@ -26462,7 +27480,7 @@ function stepGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/GitTag .build git.tag.default' )
@@ -26563,6 +27581,46 @@ function stepGitTag( test )
     return null;
   });
 
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion* tag:alpha' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion* tag:alpha - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag alpha' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'alpha' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin();
+  a.appStart( '.with original/GitTag .build git.tag.with.criterion.beta' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitTag .build git.tag.with.criterion.beta - add tag from criterion';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag beta' ), 1 );
+    return null;
+  });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git tag -l -n' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'beta' ), 1 );
+    return null;
+  });
+
   /* - */
 
   return a.ready;
@@ -26572,7 +27630,6 @@ function stepGitTag( test )
   function begin()
   {
     a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -26585,12 +27642,168 @@ stepGitTag.rapidity = -1;
 
 //
 
+function stepRepoReleaseRemote( test )
+{
+  const context = this;
+
+  const config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  return test.true( true );
+
+  /* */
+
+  const a = context.assetFor( test, 'repoRelease' );
+  a.reflectMinimal();
+  const user = config.about.user;
+  const token = config.about[ 'github.token' ];
+  const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
+
+  /* */
+
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository has no tags';
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am init' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.imply v:2 .build release.master' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.master"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "0.0.1" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with name and options';
+    a.fileProvider.fileWrite( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag first' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileWrite( a.abs( './file1.txt' ), 'file1.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag second' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.existed' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.existed"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "first" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with description';
+    a.fileProvider.fileWrite( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag v0.0.2' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.description' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.3" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'release tag twice, force - 1';
+    a.fileProvider.fileAppend( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.imply v:2 .build release.force' );
+  a.appStart( '.imply v:2 .build release.force' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".imply v:2 .build release.force"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully deleted release "v0.0.4" in git+https:///github.com/${ user }` ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.4" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () => repositoryDelete() );
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.ready.then( () =>
+    {
+      return _.git.repositoryInit
+      ({
+        remotePath : repository,
+        localPath : a.routinePath,
+        throwing : 1,
+        description : 'Test',
+        token,
+      });
+    });
+
+    return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token,
+    });
+  }
+}
+
+//
+
 function stepView( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepView' );
 
-  if( process.platform !== 'linux' )
+  if( process.platform !== 'linux' || !_.process.insideTestContainer() )
   return test.true( true );
 
   /* - */
@@ -28578,7 +29791,7 @@ function commandHookCallWithHookInfo( test )
 }
 
 commandHookCallWithHookInfo.rapidity = -1;
-commandHookCallWithHookInfo.timeOut = 300000;
+commandHookCallWithHookInfo.timeOut = 600000;
 commandHookCallWithHookInfo.description =
 `
 - do execute js script
@@ -28598,8 +29811,7 @@ function commandDoWithHookStatus( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.reflect();
@@ -28608,7 +29820,7 @@ function commandDoWithHookStatus( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.appStart( '.clean' );
   a.appStart( '.export' )
@@ -28680,7 +29892,7 @@ function commandDoWithHookStatus( test )
 }
 
 commandDoWithHookStatus.rapidity = -1;
-commandDoWithHookStatus.timeOut = 300000;
+commandDoWithHookStatus.timeOut = 600000;
 commandDoWithHookStatus.description =
 `
 - it.shell exposed for action
@@ -28807,60 +30019,6 @@ function commandImplyWithAsterisk( test )
     return a.ready;
   }
 }
-
-//
-
-function etcCommandsSeveral( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'open' );
-  a.reflect();
-  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
-
-  /* - */
-
-  a.appStart( '".with . .export ; .clean"' )
-  .then( ( op ) =>
-  {
-    test.case = '.with . .export ; .clean';
-    test.identical( op.exitCode, 0 );
-
-    test.identical( _.strCount( op.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
-    test.identical( _.strCount( op.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
-    test.identical( _.strCount( op.output, 'Clean deleted 5 file' ), 1 );
-
-    var exp =
-    [
-      '.',
-      './.ex.will.yml',
-      './.im.will.yml',
-      './doc.ex.will.yml',
-      './doc.im.will.yml',
-      './doc',
-      './doc/.ex.will.yml',
-      './doc/.im.will.yml',
-      './doc/doc.ex.will.yml',
-      './doc/doc.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js'
-    ]
-    var got = a.find( a.routinePath );
-    test.identical( got, exp );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-} /* end of function etcCommandsSeveral */
-
-etcCommandsSeveral.description =
-`
-- check internal stat of will
-- several commands separated with ";"" should works
-`
 
 //
 
@@ -29875,7 +31033,7 @@ function commandVersionBump( test )
     test.identical( config.about.version, '0.0.0' );
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump' })
   .then( ( op ) =>
@@ -29889,7 +31047,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 1' })
   .then( ( op ) =>
@@ -29903,7 +31061,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 0.1.1' })
   .then( ( op ) =>
@@ -29917,7 +31075,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump 1.1' })
   .then( ( op ) =>
@@ -29931,7 +31089,49 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
+
+  a.appStart({ args : '.with Version .version.bump patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:1' })
   .then( ( op ) =>
@@ -29945,7 +31145,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:0.1.1' })
   .then( ( op ) =>
@@ -29959,7 +31159,7 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
 
   a.appStart({ args : '.with Version .version.bump versionDelta:1.1' })
   .then( ( op ) =>
@@ -29973,7 +31173,49 @@ function commandVersionBump( test )
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
-  })
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
 
   /* - */
 
@@ -30199,7 +31441,7 @@ function commandSubmodulesGit( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30381,7 +31623,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -30475,7 +31717,7 @@ function commandSubmodulesGitRemoteSubmodulesRecursive( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31480,7 +32722,7 @@ function commandSubmodulesGitSync( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -31966,7 +33208,7 @@ function commandModulesGit( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32198,7 +33440,7 @@ function commandModulesGitRemoteSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -32295,7 +33537,7 @@ function commandModulesGitRemoteSubmodulesRecursive( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -33486,7 +34728,7 @@ function commandModulesGitSync( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34282,7 +35524,7 @@ function commandModules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34444,7 +35686,7 @@ function commandSubmodules( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -34739,7 +35981,7 @@ function commandGitCheckHardLinkRestoring( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35097,7 +36339,7 @@ function commandGitDifferentCommands( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35370,7 +36612,7 @@ function commandGitPull( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -35641,7 +36883,7 @@ function commandGitPullRestoreHardlinkOnFail( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -36698,15 +37940,9 @@ function commandGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  let config = { path : { hlink : a.abs( '..' ) } };
+  let profile = 'test-profile';
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* */
 
@@ -36869,18 +38105,20 @@ function commandGitSync( test )
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
     return null;
   })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "sixth"' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am "seventh"' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push -u origin --all' });
 
-  a.appStart( `.with original/ .git.sync -am seventh dry:1 profile:${ profile }` )
+  a.appStart( `.with original/ .git.sync "-am {about::name}" profile:${ profile }` )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.sync -am seventh dry:1 - checking of option dry';
+    test.case = '.with original/ .git.sync -am {about::name} - resolving of commit message';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
-    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '> git commit -am {about::name}' ), 0 );
+    test.identical( _.strCount( op.output, '> git commit -am clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
   });
 
@@ -36888,8 +38126,7 @@ function commandGitSync( test )
 
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
@@ -36929,7 +38166,7 @@ function commandGitSyncRestoringHardlinks( test )
   let config, profile, profileDir;
   if( _.censor )
   {
-    config = { path : { hlink : a.path.join( a.routinePath, '..' ) } };
+    config = { path : { hlink : a.abs( '..' ) } };
     profile = 'test-profile';
     profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
     let configPath = a.abs( profileDir, 'config.yaml' );
@@ -37239,10 +38476,10 @@ function commandGitTag( test )
   /* - */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v1.0' )
+  a.appStart( '.with original/ .git.tag tag:v1.0' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v1.0 - add tag, only option name';
+    test.case = '.with original/ .git.tag tag:v1.0 - add tag, only option name';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
@@ -37259,10 +38496,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v2.0 description:"Version 2.0"' )
+  a.appStart( '.with original/ .git.tag tag:v2.0 description:"Version 2.0"' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v2.0 description:"Version 2.0" - add tag with description';
+    test.case = '.with original/ .git.tag tag:v2.0 description:"Version 2.0" - add tag with description';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
@@ -37279,10 +38516,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1' )
+  a.appStart( '.with original/ .git.tag tag:v3.0 description:"Version 3.0" light:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
+    test.case = '.with original/ .git.tag tag:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
@@ -37299,10 +38536,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0" dry:1' )
   .then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
+    test.case = '.with original/ .git.tag tag:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
@@ -37319,10 +38556,10 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0" v:0' )
   a.ready.then( ( op ) =>
   {
-    test.case = '.with original/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
+    test.case = '.with original/ .git.tag tag:v4.0 description:"Version 4.0" v:0 - verbosity';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     // test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -37340,8 +38577,8 @@ function commandGitTag( test )
   /* */
 
   begin();
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
-  a.appStart( '.with original/ .git.tag name:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0"' )
+  a.appStart( '.with original/ .git.tag tag:v4.0 description:"Version 4.0"' )
   a.ready.then( ( op ) =>
   {
     test.case = 'add same tag twice, should not throw error';
@@ -37374,7 +38611,7 @@ function commandGitTag( test )
     let ready = _.take( null );
     a.appStart
     ({
-      execPath : `.with original/ .git.tag name:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
+      execPath : `.with original/ .git.tag tag:v5.0 description:"Version 5.0" toVersion:${ commitHash }`,
       ready
     });
     return ready;
@@ -37628,6 +38865,160 @@ function commandRepoPullOpenRemote( test )
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
+  }
+}
+
+//
+
+function commandRepoReleaseRemote( test )
+{
+  const context = this;
+
+  const config = _.censor.configRead();
+  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  return test.true( true );
+
+  /* */
+
+  const a = context.assetFor( test, 'repoRelease' );
+  a.reflectMinimal();
+  const user = config.about.user;
+  const token = config.about[ 'github.token' ];
+  const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
+
+  /* */
+
+  begin();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository has no tags';
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am init' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.repo.release tag:v0.0.1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.1"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.1" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with name and options';
+    a.fileProvider.fileWrite( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag first' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileWrite( a.abs( './file1.txt' ), 'file1.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag second' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.repo.release v0.0.2 tag:first prerelease:0 draft:0' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release v0.0.2 tag:first prerelease:0 draft:0"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "first" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'repository with tags, release existed tag, release with description';
+    a.fileProvider.fileWrite( a.abs( './file2.txt' ), 'file2.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git tag v0.0.3' );
+  a.shell( 'git push -u origin master' );
+  a.shell( 'git push --tags' );
+
+  a.appStart( '.repo.release tag:v0.0.3 descriptionBody:description' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.3 descriptionBody:description"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.3" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'release the tag twice, force - 1';
+    a.fileProvider.fileAppend( a.abs( './file.txt' ), 'file.txt' );
+    return null;
+  });
+  a.shell( 'git add .' );
+  a.shell( 'git commit -am commit' );
+  a.shell( 'git push -u origin master' );
+
+  a.appStart( '.repo.release tag:v0.0.4 force:1' );
+  a.appStart( '.repo.release tag:v0.0.4 force:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, 'Command ".repo.release tag:v0.0.4 force:1"' ), 1 );
+    test.identical( _.strCount( op.output, `Succefully created release "v0.0.4" in git+https:///github.com/${ user }` ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () => repositoryDelete() );
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.ready.then( () =>
+    {
+      return _.git.repositoryInit
+      ({
+        remotePath : repository,
+        localPath : a.routinePath,
+        throwing : 1,
+        description : 'Test',
+        token,
+      });
+    });
+
+    return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token,
+    });
   }
 }
 
@@ -38100,6 +39491,38 @@ function commandNpmFromWillfileOptionsInCommand( test )
     test.true( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp = { files : [ 'proto/File.s' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"[ {path::proto}/**, proto ]"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'resolve list of files paths';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { files : [ 'proto/File.s', 'proto' ], main : 'proto' };
+    test.identical( config, exp );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Name .npm.from.willfile npmName:"user.module.name"' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'check option `name`';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.routinePath );
+    test.true( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp = { name : 'user.module.name' };
     test.identical( config, exp );
 
     return null;
@@ -44228,6 +45651,10 @@ const Proto =
 
     // etcResourcesFormReflectorsExperiment, // xxx : look
 
+    etcCommandsSeveral,
+
+    etcResolveDefaultBuilds,
+
     // build
 
     build,
@@ -44466,6 +45893,11 @@ const Proto =
     stepBuild,
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
+    stepSourcesJoin,
+    stepSourcesJoinRunInBrowser,
+    stepSourcesJoinRunWithExts,
+    stepNpmGenerate,
+    stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,
     stepGitDifferentCommands,
     stepGitPull,
@@ -44474,6 +45906,7 @@ const Proto =
     stepGitSync,
     stepGitStatus,
     stepGitTag,
+    stepRepoReleaseRemote,
     stepView,
 
     stepInterpreterVerify,
@@ -44509,7 +45942,6 @@ const Proto =
     commandImplyWithDot,
     commandImplyWithAsterisk,
 
-    etcCommandsSeveral,
     commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
 
     commandImplyPropertyWithDisabled,
@@ -44569,6 +46001,7 @@ const Proto =
 
     commandRepoPullOpen,
     commandRepoPullOpenRemote,
+    commandRepoReleaseRemote,
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,

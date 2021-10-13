@@ -1695,20 +1695,35 @@ function _repoDownload( o )
       {
         fetching : 0,
       },
+    };
+
+    let vscTools = _.repo.vcsFor( opener.remotePath );
+    _.assert( !!vscTools );
+
+    if( _.longHas( vscTools.protocols, 'git' ) )
+    {
+      o2.extra.fetchingDefaults =
+      {
+        attemptLimit : 10,
+        attemptDelay : 500,
+        attemptDelayMultiplier : 2,
+      };
     }
 
     if( o.mode === 'update' )
     {
       // let vscTools = will.vcsToolsFor( opener.remotePath );
-      let vscTools = _.repo.vcsFor( opener.remotePath );
+      // let vscTools = _.repo.vcsFor( opener.remotePath );
 
-      _.assert( !!vscTools )
+      // _.assert( !!vscTools )
       if( _.longHas( vscTools.protocols, 'git' ) )
       {
         o2.extra.fetching = 1;
         o2.extra.fetchingTags = 1;
       }
     }
+
+    o2.verbosity = 5
 
     if( downloading && !o.dry )
     return _.will.Predefined._filesReflect.call( fileProvider, o2 );

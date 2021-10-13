@@ -1,0 +1,20 @@
+about :
+  contributors :
+  - 'Contributor1 <contributor1@dot.com>'
+  - 'Contributor2 <contributor2@dot.com>'
+
+step :
+
+  npm.generate :
+    inherit : npm.generate
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1
+

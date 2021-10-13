@@ -544,6 +544,7 @@ function _commandsMake()
     'export' :                          { ro : _.routineJoin( cui, cui.commandExport ) },
     'export purging' :                  { ro : _.routineJoin( cui, cui.commandExportPurging ) },
     'export recursive' :                { ro : _.routineJoin( cui, cui.commandExportRecursive ) },
+    'publish' :                         { ro : _.routineJoin( cui, cui.commandPublish ) },
 
     'module new' :                      { ro : _.routineJoin( cui, cui.commandModuleNew ) },
     'module new with' :                 { ro : _.routineJoin( cui, cui.commandModuleNewWith ) },
@@ -584,6 +585,8 @@ function _commandsMake()
     'repo pull list' :                  { ro : _.routineJoin( cui, cui.commandRepoPullList ) },
     'repo program list' :               { ro : _.routineJoin( cui, cui.commandRepoProgramList ) },
     'repo program process list' :       { ro : _.routineJoin( cui, cui.commandRepoProgramProcessList ) },
+
+    'repo release' :                    { ro : _.routineJoin( cui, cui.commandRepoRelease ) },
 
     'npm publish' :                     { ro : _.routineJoin( cui, cui.commandNpmPublish ) },
     'npm dep add' :                     { ro : _.routineJoin( cui, cui.commandNpmDepAdd ) },
@@ -1739,7 +1742,6 @@ command.properties =
   versionDelta : 'A string in format "x.x.x" that defines delta for version.',
   verbosity : 'Set verbosity. Default is 3.',
 };
-
 
 //
 
@@ -3924,6 +3926,43 @@ command.hint = 'Export selected the module with spesified criterion and its subm
 command.longHint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 command.subjectHint = 'A name of export scenario.';
 
+//
+
+function commandPublish( e )
+{
+  let cui = this;
+  cui._command_head( commandPublish, arguments );
+  let doneContainer = [];
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'publish',
+    onEach : handleEach,
+    commandRoutine : commandPublish,
+  });
+
+  function handleEach( it )
+  {
+    let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
+    return it.opener.openedModule.modulesPublish
+    ({
+      ... filterProperties,
+      doneContainer,
+      name : e.subject,
+      criterion : e.propertiesMap,
+      recursive : 0,
+      kind : 'publish',
+    });
+  }
+
+}
+
+var command = commandPublish.command = Object.create( null );
+command.hint = 'Publish selected module with spesified criterion.';
+command.longHint = 'Publish selected module with spesified criterion.';
+command.subjectHint = 'A name of export scenario.';
+
 // --
 // command iterator
 // --
@@ -4328,6 +4367,7 @@ commandNpmFromWillfile.defaults =
   packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
+  npmName : null,
   withSubmodules : 0,
   withDisabledSubmodules : 0,
 };
@@ -4346,6 +4386,8 @@ command.properties =
   + '\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
   filesPath : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module with path "path/npm.files".'
   + '\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
+  npmName : 'A value for field "name" of "package.json". By default, module name generates from fields "npm.name" or "name" of section "about".'
+  + '\n\t"will .npm.from.willfile npmName:usermodule" - generate "package.json" from unnamed willfiles, field "name" will have value  "usermodule".',
 };
 
 //
@@ -5951,7 +5993,7 @@ function commandGitTag( e )
 commandGitTag.defaults =
 {
   ... commandImply.defaults,
-  name : '.',
+  tag : null,
   description : '',
   toVersion : null,
   dry : 0,
@@ -5969,7 +6011,7 @@ command.propertiesAliases =
 command.properties =
 {
   ... commandImply.command.properties,
-  name : 'Tag name. Default is name:".".',
+  tag : 'Tag name.',
   description : 'Description of annotated tag. Default is description:"".',
   toVersion : 'The commit to add tag. Default is current HEAD commit.',
   dry : 'Dry run without tagging. Default is dry:0.',
@@ -6215,6 +6257,69 @@ command.properties = _.props.extend( null,
   token : 'An individual authorization token. By default reads from user config file.',
   verbosity : 'Set verbosity. Default is 2.',
 });
+
+//
+
+function commandRepoRelease( e )
+{
+  const cui = this;
+
+  cui._command_head( commandRepoRelease, arguments );
+  cui._transactionExtend( commandRepoRelease, e.propertiesMap );
+  _.routine.options_( commandRepoRelease, e.propertiesMap );
+
+  _.assert( _.numberDefined( e.propertiesMap.verbosity ) );
+  const o = e.propertiesMap;
+  o.logger = o.verbosity;
+  delete o.verbosity;
+  o.name = o.subject;
+
+  return cui._commandModuleOrientedLike
+  ({
+    event : e,
+    name : 'repo release',
+    onEachModule : handleEachModule,
+    commandRoutine : commandRepoRelease,
+    recursive : 0,
+  });
+
+  /* */
+
+  function handleEachModule( module, op )
+  {
+    return module.repoRelease( o );
+  }
+}
+
+commandRepoRelease.defaults = _.props.extend( null,
+{
+  token : null,
+  tag : null,
+  descriptionBody : null,
+  draft : 0,
+  prerelease : 0,
+  verbosity : 2,
+  force : 0,
+});
+
+var command = commandRepoRelease.command = Object.create( null );
+command.hint = 'Create release on Github.';
+command.subjectHint = 'A name of release.';
+command.propertiesAliases =
+{
+  verbosity : [ 'v' ]
+};
+command.properties =
+{
+  name : 'Name of release',
+  descriptionBody : 'Description of release',
+  tag : 'Tag name to make release. If module has no tag, command creates new tag.',
+  draft : 'Nake draft release. Default is 0.',
+  prerelease : 'Make prerelease instead of release. Default is 0.',
+  token : 'An individual authorization token. By default reads from user config file.',
+  force : 'Create release force. Allows to delete existed release and tag and create a new one. Default is 0.',
+  verbosity : 'Set verbosity. Default is 2.',
+};
 
 // --
 // npm
@@ -7172,6 +7277,7 @@ let Extension =
   commandExport,
   commandExportPurging,
   commandExportRecursive,
+  commandPublish,
 
   // command iterator
 
@@ -7211,6 +7317,8 @@ let Extension =
   commandRepoPullList,
   commandRepoProgramList,
   commandRepoProgramProcessList,
+
+  commandRepoRelease,
 
   // npm
 

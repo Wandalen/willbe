@@ -1,0 +1,36 @@
+
+about :
+
+  name : explicit
+
+step :
+
+  echo :
+    shell : echo explicit
+
+build :
+
+  build :
+    criterion :
+      default : 1
+      export : 0
+      publish : 0
+    steps :
+      - echo
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+      publish : 0
+    steps :
+      - echo
+
+  publish :
+    criterion :
+      default : 1
+      publish : 1
+      export : 0
+    steps :
+      - echo
+

@@ -1,0 +1,125 @@
+
+submodule :
+
+  eslint :
+    path : npm:///eslint!7.1.0
+    enabled : 0
+    criterion :
+      debug : 1
+
+  NpmFromWillfile :
+    path : hd://.
+    enabled : 0
+    criterion :
+      development : 1
+
+  wTesting :
+    path : npm:///wTesting
+    enabled : 0
+    criterion :
+      development : 1
+
+path :
+
+  in : '.'
+  out : 'out'
+
+  out.debug :
+    path : 'out/debug'
+    criterion :
+      debug : 1
+
+  out.release :
+    path : 'out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  proto.debug :
+    inherit : predefined.*
+    criterion :
+      debug : 1
+    filePath :
+      path::proto : '{path::out.*=1}/source'
+
+  proto.release :
+    inherit : predefined.*
+    criterion :
+      debug : 0
+    filePath :
+      path::proto : '{path::out.*=1}/source'
+
+step :
+
+  clean.debug :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : 1
+
+  clean.release :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : 0
+
+  npm.generate :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    criterion :
+      debug : [ 0, 1 ]
+
+  npm.package.path.strict :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    packagePath : out/debug/package.json
+
+  npm.package.path.resolve.simple :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    packagePath : '{path::out}/package.json'
+
+  npm.package.path.resolve.criterion :
+    inherit : npm.generate
+    withDisabledSubmodules : 1
+    packagePath : '{path::out.*=1}/package.json'
+    criterion :
+      debug : [ 0, 1 ]
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - step::clean.*=1
+      - proto.*=1
+
+  release :
+    criterion :
+      debug : 0
+    steps :
+      - step::clean.*=1
+      - proto.*=1
+
+  npm.generate :
+    criterion :
+      debug : 1
+    steps :
+      - npm.generate.*=1
+
+  npm.package.path.strict :
+    steps :
+      - npm.package.path.strict
+
+  npm.package.path.resolve.simple :
+    steps :
+      - npm.package.path.resolve.simple
+
+  npm.package.path.resolve.criterion :
+    criterion :
+      debug : 1
+    steps :
+      - npm.package.path.resolve.criterion.*=1

@@ -1213,6 +1213,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'sources.join',
+    stepRoutine : Predefined.stepRoutineSourcesJoin,
+  })
+
+  step
+  ({
     name : 'file.view',
     stepRoutine : Predefined.stepRoutineView,
   })
@@ -1269,6 +1275,12 @@ function predefinedForm()
   ({
     name : 'git.tag',
     stepRoutine : Predefined.stepRoutineGitTag,
+  })
+
+  step
+  ({
+    name : 'repo.release',
+    stepRoutine : Predefined.stepRoutineRepoRelease,
   })
 
   step
@@ -2878,6 +2890,10 @@ let modulesExport = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, mo
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
 
+let modulesPublish = _.routine.uniteCloning_replaceByUnite( modulesBuild_head, modulesBuild_body );
+modulesPublish.defaults.kind = 'publish';
+modulesPublish.defaults.downloading = 0;
+
 //
 
 function modulesUpform( o )
@@ -3737,6 +3753,7 @@ defaults.isValid = 1;
 defaults.isRepository = 1;
 defaults.hasRemote = 1;
 defaults.isUpToDate = 1;
+defaults.hasRemoteVersion = 1;
 
 delete defaults.withStem;
 delete defaults.onEach;
@@ -5489,7 +5506,7 @@ function _buildsResolve_head( routine, args )
   // o = args[ 0 ] || null;
 
   o = _.routine.options( routine, o );
-  _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
+  _.assert( _.longHas( [ 'build', 'export', 'publish' ], o.kind ) );
   _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
 
@@ -5540,8 +5557,10 @@ function _buildsResolve_body( o )
 
   if( o.kind === 'export' )
   elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
+  else if( o.kind === 'publish' )
+  elements = elements.filter( ( element ) => element.criterion && element.criterion.publish );
   else if( o.kind === 'build' )
-  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
+  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export && !element.criterion.publish );
 
   return elements;
 
@@ -9563,21 +9582,20 @@ function willfileVersionBump( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  let path = will.fileProvider.path;
 
-  _.routine.options( willfileVersionBump, o );
+  _.routine.options_( willfileVersionBump, o );
 
-  let version = _.any( module.willfilesArray, ( willfile ) => _.select( willfile.structure, 'about/version' ) );
-  _.assert( _.str.is( version ), 'Expexts version in format "x.x.x".' );
+  let version = module.resolve( 'about::version' );
+  _.sure( _.str.is( version ), 'Expexts string version: "major", "minor", "patch" or in format "x.x.x".' );
 
   let versionArray = version.split( '.' );
   let deltaArray = deltaArrayGet();
 
-  _.assert( versionArray.length >= deltaArray.length > 0, 'Not known how to bump version.' );
+  _.sure( versionArray.length >= deltaArray.length > 0, 'Not known how to bump version.' );
 
   versionBump();
-  version = versionArray.join( '.' );
+  version = module.about.version = versionArray.join( '.' );
 
   will.willfilePropertySet
   ({
@@ -9596,11 +9614,30 @@ function willfileVersionBump( o )
   function deltaArrayGet()
   {
     if( _.str.is( o.versionDelta ) )
-    return o.versionDelta.split( '.' );
-    else if( _.number.is( o.versionDelta ) )
+    {
+      let result = o.versionDelta.split( '.' );
+      if( result.length === 1 )
+      {
+        if( o.versionDelta === 'major' )
+        return [ 1, 0, 0 ];
+        else if( o.versionDelta === 'minor' )
+        return [ 0, 1, 0 ];
+        else if( o.versionDelta === 'patch' )
+        return [ 0, 0, 1 ];
+        else if( _.number.isNotNan( _.number.from( o.versionDelta ) ) )
+        return result;
+        else
+        throw _.error.brief
+        (
+          `Unexpected string version delta: "${ o.versionDelta }".\nUse "major", "minor", "patch" or string in format "x.x.x"`
+        );
+      }
+      return result;
+    }
+
+    if( _.number.is( o.versionDelta ) )
     return _.array.as( o.versionDelta );
-    else
-    _.assert( 0, 'Not known how to handle delta.', o.versionDelta );
+    throw _.error.brief( `Not known how to handle delta: "${ o.versionDelta }".` );
   }
 
   /* */
@@ -10634,9 +10671,14 @@ function gitSync( o )
 
     start( `git add --all` );
     if( o.message )
-    start( `git commit ${ o.message }` );
+    {
+      o.message = module.resolve( o.message );
+      start( `git commit ${ o.message }` );
+    }
     else
-    start( 'git commit -am "."' );
+    {
+      start( 'git commit -am "."' );
+    }
 
     return con;
   }
@@ -10677,11 +10719,12 @@ function gitTag( o )
   if( !module.about.name )
   throw _.errBrief( 'Module should be local, opened and have name' );
 
-  if( !_.strDefined( o.name ) )
+  if( !_.strDefined( o.tag ) )
   throw _.errBrief( 'Expects defined name of tag' );
+  o.tag = module.resolve( o.tag );
 
   if( o.description === null )
-  o.description = o.name;
+  o.description = o.tag;
 
   let localPath = _.git.localPathFromInside( o.dirPath );
 
@@ -10695,13 +10738,13 @@ function gitTag( o )
   {
     logger.log( `\n${ module._NameWithLocationFormat( module.qualifiedName, module._shortestModuleDirPathGet() ) }` );
     logger.up();
-    logger.log( `Creating tag ${ _.ct.format( o.name, 'entity' ) }` );
+    logger.log( `Creating tag ${ _.ct.format( o.tag, 'entity' ) }` );
   }
 
   let result = _.git.tagMake
   ({
     localPath,
-    tag : o.name,
+    tag : o.tag,
     description : o.description || '',
     toVersion : o.toVersion,
     light : o.light,
@@ -10718,7 +10761,7 @@ function gitTag( o )
 
 gitTag.defaults =
 {
-  name : null,
+  tag : null,
   description : '',
   toVersion : null,
   dry : 0,
@@ -10741,6 +10784,56 @@ let repoProgramList = _repoRequest_functor
   requestRoutine : _.routine.join( _.repo, _.repo.programList ),
   exportStringRoutine : _.routine.join( _.repo, _.repo.programCollectionExportString ),
 });
+
+//
+
+function repoRelease( o )
+{
+  const module = this;
+  const will = module.will;
+  const logger = will.transaction.logger;
+
+  if( !o.token )
+  {
+    const config = _.censor.configRead();
+    if( config !== null && config.about && config.about[ 'github.token' ] )
+    o.token = config.about[ 'github.token' ];
+  }
+
+  _.assert( _.str.defined( o.token ), 'Expects token. Please, define it directly in command line or by the Censor utility.' );
+  _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
+
+  const originalRemotePath = _.git.remotePathFromLocal({ localPath : module.dirPath });
+  _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
+
+  const remotePath = `${ originalRemotePath }!${ o.tag }`;
+
+  return _.repo.releaseMake
+  ({
+    name : o.name,
+    token : o.token,
+    remotePath,
+    descriptionBody : o.descriptionBody,
+    draft : o.draft,
+    prerelease : o.prerelease,
+    sync : 0,
+    force : o.force,
+    localPath : module.dirPath,
+    logger,
+  });
+}
+
+repoRelease.defaults =
+{
+  name : null,
+  token : null,
+  tag : null,
+  draft : 0,
+  prerelease : 0,
+  descriptionBody : null,
+  force : 0,
+  logger : null,
+};
 
 // --
 // etc
@@ -11196,6 +11289,7 @@ let Extension =
 
   modulesBuild,
   modulesExport,
+  modulesPublish,
   modulesUpform,
 
   // submodule
@@ -11416,6 +11510,8 @@ let Extension =
 
   repoPullList,
   repoProgramList,
+
+  repoRelease,
 
   // etc
 

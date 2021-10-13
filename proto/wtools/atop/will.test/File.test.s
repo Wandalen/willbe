@@ -1102,7 +1102,7 @@ function filesAtCommonPathWithGlobs( test )
 }
 
 filesAtCommonPathWithGlobs.rapidity = -1;
-filesAtCommonPathWithGlobs.timeOut = 3e5;
+filesAtCommonPathWithGlobs.timeOut = 6e5;
 
 //
 
