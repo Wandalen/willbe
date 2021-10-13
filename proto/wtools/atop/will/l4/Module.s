@@ -9902,7 +9902,7 @@ function ResourceSetter_functor( op )
       if( resource.module !== null )
       resource = resource.clone();
       _.assert( resource.formed === 0 );
-      resource.module = module;
+      resource.module = module; /* qqq : for Dmytro : investigate why resource.longPath is changed */
       resource.form1();
       _.assert( !_.workpiece.isFinited( resource ) );
     }
