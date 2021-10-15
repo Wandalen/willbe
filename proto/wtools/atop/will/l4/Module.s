@@ -9638,14 +9638,35 @@ function willfileVersionBump( o )
 
   function versionBump()
   {
-    for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+    let delta, i;
+    for( i = 0 ; i < deltaArray.length ; i++ )
     {
-      let delta = Number( deltaArray[ i ] );
-      let versionArrayOffset = versionArray.length - 1 - offset;
-      _.assert( _.intIs( delta ), 'Expects integer as delta.' );
-      _.assert( delta >= 0, 'Expects positive delta.' );
-      versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+      delta = Number( deltaArray[ i ] );
+      if( delta > 0 )
+      break;
     }
+
+    if( deltaArray.length !== versionArray.length )
+    {
+      _.assert( deltaArray.length < versionArray.length );
+      i += versionArray.length - deltaArray.length;
+    }
+
+    _.assert( _.number.intIs( delta ), 'Expects integer as delta.' );
+    _.assert( delta >= 0, 'Expects positive delta.' );
+    versionArray[ i ] = Number( versionArray[ i ] ) + delta;
+
+    for( let j = i + 1 ; j < versionArray.length ; j++ )
+    versionArray[ j ] = 0;
+
+    // for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+    // {
+    //   let delta = Number( deltaArray[ i ] );
+    //   let versionArrayOffset = versionArray.length - 1 - offset;
+    //   _.assert( _.intIs( delta ), 'Expects integer as delta.' );
+    //   _.assert( delta >= 0, 'Expects positive delta.' );
+    //   versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+    // }
   }
 }
 
