@@ -188,6 +188,19 @@ function framePerform( frame )
     // con.then( ( arg ) => frame2.resourceFormAndPerform() );
 
     con.then( () => step.form() );
+    con.then( () =>
+    {
+      if( step.opts )
+      {
+        let supplementMap = _.mapOnly_( null, build.implied, step.stepRoutine.stepOptions );
+        _.mapSupplementNulls( step.opts, supplementMap );
+      }
+      else
+      {
+        step.implied = _.aux.supplement( step.implied, build.implied );
+      }
+      return null;
+    });
     con.then( () => step.framePerform( frame2 ) );
 
     con.finally( ( err, arg ) =>
@@ -386,6 +399,7 @@ let Composes =
 
   steps : null,
   withSubmodules : null,
+  implied : null,
 
 }
 
