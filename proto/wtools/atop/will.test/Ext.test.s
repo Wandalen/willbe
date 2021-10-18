@@ -28982,6 +28982,43 @@ function commandBuildImply( test )
 
 //
 
+function commandBuildImplyWithSeveralSteps( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandBuildImply' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'different commands, should not extend extra options';
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.name, 'build-imply' );
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  a.appStart({ args : '.build.imply shell:"echo str" versionDelta:1.0.0 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.name, 'build-imply' );
+    test.identical( config.about.version, '1.0.0' );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandVersion( test )
 {
   let context = this;
@@ -45769,6 +45806,7 @@ const Proto =
     commandImplyPropertyWithEnabled,
 
     commandBuildImply,
+    commandBuildImplyWithSeveralSteps,
 
     commandVersion,
     commandVersionCheck,
