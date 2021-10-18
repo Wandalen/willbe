@@ -3265,12 +3265,10 @@ function modulesBuild_body( o )
     o.doneContainer.push( module );
     return module.moduleBuild( o3 );
   }
-
 }
 
 var defaults = modulesBuild_body.defaults =
 {
-
   ... _.props.extend( null, modulesFor.defaults ),
 
   name : null,
@@ -3278,6 +3276,7 @@ var defaults = modulesBuild_body.defaults =
   kind : 'build',
 
   modules : null,
+  implied : null,
   doneContainer : null,
   recursive : 0,
   withStem : 1,
@@ -3286,7 +3285,6 @@ var defaults = modulesBuild_body.defaults =
   upforming : 1,
   downloading : 1,
   purging : 0,
-
 };
 
 delete defaults.onEach;
