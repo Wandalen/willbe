@@ -28887,6 +28887,101 @@ commandImplyPropertyWithEnabled.timeOut = 1200000;
 
 //
 
+function commandBuildImply( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNpmGenerate' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ args : '.with Author .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without options';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [] );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Author .build.imply packagePath:"out/package.json" .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'single option in command';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Author .build.imply packagePath:"out/package.json" npmName:test .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'several options in command';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { name : 'test', author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.build.imply packagePath:"out/package.json" .with Author .build.imply npmName:test .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'several options in different parts of command';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { name : 'test', author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.build.imply packagePath:"out/package.json" npmName:test .with Author .build.imply npmName:tst .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'several options in different parts of command, last rewrite previous';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { name : 'tst', author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandVersion( test )
 {
   let context = this;
@@ -45672,6 +45767,8 @@ const Proto =
 
     commandImplyPropertyWithDisabled,
     commandImplyPropertyWithEnabled,
+
+    commandBuildImply,
 
     commandVersion,
     commandVersionCheck,
