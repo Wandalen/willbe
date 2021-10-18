@@ -24489,7 +24489,7 @@ function stepVersionBump( test )
     test.case = '".build bump.string", bump with string delta, full form';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.1' );
+    test.identical( config.about.version, '0.1.0' );
 
     config.about.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
@@ -24503,7 +24503,7 @@ function stepVersionBump( test )
     test.case = '".build bump.string.partial", bump with string delta, not full form';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.1' );
+    test.identical( config.about.version, '0.1.0' );
 
     config.about.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
@@ -24678,6 +24678,76 @@ function stepVersionBump( test )
     test.notIdentical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepVersionBumpCheckReset( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '2.0.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .build bump.string' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.3.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .build bump' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.2.4' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
     return null;
   });
 
@@ -30775,7 +30845,7 @@ function commandVersionBump( test )
     test.case = '".version.bump 0.1.1", bump with string delta, full form';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.1' );
+    test.identical( config.about.version, '0.1.0' );
 
     config.about.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
@@ -30789,7 +30859,7 @@ function commandVersionBump( test )
     test.case = '".version.bump 1.1", bump with string delta, not full form';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.1' );
+    test.identical( config.about.version, '0.1.0' );
 
     config.about.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
@@ -30859,7 +30929,7 @@ function commandVersionBump( test )
     test.case = '".version.bump versionDelta:0.1.1", bump with option, string delta, full form';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.1' );
+    test.identical( config.about.version, '0.1.0' );
 
     config.about.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
@@ -30873,7 +30943,7 @@ function commandVersionBump( test )
     test.case = '".version.bump versionDelta:1.1", bump with option, string delta, not full form';
     test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.1' );
+    test.identical( config.about.version, '0.1.0' );
 
     config.about.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
@@ -30976,6 +31046,76 @@ function commandVersionBump( test )
     test.notIdentical( op.exitCode, 0 );
     var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandVersionBumpCheckReset( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump 1.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '2.0.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .version.bump 0.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.3.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .version.bump 1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.2.4' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
     return null;
   });
 
@@ -39446,7 +39586,7 @@ function commandWillfileFromNpm( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.1.0',
+        'path' : 'npm:///eslint!7.32.0',
         'enabled' : 1
       },
       'babel' :
@@ -39535,7 +39675,7 @@ function commandWillfileFromNpm( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.1.0',
+          'path' : 'npm:///eslint!7.32.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -39606,7 +39746,7 @@ function commandWillfileFromNpmDoubleConversion( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.1.0',
+          'path' : 'npm:///eslint!7.32.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -40707,7 +40847,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.1.0',
+          'path' : 'npm:///eslint!7.32.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -40772,7 +40912,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.1.0',
+          'path' : 'npm:///eslint!7.32.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -41523,7 +41663,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.1.0',
+          'path' : 'npm:///eslint!7.32.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -41588,7 +41728,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.1.0',
+          'path' : 'npm:///eslint!7.32.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -41699,7 +41839,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         eslint :
         {
-          path : 'npm:///eslint!7.1.0',
+          path : 'npm:///eslint!7.32.0',
           enabled : 0,
           criterion : { debug : 1 },
         },
@@ -42168,7 +42308,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.1.0',
+        'path' : 'npm:///eslint!7.32.0',
         'enabled' : 0,
         'criterion' : { 'debug' : 1 }
       },
@@ -42380,7 +42520,7 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.1.0',
+        'path' : 'npm:///eslint!7.32.0',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -42449,7 +42589,7 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.1.0',
+        'path' : 'npm:///eslint!7.32.0',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -42518,7 +42658,7 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.1.0',
+        'path' : 'npm:///eslint!7.32.0',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -45596,6 +45736,7 @@ const Proto =
     stepModulesUpdate,
     stepWillbeVersionCheck,
     stepVersionBump,
+    stepVersionBumpCheckReset,
     stepSubmodulesAreUpdated,
     stepBuild,
     stepShellWithPathResolving,
@@ -45649,6 +45790,7 @@ const Proto =
     commandVersion,
     commandVersionCheck,
     commandVersionBump,
+    commandVersionBumpCheckReset,
 
     commandSubmodulesClean,
     commandSubmodulesShell,
