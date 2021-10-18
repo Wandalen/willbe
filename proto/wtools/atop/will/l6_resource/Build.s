@@ -396,11 +396,9 @@ function archiveFilePathFor()
 
 let Composes =
 {
-
   steps : null,
   withSubmodules : null,
-  implied : null,
-
+  implied : _.define.own( {} ),
 }
 
 let Aggregates =
