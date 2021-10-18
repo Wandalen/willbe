@@ -1317,12 +1317,12 @@ stepRoutineExport.stepOptions =
 {
   export : null,
   tar : 0,
-}
+};
 
 stepRoutineExport.uniqueOptions =
 {
   export : null,
-}
+};
 
 //
 
@@ -1341,12 +1341,11 @@ function stepRoutineWillbeIsUpToDate( frame )
 stepRoutineWillbeIsUpToDate.stepOptions =
 {
   throwing : 1,
-  // brief : 0
-}
+};
 
 stepRoutineWillbeIsUpToDate.uniqueOptions =
 {
-}
+};
 
 //
 
@@ -1372,12 +1371,12 @@ function stepRoutineWillfileVersionBump( frame )
 stepRoutineWillfileVersionBump.stepOptions =
 {
   versionDelta : null,
-}
+};
 
 stepRoutineWillfileVersionBump.uniqueOptions =
 {
   versionDelta : null,
-}
+};
 
 // --
 // declare
