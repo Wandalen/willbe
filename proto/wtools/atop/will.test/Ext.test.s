@@ -39586,7 +39586,7 @@ function commandWillfileFromNpm( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.32.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 1
       },
       'babel' :
@@ -39675,7 +39675,7 @@ function commandWillfileFromNpm( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.32.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -39746,7 +39746,7 @@ function commandWillfileFromNpmDoubleConversion( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.32.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -40847,7 +40847,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.32.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -40912,7 +40912,7 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.32.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -41663,7 +41663,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.32.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -41728,7 +41728,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         'eslint' :
         {
-          'path' : 'npm:///eslint!7.32.0',
+          'path' : 'npm:///eslint!7.1.0',
           'enabled' : 1
         },
         'willfilefromnpm' :
@@ -41839,7 +41839,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
       {
         eslint :
         {
-          path : 'npm:///eslint!7.32.0',
+          path : 'npm:///eslint!7.1.0',
           enabled : 0,
           criterion : { debug : 1 },
         },
@@ -42308,7 +42308,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.32.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 0,
         'criterion' : { 'debug' : 1 }
       },
@@ -42520,7 +42520,7 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.32.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -42589,7 +42589,7 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.32.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
@@ -42658,7 +42658,7 @@ function commandWillfileMergeIntoSingle( test )
     {
       'eslint' :
       {
-        'path' : 'npm:///eslint!7.32.0',
+        'path' : 'npm:///eslint!7.1.0',
         'enabled' : 0,
         'criterion' : { 'development' : 1 }
       },
