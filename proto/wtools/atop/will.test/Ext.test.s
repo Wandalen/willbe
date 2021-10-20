@@ -24608,7 +24608,7 @@ function stepVersionBumpCheckReset( test )
     return null;
   });
 
-  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
+  a.appStart({ args : '.imply withDisabledSubmodules:0 .with Version .build bump.with.criterion* bump:major' })
   .then( ( op ) =>
   {
     test.case = 'bump major version';
@@ -27991,6 +27991,1586 @@ function commandHelp( test )
 
 //
 
+function commandImplyWithDot( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( '.clone/File.txt' ), 'new line\n' );
+    return null;
+  });
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with .clone/ .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.clone' ) });
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( '.clone' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
+    return a.ready;
+  }
+}
+
+//
+
+function commandImplyWithAsterisk( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+
+  /* */
+
+  begin().then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( '.module/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/* .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with module .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/** .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with module .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 7 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 7 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () =>
+    {
+      a.reflect();
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      a.fileProvider.dirMake( a.abs( 'repo' ) );
+      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.module' ) });
+      return null;
+    });
+    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
+    let currentPath = a.abs( '.module' )
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
+    a.shell({ currentPath, execPath : 'git add --all' });
+    a.shell({ currentPath, execPath : 'git commit -am first' });
+    a.shell({ currentPath, execPath : 'git push -u origin --all' });
+    return a.ready;
+  }
+}
+
+//
+
+function commandImplyWithSubmodulesModulesList( test )
+{
+  let context = this;
+  let a = context.assetFor( test, '4LevelsLocal' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'default withSubmodules';
+    a.reflect();
+    return null;
+  });
+  a.appStart( '".with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 7 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withSubmodules:0';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '".imply withSubmodules:0 ; .with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 1 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withSubmodules:1';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '".imply withSubmodules:1 ; .with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 3 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:2';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '".imply withSubmodules:2 ; .with l4 .modules.list"' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 7 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:0';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '.imply withSubmodules:0 .with l4 .modules.list' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 1 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:1';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '.imply withSubmodules:1 .with l4 .modules.list' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 3 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:2';
+    a.reflect();
+    return null;
+  })
+  a.appStart( '.imply withSubmodules:2 .with l4 .modules.list' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 7 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+commandImplyWithSubmodulesModulesList.rapidity = -1;
+commandImplyWithSubmodulesModulesList.description =
+`
+- imply withSubmodules:0 cause to open no submodules
+- imply withSubmodules:1 cause to open only submodules of the main module
+- imply withSubmodules:2 cause to open all submodules recursively
+- no error are thowen
+`
+
+//
+
+function commandImplyPropertyWithDisabled( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandImplyProperties' );
+  a.reflect();
+
+  /* - */
+
+  act({ withWith : 0 })
+  act({ withWith : 1, implyFirst : 0 })
+  // act({ withWith : 1, implyFirst : 1 }) //qqq for Vova: to implement
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function act( o )
+  {
+    let withWith = o.withWith ? '.with **/' : '';
+
+    function commandFor( opts )
+    {
+      let command = [ `.imply ${opts.imply}`, `${opts.command}` ];
+
+      if( o.withWith )
+      {
+        if( o.implyFirst )
+        command.splice( 1, 0, withWith );
+        else
+        command.unshift( withWith );
+      }
+
+      command = command.join( ' ' );
+
+      test.case = command;
+
+      return command;
+    }
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      if( o.withWith )
+      expected.push( 'ModuleForTesting1a' );
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ]
+      if( o.withWith )
+      expected.push( 'ModuleForTesting1a' );
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      if( o.withWith )
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      if( o.withWith )
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
+      test.identical( modules, expected );
+      return null;
+    });
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      if( o.withWith )
+      expected.push( 'ModuleForTesting1a' );
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      if( o.withWith )
+      expected.push( 'ModuleForTesting1a' );
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      if( o.withWith )
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
+
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* fails */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+      if( o.withWith )
+      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
+
+      test.identical( modules, expected );
+      return null;
+    })
+
+  }
+
+  /* */
+
+  function clean()
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      return null;
+    })
+  }
+}
+
+commandImplyPropertyWithDisabled.timeOut = 1400000;
+
+//
+
+function commandImplyPropertyWithEnabled( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandImplyProperties' );
+  a.reflect();
+
+  /* - */
+
+  act({ withWith : 0 })
+  act({ withWith : 1, implyFirst : 0 })
+  // act({ withWith : 1, implyFirst : 1 }) //qqq: for Vova to implement
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function act( o )
+  {
+    let withWith = o.withWith ? '.with **/' : '';
+
+    function commandFor( opts )
+    {
+      let command = [ `.imply ${opts.imply}`, `${opts.command}` ];
+
+      if( o.withWith )
+      {
+        if( o.implyFirst )
+        command.splice( 1, 0, withWith );
+        else
+        command.unshift( withWith );
+      }
+
+      command = command.join( ' ' );
+
+      test.case = command;
+
+      return command;
+    }
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
+    a.ready.then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledSubmodules:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledSubmodules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledModules:1', command : '.submodules.download withEnabled:0' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null;
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
+    .then( ( op ) =>
+    {
+      if( o.withWith )
+      {
+        test.notIdentical( op.exitCode, 0 );
+        test.true( _.strHas( op.output, 'Found no willfile at' ) );
+      }
+
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = null
+      test.identical( modules, expected );
+
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+    /* */
+
+    clean()
+    a.appStart({ args : commandFor({ imply : 'withEnabledModules:1', command : '.submodules.download withEnabled:1' }) })
+    .then( () =>
+    {
+      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
+      let expected = [ 'ModuleForTesting1' ];
+      test.identical( modules, expected );
+      return null;
+    })
+
+  }
+
+  /* */
+
+  function clean()
+  {
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+      return null;
+    });
+  }
+}
+
+commandImplyPropertyWithEnabled.timeOut = 1200000;
+
+//
+
+function commandBuildImply( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepNpmGenerate' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ args : '.with Author .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without options';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [] );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Author .build.imply packagePath:"out/package.json" .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'single option in command';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Author .build.imply packagePath:"out/package.json" npmName:test .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'several options in command';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { name : 'test', author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.build.imply packagePath:"out/package.json" .with Author .build.imply npmName:test .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'several options in different parts of command';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { name : 'test', author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.build.imply packagePath:"out/package.json" npmName:test .with Author .build.imply npmName:tst .build npm.generate' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'several options in different parts of command, last rewrite previous';
+    test.identical( op.exitCode, 0 );
+    let files = a.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'out/package.json' ) );
+    var exp = { name : 'tst', author : 'Author <author@dot.com>' };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandBuildImplyWithSeveralSteps( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'commandBuildImply' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'different commands, should not extend extra options';
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.name, 'build-imply' );
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  a.appStart({ args : '.build.imply shell:"echo str" versionDelta:1.0.0 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    let config = a.fileProvider.fileReadUnknown( a.abs( 'will.yml' ) );
+    test.identical( config.about.name, 'build-imply' );
+    test.identical( config.about.version, '1.0.0' );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandVersion( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+  a.fileProvider.dirMake( a.abs( '.' ) );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.version';
+    return null;
+  });
+
+  a.appStart({ args : '.version' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply v:9 ; .version';
+    return null;
+  });
+
+  a.appStart({ args : '.imply v:9 ; .version' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply v:9 .version';
+    return null;
+  });
+
+  a.appStart({ args : '.imply v:9 .version' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.version v:7';
+    return null;
+  });
+
+  a.appStart({ args : '.version v:7' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, 'Read' ) );
+    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
+    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandVersionCheck( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'simple' );
+
+  begin();
+
+  /* starter for local copy of utility */
+  a.appStart = _.process.starter
+  ({
+    execPath : `node ${ a.path.nativize( a.abs( 'proto/wtools/atop/will/entry/Exec' ) ) }`,
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    verbosity : 3,
+    ready : a.ready,
+  });
+
+  /* - */
+
+  a.appStart({ args : '.version.check' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.check", current version';
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  });
+
+  a.appStart({ args : '.imply v:9 ; .version.check' })
+  .then( ( op ) =>
+  {
+    test.case = '".imply v:9 ; .version.check", current version';
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Read/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  });
+
+  a.appStart({ args : '.imply v:9 .version.check' })
+  .then( ( op ) =>
+  {
+    test.case = '".imply v:9 .version.check", current version';
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Read/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  });
+
+  a.appStart({ args : '.version.check v:7' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.check v:7", current version';
+    test.identical( op.exitCode, 0 );
+    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Read/ ) );
+    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    let packageJsonPath = a.abs( 'package.json' );
+    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    packageJson.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    return null;
+  });
+
+  a.appStart({ args : '.version.check' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.check", outdated version';
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    return null;
+  });
+
+  a.appStart({ args : '.imply v:9 ; .version.check' })
+  .then( ( op ) =>
+  {
+    test.case = '".imply v:9 ; .version.check", outdated version';
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    return null;
+  });
+
+  a.appStart({ args : '.imply v:9 .version.check' })
+  .then( ( op ) =>
+  {
+    test.case = '".imply v:9 .version.check", outdated version';
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    return null;
+  });
+
+  a.appStart({ args : '.version.check v:7' })
+  .then( ( op ) =>
+  {
+    test.case = '".imply v:7 .version.check", outdated version';
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
+    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
+    a.shell( 'git clone https://github.com/Wandalen/willbe.git .' );
+    a.shell( 'npm i' );
+    return a.ready;
+  }
+}
+
+//
+
+function commandVersionBump( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump", bump with defaults';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump 1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump 1", bump with number delta';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump 0.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump 0.1.1", bump with string delta, full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump 1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump 1.1", bump with string delta, not full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:1", bump with option, number delta';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:0.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:0.1.1", bump with option, string delta, full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:1.1", bump with option, string delta, not full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:patch", bump with string delta, increase patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:minor", bump with string delta, increase minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:major", bump with string delta, increase major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* - */
+
+  a.appStartNonThrowing({ args : '.with Author .version.bump' })
+  .then( ( op ) =>
+  {
+    test.case = 'willfile has not version';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, undefined );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'willfile has version as number';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    config.about.version = 1.1;
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Author.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.with Author .version.bump' })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, 1.1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.with Version .version.bump -1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump with negative number';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.with Version .version.bump versionDelta:-1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump with negative number';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandVersionBumpCheckReset( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .version.bump 1.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '2.0.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .version.bump 0.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.3.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .version.bump 1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.2.4' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandModuleNewDotless( test )
 {
   let context = this;
@@ -29577,1455 +31157,7 @@ commandDoWithHookStatus.description =
 - it.shell exposed for action
 - it.shell has proper current path
 - errorors are brief
-`
-
-//
-
-function commandImplyWithDot( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( '.clone/File.txt' ), 'new line\n' );
-    return null;
-  });
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
-  .then( ( op ) =>
-  {
-    test.case = '.with .clone/ .git.status - only local commits';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.clone' ) });
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( '.clone' );
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    return a.ready;
-  }
-}
-
-//
-
-function commandImplyWithAsterisk( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
-  begin().then( () =>
-  {
-    a.fileProvider.fileAppend( a.abs( '.module/File.txt' ), 'new line\n' );
-    return null;
-  })
-
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/* .call GitStatus' )
-  .then( ( op ) =>
-  {
-    test.case = '.with module .git.status - only local commits';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
-    return null;
-  })
-
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/** .call GitStatus' )
-  .then( ( op ) =>
-  {
-    test.case = '.with module .git.status - only local commits';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 7 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 7 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-      a.fileProvider.dirMake( a.abs( 'repo' ) );
-      a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.module' ) });
-      return null;
-    });
-    a.shell({ currentPath : a.abs( 'repo' ), execPath : 'git init --bare' });
-    let currentPath = a.abs( '.module' )
-    a.shell({ currentPath, execPath : 'git init' });
-    a.shell({ currentPath, execPath : 'git remote add origin ../repo' });
-    a.shell({ currentPath, execPath : 'git add --all' });
-    a.shell({ currentPath, execPath : 'git commit -am first' });
-    a.shell({ currentPath, execPath : 'git push -u origin --all' });
-    return a.ready;
-  }
-}
-
-//
-
-function commandImplyWithSubmodulesModulesList( test )
-{
-  let context = this;
-  let a = context.assetFor( test, '4LevelsLocal' );
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'default withSubmodules';
-    a.reflect();
-    return null;
-  });
-  a.appStart( '".with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'withSubmodules:0';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:0 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 1 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = 'withSubmodules:1';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:1 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 3 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:2';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:2 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:0';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '.imply withSubmodules:0 .with l4 .modules.list' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 1 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:1';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '.imply withSubmodules:1 .with l4 .modules.list' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 3 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 2 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-
-    return null;
-  })
-
-  /* */
-
-  a.ready
-  .then( () =>
-  {
-    test.case = 'withSubmodules:2';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '.imply withSubmodules:2 .with l4 .modules.list' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}
-
-commandImplyWithSubmodulesModulesList.rapidity = -1;
-commandImplyWithSubmodulesModulesList.description =
-`
-- imply withSubmodules:0 cause to open no submodules
-- imply withSubmodules:1 cause to open only submodules of the main module
-- imply withSubmodules:2 cause to open all submodules recursively
-- no error are thowen
-`
-
-//
-
-function commandImplyPropertyWithDisabled( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'commandImplyProperties' );
-  a.reflect();
-
-  /* - */
-
-  act({ withWith : 0 })
-  act({ withWith : 1, implyFirst : 0 })
-  // act({ withWith : 1, implyFirst : 1 }) //qqq for Vova: to implement
-
-  /* - */
-
-  return a.ready;
-
-  /* - */
-
-  function act( o )
-  {
-    let withWith = o.withWith ? '.with **/' : '';
-
-    function commandFor( opts )
-    {
-      let command = [ `.imply ${opts.imply}`, `${opts.command}` ];
-
-      if( o.withWith )
-      {
-        if( o.implyFirst )
-        command.splice( 1, 0, withWith );
-        else
-        command.unshift( withWith );
-      }
-
-      command = command.join( ' ' );
-
-      test.case = command;
-
-      return command;
-    }
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      if( o.withWith )
-      expected.push( 'ModuleForTesting1a' );
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ]
-      if( o.withWith )
-      expected.push( 'ModuleForTesting1a' );
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      if( o.withWith )
-      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      if( o.withWith )
-      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
-      test.identical( modules, expected );
-      return null;
-    });
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      if( o.withWith )
-      expected.push( 'ModuleForTesting1a' );
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      if( o.withWith )
-      expected.push( 'ModuleForTesting1a' );
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      if( o.withWith )
-      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
-
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* fails */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
-      if( o.withWith )
-      expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
-
-      test.identical( modules, expected );
-      return null;
-    })
-
-  }
-
-  /* */
-
-  function clean()
-  {
-    a.ready.then( () =>
-    {
-      a.fileProvider.filesDelete( a.abs( '.' ) );
-      a.reflect();
-      return null;
-    })
-  }
-}
-
-commandImplyPropertyWithDisabled.timeOut = 1400000;
-
-//
-
-function commandImplyPropertyWithEnabled( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'commandImplyProperties' );
-  a.reflect();
-
-  /* - */
-
-  act({ withWith : 0 })
-  act({ withWith : 1, implyFirst : 0 })
-  // act({ withWith : 1, implyFirst : 1 }) //qqq: for Vova to implement
-
-  /* - */
-
-  return a.ready;
-
-  /* - */
-
-  function act( o )
-  {
-    let withWith = o.withWith ? '.with **/' : '';
-
-    function commandFor( opts )
-    {
-      let command = [ `.imply ${opts.imply}`, `${opts.command}` ];
-
-      if( o.withWith )
-      {
-        if( o.implyFirst )
-        command.splice( 1, 0, withWith );
-        else
-        command.unshift( withWith );
-      }
-
-      command = command.join( ' ' );
-
-      test.case = command;
-
-      return command;
-    }
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:0' }) })
-    a.ready.then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledSubmodules:1' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:0' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledSubmodules:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:0', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledSubmodules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledSubmodules:1', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:0' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:0' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:0', command : '.submodules.download withEnabledModules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:1', command : '.submodules.download withEnabled:0' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null;
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:0' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStartNonThrowing({ args : commandFor({ imply : 'withEnabledModules:0', command : '.submodules.download withEnabled:1' }) })
-    .then( ( op ) =>
-    {
-      if( o.withWith )
-      {
-        test.notIdentical( op.exitCode, 0 );
-        test.true( _.strHas( op.output, 'Found no willfile at' ) );
-      }
-
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = null
-      test.identical( modules, expected );
-
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabled:1', command : '.submodules.download withEnabledModules:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-    /* */
-
-    clean()
-    a.appStart({ args : commandFor({ imply : 'withEnabledModules:1', command : '.submodules.download withEnabled:1' }) })
-    .then( () =>
-    {
-      let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-      let expected = [ 'ModuleForTesting1' ];
-      test.identical( modules, expected );
-      return null;
-    })
-
-  }
-
-  /* */
-
-  function clean()
-  {
-    a.ready.then( () =>
-    {
-      a.fileProvider.filesDelete( a.abs( '.' ) );
-      a.reflect();
-      return null;
-    });
-  }
-}
-
-commandImplyPropertyWithEnabled.timeOut = 1200000;
-
-//
-
-function commandVersion( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-  a.fileProvider.dirMake( a.abs( '.' ) );
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.version';
-    return null;
-  });
-
-  a.appStart({ args : '.version' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, 'Read' ) );
-    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.imply v:9 ; .version';
-    return null;
-  });
-
-  a.appStart({ args : '.imply v:9 ; .version' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, 'Read' ) );
-    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.imply v:9 .version';
-    return null;
-  });
-
-  a.appStart({ args : '.imply v:9 .version' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, 'Read' ) );
-    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = '.version v:7';
-    return null;
-  });
-
-  a.appStart({ args : '.version v:7' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, 'Read' ) );
-    test.true( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Latest version of willbe : \d+\.\d+\.\d+/ ) );
-    test.true( _.strHas( op.output, /Stable version of willbe : \d+\.\d+\.\d+/ ) );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function commandVersionCheck( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'simple' );
-
-  begin();
-
-  /* starter for local copy of utility */
-  a.appStart = _.process.starter
-  ({
-    execPath : `node ${ a.path.nativize( a.abs( 'proto/wtools/atop/will/entry/Exec' ) ) }`,
-    currentPath : a.abs( '.' ),
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    verbosity : 3,
-    ready : a.ready,
-  });
-
-  /* - */
-
-  a.appStart({ args : '.version.check' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.check", current version';
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
-    return null
-  });
-
-  a.appStart({ args : '.imply v:9 ; .version.check' })
-  .then( ( op ) =>
-  {
-    test.case = '".imply v:9 ; .version.check", current version';
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Read/ ) );
-    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
-    return null
-  });
-
-  a.appStart({ args : '.imply v:9 .version.check' })
-  .then( ( op ) =>
-  {
-    test.case = '".imply v:9 .version.check", current version';
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Read/ ) );
-    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
-    return null
-  });
-
-  a.appStart({ args : '.version.check v:7' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.check v:7", current version';
-    test.identical( op.exitCode, 0 );
-    test.false( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Read/ ) );
-    test.true( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
-    return null
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    let packageJsonPath = a.abs( 'package.json' );
-    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
-    packageJson.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
-    return null;
-  });
-
-  a.appStart({ args : '.version.check' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.check", outdated version';
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
-    return null;
-  });
-
-  a.appStart({ args : '.imply v:9 ; .version.check' })
-  .then( ( op ) =>
-  {
-    test.case = '".imply v:9 ; .version.check", outdated version';
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
-    return null;
-  });
-
-  a.appStart({ args : '.imply v:9 .version.check' })
-  .then( ( op ) =>
-  {
-    test.case = '".imply v:9 .version.check", outdated version';
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
-    return null;
-  });
-
-  a.appStart({ args : '.version.check v:7' })
-  .then( ( op ) =>
-  {
-    test.case = '".imply v:7 .version.check", outdated version';
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Utility willbe is out of date!/ ) );
-    test.true( _.strHas( op.output, /Current version: 0.0.0/ ) );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
-    a.shell( 'git clone https://github.com/Wandalen/willbe.git .' );
-    a.shell( 'npm i' );
-    return a.ready;
-  }
-}
-
-//
-
-function commandVersionBump( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'initial check';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.0' );
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump", bump with defaults';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump 1' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump 1", bump with number delta';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump 0.1.1' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump 0.1.1", bump with string delta, full form';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump 1.1' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump 1.1", bump with string delta, not full form';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump patch' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump patch", bump with string delta, increase patch version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump minor' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump minor", bump with string delta, increase minor version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump major' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump major", bump with string delta, increase major version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.0.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump versionDelta:1' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump versionDelta:1", bump with option, number delta';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump versionDelta:0.1.1' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump versionDelta:0.1.1", bump with option, string delta, full form';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump versionDelta:1.1' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump versionDelta:1.1", bump with option, string delta, not full form';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump versionDelta:patch' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump versionDelta:patch", bump with string delta, increase patch version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump versionDelta:minor' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump versionDelta:minor", bump with string delta, increase minor version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump versionDelta:major' })
-  .then( ( op ) =>
-  {
-    test.case = '".version.bump versionDelta:major", bump with string delta, increase major version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.0.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* - */
-
-  a.appStartNonThrowing({ args : '.with Author .version.bump' })
-  .then( ( op ) =>
-  {
-    test.case = 'willfile has not version';
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, undefined );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = 'willfile has version as number';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
-    config.about.version = 1.1;
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Author.will.yml' ), data : config, encoding : 'yaml' });
-    return null;
-  });
-
-  a.appStartNonThrowing({ args : '.with Author .version.bump' })
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, 1.1 );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing({ args : '.with Version .version.bump -1' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump with negative number';
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.0' );
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing({ args : '.with Version .version.bump versionDelta:-1' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump with negative number';
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.0' );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function commandVersionBumpCheckReset( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'initial check';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .version.bump 1.1.1' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump major version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '2.0.0' );
-
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ args : '.with Version .version.bump 0.1.1' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump minor version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.3.0' );
-
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ args : '.with Version .version.bump 1' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump patch version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.2.4' );
-
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
+`;
 
 //
 
@@ -45665,6 +45797,22 @@ const Proto =
 
     commandHelp,
 
+    commandImplyWithDot,
+    commandImplyWithAsterisk,
+
+    commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
+
+    commandImplyPropertyWithDisabled,
+    commandImplyPropertyWithEnabled,
+
+    commandBuildImply,
+    commandBuildImplyWithSeveralSteps,
+
+    commandVersion,
+    commandVersionCheck,
+    commandVersionBump,
+    commandVersionBumpCheckReset,
+
     commandModuleNewDotless,
     commandModuleNewDotlessSingle,
     commandModuleNewNamed,
@@ -45680,19 +45828,6 @@ const Proto =
 
     commandHookCallWithHookInfo,
     commandDoWithHookStatus,
-
-    commandImplyWithDot,
-    commandImplyWithAsterisk,
-
-    commandImplyWithSubmodulesModulesList, /* qqq : test to cover imply + submodules.verify */
-
-    commandImplyPropertyWithDisabled,
-    commandImplyPropertyWithEnabled,
-
-    commandVersion,
-    commandVersionCheck,
-    commandVersionBump,
-    commandVersionBumpCheckReset,
 
     commandSubmodulesClean,
     commandSubmodulesShell,
