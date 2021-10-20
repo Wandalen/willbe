@@ -2660,6 +2660,7 @@ function moduleBuild_body( o )
 
   let build = builds[ 0 ];
   will._willfilesReadEnd( module );
+  build.implied = _.aux.supplement( build.implied, o.implied );
 
   let run = new _.will.BuildRun
   ({
@@ -2705,6 +2706,7 @@ moduleBuild_body.defaults =
 {
   name : null,
   criterion : null,
+  implied : null,
   kind : 'export',
   isRoot : null,
   purging : 0,

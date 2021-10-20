@@ -498,6 +498,8 @@ function _commandsMake()
 
     'help' :                            { ro : _.routineJoin( cui, cui.commandHelp ) },
     'imply' :                           { ro : _.routineJoin( cui, cui.commandImply ) },
+    'build imply' :                     { ro : _.routineJoin( cui, cui.commandBuildImply ) },
+
     'version' :                         { ro : _.routineJoin( cui, cui.commandVersion ) },
     'version check' :                   { ro : _.routineJoin( cui, cui.commandVersionCheck ) },
     'version bump' :                    { ro : _.routineJoin( cui, cui.commandVersionBump ) },
@@ -1599,6 +1601,24 @@ command.properties =
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
   willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
+};
+
+//
+
+function commandBuildImply( e )
+{
+  let cui = this;
+
+  let impliedPrev = cui.buildImplied;
+  _.aux.extend( cui.buildImplied, e.propertiesMap );
+}
+
+var command = commandBuildImply.command = Object.create( null );
+command.hint = 'Imply options that supplements missed build steps options.';
+command.subjectHint = false;
+command.properties =
+{
+  any : 'Any option with value to set for build.',
 };
 
 // function commandImply( e )
@@ -3803,6 +3823,7 @@ function commandBuild( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       kind : 'build',
     });
@@ -3839,6 +3860,7 @@ function commandExport( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       kind : 'export',
     });
@@ -3876,6 +3898,7 @@ function commandExportPurging( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       purging : 1,
       kind : 'export',
@@ -3914,6 +3937,7 @@ function commandExportRecursive( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 2,
       kind : 'export',
     });
@@ -3951,6 +3975,7 @@ function commandPublish( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       kind : 'publish',
     });
@@ -7147,6 +7172,7 @@ let Restricts =
 {
   will : null,
   implied : _.define.own( {} ),
+  buildImplied : _.define.own( {} ),
   transactionOld : null
 }
 
@@ -7218,6 +7244,7 @@ let Extension =
 
   commandHelp,
   commandImply,
+  commandBuildImply,
 
   commandVersion,
   commandVersionCheck,
