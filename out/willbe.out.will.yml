@@ -1740,6 +1740,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/commandBuildImply
+          - ../proto/wtools/atop/will.test/_asset/commandBuildImply/will.yml
           - ../proto/wtools/atop/will.test/_asset/commandImplyProperties
           - >-
             ../proto/wtools/atop/will.test/_asset/commandImplyProperties/.will.yml
