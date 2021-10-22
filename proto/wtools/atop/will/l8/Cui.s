@@ -1489,6 +1489,8 @@ function _commandModuleOrientedLike( o )
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
     o2.recursive = 2;
+    if( will.modulesArray.length === 1 )
+    o2.withDisabledStem = 1;
     return will.modulesFor( o2 );
   })
 
