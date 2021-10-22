@@ -2779,6 +2779,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/openNonWillfile/dir
           - >-
             ../proto/wtools/atop/will.test/_asset/openNonWillfile/dir/.will.state.json
+          - ../proto/wtools/atop/will.test/_asset/openWithDisabled
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithDisabled/Disabled.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithDisabled/Enabled.will.yml
+          - ../proto/wtools/atop/will.test/_asset/openWithDisabled/will.yml
           - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule
           - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/will.yml
           - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/proto

@@ -820,6 +820,133 @@ etcCommandsSeveral.description =
 
 //
 
+function etcRunCommandsOnDisabledModule( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'openWithDisabled' );
+  a.reflectMinimal();
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
+
+  /* - */
+
+  a.appStart( '.shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from unnamed disabled module, no selector';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with ./ .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from unnamed disabled module, selector - current directory';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with ./will .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from unnamed disabled module, selector - directory with name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with ./will.yml .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from unnamed disabled module, selector - directory with full name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ./will* .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should not echo, selector - directory with name and glob';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with ./Disabled .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from named disabled module, selector - directory with name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with ./Disabled.will .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from named disabled module, selector - directory with name and extension';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStart( '.with ./Disabled.will.yml .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from named disabled module, selector - directory with full name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with ./Disabled* .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should not echo, selector - directory with name and glob';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with ./* .shell echo str' )
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from named enabled module, selector - willfiles in directory';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ currentPath : a.abs( '..' ), execPath : '.with */* .shell echo str' })
+  .then( ( op ) =>
+  {
+    test.case = 'should echo once from enabled module, run from external directory with all willfiles';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo str' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcRunCommandsOnDisabledModule.description =
+`
+- check internal stat of will
+- several commands separated with ";"" should works
+`;
+
+//
+
 function etcResolveDefaultBuilds( test )
 {
   let context = this;
@@ -44538,7 +44665,7 @@ function commandsSubmoduleSafety( test )
   let a = context.assetFor( test, 'submodulesSafety' );
 
   a.rooWillFilePath = a.abs( '.will.yml' );
-  a.localPath = a.abs( '.module/ModuleForTesting1' );
+  a.localPath = a.abs( '.module/ModuleForTesting2' );
 
   a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath });
   a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data });
@@ -44696,7 +44823,7 @@ function commandsSubmoduleSafety( test )
     {
       test.case = `${_.entity.exportStringSolo( env )}`;
       a.fileProvider.filesDelete( a.abs( '.' ) );
-      a.reflect();
+      a.reflectMinimal();
       return null;
     })
 
@@ -45522,6 +45649,7 @@ const Proto =
     // etcResourcesFormReflectorsExperiment, // xxx : look
 
     etcCommandsSeveral,
+    etcRunCommandsOnDisabledModule,
 
     etcResolveDefaultBuilds,
 
@@ -45924,6 +46052,6 @@ const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-/* aaa : for Dmytro : remove -assets. disuss before removing! */ /* Dmytro : files with dash are generated in tests */
+/* aaa : for Dmytro : remove -assets, discuss before removing! */ /* Dmytro : files with dash are generated in tests */
 
 })();
