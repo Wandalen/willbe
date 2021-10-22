@@ -515,6 +515,7 @@ function _commandsMake()
     'steps list' :                      { ro : _.routineJoin( cui, cui.commandStepsList ) },
     'builds list' :                     { ro : _.routineJoin( cui, cui.commandBuildsList ) },
     'exports list' :                    { ro : _.routineJoin( cui, cui.commandExportsList ) },
+    'publishes list' :                  { ro : _.routineJoin( cui, cui.commandPublishesList ) },
     'about list' :                      { ro : _.routineJoin( cui, cui.commandAboutList ) },
     'about' :                           { ro : _.routineJoin( cui, cui.commandAboutList ) },
 
@@ -1942,7 +1943,6 @@ function commandBuildsList( e )
     });
     logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
-
 }
 
 var command = commandBuildsList.command = Object.create( null );
@@ -1977,12 +1977,45 @@ function commandExportsList( e )
     });
     logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
-
 }
 
 var command = commandExportsList.command = Object.create( null );
 command.hint = 'List available exports of the current module.';
 command.subjectHint = 'A selector for exports. Could be a glob.';
+
+//
+
+function commandPublishesList( e )
+{
+  let cui = this;
+  cui._command_head( commandPublishesList, arguments );
+
+  return cui._commandListLike
+  ({
+    event : e,
+    name : 'publishes list',
+    onEach : act,
+    commandRoutine : commandPublishesList,
+    resourceKind : null,
+  });
+
+  function act( module )
+  {
+    let logger = cui.transaction.logger;
+    let request = _.will.resolver.Resolver.strRequestParse( e.instructionArgument );
+    let builds = module.openedModule.publishesResolve
+    ({
+      name : request.subject,
+      criterion : request.map,
+      preffering : 'more',
+    });
+    logger.log( module.openedModule.resourcesExportInfo( builds ) );
+  }
+}
+
+var command = commandPublishesList.command = Object.create( null );
+command.hint = 'List available publish builds of the current module.';
+command.subjectHint = 'A selector for publish builds. Could be a glob.';
 
 //
 
@@ -7259,6 +7292,7 @@ let Extension =
   commandStepsList,
   commandBuildsList,
   commandExportsList,
+  commandPublishesList,
   commandAboutList,
 
   commandModulesList,
