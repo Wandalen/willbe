@@ -9414,20 +9414,9 @@ function listSteps( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodules' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
-
-  a.ready
 
   a.appStart({ execPath : '.steps.list' })
   .finally( ( err, op ) =>
@@ -9445,9 +9434,9 @@ function listSteps( test )
     test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.steps.list *' })
   .finally( ( err, op ) =>
@@ -9465,9 +9454,9 @@ function listSteps( test )
     test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.steps.list *proto*' })
   .finally( ( err, op ) =>
@@ -9485,9 +9474,9 @@ function listSteps( test )
     test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.appStart({ execPath : '.steps.list *proto* debug:1' })
   .finally( ( err, op ) =>
@@ -9505,9 +9494,9 @@ function listSteps( test )
     test.true( _.strHas( op.output, 'step::export.proto' ) );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   return a.ready;
 }
