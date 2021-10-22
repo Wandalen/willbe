@@ -44549,7 +44549,7 @@ function commandsSubmoduleSafety( test )
   let a = context.assetFor( test, 'submodulesSafety' );
 
   a.rooWillFilePath = a.abs( '.will.yml' );
-  a.localPath = a.abs( '.module/ModuleForTesting1' );
+  a.localPath = a.abs( '.module/ModuleForTesting2' );
 
   a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath });
   a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data });
@@ -44707,7 +44707,7 @@ function commandsSubmoduleSafety( test )
     {
       test.case = `${_.entity.exportStringSolo( env )}`;
       a.fileProvider.filesDelete( a.abs( '.' ) );
-      a.reflect();
+      a.reflectMinimal();
       return null;
     })
 
