@@ -951,7 +951,7 @@ function etcResolveDefaultBuilds( test )
 {
   let context = this;
   let a = context.assetFor( test, 'buildsResolve' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
@@ -1037,42 +1037,42 @@ function etcResolveDefaultBuilds( test )
 
   /* */
 
-  a.appStart( '.build no.criterions' );
+  a.appStart( '.build build.no.default.criterion' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".build no.criterions"' ), 1 );
-    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".build build.no.default.criterion"' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build.no.default.criterion' ), 1 );
     test.identical( _.strCount( op.output, 'Building module::implicit / build::export' ), 0 );
     test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
     test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
-    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::build.no.default.criterion in' ), 1 );
     return null;
   });
 
-  a.appStartNonThrowing( '.export no.criterions' );
+  a.appStartNonThrowing( '.export build.no.default.criterion' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".export no.criterions"' ), 1 );
-    test.identical( _.strCount( op.output, 'Building module::implicit / build::build' ), 0 );
-    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Command ".export build.no.default.criterion"' ), 1 );
+    test.identical( _.strCount( op.output, /Building module::implicit \/ build::build\s/ ), 0 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build.no.default.criterion' ), 1 );
     test.identical( _.strCount( op.output, 'Building module::implicit / build::publish' ), 0 );
     test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
-    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::build.no.default.criterion in' ), 1 );
     return null;
   });
 
-  a.appStartNonThrowing( '.publish no.criterions' );
+  a.appStartNonThrowing( '.publish build.no.default.criterion' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".publish no.criterions"' ), 1 );
-    test.identical( _.strCount( op.output, 'Building module::implicit / build:: build' ), 0 );
+    test.identical( _.strCount( op.output, 'Command ".publish build.no.default.criterion"' ), 1 );
+    test.identical( _.strCount( op.output, /Building module::implicit \/ build::build\s/ ), 0 );
     test.identical( _.strCount( op.output, 'Building module::implicit / build::export' ), 0 );
-    test.identical( _.strCount( op.output, 'Building module::implicit / build::no.criterions' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::implicit / build::build.no.default.criterion' ), 1 );
     test.identical( _.strCount( op.output, '> echo implicit' ), 1 );
-    test.identical( _.strCount( op.output, 'Built module::implicit / build::no.criterions in' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::implicit / build::build.no.default.criterion in' ), 1 );
     return null;
   });
 
@@ -1084,6 +1084,71 @@ function etcResolveDefaultBuilds( test )
 etcResolveDefaultBuilds.description =
 `
 check that utility resolves next builds with criterion default:
+  - trivial;
+  - export;
+  - publish;
+`;
+
+//
+
+function etcResolveBuildsLists( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildsResolve' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.builds.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".builds.list"' ), 1 );
+    test.identical( _.strCount( op.output, /module::implicit \/ build::build\s/ ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::build.no.default.criterion' ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::export.no.default.criterion' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::publish.no.default.criterion' ), 0 );
+    return null;
+  });
+
+  a.appStart( '.exports.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".exports.list"' ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::build.no.default.criterion' ), 0 );
+    test.identical( _.strCount( op.output, /module::implicit \/ build::export\s/ ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::export.no.default.criterion' ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::publish' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::publish.no.default.criterion' ), 0 );
+    return null;
+  });
+
+  a.appStart( '.publishes.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".publishes.list"' ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::build' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::build.no.default.criterion' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::export' ), 0 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::export.no.default.criterion' ), 0 );
+    test.identical( _.strCount( op.output, /module::implicit \/ build::publish\s/ ), 1 );
+    test.identical( _.strCount( op.output, 'module::implicit / build::publish.no.default.criterion' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcResolveBuildsLists.description =
+`
+check that utility resolves valid names for build types:
   - trivial;
   - export;
   - publish;
@@ -9531,110 +9596,6 @@ function listWithSubmodules( test )
 
     return null;
   })
-
-  return a.ready;
-} /* end of function listWithSubmodules */
-
-//
-
-function listSteps( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'submodules' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
-
-  /* - */
-
-  a.ready
-
-  a.appStart({ execPath : '.steps.list' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.steps.list';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
-
-    test.true( _.strHas( op.output, 'step::delete.out.debug' ) );
-    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.true( _.strHas( op.output, 'step::reflect.submodules' ) );
-    test.true( _.strHas( op.output, 'step::export.proto' ) );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ execPath : '.steps.list *' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.steps.list';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-
-    test.true( _.strHas( op.output, 'step::delete.out.debug' ) );
-    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.true( _.strHas( op.output, 'step::reflect.submodules' ) );
-    test.true( _.strHas( op.output, 'step::export.proto' ) );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ execPath : '.steps.list *proto*' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.steps.list';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-
-    test.true( !_.strHas( op.output, 'step::delete.out.debug' ) );
-    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.true( !_.strHas( op.output, 'step::reflect.submodules' ) );
-    test.true( _.strHas( op.output, 'step::export.proto' ) );
-
-    return null;
-  })
-
-  /* - */
-
-  a.appStart({ execPath : '.steps.list *proto* debug:1' })
-  .finally( ( err, op ) =>
-  {
-    test.case = '.steps.list';
-    test.true( !err );
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-
-    test.true( !_.strHas( op.output, 'step::delete.out.debug' ) );
-    test.true( !_.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
-    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
-    test.true( !_.strHas( op.output, 'step::reflect.submodules' ) );
-    test.true( _.strHas( op.output, 'step::export.proto' ) );
-
-    return null;
-  })
-
-  /* - */
 
   return a.ready;
 }
@@ -29698,6 +29659,99 @@ function commandVersionBumpCheckReset( test )
 
 //
 
+function commandStepsList( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart({ execPath : '.steps.list' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.steps.list';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+
+    test.true( _.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( _.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.steps.list *' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.steps.list';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+
+    test.true( _.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( _.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.steps.list *proto*' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.steps.list';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+
+    test.true( !_.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( _.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.steps.list *proto* debug:1' })
+  .finally( ( err, op ) =>
+  {
+    test.case = '.steps.list';
+    test.true( !err );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+
+    test.true( !_.strHas( op.output, 'step::delete.out.debug' ) );
+    test.true( !_.strHas( op.output, /step::reflect\.proto\.[^d]/ ) );
+    test.true( _.strHas( op.output, 'step::reflect.proto.debug' ) );
+    test.true( !_.strHas( op.output, 'step::reflect.submodules' ) );
+    test.true( _.strHas( op.output, 'step::export.proto' ) );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandModuleNewDotless( test )
 {
   let context = this;
@@ -45663,6 +45717,7 @@ const Proto =
     etcRunCommandsOnDisabledModule,
 
     etcResolveDefaultBuilds,
+    etcResolveBuildsLists,
 
     // build
 
@@ -45752,7 +45807,6 @@ const Proto =
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
-    listSteps,
 
     // export
 
@@ -45940,6 +45994,8 @@ const Proto =
     commandVersionCheck,
     commandVersionBump,
     commandVersionBumpCheckReset,
+
+    commandStepsList,
 
     commandModuleNewDotless,
     commandModuleNewDotlessSingle,

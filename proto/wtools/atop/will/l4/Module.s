@@ -5622,6 +5622,12 @@ defaults.kind = 'export';
 
 //
 
+let publishesResolve = _.routine.uniteCloning_replaceByUnite( _buildsResolve_head, _buildsResolve_body );
+var defaults = publishesResolve.defaults;
+defaults.kind = 'publish';
+
+//
+
 function willfilesResolve()
 {
   let module = this;
@@ -11396,6 +11402,7 @@ let Extension =
   _buildsResolve,
   buildsResolve,
   exportsResolve,
+  publishesResolve,
   willfilesResolve,
 
   // path
