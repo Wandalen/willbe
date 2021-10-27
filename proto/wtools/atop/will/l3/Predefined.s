@@ -1035,6 +1035,9 @@ function stepRoutineNpmPublish( frame )
   else
   opts.versionDelta = 1;
 
+  if( opts.withDisabledSubmodules === null )
+  opts.withDisabledSubmodules = 1;
+
   return module.npmModulePublish( opts );
 }
 
