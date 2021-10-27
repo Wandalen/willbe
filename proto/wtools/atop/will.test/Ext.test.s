@@ -21480,16 +21480,15 @@ function subModulesUpdate( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.update';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version aed6304a687c22eb25a3af3c194000e7af4ac3f4 in' ) );
@@ -21497,19 +21496,20 @@ function subModulesUpdate( test )
     test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version a19813c715fa9ef8bb6a7c89adfa170e0e185971 in' ) );
     test.true( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.submodules.update -- second';
+    test.case = '.submodules.update -- twice';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
@@ -21521,38 +21521,43 @@ function subModulesUpdate( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( () =>
   {
     test.case = '.submodules.update -- after patch';
-    var read = a.fileProvider.fileRead( a.abs( '.im.will.yml' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
     read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
-    a.fileProvider.fileWrite( a.abs( '.im.will.yml' ), read );
+    a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    // test.true( _.strHas( op.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
     test.true( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
     test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
     test.true( _.strHas( op.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( () =>
   {
-    test.case = '.submodules.update -- second';
+    test.case = '.submodules.update -- after patch, twice';
+    var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
+    read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
+    a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.update' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
@@ -21560,7 +21565,7 @@ function subModulesUpdate( test )
     test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
     test.true( _.strHas( op.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -44976,7 +44981,6 @@ function commandsSubmoduleSafety( test )
       if( expectedOutput )
       _.each( _.array.as( expectedOutput ), ( expected ) => test.true( _.strHas( op.output, expected ) ) );
 
-      debugger;
       let moduleDirExists = a.fileProvider.isDir( a.localPath );
 
       if( env.deleted )
