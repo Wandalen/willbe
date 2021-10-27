@@ -3505,12 +3505,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesShell/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesShell/Named.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdate
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/+.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/.ex.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesUpdate/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/.will.yml

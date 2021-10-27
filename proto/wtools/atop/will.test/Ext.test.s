@@ -21480,16 +21480,15 @@ function subModulesUpdate( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.update';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version aed6304a687c22eb25a3af3c194000e7af4ac3f4 in' ) );
@@ -21497,19 +21496,20 @@ function subModulesUpdate( test )
     test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version a19813c715fa9ef8bb6a7c89adfa170e0e185971 in' ) );
     test.true( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.submodules.update -- second';
+    test.case = '.submodules.update -- twice';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
@@ -21521,38 +21521,43 @@ function subModulesUpdate( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( () =>
   {
     test.case = '.submodules.update -- after patch';
-    var read = a.fileProvider.fileRead( a.abs( '.im.will.yml' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
     read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
-    a.fileProvider.fileWrite( a.abs( '.im.will.yml' ), read );
+    a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    // test.true( _.strHas( op.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
     test.true( !_.strHas( op.output, /module::ModuleForTesting2a/ ) );
     test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
     test.true( _.strHas( op.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( () =>
   {
-    test.case = '.submodules.update -- second';
+    test.case = '.submodules.update -- after patch, twice';
+    var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
+    read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
+    a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.update' });
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /module::ModuleForTesting1/ ) );
@@ -21560,7 +21565,7 @@ function subModulesUpdate( test )
     test.true( !_.strHas( op.output, /module::ModuleForTesting12ab/ ) );
     test.true( _.strHas( op.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
-  })
+  });
 
   /* */
 
@@ -24380,10 +24385,14 @@ function stepWillbeVersionCheck( test )
   a.appStart( '.build' )
   .then( ( op ) =>
   {
+    test.case = 'utiliti is up to data';
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, /Built .+ \/ build::debug/ ) );
+    test.identical( _.strCount( op.output, 'Current version: 0.5.502. Utility willbe is up to date.' ), 1 );
+    test.identical( _.strCount( op.output, /Built .+ \/ build::debug/ ), 1 );
     return null;
   });
+
+  /* */
 
   a.ready.then( ( ) =>
   {
@@ -24397,9 +24406,12 @@ function stepWillbeVersionCheck( test )
   a.appStart( '.build' )
   .then( ( op ) =>
   {
+    test.case = 'utility is out of date';
     test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, 'npm r -g willbe && npm i -g willbe' ) );
-    test.true( _.strHas( op.output, /Failed .+ \/ step::willbe.version.check/ ) );
+    test.identical( _.strCount( op.output, 'Utility willbe is out of date!' ), 1 );
+    test.identical( _.strCount( op.output, 'Current version: 0.0.0' ), 1 );
+    test.identical( _.strCount( op.output, /Latest: \d+\.\d+\.\d+/ ), 1 );
+    test.identical( _.strCount( op.output, 'Please run: "npm r -g willbe && npm i -g willbe" to update.' ), 1 );
     return null;
   });
 
@@ -24412,14 +24424,13 @@ function stepWillbeVersionCheck( test )
   function begin()
   {
     a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
-    a.shell( 'git clone https://github.com/Wandalen/willbe.git .' );
+    a.shell( 'git clone https://github.com/Wandalen/willbe.git ./' );
     a.shell( 'npm i' );
     a.ready.then( () =>
     {
       const willPath = a.abs( 'will.yml' );
       const assetWillPath = a.abs( context.assetsOriginalPath, 'stepWillbeVersionCheck/will.yml' );
       a.fileProvider.filesDelete( a.abs( 'out' ) );
-      a.fileProvider.filesDelete( a.abs( '.git' ) );
       a.fileProvider.filesReflect({ reflectMap : { [ assetWillPath ] : willPath } });
       return null;
     });
@@ -44730,7 +44741,7 @@ function commandsSubmoduleSafety( test )
   let a = context.assetFor( test, 'submodulesSafety' );
 
   a.rooWillFilePath = a.abs( '.will.yml' );
-  a.localPath = a.abs( '.module/ModuleForTesting2' );
+  a.localPath = a.abs( '.module/ModuleForTesting1' );
 
   a.rootWillFileRead = () => a.fileProvider.fileRead({ filePath : a.rooWillFilePath });
   a.rootWillFileWrite = ( data ) => a.fileProvider.fileWrite({ filePath : a.rooWillFilePath, data });
