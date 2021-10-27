@@ -6412,6 +6412,7 @@ commandNpmPublish.defaults =
 {
   message : null,
   tag : null,
+  versionDelta : null,
 
   force : 0,
   withDisabledSubmodules : 1,
@@ -6430,6 +6431,7 @@ command.properties =
 {
   message : 'Commit message', /* aaa : for Dmytro : bad : bad name */ /* Dmytro : renamed */
   tag : 'Tag for NPM module',
+  versionDelta : 'Delta for bump. Default is +1 to patch version.',
   force : 'Forces diff.',
   withDisabledSubmodules : 'Generate dependencies from disabled submodules. Default is 1.',
   dry : 'Dry run.',
