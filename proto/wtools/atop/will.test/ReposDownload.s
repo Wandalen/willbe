@@ -7,12 +7,6 @@ _.include( 'wGitTools' );
 let assetsOriginalPath = _.path.join( __dirname, '_asset' );
 let repoDirPath = _.path.join( assetsOriginalPath, '-repo' );
 let ready = _.take( null );
-// let start = _.process.starter
-// ({
-//   currentPath : repoDirPath,
-//   outputCollecting : 1,
-//   ready,
-// });
 
 module.exports = reposRedownload;
 
@@ -109,7 +103,17 @@ function repositoryDownload( name )
 {
   let localPath = _.path.join( repoDirPath, name );
   if( !_.fileProvider.isDir( localPath ) )
-  ready.then( () => _.git.repositoryClone({ remotePath : `https://github.com/Wandalen/w${ name }.git`, localPath }) );
+  ready.then( () =>
+  {
+    return _.git.repositoryClone
+    ({
+      remotePath : `https://github.com/Wandalen/w${ name }.git`,
+      localPath,
+      attemptLimit : 5,
+      attemptDelay : 250,
+      attemptDelayMultiplier : 2,
+    });
+  });
   return ready;
 }
 
