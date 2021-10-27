@@ -2807,6 +2807,8 @@ function fileWritePath( test )
   });
 }
 
+fileWritePath.timeOut = 240000;
+
 // --
 // declare
 // --
@@ -2819,7 +2821,7 @@ let Self =
 
   onSuiteBegin,
   onSuiteEnd,
-  routineTimeOut : 100000,
+  routineTimeOut : 120000,
 
   context :
   {
