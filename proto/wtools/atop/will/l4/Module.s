@@ -9743,8 +9743,8 @@ function npmModulePublish( o )
   ready.then( () => _.npm.fileFormat({ configPath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
-  ready.then( () => module.gitTag({ name : `v${ version }` }) );
-  ready.then( () => module.gitTag({ name : o.tag }) );
+  ready.then( () => module.gitTag({ tag : `v${ version }` }) );
+  ready.then( () => module.gitTag({ tag : o.tag }) );
   ready.then( () => module.gitPush({ withTags : 1, force : 1 }) );
 
   ready.then( () => npmPublish() );
