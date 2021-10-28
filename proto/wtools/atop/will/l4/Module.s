@@ -1285,6 +1285,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'npm.publish',
+    stepRoutine : Predefined.stepRoutineNpmPublish,
+  })
+
+  step
+  ({
     name : 'modules.update',
     stepRoutine : Predefined.stepRoutineModulesUpdate,
   })
@@ -9666,15 +9672,6 @@ function willfileVersionBump( o )
 
     for( let j = i + 1 ; j < versionArray.length ; j++ )
     versionArray[ j ] = 0;
-
-    // for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
-    // {
-    //   let delta = Number( deltaArray[ i ] );
-    //   let versionArrayOffset = versionArray.length - 1 - offset;
-    //   _.assert( _.intIs( delta ), 'Expects integer as delta.' );
-    //   _.assert( delta >= 0, 'Expects positive delta.' );
-    //   versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
-    // }
   }
 }
 
@@ -9732,7 +9729,7 @@ function npmModulePublish( o )
   let version;
   ready.then( () =>
   {
-    version = module.willfileVersionBump( Object.create( null ) );
+    version = module.willfileVersionBump({ versionDelta : o.versionDelta });
     return null;
   });
 
@@ -9746,8 +9743,8 @@ function npmModulePublish( o )
   ready.then( () => _.npm.fileFormat({ configPath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
-  ready.then( () => module.gitTag({ name : `v${ version }` }) );
-  ready.then( () => module.gitTag({ name : o.tag }) );
+  ready.then( () => module.gitTag({ tag : `v${ version }` }) );
+  ready.then( () => module.gitTag({ tag : o.tag }) );
   ready.then( () => module.gitPush({ withTags : 1, force : 1 }) );
 
   ready.then( () => npmPublish() );
@@ -9881,6 +9878,7 @@ npmModulePublish.defaults =
   withDisabledSubmodules : 1,
   dry : 0,
   verbosity : 1,
+  versionDelta : 1,
 };
 
 //
