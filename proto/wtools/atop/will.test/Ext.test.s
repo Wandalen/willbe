@@ -24387,7 +24387,7 @@ function stepWillbeVersionCheck( test )
   {
     test.case = 'utiliti is up to data';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Current version: 0.5.502. Utility willbe is up to date.' ), 1 );
+    test.identical( _.strCount( op.output, /Current version: \d+\.\d+\.\d+\. Utility willbe is up to date\./ ), 1 );
     test.identical( _.strCount( op.output, /Built .+ \/ build::debug/ ), 1 );
     return null;
   });
