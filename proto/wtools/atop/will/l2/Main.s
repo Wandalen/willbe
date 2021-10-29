@@ -5075,11 +5075,12 @@ function _requestParsePathAndSelectors( o )
       if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
       {
         selectorsString = o.request;
+        if( !o.commonPath )
         o.commonPath = './';
       }
       else
       {
-        o.commonPath = isolated[ 0 ];
+        o.commonPath = path.join( o.commonPath, isolated[ 0 ] );
       }
     }
   }
