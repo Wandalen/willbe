@@ -1060,7 +1060,7 @@ function _commandExtendLike( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     it2.openers = will.currentOpeners;
-    it2.roots = will.modulesOnlyRoots( it2.openers );
+    // it2.roots = will.modulesOnlyRoots( it2.openers );
 
     ready2.then( () =>
     {
