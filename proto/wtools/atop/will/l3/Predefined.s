@@ -1029,6 +1029,7 @@ function stepRoutineNpmPublish( frame )
 
   opts.tag = module.resolve( opts.tag );
 
+  /* qqq2 : for Dmytro : bump should be separate step */
   if( opts.versionDelta === null )
   if( 'bump' in step.criterion )
   opts.versionDelta = step.criterion.bump;
