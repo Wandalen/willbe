@@ -2501,10 +2501,10 @@ function modulesFor_body( o )
 
     if( o.onEachModule )
     {
-      let objects = [ object ];
-      _.arrayAppendArrayOnce( objects, junction.modules );
+      let objects2 = [ object ];
+      _.arrayAppendArrayOnce( objects2, junction.modules );
 
-      objects.forEach( ( object ) =>
+      objects2.forEach( ( object ) =>
       {
         if( visitedModulesSet.has( object ) )
         return null;
@@ -2516,6 +2516,14 @@ function modulesFor_body( o )
           o3.module = object;
           o3.isRoot = isRoot;
           ready.then( () => o.onEachModule( object, o3 ) );
+          ready.then( () =>
+          {
+            /* update module if it is reopened in build */
+            for( let i = 0 ; i < objects.length ; i++ )
+            if( objects[ i ] === object )
+            objects[ i ] = _.resolve( will.moduleWithNameMap, object.name );
+            return null;
+          });
         }
 
       });
