@@ -259,12 +259,12 @@ function etcOldImportFileAdapt( test )
 {
   let context = this;
   let a = context.assetFor( test, 'oldImportFileAdapt' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' )
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Failed to download submodules' ) );
@@ -273,14 +273,14 @@ function etcOldImportFileAdapt( test )
     return null;
   });
 
-  /* - */
+  /* */
 
-  a.appStart( '.imply willFileAdapting:1 .submodules.download' )
-  .then( ( op ) =>
+  a.appStart( '.imply willFileAdapting:1 .submodules.download' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 );
 
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
     let expectedModules =
@@ -289,13 +289,13 @@ function etcOldImportFileAdapt( test )
       'ModuleForTesting1a',
       'ModuleForTesting1b',
       'ModuleForTesting2'
-    ]
+    ];
     test.identical( modules, expectedModules );
 
     _.each( expectedModules, ( moduleName ) =>
     {
       test.true( _.git.isRepository({ localPath : a.abs( `.module/${moduleName}` ) }) );
-    })
+    });
 
     return null;
   });
@@ -309,7 +309,7 @@ etcOldImportFileAdapt.rapidity = 1;
 etcOldImportFileAdapt.description =
 `
   Checks if old format of import file is converted to new format if feature is enabled via option.
-`
+`;
 
 //
 
@@ -46117,7 +46117,6 @@ const Proto =
     commandsSequenceProceduresTermination,
 
     // etcWillFilterFieldsOverwrite,
-    // etcOldImportFileAdapt,
 
   }
 
