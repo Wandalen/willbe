@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/#aed6304a687c22eb25a3af3c194000e7af4ac3f4
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/#8e2aa80ca350f3c45215abafa07a4f2cd320342a
   ModuleForTesting2a : git+hd://../-repo/ModuleForTesting2a/!master
-  ModuleForTesting12ab : git+hd://../-repo/ModuleForTesting12ab/#a19813c715fa9ef8bb6a7c89adfa170e0e185971
+  ModuleForTesting12ab : git+hd://../-repo/ModuleForTesting12ab/#c5c27157a6803d97b084002b8853b8fae0f62a08
 

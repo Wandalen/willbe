@@ -9,9 +9,9 @@ submodule :
 
   ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1#master
   ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out.will.yml#master
-  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/#delta
+  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/#gamma
   ModuleForTesting2 :
-    path : git+https:///github.com/Wandalen/wModuleForTesting2.git/#0a9ac9ecbfbab54af8f99c61a9dd938659b065a1
+    path : git+https:///github.com/Wandalen/wModuleForTesting2.git/#54e70dfd8bedbf01e2aa885e258c5cac89b609bd
 
 path :
 

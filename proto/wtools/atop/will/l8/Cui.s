@@ -4555,7 +4555,7 @@ function commandWillfileFromNpm( e )
       packagePath : e.optionsMap.packagePath,
       willfilePath : e.optionsMap.willfilePath,
       currentContext,
-      modules : it.roots,
+      modules : it.roots || [],
       logger : 3,
     });
   }
