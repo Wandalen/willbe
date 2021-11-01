@@ -21490,9 +21490,9 @@ function subModulesUpdate( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version aed6304a687c22eb25a3af3c194000e7af4ac3f4 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 8e2aa80ca350f3c45215abafa07a4f2cd320342a in' ) );
     test.true( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version a19813c715fa9ef8bb6a7c89adfa170e0e185971 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version c5c27157a6803d97b084002b8853b8fae0f62a08 in' ) );
     test.true( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   });
@@ -21526,7 +21526,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
-    read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
+    read = _.strReplace( read, '#8e2aa80ca350f3c45215abafa07a4f2cd320342a', '!master' )
     a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
   });
@@ -21549,7 +21549,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch, twice';
     var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
-    read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
+    read = _.strReplace( read, '#8e2aa80ca350f3c45215abafa07a4f2cd320342a', '!master' )
     a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
   });
