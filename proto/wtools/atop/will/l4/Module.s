@@ -9868,6 +9868,7 @@ function npmModulePublish( o )
       dep.version = about.version;
     }
   }
+
 }
 
 npmModulePublish.defaults =

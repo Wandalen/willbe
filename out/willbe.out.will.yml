@@ -1892,6 +1892,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmInstall.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmPublish.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmPublish2.js
+          - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/OnPublish.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/prepare.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/ProtoSync.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/publish.js
