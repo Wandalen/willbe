@@ -13115,7 +13115,7 @@ function exportWithRemoteSubmodulesMin( test )
 exportWithRemoteSubmodulesMin.description =
 `
 exporting of hierarchy with remote submodules throw no error and produce out files
-`
+`;
 
 //
 
@@ -14619,7 +14619,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   a.ready.then( () =>
   {
     test.case = '.export';
-    a.reflectMinimal();
+    a.reflect();
     return null;
   });
 
