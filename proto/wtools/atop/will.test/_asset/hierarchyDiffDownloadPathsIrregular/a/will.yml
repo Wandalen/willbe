@@ -6,9 +6,9 @@ about :
 
 submodule :
 
-  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out
-  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
-  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out.will
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out!gamma
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out!gamma
+  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out.will!gamma
   ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!gamma
 path :
 
