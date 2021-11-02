@@ -5,8 +5,8 @@ about :
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
-  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma
+  ModuleForTesting1b : git+https:///github.com/Wandalen/wModuleForTesting1b.git/!gamma
 
 path :
 
