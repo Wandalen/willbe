@@ -259,12 +259,12 @@ function etcOldImportFileAdapt( test )
 {
   let context = this;
   let a = context.assetFor( test, 'oldImportFileAdapt' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' )
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.imply willFileAdapting:0 .submodules.download' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Failed to download submodules' ) );
@@ -273,14 +273,14 @@ function etcOldImportFileAdapt( test )
     return null;
   });
 
-  /* - */
+  /* */
 
-  a.appStart( '.imply willFileAdapting:1 .submodules.download' )
-  .then( ( op ) =>
+  a.appStart( '.imply willFileAdapting:1 .submodules.download' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 )
+    test.identical( _.strCount( op.output, /\+ 4\/4 submodule\(s\) of module::.* were downloaded in/ ), 1 );
 
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
     let expectedModules =
@@ -289,13 +289,13 @@ function etcOldImportFileAdapt( test )
       'ModuleForTesting1a',
       'ModuleForTesting1b',
       'ModuleForTesting2'
-    ]
+    ];
     test.identical( modules, expectedModules );
 
     _.each( expectedModules, ( moduleName ) =>
     {
       test.true( _.git.isRepository({ localPath : a.abs( `.module/${moduleName}` ) }) );
-    })
+    });
 
     return null;
   });
@@ -309,7 +309,7 @@ etcOldImportFileAdapt.rapidity = 1;
 etcOldImportFileAdapt.description =
 `
   Checks if old format of import file is converted to new format if feature is enabled via option.
-`
+`;
 
 //
 
@@ -13115,7 +13115,7 @@ function exportWithRemoteSubmodulesMin( test )
 exportWithRemoteSubmodulesMin.description =
 `
 exporting of hierarchy with remote submodules throw no error and produce out files
-`
+`;
 
 //
 
@@ -14619,7 +14619,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   a.ready.then( () =>
   {
     test.case = '.export';
-    a.reflectMinimal();
+    a.reflect();
     return null;
   });
 
@@ -19744,40 +19744,40 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     return null;
   });
 
-  a.appStart( '.with c .clean recursive:2' )
-  a.appStart( '.with c .submodules.download' )
-  .then( ( op ) =>
+  a.appStart( '.with c .clean recursive:2' );
+  a.appStart( '.with c .submodules.download' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   });
 
-  a.appStart( '.with c .submodules.download' )
-  .then( ( op ) =>
+  a.appStart( '.with c .submodules.download' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
@@ -19799,40 +19799,40 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     return null;
   });
 
-  a.appStart( '.with c .clean recursive:2' )
-  a.appStart( '.with c .submodules.download recursive:2' )
-  .then( ( op ) =>
+  a.appStart( '.with c .clean recursive:2' );
+  a.appStart( '.with c .submodules.download recursive:2' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   });
 
-  a.appStart( '.with c .submodules.download recursive:2' )
-  .then( ( op ) =>
+  a.appStart( '.with c .submodules.download recursive:2' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
@@ -19848,7 +19848,6 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
   /* - */
 
   return a.ready;
-
 }
 
 submodulesDownloadDiffDownloadPathsIrregular.rapidity = -1;
@@ -21491,9 +21490,9 @@ function subModulesUpdate( test )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version aed6304a687c22eb25a3af3c194000e7af4ac3f4 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 8e2aa80ca350f3c45215abafa07a4f2cd320342a in' ) );
     test.true( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version a19813c715fa9ef8bb6a7c89adfa170e0e185971 in' ) );
+    test.true( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version c5c27157a6803d97b084002b8853b8fae0f62a08 in' ) );
     test.true( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   });
@@ -21527,7 +21526,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
-    read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
+    read = _.strReplace( read, '#8e2aa80ca350f3c45215abafa07a4f2cd320342a', '!master' )
     a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
   });
@@ -21550,7 +21549,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch, twice';
     var read = a.fileProvider.fileRead( a.abs( 'will.yml' ) );
-    read = _.strReplace( read, '#aed6304a687c22eb25a3af3c194000e7af4ac3f4', '!master' )
+    read = _.strReplace( read, '#8e2aa80ca350f3c45215abafa07a4f2cd320342a', '!master' )
     a.fileProvider.fileWrite( a.abs( 'will.yml' ), read );
     return null;
   });
@@ -31380,9 +31379,9 @@ function commandSubmodulesClean( test )
   {
     test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     return null;
   });
 
@@ -31408,9 +31407,9 @@ function commandSubmodulesClean( test )
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     return null;
   });
 
@@ -46118,7 +46117,6 @@ const Proto =
     commandsSequenceProceduresTermination,
 
     // etcWillFilterFieldsOverwrite,
-    // etcOldImportFileAdapt,
 
   }
 

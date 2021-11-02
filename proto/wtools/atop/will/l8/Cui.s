@@ -4555,7 +4555,7 @@ function commandWillfileFromNpm( e )
       packagePath : e.optionsMap.packagePath,
       willfilePath : e.optionsMap.willfilePath,
       currentContext,
-      modules : it.roots,
+      modules : it.roots || [],
       logger : 3,
     });
   }
@@ -5305,7 +5305,7 @@ function commandWillfileExtendWillfile( e )
     ({
       request : e.subject,
       onSection : _.props.extend.bind( _.props ),
-      modules : it.roots,
+      modules : it.roots || [],
       ... e.optionsMap,
     });
   }
@@ -5443,7 +5443,7 @@ function commandWillfileSupplementWillfile( e )
     ({
       request : e.subject,
       onSection : _.props.supplement.bind( _.props ),
-      modules : it.roots,
+      modules : it.roots || [],
       ... e.optionsMap,
     });
   }

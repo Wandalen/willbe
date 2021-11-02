@@ -54,9 +54,6 @@ step :
     criterion :
       content : 'npm'
 
-  npm.publish :
-    shell : npm publish
-
 build :
 
   proto.export :
@@ -74,15 +71,6 @@ build :
     steps :
       # - build::debug.raw
       - step::doc.export
-
-  npm.export :
-    criterion :
-      content : 'npm'
-      export : 1
-    steps :
-      # - build::debug.raw
-      # - step::npm.export
-      - step::npm.publish
 
   export :
 
