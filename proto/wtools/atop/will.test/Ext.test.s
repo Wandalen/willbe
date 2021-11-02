@@ -31379,9 +31379,9 @@ function commandSubmodulesClean( test )
   {
     test.case = 'build config, clean submodules and run submodules.update with recursive : 2'
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     return null;
   });
 
@@ -31407,9 +31407,9 @@ function commandSubmodulesClean( test )
   {
     test.case = 'commands, clean submodules and run submodules.update with recursive : 2'
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated / ), 1 );
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated / ), 1 );
     let modules = a.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
     return null;
   });
 
