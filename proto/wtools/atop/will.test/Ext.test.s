@@ -473,7 +473,8 @@ function etcKillWillbe( test )
       test.identical( op.exitSignal, 'SIGTERM' );
 
       test.identical( _.strCount( op.output, 'Command ".with ./* .paths.list"' ), 1 );
-      test.ge( _.strCount( op.output, '. Opened .' ), 2 );
+      test.ge( _.strCount( op.output, '. Opened .' ), 1 );
+      test.le( _.strCount( op.output, '. Opened .' ), 7 );
       test.ge( _.strCount( op.output, '. Read 6 willfile(s)' ), 0 );
       if( !process.platform === 'win32' )
       test.ge( _.strCount( op.output, 'SIGTERM' ), 1 );
