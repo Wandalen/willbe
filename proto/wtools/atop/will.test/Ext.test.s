@@ -5666,7 +5666,9 @@ function hookGitMake( test )
   let config = _.censor ? _.censor.configRead() : null;
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return test.true( true );
+
   let user = config.about.user;
+  const repository = `https://github.com/${user}/New2`;
 
   /* - */
 
@@ -5682,12 +5684,7 @@ function hookGitMake( test )
     var exp = [ '.', './will.yml' ];
     var files = a.find( a.abs( 'New2' ) );
     test.identical( files, exp );
-
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
+    return repositoryDelete( false );
   });
 
   a.appStart({ execPath : '.with New2/ .hook.call GitMake v:3' })
@@ -5707,18 +5704,23 @@ function hookGitMake( test )
     return null;
   });
 
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  });
+  a.ready.finally( () => repositoryDelete( true ) );
 
   /* - */
 
   return a.ready;
+
+  /* */
+
+  function repositoryDelete( throwing )
+  {
+   return _.git.repositoryDelete
+    ({
+      remotePath : repository,
+      token : config.about[ 'github.token' ],
+      throwing,
+    });
+  }
 }
 
 hookGitMake.timeOut = 300000;
