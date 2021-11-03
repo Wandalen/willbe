@@ -13556,11 +13556,11 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -13569,10 +13569,10 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 28 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 34 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
@@ -13584,11 +13584,11 @@ function exportDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -19001,11 +19001,11 @@ function submodulesDownloadRecursive( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp )
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp )
 
@@ -19015,7 +19015,7 @@ function submodulesDownloadRecursive( test )
 
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded in' ), 1 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
 
     return null;
   });
@@ -19025,11 +19025,11 @@ function submodulesDownloadRecursive( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp )
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp )
 
@@ -19058,11 +19058,11 @@ function submodulesDownloadRecursive( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp )
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp )
 
@@ -19072,7 +19072,7 @@ function submodulesDownloadRecursive( test )
 
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded in' ), 1 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
 
     return null;
   });
@@ -19082,11 +19082,11 @@ function submodulesDownloadRecursive( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp )
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp )
 
@@ -19280,6 +19280,7 @@ function submodulesDownloadRecursive( test )
 
     return null;
   });
+
   /* - */
 
   return a.ready;
@@ -19680,17 +19681,17 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 5 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( op.output, '+ 5/6 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -19704,11 +19705,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -19750,17 +19751,17 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -19773,11 +19774,11 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
@@ -19805,17 +19806,17 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 18 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 22 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 6 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -19828,11 +19829,11 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.case = 'second';
     test.identical( op.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2', 'wModuleForTesting2' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
