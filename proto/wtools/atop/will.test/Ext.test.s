@@ -5714,7 +5714,7 @@ function hookGitMake( test )
 
   function repositoryDelete( throwing )
   {
-   return _.git.repositoryDelete
+    return _.git.repositoryDelete
     ({
       remotePath : repository,
       token : config.about[ 'github.token' ],
@@ -13115,6 +13115,7 @@ function exportWithRemoteSubmodulesMin( test )
   return a.ready;
 }
 
+exportWithRemoteSubmodulesMin.timeOut = 600000;
 exportWithRemoteSubmodulesMin.description =
 `
 exporting of hierarchy with remote submodules throw no error and produce out files
