@@ -5714,7 +5714,7 @@ function hookGitMake( test )
 
   function repositoryDelete( throwing )
   {
-   return _.git.repositoryDelete
+    return _.git.repositoryDelete
     ({
       remotePath : repository,
       token : config.about[ 'github.token' ],
