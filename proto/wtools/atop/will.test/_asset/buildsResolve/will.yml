@@ -16,9 +16,21 @@ build :
     steps :
       - echo
 
+  build.no.default.criterion :
+    criterion :
+      debug : 1
+    steps :
+      - echo
+
   export :
     criterion :
       default : 1
+      export : 1
+    steps :
+      - echo
+
+  export.no.default.criterion :
+    criterion :
       export : 1
     steps :
       - echo
@@ -30,7 +42,9 @@ build :
     steps :
       - echo
 
-  no.criterions :
+  publish.no.default.criterion :
+    criterion :
+      publish : 1
     steps :
       - echo
 
