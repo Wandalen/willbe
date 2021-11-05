@@ -3265,12 +3265,10 @@ function modulesBuild_body( o )
     o.doneContainer.push( module );
     return module.moduleBuild( o3 );
   }
-
 }
 
 var defaults = modulesBuild_body.defaults =
 {
-
   ... _.props.extend( null, modulesFor.defaults ),
 
   name : null,
@@ -3278,6 +3276,7 @@ var defaults = modulesBuild_body.defaults =
   kind : 'build',
 
   modules : null,
+  implied : null,
   doneContainer : null,
   recursive : 0,
   withStem : 1,
@@ -3286,7 +3285,6 @@ var defaults = modulesBuild_body.defaults =
   upforming : 1,
   downloading : 1,
   purging : 0,
-
 };
 
 delete defaults.onEach;
@@ -5077,11 +5075,12 @@ function _requestParsePathAndSelectors( o )
       if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
       {
         selectorsString = o.request;
+        if( !o.commonPath )
         o.commonPath = './';
       }
       else
       {
-        o.commonPath = isolated[ 0 ];
+        o.commonPath = path.join( o.commonPath, isolated[ 0 ] );
       }
     }
   }

@@ -46,11 +46,13 @@ jobs :
         git config --global core.autocrlf input
         git config --global user.email "testing@testing.com"
         git config --global user.name "Testing"
+        git config --global pull.rebase false
+        git config --global init.defaultBranch master
     - uses : actions/checkout@v2
       with :
         fetch-depth: 2
     - name : ${{ matrix.node-version }}
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         action : actions/setup-node@v1
         with : |
@@ -65,13 +67,13 @@ jobs :
       if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
       run : npm install -g npm@latest-6
     - name : Install willbe
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         command : npm i -g willbe@delta
         attempt_limit : 3
         attempt_delay: 1000
     - name : Install submodules
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         command : will .npm.install
         attempt_limit : 3
@@ -103,11 +105,13 @@ jobs :
         git config --global core.autocrlf input
         git config --global user.email "testing@testing.com"
         git config --global user.name "Testing"
+        git config --global pull.rebase false
+        git config --global init.defaultBranch master
     - uses : actions/checkout@v2
       with :
         fetch-depth: 2
     - name : ${{ matrix.node-version }}
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         action : actions/setup-node@v1
         with : |
@@ -122,13 +126,13 @@ jobs :
       if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
       run : npm install -g npm@latest-6
     - name : Install willbe
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         command : npm i -g willbe@delta
         attempt_limit : 3
         attempt_delay: 1000
     - name : Install submodules
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         command : will .npm.install
         attempt_limit : 3
@@ -159,11 +163,13 @@ jobs :
         git config --global core.autocrlf input
         git config --global user.email "testing@testing.com"
         git config --global user.name "Testing"
+        git config --global pull.rebase false
+        git config --global init.defaultBranch master
     - uses : actions/checkout@v2
       with :
         fetch-depth: 2
     - name : ${{ matrix.node-version }}
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         action : actions/setup-node@v1
         with : |
@@ -178,13 +184,13 @@ jobs :
       if : "startsWith( steps.getnpmver.outputs.npmver, '6.' )"
       run : npm install -g npm@latest-6
     - name : Install willbe
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         command : npm i -g willbe@delta
         attempt_limit : 3
         attempt_delay: 1000
     - name : Install submodules
-      uses : Wandalen/wretry.action@1.0.1
+      uses : Wandalen/wretry.action@v1.0.11
       with :
         command : will .npm.install
         attempt_limit : 3

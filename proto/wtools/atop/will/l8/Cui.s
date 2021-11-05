@@ -498,6 +498,8 @@ function _commandsMake()
 
     'help' :                            { ro : _.routineJoin( cui, cui.commandHelp ) },
     'imply' :                           { ro : _.routineJoin( cui, cui.commandImply ) },
+    'build imply' :                     { ro : _.routineJoin( cui, cui.commandBuildImply ) },
+
     'version' :                         { ro : _.routineJoin( cui, cui.commandVersion ) },
     'version check' :                   { ro : _.routineJoin( cui, cui.commandVersionCheck ) },
     'version bump' :                    { ro : _.routineJoin( cui, cui.commandVersionBump ) },
@@ -513,6 +515,7 @@ function _commandsMake()
     'steps list' :                      { ro : _.routineJoin( cui, cui.commandStepsList ) },
     'builds list' :                     { ro : _.routineJoin( cui, cui.commandBuildsList ) },
     'exports list' :                    { ro : _.routineJoin( cui, cui.commandExportsList ) },
+    'publishes list' :                  { ro : _.routineJoin( cui, cui.commandPublishesList ) },
     'about list' :                      { ro : _.routineJoin( cui, cui.commandAboutList ) },
     'about' :                           { ro : _.routineJoin( cui, cui.commandAboutList ) },
 
@@ -1057,7 +1060,7 @@ function _commandExtendLike( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     it2.openers = will.currentOpeners;
-    it2.roots = will.modulesOnlyRoots( it2.openers );
+    // it2.roots = will.modulesOnlyRoots( it2.openers );
 
     ready2.then( () =>
     {
@@ -1487,6 +1490,8 @@ function _commandModuleOrientedLike( o )
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
     o2.modules = openers;
     o2.recursive = 2;
+    if( will.modulesArray.length === 1 )
+    o2.withDisabledStem = 1;
     return will.modulesFor( o2 );
   })
 
@@ -1599,6 +1604,24 @@ command.properties =
   dirPath : 'Path to local directory. Default is directory of current module.',
   dry : 'Dry run without resetting. Default is dry:0.',
   willFileAdapting : 'Try to adapt will files from old versions of willbe. Default is 0.'
+};
+
+//
+
+function commandBuildImply( e )
+{
+  let cui = this;
+
+  let impliedPrev = cui.buildImplied;
+  _.aux.extend( cui.buildImplied, e.propertiesMap );
+}
+
+var command = commandBuildImply.command = Object.create( null );
+command.hint = 'Imply options that supplements missed build steps options.';
+command.subjectHint = false;
+command.properties =
+{
+  any : 'Any option with value to set for build.',
 };
 
 // function commandImply( e )
@@ -1920,7 +1943,6 @@ function commandBuildsList( e )
     });
     logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
-
 }
 
 var command = commandBuildsList.command = Object.create( null );
@@ -1955,12 +1977,45 @@ function commandExportsList( e )
     });
     logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
-
 }
 
 var command = commandExportsList.command = Object.create( null );
 command.hint = 'List available exports of the current module.';
 command.subjectHint = 'A selector for exports. Could be a glob.';
+
+//
+
+function commandPublishesList( e )
+{
+  let cui = this;
+  cui._command_head( commandPublishesList, arguments );
+
+  return cui._commandListLike
+  ({
+    event : e,
+    name : 'publishes list',
+    onEach : act,
+    commandRoutine : commandPublishesList,
+    resourceKind : null,
+  });
+
+  function act( module )
+  {
+    let logger = cui.transaction.logger;
+    let request = _.will.resolver.Resolver.strRequestParse( e.instructionArgument );
+    let builds = module.openedModule.publishesResolve
+    ({
+      name : request.subject,
+      criterion : request.map,
+      preffering : 'more',
+    });
+    logger.log( module.openedModule.resourcesExportInfo( builds ) );
+  }
+}
+
+var command = commandPublishesList.command = Object.create( null );
+command.hint = 'List available publish builds of the current module.';
+command.subjectHint = 'A selector for publish builds. Could be a glob.';
 
 //
 
@@ -3805,6 +3860,7 @@ function commandBuild( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       kind : 'build',
     });
@@ -3843,6 +3899,7 @@ function commandExport( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       kind : 'export',
     });
@@ -3881,6 +3938,7 @@ function commandExportPurging( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       purging : 1,
       kind : 'export',
@@ -3919,6 +3977,7 @@ function commandExportRecursive( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 2,
       kind : 'export',
     });
@@ -3956,6 +4015,7 @@ function commandPublish( e )
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
+      implied : cui.buildImplied || null,
       recursive : 0,
       kind : 'publish',
     });
@@ -4500,7 +4560,7 @@ function commandWillfileFromNpm( e )
       packagePath : e.optionsMap.packagePath,
       willfilePath : e.optionsMap.willfilePath,
       currentContext,
-      modules : it.roots,
+      modules : it.roots || [],
       logger : 3,
     });
   }
@@ -5250,7 +5310,7 @@ function commandWillfileExtendWillfile( e )
     ({
       request : e.subject,
       onSection : _.props.extend.bind( _.props ),
-      modules : it.roots,
+      modules : it.roots || [],
       ... e.optionsMap,
     });
   }
@@ -5388,7 +5448,7 @@ function commandWillfileSupplementWillfile( e )
     ({
       request : e.subject,
       onSection : _.props.supplement.bind( _.props ),
-      modules : it.roots,
+      modules : it.roots || [],
       ... e.optionsMap,
     });
   }
@@ -6357,6 +6417,7 @@ commandNpmPublish.defaults =
 {
   message : null,
   tag : null,
+  versionDelta : null,
 
   force : 0,
   withDisabledSubmodules : 1,
@@ -6375,6 +6436,7 @@ command.properties =
 {
   message : 'Commit message', /* aaa : for Dmytro : bad : bad name */ /* Dmytro : renamed */
   tag : 'Tag for NPM module',
+  versionDelta : 'Delta for bump. Default is +1 to patch version.',
   force : 'Forces diff.',
   withDisabledSubmodules : 'Generate dependencies from disabled submodules. Default is 1.',
   dry : 'Dry run.',
@@ -7152,6 +7214,7 @@ let Restricts =
 {
   will : null,
   implied : _.define.own( {} ),
+  buildImplied : _.define.own( {} ),
   transactionOld : null
 }
 
@@ -7223,6 +7286,7 @@ let Extension =
 
   commandHelp,
   commandImply,
+  commandBuildImply,
 
   commandVersion,
   commandVersionCheck,
@@ -7235,6 +7299,7 @@ let Extension =
   commandStepsList,
   commandBuildsList,
   commandExportsList,
+  commandPublishesList,
   commandAboutList,
 
   commandModulesList,

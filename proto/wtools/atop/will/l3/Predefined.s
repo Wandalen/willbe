@@ -1016,6 +1016,47 @@ stepRoutineRepoRelease.uniqueOptions =
 
 //
 
+function stepRoutineNpmPublish( frame )
+{
+  const step = this;
+  const run = frame.run;
+  const module = run.module;
+  const opts = _.props.extend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.object.isBasic( opts ) );
+
+  opts.tag = module.resolve( opts.tag );
+
+  if( opts.versionDelta === null )
+  if( 'bump' in step.criterion )
+  opts.versionDelta = step.criterion.bump;
+  else
+  opts.versionDelta = 1;
+
+  if( opts.withDisabledSubmodules === null )
+  opts.withDisabledSubmodules = 1;
+
+  return module.npmModulePublish( opts );
+}
+
+stepRoutineNpmPublish.stepOptions =
+{
+  message : null,
+  tag : null,
+  force : null,
+  withDisabledSubmodules : null,
+  dry : null,
+  versionDelta : null,
+};
+
+stepRoutineNpmPublish.uniqueOptions =
+{
+};
+
+//
+
 function stepRoutineModulesUpdate( frame )
 {
   let step = this;
@@ -1317,12 +1358,12 @@ stepRoutineExport.stepOptions =
 {
   export : null,
   tar : 0,
-}
+};
 
 stepRoutineExport.uniqueOptions =
 {
   export : null,
-}
+};
 
 //
 
@@ -1341,12 +1382,11 @@ function stepRoutineWillbeIsUpToDate( frame )
 stepRoutineWillbeIsUpToDate.stepOptions =
 {
   throwing : 1,
-  // brief : 0
-}
+};
 
 stepRoutineWillbeIsUpToDate.uniqueOptions =
 {
-}
+};
 
 //
 
@@ -1372,12 +1412,11 @@ function stepRoutineWillfileVersionBump( frame )
 stepRoutineWillfileVersionBump.stepOptions =
 {
   versionDelta : null,
-}
+};
 
 stepRoutineWillfileVersionBump.uniqueOptions =
 {
-  versionDelta : null,
-}
+};
 
 // --
 // declare
@@ -1412,6 +1451,7 @@ let Extension =
   stepRoutineGitTag,
 
   stepRoutineRepoRelease,
+  stepRoutineNpmPublish,
 
   stepRoutineModulesUpdate,
 

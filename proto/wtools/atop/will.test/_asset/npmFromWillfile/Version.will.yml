@@ -2,16 +2,22 @@ about:
   version: 0.0.0
 step:
   bump.number:
+    inherit: version.bump
     versionDelta: 1
   bump.string:
+    inherit: version.bump
     versionDelta: 0.1.1
   bump.string.partial:
+    inherit: version.bump
     versionDelta: '1.1'
   bump.patch:
+    inherit: version.bump
     versionDelta: patch
   bump.minor:
+    inherit: version.bump
     versionDelta: minor
   bump.major:
+    inherit: version.bump
     versionDelta: major
   bump.with.criterion:
     inherit: version.bump
@@ -21,8 +27,10 @@ step:
         - minor
         - patch
   bump.throwing.notInt:
+    inherit: version.bump
     versionDelta: 1.1
   bump.throwing.negative:
+    inherit: version.bump
     versionDelta: -1
   echo.version:
     shell: 'echo {about::version}'

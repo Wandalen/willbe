@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: 0f739910a9d1e71bf0381e65e660e861
-    size: 9119
+    hash: a37ecda2bafaba7ef67a70aaee6cf2bf
+    size: 8978
 module:
   willbe.out:
     about:
@@ -1740,6 +1740,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/commandBuildImply
+          - ../proto/wtools/atop/will.test/_asset/commandBuildImply/will.yml
           - ../proto/wtools/atop/will.test/_asset/commandImplyProperties
           - >-
             ../proto/wtools/atop/will.test/_asset/commandImplyProperties/.will.yml
@@ -1890,6 +1892,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmInstall.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmPublish.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmPublish2.js
+          - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/OnPublish.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/prepare.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/ProtoSync.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/publish.js
@@ -2777,6 +2780,12 @@ module:
           - ../proto/wtools/atop/will.test/_asset/openNonWillfile/dir
           - >-
             ../proto/wtools/atop/will.test/_asset/openNonWillfile/dir/.will.state.json
+          - ../proto/wtools/atop/will.test/_asset/openWithDisabled
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithDisabled/Disabled.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/openWithDisabled/Enabled.will.yml
+          - ../proto/wtools/atop/will.test/_asset/openWithDisabled/will.yml
           - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule
           - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/will.yml
           - ../proto/wtools/atop/will.test/_asset/openWithLostSubmodule/proto
@@ -3497,12 +3506,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesShell/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesShell/Named.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdate
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/+.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/.ex.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesUpdate/proto/WithSubmodules.s
+          - ../proto/wtools/atop/will.test/_asset/submodulesUpdate/will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesUpdateSwitchBranch/.will.yml
@@ -4247,9 +4251,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -4597,12 +4598,6 @@ module:
           - 'step::doc.export'
         criterion:
           content: doc
-          export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
           export: 1
       export:
         steps:
@@ -5063,9 +5058,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -5414,12 +5406,6 @@ module:
         criterion:
           content: doc
           export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
-          export: 1
       export:
         steps:
           - 'build::proto.export'
@@ -5477,5 +5463,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 0f739910a9d1e71bf0381e65e660e861
-        size: 9119
+        hash: a37ecda2bafaba7ef67a70aaee6cf2bf
+        size: 8978
