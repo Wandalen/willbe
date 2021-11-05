@@ -2430,20 +2430,20 @@ function modulesFor_body( o )
 
     ready.then( () =>
     {
-      if( !o.onEachVisitedObject && !o.onEachModule )
-      return null;
-      let ready = _.take( null );
-      objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
-      return ready;
-    });
-
-    ready.then( () =>
-    {
       if( !o.onEachJunction )
       return null;
       let ready = _.take( null );
       let junctions = _.longOnce( will.junctionsFrom( objects ) );
       junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
+      return ready;
+    });
+
+    ready.then( () =>
+    {
+      if( !o.onEachVisitedObject && !o.onEachModule )
+      return null;
+      let ready = _.take( null );
+      objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
       return ready;
     });
 
