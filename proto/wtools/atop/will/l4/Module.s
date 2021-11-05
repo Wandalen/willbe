@@ -1285,6 +1285,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'npm.publish',
+    stepRoutine : Predefined.stepRoutineNpmPublish,
+  })
+
+  step
+  ({
     name : 'modules.update',
     stepRoutine : Predefined.stepRoutineModulesUpdate,
   })
@@ -2660,6 +2666,7 @@ function moduleBuild_body( o )
 
   let build = builds[ 0 ];
   will._willfilesReadEnd( module );
+  build.implied = _.aux.supplement( build.implied, o.implied );
 
   let run = new _.will.BuildRun
   ({
@@ -2705,6 +2712,7 @@ moduleBuild_body.defaults =
 {
   name : null,
   criterion : null,
+  implied : null,
   kind : 'export',
   isRoot : null,
   purging : 0,
@@ -5617,6 +5625,12 @@ defaults.kind = 'build';
 let exportsResolve = _.routine.uniteCloning_replaceByUnite( _buildsResolve_head, _buildsResolve_body );
 var defaults = exportsResolve.defaults;
 defaults.kind = 'export';
+
+//
+
+let publishesResolve = _.routine.uniteCloning_replaceByUnite( _buildsResolve_head, _buildsResolve_body );
+var defaults = publishesResolve.defaults;
+defaults.kind = 'publish';
 
 //
 
@@ -9638,14 +9652,26 @@ function willfileVersionBump( o )
 
   function versionBump()
   {
-    for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+    let delta, i;
+    for( i = 0 ; i < deltaArray.length ; i++ )
     {
-      let delta = Number( deltaArray[ i ] );
-      let versionArrayOffset = versionArray.length - 1 - offset;
-      _.assert( _.intIs( delta ), 'Expects integer as delta.' );
-      _.assert( delta >= 0, 'Expects positive delta.' );
-      versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+      delta = Number( deltaArray[ i ] );
+      if( delta > 0 )
+      break;
     }
+
+    if( deltaArray.length !== versionArray.length )
+    {
+      _.assert( deltaArray.length < versionArray.length );
+      i += versionArray.length - deltaArray.length;
+    }
+
+    _.assert( _.number.intIs( delta ), 'Expects integer as delta.' );
+    _.assert( delta >= 0, 'Expects positive delta.' );
+    versionArray[ i ] = Number( versionArray[ i ] ) + delta;
+
+    for( let j = i + 1 ; j < versionArray.length ; j++ )
+    versionArray[ j ] = 0;
   }
 }
 
@@ -9703,7 +9729,7 @@ function npmModulePublish( o )
   let version;
   ready.then( () =>
   {
-    version = module.willfileVersionBump( Object.create( null ) );
+    version = module.willfileVersionBump({ versionDelta : o.versionDelta });
     return null;
   });
 
@@ -9717,8 +9743,8 @@ function npmModulePublish( o )
   ready.then( () => _.npm.fileFormat({ configPath : packagePath }) );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
-  ready.then( () => module.gitTag({ name : `v${ version }` }) );
-  ready.then( () => module.gitTag({ name : o.tag }) );
+  ready.then( () => module.gitTag({ tag : `v${ version }` }) );
+  ready.then( () => module.gitTag({ tag : o.tag }) );
   ready.then( () => module.gitPush({ withTags : 1, force : 1 }) );
 
   ready.then( () => npmPublish() );
@@ -9842,6 +9868,7 @@ function npmModulePublish( o )
       dep.version = about.version;
     }
   }
+
 }
 
 npmModulePublish.defaults =
@@ -9852,6 +9879,7 @@ npmModulePublish.defaults =
   withDisabledSubmodules : 1,
   dry : 0,
   verbosity : 1,
+  versionDelta : 1,
 };
 
 //
@@ -9902,7 +9930,7 @@ function ResourceSetter_functor( op )
       if( resource.module !== null )
       resource = resource.clone();
       _.assert( resource.formed === 0 );
-      resource.module = module;
+      resource.module = module; /* qqq : for Dmytro : investigate why resource.longPath is changed */
       resource.form1();
       _.assert( !_.workpiece.isFinited( resource ) );
     }
@@ -11373,6 +11401,7 @@ let Extension =
   _buildsResolve,
   buildsResolve,
   exportsResolve,
+  publishesResolve,
   willfilesResolve,
 
   // path

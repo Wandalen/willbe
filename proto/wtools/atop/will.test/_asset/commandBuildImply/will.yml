@@ -1,0 +1,12 @@
+
+about :
+  name : build-imply
+  version : 0.0.0
+
+build :
+  default :
+    criterion :
+      default : 1
+    steps :
+      - version.bump
+      - shell.run

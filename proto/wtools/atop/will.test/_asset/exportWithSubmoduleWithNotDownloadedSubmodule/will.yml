@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git
+  ModuleForTesting12 : git+hd://../-repo/ModuleForTesting12/!gamma
 
 path :
 
