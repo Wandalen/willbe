@@ -18459,6 +18459,209 @@ function functionThisCriterion( test )
 
 //
 
+function submodulesDownload( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'download' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download single git submodule';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with SingleGit .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::SingleGit were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1' ] );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download single npm submodule';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with SingleNpm .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::SingleNpm were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml' ] );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download single git hd submodule';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with SingleHd .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::SingleHd were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1' ] );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download single git submodule with irregular path';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with SingleGitIrregular .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::SingleGitIrregular were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1' ] );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download single git hd submodule with irregular path';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with SingleHdIrregular .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::SingleHdIrregular were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1' ] );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download multiple git submodules';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with MultipleGit .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::MultipleGit were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting2' ] );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download multiple npm submodules';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with MultipleNpm .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::MultipleNpm were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2', 'ModuleForTesting2.will.yml' ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download multiple git hd submodules';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with MultipleHd .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::MultipleHd were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting2' ] );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'download mixex types of submodules';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with Mixed .submodules.download' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1a was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1b was downloaded version' ), 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2a was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2b was downloaded version' ), 0 );
+    test.identical( _.strCount( op.output, '+ 6/6 submodule(s) of module::Mixed were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    var exp =
+    [
+      'ModuleForTesting1',
+      'ModuleForTesting1a',
+      'ModuleForTesting1b',
+      'ModuleForTesting1b.will.yml',
+      'ModuleForTesting2',
+      'ModuleForTesting2a',
+      'ModuleForTesting2b',
+      'ModuleForTesting2b.will.yml',
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function submodulesDownloadSingle( test )
 {
   let context = this;
@@ -45923,6 +46126,7 @@ const Proto =
 
     // submodules
 
+    submodulesDownload,
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
