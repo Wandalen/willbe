@@ -18750,6 +18750,98 @@ function submodulesDownloadRecursiveGit( test )
 
 //
 
+function submodulesDownloadRecursiveNpm( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'downloadRecursiveNpm' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'recursive - 0';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with a .submodules.download recursive:0' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1 was downloaded version' ), 0 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting2 was downloaded version' ), 0 );
+    test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::a were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, null );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/.module' ) );
+    test.identical( files, null );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/sub2/.module' ) );
+    test.identical( files, null );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'recursive - 1';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with a .submodules.download recursive:1' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::a were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2', 'ModuleForTesting2.will.yml' ];
+    test.identical( files, exp );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/.module' ) );
+    test.identical( files, null );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/sub2/.module' ) );
+    test.identical( files, null );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'recursive - 2';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart({ execPath : '.with a .submodules.download recursive:2' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1a was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting2a was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting1b was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::ModuleForTesting2b was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 6/9 submodule(s) of module::a were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2', 'ModuleForTesting2.will.yml' ];
+    test.identical( files, exp );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/.module' ) );
+    var exp = [ 'ModuleForTesting1a', 'ModuleForTesting1a.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
+    test.identical( files, exp );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/sub2/.module' ) );
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting1b.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function submodulesDownloadSingle( test )
 {
   let context = this;
@@ -46216,6 +46308,7 @@ const Proto =
 
     submodulesDownload,
     submodulesDownloadRecursiveGit,
+    submodulesDownloadRecursiveNpm,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
