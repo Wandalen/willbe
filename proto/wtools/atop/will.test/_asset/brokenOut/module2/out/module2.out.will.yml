@@ -2,10 +2,7 @@ format: outwillfile-2.0
 root:
   - module2.out
 consistency:
-  module2.out.will.yml: &ref_0
-    hash: d8a460ee4cb99a3465c068681b91c538
-    size: 3902
-  ../will.yml: &ref_1
+  ../will.yml: &ref_0
     hash: 311d88b3b26db41dc59732fdb865d6f3
     size: 416
 module:
@@ -64,7 +61,6 @@ module:
         path:
           - ..
           - ../will.yml
-          - .
     submodule: {}
     reflector:
       exported.export:
@@ -73,6 +69,8 @@ module:
             '*': ''
           prefixPath: ..
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -85,7 +83,6 @@ module:
           prefixPath: 'path::exported.dir.export'
           recursive: 0
         recursive: 0
-        mandatory: 1
         criterion:
           generated: 1
           default: 1
@@ -99,24 +96,6 @@ module:
           content: proto
         inherit:
           - module.export
-      exported.export:
-        opts:
-          reflector: 'reflector::exported.export*'
-        criterion:
-          generated: 1
-          default: 1
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.export:
-        opts:
-          reflector: 'reflector::exported.files.export*'
-        criterion:
-          generated: 1
-          default: 1
-          export: 1
-        inherit:
-          - files.reflect
     build:
       export:
         steps:
@@ -138,8 +117,7 @@ module:
           default: 1
           export: 1
     consistency:
-      module2.out.will.yml: *ref_0
-      ../will.yml: *ref_1
+      ../will.yml: *ref_0
   ../:
     about:
       name: module2
@@ -203,6 +181,3 @@ module:
       ../will.yml:
         hash: 311d88b3b26db41dc59732fdb865d6f3
         size: 416
-      module2.out.will.yml:
-        hash: d8a460ee4cb99a3465c068681b91c538
-        size: 3902

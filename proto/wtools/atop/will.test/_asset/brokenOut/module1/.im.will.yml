@@ -3,24 +3,19 @@ submodule :
 
   module1 :
     path : hd://.
-    enabled : 0 # submodule
+    enabled : 0
     criterion :
       development : 1
   wModuleForTesting1 :
     path : npm:///wModuleForTesting1
-    enabled : 0 # submodule
+    enabled : 0
     criterion :
       development : 1
   ModuleForTesting1b :
     path : npm:///wmodulefortesting1b
-    enabled : 0 # submodule
+    enabled : 0
     criterion :
       development : 1
-  # wTesting :
-  #   path : npm:///wTesting
-  #   enabled : 0 # submodule
-  #   criterion :
-  #     development : 1
 
 path :
 

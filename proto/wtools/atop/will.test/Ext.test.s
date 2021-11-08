@@ -13752,7 +13752,7 @@ exportHierarchyRemote.description =
 - "with module .export.recursive" should export the same number of modules as "with ** .export.recursive"
 - each format of recursive export command should export each instance of each module exactly one time
 - each instance of a module is exported once even if module has several instances in different location
-`
+`;
 
 //
 
@@ -13795,7 +13795,7 @@ function exportWithDisabled( test )
 
     test.identical( _.strCount( op.output, 'Exported' ), 2 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strHas( op.output, '! Outdated' ), true );
+    test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
   });
@@ -13874,9 +13874,9 @@ function exportWithDisabled( test )
     test.identical( _.strHas( op.output, '! Outdated' ), false );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
