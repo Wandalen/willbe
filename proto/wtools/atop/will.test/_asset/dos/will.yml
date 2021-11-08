@@ -6,13 +6,12 @@ about :
 submodule :
 
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!master
-  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/!master
-  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/!master
+  # ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!master
+  # ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/!master
   # ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/!master
-  # ModuleForTesting2b : git+https:///github.com/Wandalen/wModuleForTesting2b.git/!master
-  # ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/!master
-  # ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/!master
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!master
+  ModuleForTesting2a : git+hd://../-repo/ModuleForTesting2a/!master
+  ModuleForTesting12 : git+hd://../-repo/ModuleForTesting12/!master
 
 path :
 

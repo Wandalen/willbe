@@ -5446,7 +5446,6 @@ function reflectorOptionStepThrowing( test )
   /* - */
 
   a.appStartNonThrowing({ execPath : '.build' })
-
   .then( ( op ) =>
   {
     test.case = 'try to create reflector with name of existing step using option step, should throw error';
@@ -5454,7 +5453,7 @@ function reflectorOptionStepThrowing( test )
     test.true( !_.strHas( op.output, 'step::reflector.delete deleted 0 file' ) );
 
     return null;
-  })
+  });
 
   /* - */
 
