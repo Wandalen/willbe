@@ -11982,13 +11982,12 @@ function exportCourruptedSubmodulesDisabled( test )
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function exportCourruptedSubmodulesDisabled */
+}
 
 //
 
@@ -12002,7 +12001,7 @@ function exportDisabledModule( test )
   a.ready.then( () =>
   {
     test.case = '.export';
-    a.reflectMinimal();
+    a.reflect();
     return null;
   });
 
@@ -12038,7 +12037,7 @@ function exportDisabledModule( test )
   a.ready.then( () =>
   {
     test.case = '.with . .export';
-    a.reflectMinimal();
+    a.reflect();
     return null;
   });
 
@@ -12074,7 +12073,7 @@ function exportDisabledModule( test )
   a.ready.then( () =>
   {
     test.case = '.with * .export';
-    a.reflectMinimal();
+    a.reflect();
     return null;
   });
 
@@ -12097,7 +12096,7 @@ function exportDisabledModule( test )
   a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1; .with * .export';
-    a.reflectMinimal();
+    a.reflect();
     return null;
   });
 
@@ -12139,7 +12138,7 @@ exportDisabledModule.description =
 `
 - disabled module should be exported if picked explicitly
 - disabled module should not be exported if picked with glob
-`
+`;
 
 //
 
