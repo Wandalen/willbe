@@ -425,11 +425,11 @@ function etcRunWillbe( test )
       test.true( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
       test.true( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
       return null;
-    })
+    });
 
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
@@ -16337,7 +16337,7 @@ function cleanWithInPath( test )
   a.ready.then( ( op ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
-    a.reflect();
+    a.reflectMinimal();
     hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
