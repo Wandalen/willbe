@@ -15209,7 +15209,7 @@ Modules structure:
     - module1
     - module2
       - module1
-`
+`;
 
 // --
 // clean
@@ -16116,8 +16116,7 @@ function cleanHdBug( test )
   /* - */
 
   return a.ready;
-
-} /* end of function cleanHdBug */
+}
 
 //
 
@@ -16137,7 +16136,7 @@ function cleanNoBuild( test )
     test.true( _.strHas( op.output, 'Clean deleted ' + 0 + ' file(s)' ) );
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
     return null;
-  })
+  });
 
   a.appStartNonThrowing({ execPath : '.with NoBuild .clean' })
   .then( ( op ) =>
@@ -16170,12 +16169,12 @@ function cleanDry( test )
 {
   let context = this;
   let a = context.assetFor( test, 'clean' );
-  a.reflectMinimal();
+  a.reflect();
 
   /* - */
 
-  a.appStart({ args : [ '.with NoTemp .submodules.update' ] })
-  .then( ( op ) =>
+  a.appStart({ args : [ '.with NoTemp .submodules.update' ] });
+  a.ready.then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     var files = a.find( a.abs( '.module' ) );
@@ -16183,8 +16182,8 @@ function cleanDry( test )
     return null;
   });
 
-  a.appStart({ args : [ '.with NoTemp .build' ] })
-  .then( ( op ) =>
+  a.appStart({ args : [ '.with NoTemp .build' ] });
+  a.ready.then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
     return op;
@@ -16210,7 +16209,7 @@ function cleanDry( test )
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -16227,7 +16226,7 @@ function cleanSubmodules( test )
   let a = context.assetFor( test, 'clean' );
   a.reflect();
 
-  /* */
+  /* - */
 
   a.appStart({ execPath : '.with NoTemp .submodules.update' })
   .then( ( op ) =>
@@ -16245,19 +16244,16 @@ function cleanSubmodules( test )
     test.true( files.length >= 1 );
 
     return null;
-  })
+  });
 
   /* */
 
   var files;
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     files = a.findAll( a.abs( '.module' ) );
     return null;
-  })
-
-  /* */
+  });
 
   a.appStart({ execPath : '.with NoTemp .clean.submodules' })
   .then( ( op ) =>
@@ -16268,7 +16264,7 @@ function cleanSubmodules( test )
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
