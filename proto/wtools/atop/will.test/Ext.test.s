@@ -18842,6 +18842,94 @@ function submodulesDownloadRecursiveNpm( test )
 
 //
 
+function submodulesDownloadRecursiveHd( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'downloadRecursiveHd' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'recursive - 0';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with a .submodules.download recursive:0' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2 was downloaded version' ), 0 );
+    test.identical( _.strCount( op.output, '+ 0/0 submodule(s) of module::a were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, null );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/.module' ) );
+    test.identical( files, null );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/sub2/.module' ) );
+    test.identical( files, null );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'recursive - 1';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with a .submodules.download recursive:1' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::a were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting2' ] );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/.module' ) );
+    test.identical( files, null );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/sub2/.module' ) );
+    test.identical( files, null );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'recursive - 2';
+    a.reflect();
+    return null;
+  });
+  a.appStart({ execPath : '.with a .submodules.download recursive:2' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2 was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1a was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2a was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting1b was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ module::wModuleForTesting2b was downloaded version' ), 1 );
+    test.identical( _.strCount( op.output, '+ 6/9 submodule(s) of module::a were downloaded' ), 1 );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting2' ] );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/.module' ) );
+    test.identical( files, [ 'ModuleForTesting1a', 'ModuleForTesting2a' ] );
+    var files = a.fileProvider.dirRead( a.abs( 'sub1/sub2/.module' ) );
+    test.identical( files, [ 'ModuleForTesting1b', 'ModuleForTesting2b' ] );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function submodulesDownloadSingle( test )
 {
   let context = this;
@@ -46309,6 +46397,7 @@ const Proto =
     submodulesDownload,
     submodulesDownloadRecursiveGit,
     submodulesDownloadRecursiveNpm,
+    submodulesDownloadRecursiveHd,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
