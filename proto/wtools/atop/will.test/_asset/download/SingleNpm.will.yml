@@ -1,0 +1,5 @@
+
+submodule  :
+
+  ModuleForTesting1 : npm:///wmodulefortesting1!gamma
+

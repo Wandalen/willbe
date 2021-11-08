@@ -1,0 +1,11 @@
+
+submodule  :
+
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out.will.yml!gamma
+  ModuleForTesting1b : npm:///wmodulefortesting1b!gamma
+
+  ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2/!gamma
+  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git!gamma
+  ModuleForTesting2b : npm:///wmodulefortesting2b!gamma
+
