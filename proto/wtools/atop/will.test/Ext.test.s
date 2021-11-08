@@ -9760,20 +9760,20 @@ function exportItself( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportItself' );
-  a.reflect();
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export';
+    a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with v1 .clean' )
-  a.appStart( '.with v1 .submodules.download' )
+  a.appStart( '.with v1 .clean' );
+  a.appStart( '.with v1 .submodules.download' );
+
   a.appStart( '.with v1 .export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -9785,9 +9785,9 @@ function exportItself( test )
     test.true( _.strHas( op.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
 
     return null;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
