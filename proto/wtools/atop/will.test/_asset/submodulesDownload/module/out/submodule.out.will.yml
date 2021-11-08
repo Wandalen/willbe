@@ -3,20 +3,20 @@ root:
   - submodule.out
 consistency:
   ../submodule.will.yml: &ref_0
-    hash: b8749bf2c749e5236b569d6cabd8f2c7
-    size: 441
+    hash: fae8e2de8cd5efc2b82094d57f77909b
+    size: 443
   ../.module/ModuleForTesting1/will.yml: &ref_1
-    hash: f6b3daab534c3194294933ab43158dae
-    size: 6212
+    hash: 25a91132c8a3a35f55c8a3a17f25cfdd
+    size: 6105
   ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: &ref_2
-    hash: b20584ca7ab87c9532c0e422e5caf31a
-    size: 37089
+    hash: 2ebfa4e144453338b6b720777c119cd5
+    size: 36791
   ../.module/ModuleForTesting2a/will.yml: &ref_3
-    hash: a6e8cbf46492967ce460a9576af6060f
-    size: 6359
+    hash: 159a696be21b5d05ba1d799601ead3d7
+    size: 6251
   ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: &ref_4
-    hash: a2c6afb6f6f5dd1c53bdf16ecad167c6
-    size: 37585
+    hash: 29f01d5eb9e8d1a5a5802100bca462ea
+    size: 37251
 module:
   submodule.out:
     about:
@@ -66,6 +66,52 @@ module:
         path:
           - ..
           - ../submodule.will.yml
+          - ../.git
+          - ../.git/COMMIT_EDITMSG
+          - ../.git/config
+          - ../.git/description
+          - ../.git/HEAD
+          - ../.git/index
+          - ../.git/branches
+          - ../.git/hooks
+          - ../.git/hooks/applypatch-msg.sample
+          - ../.git/hooks/commit-msg.sample
+          - ../.git/hooks/fsmonitor-watchman.sample
+          - ../.git/hooks/post-update.sample
+          - ../.git/hooks/pre-applypatch.sample
+          - ../.git/hooks/pre-commit.sample
+          - ../.git/hooks/pre-merge-commit.sample
+          - ../.git/hooks/pre-push.sample
+          - ../.git/hooks/pre-rebase.sample
+          - ../.git/hooks/pre-receive.sample
+          - ../.git/hooks/prepare-commit-msg.sample
+          - ../.git/hooks/update.sample
+          - ../.git/info
+          - ../.git/info/exclude
+          - ../.git/logs
+          - ../.git/logs/HEAD
+          - ../.git/logs/refs
+          - ../.git/logs/refs/heads
+          - ../.git/logs/refs/heads/master
+          - ../.git/objects
+          - ../.git/objects/05
+          - ../.git/objects/05/f4b5e195fb232978757f19f81ac99bac5caf81
+          - ../.git/objects/6e
+          - ../.git/objects/6e/9480e323eb56def93bef353804d3a194fe450a
+          - ../.git/objects/93
+          - ../.git/objects/93/897c67097552d6121126cfdc75ff0a16badbfb
+          - ../.git/objects/c0
+          - ../.git/objects/c0/ac85162193e31a02dd430b36a4cad4eb5d0d47
+          - ../.git/objects/f8
+          - ../.git/objects/f8/cb20801f8e4aa9007603d7767546ed94a9a9a2
+          - ../.git/objects/fd
+          - ../.git/objects/fd/81461de2ade341afe17e4895011501762c03ba
+          - ../.git/objects/info
+          - ../.git/objects/pack
+          - ../.git/refs
+          - ../.git/refs/heads
+          - ../.git/refs/heads/master
+          - ../.git/refs/tags
           - ../.module
           - ../.module/ModuleForTesting1
           - ../.module/ModuleForTesting1/.eslintrc.yml
@@ -112,9 +158,9 @@ module:
           - ../.module/ModuleForTesting1/.git/objects/info
           - ../.module/ModuleForTesting1/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-dc0625f133199444e25adc86fafb4618b8092233.idx
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-e0d523ab395756dd28dbc0d53fa912e091a5e90f.idx
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-dc0625f133199444e25adc86fafb4618b8092233.pack
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-e0d523ab395756dd28dbc0d53fa912e091a5e90f.pack
           - ../.module/ModuleForTesting1/.git/refs
           - ../.module/ModuleForTesting1/.git/refs/heads
           - ../.module/ModuleForTesting1/.git/refs/heads/master
@@ -190,9 +236,9 @@ module:
           - ../.module/ModuleForTesting2a/.git/objects/info
           - ../.module/ModuleForTesting2a/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-3c1ddcfa06d6935670f92dc1761fe26978eecbcd.idx
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-9f55d1a1ea028c0b34b47a1c460c4a807a6a7f9b.idx
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-3c1ddcfa06d6935670f92dc1761fe26978eecbcd.pack
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-9f55d1a1ea028c0b34b47a1c460c4a807a6a7f9b.pack
           - ../.module/ModuleForTesting2a/.git/refs
           - ../.module/ModuleForTesting2a/.git/refs/heads
           - ../.module/ModuleForTesting2a/.git/refs/heads/master
@@ -216,7 +262,6 @@ module:
           - ../.module/ModuleForTesting2a/proto/node_modules/wmodulefortesting2a
           - ../.module/ModuleForTesting2a/proto/wtools
           - ../.module/ModuleForTesting2a/proto/wtools/testing
-          - ../.module/ModuleForTesting2a/proto/wtools/testing/Basic.s
           - ../.module/ModuleForTesting2a/proto/wtools/testing/Common.s
           - ../.module/ModuleForTesting2a/proto/wtools/testing/l3
           - ../.module/ModuleForTesting2a/proto/wtools/testing/l3/testing2a
@@ -348,8 +393,8 @@ module:
           export: 1
     consistency:
       ../submodule.will.yml:
-        hash: b8749bf2c749e5236b569d6cabd8f2c7
-        size: 441
+        hash: fae8e2de8cd5efc2b82094d57f77909b
+        size: 443
   ../.module/ModuleForTesting1/:
     about:
       name: wModuleForTesting1
@@ -361,12 +406,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting1
-      author: Kostiantyn Wandalen <wandalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wandalen@01.school>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -448,7 +493,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/wtools/testing/l1/Include.s
+        path: proto/wtools/testing/l1/ModuleForTesting1.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -458,13 +503,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l1/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l1/ModuleForTesting1.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l1/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l1/ModuleForTesting1.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -479,7 +524,7 @@ module:
         path: '{path::out.*=}/source/Index.s'
       npm.proto.entry:
         path:
-          - proto/wtools/testing/l1/Include.s
+          - proto/wtools/testing/l1/ModuleForTesting1.s
           - proto/node_modules/wmodulefortesting1
     submodule: {}
     reflector:
@@ -612,9 +657,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -951,12 +993,6 @@ module:
         criterion:
           content: doc
           export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
-          export: 1
       export:
         steps:
           - 'build::proto.export'
@@ -1026,12 +1062,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting1
-      author: Kostiantyn Wandalen <wandalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wandalen@01.school>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -1113,7 +1149,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/wtools/testing/l1/Include.s
+        path: ../proto/wtools/testing/l1/ModuleForTesting1.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -1123,13 +1159,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l1/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l1/ModuleForTesting1.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l1/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l1/ModuleForTesting1.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -1144,7 +1180,7 @@ module:
         path: '{path::out.*=}/source/Index.s'
       npm.proto.entry:
         path:
-          - ../proto/wtools/testing/l1/Include.s
+          - ../proto/wtools/testing/l1/ModuleForTesting1.s
           - ../proto/node_modules/wmodulefortesting1
       exported.dir.proto.export:
         criterion:
@@ -1348,9 +1384,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -1705,12 +1738,6 @@ module:
         criterion:
           content: doc
           export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
-          export: 1
       export:
         steps:
           - 'build::proto.export'
@@ -1781,11 +1808,11 @@ module:
           export: 1
     consistency:
       ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml:
-        hash: b20584ca7ab87c9532c0e422e5caf31a
-        size: 37089
+        hash: 2ebfa4e144453338b6b720777c119cd5
+        size: 36791
       ../.module/ModuleForTesting1/will.yml:
-        hash: f6b3daab534c3194294933ab43158dae
-        size: 6212
+        hash: 25a91132c8a3a35f55c8a3a17f25cfdd
+        size: 6105
   ../.module/ModuleForTesting2a/:
     about:
       name: wModuleForTesting2a
@@ -1797,12 +1824,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting2a
-      author: Kostiantyn Wandalen <wandalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wandalen@01.school>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -1884,7 +1911,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/wtools/testing/l3/testing2a/Include.s
+        path: proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -1894,13 +1921,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -1915,11 +1942,11 @@ module:
         path: '{path::out.*=}/source/Index.s'
       npm.proto.entry:
         path:
-          - proto/wtools/testing/l3/testing2a/Include.s
+          - proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s
           - proto/node_modules/wmodulefortesting2a
     submodule:
       wModuleForTesting2:
-        path: 'git+https://github.com/Wandalen/wModuleForTesting2.git/!alpha'
+        path: 'git+https://github.com/Wandalen/wModuleForTesting2.git/!gamma'
         autoExporting: 0
         enabled: 0
     reflector:
@@ -2052,9 +2079,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -2391,12 +2415,6 @@ module:
         criterion:
           content: doc
           export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
-          export: 1
       export:
         steps:
           - 'build::proto.export'
@@ -2466,12 +2484,12 @@ module:
       version: 0.0.1
       license: MIT
       npm.name: wmodulefortesting2a
-      author: Kostiantyn Wandalen <wandalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       keywords:
         - willbe
         - test
       contributors:
-        - Kostiantyn Wandalen <wandalen@01.school>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       interpreters:
         - njs >= 10.0.0
@@ -2553,7 +2571,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/wtools/testing/l3/testing2a/Include.s
+        path: ../proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -2563,13 +2581,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/Include.s'
+        path: '{path::out.*=1}/proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -2584,7 +2602,7 @@ module:
         path: '{path::out.*=}/source/Index.s'
       npm.proto.entry:
         path:
-          - ../proto/wtools/testing/l3/testing2a/Include.s
+          - ../proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s
           - ../proto/node_modules/wmodulefortesting2a
       exported.dir.proto.export:
         criterion:
@@ -2603,14 +2621,13 @@ module:
           - ../proto/node_modules/wmodulefortesting2a
           - ../proto/wtools
           - ../proto/wtools/testing
-          - ../proto/wtools/testing/Basic.s
           - ../proto/wtools/testing/Common.s
           - ../proto/wtools/testing/l3
           - ../proto/wtools/testing/l3/testing2a
           - ../proto/wtools/testing/l3/testing2a/ModuleForTesting2a.s
     submodule:
       wModuleForTesting2:
-        path: 'git+https://../github.com/Wandalen/wModuleForTesting2.git!alpha'
+        path: 'git+https://../github.com/Wandalen/wModuleForTesting2.git!gamma'
         autoExporting: 0
         enabled: 0
     reflector:
@@ -2794,9 +2811,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -3151,12 +3165,6 @@ module:
         criterion:
           content: doc
           export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
-          export: 1
       export:
         steps:
           - 'build::proto.export'
@@ -3227,8 +3235,8 @@ module:
           export: 1
     consistency:
       ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml:
-        hash: a2c6afb6f6f5dd1c53bdf16ecad167c6
-        size: 37585
+        hash: 29f01d5eb9e8d1a5a5802100bca462ea
+        size: 37251
       ../.module/ModuleForTesting2a/will.yml:
-        hash: a6e8cbf46492967ce460a9576af6060f
-        size: 6359
+        hash: 159a696be21b5d05ba1d799601ead3d7
+        size: 6251
