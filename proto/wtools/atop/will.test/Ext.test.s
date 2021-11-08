@@ -14946,19 +14946,17 @@ function importLocalRepo( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.with module/ModuleForTesting12 .export';
     a.reflect();
-
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' })
-  a.appStart({ execPath : '.with module/ModuleForTesting12 .export' })
+  a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' });
+  a.appStart({ execPath : '.with module/ModuleForTesting12 .export' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
 
     var files = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -15039,10 +15037,6 @@ function importLocalRepo( test )
       {
         'path' : `.`
       },
-      // 'remote' :
-      // {
-      //   'criterion' : { 'predefined' : 1 }
-      // },
       'download' : { 'path' : `ModuleForTesting12` },
       'export' : { 'path' : `{path::download}/proto/**` },
       'temp' : { 'path' : `../out` },
@@ -15085,10 +15079,9 @@ function importLocalRepo( test )
       }
     }
     test.identical( outfile.path, expectedPath );
-    // logger.log( _.entity.exportJs( outfile.path ) );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -15713,7 +15706,7 @@ function cleanItself( test )
 
   function begin( name )
   {
-    a.ready.then( () => { a.reflectMinimal(); return null } );
+    a.ready.then( () => { a.reflect(); return null } );
     a.appStart( `.with ${ name } .export` );
     return a.ready;
   }
