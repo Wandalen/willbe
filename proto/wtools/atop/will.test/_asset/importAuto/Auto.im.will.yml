@@ -1,9 +1,9 @@
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma
   ModuleForTesting12 :
-    path : git+https:///github.com/Wandalen/wModuleForTesting12.git/proto
+    path : git+hd://../-repo/ModuleForTesting12/proto
     autoExporting : 1
 
 path :

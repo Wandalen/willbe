@@ -6,10 +6,8 @@ about :
 path :
 
   in : ..
-  out : .module
+  out : out
   remote : 'git+hd://../-repo/ModuleForTesting12'
-  # remote : 'git+https:///github.com/Wandalen/wModuleForTesting12.git'
-  # git:///git@bitbucket.org:group/repo.git/out/Repo!master
   download : '.module/ModuleForTesting12'
   export : '{path::download}/proto/**'
   temp : out
