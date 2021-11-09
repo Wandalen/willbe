@@ -16055,17 +16055,14 @@ function cleanHdBug( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with z .clean recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with z .clean recursive:2' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16105,7 +16102,7 @@ function cleanHdBug( test )
     test.identical( _.strCount( op.output, 'Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
@@ -20559,18 +20556,18 @@ function submodulesDownloadHierarchyDuplicate( test )
   });
 
   a.appStart( '.with z .clean recursive:2' );
-  a.appStart( '.with z .submodules.download' );
 
+  a.appStart( '.with z .submodules.download' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
@@ -20590,11 +20587,11 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -20624,11 +20621,11 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 1 );
@@ -20648,11 +20645,11 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -20663,7 +20660,7 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -20672,7 +20669,7 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.case = '.with ** .submodules.download recursive:2';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart( '.with z .clean recursive:2' )
   a.appStart( '.with ** .submodules.download recursive:2' )
@@ -20729,7 +20726,6 @@ function submodulesDownloadHierarchyDuplicate( test )
   /* - */
 
   return a.ready;
-
 }
 
 submodulesDownloadHierarchyDuplicate.rapidity = -1;
