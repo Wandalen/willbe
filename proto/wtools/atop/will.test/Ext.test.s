@@ -7301,7 +7301,7 @@ function hookGitTag( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -26595,8 +26595,7 @@ ${ mergeEnd }
 
   function begin()
   {
-    a.ready.then( () => a.reflectMinimal() );
-    // a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflect() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
@@ -27531,7 +27530,7 @@ function stepGitStatus( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -27755,14 +27754,11 @@ function stepGitSync( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-
-  /* */
-
   let config = { path : { hlink : a.abs( '..' ) } };
   let profile = 'test-profile';
   _.censor.configSet({ profileDir : profile, set : config });
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -28437,7 +28433,7 @@ function commandImplyWithDot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -28489,7 +28485,7 @@ function commandImplyWithAsterisk( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -31849,8 +31845,6 @@ function commandSubmodulesGit( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -31861,7 +31855,7 @@ function commandSubmodulesGit( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -32582,7 +32576,7 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -33130,8 +33124,6 @@ function commandSubmodulesGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -33142,7 +33134,7 @@ function commandSubmodulesGitSync( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -33616,8 +33608,6 @@ function commandModulesGit( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -33628,7 +33618,7 @@ function commandModulesGit( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -34386,7 +34376,7 @@ function commandModulesGitStatusWithOnlyRoot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -35136,8 +35126,6 @@ function commandModulesGitSync( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -35148,14 +35136,14 @@ function commandModulesGitSync( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
     test.case = '.with original .modules .git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
   a.appStart( `.with original/ .modules .git.sync profile:${ profile }` )
   .then( ( op ) =>
@@ -35167,8 +35155,8 @@ function commandModulesGitSync( test )
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
   .then( ( op ) =>
   {
@@ -35932,8 +35920,6 @@ function commandModules( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -35944,17 +35930,17 @@ function commandModules( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
     test.case = '.with original .modules .git.sync - committing and pushing, without remote submodule';
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
-  })
+  });
 
-  a.appStart( `.with original/ .modules .git.sync profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStart( `.with original/ .modules .git.sync profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -35963,10 +35949,10 @@ function commandModules( test )
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     return null;
-  })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
-  .then( ( op ) =>
+  });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /\s\./ ), 1 );
@@ -36094,8 +36080,6 @@ function commandSubmodules( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -36106,7 +36090,7 @@ function commandSubmodules( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -36324,7 +36308,7 @@ function commandGitCheckHardLinkRestoringThrowing( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-  a.reflectMinimal();
+  a.reflect();
 
   let config = _.censor.configRead();
   if( !config || !config.about || config.about.user !== 'wtools-bot' )
@@ -36747,8 +36731,6 @@ function commandGitDifferentCommands( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -36759,7 +36741,7 @@ function commandGitDifferentCommands( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( ( op ) =>
   {
@@ -36889,7 +36871,7 @@ function commandGitDiff( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -37020,8 +37002,6 @@ function commandGitPull( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
-
   let config, profile, profileDir;
   if( _.censor )
   {
@@ -37032,7 +37012,7 @@ function commandGitPull( test )
     a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
   }
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -37290,8 +37270,6 @@ function commandGitPullRestoreHardlinkOnFail( test )
 {
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
-
-  /* */
 
   let config, profile, profileDir;
   if( _.censor )
@@ -38002,7 +37980,7 @@ function commandGitStatus( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -38249,7 +38227,7 @@ function commandGitStatusWithPR( test )
 
   let user = config.about.user;
 
-  /* */
+  /* - */
 
   begin();
   a.appStart( '.with original/ .git.status' )
@@ -38357,7 +38335,7 @@ function commandGitSync( test )
   let profile = 'test-profile';
   _.censor.configSet({ profileDir : profile, set : config });
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
