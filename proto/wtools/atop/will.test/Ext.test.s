@@ -12965,16 +12965,13 @@ function exportRewritesOutFile( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'export module with two exports'
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export export1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -12983,19 +12980,18 @@ function exportRewritesOutFile( test )
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.props.keys( build ), [ 'export1', 'export2' ] );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'remove second export build then export again';
     a.fileProvider.fileCopy( a.abs( '.will.yml' ), a.abs( '.will.single-export.yml' ) )
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export export1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13004,19 +13000,18 @@ function exportRewritesOutFile( test )
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.props.keys( build ), [ 'export1' ] );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'restore second export, then export again';
     a.fileProvider.fileCopy( a.abs( '.will.yml' ), a.abs( 'copy.will.yml' ) )
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.export export1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13025,7 +13020,7 @@ function exportRewritesOutFile( test )
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.props.keys( build ), [ 'export1', 'export2' ] );
     return null;
-  })
+  });
 
   /* - */
 
@@ -13202,7 +13197,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
 exportWithRemoteSubmodulesMinRecursive.description =
 `
 exporting of hierarchy with remote submodules throw no error and produce out files
-`
+`;
 
 //
 
@@ -16366,13 +16361,13 @@ function cleanRecursiveMin( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
-  a.reflectMinimal();
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = 'export first';
+    a.reflect();
     return null;
   });
 
@@ -16462,7 +16457,7 @@ function cleanGlobMin( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemoteMin' );
-  a.reflectMinimal();
+  a.reflect();
 
   /* - */
 
