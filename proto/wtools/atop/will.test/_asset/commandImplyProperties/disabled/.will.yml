@@ -7,9 +7,9 @@ about :
 
 submodule :
 
-  ModuleForTesting1a : git+hd://../-repo/ModuleForTesting1a?out=out/wModuleForTesting1a.out.will
+  ModuleForTesting1a : git+hd://../../-repo/ModuleForTesting1a?out=out/wModuleForTesting1a.out.will
   ModuleForTesting2a :
-    path : git+hd://../-repo/ModuleForTesting2a?out=out/wModuleForTesting2a.out.will
+    path : git+hd://../../-repo/ModuleForTesting2a?out=out/wModuleForTesting2a.out.will
     enabled : 0
 
 path :

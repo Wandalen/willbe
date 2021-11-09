@@ -28883,15 +28883,15 @@ function commandImplyPropertyWithDisabled( test )
 
   /* - */
 
-  act({ withWith : 0 })
-  act({ withWith : 1, implyFirst : 0 })
+  act({ withWith : 0 });
+  act({ withWith : 1, implyFirst : 0 });
   // act({ withWith : 1, implyFirst : 1 }) //qqq for Vova: to implement
 
   /* - */
 
   return a.ready;
 
-  /* - */
+  /* */
 
   function act( o )
   {
@@ -28912,13 +28912,12 @@ function commandImplyPropertyWithDisabled( test )
       command = command.join( ' ' );
 
       test.case = command;
-
       return command;
     }
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:0' }) })
     .then( () =>
     {
@@ -28926,11 +28925,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
@@ -28938,11 +28937,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledSubmodules:1' }) })
     .then( () =>
     {
@@ -28950,11 +28949,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
@@ -28962,11 +28961,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:0' }) })
     .then( () =>
     {
@@ -28977,11 +28976,11 @@ function commandImplyPropertyWithDisabled( test )
       test.identical( modules, expected );
 
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:0', command : '.submodules.download withDisabled:1' }) })
     .then( () =>
     {
@@ -28991,11 +28990,11 @@ function commandImplyPropertyWithDisabled( test )
       expected.push( 'ModuleForTesting1a' );
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledSubmodules:1' }) })
     .then( () =>
     {
@@ -29005,11 +29004,11 @@ function commandImplyPropertyWithDisabled( test )
       expected = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2a' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledSubmodules:1', command : '.submodules.download withDisabled:1' }) })
     .then( () =>
     {
@@ -29023,7 +29022,7 @@ function commandImplyPropertyWithDisabled( test )
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:0' }) })
     .then( () =>
     {
@@ -29031,11 +29030,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
@@ -29043,11 +29042,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:0', command : '.submodules.download withDisabledModules:1' }) })
     .then( () =>
     {
@@ -29057,11 +29056,11 @@ function commandImplyPropertyWithDisabled( test )
       expected.push( 'ModuleForTesting1a' );
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:0' }) })
     .then( () =>
     {
@@ -29071,11 +29070,11 @@ function commandImplyPropertyWithDisabled( test )
       expected.push( 'ModuleForTesting1a' );
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:0' }) })
     .then( () =>
     {
@@ -29083,11 +29082,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:0', command : '.submodules.download withDisabled:1' }) })
     .then( () =>
     {
@@ -29095,11 +29094,11 @@ function commandImplyPropertyWithDisabled( test )
       let expected = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabled:1', command : '.submodules.download withDisabledModules:1' }) })
     .then( () =>
     {
@@ -29110,11 +29109,11 @@ function commandImplyPropertyWithDisabled( test )
 
       test.identical( modules, expected );
       return null;
-    })
+    });
 
     /* fails */
 
-    clean()
+    clean();
     a.appStart({ args : commandFor({ imply : 'withDisabledModules:1', command : '.submodules.download withDisabled:1' }) })
     .then( () =>
     {
@@ -29125,20 +29124,19 @@ function commandImplyPropertyWithDisabled( test )
 
       test.identical( modules, expected );
       return null;
-    })
-
+    });
   }
 
   /* */
 
   function clean()
   {
-    a.ready.then( () =>
+    return a.ready.then( () =>
     {
       a.fileProvider.filesDelete( a.abs( '.' ) );
       a.reflect();
       return null;
-    })
+    });
   }
 }
 

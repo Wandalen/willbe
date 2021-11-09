@@ -619,12 +619,6 @@ function longPathGet()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   return path.join( relation.willf.dirPath, relation.path );
-  // if( module.isOut )
-  // {
-  //   debugger;
-  //   return path.join( module.inPath, relation.path );
-  // }
-  // else
   // return path.join( module.inPath, relation.path );
 }
 
