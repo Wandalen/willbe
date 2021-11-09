@@ -15730,7 +15730,7 @@ function cleanBroken1( test )
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.clean dry:1' })
   .then( ( op ) =>
@@ -15753,7 +15753,7 @@ function cleanBroken1( test )
     test.case = '.clean';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.clean' })
   .then( ( op ) =>
@@ -15772,7 +15772,7 @@ function cleanBroken1( test )
     test.case = '.clean then .export';
     a.reflect();
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.clean' })
   a.appStart({ execPath : '.export' })
