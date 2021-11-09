@@ -14900,8 +14900,8 @@ function importPathLocal( test )
     return null;
   });
 
-  a.appStart({ execPath : '.build' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.build' });
+  a.ready.then( ( op ) =>
   {
 
     var files = a.find( a.abs( 'out' ) );
