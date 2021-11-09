@@ -2,19 +2,22 @@ format: outwillfile-2.0
 root:
   - submodule.out
 consistency:
-  ../submodule.will.yml: &ref_0
-    hash: fae8e2de8cd5efc2b82094d57f77909b
-    size: 443
-  ../.module/ModuleForTesting1/will.yml: &ref_1
+  submodule.out.will.yml: &ref_0
+    hash: fbde2fe711470b49201f0c624ff5ab7e
+    size: 91690
+  ../submodule.will.yml: &ref_1
+    hash: 7c848aa2654483794c88be870c7697f4
+    size: 409
+  ../.module/ModuleForTesting1/will.yml: &ref_2
     hash: 25a91132c8a3a35f55c8a3a17f25cfdd
     size: 6105
-  ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: &ref_2
+  ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: &ref_3
     hash: 2ebfa4e144453338b6b720777c119cd5
     size: 36791
-  ../.module/ModuleForTesting2a/will.yml: &ref_3
+  ../.module/ModuleForTesting2a/will.yml: &ref_4
     hash: 159a696be21b5d05ba1d799601ead3d7
     size: 6251
-  ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: &ref_4
+  ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: &ref_5
     hash: 29f01d5eb9e8d1a5a5802100bca462ea
     size: 37251
 module:
@@ -33,6 +36,9 @@ module:
         criterion:
           predefined: 1
         path: submodule.out
+      download:
+        criterion:
+          predefined: 1
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -45,9 +51,6 @@ module:
         criterion:
           predefined: 1
         path: ..
-      download:
-        criterion:
-          predefined: 1
       in:
         path: .
       out:
@@ -94,18 +97,16 @@ module:
           - ../.git/logs/refs/heads
           - ../.git/logs/refs/heads/master
           - ../.git/objects
-          - ../.git/objects/05
-          - ../.git/objects/05/f4b5e195fb232978757f19f81ac99bac5caf81
-          - ../.git/objects/6e
-          - ../.git/objects/6e/9480e323eb56def93bef353804d3a194fe450a
-          - ../.git/objects/93
-          - ../.git/objects/93/897c67097552d6121126cfdc75ff0a16badbfb
-          - ../.git/objects/c0
-          - ../.git/objects/c0/ac85162193e31a02dd430b36a4cad4eb5d0d47
-          - ../.git/objects/f8
-          - ../.git/objects/f8/cb20801f8e4aa9007603d7767546ed94a9a9a2
-          - ../.git/objects/fd
-          - ../.git/objects/fd/81461de2ade341afe17e4895011501762c03ba
+          - ../.git/objects/0b
+          - ../.git/objects/0b/fc5df8d2aafdbc18e64a1c794695bb8b7fbfb7
+          - ../.git/objects/71
+          - ../.git/objects/71/e9659469b81d021738d152ea4fe935282249da
+          - ../.git/objects/a9
+          - ../.git/objects/a9/f851ce1045b6d0657f65e3f0f8c77703b304c8
+          - ../.git/objects/ba
+          - ../.git/objects/ba/feba4f9fc975ceeeeb3d66773ae69d408d5035
+          - ../.git/objects/ce
+          - ../.git/objects/ce/9bc8be60917ae86b562e743fed509d0a7cd099
           - ../.git/objects/info
           - ../.git/objects/pack
           - ../.git/refs
@@ -236,9 +237,9 @@ module:
           - ../.module/ModuleForTesting2a/.git/objects/info
           - ../.module/ModuleForTesting2a/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-9f55d1a1ea028c0b34b47a1c460c4a807a6a7f9b.idx
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-57459780336cfabbfc12fcb0b86aad06b2705701.idx
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-9f55d1a1ea028c0b34b47a1c460c4a807a6a7f9b.pack
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-57459780336cfabbfc12fcb0b86aad06b2705701.pack
           - ../.module/ModuleForTesting2a/.git/refs
           - ../.module/ModuleForTesting2a/.git/refs/heads
           - ../.module/ModuleForTesting2a/.git/refs/heads/master
@@ -270,13 +271,15 @@ module:
           - ../.module/ModuleForTesting2a/sample
           - ../.module/ModuleForTesting2a/sample/trivial
           - ../.module/ModuleForTesting2a/sample/trivial/Sample.s
+          - .
+          - submodule.out.will.yml
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
+        path: 'git+hd://../../../-repo/ModuleForTesting1!gamma'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
+        path: 'git+hd://../../../-repo/ModuleForTesting2a!gamma'
         autoExporting: 0
         enabled: 1
     reflector:
@@ -311,6 +314,24 @@ module:
           tar: 0
         inherit:
           - module.export
+      exported.export:
+        opts:
+          filePath: 'reflector::exported.export'
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.export:
+        opts:
+          filePath: 'reflector::exported.files.export'
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        inherit:
+          - files.reflect
     build:
       export:
         steps:
@@ -332,7 +353,8 @@ module:
           default: 1
           export: 1
     consistency:
-      ../submodule.will.yml: *ref_0
+      submodule.out.will.yml: *ref_0
+      ../submodule.will.yml: *ref_1
   ../submodule:
     about:
       name: submodule
@@ -369,11 +391,11 @@ module:
         path: out
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
+        path: 'git+hd://../../-repo/ModuleForTesting1/!gamma'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
+        path: 'git+hd://../../-repo/ModuleForTesting2a/!gamma'
         autoExporting: 0
         enabled: 1
     reflector: {}
@@ -393,8 +415,11 @@ module:
           export: 1
     consistency:
       ../submodule.will.yml:
-        hash: fae8e2de8cd5efc2b82094d57f77909b
-        size: 443
+        hash: 7c848aa2654483794c88be870c7697f4
+        size: 409
+      submodule.out.will.yml:
+        hash: fbde2fe711470b49201f0c624ff5ab7e
+        size: 91690
   ../.module/ModuleForTesting1/:
     about:
       name: wModuleForTesting1
@@ -585,8 +610,8 @@ module:
       transpile.proto.no.tests.compiled.debug:
         src:
           filePath:
-            '**.test*': 0
-            '**.test/**': 0
+            '**.test*': false
+            '**.test/**': false
             'path::proto': '{path::out.*=1}/Main.s'
         criterion:
           tests: no.tests
@@ -598,8 +623,8 @@ module:
       transpile.proto.no.tests.compiled.release:
         src:
           filePath:
-            '**.test*': 0
-            '**.test/**': 0
+            '**.test*': false
+            '**.test/**': false
             'path::proto': '{path::out.*=1}/Main.s'
         criterion:
           tests: no.tests
@@ -611,7 +636,7 @@ module:
       transpile.proto.only.tests.compiled.debug:
         src:
           filePath:
-            '**.test*': 1
+            '**.test*': true
             'path::proto': '{path::out.*=1}/Tests.test.s'
         criterion:
           tests: only.tests
@@ -623,7 +648,7 @@ module:
       transpile.proto.only.tests.compiled.release:
         src:
           filePath:
-            '**.test*': 1
+            '**.test*': true
             'path::proto': '{path::out.*=1}/Tests.test.s'
         criterion:
           tests: only.tests
@@ -1049,8 +1074,8 @@ module:
           - 'build::release'
           - 'build::npm'
     consistency:
-      ../.module/ModuleForTesting1/will.yml: *ref_1
-      ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: *ref_2
+      ../.module/ModuleForTesting1/will.yml: *ref_2
+      ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: *ref_3
   ../.module/ModuleForTesting1/out/wModuleForTesting1.out:
     about:
       name: wModuleForTesting1
@@ -1097,7 +1122,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ..
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       origins:
@@ -1807,12 +1832,8 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml:
-        hash: 2ebfa4e144453338b6b720777c119cd5
-        size: 36791
-      ../.module/ModuleForTesting1/will.yml:
-        hash: 25a91132c8a3a35f55c8a3a17f25cfdd
-        size: 6105
+      ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: *ref_3
+      ../.module/ModuleForTesting1/will.yml: *ref_2
   ../.module/ModuleForTesting2a/:
     about:
       name: wModuleForTesting2a
@@ -2007,8 +2028,8 @@ module:
       transpile.proto.no.tests.compiled.debug:
         src:
           filePath:
-            '**.test*': 0
-            '**.test/**': 0
+            '**.test*': false
+            '**.test/**': false
             'path::proto': '{path::out.*=1}/Main.s'
         criterion:
           tests: no.tests
@@ -2020,8 +2041,8 @@ module:
       transpile.proto.no.tests.compiled.release:
         src:
           filePath:
-            '**.test*': 0
-            '**.test/**': 0
+            '**.test*': false
+            '**.test/**': false
             'path::proto': '{path::out.*=1}/Main.s'
         criterion:
           tests: no.tests
@@ -2033,7 +2054,7 @@ module:
       transpile.proto.only.tests.compiled.debug:
         src:
           filePath:
-            '**.test*': 1
+            '**.test*': true
             'path::proto': '{path::out.*=1}/Tests.test.s'
         criterion:
           tests: only.tests
@@ -2045,7 +2066,7 @@ module:
       transpile.proto.only.tests.compiled.release:
         src:
           filePath:
-            '**.test*': 1
+            '**.test*': true
             'path::proto': '{path::out.*=1}/Tests.test.s'
         criterion:
           tests: only.tests
@@ -2471,8 +2492,8 @@ module:
           - 'build::release'
           - 'build::npm'
     consistency:
-      ../.module/ModuleForTesting2a/will.yml: *ref_3
-      ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: *ref_4
+      ../.module/ModuleForTesting2a/will.yml: *ref_4
+      ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: *ref_5
   ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out:
     about:
       name: wModuleForTesting2a
@@ -2519,7 +2540,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ..
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
       origins:
@@ -3234,9 +3255,5 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml:
-        hash: 29f01d5eb9e8d1a5a5802100bca462ea
-        size: 37251
-      ../.module/ModuleForTesting2a/will.yml:
-        hash: 159a696be21b5d05ba1d799601ead3d7
-        size: 6251
+      ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: *ref_5
+      ../.module/ModuleForTesting2a/will.yml: *ref_4

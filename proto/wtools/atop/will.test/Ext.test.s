@@ -19366,25 +19366,22 @@ function submodulesDownloadWithSubmodulesDefault( test )
     outputGraying : 1,
     throwingExitCode : 0,
     ready : a.ready,
-  })
+  });
   a.reflect();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'download using command submodules.download'
+    test.case = 'download using command submodules.download';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
-  a.appStartNonThrowing2( 'git init' )
-  a.appStartNonThrowing2( 'git add .' )
-  a.appStartNonThrowing2( 'git commit -m init' )
+  });
+  a.appStartNonThrowing2( 'git init' );
+  a.appStartNonThrowing2( 'git add .' );
+  a.appStartNonThrowing2( 'git commit -m init' );
 
   a.appStart({ execPath : '.submodules.download' })
-
   .then( ( op ) =>
   {
     let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
@@ -19425,8 +19422,8 @@ function submodulesDownloadUpdateWithSubmodulesDefault( test )
   a.shell({ currentPath : a.abs( 'module' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit -m init' });
 
-  a.appStart({ execPath : '.submodules.update' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.update' });
+  a.ready.then( ( op ) =>
   {
     let downloadedModules = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( downloadedModules, [ 'submodule' ] );
@@ -20015,24 +20012,22 @@ function submodulesDownloadStepAndCommand( test )
     outputGraying : 1,
     throwingExitCode : 0,
     ready : a.ready,
-  })
+  });
   a.reflect();
 
   /* submodules.download step downloads submodules recursively, but should not */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'download using step::submodules.download'
+    test.case = 'download using step::submodules.download';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
-  a.appStartNonThrowing2( 'git init' )
-  a.appStartNonThrowing2( 'git add .' )
-  a.appStartNonThrowing2( 'git commit -m init' )
-  a.appStartNonThrowing({ execPath : '.build' })
-  .then( ( op ) =>
+  });
+  a.appStartNonThrowing2( 'git init' );
+  a.appStartNonThrowing2( 'git add .' );
+  a.appStartNonThrowing2( 'git commit -m init' );
+  a.appStartNonThrowing({ execPath : '.build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     let files = a.find( a.abs( '.module' ) );
