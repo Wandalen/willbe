@@ -1522,7 +1522,7 @@ function openerClone( test )
 
   return a.ready;
 
-} /* end of function openerClone */
+}
 
 //
 
@@ -1534,14 +1534,13 @@ function moduleClone( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.description = 'open';
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     return opener.open();
-  })
+  });
 
   a.ready.then( ( arg ) =>
   {
@@ -1571,7 +1570,7 @@ function moduleClone( test )
     var module2 = opener.openedModule.cloneExtending({ willfilesPath : a.abs( 'super2.out/super.out.will.yml' ), peerModule : null });
     module2.preform();
 
-    mapsCheck( module, module2 )
+    mapsCheck( module, module2 );
 
     test.description = 'stages';
     var stager = module2.stager;
@@ -1600,9 +1599,9 @@ function moduleClone( test )
     test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.setFrom( a.rel( _.props.keys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/sub.out/sub.out', 'super2.out/super.out' ];
+    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
     test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
-    test.identical( _.props.keys( a.will.openerModuleWithIdMap ).length, exp.length );
+    test.identical( _.props.keys( a.will.openerModuleWithIdMap ).length, 7 );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( a.rel( _.props.keys( a.will.willfileWithFilePathPathMap ) ), exp );
@@ -1762,9 +1761,9 @@ function moduleClone( test )
     opener.finit();
     module.finit();
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   a.ready.finally( ( err, arg ) =>
   {
@@ -1786,18 +1785,17 @@ function moduleClone( test )
     return arg;
   });
 
+  /* - */
+
   return a.ready;
 
   /* */
 
   function mapsCheck( module1, module2 )
   {
-
     test.true( module1 !== module2 );
     if( module1 === module2 )
-    {
-      return;
-    }
+    return;
 
     mapCheck( module1, module2, 'stepMap' );
     mapCheck( module1, module2, 'buildMap' );
@@ -1806,7 +1804,6 @@ function moduleClone( test )
     mapCheck( module1, module2, 'reflectorMap' );
     mapCheck( module1, module2, 'submoduleMap' );
     mapCheck( module1, module2, 'submoduleMap' );
-
   }
 
   /* */
@@ -1833,10 +1830,8 @@ function moduleClone( test )
         test.true( resource1.willf === resource2.willf );
       }
     }
-
   }
-
-} /* end of function moduleClone */
+}
 
 //
 
