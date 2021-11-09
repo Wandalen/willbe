@@ -2396,8 +2396,7 @@ function buildDetached( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build';
     return null;
@@ -19142,13 +19141,12 @@ function submodulesDownloadUpdateDry( test )
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.download dry:1';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.submodules.download dry:1' })
   .then( ( op ) =>
@@ -19161,12 +19159,11 @@ function submodulesDownloadUpdateDry( test )
     var files = a.find( a.abs( '.module' ) );
     test.true( files.length === 0 );
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.download dry:1 -- after download';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
@@ -22876,8 +22873,8 @@ function submodulesUpgradeDryDetached( test )
     return null;
   });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.export' });
   a.appStart({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( op ) =>
   {
@@ -23102,8 +23099,7 @@ function submodulesUpgradeDetached( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
     a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
@@ -23502,15 +23498,14 @@ function submodulesFixateDryDetached( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.fixate dry:1 negative:1 -- after full update';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.export' });
   a.appStart({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( op ) =>
   {
