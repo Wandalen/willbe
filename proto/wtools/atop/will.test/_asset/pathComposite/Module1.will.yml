@@ -6,7 +6,7 @@ about :
 path :
 
   in : ..
-  out : .module
+  out : out
   remote : 'git+hd://../-repo/ModuleForTesting12'
   download : '.module/ModuleForTesting12'
   export : '{path::download}/proto/**'
