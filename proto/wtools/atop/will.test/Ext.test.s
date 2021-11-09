@@ -34031,7 +34031,7 @@ function commandModulesGitDiff( test )
   let context = this;
   let a = context.assetFor( test, 'modulesGitSync' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -34610,7 +34610,7 @@ function commandModulesGitStatus( test )
   let context = this;
   let a = context.assetFor( test, 'modulesGitSync' );
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
@@ -35301,7 +35301,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
 
   let linkPath = config.path.hlink;
 
-  /* */
+  /* - */
 
   begin().then( () =>
   {
