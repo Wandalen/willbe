@@ -1493,71 +1493,13 @@ module:
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/wModuleForTesting12.out.will.yml
-          - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/LICENSE
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/package.json
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/README.md
           - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/was.package.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/doc
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/doc/ModuleForTesting1.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/doc/README.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/Integration.test.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing/Basic.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing/l1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing/l1.test
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/proto/wtools/testing/l1.test/ModuleForTesting1.test.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/sample
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting1/sample/Sample.s
-          - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12
           - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/LICENSE
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/package.json
-          - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/README.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/was.package.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/doc
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/doc/ModuleForTesting12.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/doc/README.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/proto
           - >-
@@ -1580,10 +1522,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/proto/wtools/testing/l3.test
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/sample
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+.module/ModuleForTesting12/sample/Sample.s
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+out
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+out/debug
           - >-
@@ -1608,71 +1546,13 @@ module:
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/+out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/wModuleForTesting12.out.will.yml
-          - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/LICENSE
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/package.json
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/README.md
           - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/was.package.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/doc
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/doc/ModuleForTesting1.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/doc/README.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/Integration.test.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing/Basic.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing/l1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing/l1/ModuleForTesting1.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing/l1.test
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/proto/wtools/testing/l1.test/ModuleForTesting1.test.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/sample
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting1/sample/Sample.s
-          - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12
           - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/LICENSE
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/package.json
-          - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/README.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/was.package.json
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/doc
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/doc/ModuleForTesting12.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/doc/README.md
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/proto
           - >-
@@ -1695,10 +1575,6 @@ module:
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/proto/wtools/testing/l3.test
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/sample
-          - >-
-            ../proto/wtools/atop/will.test/_asset/cleanWithInpath/.module/ModuleForTesting12/sample/Sample.s
           - ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module
           - >-
             ../proto/wtools/atop/will.test/_asset/cleanWithInpath/module/ModuleForTesting12.will.yml
@@ -1928,22 +1804,44 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/dos/wExperiment/was.package.json
           - ../proto/wtools/atop/will.test/_asset/dos/wExperiment/will.yml
-          - ../proto/wtools/atop/will.test/_asset/dos2
-          - ../proto/wtools/atop/will.test/_asset/dos2/will.yml
-          - ../proto/wtools/atop/will.test/_asset/dos2/.will
-          - ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin
+          - ../proto/wtools/atop/will.test/_asset/download
+          - ../proto/wtools/atop/will.test/_asset/download/Mixed.will.yml
+          - ../proto/wtools/atop/will.test/_asset/download/MultipleGit.will.yml
+          - ../proto/wtools/atop/will.test/_asset/download/MultipleHd.will.yml
+          - ../proto/wtools/atop/will.test/_asset/download/MultipleNpm.will.yml
+          - ../proto/wtools/atop/will.test/_asset/download/SingleGit.will.yml
           - >-
-            ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/dos1.will.yml
+            ../proto/wtools/atop/will.test/_asset/download/SingleGitIrregular.will.yml
+          - ../proto/wtools/atop/will.test/_asset/download/SingleHd.will.yml
           - >-
-            ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/dos2.will.yml
-          - ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/plugin1
+            ../proto/wtools/atop/will.test/_asset/download/SingleHdIrregular.will.yml
+          - ../proto/wtools/atop/will.test/_asset/download/SingleNpm.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveGit
           - >-
-            ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/plugin1.out.will.yml
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveGit/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveGit/sub1
           - >-
-            ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/will.yml
-          - ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveGit/sub1/b.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveGit/sub1/sub2
           - >-
-            ../proto/wtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/git.js
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveGit/sub1/sub2/c.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveHd
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveHd/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveHd/sub1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveHd/sub1/b.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveHd/sub1/sub2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveHd/sub1/sub2/c.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveNpm
+          - >-
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveNpm/a.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveNpm/sub1
+          - >-
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveNpm/sub1/b.will.yml
+          - ../proto/wtools/atop/will.test/_asset/downloadRecursiveNpm/sub1/sub2
+          - >-
+            ../proto/wtools/atop/will.test/_asset/downloadRecursiveNpm/sub1/sub2/c.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachBroken
           - ../proto/wtools/atop/will.test/_asset/eachBroken/.will.yml
           - ../proto/wtools/atop/will.test/_asset/eachBroken/a.will.yml
@@ -2628,21 +2526,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/importPathLocal
           - ../proto/wtools/atop/will.test/_asset/importPathLocal/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/importPathLocal/.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1/proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1/proto/wtools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1/proto/wtools/testing
-          - >-
-            ../proto/wtools/atop/will.test/_asset/importPathLocal/+.module/ModuleForTesting1/proto/wtools/testing/Basic.s
           - ../proto/wtools/atop/will.test/_asset/importPathLocal/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/importPathLocal/.module/ModuleForTesting1
@@ -3282,35 +3165,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+.module
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+.module/ModuleForTesting2
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+.module/ModuleForTesting2/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+.module/ModuleForTesting2/out/wModuleForTesting2.out.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out
-          - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/Integration.test.ss
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/WithSubmodules.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing/Basic.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing/l1
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing/l1/Include.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing/l1/ModuleForTesting1.s
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing/l1.test
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesBroken1/+out/debug/wtools/testing/l1.test/ModuleForTesting1.test.s
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.module/ModuleForTesting2
@@ -3370,18 +3224,9 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesDelDownload/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDetached
           - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDetached/+.im.will.yml
-          - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDetached/.ex.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDetached/.im.will.yml
-          - ../proto/wtools/atop/will.test/_asset/submodulesDetached/+module
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDetached/+module/ModuleForTesting12.informal.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDetached/+module/ModuleForTesting12ab.informal.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/submodulesDetached/+module/ModuleForTesting2b.informal.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDetached/module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDetached/module/ModuleForTesting12.informal.will.yml

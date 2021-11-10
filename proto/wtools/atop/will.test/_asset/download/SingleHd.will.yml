@@ -1,0 +1,5 @@
+
+submodule  :
+
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!gamma
+

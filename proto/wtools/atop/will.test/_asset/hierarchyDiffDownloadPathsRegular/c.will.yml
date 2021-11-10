@@ -7,10 +7,10 @@ about :
 submodule :
 
   a : a/
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma
-  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a.out.will.yml!gamma
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting12.git/!gamma
-  ModuleForTesting2b : git+https:///github.com/Wandalen/wModuleForTesting2b.git/!gamma
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!gamma
+  ModuleForTesting1a : git+hd://../-repo/ModuleForTesting1a?out=out/wModuleForTesting1a.out.will!gamma
+  ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2/!gamma
+  ModuleForTesting2b : git+hd://../-repo/ModuleForTesting2b/!gamma
 
 path :
 
@@ -24,7 +24,6 @@ path :
 reflector :
 
   reflect.submodules :
-    # inherit : submodule::*/exported::*=1/reflector::exported.files*=1
     inherit : submodule::*/reflector::exported.files*=1
     criterion :
       debug : 1
@@ -45,7 +44,6 @@ build :
 
   export :
     steps :
-      # - submodules.download
       - reflect.submodules
       - export
     criterion :

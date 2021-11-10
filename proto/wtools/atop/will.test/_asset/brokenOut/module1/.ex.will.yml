@@ -21,7 +21,6 @@ build :
       content : 'proto'
       export : 1
     steps :
-      # - build::debug.raw
       - step::proto.export
 
   export :
@@ -30,6 +29,4 @@ build :
       default : 1
       export : 1
     steps :
-      # - build::npm
       - build::proto.export
-      # - build::doc.export
