@@ -1,8 +1,6 @@
 
 submodule :
 
-  # ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!stable
-  # ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/!stable
   ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1!stable
   ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2!stable
 

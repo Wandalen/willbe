@@ -259,7 +259,8 @@ function _openAct( o )
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 
   if( o.longPath === null )
-  o.longPath = relation.longPath;
+  o.longPath = relation.localPathGet();
+  // o.longPath = relation.longPath;
 
   relation._wantedOpened = 1;
 
@@ -617,7 +618,8 @@ function longPathGet()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  return path.join( module.inPath, relation.path );
+  return path.join( relation.willf.dirPath, relation.path );
+  // return path.join( module.inPath, relation.path );
 }
 
 //

@@ -3,7 +3,7 @@ about :
   name : GitSync
 
 submodule :
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!master
 
 path :
 

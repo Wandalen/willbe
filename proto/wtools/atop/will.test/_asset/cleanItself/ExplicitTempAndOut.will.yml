@@ -10,7 +10,7 @@ path :
     - '{path::proto}'
 
 submodule :
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!gamma
 
 step :
   export.default :

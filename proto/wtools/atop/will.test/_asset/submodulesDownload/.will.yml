@@ -1,10 +1,12 @@
-submodule :
-  submodule : git+hd://module/?out=out/submodule.out.will!master
 
 about :
 
   name : supermodule
   version : 0.1.0
+
+submodule :
+
+  submodule : git+hd://module/?out=out/submodule.out.will!master
 
 path :
 
@@ -19,3 +21,4 @@ build :
       debug : 1
     steps :
       - step::submodules.download
+

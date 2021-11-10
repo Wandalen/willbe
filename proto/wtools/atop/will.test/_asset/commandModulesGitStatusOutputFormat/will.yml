@@ -3,8 +3,8 @@ about :
   name : commandModulesGitStatusOutputFormat
 
 submodule :
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/
+  ModuleForTesting1 : git+hd://../-repo/ModuleForTesting1/!master
+  ModuleForTesting2 : git+hd://../-repo/ModuleForTesting2/!master
 
 path :
 

@@ -1,11 +1,13 @@
-submodule :
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma
-  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma
 
 about :
 
   name : submodule
   version : 0.1.0
+
+submodule :
+
+  ModuleForTesting1 : git+hd://../../-repo/ModuleForTesting1/!gamma
+  ModuleForTesting2a : git+hd://../../-repo/ModuleForTesting2a/!gamma
 
 path :
 

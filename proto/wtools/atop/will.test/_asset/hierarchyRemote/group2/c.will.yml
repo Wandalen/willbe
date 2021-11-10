@@ -6,7 +6,7 @@ about :
 submodule :
 
   a0 : ../group1/group10/a0
-  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out.will.yml!gamma
+  ModuleForTesting12ab : git+hd://../../-repo/ModuleForTesting12ab?out=out/wModuleForTesting12ab.out.will!gamma
 
 path :
 

@@ -19,8 +19,8 @@ execution :
 
 path :
 
-  repository : git+https://github.com/Wandalen/repo.git
-  something1 : git+https://github.com/user/something.git
+  repository : git+https:///github.com/Wandalen/repo.git
+  something1 : git+https:///github.com/user/something.git
   bugs : https://github.com/Wandalen/repo/issues
 
 step :

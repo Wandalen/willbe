@@ -1,0 +1,6 @@
+
+submodule  :
+
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will.yml!gamma
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
+
