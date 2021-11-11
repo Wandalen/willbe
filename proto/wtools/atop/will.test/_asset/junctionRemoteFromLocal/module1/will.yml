@@ -1,0 +1,13 @@
+
+about :
+  name : Module1
+  aliases :
+    hd : Module1
+    git : https://github.com/user/Module1.git
+    npm :  npm:///module1
+
+path :
+  origins :
+    - git+https:///github.com/user/Module1.git
+    - npm:///module1
+

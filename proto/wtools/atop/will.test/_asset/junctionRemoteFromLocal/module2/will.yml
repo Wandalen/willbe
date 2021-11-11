@@ -1,0 +1,16 @@
+
+about :
+  name : Module2
+  aliases :
+    hd : Module2
+    git : https://github.com/user/Module2.git
+    npm :  npm:///module2
+
+submodule :
+  Module1 : git+https:///github.com/user/Module1.git
+
+path :
+  origins :
+    - git+https:///github.com/user/Module2.git
+    - npm:///module2
+
