@@ -10,7 +10,8 @@
  */
 
 const _ = _global_.wTools;
-const Parent = null;
+// const Parent = null;
+const Parent = _.will.AbstractJunction;
 const Self = wWillModuleJunction2;
 function wWillModuleJunction2( o )
 {
@@ -311,7 +312,7 @@ function reform()
 
     _.assert( !will.junctionMap[ localPath ] );
 
-    let junction2 = new _.will.ModuleJunction({ will });
+    let junction2 = new _.will.ModuleJunction2({ will });
     junction2.localPaths.push( localPath );
     junction2.localPath = localPath;
     peerAssign( junction, junction2 );
@@ -337,12 +338,12 @@ function reform()
       _.assert( junction.peer.peer === junction );
       if( !object.peerModule )
       return junction.peer;
-      let junction2 = _.will.ModuleJunction._Of({ object : object.peerModule, will });
+      let junction2 = _.will.ModuleJunction2._Of({ object : object.peerModule, will });
       if( junction2 && junction2.peer === junction )
       return junction.peer;
     }
 
-    let junction2 = _.will.ModuleJunction._Of({ object : peerModule, will });
+    let junction2 = _.will.ModuleJunction2._Of({ object : peerModule, will });
     peerAssign( junction, junction2 );
 
     return junction2;
@@ -1537,7 +1538,7 @@ function submodulesJunctionsFilter( o )
     if( !will.relationFit( junction, filter ) )
     return;
 
-    _.assert( junction instanceof _.will.ModuleJunction );
+    _.assert( junction instanceof _.will.ModuleJunction2 );
     _.arrayAppendOnce( result, junction );
 
   }

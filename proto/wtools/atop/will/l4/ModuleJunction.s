@@ -10,7 +10,8 @@
  */
 
 const _ = _global_.wTools;
-const Parent = null;
+const Parent = _.will.AbstractJunction;
+// const Parent = null;
 const Self = wWillModuleJunction;
 function wWillModuleJunction( o )
 {
