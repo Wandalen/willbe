@@ -16,7 +16,8 @@ function isJunction( object )
   _.assert( arguments.length === 1 );
   if( !object )
   return false;
-  if( object instanceof _.will.ModuleJunction )
+  // if( object instanceof _.will.ModuleJunction )
+  if( object instanceof _.will.AbstractJunction )
   return true;
   return false;
 }
