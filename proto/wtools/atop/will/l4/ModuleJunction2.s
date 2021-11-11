@@ -616,6 +616,8 @@ function mergeMaybe( usingPath )
     {
 
       let junction2 = will.junctionMap[ remotePath ];
+      if( !junction2 )
+      junction2 = junctionFromRemoteMaybe( remotePath );
       if( junction2 && junction2 !== junction )
       {
         if( junction.mergeIn( junction2 ) )
@@ -635,9 +637,39 @@ function mergeMaybe( usingPath )
         return junction3;
       }
     }
-
   }
 
+  /* */
+
+  function junctionFromRemoteMaybe( remotePath )
+  {
+    let namespacesMap =
+    {
+      git : _.git.path,
+      npm : _.npm.path,
+      http : _.uri,
+      https : _.uri,
+    };
+    let parsed = _.uri.parse( remotePath );
+    let protocols = parsed.protocols;
+    let longPath = parsed.protocol + _.uri.protocolToken + parsed.longPath;
+
+    let junction;
+    for( let i = 0 ; i < protocols.length ; i++ )
+    {
+      let nativized = namespacesMap[ protocols[ i ] ].nativize( longPath );
+      let selected = _.select( will.junctionMap, `*/module/about/values/aliases/${ protocols[ i ] }` );
+      for( let key in selected )
+      if( selected[ key ] && namespacesMap[ protocols[ i ] ].nativize( selected[ key ] ) === nativized )
+      {
+        junction = will.junctionMap[ key ];
+        break;
+      }
+      if( junction )
+      break;
+    }
+    return junction;
+  }
 }
 
 //
