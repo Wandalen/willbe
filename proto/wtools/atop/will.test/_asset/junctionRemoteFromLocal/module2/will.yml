@@ -7,7 +7,7 @@ about :
     npm :  npm:///module2
 
 submodule :
-  Module1 : git+https:///github.com/user/Module1.git
+  Module5 : git+https:///github.com/user/Module5.git
 
 path :
   origins :
