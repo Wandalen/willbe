@@ -1155,6 +1155,113 @@ check that utility resolves valid names for build types:
   - publish;
 `;
 
+//
+
+function etcRunModulesLocalLinkedWithPriority( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'junctionRemoteFromLocal' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run single module with not downloaded submodule, should not link anything';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module9/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run two modules with not downloaded submodule, should link submodule';
+    test.description = 'submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module[5|9]/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run three modules with not downloaded submodule, should link recursively';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module[2|5|9]/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run three modules with not downloaded submodule, should link and sort submodules';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module[0|5|9]/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module0$/m).test( op.output ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcRunModulesLocalLinkedWithPriority.experimental = 1;
+etcRunModulesLocalLinkedWithPriority.description =
+`
+submodules of root module should link with local root modules and system should
+execute commands in sequence from most nested submodule to root module
+`;
+
 // --
 // build
 // --
@@ -46032,6 +46139,8 @@ const Proto =
 
     etcResolveDefaultBuilds,
     etcResolveBuildsLists,
+
+    etcRunModulesLocalLinkedWithPriority,
 
     // build
 
