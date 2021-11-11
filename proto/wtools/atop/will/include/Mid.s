@@ -29,6 +29,7 @@ if( typeof module !== 'undefined' )
   require( '../l4/Module.s' );
   require( '../l4/ModuleHandle.s' );
   require( '../l4/ModuleJunction.s' );
+  require( '../l4/ModuleJunction2.s' );
   require( '../l4/ModuleOpener.s' );
 
   require( '../l5/Resource.s' );
