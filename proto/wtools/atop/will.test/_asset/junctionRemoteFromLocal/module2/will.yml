@@ -14,3 +14,14 @@ path :
     - git+https:///github.com/user/Module2.git
     - npm:///module2
 
+step :
+  echo.self :
+    shell : echo {about::name}
+
+build :
+  echo :
+    criterion :
+      default : 1
+    steps :
+      - echo.self
+
