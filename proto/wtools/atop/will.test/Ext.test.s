@@ -1179,6 +1179,7 @@ function etcRunModulesLocalLinkedWithPriority( test )
     test.identical( _.strCount( op.output, '> echo Module5' ), 0 );
     test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
     test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
     return null;
   });
 
@@ -1200,6 +1201,7 @@ function etcRunModulesLocalLinkedWithPriority( test )
     test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
     test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
     test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
     test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
     return null;
   });
@@ -1222,6 +1224,7 @@ function etcRunModulesLocalLinkedWithPriority( test )
     test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
     test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
     test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
     test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
     test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
     return null;
@@ -1245,8 +1248,35 @@ function etcRunModulesLocalLinkedWithPriority( test )
     test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
     test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
     test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
     test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
     test.true( (/Module5\n(.|\n)*Module0$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run all modules, should link and sort submodules';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module*/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 1 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
+    test.true( (/Module2\n(.|\n)*Module0$/m).test( op.output ) );
+    test.true( (/Module0\n(.|\n)*Module11$/m).test( op.output ) );
     return null;
   });
 
