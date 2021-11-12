@@ -9401,6 +9401,44 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
 //
 
+function modulesTreeForLocalModulesExperiment( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'junctionRemoteFromLocal' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.with module*/ .modules.tree withLocalPath:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+`
+ +-- module::Module11 - path::local:=${ a.abs( 'module11' ) }/
+ | +-- module::Module0 - path::local:=${ a.abs( 'module0' ) }/
+ |
+ +-- module::Module2 - path::local:=${ a.abs( 'module2' ) }/
+ | +-- module::Module5 - path::local:=${ a.abs( 'module5' ) }/
+ |
+ +-- module::Module5 - path::local:=${ a.abs( 'module5' ) }/
+ | +-- module::Module1 - path::local:=${ a.abs( 'module1' ) }/
+ |
+ +-- module::Module9 - path::local:=${ a.abs( 'module9' ) }/
+`;
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+modulesTreeForLocalModulesExperiment.experimental = 1;
+
+//
+
 function listSingleModule( test )
 {
   let context = this;
@@ -46389,6 +46427,7 @@ const Proto =
     // modulesTreeHierarchyRemoteDownloaded, /* xxx : later */
     // modulesTreeHierarchyRemotePartiallyDownloaded, /* xxx : later */
     modulesTreeDisabledAndCorrupted,
+    modulesTreeForLocalModulesExperiment,
 
     listSingleModule,
     listWithSubmodulesSimple,
