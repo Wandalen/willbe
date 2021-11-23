@@ -33284,15 +33284,21 @@ commandSubmodulesGitSync.rapidity = -1;
 
 function commandSubmodulesRepoPullOpen( test )
 {
-  const context = this;
-  const a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  const identity = _.identity.identityResolveDefaultMaybe();
-  if( !identity || identity.login !== 'wtools-bot' )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
 
+  /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
+
+  a.reflect();
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : `git remote add origin https://github.com/${ user }/New2` });
 
   /* - */
 
@@ -33301,11 +33307,9 @@ function commandSubmodulesRepoPullOpen( test )
   {
     test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
     return null;
   });
 
@@ -33317,25 +33321,22 @@ function commandSubmodulesRepoPullOpen( test )
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
-
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
+    test.case = 'direct declaration of token, wrong data, not throwing - executes not submodules';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
