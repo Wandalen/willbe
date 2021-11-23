@@ -39114,15 +39114,17 @@ function commandRepoPullOpen( test )
 
 function commandRepoPullOpenRemote( test )
 {
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() || process.platform === 'win32' )
+  return test.true( true );
+
+  /* */
+
   const context = this;
   const a = context.assetFor( test, 'gitPush' );
-
-  const identity = _.identity.identityResolveDefaultMaybe();
-  if( process.platform === 'win32' || !identity || identity.login !== 'wtools-bot' )
-  return test.true( true );
-  const user = identity.login;
-
-  a.reflect();
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
 
   /* - */
 
@@ -39179,6 +39181,7 @@ function commandRepoPullOpenRemote( test )
   {
     a.ready.then( () =>
     {
+      a.reflect();
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
       return null;
     });
@@ -39186,12 +39189,14 @@ function commandRepoPullOpenRemote( test )
     return a.ready;
   }
 
+  /* */
+
   function repositoryDelete()
   {
     return _.git.repositoryDelete
     ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : identity[ 'github.token' ] || identity.token,
+      remotePath : `https://github.com/${ user }/New2`,
+      token,
       throwing : 0,
     });
   }
@@ -39202,7 +39207,7 @@ function commandRepoPullOpenRemote( test )
   {
     let currentPath = a.abs( 'original' );
     let execPath =
-    `git config credential.helper '!f(){ echo "username=${ user }" && echo "password=${ process.env.PRIVATE_WTOOLS_BOT_TOKEN }"; }; f'`;
+    `git config credential.helper '!f(){ echo "username=${ user }" && echo "password=${ token }"; }; f'`;
     a.shell({ currentPath, execPath });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
