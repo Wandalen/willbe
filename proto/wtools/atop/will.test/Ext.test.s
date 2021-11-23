@@ -32507,14 +32507,21 @@ commandSubmodulesGitDiff.rapidity = -1;
 
 function commandSubmodulesGitStatusWithOnlyRoot( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  let config;
-  if( _.censor )
-  config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
+
+  /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
+
+  a.reflect();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : `git remote add origin https://github.com/${ user }/New2` });
 
   /* - */
 
