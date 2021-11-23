@@ -39114,17 +39114,17 @@ function commandRepoPullOpen( test )
 
 function commandRepoPullOpenRemote( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+
+  const identity = _.identity.identityResolveDefaultMaybe();
+  if( process.platform === 'win32' || !identity || identity.login !== 'wtools-bot' )
+  return test.true( true );
+  const user = identity.login;
+
   a.reflect();
 
-  let config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  let user = config.about.user;
-
-  /* */
+  /* - */
 
   begin();
   a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
@@ -39150,7 +39150,7 @@ function commandRepoPullOpenRemote( test )
     test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -39163,20 +39163,13 @@ function commandRepoPullOpenRemote( test )
     test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  })
+  a.ready.finally( () => repositoryDelete() );
 
-  /* */
+  /* - */
 
   return a.ready;
 
@@ -39189,17 +39182,18 @@ function commandRepoPullOpenRemote( test )
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
       return null;
     });
-
-    a.ready.then( ( op ) =>
-    {
-      return _.git.repositoryDelete
-      ({
-        remotePath : `https://github.com/${user}/New2`,
-        token : config.about[ 'github.token' ],
-      });
-    })
-
+    a.ready.then( () => repositoryDelete() );
     return a.ready;
+  }
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : identity[ 'github.token' ] || identity.token,
+      throwing : 0,
+    });
   }
 
   /* */
@@ -39207,21 +39201,14 @@ function commandRepoPullOpenRemote( test )
   function prepareFirstBranch()
   {
     let currentPath = a.abs( 'original' );
-    a.shell
-    ({
-      currentPath,
-      execPath :
-      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`,
-    });
+    let execPath =
+    `git config credential.helper '!f(){ echo "username=${ user }" && echo "password=${ process.env.PRIVATE_WTOOLS_BOT_TOKEN }"; }; f'`;
+    a.shell({ currentPath, execPath });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
     a.shell({ currentPath, execPath : 'git push -u origin master' });
     a.shell({ currentPath, execPath : 'git checkout -b new' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
+    a.ready.then( () => { a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' ); return null });
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new' });
     return a.ready;
@@ -39234,11 +39221,7 @@ function commandRepoPullOpenRemote( test )
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git checkout master' });
     a.shell({ currentPath, execPath : 'git checkout -b new2' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
+    a.ready.then( () => { a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' ); return null });
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
