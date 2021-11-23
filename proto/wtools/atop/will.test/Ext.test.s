@@ -36237,58 +36237,49 @@ function commandModulesRepoPullOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config;
-  if( _.censor )
-  config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  const identity = _.identity.identityResolveDefaultMaybe();
+  if( !identity || identity.login !== 'wtools-bot' )
   return test.true( true );
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 0 );
     return null;
   });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
     test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
+    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.case = 'direct declaration of token, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
+    test.identical( _.strCount( op.output, /Error code : \d+/ ), 1 );
+    test.identical( _.strCount( op.output, 'Bad credentials' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
