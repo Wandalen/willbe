@@ -10811,9 +10811,9 @@ function repoRelease( o )
 
   if( !o.token )
   {
-    const config = _.censor.configRead();
-    if( config !== null && config.about && config.about[ 'github.token' ] )
-    o.token = config.about[ 'github.token' ];
+    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
+    if( identity )
+    o.token = identity[ 'github.token' ] || identity.token;
   }
 
   _.assert( _.str.defined( o.token ), 'Expects token. Please, define it directly in command line or by the Censor utility.' );
