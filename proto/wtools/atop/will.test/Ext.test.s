@@ -28152,25 +28152,23 @@ stepGitTag.rapidity = -1;
 
 function stepRepoReleaseRemote( test )
 {
-  const context = this;
-
-  const config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
 
   /* */
 
+  const context = this;
   const a = context.assetFor( test, 'repoRelease' );
-  a.reflectMinimal();
-  const user = config.about.user;
-  const token = config.about[ 'github.token' ];
+  const user = 'dmvict';
+  // const user = 'wtools-bot';
   const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
-
-  /* */
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
 
   begin();
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -28276,6 +28274,7 @@ function stepRepoReleaseRemote( test )
 
   function begin()
   {
+    a.ready.then( ( op ) => a.reflectMinimal() );
     a.ready.then( ( op ) => repositoryDelete() );
     a.ready.then( () =>
     {
@@ -28300,6 +28299,7 @@ function stepRepoReleaseRemote( test )
     ({
       remotePath : repository,
       token,
+      throwing : 0,
     });
   }
 }
