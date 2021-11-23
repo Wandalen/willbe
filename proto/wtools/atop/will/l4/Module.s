@@ -10578,13 +10578,16 @@ function gitStatus( o )
 
   let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
   o2.insidePath = o.dirPath;
-  /* xxx : standartize */
+  /* xxx : standartize */ /* Dmytro : used credentials from default identity */
   if( !o2.token )
   {
-    let config = fileProvider.configUserRead();
+    // let config = fileProvider.configUserRead();
     let token = null;
-    if( config !== null && config.about && config.about[ 'github.token' ] )
-    token = config.about[ 'github.token' ];
+    // if( config !== null && config.about && config.about[ 'github.token' ] )
+    // token = config.about[ 'github.token' ];
+    const config = _.identity.identityResolveDefaultMaybe();
+    if( config && ( config[ 'github.token' ] || config.token ) )
+    token = config[ 'github.token' ] || config.token;
     o2.token = token;
   }
 
