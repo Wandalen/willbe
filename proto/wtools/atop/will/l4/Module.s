@@ -10746,12 +10746,7 @@ function repoPullOpen( o )
   }
 
   if( !o.remotePath )
-  {
-    if( module.pathMap.repository )
-    o.remotePath = module.pathMap.repository;
-    else
-    o.remotePath = _.git.remotePathFromLocal( module.dirPath );
-  }
+  o.remotePath = _.git.remotePathFromLocal( module.dirPath );
   o.remotePath = _.git.path.nativize( o.remotePath );
 
   o.title = _.strUnquote( o.title );
@@ -10769,14 +10764,13 @@ function repoPullOpen( o )
       descriptionBody : o.body,
       srcBranch : o.srcBranch,
       dstBranch : o.dstBranch,
-      sync : 1,
       throwing : 1,
     });
-  })
-  .finally( ( err, arg ) =>
+  });
+  ready.finally( ( err, arg ) =>
   {
     if( err )
-    throw _.errBrief( err );
+    throw _.error.brief( err );
     return arg;
   });
 
