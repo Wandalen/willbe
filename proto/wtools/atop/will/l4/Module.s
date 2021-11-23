@@ -55,7 +55,6 @@ _.assert( _.routineIs( Parent ) );
 
 function _repoRequest_functor( fo )
 {
-
   _.routine.options( _repoRequest_functor, fo );
   _.assert( _.aux.is( fo.defaults ) || fo.defaults === null );
   _.assert( _.routineIs( fo.requestRoutine ) );
@@ -71,7 +70,7 @@ function _repoRequest_functor( fo )
     logger : 1,
     throwing : 1,
     ... fo.defaults || Object.create( null ),
-  }
+  };
 
   const requestRoutine = fo.requestRoutine;
   const exportStringRoutine = fo.exportStringRoutine;
@@ -93,12 +92,15 @@ function _repoRequest_functor( fo )
     /* xxx : standartize */
     if( o.token === null )
     {
-      let config = _.censor.configRead();
-      // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-      // if( !config )
-      // config = fileProvider.configUserRead();
-      if( config !== null && config.about && config.about[ 'github.token' ] )
-      o.token = config.about[ 'github.token' ];
+      // let config = _.censor.configRead();
+      // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+      // // if( !config )
+      // // config = fileProvider.configUserRead();
+      // if( config !== null && config.about && config.about[ 'github.token' ] )
+      // o.token = config.about[ 'github.token' ];
+      const config = _.identity.identityResolveDefaultMaybe();
+      if( config )
+      o.token = config[ 'github.token' ] || config.token;
     }
 
     if( o.remotePath === null )
@@ -112,7 +114,6 @@ function _repoRequest_functor( fo )
         return _.take( null );
         throw _.err( `Module ${module.qualifiedName} is not remote` );
       }
-
     }
 
     return requestRoutine
@@ -122,7 +123,8 @@ function _repoRequest_functor( fo )
       throwing : o.throwing,
       logger : o.logger,
       sync : 0,
-    }).then( ( op ) =>
+    })
+    .then( ( op ) =>
     {
       if( o.logger && o.logger.verbosity )
       if( op.result )
@@ -143,9 +145,7 @@ function _repoRequest_functor( fo )
       }
       return op;
     });
-
   }
-
 }
 
 _repoRequest_functor.defaults =
