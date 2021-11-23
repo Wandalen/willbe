@@ -98,9 +98,9 @@ function _repoRequest_functor( fo )
       // // config = fileProvider.configUserRead();
       // if( config !== null && config.about && config.about[ 'github.token' ] )
       // o.token = config.about[ 'github.token' ];
-      const config = _.identity.identityResolveDefaultMaybe();
-      if( config )
-      o.token = config[ 'github.token' ] || config.token;
+      const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
+      if( identity )
+      o2.token = identity[ 'github.token' ] || identity.token;
     }
 
     if( o.remotePath === null )
@@ -10503,13 +10503,11 @@ function gitStatus( o )
   if( !o2.token )
   {
     // let config = fileProvider.configUserRead();
-    let token = null;
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // token = config.about[ 'github.token' ];
-    const config = _.identity.identityResolveDefaultMaybe();
-    if( config && ( config[ 'github.token' ] || config.token ) )
-    token = config[ 'github.token' ] || config.token;
-    o2.token = token;
+    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
+    if( identity )
+    o2.token = identity[ 'github.token' ] || identity.token;
   }
 
   let got = _.git.statusFull( o2 );
@@ -10531,7 +10529,6 @@ gitStatus.defaults =
   remote : 1,
   remoteBranches : 0,
   prs : 1,
-  // v : null,
   verbosity : 1,
   uncommitted : null,
   uncommittedUntracked : null,
@@ -10740,9 +10737,9 @@ function repoPullOpen( o )
     // // config = fileProvider.configUserRead();
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // o.token = config.about[ 'github.token' ];
-    const config = _.identity.identityResolveDefaultMaybe();
-    if( config )
-    o.token = config[ 'github.token' ] || config.token;
+    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
+    if( identity )
+    o2.token = identity[ 'github.token' ] || identity.token;
   }
 
   if( !o.remotePath )
