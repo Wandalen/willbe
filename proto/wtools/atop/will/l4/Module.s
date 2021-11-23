@@ -89,7 +89,7 @@ function _repoRequest_functor( fo )
 
     _.map.assertHasAll( o, request.defaults );
 
-    /* xxx : standartize */
+    /* xxx : standartize */ /* Dmytro : used credentials from default identity */
     if( o.token === null )
     {
       // let config = _.censor.configRead();
@@ -10211,15 +10211,18 @@ function repoPullOpen( o )
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
 
-  /* xxx : standartize */
+  /* xxx : standartize */ /* Dmytro : used credentials from default identity */
   if( !o.token )
   {
-    let config = _.censor.configRead();
-    // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    // if( !config )
-    // config = fileProvider.configUserRead();
-    if( config !== null && config.about && config.about[ 'github.token' ] )
-    o.token = config.about[ 'github.token' ];
+    // let config = _.censor.configRead();
+    // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    // // if( !config )
+    // // config = fileProvider.configUserRead();
+    // if( config !== null && config.about && config.about[ 'github.token' ] )
+    // o.token = config.about[ 'github.token' ];
+    const config = _.identity.identityResolveDefaultMaybe();
+    if( config )
+    o.token = config[ 'github.token' ] || config.token;
   }
 
   if( !o.remotePath )
