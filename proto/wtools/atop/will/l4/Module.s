@@ -10194,85 +10194,6 @@ function gitDiff( o )
 gitDiff.defaults =
 {
   dirPath : null,
-  // v : null,
-  verbosity : 2,
-};
-
-//
-
-function repoPullOpen( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-
-  _.routine.options( repoPullOpen, o );
-
-  if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
-  return null;
-
-  /* xxx : standartize */ /* Dmytro : used credentials from default identity */
-  if( !o.token )
-  {
-    // let config = _.censor.configRead();
-    // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-    // // if( !config )
-    // // config = fileProvider.configUserRead();
-    // if( config !== null && config.about && config.about[ 'github.token' ] )
-    // o.token = config.about[ 'github.token' ];
-    const config = _.identity.identityResolveDefaultMaybe();
-    if( config )
-    o.token = config[ 'github.token' ] || config.token;
-  }
-
-  if( !o.remotePath )
-  {
-    if( module.pathMap.repository )
-    o.remotePath = module.pathMap.repository;
-    else
-    o.remotePath = _.git.remotePathFromLocal( module.dirPath );
-  }
-  o.remotePath = _.git.path.nativize( o.remotePath );
-
-  o.title = _.strUnquote( o.title );
-
-  /* */
-
-  let ready = _.take( null );
-  ready.then( () =>
-  {
-    return _.repo.pullOpen
-    ({
-      token : o.token,
-      remotePath : o.remotePath,
-      // title : o.title,
-      // body : o.body,
-      descriptionHead : o.title,
-      descriptionBody : o.body,
-      srcBranch : o.srcBranch,
-      dstBranch : o.dstBranch,
-      sync : 1,
-      throwing : 1,
-    });
-  })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    throw _.errBrief( err );
-    return arg;
-  });
-
-  return ready;
-}
-
-repoPullOpen.defaults =
-{
-  token : null,
-  remotePath : null,
-  srcBranch : null,
-  dstBranch : 'master',
-  title : null,
-  body : null,
   verbosity : 2,
 };
 
@@ -10795,6 +10716,82 @@ gitTag.defaults =
   dry : 0,
   light : 0,
   verbosity : 1,
+};
+
+//
+
+function repoPullOpen( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+
+  _.routine.options( repoPullOpen, o );
+
+  if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
+  return null;
+
+  /* xxx : standartize */ /* Dmytro : used credentials from default identity */
+  if( !o.token )
+  {
+    // let config = _.censor.configRead();
+    // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    // // if( !config )
+    // // config = fileProvider.configUserRead();
+    // if( config !== null && config.about && config.about[ 'github.token' ] )
+    // o.token = config.about[ 'github.token' ];
+    const config = _.identity.identityResolveDefaultMaybe();
+    if( config )
+    o.token = config[ 'github.token' ] || config.token;
+  }
+
+  if( !o.remotePath )
+  {
+    if( module.pathMap.repository )
+    o.remotePath = module.pathMap.repository;
+    else
+    o.remotePath = _.git.remotePathFromLocal( module.dirPath );
+  }
+  o.remotePath = _.git.path.nativize( o.remotePath );
+
+  o.title = _.strUnquote( o.title );
+
+  /* */
+
+  let ready = _.take( null );
+  ready.then( () =>
+  {
+    return _.repo.pullOpen
+    ({
+      token : o.token,
+      remotePath : o.remotePath,
+      descriptionHead : o.title,
+      descriptionBody : o.body,
+      srcBranch : o.srcBranch,
+      dstBranch : o.dstBranch,
+      sync : 1,
+      throwing : 1,
+    });
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.errBrief( err );
+    return arg;
+  });
+
+  return ready;
+}
+
+repoPullOpen.defaults =
+{
+  token : null,
+  remotePath : null,
+  srcBranch : null,
+  dstBranch : 'master',
+  title : null,
+  body : null,
+  verbosity : 2,
 };
 
 //
@@ -11528,7 +11525,6 @@ let Extension =
 
   gitExecCommand,
   gitDiff,
-  repoPullOpen,
   gitPull,
   gitPush,
   gitReset,
@@ -11537,6 +11533,7 @@ let Extension =
   gitSync,
   gitTag,
 
+  repoPullOpen,
   repoPullList,
   repoProgramList,
 

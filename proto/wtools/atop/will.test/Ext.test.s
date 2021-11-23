@@ -33292,6 +33292,8 @@ function commandSubmodulesRepoPullOpen( test )
   if( !identity || identity.login !== 'wtools-bot' )
   return test.true( true );
 
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+
   /* - */
 
   a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
@@ -36241,16 +36243,18 @@ function commandModulesRepoPullOpen( test )
   if( !identity || identity.login !== 'wtools-bot' )
   return test.true( true );
 
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+
   /* - */
 
   a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.identical( op.exitCode, 0 );
+    test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39041,22 +39045,22 @@ function commandRepoPullOpen( test )
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
-  let config = _.censor === undefined ? null : _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  const identity = _.identity.identityResolveDefaultMaybe();
+  if( !identity || identity.login !== 'wtools-bot' )
   return test.true( true );
+
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39067,11 +39071,10 @@ function commandRepoPullOpen( test )
   {
     test.case = 'token from environment variables, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39082,11 +39085,10 @@ function commandRepoPullOpen( test )
   {
     test.case = 'direct declaration of token, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39097,11 +39099,9 @@ function commandRepoPullOpen( test )
   {
     test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, 'Expects token {-o.token-}.' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
