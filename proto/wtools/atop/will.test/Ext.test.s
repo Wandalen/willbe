@@ -8870,7 +8870,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
   /* - */
 
   a.appStart({ execPath : '.with * .submodules.download recursive:2' });
-  a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .with * .modules.tree withRemotePath:1' });
   a.ready.then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
@@ -8957,7 +8957,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let context = this;
   let a = context.assetFor( test, 'hierarchyRemote' );
-  a.reflectMinimal();
+  a.reflect();
   a.fileProvider.filesDelete( a.abs( '.module' ) );
 
   /* - */
@@ -8968,88 +8968,10 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.with * .modules.tree withRemotePath:1';
+    test.case = '.imply withSubmodules:2 .with * .modules.tree withRemotePath:1';
     test.identical( op.exitCode, 0 );
 
     let exp =
-// `
-//  +-- module::z
-//    +-- module::a
-//    | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | +-- module::a0
-//    |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    +-- module::b
-//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
-//    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
-//    +-- module::c
-//    | +-- module::a0
-//    | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-//    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-// `
-// `
-//  +-- module::z
-//    +-- module::a
-//    | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-//    | | +-- module::wFiles - path::remote:=npm:///wFiles
-//    | | +-- module::wCloner - path::remote:=npm:///wcloner
-//    | | +-- module::wStringer - path::remote:=npm:///wstringer
-//    | | +-- module::wTesting - path::remote:=npm:///wTesting
-//    | | +-- module::wSelector - path::remote:=npm:///wselector
-//    | | +-- module::wTools
-//    | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | | +-- module::wTools - path::remote:=npm:///wTools
-//    | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-//    | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-//    | | +-- module::wPathTools
-//    | | +-- module::wFiles - path::remote:=npm:///wFiles
-//    | | +-- module::wTesting - path::remote:=npm:///wTesting
-//    | +-- module::a0
-//    |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    |   | +-- module::wTools - path::remote:=npm:///wTools
-//    |   | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-//    |   | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-//    |   | +-- module::wPathTools
-//    |   | +-- module::wFiles - path::remote:=npm:///wFiles
-//    |   | +-- module::wTesting - path::remote:=npm:///wTesting
-//    |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    |     +-- module::wTools - path::remote:=npm:///wTools
-//    |     +-- module::wFiles - path::remote:=npm:///wFiles
-//    |     +-- module::wTesting - path::remote:=npm:///wTesting
-//    +-- module::b
-//    | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | | +-- module::wTools - path::remote:=npm:///wTools
-//    | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-//    | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-//    | | +-- module::wPathTools
-//    | | +-- module::wFiles - path::remote:=npm:///wFiles
-//    | | +-- module::wTesting - path::remote:=npm:///wTesting
-//    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
-//    +-- module::c
-//    | +-- module::a0
-//    | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | | | +-- module::wTools - path::remote:=npm:///wTools
-//    | | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-//    | | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-//    | | | +-- module::wPathTools
-//    | | | +-- module::wFiles - path::remote:=npm:///wFiles
-//    | | | +-- module::wTesting - path::remote:=npm:///wTesting
-//    | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    | |   +-- module::wTools - path::remote:=npm:///wTools
-//    | |   +-- module::wFiles - path::remote:=npm:///wFiles
-//    | |   +-- module::wTesting - path::remote:=npm:///wTesting
-//    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-//    +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//      +-- module::wTools - path::remote:=npm:///wTools
-//      +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-//      +-- module::wArraySorted - path::remote:=npm:///warraysorted
-//      +-- module::wPathTools
-//      +-- module::wFiles - path::remote:=npm:///wFiles
-//      +-- module::wTesting - path::remote:=npm:///wTesting
-// `
 `
  +-- module::z
    +-- module::a
@@ -9135,7 +9057,7 @@ function modulesTreeDisabledAndCorrupted( test )
 
   a.appStart({ execPath : '.clean' });
   a.appStart({ execPath : '.submodules.download' });
-  a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ** .modules.tree withRemotePath:1' });
 
   a.ready.then( ( op ) =>
   {
