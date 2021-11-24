@@ -3527,41 +3527,43 @@ function reflectGetPath( test )
 
   a.ready.then( () =>
   {
-    test.case = '.build debug1'
+    test.case = '.imply withSubmodules:1 .build debug1';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.build debug1' })
-  .then( ( arg ) => validate( arg ) )
+  a.appStart({ execPath : '.imply withSubmodules:1 .build debug1' });
+  a.ready.then( ( arg ) => validate( arg ) );
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
-    test.case = '.build debug2'
+    test.case = '.imply withSubmodules:1 .build debug2';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.build debug2' })
-  .then( ( arg ) => validate( arg ) )
+  a.appStart({ execPath : '.imply withSubmodules:1 .build debug2' });
+  a.ready.then( ( arg ) => validate( arg ) );
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
-    test.case = '.build debug3'
+    test.case = '.imply withSubmodules:1 .build debug3';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.build debug3' })
-  .then( ( arg ) => validate( arg ) )
+  a.appStart({ execPath : '.imply withSubmodules:1 .build debug3' });
+  a.ready.then( ( arg ) => validate( arg ) );
 
   /* - */
 
   return a.ready;
+
+  /* */
 
   function validate( arg )
   {
@@ -3581,10 +3583,8 @@ function reflectGetPath( test )
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
     test.identical( files, expected );
-
     return null;
   }
-
 }
 
 //
@@ -3725,7 +3725,6 @@ function reflectSubdir( test )
     ];
     var got = a.find( a.routinePath );
     test.identical( got, expected );
-
     return null;
   });
 
