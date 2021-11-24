@@ -13125,8 +13125,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
   });
 
   a.appStart( '.with "**" .clean' );
-  a.appStart( '.with "**" .export' );
-
+  a.appStart( '.imply withSubmodules:2 .with "**" .export' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13134,8 +13133,8 @@ function exportWithRemoteSubmodulesMinRecursive( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 1/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
+    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
     var exp =
     [
