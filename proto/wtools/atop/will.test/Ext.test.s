@@ -14303,15 +14303,12 @@ function exportOutdated2( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' );
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-  a.reflect();
-
-  a.appStart( '.with module/mand/ .export' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with module/mand/ .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'rror' ), 0 );
@@ -14323,11 +14320,12 @@ function exportOutdated2( test )
     read += '\n\n';
     a.fileProvider.fileWrite( a.abs( 'module/mand/.im.will.yml' ), read );
     return null;
-  })
+  });
 
-  a.appStart( '.with module/mand/ .export' )
+  /* */
 
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with module/mand/ .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'rror' ), 0 );
@@ -14336,7 +14334,7 @@ function exportOutdated2( test )
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
     test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     return null;
-  })
+  });
 
   /* - */
 
@@ -14462,7 +14460,7 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   /* - */
 
   return a.ready;
-}/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
+}
 
 exportWithSubmoduleThatHasModuleDirDeleted.rapidity = -1;
 exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 150000;
@@ -14472,7 +14470,7 @@ Supermodule has single submodule. Submodule has own dependency too.
 Expected behaviour:
 - Submodule exports own files and submodule
 - Export of supermodule works even if submodules are not downloaded recursively.
-`
+`;
 
 //
 
