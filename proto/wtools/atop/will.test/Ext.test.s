@@ -13623,7 +13623,7 @@ function exportHierarchyRemote( test )
   });
 
   a.appStart( '.with z .clean recursive:2' );
-  a.appStart( '.with z .export.recursive' );
+  a.appStart( '.imply withSubmodules:2 .with z .export.recursive' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -13672,30 +13672,29 @@ function exportHierarchyRemote( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with ** .export.recursive';
+    test.case = '.imply withSubmodules:1 .with ** .export.recursive';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart( '.with ** .clean recursive:2' )
-  a.appStart( '.with ** .export.recursive' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with ** .clean recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with ** .export.recursive' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
     var exp = [ 'debug', 'z.out.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
@@ -13726,7 +13725,6 @@ function exportHierarchyRemote( test )
   /* - */
 
   return a.ready;
-
 }
 
 exportHierarchyRemote.rapidity = -1;
@@ -14343,12 +14341,12 @@ function exportOutdated2( test )
   /* - */
 
   return a.ready;
-}/* end of function exportOutdated2 */
+}
 
 exportOutdated2.description =
 `
 - Exporting of module with outdated outfile throws no error.
-`
+`;
 
 //
 
