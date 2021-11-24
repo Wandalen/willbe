@@ -12563,42 +12563,36 @@ function exportRecursiveLocal( test )
   /* */
 
   a.appStart({ execPath : '.with */* .clean' });
-  a.appStart({ execPath : '.with */* .export' });
-
-  a.ready.finally( ( err, op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with */* .export' });
+  a.ready.then( ( op ) =>
   {
     test.case = 'first';
-
-    test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 9 );
     return null;
   });
 
-  a.appStart({ execPath : '.with ab/ .resources.list' })
-  .finally( ( err, op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ab/ .resources.list' });
+  a.ready.then( ( op ) =>
   {
-    test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
 
     test.identical( _.strCount( op.output, 'About' ), 1 );
     test.identical( _.strCount( op.output, 'module::module-ab / path::export' ), 1 );
     test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
-
     return null;
   });
 
   /* */
 
-  a.appStart({ execPath : '.with */* .export' })
-  .finally( ( err, op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with */* .export' });
+  a.ready.then( ( op ) =>
   {
     test.case = 'second';
-    test.true( !err );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
@@ -12606,18 +12600,16 @@ function exportRecursiveLocal( test )
     return null;
   });
 
-  a.appStart({ execPath : '.with ab/ .resources.list' })
-  .finally( ( err, op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ab/ .resources.list' });
+  a.ready.then( ( op ) =>
   {
-    test.true( !err );
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
 
     test.identical( _.strCount( op.output, 'About' ), 1 );
     test.identical( _.strCount( op.output, 'module::module-ab / path::export' ), 1 );
     test.true( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
-
     return null;
   });
 
@@ -12631,7 +12623,7 @@ function exportRecursiveLocal( test )
   {
     return a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
       return null;
     });
