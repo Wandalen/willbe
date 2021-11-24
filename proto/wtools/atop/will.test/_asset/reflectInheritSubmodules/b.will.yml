@@ -26,4 +26,5 @@ build :
     criterion :
       default : 1
     steps :
+      - step::submodules.reload
       - step::reflect.submodules

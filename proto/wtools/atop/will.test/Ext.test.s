@@ -5180,79 +5180,98 @@ function reflectInheritSubmodules( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'setup'
+    test.case = 'setup';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.each module .export' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.each module .export' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.routinePath );
-    test.identical( files, [ '.', './a.will.yml', './b.will.yml', './c.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './submodule3.out.will.yml', './submodule4.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/submodule3.will.yml', './module/submodule4.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s', './module/proto1', './module/proto1/File1.s', './module/proto2', './module/proto2/File2.s' ] );
+    var exp =
+    [
+      '.',
+      './a.will.yml',
+      './b.will.yml',
+      './c.will.yml',
+      './submodule1.out.will.yml',
+      './submodule2.out.will.yml',
+      './submodule3.out.will.yml',
+      './submodule4.out.will.yml',
+      './module',
+      './module/submodule1.will.yml',
+      './module/submodule2.will.yml',
+      './module/submodule3.will.yml',
+      './module/submodule4.will.yml',
+      './module/proto',
+      './module/proto/File1.s',
+      './module/proto/File2.s',
+      './module/proto1',
+      './module/proto1/File1.s',
+      './module/proto2',
+      './module/proto2/File2.s'
+    ];
+    test.identical( files, exp );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with a .build'
+    test.case = '.with a .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with a .build' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with a .build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with b .build'
+    test.case = '.with b .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with b .build' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with b .build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/f1', './debug/f2' ] );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with c .build'
+    test.case = '.with c .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with c .build' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with c .build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
-  })
+  });
 
   /* - */
 
