@@ -18879,6 +18879,103 @@ function submodulesDownloadSingle( test )
 
 //
 
+function submodulesDownloadEnabledAndDisabled( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodulesDownloadEnabledAndDisabled' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:0 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'download submodules not recursive';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::enabledAndDisabled were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'download submodules and its modules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::enabledAndDisabled were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'download submodules recursive';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::enabledAndDisabled were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    return null;
+  });
+
+  /* - */
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:0 withDisabledSubmodules:1 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'download submodules not recursive';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::enabledAndDisabled were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:1 withDisabledSubmodules:1 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'download submodules and its modules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::enabledAndDisabled were downloaded in' ), 1 );
+    test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:2 withDisabledSubmodules:1 .build' });
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'download submodules recursive';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ 1/1 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::enabledAndDisabled were downloaded in' ), 0 );
+    test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::enabledAndDisabled were downloaded in' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function submodulesDownloadUpdate( test )
 {
   let context = this;
@@ -46151,6 +46248,7 @@ const Proto =
     submodulesDownloadRecursiveHd,
 
     submodulesDownloadSingle,
+    submodulesDownloadEnabledAndDisabled,
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,

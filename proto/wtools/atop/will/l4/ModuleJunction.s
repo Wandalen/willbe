@@ -1919,7 +1919,7 @@ function enabledGet()
   else if( junction.peer && junction.peer.module )
   result = junction.peer.module.enabled;
 
-  _.assert( result === null || _.boolIs( result ) );
+  _.assert( result === null || _.boolLike( result ) );
   return result;
 }
 

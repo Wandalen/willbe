@@ -3852,9 +3852,11 @@ function commandBuild( e )
 
   function handleEach( it )
   {
+    const supplementReletionFilterFromTransaction = _.mapOnly_( null, cui.transaction, cui.RelationFilterNulls );
     return it.opener.openedModule.modulesBuild
     ({
-      ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, supplementReletionFilterFromTransaction, [ 'withIn', 'withOut' ] ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
@@ -3888,7 +3890,9 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
+    const supplementReletionFilterFromTransaction = _.mapOnly_( null, cui.transaction, cui.RelationFilterNulls );
+    // let filterProperties = _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } );
+    let filterProperties = _.mapBut_( null, supplementReletionFilterFromTransaction, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
       ... filterProperties,
@@ -3926,10 +3930,11 @@ function commandExportPurging( e )
 
   function handleEach( it )
   {
+    const supplementReletionFilterFromTransaction = _.mapOnly_( null, cui.transaction, cui.RelationFilterNulls );
     return it.opener.openedModule.modulesExport
     ({
-      // ... _.mapBut_( null, cui.RelationFilterOn, { withIn : null, withOut : null } ),
-      ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
+      // ... _.mapBut_( null, cui.RelationFilterDefaults, { withIn : null, withOut : null } ),
+      ... _.mapBut_( null, supplementReletionFilterFromTransaction, [ 'withIn', 'withOut' ] ),
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
