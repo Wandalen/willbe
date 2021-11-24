@@ -12296,7 +12296,7 @@ function exportRecursiveUsingSubmodule( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportMultipleExported' );
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( 'super.out' ) );
   a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
@@ -12304,56 +12304,12 @@ function exportRecursiveUsingSubmodule( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with super .export.recursive debug:1 -- first'
+    test.case = '.imply withSubmodules:2 .with super .export.recursive debug:1 -- first';
     return null;
   });
 
-  a.appStart({ execPath : '.with super .export.recursive debug:1' })
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-
-    test.description = 'files';
-    var exp =
-    [
-      '.',
-      './.ex.will.yml',
-      './.im.will.yml',
-      './super.ex.will.yml',
-      './super.im.will.yml',
-      './proto',
-      './proto/File.debug.js',
-      './proto/File.release.js',
-      './sub.out',
-      './sub.out/submodule.debug.out.tgs',
-      './sub.out/submodule.out.will.yml',
-      './sub.out/debug',
-      './sub.out/debug/File.debug.js',
-      './super.out',
-      './super.out/supermodule.debug.out.tgs',
-      './super.out/supermodule.out.will.yml',
-      './super.out/debug',
-      './super.out/debug/File.debug.js'
-    ]
-    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
-    test.identical( files, exp );
-
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with super .export.recursive debug:1 -- second'
-    return null;
-  });
-
-  a.appStart({ execPath : '.with super .export.recursive debug:1' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export.recursive debug:1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12382,22 +12338,68 @@ function exportRecursiveUsingSubmodule( test )
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
+    var exp = 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
 
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
-    test.case = '.with super .export.recursive debug:0 -- first'
+    test.case = '.imply withSubmodules:2 .with super .export.recursive debug:1 -- second';
     return null;
   });
 
-  a.appStart({ execPath : '.with super .export.recursive debug:0' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export.recursive debug:1' });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/submodule.debug.out.tgs',
+      './sub.out/submodule.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.debug.out.tgs',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js'
+    ];
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    var exp = 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:2 .with super .export.recursive debug:0 -- first';
+    return null;
+  });
+
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export.recursive debug:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12428,26 +12430,27 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/debug/File.debug.js',
       './super.out/release',
       './super.out/release/File.release.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
+    var exp = 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
-    test.case = '.with super .export.recursive debug:0 -- second'
+    test.case = '.imply withSubmodules:2 .with super .export.recursive debug:0 -- second'
     return null;
   });
 
-  a.appStart({ execPath : '.with super .export.recursive debug:0' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export.recursive debug:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12478,11 +12481,12 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/debug/File.debug.js',
       './super.out/release',
       './super.out/release/File.release.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
+    var exp = 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
 
     return null;
