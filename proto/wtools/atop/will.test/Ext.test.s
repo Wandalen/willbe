@@ -11743,34 +11743,42 @@ function exportDoc( test )
 
   /* - */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = 'export submodule';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     a.fileProvider.filesDelete( a.abs( 'doc.out' ) );
-
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with . .export export.doc' })
-  a.appStart({ execPath : '.with . .export export.debug' })
-  a.appStart({ execPath : '.with . .export export.' })
-  a.appStart({ execPath : '.with doc .build doc:1' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with . .export export.doc' });
+  a.appStart({ execPath : '.with . .export export.debug' });
+  a.appStart({ execPath : '.with . .export export.' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .with doc .build doc:1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var files = a.find( a.abs( 'out' ) );
-    test.identical( files, [ '.', './submodule.default-debug-raw.out.tgs', './submodule.default-raw.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
+    var exp =
+    [
+      '.',
+      './submodule.default-debug-raw.out.tgs',
+      './submodule.default-raw.out.tgs',
+      './submodule.out.will.yml',
+      './debug',
+      './debug/File.debug.js',
+      './release',
+      './release/File.release.js'
+    ];
+    test.identical( files, exp );
 
     var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './file.md' ] );
 
     return null;
-  })
+  });
 
   /* - */
 
