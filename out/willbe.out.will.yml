@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: a37ecda2bafaba7ef67a70aaee6cf2bf
-    size: 8978
+    hash: 51d3d93d4731e2472042499b180d3dd7
+    size: 9045
 module:
   willbe.out:
     about:
@@ -3160,8 +3160,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodules/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/submodules/proto/WithSubmodules.s
-          - ../proto/wtools/atop/will.test/_asset/submodules-safety
-          - ../proto/wtools/atop/will.test/_asset/submodules-safety/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.im.will.yml
@@ -3263,6 +3261,10 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadEnabledAndDisabled
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadEnabledAndDisabled/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDownloadErrors
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadErrors/bad.will.yml
@@ -3877,6 +3879,10 @@ module:
         enabled: 0
       wcensorbasic:
         path: 'npm:///wcensorbasic'
+        autoExporting: 0
+        enabled: 0
+      widentitybasic:
+        path: 'npm:///widentitybasic'
         autoExporting: 0
         enabled: 0
       eslint:
@@ -4737,6 +4743,10 @@ module:
         path: 'npm:///wcensorbasic'
         autoExporting: 0
         enabled: 0
+      widentitybasic:
+        path: 'npm:///widentitybasic'
+        autoExporting: 0
+        enabled: 0
       eslint:
         path: 'npm:///eslint!7.32.0'
         autoExporting: 0
@@ -5308,5 +5318,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: a37ecda2bafaba7ef67a70aaee6cf2bf
-        size: 8978
+        hash: 51d3d93d4731e2472042499b180d3dd7
+        size: 9045

@@ -1,6 +1,6 @@
 {
   "name": "willbe",
-  "version": "0.5.520",
+  "version": "0.5.521",
   "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors": [
@@ -71,6 +71,7 @@
     "wnpmtools": "alpha",
     "wnamemapper": "alpha",
     "wLogger": "alpha",
+    "widentitybasic": "alpha",
     "wgraphextra": "alpha",
     "wgraphbasic": "alpha",
     "wfilesencoders": "alpha",
