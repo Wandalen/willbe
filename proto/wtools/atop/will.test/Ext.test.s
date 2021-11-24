@@ -12273,12 +12273,12 @@ function exportRecursive( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with ab/ .export.recursive -- first';
+    test.case = '.imply withSubmodules:2 .with ab/ .export.recursive -- first';
     return null;
   });
 
-  a.appStart({ execPath : '.with ab/ .export.recursive' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ab/ .export.recursive' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12287,10 +12287,11 @@ function exportRecursive( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
-    test.identical( _.strCount( op.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::module-ab / module::module-b / build::proto.export with 8 file(s) in' ), 1 );
+    var exp = 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    var exp = 'Exported module::module-ab / module::module-b / build::proto.export with 8 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
-
     return null;
   });
 
@@ -12298,12 +12299,12 @@ function exportRecursive( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with ab/ .export.recursive -- second';
+    test.case = '.imply withSubmodules:2 .with ab/ .export.recursive -- second';
     return null;
   });
 
-  a.appStart({ execPath : '.with ab/ .export.recursive' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ab/ .export.recursive' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12312,8 +12313,10 @@ function exportRecursive( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
-    test.identical( _.strCount( op.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
-    test.identical( _.strCount( op.output, 'Exported module::module-ab / module::module-b / build::proto.export with 8 file(s) in' ), 1 );
+    var exp = 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
+    var exp = 'Exported module::module-ab / module::module-b / build::proto.export with 8 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
@@ -12329,7 +12332,7 @@ function exportRecursive( test )
   {
     return a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
       a.fileProvider.filesDelete( a.abs( 'out' ) );
       return null;
