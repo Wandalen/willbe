@@ -1879,9 +1879,8 @@ function buildSubmodules( test )
   });
 
   a.appStart({ execPath : '.build' })
-  .finally( ( err, op ) =>
+  .then( (op ) =>
   {
-    test.true( !err );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     var files = a.find( a.abs( 'out' ) );
