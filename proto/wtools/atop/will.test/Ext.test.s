@@ -8626,7 +8626,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  a.appStart({ execPath : '.with * .modules.tree' })
+  a.appStart({ execPath : '.imply withSubmodules:2 .with * .modules.tree' })
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree';
@@ -8669,7 +8669,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* */
 
-  a.appStart({ execPath : '.with * .modules.tree withRemotePath:1' })
+  a.appStart({ execPath : '.imply withSubmodules:2 .with * .modules.tree withRemotePath:1' })
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree withRemotePath:1';
@@ -8712,7 +8712,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* */
 
-  a.appStart({ execPath : '.with * .modules.tree withLocalPath:1' })
+  a.appStart({ execPath : '.imply withSubmodules:2 .with * .modules.tree withLocalPath:1' })
   .then( ( op ) =>
   {
     test.case = '.with * .modules.tree withLocalPath:1';
@@ -8734,7 +8734,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* */
 
-  a.appStart({ execPath : '.with ** .modules.tree' })
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ** .modules.tree' })
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree';
@@ -8777,7 +8777,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* */
 
-  a.appStart({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ** .modules.tree withRemotePath:1' })
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree withRemotePath:1';
@@ -8820,7 +8820,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* */
 
-  a.appStart({ execPath : '.with ** .modules.tree withLocalPath:1' })
+  a.appStart({ execPath : '.imply withSubmodules:2 .with ** .modules.tree withLocalPath:1' })
   .then( ( op ) =>
   {
     test.case = '.with ** .modules.tree withLocalPath:1';
