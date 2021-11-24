@@ -373,6 +373,9 @@ submodule:
   wcensorbasic:
     path: 'npm:///wcensorbasic'
     enabled: 0
+  widentitybasic:
+    path: 'npm:///widentitybasic'
+    enabled: 0
   eslint:
     path: 'npm:///eslint!7.32.0'
     enabled: 0

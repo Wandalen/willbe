@@ -1,0 +1,22 @@
+about :
+  name : enabledAndDisabled
+  version : 0.1.0
+
+submodule :
+  ModuleForTesting1 :
+    path : git+hd://../-repo/ModuleForTesting1/?out=out/wModuleForTesting1.out.will
+    enabled : 1
+  ModuleForTesting2 :
+    path : git+hd://../-repo/ModuleForTesting2/?out=out/wModuleForTesting2.out.will
+    enabled : 0
+
+path :
+  in : .
+  out : out
+
+build :
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - step::submodules.download
