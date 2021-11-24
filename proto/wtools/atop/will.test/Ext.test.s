@@ -4711,31 +4711,29 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 {
   let context = this;
   let a = context.assetFor( test, 'reflectSubmodulesWithPluralCriterion' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'reflect informal submodule, manual export'
+    test.case = 'reflect informal submodule, manual export';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.each module .export' })
-
-  // fails with error on first run
-
-  a.appStart({ execPath : '.build variant1' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.each module .export' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .build variant1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
