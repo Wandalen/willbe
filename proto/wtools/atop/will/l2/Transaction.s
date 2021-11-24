@@ -310,7 +310,7 @@ let TransactionFields =
   ... _.Will.FilterFields,
 
   withPath : null,
-  withSubmodules : null,
+  withSubmodules : 0,
 
   withEnabledModules : null,
   withEnabledSubmodules : null,
