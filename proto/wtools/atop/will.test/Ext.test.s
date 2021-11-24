@@ -11439,18 +11439,28 @@ function exportImportMultiple( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'export submodule';
-    a.reflect();
+    a.reflectMinimal();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.with . .export debug:0' });
   a.appStart({ execPath : '.with . .export debug:1' });
-
   a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'out' ) );
-    test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
+    var exp =
+    [
+      '.',
+      './submodule.debug.out.tgs',
+      './submodule.out.tgs',
+      './submodule.out.will.yml',
+      './debug',
+      './debug/File.debug.js',
+      './release',
+      './release/File.release.js'
+    ];
+    test.identical( files, exp );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
     return null;
@@ -11460,19 +11470,26 @@ function exportImportMultiple( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.with super .export debug:0';
+    test.case = '.imply withSubmodules:1 .with super .export debug:0';
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   });
 
-  a.appStart({ execPath : '.with super .export debug:0' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .with super .export debug:0' });
+  a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'super.out' ) );
-    test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
+    var exp =
+    [
+      '.',
+      './supermodule.out.tgs',
+      './supermodule.out.will.yml',
+      './release',
+      './release/File.release.js'
+    ];
+    test.identical( files, exp );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
-
     return null;
   });
 
@@ -11480,19 +11497,25 @@ function exportImportMultiple( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.with super .clean dry:1';
+    test.case = '.imply withSubmodules:1 .with super .clean dry:1';
     return null;
   });
 
-  a.appStart({ execPath : '.with super .clean dry:1' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .with super .clean dry:1' });
+  a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'super.out' ) );
-    test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
+    var exp =
+    [
+      '.',
+      './supermodule.out.tgs',
+      './supermodule.out.will.yml',
+      './release',
+      './release/File.release.js'
+    ];
+    test.identical( files, exp );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '5 at ' ) );
-    test.true( _.strHas( op.output, 'Clean will delete 5 file(s)' ) );
-
     return null;
   });
 
@@ -11500,12 +11523,12 @@ function exportImportMultiple( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.with super .clean';
+    test.case = '.imply withSubmodules:1 .with super .clean';
     return null;
   });
 
-  a.appStart({ execPath : '.with super .clean' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .with super .clean' });
+  a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
@@ -11519,43 +11542,63 @@ function exportImportMultiple( test )
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.with super .export debug:0 ; .with super .export debug:1';
+    test.case = '.imply withSubmodules:1 .with super .export debug:0 ; .with super .export debug:1';
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   });
 
-  a.appStart({ execPath : '.with . .export debug:0' })
-  a.appStart({ execPath : '.with . .export debug:1' })
-  a.appStart({ execPath : '.with super .export debug:0' })
-  a.appStart({ execPath : '.with super .export debug:1' })
+  a.appStart({ execPath : '.with . .export debug:0' });
+  a.appStart({ execPath : '.with . .export debug:1' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export debug:0' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export debug:1' });
 
   a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'super.out' ) );
-    test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
+    var exp =
+    [
+      '.',
+      './supermodule.debug.out.tgs',
+      './supermodule.out.tgs',
+      './supermodule.out.will.yml',
+      './debug',
+      './debug/File.debug.js',
+      './release',
+      './release/File.release.js'
+    ];
+    test.identical( files, exp );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Exported module::supermodule / build::export.debug with 2 file(s)' ) );
-
     return null;
-  })
+  });
 
   /* */
 
   a.ready.then( ( op ) =>
   {
-    test.case = '.with super .clean dry:1';
+    test.case = '.imply withSubmodules:1 .with super .clean dry:1';
     return null;
   });
 
-  a.appStart({ execPath : '.with super .clean dry:1' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .with super .clean dry:1' });
+  a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'super.out' ) );
-    test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
+    var exp =
+    [
+      '.',
+      './supermodule.debug.out.tgs',
+      './supermodule.out.tgs',
+      './supermodule.out.will.yml',
+      './debug',
+      './debug/File.debug.js',
+      './release',
+      './release/File.release.js'
+    ];
+    test.identical( files, exp );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '8 at ' ) );
     test.true( _.strHas( op.output, 'Clean will delete 8 file(s)' ) );
-
     return null;
   });
 
@@ -11567,14 +11610,13 @@ function exportImportMultiple( test )
     return null;
   });
 
-  a.appStart({ execPath : '.with super .clean' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with super .clean' });
+  a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted 8 file(s)' ) );
-
     return null;
   });
 
