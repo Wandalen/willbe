@@ -13537,21 +13537,21 @@ function exportDiffDownloadPathsRegular( test )
     return null;
   });
 
-  a.appStart( '.with c .export.recursive' );
+  a.appStart( '.imply withSubmodules:2 .with c .export.recursive' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b', 'ModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
@@ -13560,7 +13560,6 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( _.strCount( op.output, 'was downloaded' ), 6 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 10 );
     test.identical( _.strCount( op.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
-
     return null;
   });
 
@@ -13572,22 +13571,22 @@ function exportDiffDownloadPathsRegular( test )
     a.reflect();
     return null;
   });
-  a.appStart( '.with c .export.recursive' )
-  a.appStart( '.with c .export.recursive' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with c .export.recursive' );
+  a.appStart( '.imply withSubmodules:2 .with c .export.recursive' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b', 'ModuleForTesting2' ];
-    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
-    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -14178,7 +14177,7 @@ function exportImplicit( test )
 
   return a.ready;
 
-} /* end of function exportImplicit */
+}
 
 exportImplicit.timeOut = 300000;
 
@@ -14292,13 +14291,13 @@ function exportAuto( test )
   /* - */
 
   return a.ready;
-} /* end of function exportAuto */
+}
 
 exportAuto.timeOut = 300000;
 exportAuto.description =
 `
 - auto export works similar to manual export
-`
+`;
 
 //
 
