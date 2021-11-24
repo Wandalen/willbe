@@ -12225,7 +12225,7 @@ function exportOutdated( test )
   /* - */
 
   return a.ready;
-} /* end of function exportOutdated */
+}
 
 //
 
@@ -12233,33 +12233,30 @@ function exportWholeModule( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportWhole' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'export whole module using in path'
+    test.case = 'export whole module using in path';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with module/ .export' })
-  a.appStart({ execPath : '.build' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with module/ .export' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './.will.yml', './proto', './proto/File1.s', './proto/dir', './proto/dir/File2.s' ] );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportWholeModule */
+}
 
 //
 
