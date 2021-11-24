@@ -11741,23 +11741,20 @@ function exportImport( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoExported' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.export'
+    test.case = '.export';
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with super .export debug:0' })
-  a.appStart({ execPath : '.with super .export debug:1' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export debug:0' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .with super .export debug:1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -11765,7 +11762,9 @@ function exportImport( test )
     test.identical( files, [ 'debug', 'release', 'supermodule.out.will.yml' ] );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
