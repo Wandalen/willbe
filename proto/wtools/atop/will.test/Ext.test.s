@@ -3744,40 +3744,35 @@ function reflectSubmodulesWithBase( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup';
     a.reflect();
     return null;
-  })
+  });
 
-  /* */
-
-  a.appStart({ execPath : '.each module .export' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.each module .export' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( a.fileProvider.isTerminal( a.abs( 'submodule1.out.will.yml' ) ) );
     test.true( a.fileProvider.isTerminal( a.abs( 'submodule2.out.will.yml' ) ) );
     return op;
-  })
+  });
 
   /* */
 
   a.ready.then( () =>
   {
-    test.case = 'variant 0, src basePath : ../..'
-    a.fileProvider.filesDelete( a.abs( 'out' ) )
+    test.case = 'variant 0, src basePath : ../..';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
 
-  a.appStart({ execPath : '.build variant:0' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .build variant:0' })
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-
     var expected =
     [
       '.',
@@ -3787,27 +3782,25 @@ function reflectSubmodulesWithBase( test )
       './debug/reflectSubmodulesWithBase/module/proto',
       './debug/reflectSubmodulesWithBase/module/proto/File1.s',
       './debug/reflectSubmodulesWithBase/module/proto/File2.s'
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, expected );
     return op;
-  })
+  });
 
   /* */
 
   a.ready.then( () =>
   {
-    test.case = 'variant 1, src basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/../.."'
-    a.fileProvider.filesDelete( a.abs( 'out' ) )
+    test.case = 'variant 1, src basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/../.."';
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
 
-  a.appStart({ execPath : '.build variant:1' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .build variant:1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-
     var expected =
     [
       '.',
@@ -3820,9 +3813,9 @@ function reflectSubmodulesWithBase( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, expected );
     return op;
-  })
+  });
 
-  /* */
+  /* - */
 
   return a.ready;
 }
