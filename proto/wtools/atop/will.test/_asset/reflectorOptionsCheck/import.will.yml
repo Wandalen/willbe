@@ -24,17 +24,20 @@ build :
     criterion :
       default : 1
     steps :
+      - submodules.reload
       - step::reflect.withoutOptions
 
   defaultOptions :
     criterion :
       default : 1
     steps :
+      - submodules.reload
       - step::reflect.defaultOptions
 
   notDefaultOptions :
     criterion :
       default : 1
     steps :
+      - submodules.reload
       - step::reflect.notDefaultOptions
 

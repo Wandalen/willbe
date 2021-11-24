@@ -3222,57 +3222,53 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'reflectorOptionsCheck' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
   a.appStart({ execPath : '.export' })
-
   a.ready.then( () =>
   {
     a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart({ args : '.with import .build defaultOptions' })
-  .then( ( op ) =>
+  a.appStart({ args : '.with import .build defaultOptions' });
+  a.ready.then( ( op ) =>
   {
     test.case = '".with import .build defaultOptions", first reflection';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
-
     return null;
   });
 
   /* */
 
-  a.appStart({ args : '.with import .build defaultOptions' })
-  .then( ( op ) =>
+  a.appStart({ args : '.with import .build defaultOptions' });
+  a.ready.then( ( op ) =>
   {
     test.case = '".with import .build defaultOptions", second reflection';
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'reflected 1 file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
-
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.with import .build withoutOptions' })
-  .then( ( op ) =>
+  a.appStartNonThrowing({ args : '.with import .build withoutOptions' });
+  a.ready.then( ( op ) =>
   {
     test.case = '".with import .build withoutOptions", throw error - different files';
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
-
     return null;
   });
 
