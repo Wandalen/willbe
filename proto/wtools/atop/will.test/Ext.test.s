@@ -6025,20 +6025,17 @@ hookHlink.timeOut = 300000;
 
 function hookGitPull( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  if( !_.censor )
+  return test.true( true );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
 
-  /* */
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
+
+  /* - */
 
   begin().then( () =>
   {
@@ -6050,7 +6047,7 @@ function hookGitPull( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
@@ -6100,7 +6097,7 @@ function hookGitPull( test )
     test.case = '.with clone/ .call GitPull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
@@ -6130,12 +6127,7 @@ function hookGitPull( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
