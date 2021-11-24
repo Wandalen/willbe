@@ -5600,18 +5600,16 @@ function hookCallInfo( test )
   /* */
 
   a.appStart( '.clean' );
-  a.appStart( '.export' )
-  .then( ( op ) =>
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
-
     test.true( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
-
     return null;
   });
 
@@ -5622,7 +5620,7 @@ function hookCallInfo( test )
   {
     test.case = '.hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5637,7 +5635,7 @@ function hookCallInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
@@ -5652,7 +5650,7 @@ function hookCallInfo( test )
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 7 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '! Outdated' ), 1 );
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 1 );
