@@ -8498,69 +8498,50 @@ function modulesTreeDotless( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessSingleExported' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply v:1 ; .modules.tree withLocalPath:1';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-
     test.identical( _.strCount( op.output, '+-- module::' ), 2 );
     test.identical( _.strCount( op.output, 'modulesTreeDotless/' ), 2 );
     test.identical( _.strCount( op.output, 'modulesTreeDotless/sub' ), 1 );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.modules.tree withLocalPath:1'
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.modules.tree withLocalPath:1' })
-
+  a.appStart({ execPath : '.imply withSubmodules:1 .modules.tree withLocalPath:1' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-
     test.identical( _.strCount( op.output, '+-- module::' ), 2 );
     test.identical( _.strCount( op.output, 'modulesTreeDotless/' ), 4 );
     test.identical( _.strCount( op.output, 'modulesTreeDotless/sub' ), 2 );
-
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeDotless */
+}
 
 //
 
