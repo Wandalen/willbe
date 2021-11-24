@@ -13401,14 +13401,13 @@ function exportWithRemoteSubmodulesRecursive( test )
 
   a.ready.then( () =>
   {
-    test.case = 'export'
+    test.case = 'export';
     return null;
   });
 
   a.appStart( '.with "**" .clean' );
-
-  a.appStart( '.with "**" .export.recursive' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with "**" .export.recursive' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
