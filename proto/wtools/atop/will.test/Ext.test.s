@@ -5294,10 +5294,10 @@ function reflectComplexInherit( test )
     return null;
   });
 
-  a.appStart({ execPath : '.with a .export' })
-  a.appStart({ execPath : '.with b .export' })
-  a.appStart({ execPath : '.with ab/ .build' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with a .export' });
+  a.appStart({ execPath : '.with b .export' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .with ab/ .build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ reflector::files.all reflected 21 file(s)' ) );
@@ -5336,12 +5336,12 @@ function reflectComplexInherit( test )
     return null;
   });
 
-  a.appStart({ execPath : '.with a .export' })
-  a.appStart({ execPath : '.with b .export' })
-  a.appStart({ execPath : '.with c .export' })
-  a.appStart({ execPath : '.with ab/ .export' })
-  a.appStart({ execPath : '.with abac/ .build' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.with a .export' });
+  a.appStart({ execPath : '.with b .export' });
+  a.appStart({ execPath : '.with c .export' });
+  a.appStart({ execPath : '.with ab/ .export' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .with abac/ .build' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ reflector::files.all reflected 24 file(s)' ) );
@@ -5386,7 +5386,7 @@ function reflectComplexInherit( test )
   {
     return a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
       return null;
     });
