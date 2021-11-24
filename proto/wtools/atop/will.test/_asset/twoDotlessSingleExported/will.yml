@@ -73,5 +73,6 @@ build :
       raw : 1
       export : 1
     steps :
+      - submodules.reload
       - build::*=1
       - step::export*=1

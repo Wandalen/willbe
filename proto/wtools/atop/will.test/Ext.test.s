@@ -12755,17 +12755,14 @@ function exportDotlessSingle( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.export.recursive debug:1'
+    test.case = '.export.recursive debug:1';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.export.recursive debug:1' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.export.recursive debug:1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12788,25 +12785,26 @@ function exportDotlessSingle( test )
       './super.out/debug',
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    var exp = 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
-
     return null;
-  })
+  });
 
-  .then( () =>
+  /* */
+
+  a.ready.then( () =>
   {
-    test.case = '.with . .export.recursive debug:0'
+    test.case = '.imply withSubmodules:2 .with . .export.recursive debug:0';
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with . .export.recursive debug:0' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:2 .with . .export.recursive debug:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12834,20 +12832,20 @@ function exportDotlessSingle( test )
       './super.out/release',
       './super.out/release/File.debug.js',
       './super.out/release/File.release.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::sub / build::export. with 2 file(s) in' ), 1 );
+    var exp = 'Exported module::supermodule / module::sub / build::export. with 2 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export. with 3 file(s) in' ), 1 );
-
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportDotlessSingle */
+}
 
 exportDotlessSingle.timeOut = 300000;
 
