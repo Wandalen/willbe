@@ -6105,13 +6105,11 @@ function commandRepoPullOpen( e )
   let cui = this;
   cui._command_head( commandRepoPullOpen, arguments );
 
-  // return cui._commandBuildLike
   return cui._commandModuleOrientedLike
   ({
     event : e,
     name : 'repo pull open',
     onEachModule : handleEach,
-    // onEach : handleEach,
     commandRoutine : commandRepoPullOpen,
   });
 
@@ -6123,14 +6121,6 @@ function commandRepoPullOpen( e )
       ... _.mapOnly_( null, e.optionsMap, module.repoPullOpen.defaults ),
     });
   }
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.repoPullOpen
-  //   ({
-  //     title : e.subject,
-  //     ... _.mapOnly_( null, e.optionsMap, it.opener.openedModule.repoPullOpen.defaults ),
-  //   });
-  // }
 }
 
 commandRepoPullOpen.defaults =
@@ -6140,7 +6130,6 @@ commandRepoPullOpen.defaults =
   token : null,
   srcBranch : null,
   dstBranch : 'master',
-  // title : null, /* Dmytro : rewrites options */
   body : null,
   verbosity : 2,
   withSubmodules : 1

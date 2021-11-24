@@ -28152,25 +28152,23 @@ stepGitTag.rapidity = -1;
 
 function stepRepoReleaseRemote( test )
 {
-  const context = this;
-
-  const config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
 
   /* */
 
+  const context = this;
   const a = context.assetFor( test, 'repoRelease' );
-  a.reflectMinimal();
-  const user = config.about.user;
-  const token = config.about[ 'github.token' ];
+  const user = 'dmvict';
+  // const user = 'wtools-bot';
   const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
-
-  /* */
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
 
   begin();
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -28276,6 +28274,7 @@ function stepRepoReleaseRemote( test )
 
   function begin()
   {
+    a.ready.then( ( op ) => a.reflectMinimal() );
     a.ready.then( ( op ) => repositoryDelete() );
     a.ready.then( () =>
     {
@@ -28300,6 +28299,7 @@ function stepRepoReleaseRemote( test )
     ({
       remotePath : repository,
       token,
+      throwing : 0,
     });
   }
 }
@@ -32510,73 +32510,6 @@ function commandSubmodulesGitStatusWithOnlyRoot( test )
   let context = this;
   let a = context.assetFor( test, 'gitPush' );
 
-  let config;
-  if( _.censor )
-  config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
-  return test.true( true );
-
-  /* - */
-
-  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
-  {
-    test.case = 'all defaults exept title and source branch, wrong data, throwing';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
-
-    return null;
-  });
-
-  /* */
-
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new token:"token"' )
-  .then( ( op ) =>
-  {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function commandSubmodulesGitStatusWithOnlyRoot( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
   /* - */
 
   begin().then( () =>
@@ -33284,62 +33217,59 @@ commandSubmodulesGitSync.rapidity = -1;
 
 function commandSubmodulesRepoPullOpen( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config;
-  if( _.censor )
-  config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
+
+  /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
+
+  a.reflect();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : `git remote add origin https://github.com/${ user }/New2` });
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, not throwing - without submodules';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
     return null;
   });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 1 );
-
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .submodules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.with original/Git.* .submodules .repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, not throwing - executes not submodules';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 0 );
-    test.identical( _.strCount( op.output, 'Failed to submodules git pr open at' ), 0 );
-
+    test.case = 'direct declaration of token, wrong data, not throwing - executes not submodules';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -36239,62 +36169,61 @@ commandSubmodules.rapidity = -1;
 
 function commandModulesRepoPullOpen( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config;
-  if( _.censor )
-  config = _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
+
+  /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
+
+  a.reflect();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : `git remote add origin https://github.com/${ user }/New2` });
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, /Error code : \d+/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
   /* */
 
   a.appStart( '.with original/Git.* .submodules.download' );
-  a.appStartNonThrowing( '.with original/Git.* .modules.repo.pull.open "some title" srcBranch:new' )
+  a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new' )
   .then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, /Error code : \d+/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
-
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.repo.pull.open "some title" srcBranch:new token:"token"' )
+  a.appStartNonThrowing( '.with original/Git.* .modules .repo.pull.open "some title" srcBranch:new token:"token"' )
   .then( ( op ) =>
   {
-    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.case = 'direct declaration of token, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
-    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
 
+    test.identical( _.strCount( op.output, /Error code : \d+/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -38219,14 +38148,17 @@ commandGitStatus.rapidity = -1;
 
 function commandGitStatusWithPR( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-
-  let config = a.fileProvider.configUserRead();
-  if( !_.process.insideTestContainer() || !config || !config.about || !config.about[ 'github.token' ] )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() || process.platform === 'win32' )
   return test.true( true );
 
-  let user = config.about.user;
+  /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
 
   /* - */
 
@@ -38267,20 +38199,13 @@ function commandGitStatusWithPR( test )
     test.identical( _.strCount( op.output, 'Has 1 opened pull request(s)' ), 0 );
 
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  })
+  a.ready.finally( () => repositoryDelete() );
 
-  /* */
+  /* - */
 
   return a.ready;
 
@@ -38288,40 +38213,38 @@ function commandGitStatusWithPR( test )
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    const currentPath = a.abs( 'original' );
     a.ready.then( () =>
     {
+      a.reflect()
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
       return null;
     });
-    a.ready.then( ( op ) =>
-    {
-      return _.git.repositoryDelete
-      ({
-        remotePath : `https://github.com/${user}/New2`,
-        token : config.about[ 'github.token' ],
-      });
-    });
-    a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
-    a.shell
-    ({
-      currentPath,
-      execPath :
-      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
-    });
+    a.ready.then( ( op ) => repositoryDelete() );
+    a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' });
+    let execPath = `git config credential.helper '!f(){ echo "username=${ user }" && echo "password=${ token }"; }; f'`;
+    a.shell({ currentPath, execPath });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
     a.shell({ currentPath, execPath : 'git push -u origin master' });
     a.shell({ currentPath, execPath : 'git checkout -b new' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
+    a.ready.then( () => { a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' ); return null });
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new' });
-    a.appStart( '.with original/GitPrOpen .git.pr "New PR" srcBranch:new' )
+    a.appStart( '.with original/GitPrOpen .repo.pull.open "New PR" srcBranch:new' );
     return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token,
+      throwing : 0,
+    });
   }
 }
 
@@ -39052,26 +38975,32 @@ function commandGitTag( test )
 
 function commandRepoPullOpen( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor === undefined ? null : _.censor.configRead();
-  if( !config || !config.about || config.about.user !== 'wtools-bot' )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
+
+  /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
+
+  a.reflect();
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'original' ), execPath : `git remote add origin https://github.com/${ user }/New2` });
 
   /* - */
 
-  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' )
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.with original/Git.* .repo.pull.open "some title" srcBranch:new' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'all defaults exept title and source branch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39082,11 +39011,9 @@ function commandRepoPullOpen( test )
   {
     test.case = 'token from environment variables, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39097,11 +39024,9 @@ function commandRepoPullOpen( test )
   {
     test.case = 'direct declaration of token, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39112,11 +39037,9 @@ function commandRepoPullOpen( test )
   {
     test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
     test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to repo pull open' ), 1 );
     return null;
   });
 
@@ -39129,17 +39052,19 @@ function commandRepoPullOpen( test )
 
 function commandRepoPullOpenRemote( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
-  a.reflect();
-
-  let config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() || process.platform === 'win32' )
   return test.true( true );
 
-  let user = config.about.user;
-
   /* */
+
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+  const user = 'wtools-bot';
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
+
+  /* - */
 
   begin();
   a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
@@ -39163,9 +39088,8 @@ function commandRepoPullOpenRemote( test )
     test.case = 'opened pull request, only title and srcBranch';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
-
     return null;
-  })
+  });
 
   /* */
 
@@ -39176,22 +39100,14 @@ function commandRepoPullOpenRemote( test )
     test.case = 'opened pull request, body and dstBranch';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
-
     return null;
-  })
+  });
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    return _.git.repositoryDelete
-    ({
-      remotePath : `https://github.com/${user}/New2`,
-      token : config.about[ 'github.token' ],
-    });
-  })
+  a.ready.finally( () => repositoryDelete() );
 
-  /* */
+  /* - */
 
   return a.ready;
 
@@ -39201,20 +39117,24 @@ function commandRepoPullOpenRemote( test )
   {
     a.ready.then( () =>
     {
+      a.reflect();
       a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
       return null;
     });
-
-    a.ready.then( ( op ) =>
-    {
-      return _.git.repositoryDelete
-      ({
-        remotePath : `https://github.com/${user}/New2`,
-        token : config.about[ 'github.token' ],
-      });
-    })
-
+    a.ready.then( () => repositoryDelete() );
     return a.ready;
+  }
+
+  /* */
+
+  function repositoryDelete()
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${ user }/New2`,
+      token,
+      throwing : 0,
+    });
   }
 
   /* */
@@ -39222,21 +39142,14 @@ function commandRepoPullOpenRemote( test )
   function prepareFirstBranch()
   {
     let currentPath = a.abs( 'original' );
-    a.shell
-    ({
-      currentPath,
-      execPath :
-      `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`,
-    });
+    let execPath =
+    `git config credential.helper '!f(){ echo "username=${ user }" && echo "password=${ token }"; }; f'`;
+    a.shell({ currentPath, execPath });
     a.shell({ currentPath, execPath : 'git add --all' });
     a.shell({ currentPath, execPath : 'git commit -m first' });
     a.shell({ currentPath, execPath : 'git push -u origin master' });
     a.shell({ currentPath, execPath : 'git checkout -b new' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
+    a.ready.then( () => { a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' ); return null });
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new' });
     return a.ready;
@@ -39249,11 +39162,7 @@ function commandRepoPullOpenRemote( test )
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git checkout master' });
     a.shell({ currentPath, execPath : 'git checkout -b new2' });
-    a.ready.then( () =>
-    {
-      a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
-      return null;
-    });
+    a.ready.then( () => { a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' ); return null });
     a.shell({ currentPath, execPath : 'git commit -am second' });
     a.shell({ currentPath, execPath : 'git push -u origin new2' });
     return a.ready;
@@ -39264,25 +39173,22 @@ function commandRepoPullOpenRemote( test )
 
 function commandRepoReleaseRemote( test )
 {
-  const context = this;
-
-  const config = _.censor.configRead();
-  if( !config || !config.about || !config.about.user !== 'wtools-bot' || !config.about[ 'github.token' ] )
+  const token = process.env.PRIVATE_WTOOLS_BOT_TOKEN;
+  if( !token || !_.process.insideTestContainer() )
   return test.true( true );
 
   /* */
 
+  const context = this;
   const a = context.assetFor( test, 'repoRelease' );
-  a.reflectMinimal();
-  const user = config.about.user;
-  const token = config.about[ 'github.token' ];
+  const user = 'wtools-bot';
   const repository = `https://github.com/${ user }/New-${ _.intRandom( 1000000 ) }`;
-
-  /* */
+  const defaultIdentity = { name : '_bot_', login : user, email : 'bot@domain.com', type : 'git', token, default : 1 };
+  _.identity.identityNew({ identity : defaultIdentity, force : 1 });
 
   begin();
 
-  /* */
+  /* - */
 
   a.ready.then( () =>
   {
@@ -39386,6 +39292,7 @@ function commandRepoReleaseRemote( test )
 
   function begin()
   {
+    a.ready.then( ( op ) => a.reflectMinimal() );
     a.ready.then( ( op ) => repositoryDelete() );
     a.ready.then( () =>
     {
@@ -39398,7 +39305,6 @@ function commandRepoReleaseRemote( test )
         token,
       });
     });
-
     return a.ready;
   }
 
@@ -39410,6 +39316,7 @@ function commandRepoReleaseRemote( test )
     ({
       remotePath : repository,
       token,
+      throwing : 0,
     });
   }
 }

@@ -80,6 +80,7 @@
     "wcommandsconfig": "",
     "wcommandsaggregator": "",
     "wcensorbasic": "",
+    "widentitybasic": "",
     "tar": "6.1.11",
     "open": "7.0.4",
     "gitconfiglocal": "2.1.0",
