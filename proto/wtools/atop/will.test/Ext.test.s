@@ -1156,6 +1156,71 @@ check that utility resolves valid names for build types:
   - publish;
 `;
 
+//
+
+function etcRunWithSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'runWithSubmodules' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'default behavior, should run only supermodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo super' ), 1 );
+    test.identical( _.strCount( op.output, '> echo submodule' ), 0 );
+    test.identical( _.strCount( op.output, '> echo submodule2' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.imply withSubmodules:0 .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'withSubmodules:0, should run only supermodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo super' ), 1 );
+    test.identical( _.strCount( op.output, '> echo submodule' ), 0 );
+    test.identical( _.strCount( op.output, '> echo submodule2' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.imply withSubmodules:1 .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'withSubmodules:1, should run supermodule and submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo super' ), 1 );
+    test.identical( _.strCount( op.output, '> echo submodule' ), 1 );
+    test.identical( _.strCount( op.output, '> echo submodule2' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.imply withSubmodules:2 .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'withSubmodules:2, should run supermodule and submodules recursive';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo super' ), 1 );
+    test.identical( _.strCount( op.output, /> echo submodule\s/ ), 1 );
+    test.identical( _.strCount( op.output, '> echo submodule2' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
 // --
 // build
 // --
@@ -46047,6 +46112,8 @@ const Proto =
 
     etcResolveDefaultBuilds,
     etcResolveBuildsLists,
+
+    etcRunWithSubmodules,
 
     // build
 
