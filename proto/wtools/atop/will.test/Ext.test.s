@@ -7934,8 +7934,8 @@ function verbositySet( test )
   /* - */
 
   a.appStart({ execPath : '.clean' });
-  a.appStart({ execPath : '.imply verbosity:3 ; .build' })
-  .finally( ( err, op ) =>
+  a.appStart({ execPath : '.imply verbosity:3 ; .build' });
+  a.ready.finally( ( err, op ) =>
   {
     test.case = '.imply verbosity:3 ; .build';
     test.true( !err );
@@ -7943,30 +7943,29 @@ function verbositySet( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.true( _.strHas( op.output, '.imply verbosity:3 ; .build' ) );
-    test.true( _.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
-    test.true( _.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.true( _.strHas( op.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ) );
-    test.true( _.strHas( op.output, 'Failed to open module::submodules / relation::ModuleForTesting2a' ) );
-    test.true( _.strHas( op.output, '. Read 2 willfile(s) in' ) );
+    test.identical( _.strCount( op.output, '.imply verbosity:3 ; .build' ), 1 );
+    test.identical( _.strCount( op.output, / \. Opened .+\/\.im\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, / \. Opened .+\/\.ex\.will\.yml/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open module::submodules / relation::ModuleForTesting2a' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
 
-    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.false( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ), 1 );
+    test.identical( _.strCount( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ), 0 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-    test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-    test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
-    test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
-    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
+    test.identical( _.strCount( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ), 1 );
+    test.identical( _.strCount( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ), 1 );
+    test.identical( _.strCount( op.output, ' + reflector::reflect.submodules reflected' ), 1 );
+    test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ), 1 );
     return null;
   });
 
-  /* - */
+  /* */
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.imply verbosity:2 ; .build' })
-  .finally( ( err, op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply verbosity:2 ; .build' });
+  a.ready.finally( ( err, op ) =>
   {
     test.case = '.imply verbosity:2 ; .build';
     test.true( !err );
@@ -7974,30 +7973,29 @@ function verbositySet( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.true( _.strHas( op.output, '.imply verbosity:2 ; .build' ) );
-    test.true( !_.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
-    test.true( !_.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.true( !_.strHas( op.output, 'Failed to open relation::ModuleForTesting1' ) );
-    test.true( !_.strHas( op.output, 'Failed to open relation::ModuleForTesting2a' ) );
-    test.true( _.strHas( op.output, '. Read 2 willfile(s) in' ) );
+    test.identical( _.strCount( op.output, '.imply verbosity:2 ; .build' ), 1 );
+    test.identical( _.strCount( op.output, / \. Opened .+\/\.im\.will\.yml/ ), 0 );
+    test.identical( _.strCount( op.output, / \. Opened .+\/\.ex\.will\.yml/ ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open relation::ModuleForTesting1' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open relation::ModuleForTesting2a' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 1 );
 
-    test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.false( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ), 1 );
+    test.identical( _.strCount( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ), 0 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
-    test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-    test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
-    test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
-    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
+    test.identical( _.strCount( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ), 1 );
+    test.identical( _.strCount( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ), 1 );
+    test.identical( _.strCount( op.output, ' + reflector::reflect.submodules reflected' ), 1 );
+    test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ), 1 );
     return null;
   });
 
-  /* - */
+  /* */
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.imply verbosity:1 ; .build' })
-  .finally( ( err, op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply verbosity:1 ; .build' });
+  a.ready.finally( ( err, op ) =>
   {
     test.case = '.imply verbosity:1 ; .build';
     test.true( !err );
@@ -8005,22 +8003,21 @@ function verbositySet( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
 
-    test.true( _.strHas( op.output, '.imply verbosity:1 ; .build' ) );
-    test.true( !_.strHas( op.output, / \. Opened .+\/\.im\.will\.yml/ ) );
-    test.true( !_.strHas( op.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.true( !_.strHas( op.output, ' ! Failed to open relation::ModuleForTesting1' ) );
-    test.true( !_.strHas( op.output, ' ! Failed to open relation::ModuleForTesting2a' ) );
-    test.true( !_.strHas( op.output, '. Read 2 willfile(s) in' ) );
+    test.identical( _.strCount( op.output, '.imply verbosity:1 ; .build' ), 1 );
+    test.identical( _.strCount( op.output, / \. Opened .+\/\.im\.will\.yml/ ), 0 );
+    test.identical( _.strCount( op.output, / \. Opened .+\/\.ex\.will\.yml/ ), 0 );
+    test.identical( _.strCount( op.output, ' ! Failed to open relation::ModuleForTesting1' ), 0 );
+    test.identical( _.strCount( op.output, ' ! Failed to open relation::ModuleForTesting2a' ), 0 );
+    test.identical( _.strCount( op.output, '. Read 2 willfile(s) in' ), 0 );
 
-    test.true( !_.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.true( !_.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.true( !_.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ), 0 );
+    test.identical( _.strCount( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ), 0 );
+    test.identical( _.strCount( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ), 0 );
     test.identical( _.strCount( op.output, 'submodule(s)' ), 0 );
-    test.true( !_.strHas( op.output, ' - Deleted' ) );
-    test.true( !_.strHas( op.output, ' + reflect.proto.debug reflected 2 file(s) ' ) );
-    test.true( !_.strHas( op.output, ' + reflect.submodules reflected' ) );
-    test.true( _.strHas( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
+    test.identical( _.strCount( op.output, ' - Deleted' ), 0 );
+    test.identical( _.strCount( op.output, ' + reflect.proto.debug reflected 2 file(s) ' ), 0 )
+    test.identical( _.strCount( op.output, ' + reflect.submodules reflected' ), 0 );
+    test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.*/ ), 1 );
     return null;
   });
 
