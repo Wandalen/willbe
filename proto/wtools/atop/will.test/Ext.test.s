@@ -12956,7 +12956,7 @@ function exportRewritesOutFile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'exportRewritesOutFile' );
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.fileCopy( a.abs( 'copy.will.yml' ), a.abs( '.will.yml' ) );
 
   /* - */
@@ -13039,17 +13039,16 @@ function exportWithRemoteSubmodulesMin( test )
     return null;
   });
 
-  a.appStart( '.with group1/a .export' )
-  a.appStart( '.with z .export' )
-
-  .then( ( op ) =>
+  a.appStart( '.with group1/a .export' );
+  a.appStart( '.imply withSubmodules:2 .with z .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
-    test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
+    test.identical( _.strCount( op.output, '+ 2/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
     var exp =
     [
