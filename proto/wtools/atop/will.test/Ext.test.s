@@ -4609,7 +4609,7 @@ function reflectWithSelectorInDstFilter( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './release', './release/Single.s' ] );
     return null;
-  })
+  });
 
   /* - */
 
@@ -4622,22 +4622,21 @@ function reflectSubmodulesWithCriterion( test )
 {
   let context = this;
   let a = context.assetFor( test, 'submodulesWithCriterion' );
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'setup'
+    test.case = 'setup';
     a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.with module/A .export' })
-  a.appStart({ execPath : '.with module/B .export' })
+  a.appStart({ execPath : '.with module/A .export' });
+  a.appStart({ execPath : '.with module/B .export' });
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.routinePath );
@@ -4655,50 +4654,48 @@ function reflectSubmodulesWithCriterion( test )
       './module/A/A.js',
       './module/B',
       './module/B/B.js'
-    ]
+    ];
     test.identical( files, expected );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'reflect only A'
+    test.case = 'reflect only A';
     a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.build A' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .build A' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out/debug' ) );
     var expected = [ '.', './A.js' ];
     test.identical( files, expected );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'reflect only B'
+    test.case = 'reflect only B';
     a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.build B' })
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .build B' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     var files = a.find( a.abs( 'out/debug' ) );
     var expected = [ '.', './B.js' ];
     test.identical( files, expected );
     return null;
-  })
+  });
 
   /* - */
 
