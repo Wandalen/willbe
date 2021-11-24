@@ -12749,7 +12749,7 @@ function exportDotlessSingle( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessSingleExported' );
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( 'super.out' ) );
   a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
@@ -12855,23 +12855,20 @@ function exportTracing( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessSingleExported' );
-  a.reflect();
+  a.reflectMinimal();
   a.fileProvider.filesDelete( a.abs( 'super.out' ) );
   a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.export.recursive debug:1'
+    test.case = '.imply withSubmodules:2 .export.recursive debug:1';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ execPath : '.export.recursive debug:1', currentPath : a.routinePath + '/proto' })
-
-  .then( ( op ) =>
+  a.appStartNonThrowing({ execPath : '.imply withSubmodules:2 .export.recursive debug:1', currentPath : a.abs( './proto' ) });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12894,29 +12891,26 @@ function exportTracing( test )
       './super.out/debug',
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    var exp = 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with . .export.recursive debug:1'
+    test.case = '.imply withSubmodules:2 .with . .export.recursive debug:1';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing({ execPath : '.with . .export.recursive debug:1', currentPath : a.routinePath + '/proto' })
-
-  .finally( ( err, op ) =>
+  a.appStartNonThrowing({ execPath : '.imply withSubmodules:2 .with . .export.recursive debug:1', currentPath : a.abs( './proto' ) });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -12939,20 +12933,20 @@ function exportTracing( test )
       './super.out/debug',
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
-    ]
+    ];
     var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
-    test.identical( _.strCount( op.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    var exp = 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in';
+    test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
-
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function exportTracing */
+}
 
 exportTracing.timeOut = 300000;
 
