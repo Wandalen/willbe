@@ -4746,6 +4746,14 @@ function reflectNpmModules( test )
 
   /* - */
 
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  });
+
+  /* */
+
   a.appStart( '.build' )
   .then( ( op ) =>
   {
@@ -4773,8 +4781,8 @@ function reflectNpmModules( test )
       './proto/wtools/testing/l4/testing12ab',
       './proto/wtools/testing/l4/testing12ab/Include.s',
       './proto/wtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
-    ]
-    var files = a.find( a.abs( 'out' ) )
+    ];
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
 
     return null;
@@ -7894,8 +7902,8 @@ function verbositySet( test )
 
     test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.true( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.identical( _.strCount( op.output, 'submodule(s)' ), 2 );
+    test.false( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
     test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
@@ -7925,8 +7933,8 @@ function verbositySet( test )
 
     test.true( _.strHas( op.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.true( _.strHas( op.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
-    test.true( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.identical( _.strCount( op.output, 'submodule(s)' ), 2 );
+    test.false( _.strHas( op.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( op.output, 'submodule(s)' ), 1 );
     test.true( _.strHas( op.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.true( _.strHas( op.output, ' + reflector::reflect.submodules reflected' ) );
@@ -13051,7 +13059,7 @@ function exportWithRemoteSubmodulesMin( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
 
     var exp =
     [
@@ -13138,7 +13146,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/2 submodule(s) of module::z / module::a were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 1/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
 
     var exp =
     [
@@ -13229,7 +13237,7 @@ function exportWithRemoteSubmodules( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 24 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 0 );
 
     var exp =
     [
@@ -16375,7 +16383,7 @@ function cleanRecursiveMin( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
 
     var exp =
     [
@@ -16471,7 +16479,7 @@ function cleanGlobMin( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
     test.identical( _.strCount( op.output, '. Opened .' ), 12 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 0 );
 
     var exp =
     [
@@ -16574,7 +16582,6 @@ function cleanRecursive( test )
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 24 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
     return null;
   });
 
@@ -16624,12 +16631,11 @@ function cleanDisabledModule( test )
   a.ready.then( () =>
   {
     test.case = '.clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16640,10 +16646,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.clean' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16654,21 +16659,18 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with . .clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16679,10 +16681,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.with . .clean' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16693,21 +16694,18 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.with * .clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16718,10 +16716,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStartNonThrowing( '.with * .clean' )
-
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -16730,25 +16727,21 @@ function cleanDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 0 );
-    // test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
     test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply withDisabled:1 ; .with * .clean';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
+  });
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16759,10 +16752,9 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
     return null;
-  })
+  });
 
   a.appStart( '.imply withDisabled:1 ; .with * .clean' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -16773,13 +16765,12 @@ function cleanDisabledModule( test )
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-
-} /* end of function cleanDisabledModule */
+}
 
 cleanDisabledModule.rapidity = -1;
 cleanDisabledModule.timeOut = 300000;

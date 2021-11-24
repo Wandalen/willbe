@@ -3201,13 +3201,10 @@ function modulesBuild_body( o )
     if( o2.recursive === 0 )
     {
       if( recursive === null )
-      {
-        o2.recursive = 1;
-      }
+      o2.recursive = 0;
+      // o2.recursive = 1; /* Dmytro : by default module should not download submodules, use step `submodules.download` to download it */
       else
-      {
-        o2.recursive = recursive;
-      }
+      o2.recursive = recursive;
     }
     o2.strict = 0;
     o2.withOut = 0;

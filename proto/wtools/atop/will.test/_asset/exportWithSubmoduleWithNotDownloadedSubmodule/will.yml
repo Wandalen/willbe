@@ -15,7 +15,8 @@ build :
 
   export :
     steps :
-      module.export
+      - submodules.download
+      - module.export
     criterion :
       export : 1
       default : 1
