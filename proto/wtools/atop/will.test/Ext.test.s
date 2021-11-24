@@ -3596,32 +3596,31 @@ function reflectSubdir( test )
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
-  a.appStart({ execPath : '.each module .export' })
-  .then( ( op ) =>
+  });
+  a.appStart({ execPath : '.each module .export' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.build variant:1'
+    test.case = '.build variant:1';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
-  a.appStart({ execPath : '.build variant:1' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .build variant:1' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
@@ -3645,23 +3644,22 @@ function reflectSubdir( test )
       './out/debug/proto',
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
-    ]
+    ];
     var got = a.find( a.routinePath );
     test.identical( got, expected );
-
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.build variant:2'
+    test.case = '.build variant:2';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
-  a.appStart({ execPath : '.build variant:2' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .build variant:2' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
@@ -3685,23 +3683,22 @@ function reflectSubdir( test )
       './out/debug/proto',
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
-    ]
+    ];
     var got = a.find( a.routinePath );
     test.identical( got, expected );
-
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.build variant:3'
+    test.case = '.build variant:3';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
-  a.appStart({ execPath : '.build variant:3' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .build variant:3' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
@@ -3725,12 +3722,14 @@ function reflectSubdir( test )
       './out/debug/proto',
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
-    ]
+    ];
     var got = a.find( a.routinePath );
     test.identical( got, expected );
 
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
@@ -3747,7 +3746,7 @@ function reflectSubmodulesWithBase( test )
   a.ready.then( () =>
   {
     test.case = 'setup';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
