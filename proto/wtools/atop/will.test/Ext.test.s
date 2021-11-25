@@ -34453,8 +34453,8 @@ function commandModulesGitStatus( test )
     return null;
   });
 
-  a.appStart( '.with original/ .modules .git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34464,9 +34464,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34475,8 +34476,8 @@ function commandModulesGitStatus( test )
     return null;
   });
 
-  a.appStart( '.with original/ .modules .git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34486,7 +34487,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
     return null;
   });
 
@@ -34500,8 +34500,8 @@ function commandModulesGitStatus( test )
     return null;
   });
 
-  a.appStart( '.with original/ .modules .git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34512,9 +34512,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34524,8 +34525,8 @@ function commandModulesGitStatus( test )
     return null;
   });
 
-  a.appStart( '.with original/ .modules .git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34536,7 +34537,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
-
     return null;
   });
 
@@ -34552,8 +34552,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34564,9 +34564,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34578,8 +34579,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34590,7 +34591,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
 
@@ -34606,8 +34606,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status local:0' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status local:0' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34618,7 +34618,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 0 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
 
@@ -34632,8 +34631,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status local:0' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status local:0' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34644,7 +34643,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 0 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
 
@@ -34660,8 +34658,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status remote:0' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status remote:0' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34672,9 +34670,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34686,8 +34685,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status remote:0' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status remote:0' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34698,7 +34697,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
-
     return null;
   });
 
@@ -34715,8 +34713,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:1' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status uncommittedIgnored:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34728,9 +34726,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34743,8 +34742,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:1' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status uncommittedIgnored:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34756,7 +34755,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
 
@@ -34773,8 +34771,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:0' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status uncommittedIgnored:0' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34786,9 +34784,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34801,8 +34800,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status uncommittedIgnored:0' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status uncommittedIgnored:0' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34814,7 +34813,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
 
@@ -34830,8 +34828,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status remoteBranches:1' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status remoteBranches:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34842,9 +34840,10 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
+
+  /* */
 
   begin().then( () =>
   {
@@ -34856,8 +34855,8 @@ function commandModulesGitStatus( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am first' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git push' });
 
-  a.appStart( '.with original/ .modules .git.status remoteBranches:1' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with original/ .modules .git.status remoteBranches:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -34868,7 +34867,6 @@ function commandModulesGitStatus( test )
     test.identical( _.strCount( op.output, '?? GitSync.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
     test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
-
     return null;
   });
 
@@ -34882,7 +34880,7 @@ function commandModulesGitStatus( test )
   {
     a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.dirMake( a.abs( 'repo' ) );
       a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.original' ) });
       return null;
