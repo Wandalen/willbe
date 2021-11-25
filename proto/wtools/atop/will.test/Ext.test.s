@@ -31542,7 +31542,7 @@ commandHookCallWithHookInfo.description =
 - only one attempt to open outdate outfile
 - action info works properly
 - message with time printed afterwards
-`
+`;
 
 //
 
@@ -31558,15 +31558,14 @@ function commandDoWithHookStatus( test )
     test.case = 'setup';
     a.reflect();
     a.shell({ execPath : 'git init', currentPath : a.abs( 'disabled' ) });
-
     return null;
   });
 
   /* */
 
   a.appStart( '.clean' );
-  a.appStart( '.export' )
-  .then( ( op ) =>
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
 
@@ -31575,14 +31574,13 @@ function commandDoWithHookStatus( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
-
     return null;
   });
 
   /* */
 
-  a.appStart( '.hooks.list' )
-  .then( ( op ) =>
+  a.appStart( '.hooks.list' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'hooks list';
     test.identical( op.exitCode, 0 );
@@ -31592,8 +31590,8 @@ function commandDoWithHookStatus( test )
 
   /* */
 
-  a.appStart( '.with ** .do ./.will/hook/status.js' )
-  .then( ( op ) =>
+  a.appStart( '.with ** .do ./.will/hook/status.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'no changes';
     test.identical( op.exitCode, 0 );
@@ -31614,8 +31612,8 @@ function commandDoWithHookStatus( test )
     return null;
   });
 
-  a.appStart( '.with ** .do ./.will/hook/status.js' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with ** .do ./.will/hook/status.js' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 10 );
