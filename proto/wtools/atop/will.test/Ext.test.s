@@ -31958,18 +31958,15 @@ commandSubmodulesGit.rapidity = -1;
 
 function commandSubmodulesGitRemoteSubmodules( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'modulesGit' );
+  if( !_.censor )
+  return test.true( true );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const context = this;
+  const a = context.assetFor( test, 'modulesGit' );
+
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* */
 
@@ -31980,8 +31977,8 @@ function commandSubmodulesGitRemoteSubmodules( test )
     return null;
   });
 
-  a.appStart( '.submodules .git status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .submodules .git status' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -32003,8 +32000,8 @@ function commandSubmodulesGitRemoteSubmodules( test )
     return null;
   });
   a.appStart( '.build' );
-  a.appStart( '.submodules .git status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .submodules .git status' )
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -32022,12 +32019,7 @@ function commandSubmodulesGitRemoteSubmodules( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
