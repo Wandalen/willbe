@@ -36169,22 +36169,19 @@ function commandGitCheckHardLinkRestoringThrowing( test )
 
 function commandGitCheckHardLinkRestoring( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  if( !_.censor )
+  return test.true( true );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
 
-  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
-  let mergeMid = _.strDup( '=', 7 )
-  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
+
+  const mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  const mergeMid = _.strDup( '=', 7 );
+  const mergeEnd = ` ${ _.strDup( '>', 7 ) }`;
 
   /* - */
 
@@ -36194,11 +36191,14 @@ function commandGitCheckHardLinkRestoring( test )
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git pull hardLinkMaybe:1 profile:${ profile }` })
-  .then( ( op ) =>
+  a.appStart
+  ({
+    currentPath : a.abs( `clone` ), execPath : `.imply withSubmodules:1 .git pull hardLinkMaybe:1 profile:${ profile }`
+  });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -36207,7 +36207,7 @@ function commandGitCheckHardLinkRestoring( test )
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
@@ -36219,8 +36219,8 @@ function commandGitCheckHardLinkRestoring( test )
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git pull hardLinkMaybe:1 v:0 profile:${ profile }` })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( `clone` ), execPath : `.git pull hardLinkMaybe:1 v:0 profile:${ profile }` });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
@@ -36229,7 +36229,7 @@ function commandGitCheckHardLinkRestoring( test )
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -36250,8 +36250,8 @@ function commandGitCheckHardLinkRestoring( test )
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ execPath : `.with clone/ .git pull hardLinkMaybe:1 profile:${ profile }` })
-  .then( ( op ) =>
+  a.appStart({ execPath : `.imply withSubmodules:1 .with clone/ .git pull hardLinkMaybe:1 profile:${ profile }` });
+  a.ready.then( ( op ) =>
   {
     test.case = '.with clone/ .git pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
@@ -36285,14 +36285,14 @@ function commandGitCheckHardLinkRestoring( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -36300,7 +36300,7 @@ original/f.txt
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -36308,12 +36308,12 @@ clone
 `
 original/f.txt
 clone
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36331,8 +36331,8 @@ clone
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( `.with clone/ .git pull hardLinkMaybe:1 v:5 profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStartNonThrowing( `.imply withSubmodules:1 .with clone/ .git pull hardLinkMaybe:1 v:5 profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.description = 'has local changes';
     test.notIdentical( op.exitCode, 0 );
@@ -36391,8 +36391,8 @@ clone
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( `.with clone/ .git pull hardLinkMaybe:1 v:5 profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStartNonThrowing( `.with clone/ .git pull hardLinkMaybe:1 v:5 profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
@@ -36453,11 +36453,11 @@ ${ mergeEnd }
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ execPath : `.with clone/ .git pull hardLinkMaybe:1 withSubmodules:1 profile:${ profile }` })
-  .then( ( op ) =>
+  a.appStart({ execPath : `.imply withSubmodules:1 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1 profile:${ profile }` });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -36467,7 +36467,7 @@ ${ mergeEnd }
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
     return null;
-  })
+  });
 
   /* */
 
@@ -36477,10 +36477,10 @@ ${ mergeEnd }
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
-  })
+  });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart( `.imply withSubmodules:2 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1 profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStart( `.imply withSubmodules:2 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1 profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -36493,12 +36493,7 @@ ${ mergeEnd }
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
