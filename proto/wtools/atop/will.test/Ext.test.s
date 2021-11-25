@@ -22217,87 +22217,82 @@ function submodulesVerify( test )
     return null;
   });
 
-  a.appStartNonThrowing( '.submodules.versions.verify' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.submodules.versions.verify' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'first verify after download';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.submodules.download' )
-  a.appStartNonThrowing( '.submodules.versions.verify' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.submodules.download' );
+  a.appStartNonThrowing( '.imply withSubmodules:1 .submodules.versions.verify' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'second verify';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.submodules.versions.verify' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.imply withSubmodules:1 .submodules.versions.verify' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'new commit on local copy, try to verify';
     return null;
-  })
+  });
 
-  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git commit --allow-empty -m test' })
-
-  a.appStartNonThrowing( '.submodules.versions.verify' )
-
-  .then( ( op ) =>
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git commit --allow-empty -m test' });
+  a.appStartNonThrowing( '.imply withSubmodules:1 .submodules.versions.verify' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'change branch';
     return null;
-  })
+  });
 
-  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git checkout -b testbranch' })
-
-  a.appStartNonThrowing( '.submodules.versions.verify' )
-
-  .then( ( op ) =>
+  a.shell({ currentPath : a.abs( '.module/local' ), execPath : 'git checkout -b testbranch' });
+  a.appStartNonThrowing( '.imply withSubmodules:1 .submodules.versions.verify' )
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Submodule module::local has version different from that is specified in will-file' ) );
     return null;
-  })
+  });
+
+  /* - */
 
   return a.ready;
 }
