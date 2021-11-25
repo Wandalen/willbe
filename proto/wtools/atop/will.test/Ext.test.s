@@ -18900,21 +18900,17 @@ function submodulesDownloadUpdate( test )
   let a = context.assetFor( test, 'submodules' );
   a.reflect();
 
-  /* */
+  /* - */
 
-  a.ready
-
-  /* */
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.download - first time';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.submodules.download' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.download' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were downloaded' ) );
@@ -18923,14 +18919,14 @@ function submodulesDownloadUpdate( test )
 
     test.true( files.length > 30 );
 
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
-    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.submodules.download - again';
     return null;
@@ -26298,24 +26294,19 @@ function stepNpmGenerateOptionsInStep( test )
 
 function stepGitCheckHardLinkRestoring( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  if( !_.censor )
+  return test.true( true );
 
-  /* */
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
 
-  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
-  let mergeMid = _.strDup( '=', 7 )
-  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+  const mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  const mergeMid = _.strDup( '=', 7 );
+  const mergeEnd = ` ${ _.strDup( '>', 7 ) }`;
 
   /* - */
 
@@ -26325,8 +26316,8 @@ function stepGitCheckHardLinkRestoring( test )
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart( `.with clone/Git.* .build git.pull` )
-  .then( ( op ) =>
+  a.appStart( `.imply withSubmodules:1 .with clone/Git.* .build git.pull` );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
@@ -26334,7 +26325,6 @@ function stepGitCheckHardLinkRestoring( test )
     test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
-
     return null;
   });
 
@@ -26346,8 +26336,8 @@ function stepGitCheckHardLinkRestoring( test )
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart( `.imply v:0 .with clone/Git.* .build git.pull` )
-  .then( ( op ) =>
+  a.appStart( `.imply v:0 .with clone/Git.* .build git.pull` );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git' ), 0 );
@@ -26355,7 +26345,6 @@ function stepGitCheckHardLinkRestoring( test )
     test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
-
     return null;
   });
 
@@ -26376,8 +26365,8 @@ function stepGitCheckHardLinkRestoring( test )
   });
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ execPath : `.with clone/Git.* .build git.pull` })
-  .then( ( op ) =>
+  a.appStart({ execPath : `.imply withSubmodules:1 .with clone/Git.* .build git.pull` });
+  a.ready.then( ( op ) =>
   {
     test.case = '.with clone/Git.* .build git.pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
@@ -26386,7 +26375,6 @@ function stepGitCheckHardLinkRestoring( test )
     test.identical( _.strCount( op.output, 'Executing command "git pull", module::git' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
-
     return null;
   });
 
@@ -26443,8 +26431,8 @@ clone
   /* */
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( `.with clone/Git.* .build git.pull` )
-  .then( ( op ) =>
+  a.appStartNonThrowing( `.with clone/Git.* .build git.pull` );
+  a.ready.then( ( op ) =>
   {
     test.description = 'has local changes';
     test.notIdentical( op.exitCode, 0 );
@@ -26490,8 +26478,8 @@ clone
   /* */
 
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -am second' });
-  a.appStartNonThrowing( `.with clone/Git.* .build git.pull` )
-  .then( ( op ) =>
+  a.appStartNonThrowing( `.with clone/Git.* .build git.pull` );
+  a.ready.then( ( op ) =>
   {
     test.description = 'conflict';
     test.notIdentical( op.exitCode, 0 );
@@ -26554,8 +26542,8 @@ ${ mergeEnd }
     return null;
   });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ execPath : `.imply withSubmodules:0 .with clone/Git.* .build git.pull` })
-  .then( ( op ) =>
+  a.appStart({ execPath : `.imply withSubmodules:0 .with clone/Git.* .build git.pull` });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
@@ -26571,8 +26559,7 @@ ${ mergeEnd }
 
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
@@ -26584,7 +26571,7 @@ ${ mergeEnd }
 
   function begin()
   {
-    a.ready.then( () => a.reflect() );
+    a.ready.then( () => a.reflectMinimal() );
     let currentPath = a.abs( 'original' );
     a.shell({ currentPath, execPath : 'git init' });
     a.shell({ currentPath, execPath : 'git add --all' });
