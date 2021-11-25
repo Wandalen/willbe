@@ -34923,7 +34923,7 @@ function commandModulesGitStatusOutputFormat( test )
     return null;
   });
 
-  a.appStart( '.modules .git.status' )
+  a.appStart( '.imply withSubmodules:1 .modules .git.status' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
