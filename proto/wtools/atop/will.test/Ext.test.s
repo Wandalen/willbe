@@ -16015,12 +16015,12 @@ function cleanHdBug( test )
   a.ready.then( () =>
   {
     test.case = '.with z .clean recursive:2';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
 
-  a.appStart( '.with z .clean recursive:2' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with z .clean recursive:2' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
