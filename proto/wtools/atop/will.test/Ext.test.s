@@ -31423,8 +31423,8 @@ function commandHookCallWithHookInfo( test )
   /* - */
 
   a.appStart( '.clean' );
-  a.appStart( '.export' )
-  .then( ( op ) =>
+  a.appStart( '.export' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'setup';
     a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
@@ -31434,14 +31434,13 @@ function commandHookCallWithHookInfo( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
-
     return null;
   });
 
   /* */
 
-  a.appStart( '.hook.call info.js' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .hook.call info.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.hook.call info.js';
     test.identical( op.exitCode, 0 );
@@ -31455,8 +31454,8 @@ function commandHookCallWithHookInfo( test )
 
   /* */
 
-  a.appStart( '.with . .hook.call info.js' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with . .hook.call info.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
@@ -31470,8 +31469,8 @@ function commandHookCallWithHookInfo( test )
 
   /* */
 
-  a.appStart( '.with * .hook.call info.js' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with * .hook.call info.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
@@ -31485,8 +31484,8 @@ function commandHookCallWithHookInfo( test )
 
   /* */
 
-  a.appStart( '.with ** .hook.call info.js' )
-  .then( ( op ) =>
+  a.appStart( '.with ** .hook.call info.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with . .hook.call info.js';
     test.identical( op.exitCode, 0 );
@@ -31500,8 +31499,8 @@ function commandHookCallWithHookInfo( test )
 
   /* */
 
-  a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' )
-  .then( ( op ) =>
+  a.appStart( '.imply withOut:0 ; .with ** .hook.call info.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( op.exitCode, 0 );
@@ -31515,8 +31514,8 @@ function commandHookCallWithHookInfo( test )
 
   /* */
 
-  a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' )
-  .then( ( op ) =>
+  a.appStart( '.imply withIn:0 ; .with ** .hook.call info.js' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
     test.identical( op.exitCode, 0 );
@@ -31525,7 +31524,6 @@ function commandHookCallWithHookInfo( test )
     test.identical( _.strCount( op.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( op.output, 'local :' ), 4 );
     test.identical( _.strCount( op.output, 'Done hook::info.js in' ), 1 );
-
     return null;
   });
 
