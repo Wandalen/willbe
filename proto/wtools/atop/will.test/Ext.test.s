@@ -34114,8 +34114,8 @@ function commandModulesGitDiffOutputFormat( test )
     return null;
   });
 
-  a.appStart( '.modules .git.diff' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .modules .git.diff' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '\nDiff of module::wModuleForTesting1 at' ), 1 );
@@ -34128,7 +34128,6 @@ function commandModulesGitDiffOutputFormat( test )
     test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/l1/ModuleForTesting1.s b/proto/wtools/testing/l1/ModuleForTesting1.s' ), 1 );
     test.identical( _.strCount( op.output, '    diff --git a/proto/wtools/testing/Common.s b/proto/wtools/testing/Common.s' ), 1 );
     test.identical( _.strCount( op.output, '    +testData' ), 2 );
-
     return null;
   });
 
@@ -34140,14 +34139,8 @@ function commandModulesGitDiffOutputFormat( test )
 
   function begin()
   {
-    a.ready.then( () =>
-    {
-      a.reflect();
-      return null;
-    });
-
+    a.ready.then( () => a.reflect() );
     a.appStart( '.submodules.download' );
-
     return a.ready;
   }
 }
