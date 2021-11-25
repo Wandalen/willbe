@@ -36520,18 +36520,15 @@ commandGitCheckHardLinkRestoring.timeOut = 300000;
 
 function commandGitDifferentCommands( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  if( !_.censor )
+  return test.true( true );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* - */
 
@@ -36543,18 +36540,16 @@ function commandGitDifferentCommands( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git status' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.imply withSubmodules:1 .git status' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    // test.identical( _.strCount( op.output, 'Failed to open' ), 0 ); /* Dmytro : changed default value of withSubmodules in routine */
     test.identical( _.strCount( op.output, 'module::clone' ), 2 );
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
-
     return null;
   });
 
@@ -36566,8 +36561,8 @@ function commandGitDifferentCommands( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
@@ -36579,7 +36574,7 @@ function commandGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'first' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
 
   /* */
 
@@ -36589,8 +36584,8 @@ function commandGitDifferentCommands( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log hardLinkMaybe:1' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.imply withSubmodules:1 .git log hardLinkMaybe:1' });
+  a.ready.then( ( op ) =>
   {
     test.case = '.git log hardLinkMaybe:1';
     test.identical( op.exitCode, 0 );
@@ -36603,7 +36598,7 @@ function commandGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'first' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
     return null;
-  })
+  });
 
   /* */
 
@@ -36615,8 +36610,8 @@ function commandGitDifferentCommands( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git commit -am second' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.imply withSubmodules:1 .git commit -am second' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -36629,12 +36624,7 @@ function commandGitDifferentCommands( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
