@@ -19962,7 +19962,7 @@ function submodulesDownloadStepAndCommand( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   return a.ready;
 }
@@ -20706,7 +20706,7 @@ function submodulesDownloadNpm( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   a.appStart( '.submodules.download' )
 
@@ -20748,7 +20748,7 @@ function submodulesDownloadNpm( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   .then( () =>
   {
@@ -20812,7 +20812,7 @@ function submodulesDownloadNpm( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   return a.ready;
 }
@@ -20885,7 +20885,7 @@ function submodulesDownloadUpdateNpm( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   .then( ( op ) =>
   {
@@ -20940,7 +20940,7 @@ function submodulesDownloadUpdateNpm( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   a.appStart( '.submodules.update' )
 
@@ -20982,7 +20982,7 @@ function submodulesDownloadUpdateNpm( test )
     return null;
   })
 
-  /*  */
+  /* */
 
   .then( () =>
   {
@@ -22504,16 +22504,14 @@ function submodulesVersionsAgreeNpm( test )
     versions[ 'ModuleForTesting1' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting1' );
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.remoteVersionCurrent( 'npm:///wmodulefortesting12ab#0.0.31' );
-
     a.reflectMinimal();
-
     return null;
   });
 
   /* */
 
-  a.appStart( '.submodules.versions.agree' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .submodules.versions.agree' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'agree npm modules';
 
@@ -22528,7 +22526,7 @@ function submodulesVersionsAgreeNpm( test )
       'ModuleForTesting2a',
       'ModuleForTesting2a.will.yml'
     ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 3 );
@@ -22559,7 +22557,7 @@ function submodulesVersionsAgreeNpm( test )
     return null;
   });
 
-  /*  */
+  /* */
 
   a.ready.then( ( op ) =>
   {
@@ -22570,12 +22568,11 @@ function submodulesVersionsAgreeNpm( test )
 
     versions[ 'ModuleForTesting2a' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.34';
-
     return null;
   });
 
-  a.appStart( '.submodules.versions.agree' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .submodules.versions.agree' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'second run of .submodules.versions.agree';
 
@@ -22616,14 +22613,13 @@ function submodulesVersionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
-
     return null;
   });
 
-  /*  */
+  /* */
 
-  a.appStart( '.submodules.versions.agree' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .submodules.versions.agree' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
 
@@ -22664,11 +22660,10 @@ function submodulesVersionsAgreeNpm( test )
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) );
-
     return null;
   });
 
-  /*  */
+  /* */
 
   a.ready.then( () =>
   {
@@ -22679,12 +22674,11 @@ function submodulesVersionsAgreeNpm( test )
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     versions[ 'ModuleForTesting2b' ] = _.npm.remoteVersion( 'npm:///wmodulefortesting2b!gamma' );
-
     return null;
   });
 
-  a.appStart( '.submodules.versions.agree' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .submodules.versions.agree' );
+  a.ready.then( ( op ) =>
   {
     test.case = 'third run of .submodules.versions.agree';
 
@@ -22740,11 +22734,10 @@ function submodulesVersionsAgreeNpm( test )
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files, exp );
-
     return null;
   });
 
-  /*  */
+  /* - */
 
   return a.ready;
 }
@@ -25117,13 +25110,6 @@ function stepSubmodulesAreUpdated( test )
 {
   let context = this;
   let a = context.assetFor( test, 'stepSubmodulesAreUpdated' );
-  a.appStart2 = _.process.starter
-  ({
-    currentPath : a.abs( 'module' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-  })
   a.reflect();
 
   /* - */
@@ -25132,182 +25118,174 @@ function stepSubmodulesAreUpdated( test )
   {
     test.case = 'setup';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.with ./module/ .export' )
-  a.appStart2( 'git init' )
-  a.appStart2( 'git add -fA .' )
-  a.appStart2( 'git commit -m init' )
-  a.appStart2( 'git commit --allow-empty -m test' )
+  a.appStartNonThrowing( '.with ./module/ .export' );
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git init' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git add -fA .' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit -m init' });
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit --allow-empty -m test' });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'first build';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.build' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
     test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'second build';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.build' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'new commit on remote, try to build';
     return null;
-  })
+  });
 
-  a.appStart2( 'git commit --allow-empty -m test' )
-
-  a.appStartNonThrowing( '.build' )
-
-  .then( ( op ) =>
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit --allow-empty -m test' });
+  a.appStartNonThrowing( '.imply withSubmodules:1 .build' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'module is not downloaded';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.build debug2' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build debug2' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
     test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'download path does not contain git repo';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.build debug3' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build debug3' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
     test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
 
-  /*  */
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'module is downloaded from different origin';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.build debug4' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build debug4' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     // test.true( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
     test.true( _.strHas( op.output, '! Submodule opener::local has different origin url' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
 
-  /*  */
+  /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'module is in detached state';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.build debug5' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build debug5' );
+  a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
     // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
-
-  /*  */
-
-  .then( () =>
-  {
-    test.case = 'module is ahead remote';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build debug6' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
+  });
 
   /* */
 
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = 'new commit on remote, check is disabled via option';
+    test.case = 'module is ahead remote';
     return null;
-  })
+  });
 
-  a.appStartNonThrowing( '.clean .submodules.download' )
-  a.appStartNonThrowing( '.submodules.download' )
-  a.appStart2( 'git commit --allow-empty -m test' )
-  a.appStartNonThrowing( '.build debug7' )
-
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.build debug6' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
-  })
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'new commit on remote, check is disabled via option';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.clean .submodules.download' );
+  a.appStartNonThrowing( '.submodules.download' );
+  a.shell({ currentPath : a.abs( 'module' ), execPath : 'git commit --allow-empty -m test' });
+  a.appStartNonThrowing( '.build debug7' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  });
+
+  /* - */
 
   return a.ready;
 }
