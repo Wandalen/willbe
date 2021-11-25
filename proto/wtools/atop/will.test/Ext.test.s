@@ -14478,20 +14478,19 @@ function exportWithoutSubSubModules( test )
   let context = this;
   let a = context.assetFor( test, '4LevelsLocal' );
 
-  a.reflect();
+  a.reflectMinimal();
   a.appStart( '.with * .clean' );
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = '.with l1 .export';
+    test.case = '.imply withSubmodules:1 .with l1 .export';
     return null;
-  })
+  });
 
-  a.appStart( '.with l1 .export' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with l1 .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 1 );
@@ -14506,13 +14505,12 @@ function exportWithoutSubSubModules( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with l2 .export';
+    test.case = '.imply withSubmodules:1 .with l2 .export';
     return null;
-  })
+  });
 
-  a.appStart( '.with l2 .export' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with l2 .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 1 );
@@ -14529,14 +14527,13 @@ function exportWithoutSubSubModules( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with l3 .export';
+    test.case = '.imply withSubmodules:2 .with l3 .export';
     a.fileProvider.fileDelete( a.abs( 'l1.out.will.yml' ) );
     return null;
-  })
+  });
 
-  a.appStart( '.with l3 .export' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with l3 .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 0 );
@@ -14557,14 +14554,13 @@ function exportWithoutSubSubModules( test )
 
   a.ready.then( () =>
   {
-    test.case = '.with l4 .export';
+    test.case = '.imply withSubmodules:2 .with l4 .export';
     a.fileProvider.fileDelete( a.abs( 'l2.out.will.yml' ) );
     return null;
-  })
+  });
 
-  a.appStart( '.with l4 .export' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with l4 .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 0 );
