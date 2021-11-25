@@ -31738,8 +31738,8 @@ function commandSubmodulesShell( test )
 
   /* - */
 
-  a.appStart( '.with ./* .submodules .shell ls' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with ./* .submodules .shell ls' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with ./* .submodules .shell ls - without submodules, no executed commands';
     test.identical( op.exitCode, 0 );
@@ -31748,15 +31748,14 @@ function commandSubmodulesShell( test )
     test.identical( _.strCount( op.output, '> ls' ), 0 );
     test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 0 );
     test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 0 );
-
     return null;
   });
 
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.with ./* .submodules .shell ls' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with ./* .submodules .shell ls' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with ./* .submodules .shell ls - with submodules';
     test.identical( op.exitCode, 0 );
@@ -31765,15 +31764,14 @@ function commandSubmodulesShell( test )
     test.identical( _.strCount( op.output, '> ls' ), 2 );
     test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 1 );
     test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 1 );
-
     return null;
   });
 
   /* */
 
   a.appStart( '.with ./* .submodules.download' );
-  a.appStart( '.imply withSubmodules:0 .with ./* .submodules .shell ls' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:0 .with ./* .submodules .shell ls' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.imply withSubmodules:0 .with ./* .submodules .shell ls - disabled submodules';
     test.identical( op.exitCode, 0 );
@@ -31782,7 +31780,6 @@ function commandSubmodulesShell( test )
     test.identical( _.strCount( op.output, '> ls' ), 0 );
     test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 0 );
     test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 0 );
-
     return null;
   });
 
