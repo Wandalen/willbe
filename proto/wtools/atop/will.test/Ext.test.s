@@ -33647,14 +33647,14 @@ function commandModulesGitOutputFormat( test )
 
   begin().then( () =>
   {
-    test.case = 'output of git status has indentation, there is an empty line before output of each module'
+    test.case = 'output of git status has indentation, there is an empty line before output of each module';
     a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting1/proto/wtools/testing/l1/Include.s' ), 'testData' );
     a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2/proto/Integration.test.ss' ), 'testData' );
     return null;
   });
 
-  a.appStart( '.modules .git status hardLinkMaybe:1' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .modules .git status hardLinkMaybe:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '\nmodule::wModuleForTesting1 at' ), 1 );
@@ -33664,7 +33664,6 @@ function commandModulesGitOutputFormat( test )
     test.identical( _.strCount( op.output, `    ${a.abs( '.module/ModuleForTesting2' )}` ), 1 );
     test.identical( _.strCount( op.output, '  On branch master' ), 2 );
     test.identical( _.strCount( op.output, ' + Restored 0 hardlinks' ), 2 );
-
     return null;
   });
 
