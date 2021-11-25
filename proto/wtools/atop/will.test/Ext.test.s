@@ -26594,26 +26594,21 @@ stepGitCheckHardLinkRestoring.timeOut = 600000;
 
 function stepGitDifferentCommands( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  if( !_.censor )
+  return test.true( true );
 
-  /* */
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
 
-  /* */
+  /* - */
 
   begin();
-  a.appStart( '.with clone/Git.* .build git.status' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:1 .with clone/Git.* .build git.status' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with clone/Git.* .build git.status';
     test.identical( op.exitCode, 0 );
@@ -26623,12 +26618,11 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
     test.identical( _.strCount( op.output, 'modified' ), 2 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
-
     return null;
-  })
+  });
 
-  a.appStart( '.imply v:0 .with clone/Git.* .build git.log' )
-  .then( ( op ) =>
+  a.appStart( '.imply v:0 .with clone/Git.* .build git.log' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.imply v:0 .with clone/Git.* .build git.log';
     test.identical( op.exitCode, 0 );
@@ -26640,14 +26634,13 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'Date:' ), 1 );
     test.identical( _.strCount( op.output, 'first' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
-
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart( '.with clone/Git.* .build git.log.hardlink' )
-  .then( ( op ) =>
+  a.appStart( '.with clone/Git.* .build git.log.hardlink' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with clone/Git.* .build git.log.hardlink';
     test.identical( op.exitCode, 0 );
@@ -26659,12 +26652,12 @@ function stepGitDifferentCommands( test )
     test.identical( _.strCount( op.output, 'first' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
     return null;
-  })
+  });
 
   /* */
 
-  a.appStart( '.imply withSubmodules:0 .with clone/Git.* .build git.commit' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:0 .with clone/Git.* .build git.commit' );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with clone/Git.* .build git.commit';
     test.identical( op.exitCode, 0 );
@@ -26680,8 +26673,7 @@ function stepGitDifferentCommands( test )
 
   a.ready.finally( () =>
   {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     return null;
   });
 
