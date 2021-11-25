@@ -1934,7 +1934,7 @@ function modulesUpform( test )
       return op;
     })
   })
-  end()
+  end();
 
   /* - */
 
@@ -1960,7 +1960,7 @@ function modulesUpform( test )
       return op;
     })
   })
-  end()
+  end();
 
   /* - */
 
@@ -1986,7 +1986,7 @@ function modulesUpform( test )
       return op;
     })
   })
-  end()
+  end();
 
   /* - */
 
@@ -10221,7 +10221,7 @@ function modulesFor( test )
     test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
     return op;
   });
-  end()
+  end();
 
   /* */
 
@@ -10258,7 +10258,7 @@ function modulesFor( test )
     test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
     return op;
   });
-  end()
+  end();
 
   /* */
 
@@ -10295,7 +10295,7 @@ function modulesFor( test )
     test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
     return op;
   });
-  end()
+  end();
 
   /* */
 
@@ -10332,7 +10332,7 @@ function modulesFor( test )
     test.identical( _.select( onEachVisitedObjects, '*/qualifiedName' ), exp );
     return op;
   });
-  end()
+  end();
 
   /* */
 
@@ -10386,7 +10386,7 @@ function modulesFor( test )
 
     return op;
   });
-  end()
+  end();
 
   /* - */
 
@@ -10444,7 +10444,7 @@ function modulesFor( test )
 
     return op;
   });
-  end()
+  end();
 
   /* - */
 
@@ -10578,8 +10578,8 @@ function modulesForWithOptionsWith( test )
 
   /* - */
 
-  begin({ selector : a.abs( './a' ) })
-  .then( () =>
+  begin({ selector : a.abs( './a' ) });
+  a.ready.then( () =>
   {
     test.case = 'single module, with nested submodules, withEnabledSubmodules:0 recursive:2';
     let o2 =
@@ -10612,13 +10612,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
-  /* - */
+  /* */
 
-  begin({ selector : a.abs( './a' ) })
-  .then( () =>
+  begin({ selector : a.abs( './a' ) });
+  a.ready.then( () =>
   {
     test.case = 'single module, withEnabledModules:0';
     let o2 =
@@ -10626,7 +10626,7 @@ function modulesForWithOptionsWith( test )
       ... defaults,
       withEnabledModules : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10650,13 +10650,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
-  /* - */
+  /* */
 
-  begin({ selector : a.abs( './a' ) })
-  .then( () =>
+  begin({ selector : a.abs( './a' ) });
+  a.ready.then( () =>
   {
     test.case = 'single module, with nested submodules, withStem : 0';
     let o2 =
@@ -10664,7 +10664,7 @@ function modulesForWithOptionsWith( test )
       ... defaults,
       withStem : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10688,13 +10688,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
-  /* - */
+  /* */
 
-  begin({ selector : a.abs( './group2/c' ) })
-  .then( () =>
+  begin({ selector : a.abs( './group2/c' ) });
+  a.ready.then( () =>
   {
     test.case = 'exported module, withIn : 0';
     let o2 =
@@ -10702,7 +10702,7 @@ function modulesForWithOptionsWith( test )
       ... defaults,
       withIn : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10726,13 +10726,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
-  /* - */
+  /* */
 
-  begin({ selector : a.abs( './group2/c' ) })
-  .then( () =>
+  begin({ selector : a.abs( './group2/c' ) });
+  a.ready.then( () =>
   {
     test.case = 'exported module, withOut : 0';
     let o2 =
@@ -10740,7 +10740,7 @@ function modulesForWithOptionsWith( test )
       ... defaults,
       withOut : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10764,13 +10764,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
-  /* - */
+  /* */
 
-  begin({ selector : a.abs( './group2/c' ) })
-  .then( () =>
+  begin({ selector : a.abs( './group2/c' ) });
+  a.ready.then( () =>
   {
     test.case = 'exported module, withIn : 0, withOut : 0';
     let o2 =
@@ -10779,7 +10779,7 @@ function modulesForWithOptionsWith( test )
       withIn : 0,
       withOut : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10803,13 +10803,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
-  /* - */
+  /* */
 
-  begin({ selector : a.abs( './group2/c' ) })
-  .then( () =>
+  begin({ selector : a.abs( './group2/c' ) });
+  a.ready.then( () =>
   {
     test.case = 'exported module, withPeers : 0';
     let o2 =
@@ -10817,7 +10817,7 @@ function modulesForWithOptionsWith( test )
       ... defaults,
       withPeers : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10841,13 +10841,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
   /* - */
 
-  begin({ selector : a.abs( './group1/b' ) })
-  .then( () =>
+  begin({ selector : a.abs( './group1/b' ) });
+  a.ready.then( () =>
   {
     test.case = 'module with single termninal, withTerminals : 0';
     let o2 =
@@ -10855,7 +10855,7 @@ function modulesForWithOptionsWith( test )
       ... defaults,
       withTerminals : 0,
       modules : openers,
-    }
+    };
     return a.will.modulesFor( o2 )
     .then( ( op ) =>
     {
@@ -10879,13 +10879,13 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
   /* - */
 
-  begin({ selector : a.abs( './a' ) })
-  .then( () =>
+  begin({ selector : a.abs( './a' ) });
+  a.ready.then( () =>
   {
     test.case = 'single module, with nested submodules, recursive:2, withBranches:0';
     let o2 =
@@ -10894,7 +10894,7 @@ function modulesForWithOptionsWith( test )
       withBranches : 0,
       recursive : 2,
       modules : openers,
-    }
+    };
     return a.will.moduleWithNameMap.b.subModulesDownload()
     .then( () => a.will.modulesFor( o2 ) )
     .then( ( op ) =>
@@ -10945,15 +10945,15 @@ function modulesForWithOptionsWith( test )
 
       return op;
     });
-  })
-  end()
+  });
+  end();
 
   /* - */
 
   return a.ready;
 
 
-  /* - */
+  /* */
 
   function onEachModule( module, op )
   {
@@ -10961,7 +10961,7 @@ function modulesForWithOptionsWith( test )
     return null;
   }
 
-  /* - */
+  /* */
 
   function onEachJunction( junction, op )
   {
@@ -10969,7 +10969,7 @@ function modulesForWithOptionsWith( test )
     return null;
   }
 
-  /* - */
+  /* */
 
   function onEachVisitedObject( object, op )
   {
@@ -10977,21 +10977,21 @@ function modulesForWithOptionsWith( test )
     return null;
   }
 
-  /* - */
+  /* */
 
   function onBegin( object, op )
   {
     return null;
   }
 
-  /* - */
+  /* */
 
   function onEnd( object, op )
   {
     return null;
   }
 
-  /* - */
+  /* */
 
   function clean()
   {
@@ -11000,7 +11000,7 @@ function modulesForWithOptionsWith( test )
     onEachVisitedObjects = [];
   }
 
-  /* - */
+  /* */
 
   function begin( o2 )
   {
@@ -11013,24 +11013,27 @@ function modulesForWithOptionsWith( test )
       if( o2.tracing === undefined )
       o2.tracing = a.path.isGlob( o2.selector );
 
+      a.will.transaction.unform();
+      a.will.transaction.withSubmodules = 1;
+      a.will.transaction.form();
       return a.will.modulesFindWithAt( o2 )
       .then( ( it ) =>
       {
         openers = it.openers;
         return null;
-      })
-    })
+      });
+    });
 
     return a.ready;
   }
 
-  /* - */
+  /* */
 
   function end()
   {
     return a.ready.then( () =>
     {
-      _.each( openers, ( opener ) => opener.finit() )
+      _.each( openers, ( opener ) => opener.finit() );
       return null;
     });
   }
@@ -11192,7 +11195,7 @@ function modulesForWithSubmodules( test )
       return op;
     });
   })
-  end()
+  end();
 
   /* - */
 
