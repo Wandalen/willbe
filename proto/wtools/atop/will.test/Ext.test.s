@@ -36660,11 +36660,10 @@ function commandGitDiff( test )
     test.case = '.git.diff - no diffs';
     return null;
   });
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .git.diff' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 1 );
@@ -36678,11 +36677,10 @@ function commandGitDiff( test )
     test.case = '.git.diff v:0 - no diffs, verbosity - 0';
     return null;
   });
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .git.diff v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 0 );
@@ -36698,11 +36696,10 @@ function commandGitDiff( test )
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'another new line' );
     return null;
   });
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .git.diff' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 1 );
@@ -36730,11 +36727,10 @@ function commandGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.git.diff v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .git.diff v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::clone at' ), 0 );
