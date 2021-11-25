@@ -16121,7 +16121,7 @@ function cleanDry( test )
 
   /* - */
 
-  a.appStart({ args : [ '.with NoTemp .submodules.update' ] });
+  a.appStart( '.imply withSubmodules:1 .with NoTemp .submodules.update' );
   a.ready.then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
@@ -16130,7 +16130,7 @@ function cleanDry( test )
     return null;
   });
 
-  a.appStart({ args : [ '.with NoTemp .build' ] });
+  a.appStart({ args : [ '.imply withSubmodules:1 .with NoTemp .build' ] });
   a.ready.then( ( op ) =>
   {
     test.true( _.strHas( op.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
@@ -16139,7 +16139,7 @@ function cleanDry( test )
 
   var wasFiles;
 
-  a.appStart({ execPath : '.with NoTemp .clean dry:1' })
+  a.appStart({ execPath : '.imply withSubmodules:1 .with NoTemp .clean dry:1' })
   .then( ( op ) =>
   {
     test.case = '.clean dry:1';
