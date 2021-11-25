@@ -9511,41 +9511,40 @@ function resourcePathRemote( test )
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './module/' ) });
     return opener.open();
-  })
-  .then( () =>
+  });
+  a.ready.then( () =>
   {
     let module = opener.openedModule;
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
     return build.perform()
-  })
-  .then( () =>
+  });
+  a.ready.then( () =>
   {
     let module = opener.openedModule;
     test.description = 'finit';
     opener.finit();
     test.true( module.isFinited() );
     test.true( opener.isFinited() );
-
     return null;
-  })
+  });
 
-  .then( () =>
+  a.ready.then( () =>
   {
+    a.will.transaction.unform();
+    a.will.transaction.withSubmodules = 1;
+    a.will.transaction.form();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
-  })
-  .then( () =>
+  });
+  a.ready.then( () =>
   {
     let module = opener.openedModule;
-    // let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
     let informalOpener =  module.submoduleMap[ 'ModuleForTesting2b' ].opener;
     let informalOpened = informalOpener.openedModule;
     let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
 
     test.identical( informalPathRemoteResource.path, null );
-    // test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' );
-
     return null;
   });
 
