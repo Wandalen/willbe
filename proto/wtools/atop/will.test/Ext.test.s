@@ -17529,8 +17529,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     return null;
   });
 
-  a.appStart( '.with ** .submodules.download recursive:2' );
-  a.appStart( '.with z .clean.submodules dry:1' );
+  a.appStart( '.imply withSubmodules:2 .with ** .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with z .clean.submodules dry:1' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17557,7 +17557,6 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
-
     return null;
   });
 
@@ -17570,27 +17569,26 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     return null;
   });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .clean.submodules dry:1' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with ** .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with * .clean.submodules dry:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -17599,7 +17597,6 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
-
     return null;
   });
 
@@ -17612,27 +17609,26 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     return null;
   });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .clean.submodules recursive:1 dry:1' )
-
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:2 .with ** .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with * .clean.submodules recursive:1 dry:1' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1b' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) );
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
@@ -17641,7 +17637,6 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, ' at .' ), 3 );
     test.identical( _.strCount( op.output, ' at ' ), 5 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
-
     return null;
   });
 
@@ -17656,8 +17651,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     return null;
   });
 
-  a.appStart( '.with ** .submodules.download recursive:2' )
-  a.appStart( '.with * .clean.submodules recursive:2 dry:1' )
+  a.appStart( '.imply withSubmodules:2 .with ** .submodules.download recursive:2' )
+  a.appStart( '.imply withSubmodules:2 .with * .clean.submodules recursive:2 dry:1' )
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17684,7 +17679,6 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, ' at .' ), 4 );
     test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
-
     return null;
   });
 
@@ -17697,8 +17691,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     return null;
   });
 
-  a.appStart( '.with ** .submodules.download recursive:2' );
-  a.appStartNonThrowing( '.with ** .clean.submodules recursive:1 dry:1' );
+  a.appStart( '.imply withSubmodules:2 .with ** .submodules.download recursive:2' );
+  a.appStartNonThrowing( '.imply withSubmodules:2 .with ** .clean.submodules recursive:1 dry:1' );
   a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -17738,8 +17732,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     return null;
   });
 
-  a.appStart( '.with ** .submodules.download recursive:2' );
-  a.appStart( '.with ** .clean.submodules recursive:2 dry:1' );
+  a.appStart( '.imply withSubmodules:2 .with ** .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with ** .clean.submodules recursive:2 dry:1' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17766,7 +17760,6 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, ' at .' ), 4 );
     test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
-
     return null;
   });
 
