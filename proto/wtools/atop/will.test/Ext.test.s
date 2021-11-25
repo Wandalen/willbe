@@ -17272,8 +17272,8 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  a.appStart( '.with z .submodules.download recursive:2' );
-  a.appStart( '.with z .clean.submodules' );
+  a.appStart( '.imply withSubmodules:2 .with z .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with z .clean.submodules' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17300,7 +17300,6 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
-
     return null;
   });
 
@@ -17313,8 +17312,8 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  a.appStart( '.with z .submodules.download recursive:2' );
-  a.appStart( '.with * .clean.submodules' );
+  a.appStart( '.imply withSubmodules:2 .with z .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with * .clean.submodules' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17341,7 +17340,6 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, ' at .' ), 1 );
     test.identical( _.strCount( op.output, ' at ' ), 3 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
-
     return null;
   });
 
@@ -17354,8 +17352,8 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  a.appStart( '.with z .submodules.download recursive:2' );
-  a.appStart( '.with * .clean.submodules recursive:1' );
+  a.appStart( '.imply withSubmodules:2 .with z .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with * .clean.submodules recursive:1' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17382,7 +17380,6 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, ' at .' ), 3 );
     test.identical( _.strCount( op.output, ' at ' ), 5 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
-
     return null;
   });
 
@@ -17395,8 +17392,8 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  a.appStart( '.with z .submodules.download recursive:2' );
-  a.appStart( '.with * .clean.submodules recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with z .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with * .clean.submodules recursive:2' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -17436,8 +17433,8 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  a.appStart( '.with z .submodules.download recursive:2' );
-  a.appStartNonThrowing( '.with ** .clean.submodules recursive:1' );
+  a.appStart( '.imply withSubmodules:2 .with z .submodules.download recursive:2' );
+  a.appStartNonThrowing( '.imply withSubmodules:2 .with ** .clean.submodules recursive:1' );
   a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -17464,7 +17461,6 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, ' at .' ), 0 );
     test.identical( _.strCount( op.output, ' at ' ), 0 );
     test.identical( _.strCount( op.output, 'module::wModuleForTesting1 should not delete itself' ), 1 );
-
     return null;
   });
 
@@ -17477,8 +17473,8 @@ function cleanSubmodulesHierarchyRemote( test )
     return null;
   });
 
-  a.appStart( '.with z .submodules.download recursive:2' );
-  a.appStart( '.with ** .clean.submodules recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with z .submodules.download recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with ** .clean.submodules recursive:2' );
 
   a.ready.then( ( op ) =>
   {
@@ -17506,7 +17502,6 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, ' at .' ), 4 );
     test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
-
     return null;
   });
 
