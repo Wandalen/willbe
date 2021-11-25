@@ -14358,15 +14358,16 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   a.ready.then( () =>
   {
     test.case = 'optional';
-    a.reflect();
+    a.reflectMinimal();
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
     return null;
   });
 
-  a.appStart( '.with module/opt/ .export' )
-  .then( ( op ) =>
+  a.appStart( '.with module/opt/ .submodules.download' );
+  a.appStart( '.imply withSubmodules:1 .with module/opt/ .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'rror' ), 0 );
@@ -14378,15 +14379,15 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
+    a.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) );
     test.true( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
     return null;
   });
 
-  a.appStart( '.with Optional .export' )
-  .then( ( op ) =>
+  a.appStart( '.imply withSubmodules:0 .with Optional .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'rror' ), 0 );
@@ -14403,29 +14404,27 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
       '../Optional',
       '../module/opt/',
       '../module/opt/out/opt.out',
-      '../module/opt/.module/ModuleForTesting2/',
-      '../module/opt/.module/ModuleForTesting2/out/wModuleForTesting2.out',
     ];
     var outfile = a.fileProvider.fileReadUnknown( a.abs( 'out/Optional.out.will.yml' ) );
     test.identical( _.props.keys( outfile.module ), exp );
-
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = 'mandatory';
-    a.reflect();
+    a.reflectMinimal();
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
-  })
+  });
 
-  a.appStart( '.with module/mand/ .export' )
-  .then( ( op ) =>
+  a.appStart( '.with module/mand/ .submodules.download' );
+  a.appStart( '.imply withSubmodules:2 .with module/mand/ .export' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'rror' ), 0 );
@@ -14444,15 +14443,15 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     return null;
   });
 
-  a.appStart( '.with Mandatory .export' )
-  .then( ( op ) =>
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with Mandatory .export' );
+  a.ready.then( ( op ) =>
   {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 0 );
-    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 0 );
-    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 1 );
+    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 0 );
     test.true( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
-    test.true( a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.false( a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
   });
