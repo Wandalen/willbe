@@ -1538,6 +1538,9 @@ function moduleClone( test )
   {
     test.description = 'open';
     a.reflect();
+    a.will.transaction.unform();
+    a.will.transaction.withSubmodules = 1;
+    a.will.transaction.form();
     opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     return opener.open();
   });
@@ -1595,14 +1598,37 @@ function moduleClone( test )
     opener2.moduleAdopt( module2 );
 
     test.description = 'instances';
-    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
+    var exp =
+    [
+      'super',
+      'super.out/supermodule.out',
+      'sub.out/sub.out',
+      'sub',
+      'super2.out/super.out'
+    ];
     test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.setFrom( a.rel( _.props.keys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
+    var exp =
+    [
+      'super',
+      'sub.out/sub.out',
+      'super.out/supermodule.out',
+      'sub.out/sub.out',
+      'sub',
+      'super2.out/super.out'
+    ];
     test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.openerModuleWithIdMap ).length, 7 );
-    var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
+    var exp =
+    [
+      'super.ex.will.yml',
+      'super.im.will.yml',
+      'super.out/supermodule.out.will.yml',
+      'sub.out/sub.out.will.yml',
+      'sub.ex.will.yml',
+      'sub.im.will.yml'
+    ];
     test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( a.rel( _.props.keys( a.will.willfileWithFilePathPathMap ) ), exp );
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
@@ -1660,14 +1686,36 @@ function moduleClone( test )
     opener2.close();
 
     test.description = 'instances';
-    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
+    var exp =
+    [
+      'super',
+      'super.out/supermodule.out',
+      'sub.out/sub.out',
+      'sub'
+    ];
     test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.setFrom( a.rel( _.props.keys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
+    var exp =
+    [
+      'super',
+      'sub.out/sub.out',
+      'super.out/supermodule.out',
+      'sub.out/sub.out',
+      'sub',
+      'super2.out/super.out'
+    ];
     test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.openerModuleWithIdMap ).length, exp.length );
-    var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
+    var exp =
+    [
+      'super.ex.will.yml',
+      'super.im.will.yml',
+      'super.out/supermodule.out.will.yml',
+      'sub.out/sub.out.will.yml',
+      'sub.ex.will.yml',
+      'sub.im.will.yml'
+    ];
     test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( a.rel( _.props.keys( a.will.willfileWithFilePathPathMap ) ), exp );
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
@@ -1716,14 +1764,35 @@ function moduleClone( test )
     opener.openedModule = null;
 
     test.description = 'instances';
-    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
+    var exp =
+    [
+      'super',
+      'super.out/supermodule.out',
+      'sub.out/sub.out',
+      'sub'
+    ];
     test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.setFrom( a.rel( _.props.keys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
+    var exp =
+    [
+      'super',
+      'sub.out/sub.out',
+      'super.out/supermodule.out',
+      'sub.out/sub.out',
+      'sub'
+    ];
     test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.props.keys( a.will.openerModuleWithIdMap ).length, exp.length );
-    var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
+    var exp =
+    [
+      'super.ex.will.yml',
+      'super.im.will.yml',
+      'super.out/supermodule.out.will.yml',
+      'sub.out/sub.out.will.yml',
+      'sub.ex.will.yml',
+      'sub.im.will.yml'
+    ];
     test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( a.rel( _.props.keys( a.will.willfileWithFilePathPathMap ) ), exp );
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
