@@ -15143,8 +15143,8 @@ function importOutdated( test )
 
   /* - */
 
-  a.appStart({ args : [ '.with module1/ .export' ] });
-  a.appStart({ args : [ '.with module2/ .export' ] });
+  a.appStart( '.with module1/ .export' );
+  a.appStart( '.with module2/ .export' );
   a.ready.then( () =>
   {
     let willfilePath = a.abs( 'module1/.will.yml' );
@@ -15152,9 +15152,9 @@ function importOutdated( test )
     willFile.path.somepath = 'somepath';
     a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
-  })
-  a.appStart({ args : [ '.with module1/ .export' ] });
-  a.appStartNonThrowing({ args : [ '.build' ] });
+  });
+  a.appStart( '.with module1/ .export' );
+  a.appStartNonThrowing( '.build' );
   a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -15164,7 +15164,7 @@ function importOutdated( test )
     test.identical( _.strCount( op.output, 'module::supermodule / module::submodule1 loaded from module::supermodule / module::submodule2 is outdated!' ), 1 );
     test.identical( _.strCount( op.output, `Please re-export ${a.abs( './module2/out/submodule2.out.will.yml' )} first.` ), 1 );
     return null;
-  })
+  });
 
   /* - */
 

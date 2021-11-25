@@ -29,4 +29,5 @@ build :
       default : 1
       debug : 1
     steps :
+      - submodules.reload
       - reflect.submodules
