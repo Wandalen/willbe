@@ -32144,16 +32144,14 @@ function commandSubmodulesGitDiff( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
-
     return null;
   });
 
@@ -32168,16 +32166,14 @@ function commandSubmodulesGitDiff( test )
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git add .' });
   a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git commit -m second' });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
-
     return null;
   });
 
@@ -32191,11 +32187,10 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
@@ -32211,7 +32206,6 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+another new line' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
-
     return null;
   });
 
@@ -32225,11 +32219,10 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
@@ -32245,7 +32238,6 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 0 );
     test.identical( _.strCount( op.output, '+another new line' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
-
     return null;
   });
 
@@ -32259,11 +32251,10 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
@@ -32279,7 +32270,6 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
     test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 1 );
-
     return null;
   });
 
@@ -32293,11 +32283,10 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
@@ -32313,7 +32302,6 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
     test.identical( _.strCount( op.output, 'Diff of module::GitSync at' ), 0 );
-
     return null;
   });
 
@@ -32327,11 +32315,10 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
@@ -32347,7 +32334,6 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-
     return null;
   });
 
@@ -32361,11 +32347,10 @@ function commandSubmodulesGitDiff( test )
     return null;
   });
 
-  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.submodules .git.diff v:0' })
-  .then( ( op ) =>
+  a.appStart({ currentPath : a.abs( 'original' ), execPath : '.imply withSubmodules:1 .submodules .git.diff v:0' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".submodules .git.diff"' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
     test.identical( _.strCount( op.output, 'Diff of module::super at' ), 0 );
@@ -32381,7 +32366,6 @@ function commandSubmodulesGitDiff( test )
     test.identical( _.strCount( op.output, '--- a/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+++ b/f2.txt' ), 1 );
     test.identical( _.strCount( op.output, '+another new line' ), 1 );
-
     return null;
   });
 
