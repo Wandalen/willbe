@@ -14784,7 +14784,7 @@ Two remote modules. First is a submodule of the second.
 Exporting modules using .with */*.
 Second module should not download copy of first module, but use already opened module.
 Out will-file of the second module should contain updated hash and size of the in will-files of the first module.
-`
+`;
 
 //
 
@@ -14825,7 +14825,7 @@ exportWithOutdatedWillbe.description =
 Reproduces situation when out file contains field that were renamed in newer version of willbe.
 Uses older version of will to export the module and then tries to export module using current willbe.
 Current willbe should alert user about unexpected fields.
-`
+`;
 
 //
 
@@ -14854,7 +14854,7 @@ function exportCreatesOutDir( test )
 exportCreatesOutDir.description =
 `
 Reproduces situation when out directory is not present and should be created by willbe.
-`
+`;
 
 //
 
@@ -14917,7 +14917,6 @@ function importLocalRepo( test )
 {
   let context = this;
   let a = context.assetFor( test, 'importAuto' );
-  a.reflect();
 
   /* - */
 
@@ -14929,7 +14928,7 @@ function importLocalRepo( test )
   });
 
   a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' });
-  a.appStart({ execPath : '.with module/ModuleForTesting12 .export' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .with module/ModuleForTesting12 .export' });
 
   a.ready.then( ( op ) =>
   {
@@ -15085,8 +15084,7 @@ function importOutWithDeletedSource( test )
   a.appStart({ args : '.clean' });
   a.appStart({ args : '.with a .export' });
   a.appStart({ args : '.with b .export' });
-  a.appStart({ args : '.with ab-named .export' });
-
+  a.appStart({ args : '.imply withSubmodules:1 .with ab-named .export' });
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15103,7 +15101,7 @@ function importOutWithDeletedSource( test )
     return null;
   });
 
-  a.appStart({ args : '.with out/module-ab-named .modules.list' })
+  a.appStart({ args : '.imply withSubmodules:1 .with out/module-ab-named .modules.list' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -15128,7 +15126,7 @@ function importOutWithDeletedSource( test )
   {
     return a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.fileWrite( a.abs( 'proto/b/-Excluded.js' ), 'console.log( \'b/-Ecluded.js\' );' );
       return null;
     });
