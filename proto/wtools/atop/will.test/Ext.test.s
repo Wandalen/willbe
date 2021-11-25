@@ -15705,8 +15705,8 @@ function cleanBroken1( test )
     return null;
   });
 
-  a.appStart({ execPath : '.clean dry:1' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean dry:1' });
+  a.ready.then( ( op ) =>
   {
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
@@ -15715,11 +15715,10 @@ function cleanBroken1( test )
     test.true( _.strHas( op.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
-
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
@@ -15728,8 +15727,8 @@ function cleanBroken1( test )
     return null;
   });
 
-  a.appStart({ execPath : '.clean' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, 'Clean deleted' ) );
@@ -15738,7 +15737,7 @@ function cleanBroken1( test )
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
@@ -15747,9 +15746,9 @@ function cleanBroken1( test )
     return null;
   });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .export' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
@@ -15759,23 +15758,22 @@ function cleanBroken1( test )
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
-
     return null;
   });
 
-  /* - */
+  /* */
 
   a.ready.then( () =>
   {
     test.case = '.clean then .export twice';
     a.reflect();
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  a.appStart({ execPath : '.export' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .export' });
+  a.appStart({ execPath : '.imply withSubmodules:2 .export' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
@@ -15785,7 +15783,6 @@ function cleanBroken1( test )
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
-
     return null;
   });
 
