@@ -16521,21 +16521,20 @@ function cleanRecursive( test )
 
   a.appStart( '.with ** .clean' );
   a.appStart( '.with group1/group10/a0 .export' );
-  a.appStart( '.with group1/a .export' );
-  a.appStart( '.with group1/b .export' );
-  a.appStart( '.with group2/c .export' );
-  a.appStart( '.with z .export' );
-
+  a.appStart( '.imply withSubmodules:1 .with group1/a .export' );
+  a.appStart( '.imply withSubmodules:1 .with group1/b .export' );
+  a.appStart( '.imply withSubmodules:2 .with group2/c .export' );
+  a.appStart( '.imply withSubmodules:2 .with z .export' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 24 );
-    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/8 submodule(s) of module::z were downloaded' ), 1 );
     return null;
   });
 
-  a.appStart( '.with z .clean recursive:2' );
+  a.appStart( '.imply withSubmodules:2 .with z .clean recursive:2' );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
