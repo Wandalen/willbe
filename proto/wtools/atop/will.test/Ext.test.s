@@ -28526,37 +28526,11 @@ function commandImplyWithSubmodulesModulesList( test )
   a.ready.then( () =>
   {
     test.case = 'default withSubmodules';
-    a.reflect();
+    a.reflectMinimal();
     return null;
   });
-  a.appStart( '".with l4 .modules.list"' )
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( op.output, 'error' ), 0 );
-
-    test.identical( _.strCount( op.output, 'module::' ), 7 );
-    test.identical( _.strCount( op.output, 'remote : null' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l4' ), 4 );
-    test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l2' ), 1 );
-    test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
-    return null;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'withSubmodules:0';
-    a.reflect();
-    return null;
-  })
-  a.appStart( '".imply withSubmodules:0 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
+  a.appStart( '".with l4 .modules.list"' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
@@ -28566,20 +28540,44 @@ function commandImplyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'module::' ), 1 );
     test.identical( _.strCount( op.output, 'remote : null' ), 1 );
     test.identical( _.strCount( op.output, 'module::l4' ), 1 );
-
+    test.identical( _.strCount( op.output, 'module::l3' ), 0 );
+    test.identical( _.strCount( op.output, 'module::l2' ), 0 );
+    test.identical( _.strCount( op.output, 'module::l1' ), 0 );
     return null;
-  })
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'withSubmodules:0';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '".imply withSubmodules:0 ; .with l4 .modules.list"' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'error' ), 0 );
+
+    test.identical( _.strCount( op.output, 'module::' ), 1 );
+    test.identical( _.strCount( op.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( op.output, 'module::l4' ), 1 );
+    return null;
+  });
 
   /* */
 
   a.ready.then( () =>
   {
     test.case = 'withSubmodules:1';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
-  a.appStart( '".imply withSubmodules:1 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
+  });
+  a.appStart( '".imply withSubmodules:1 ; .with l4 .modules.list"' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
@@ -28590,21 +28588,19 @@ function commandImplyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'remote : null' ), 2 );
     test.identical( _.strCount( op.output, 'module::l4' ), 2 );
     test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'withSubmodules:2';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
-  a.appStart( '".imply withSubmodules:2 ; .with l4 .modules.list"' )
-  .then( ( op ) =>
+  });
+  a.appStart( '".imply withSubmodules:2 ; .with l4 .modules.list"' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
@@ -28617,21 +28613,19 @@ function commandImplyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'module::l3' ), 1 );
     test.identical( _.strCount( op.output, 'module::l2' ), 1 );
     test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
     return null;
-  })
+  });
 
   /* - */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'withSubmodules:0';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
-  a.appStart( '.imply withSubmodules:0 .with l4 .modules.list' )
-  .then( ( op ) =>
+  });
+  a.appStart( '.imply withSubmodules:0 .with l4 .modules.list' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
@@ -28641,21 +28635,19 @@ function commandImplyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'module::' ), 1 );
     test.identical( _.strCount( op.output, 'remote : null' ), 1 );
     test.identical( _.strCount( op.output, 'module::l4' ), 1 );
-
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'withSubmodules:1';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
-  a.appStart( '.imply withSubmodules:1 .with l4 .modules.list' )
-  .then( ( op ) =>
+  });
+  a.appStart( '.imply withSubmodules:1 .with l4 .modules.list' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
@@ -28666,21 +28658,19 @@ function commandImplyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'remote : null' ), 2 );
     test.identical( _.strCount( op.output, 'module::l4' ), 2 );
     test.identical( _.strCount( op.output, 'module::l3' ), 1 );
-
     return null;
-  })
+  });
 
   /* */
 
-  a.ready
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'withSubmodules:2';
-    a.reflect();
+    a.reflectMinimal();
     return null;
-  })
-  a.appStart( '.imply withSubmodules:2 .with l4 .modules.list' )
-  .then( ( op ) =>
+  });
+  a.appStart( '.imply withSubmodules:2 .with l4 .modules.list' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
@@ -28693,9 +28683,8 @@ function commandImplyWithSubmodulesModulesList( test )
     test.identical( _.strCount( op.output, 'module::l3' ), 1 );
     test.identical( _.strCount( op.output, 'module::l2' ), 1 );
     test.identical( _.strCount( op.output, 'module::l1' ), 1 );
-
     return null;
-  })
+  });
 
   /* - */
 
