@@ -21054,37 +21054,37 @@ function submodulesDownloadAutoCrlfEnabled( test )
   if( runningInsideTestContainer )
   a.shell( 'git config --global core.autocrlf true' );
 
-  a.appStart({ execPath : '.submodules.download' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.submodules.download' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.true( _.strHas( op.output, '+ 1/1 submodule(s) of module::supermodule were downloaded in' ) );
     return null;
-  })
-  a.appStart({ execPath : '.submodules.list' })
-  .then( ( op ) =>
+  });
+  a.appStart( '.imply withSubmodules:1 .submodules.list' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 3 );
     test.identical( _.strCount( op.output, '! Outdated .' ), 0 );
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
 
-  /* - */
+  /* */
 
   function prepare( o )
   {
     a.ready.then( () => { a.reflect(); return null } );
-    a.appStart({ execPath : '.with module/submodule .export' })
-    let shell = _.process.starter({ currentPath : a.abs( 'module' ), ready : a.ready })
-    shell( 'git init' )
-    shell( 'git config core.autocrlf false' )
-    shell( 'git add -fA .' )
-    shell( 'git commit -m init' )
+    a.appStart({ execPath : '.with module/submodule .export' });
+    const currentPath = a.abs( 'module' );
+    a.shell({ currentPath, execPath : 'git init' });
+    a.shell({ currentPath, execPath : 'git config core.autocrlf false' });
+    a.shell({ currentPath, execPath : 'git add -fA .' });
+    a.shell({ currentPath, execPath : 'git commit -m init' });
     return a.ready;
   }
 }
