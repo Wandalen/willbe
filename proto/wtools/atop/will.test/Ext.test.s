@@ -26557,11 +26557,7 @@ ${ mergeEnd }
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    _.censor.profileDel( profile );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
@@ -26671,11 +26667,7 @@ function stepGitDifferentCommands( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    _.censor.profileDel( profile );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
@@ -27918,11 +27910,7 @@ function stepGitSync( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    _.censor.profileDel( profile );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
@@ -31792,18 +31780,15 @@ function commandSubmodulesShell( test )
 
 function commandSubmodulesGit( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'gitPush' );
+  if( !_.censor )
+  return test.true( true );
 
-  let config, profile, profileDir;
-  if( _.censor )
-  {
-    config = { path : { hlink : a.abs( '..' ) } };
-    profile = 'test-profile';
-    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-    let configPath = a.abs( profileDir, 'config.yaml' );
-    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-  }
+  const context = this;
+  const a = context.assetFor( test, 'gitPush' );
+
+  const config = { path : { hlink : a.abs( '..' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
 
   /* - */
 
@@ -31813,8 +31798,8 @@ function commandSubmodulesGit( test )
     a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
     return null;
   });
-  a.appStart( `.with original/ .submodules .git status profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStart( `.imply withSubmodules:1 .with original/ .submodules .git status profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -31835,9 +31820,11 @@ function commandSubmodulesGit( test )
     return null;
   });
   a.appStart( '.with original/GitSync .submodules .git add --all' );
-  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules .git commit -am "new lines" hardLinkMaybe:1` )
-  a.appStart( `.with original/GitSync .submodules .git commit -am "new lines" profile:${ profile } hardLinkMaybe:1` )
-  .then( ( op ) =>
+  a.appStart
+  (
+    `.imply withSubmodules:1 .with original/GitSync .submodules .git commit -am "new lines" profile:${ profile } hardLinkMaybe:1`
+  );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
@@ -31848,10 +31835,10 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 1 );
     return null;
   });
-  a.appStart( '.with original/GitSync .submodules .git push --all' )
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
-  .then( ( op ) =>
+  a.appStart( '.with original/GitSync .submodules .git push --all' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines' ), 0 );
@@ -31868,9 +31855,8 @@ function commandSubmodulesGit( test )
     return null;
   });
 
-  // a.appStart( `.imply withSubmodules:0 profile:${ profile } .with original/GitSync .submodules .git commit -am "new lines2"` )
-  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules .git commit -am "new lines2" profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStart( `.imply withSubmodules:0 .with original/GitSync .submodules .git commit -am "new lines2" profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
@@ -31881,10 +31867,10 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
-  a.appStart( '.imply .with original/GitSync .submodules .git push --all' )
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' })
-  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' })
-  .then( ( op ) =>
+  a.appStart( '.imply .with original/GitSync .submodules .git push --all' );
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git pull' });
+  a.shell({ currentPath : a.abs( 'clone' ), execPath : 'git log' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'new lines2' ), 0 );
@@ -31894,9 +31880,12 @@ function commandSubmodulesGit( test )
   /* */
 
   begin();
-  // a.appStart( `.with original/GitSync .imply profile:${ profile } .submodules .git remote add origin1 https://github.com/user/{about::name}.git` )
-  a.appStart( `.with original/GitSync .submodules .git remote add origin1 https://github.com/user/{about::name}.git profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStart
+  (
+    `.imply withSubmodules:1 .with original/GitSync .submodules `
+    + `.git remote add origin1 https://github.com/user/{about::name}.git profile:${ profile }`
+  );
+  a.ready.then( ( op ) =>
   {
     test.case = '.with original/GitSync .modules .git remote add origin1 https://github.com/user/{about::name}.git';
     test.identical( op.exitCode, 0 );
@@ -31908,15 +31897,15 @@ function commandSubmodulesGit( test )
     test.identical( _.strCount( op.output, '+ Restored 0 hardlinks' ), 0 );
     return null;
   });
-  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git remote -v' })
-  .then( ( op ) =>
+  a.shell({ currentPath : a.abs( 'original' ), execPath : 'git remote -v' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/git-sync.git' ), 0 );
     return null;
   });
-  a.shell({ currentPath : a.abs( 'original/.local' ), execPath : 'git remote -v' })
-  .then( ( op ) =>
+  a.shell({ currentPath : a.abs( 'original/.local' ), execPath : 'git remote -v' });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /origin1.*github.com.user\/local.git/ ), 2 );
@@ -31925,12 +31914,7 @@ function commandSubmodulesGit( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    if( _.censor )
-    a.fileProvider.filesDelete( profileDir );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
@@ -38388,11 +38372,7 @@ function commandGitSync( test )
 
   /* */
 
-  a.ready.finally( () =>
-  {
-    _.censor.profileDel( profile );
-    return null;
-  });
+  a.ready.finally( () => { _.censor.profileDel( profile ); return null });
 
   /* - */
 
