@@ -35577,28 +35577,25 @@ original/f2.txt
 
 function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 {
-  let context = this;
+  const context = this;
 
   if( !_.censor )
   return test.true( true );
 
-  let temp = context.suiteTempPath;
+  const temp = context.suiteTempPath;
   context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
+  const a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
-  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
-  let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-  let configPath = a.abs( profileDir, 'config.yaml' );
-  a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  const config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
+  const linkPath = config.path.hlink;
 
-  let linkPath = config.path.hlink;
-
-  let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
-  let mergeMid = _.strDup( '=', 7 )
-  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+  const mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
+  const mergeMid = _.strDup( '=', 7 );
+  const mergeEnd = ` ${ _.strDup( '>', 7 ) }`;
 
   /* - */
 
@@ -35615,22 +35612,20 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
-
     return null;
-  })
+  });
 
   /* */
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
 
-  a.appStartNonThrowing( `.with super/ .modules .git.sync v:5 profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStartNonThrowing( `.imply withSubmodules:1 .with super/ .modules .git.sync v:5 profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .modules .git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
     test.identical( _.strCount( op.output, '> git commit -am "."' ), 1 );
@@ -35652,14 +35647,14 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
 `
 original/f.txt
 original
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
@@ -35671,7 +35666,7 @@ clone
 ${ mergeMid }
 original
 ${ mergeEnd }
-`
+`;
     var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
@@ -35679,17 +35674,17 @@ ${ mergeEnd }
     var exp =
 `
 original/f.txt
-`
+`;
     var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
-  })
+  });
 
   a.ready.then( () =>
   {
     a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     context.suiteTempPath = temp;
     return null;
   });
@@ -35704,7 +35699,7 @@ original/f.txt
   {
     a.ready.then( () =>
     {
-      a.reflect();
+      a.reflectMinimal();
       a.fileProvider.dirMake( a.abs( 'repo' ) );
       return null;
     });
