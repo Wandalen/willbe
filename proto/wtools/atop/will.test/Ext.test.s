@@ -15802,21 +15802,17 @@ function cleanBroken2( test )
 
   /* - */
 
-  a.ready
-
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean dry ';
     a.reflect();
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean dry:1' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean dry:1' });
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean dry:1';
 
@@ -15826,25 +15822,22 @@ function cleanBroken2( test )
     test.true( _.strHas( op.output, String( files.length ) ) );
     test.true( a.fileProvider.fileExists( a.abs( '.module' ) ) );
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean';
     a.reflect();
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean';
     test.identical( op.exitCode, 0 );
@@ -15852,23 +15845,22 @@ function cleanBroken2( test )
     test.true( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
     test.true( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.clean';
     a.reflect();
     var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-
     return null;
-  })
+  });
 
-  a.appStart({ execPath : '.clean' })
-  a.appStart({ execPath : '.export' })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.clean' });
+  a.appStart({ execPath : '.imply withSubmodules:1 .export' });
+  a.ready.then( ( op ) =>
   {
     test.case = '.export';
 
@@ -15880,14 +15872,12 @@ function cleanBroken2( test )
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.export';
     test.will = 'update should throw error if submodule is not downloaded but download path exists';
@@ -15895,10 +15885,9 @@ function cleanBroken2( test )
     return null;
   });
 
-  a.appStart({ execPath : '.export', throwingExitCode : 0 })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withSubmodules:1 .export', throwingExitCode : 0 });
+  a.ready.then( ( op ) =>
   {
-
     test.notIdentical( op.exitCode, 0 );
     test.true( !_.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
     var expected = `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository`;
@@ -15907,12 +15896,6 @@ function cleanBroken2( test )
     var expected = `Out-willfile should not have section(s) : "brokenFile"`
     test.true( _.strHas( op.output, expected ) );
 
-    // var files = a.find( a.abs( 'out/debug' ) );
-    // test.gt( files.length, 9 );
-
-    // var files = a.fileProvider.dirRead( a.abs( 'out' ) );
-    // test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
-
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files.length, 0 );
 
@@ -15920,12 +15903,11 @@ function cleanBroken2( test )
     test.identical( files, null );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-  .then( ( op ) =>
+  a.ready.then( ( op ) =>
   {
     test.case = '.export agree1';
     test.will = 'export should not throw error because submodule was updated by agree';
@@ -15933,8 +15915,8 @@ function cleanBroken2( test )
     return null;
   });
 
-  a.appStart({ execPath : '.imply withOut:0 .submodules.versions.agree .export', throwingExitCode : 0 })
-  .then( ( op ) =>
+  a.appStart({ execPath : '.imply withOut:0 withSubmodules:1 .submodules.versions.agree .export', throwingExitCode : 0 });
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
@@ -15950,11 +15932,10 @@ function cleanBroken2( test )
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
-
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
   return a.ready;
 }
