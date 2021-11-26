@@ -7134,7 +7134,7 @@ function hookGitSyncRestoreHardLinksWithShared( test )
   return test.true( true );
 
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' ); /* Dmytro : suiteTempPath has extension .tmp, it is filtered by provider.filesFind */
+  context.suiteTempPath = _.path.join( _.path.dir( temp ), 'willbe' );
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
@@ -35055,7 +35055,7 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithSuccess( test )
   return test.true( true );
 
   const temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' );
   const a = context.assetFor( test, 'modulesGitSync' );
 
   const config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
@@ -35194,28 +35194,26 @@ super
 
 function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
 {
-  let context = this;
+  const context = this;
 
   if( !_.censor )
   return test.true( true );
 
-  let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
-  let a = context.assetFor( test, 'modulesGitSync' );
+  const temp = context.suiteTempPath;
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' );
+  const a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
 
-  let config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
-  let profile = 'test-profile';
-  let profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
-  let configPath = a.abs( profileDir, 'config.yaml' );
-  a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  const config = { path : { hlink : a.abs( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe' ) } };
+  const profile = `test-${ _.intRandom( 1000000 ) }`;
+  _.censor.configSet({ profileDir : profile, set : config });
 
   let linkPath = config.path.hlink;
 
   let mergeStart = ` ${ _.strDup( '<', 7 ) } HEAD`;
-  let mergeMid = _.strDup( '=', 7 )
-  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`
+  let mergeMid = _.strDup( '=', 7 );
+  let mergeEnd = ` ${ _.strDup( '>', 7 ) }`;
 
   /* - */
 
@@ -35242,17 +35240,14 @@ function commandModulesGitSyncRestoreHardLinksInModuleWithFail( test )
   {
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( '.original/GitSync.will.yml' ) ] : a.abs( 'clone/GitSync.will.yml' ) } });
     return null;
-  })
+  });
 
-  // a.appStartNonThrowing( `.with super/ .imply profile:${ profile } .modules .git.sync v:5` )
-  a.appStartNonThrowing( `.with super/ .modules .git.sync v:5 profile:${ profile }` )
-  .then( ( op ) =>
+  a.appStartNonThrowing( `.imply withSubmodules:1 .with super/ .modules .git.sync v:5 profile:${ profile }` );
+  a.ready.then( ( op ) =>
   {
     test.case = 'conflict';
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 0 );
-    // test.identical( _.strCount( op.output, `Command ".with super/ .imply profile:${ profile } .modules .git.sync v:5"` ), 1 );
-    test.identical( _.strCount( op.output, `Command ".with super/ .modules .git.sync v:5 profile:${ profile }"` ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::super' ), 0 );
     test.identical( _.strCount( op.output, 'Committing module::GitSync' ), 1 );
     test.identical( _.strCount( op.output, '> git add --all' ), 1 );
@@ -35309,10 +35304,10 @@ original/f2.txt
     return null;
   });
 
-  a.ready.then( () =>
+  a.ready.finally( () =>
   {
     a.fileProvider.filesDelete( a.path.dir( context.suiteTempPath ) );
-    a.fileProvider.filesDelete( profileDir );
+    _.censor.profileDel( profile );
     context.suiteTempPath = temp;
     return null;
   });
@@ -35367,7 +35362,7 @@ function commandModulesGitSyncRestoreHardLinksInModule( test )
   return test.true( true );
 
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' );
   let a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
@@ -35525,7 +35520,7 @@ function commandModulesGitSyncRestoreHardLinksInSubmodule( test )
   return test.true( true );
 
   const temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' );
   const a = context.assetFor( test, 'modulesGitSync' );
 
   /* */
@@ -38428,7 +38423,7 @@ function commandGitSyncRestoreHardLinksWithShared( test )
   return test.true( true );
 
   let temp = context.suiteTempPath;
-  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' ); /* Dmytro : suiteTempPath contains part and extension `tmp` that excludes by providerArchive filter */
+  context.suiteTempPath = _.path.join( process.env.HOME || process.env.USERPROFILE, 'tmpWillbe/willbe' );
   let a = context.assetFor( test, 'gitPush' );
   a.reflect();
 
