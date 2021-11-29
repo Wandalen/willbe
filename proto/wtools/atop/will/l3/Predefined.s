@@ -233,12 +233,32 @@ function stepRoutineLink( frame )
       });
       return ready;
     }
-
     return hardLink( srcPath, dstPath );
   }
   else
   {
-    return fileProvider.softLink
+    if( path.isGlob( srcPath ) )
+    {
+      const srcPaths = module.filesFromResource({ selector : srcPath });
+      const relativePaths = path.s.relative( srcPath, srcPaths );
+
+      const ready = _.take( null );
+      for( let i = 0 ; i < srcPaths.length ; i++ )
+      ready.then( () =>
+      {
+        const dst = path.join( dstPath, relativePaths[ i ] );
+        return softLink( srcPaths[ i ], dst );
+      });
+      return ready;
+    }
+    return softLink( srcPath, dstPath );
+  }
+
+  /* */
+
+  function hardLink( srcPath, dstPath )
+  {
+    return fileProvider.hardLink
     ({
       srcPath,
       dstPath,
@@ -248,9 +268,9 @@ function stepRoutineLink( frame )
 
   /* */
 
-  function hardLink( srcPath, dstPath )
+  function softLink( srcPath, dstPath )
   {
-    return fileProvider.hardLink
+    return fileProvider.softLink
     ({
       srcPath,
       dstPath,

@@ -1,8 +1,13 @@
 
 about :
 
-  name : 'HardLink'
+  name : 'SoftLink'
   version : '0.0.1'
+
+path :
+
+  src : flat
+  dst : dst
 
 step :
 
@@ -30,6 +35,12 @@ step :
     srcPath : 'nested/'
     dstPath : 'nested.lnk'
 
+  resolve :
+    inherit : files.link
+    mode : softlink
+    srcPath : path::src
+    dstPath : path::dst
+
 build :
 
   terminal :
@@ -47,4 +58,8 @@ build :
   directory.nested :
     steps :
       - directory.nested
+
+  resolve :
+    steps :
+      - resolve
 

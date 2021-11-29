@@ -24448,47 +24448,11 @@ function stepFilesLinkAsHardLink( test )
 
   a.ready.then( () =>
   {
-    test.case = 'hardlink several terminal files';
-    a.reflectMinimal();
-    return null;
-  });
-  a.appStart( '.with HardLink .build terminal.glob' );
-  a.appStart( '.with HardLink .build terminal.glob' );
-  a.ready.then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    var files = a.find( a.abs( '.' ) );
-    var exp =
-    [
-      '.',
-      './File.js',
-      './File.txt',
-      './HardLink.will.yml',
-      './SoftLink.will.yml',
-      './dst',
-      './dst/File.js',
-      './dst/File.txt',
-      './flat',
-      './flat/Flat.txt',
-      './nested',
-      './nested/dir',
-      './nested/dir/Nested.txt',
-    ];
-    test.identical( files, exp );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'File.js' ), a.abs( 'dst/File.js' ) ) );
-    test.true( a.fileProvider.areHardLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( () =>
-  {
-    test.case = 'hardlink flat directory';
     test.case = 'hardlink flat directory';
     a.reflectMinimal();
     return null;
   });
+  a.appStart( '.with HardLink .build directory.flat' );
   a.appStart( '.with HardLink .build directory.flat' );
   a.ready.then( ( op ) =>
   {
@@ -24598,7 +24562,377 @@ function stepFilesLinkAsHardLink( test )
 
 stepFilesLinkAsHardLink.description =
 `
-test predefined step 'link' with mode 'hardlink'
+test predefined step 'files.link' with mode 'hardlink'
+`;
+
+//
+
+function stepFilesLinkAsSoftLink( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'stepFilesLink' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default file structure';
+    a.reflectMinimal();
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.open( 'write new link' );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink single terminal file';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink several terminal files';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal.glob' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.js',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.js' ), a.abs( 'dst/File.js' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink flat directory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.flat' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './flat.lnk',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'flat.lnk/Flat.txt' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat' ), a.abs( 'flat.lnk' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink directory with subdirectory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.nested' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './nested.lnk',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested' ), a.abs( 'nested.lnk' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested/dir/Nested.txt' ), a.abs( 'nested.lnk/dir/Nested.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink resolved directories';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build resolve' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './dst',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat' ), a.abs( 'dst' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'dst/Flat.txt' ) ) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.close( 'write new link' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.open( 'rewrite links' );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink single terminal file';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal' );
+  a.appStart( '.with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink flat directory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.flat' );
+  a.appStart( '.with SoftLink .build directory.flat' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './flat.lnk',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'flat.lnk/Flat.txt' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat' ), a.abs( 'flat.lnk' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink directory with subdirectory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.nested' );
+  a.appStart( '.with SoftLink .build directory.nested' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './nested.lnk',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested' ), a.abs( 'nested.lnk' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested/dir/Nested.txt' ), a.abs( 'nested.lnk/dir/Nested.txt' ) ) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.close( 'rewrite links' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default output';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::SoftLink / build::terminal' ), 1 );
+    test.identical( _.strCount( op.output, 'Linking File.txt to dst/File.txt.' ), 0 );
+    test.identical( _.strCount( op.output, 'Built module::SoftLink / build::terminal in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default output with higher verbosity';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.imply v:5 .with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::SoftLink / build::terminal' ), 1 );
+    test.identical( _.strCount( op.output, 'Linking File.txt to dst/File.txt.' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::SoftLink / build::terminal in' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+stepFilesLinkAsSoftLink.description =
+`
+test predefined step 'files.link' with mode 'softlink'
 `;
 
 //
@@ -46686,6 +47020,7 @@ const Proto =
     // step
 
     stepFilesLinkAsHardLink,
+    stepFilesLinkAsSoftLink,
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
     stepSourcesJoin,
