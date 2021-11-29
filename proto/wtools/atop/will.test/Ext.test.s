@@ -36393,7 +36393,7 @@ ${ mergeEnd }
   });
 
   a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am second' });
-  a.appStart({ execPath : `.imply withSubmodules:1 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1 profile:${ profile }` });
+  a.appStart( `.imply withSubmodules:1 .with clone/ .git pull hardLinkMaybe:1 withSubmodules:1 profile:${ profile }` );
   a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
