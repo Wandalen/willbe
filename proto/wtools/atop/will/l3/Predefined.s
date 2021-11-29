@@ -137,12 +137,12 @@ function stepRoutineReflect( frame )
   _.props.extend( opts, reflectorOptions );
 
   opts.verbosity = 0;
+  if( opts.templateResolve )
+  opts.onWriteDstDown = onWriteDstDown;
+  delete opts.templateResolve;
 
   return _.Consequence.Try( () =>
   {
-
-    // _.will.Predefined._filesReflect.head.call( fileProvider, _.will.Predefined._filesReflect, opts );
-
     return _.will.Predefined._filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
@@ -154,7 +154,7 @@ function stepRoutineReflect( frame )
   {
     err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportString(), '  ' ), '\n' );
     throw _.err( err );
-  })
+  });
 
   /* */
 
@@ -180,12 +180,22 @@ function stepRoutineReflect( frame )
 
   /* */
 
+  function onWriteDstDown( dstRecord )
+  {
+    if( fileProvider.isTerminal( dstRecord.dst.absolute ) )
+    {
+      const dstPath = dstRecord.dst.absolute;
+      const resolved = module.resolve( fileProvider.fileRead( dstPath ) );
+      fileProvider.fileWrite( dstPath, resolved );
+    }
+  }
 }
 
 stepRoutineReflect.stepOptions =
 {
   filePath : null,
   verbosity : null,
+  templateResolve : null,
 };
 
 //
