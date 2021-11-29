@@ -1,0 +1,50 @@
+
+about :
+
+  name : 'HardLink'
+  version : '0.0.1'
+
+step :
+
+  terminal :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'File.txt'
+    dstPath : 'dst/File.txt'
+
+  terminal.glob :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'F*'
+    dstPath : 'dst/'
+
+  directory.flat :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'flat/'
+    dstPath : 'flat.lnk'
+
+  directory.nested :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'nested/'
+    dstPath : 'nested.lnk'
+
+build :
+
+  terminal :
+    steps :
+      - terminal
+
+  terminal.glob :
+    steps :
+      - terminal.glob
+
+  directory.flat :
+    steps :
+      - directory.flat
+
+  directory.nested :
+    steps :
+      - directory.nested
+
