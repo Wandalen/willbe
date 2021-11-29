@@ -186,7 +186,85 @@ stepRoutineReflect.stepOptions =
 {
   filePath : null,
   verbosity : null,
+};
+
+//
+
+function stepRoutineLink( frame )
+{
+  const step = this;
+  const module = frame.run.module;
+  const will = module.will;
+  const fileProvider = will.fileProvider;
+  const path = fileProvider.path;
+  const logger = will.transaction.logger;
+  const verbosity = step.verbosityWithDelta( -1 );
+
+  const opts = _.props.extend( null, step.opts );
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.str.defined( opts.srcPath ), 'Expects source path {-srcPath-}.' );
+  _.sure( _.str.defined( opts.dstPath ), 'Expects destination path {-dstPath-}.' );
+  _.sure
+  (
+    _.longHas( [ 'hardlink', 'softlink' ], opts.mode ),
+    () => `Unexpected mode "${ opts.mode }". Please, set mode to "softlink" or "hardlink".`
+  );
+
+  const srcPath = module.pathResolve({ selector : opts.srcPath });
+  const dstPath = module.pathResolve({ selector : opts.dstPath });
+
+  if( verbosity >= 4 )
+  logger.log( `Linking ${_.ct.format( opts.srcPath, 'path' )} to ${_.ct.format( opts.dstPath, 'path' )}.` );
+
+  if( opts.mode === 'hardlink' )
+  {
+    if( fileProvider.isDir( srcPath ) || path.isGlob( srcPath ) )
+    {
+      const srcPaths = module.filesFromResource({ selector : path.isGlob( srcPath ) ? srcPath : path.join( srcPath, './**' ) });
+      const relativePaths = path.s.relative( srcPath, srcPaths );
+
+      const ready = _.take( null );
+      for( let i = 0 ; i < srcPaths.length ; i++ )
+      ready.then( () =>
+      {
+        const dst = path.join( dstPath, relativePaths[ i ] );
+        return hardLink( srcPaths[ i ], dst );
+      });
+      return ready;
+    }
+
+    return hardLink( srcPath, dstPath );
+  }
+  else
+  {
+    return fileProvider.softLink
+    ({
+      srcPath,
+      dstPath,
+      makingDirectory : 1,
+    });
+  }
+
+  /* */
+
+  function hardLink( srcPath, dstPath )
+  {
+    return fileProvider.hardLink
+    ({
+      srcPath,
+      dstPath,
+      makingDirectory : 1,
+    });
+  }
 }
+
+stepRoutineLink.stepOptions =
+{
+  srcPath : null,
+  dstPath : null,
+  mode : 'hardlink',
+};
 
 //
 
@@ -1424,11 +1502,11 @@ stepRoutineWillfileVersionBump.uniqueOptions =
 
 let Extension =
 {
-
   _filesReflect,
 
   stepRoutineDelete,
   stepRoutineReflect,
+  stepRoutineLink,
   stepRoutineTimelapseBegin,
   stepRoutineTimelapseEnd,
 
@@ -1468,8 +1546,8 @@ let Extension =
   stepRoutineWillbeIsUpToDate,
 
   stepRoutineWillfileVersionBump,
-}
+};
 
-/* _.props.extend */Object.assign( _.will.Predefined, Extension );
+Object.assign( _.will.Predefined, Extension );
 
 })()
