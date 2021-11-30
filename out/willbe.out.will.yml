@@ -22,11 +22,11 @@ module:
         single-process-will: proto/wtools/atop/will/entry/Exec
         debug-will: proto/wtools/atop/will/entry/ExecDebug
         will: proto/wtools/atop/will/entry/ExecUnrestricted
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@obox.systems>
       keywords: &ref_3
         - wTools
       contributors: &ref_4
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@obox.systems>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       interpreters: &ref_5
@@ -4532,7 +4532,7 @@ module:
       npm.engines: *ref_1
       npm.name: willbe
       npm.bin: *ref_2
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@obox.systems>
       keywords: *ref_3
       contributors: *ref_4
       interpreters: *ref_5

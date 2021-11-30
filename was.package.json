@@ -2,11 +2,11 @@
   "name": "willbe",
   "version": "0.5.521",
   "description": "Utility to manage modules of complex modular systems",
-  "author": "Kostiantyn Wandalen <wanalen@01.school>",
+  "author": "Kostiantyn Wandalen <wandalen@obox.systems>",
   "contributors": [
     {
       "name": "Kostiantyn Wandalen",
-      "email": "wanalen@01.school"
+      "email": "wandalen@obox.systems"
     },
     {
       "name": "Volodymyr M.",
