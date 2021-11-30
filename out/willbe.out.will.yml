@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: 51d3d93d4731e2472042499b180d3dd7
-    size: 9045
+    hash: aa202329a11ba9109469e85c6b8db5a5
+    size: 9053
 module:
   willbe.out:
     about:
@@ -5318,5 +5318,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 51d3d93d4731e2472042499b180d3dd7
-        size: 9045
+        hash: aa202329a11ba9109469e85c6b8db5a5
+        size: 9053
