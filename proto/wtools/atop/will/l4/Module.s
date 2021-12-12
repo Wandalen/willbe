@@ -100,7 +100,7 @@ function _repoRequest_functor( fo )
       // o.token = config.about[ 'github.token' ];
       const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
       if( identity )
-      o2.token = identity[ 'github.token' ] || identity.token;
+      o2.token = identity[ 'git.token' ] || identity.token;
     }
 
     if( o.remotePath === null )
@@ -8744,7 +8744,7 @@ function gitStatus( o )
     // token = config.about[ 'github.token' ];
     const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
     if( identity )
-    o2.token = identity[ 'github.token' ] || identity.token;
+    o2.token = identity[ 'git.token' ] || identity.token;
   }
 
   let got = _.git.statusFull( o2 );
@@ -8976,7 +8976,7 @@ function repoPullOpen( o )
     // o.token = config.about[ 'github.token' ];
     const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
     if( identity )
-    o2.token = identity[ 'github.token' ] || identity.token;
+    o2.token = identity[ 'git.token' ] || identity.token;
   }
 
   if( !o.remotePath )
@@ -9050,7 +9050,7 @@ function repoRelease( o )
   {
     const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
     if( identity )
-    o.token = identity[ 'github.token' ] || identity.token;
+    o.token = identity[ 'git.token' ] || identity.token;
   }
 
   _.assert( _.str.defined( o.token ), 'Expects token. Please, define it directly in command line or by the Censor utility.' );
