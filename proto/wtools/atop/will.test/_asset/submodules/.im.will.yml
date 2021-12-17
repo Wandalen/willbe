@@ -56,6 +56,7 @@ build :
       raw : 1
     steps :
       - submodules.download
+      - submodules.reload
       - delete.out.debug
       - reflect.proto.*=1
       - reflect.submodules*=1

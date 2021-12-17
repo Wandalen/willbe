@@ -100,7 +100,7 @@ function _repoRequest_functor( fo )
       // o.token = config.about[ 'github.token' ];
       const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
       if( identity )
-      o2.token = identity[ 'github.token' ] || identity.token;
+      o.token = identity[ 'github.token' ] || identity.token;
     }
 
     if( o.remotePath === null )
