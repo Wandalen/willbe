@@ -8738,16 +8738,23 @@ function gitStatus( o )
   fileProvider.filesFind({ filePath : module.dirPath + '**', safe : 0 });
 
   let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
-  o2.insidePath = o.dirPath;
+  o2.localPath = _.git.localPathFromInside( o.dirPath );
+  o2.remotePath = _.git.remotePathFromLocal( o2.localPath );
   /* xxx : standartize */ /* Dmytro : used credentials from default identity */
   if( !o2.token )
   {
     // let config = fileProvider.configUserRead();
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // token = config.about[ 'github.token' ];
-    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-    if( identity )
-    o2.token = identity[ 'github.token' ] || identity.token;
+
+    const parsed = _.git.path.parse({ remotePath : o2.remotePath, full : 0, atomic : 0, objects : 1 });
+    if( parsed.service )
+    {
+      const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+      const identity = _.identity.identityResolveDefaultMaybe({ type });
+      if( identity )
+      o2.token = identity[ `${ type }.token` ] || identity.token;
+    }
   }
 
   let got = _.git.statusFull( o2 );
@@ -8968,7 +8975,11 @@ function repoPullOpen( o )
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
 
-  /* xxx : standartize */ /* Dmytro : used credentials from default identity */
+  if( !o.remotePath )
+  o.remotePath = _.git.remotePathFromLocal( module.dirPath );
+  o.remotePath = _.git.path.nativize( o.remotePath );
+
+  /* xxx : standardize */ /* Dmytro : used credentials from default identity */
   if( !o.token )
   {
     // let config = _.censor.configRead();
@@ -8977,14 +8988,13 @@ function repoPullOpen( o )
     // // config = fileProvider.configUserRead();
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // o.token = config.about[ 'github.token' ];
-    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-    if( identity )
-    o2.token = identity[ 'github.token' ] || identity.token;
-  }
 
-  if( !o.remotePath )
-  o.remotePath = _.git.remotePathFromLocal( module.dirPath );
-  o.remotePath = _.git.path.nativize( o.remotePath );
+    const parsed = _.git.path.parse({ remotePath : o.remotePath, full : 0, atomic : 0, objects : 1 });
+    const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+    const identity = _.identity.identityResolveDefaultMaybe({ type });
+    if( identity )
+    o.token = identity[ `${ type }.token` ] || identity.token;
+  }
 
   o.title = _.strUnquote( o.title );
 
