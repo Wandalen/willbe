@@ -9046,18 +9046,36 @@ function repoRelease( o )
   const will = module.will;
   const logger = will.transaction.logger;
 
-  if( !o.token )
-  {
-    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-    if( identity )
-    o.token = identity[ 'github.token' ] || identity.token;
-  }
-
-  _.assert( _.str.defined( o.token ), 'Expects token. Please, define it directly in command line or by the Censor utility.' );
   _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
 
   const originalRemotePath = _.git.remotePathFromLocal({ localPath : module.dirPath });
-  _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
+  _.assert( _.str.defined( originalRemotePath ), 'Expects git repository.' );
+
+  if( !o.token )
+  {
+    const type = typeGet();
+    const identity = _.identity.identityResolveDefaultMaybe({ type });
+    if( identity )
+    o.token = identity[ `${ type }.token` ] || identity.token;
+  }
+
+  _.sure
+  (
+    _.str.defined( o.token ),
+    () =>
+    {
+      const type = typeGet();
+      return 'Expects token.\n'
+      + 'You can provide it directly as option of command `.repo.release` or predefined step `repo.release`\n'
+      + `or add token to profile identity with type "${ type }".\n\n`
+      + `To add identity with type "${ type }" use utility "Censor" or utility "Identity".\n`
+      + `The command looks like:\n`
+      + `censor .${ type }.identity.new ${ type }.default login:yourLogin token:yourToken\n`
+      + `where "${type}.default" is identity name, "yourLogin" and "yourToken" are identity login and token.\n\n`
+      + `To check that command for type "${ type }" is implemented run:\n`
+      + `censor .help ${ type }.identity.new`
+    }
+  );
 
   const remotePath = `${ originalRemotePath }!${ o.tag }`;
 
@@ -9074,6 +9092,14 @@ function repoRelease( o )
     localPath : module.dirPath,
     logger,
   });
+
+  /* */
+
+  function typeGet()
+  {
+    const parsed = _.git.path.parse({ remotePath : originalRemotePath, full : 0, atomic : 0, objects : 1 });
+    return _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+  }
 }
 
 repoRelease.defaults =
