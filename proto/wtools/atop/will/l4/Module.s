@@ -8989,12 +8989,29 @@ function repoPullOpen( o )
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // o.token = config.about[ 'github.token' ];
 
-    const parsed = _.git.path.parse({ remotePath : o.remotePath, full : 0, atomic : 0, objects : 1 });
-    const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+    const type = typeGet();
     const identity = _.identity.identityResolveDefaultMaybe({ type });
     if( identity )
     o.token = identity[ `${ type }.token` ] || identity.token;
   }
+
+  _.sure
+  (
+    _.str.defined( o.token ),
+    () =>
+    {
+      const type = typeGet();
+      return 'Expects token.\n'
+      + 'You can provide it directly as option of command `.repo.release` or predefined step `repo.release`\n'
+      + `or add token to profile identity with type "${ type }".\n\n`
+      + `To add identity with type "${ type }" use utility "Censor" or utility "Identity".\n`
+      + `The command looks like:\n`
+      + `censor .${ type }.identity.new ${ type }.default login:yourLogin token:yourToken\n`
+      + `where "${type}.default" is identity name, "yourLogin" and "yourToken" are identity login and token.\n\n`
+      + `To check that command for type "${ type }" is implemented run:\n`
+      + `censor .help ${ type }.identity.new`
+    }
+  );
 
   o.title = _.strUnquote( o.title );
 
@@ -9022,6 +9039,15 @@ function repoPullOpen( o )
   });
 
   return ready;
+
+  /* */
+
+  function typeGet()
+  {
+    const parsed = _.git.path.parse({ remotePath : o.remotePath, full : 0, atomic : 0, objects : 1 });
+    return _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+  }
+
 }
 
 repoPullOpen.defaults =
