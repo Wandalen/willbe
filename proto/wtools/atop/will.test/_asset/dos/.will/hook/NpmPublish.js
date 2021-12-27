@@ -9,6 +9,7 @@ function onModule( context )
   let path = context.will.fileProvider.path;
   let rootPath = context.module.pathMap[ 'npm.publish' ] || './';
   rootPath = context.module.pathResolve( rootPath );
+  let rootIsSamePath = context.junction.dirPath === rootPath;
   let abs = _.routine.join( path, path.join, [ rootPath ] );
   let configPath = abs( 'package.json' );
   let wasСonfigPath = abs( 'was.package.json' );
@@ -129,6 +130,13 @@ function onModule( context )
     logger : o.verbosity - 2,
   });
 
+  if( !rootIsSamePath )
+  if( o.reflectPackageToRoot )
+  {
+    fileProvider.fileCopy( path.join( context.junction.dirPath, 'package.json' ), configPath );
+    fileProvider.fileCopy( path.join( context.junction.dirPath, 'was.package.json' ), wasСonfigPath );
+  }
+
   // /* adjust styles */
   // {
   //   context.start( `add-dependencies ${context.junction.dirPath}/package.json eslint@7.1.0 --dev` );
@@ -225,7 +233,6 @@ function onModule( context )
       }
     }
   }
-
 }
 
 var defaults = onModule.defaults = Object.create( null );
@@ -237,7 +244,8 @@ defaults.submodulesUpdating = 0;
 defaults.force = 0;
 defaults.verbosity = 2;
 defaults.org = null;
-defaults.npmUserName = 'wandalen'
+defaults.npmUserName = 'wandalen';
+defaults.reflectPackageToRoot = true;
 
 module.exports = onModule;
 
