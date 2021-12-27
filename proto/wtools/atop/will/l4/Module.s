@@ -89,20 +89,6 @@ function _repoRequest_functor( fo )
 
     _.map.assertHasAll( o, request.defaults );
 
-    /* xxx : standartize */ /* Dmytro : used credentials from default identity */
-    if( o.token === null )
-    {
-      // let config = _.censor.configRead();
-      // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-      // // if( !config )
-      // // config = fileProvider.configUserRead();
-      // if( config !== null && config.about && config.about[ 'github.token' ] )
-      // o.token = config.about[ 'github.token' ];
-      const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-      if( identity )
-      o2.token = identity[ 'github.token' ] || identity.token;
-    }
-
     if( o.remotePath === null )
     {
       if( module.pathMap.repository )
@@ -114,6 +100,23 @@ function _repoRequest_functor( fo )
         return _.take( null );
         throw _.err( `Module ${module.qualifiedName} is not remote` );
       }
+    }
+
+    /* xxx : standartize */ /* Dmytro : used credentials from default identity */
+    if( o.token === null )
+    {
+      // let config = _.censor.configRead();
+      // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+      // // if( !config )
+      // // config = fileProvider.configUserRead();
+      // if( config !== null && config.about && config.about[ 'github.token' ] )
+      // o.token = config.about[ 'github.token' ];
+
+      const parsed = _.git.path.parse({ remotePath : o.remotePath, full : 0, atomic : 0, objects : 1 });
+      const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+      const identity = _.identity.identityResolveDefaultMaybe({ type });
+      if( identity )
+      o2.token = identity[ `${ type }.token` ] || identity.token;
     }
 
     return requestRoutine
