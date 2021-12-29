@@ -8741,8 +8741,7 @@ function gitStatus( o )
   fileProvider.filesFind({ filePath : module.dirPath + '**', safe : 0 });
 
   let o2 = _.mapOnly_( null, o, _.git.statusFull.defaults );
-  o2.localPath = _.git.localPathFromInside( o.dirPath );
-  o2.remotePath = _.git.remotePathFromLocal( o2.localPath );
+  o2.insidePath = o.dirPath;
   /* xxx : standartize */ /* Dmytro : used credentials from default identity */
   if( !o2.token )
   {
@@ -8750,13 +8749,20 @@ function gitStatus( o )
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // token = config.about[ 'github.token' ];
 
-    const parsed = _.git.path.parse({ remotePath : o2.remotePath, full : 0, atomic : 0, objects : 1 });
-    if( parsed.service )
+    let localPath = _.git.localPathFromInside( o.dirPath );
+    let remotePath = null;
+    if( localPath )
+    remotePath = _.git.remotePathFromLocal( localPath );
+    if( remotePath )
     {
-      const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
-      const identity = _.identity.identityResolveDefaultMaybe({ type });
-      if( identity )
-      o2.token = identity[ `${ type }.token` ] || identity.token;
+      const parsed = _.git.path.parse({ remotePath, full : 0, atomic : 0, objects : 1 });
+      if( parsed.service )
+      {
+        const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+        const identity = _.identity.identityResolveDefaultMaybe({ type });
+        if( identity )
+        o2.token = identity[ `${ type }.token` ] || identity.token;
+      }
     }
   }
 
