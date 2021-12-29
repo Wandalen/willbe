@@ -7929,7 +7929,10 @@ function npmModulePublish( o )
   const will = module.will;
   const fileProvider = will.fileProvider;
   const path = fileProvider.path;
-  const packagePath = path.join( module.dirPath, 'package.json' );
+
+  let rootPath = context.module.pathMap[ 'npm.publish' ] || './';
+  rootPath = context.module.pathResolve( rootPath );
+  const packagePath = path.join( rootPath, 'package.json' );
   const logger = will.transaction.logger;
 
   _.routine.options_( npmModulePublish, o );
@@ -8067,7 +8070,7 @@ function npmModulePublish( o )
     return _.npm.fileFixate
     ({
       dry : o.dry,
-      localPath : module.dirPath,
+      localPath : rootPath,
       configPath : packagePath,
       tag : o.tag,
       onDep,
@@ -8081,7 +8084,7 @@ function npmModulePublish( o )
   {
     return _.npm.publish
     ({
-      localPath : module.dirPath,
+      localPath : rootPath,
       tag : o.tag,
       logger : o.verbosity === 2 ? 2 : o.verbosity - 1,
     });

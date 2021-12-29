@@ -7,7 +7,9 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let abs = _.routine.join( path, path.join, [ context.junction.dirPath ] );
+  let rootPath = context.module.pathMap[ 'npm.publish' ] || './';
+  rootPath = context.module.pathResolve( rootPath );
+  let abs = _.routine.join( path, path.join, [ rootPath ] );
   let configPath = abs( 'package.json' );
   let wasСonfigPath = abs( 'was.package.json' );
   let wasPublished = null;
@@ -18,8 +20,6 @@ function onModule( context )
 
   if( o.org === null )
   o.org = [ 'srt', 'wtools' ];
-
-  debugger;
 
   if( !context.junction.module )
   return;
@@ -121,7 +121,8 @@ function onModule( context )
   _.npm.fileFixate
   ({
     dry : o.dry,
-    localPath : context.junction.dirPath,
+    localPath : rootPath,
+    // localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
     onDep,
@@ -174,7 +175,8 @@ function onModule( context )
 
   _.npm.publish
   ({
-    localPath : context.junction.dirPath,
+    localPath : rootPath,
+    // localPath : context.junction.dirPath,
     tag : o.tag,
     ready : context.ready,
     logger : o.verbosity === 2 ? 2 : o.verbosity -1,
