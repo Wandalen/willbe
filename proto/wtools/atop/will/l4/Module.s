@@ -8286,11 +8286,9 @@ function _remoteChanged()
 
 function gitExecCommand( o )
 {
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.transaction.logger;
+  const module = this;
+  const will = module.will;
+  const logger = will.transaction.logger;
 
   _.routine.options( gitExecCommand, o );
 
@@ -8305,7 +8303,7 @@ function gitExecCommand( o )
     currentContext : module.stepMap[ 'git' ],
   });
 
-  let status = _.git.statusFull
+  const status = _.git.statusFull
   ({
     insidePath : o.dirPath,
     unpushed : 0,
@@ -8328,7 +8326,6 @@ function gitExecCommand( o )
 
     if( o.verbosity )
     {
-      // logger.log( `Restoring hardlinks in directory(s) :\n${ _.entity.exportStringNice( provider.archive.basePath ) }` );
       logger.log( `Restoring hardlinks in directory(s) :` );
       logger.up();
       logger.log( _.ct.format( _.entity.exportStringNice( provider.archive.basePath ), 'path' ) );
@@ -8337,29 +8334,28 @@ function gitExecCommand( o )
     provider.archive.restoreLinksBegin();
   }
 
-  let ready = _.take( null );
+  const execPath = _.array.as( o.command );
+  _.each( execPath, ( e, k ) => execPath[ k ] = `git ${ e }` );
 
-
-  _.process.start
+  const ready = _.process.start
   ({
-    execPath : `git ${ o.command }`,
+    execPath,
     currentPath : o.dirPath,
     logger,
-    ready,
   });
-
-  ready.tap( () =>
+  ready.finally( ( err, arg ) =>
   {
     if( o.hardLinkMaybe )
     provider.archive.restoreLinksEnd();
     logger.down();
-  });
 
-  ready.catch( ( err ) =>
-  {
-    err = _.errBrief( err );
-    logger.error( _.errOnce( err ) );
-    throw err;
+    if( err )
+    {
+      err = _.error.brief( err );
+      logger.error( _.errOnce( err ) );
+      throw err;
+    }
+    return arg;
   });
 
   return ready;
