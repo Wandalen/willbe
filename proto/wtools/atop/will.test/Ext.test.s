@@ -18534,6 +18534,8 @@ function submodulesDownload( test )
   return a.ready;
 }
 
+submodulesDownload.timeOut = 600000;
+
 //
 
 function submodulesDownloadRecursiveGit( test )
