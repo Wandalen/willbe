@@ -89,20 +89,6 @@ function _repoRequest_functor( fo )
 
     _.map.assertHasAll( o, request.defaults );
 
-    /* xxx : standartize */ /* Dmytro : used credentials from default identity */
-    if( o.token === null )
-    {
-      // let config = _.censor.configRead();
-      // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
-      // // if( !config )
-      // // config = fileProvider.configUserRead();
-      // if( config !== null && config.about && config.about[ 'github.token' ] )
-      // o.token = config.about[ 'github.token' ];
-      const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-      if( identity )
-      o2.token = identity[ 'github.token' ] || identity.token;
-    }
-
     if( o.remotePath === null )
     {
       if( module.pathMap.repository )
@@ -114,6 +100,23 @@ function _repoRequest_functor( fo )
         return _.take( null );
         throw _.err( `Module ${module.qualifiedName} is not remote` );
       }
+    }
+
+    /* xxx : standartize */ /* Dmytro : used credentials from default identity */
+    if( o.token === null )
+    {
+      // let config = _.censor.configRead();
+      // // let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+      // // if( !config )
+      // // config = fileProvider.configUserRead();
+      // if( config !== null && config.about && config.about[ 'github.token' ] )
+      // o.token = config.about[ 'github.token' ];
+
+      const parsed = _.git.path.parse({ remotePath : o.remotePath, full : 0, atomic : 0, objects : 1 });
+      const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+      const identity = _.identity.identityResolveDefaultMaybe({ type });
+      if( identity )
+      o2.token = identity[ `${ type }.token` ] || identity.token;
     }
 
     return requestRoutine
@@ -8741,9 +8744,22 @@ function gitStatus( o )
     // let config = fileProvider.configUserRead();
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // token = config.about[ 'github.token' ];
-    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-    if( identity )
-    o2.token = identity[ 'github.token' ] || identity.token;
+
+    let localPath = _.git.localPathFromInside( o.dirPath );
+    let remotePath = null;
+    if( localPath )
+    remotePath = _.git.remotePathFromLocal( localPath );
+    if( remotePath )
+    {
+      const parsed = _.git.path.parse({ remotePath, full : 0, atomic : 0, objects : 1 });
+      if( parsed.service )
+      {
+        const type = _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+        const identity = _.identity.identityResolveDefaultMaybe({ type });
+        if( identity )
+        o2.token = identity[ `${ type }.token` ] || identity.token;
+      }
+    }
   }
 
   let got = _.git.statusFull( o2 );
@@ -8964,7 +8980,11 @@ function repoPullOpen( o )
   if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
 
-  /* xxx : standartize */ /* Dmytro : used credentials from default identity */
+  if( !o.remotePath )
+  o.remotePath = _.git.remotePathFromLocal( module.dirPath );
+  o.remotePath = _.git.path.nativize( o.remotePath );
+
+  /* xxx : standardize */ /* Dmytro : used credentials from default identity */
   if( !o.token )
   {
     // let config = _.censor.configRead();
@@ -8973,14 +8993,30 @@ function repoPullOpen( o )
     // // config = fileProvider.configUserRead();
     // if( config !== null && config.about && config.about[ 'github.token' ] )
     // o.token = config.about[ 'github.token' ];
-    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
+
+    const type = typeGet();
+    const identity = _.identity.identityResolveDefaultMaybe({ type });
     if( identity )
-    o2.token = identity[ 'github.token' ] || identity.token;
+    o.token = identity[ `${ type }.token` ] || identity.token;
   }
 
-  if( !o.remotePath )
-  o.remotePath = _.git.remotePathFromLocal( module.dirPath );
-  o.remotePath = _.git.path.nativize( o.remotePath );
+  _.sure
+  (
+    _.str.defined( o.token ),
+    () =>
+    {
+      const type = typeGet();
+      return 'Expects token.\n'
+      + 'You can provide it directly as option of command `.repo.release` or predefined step `repo.release`\n'
+      + `or add token to profile identity with type "${ type }".\n\n`
+      + `To add identity with type "${ type }" use utility "Censor" or utility "Identity".\n`
+      + `The command looks like:\n`
+      + `censor .${ type }.identity.new ${ type }.default login:yourLogin token:yourToken\n`
+      + `where "${type}.default" is identity name, "yourLogin" and "yourToken" are identity login and token.\n\n`
+      + `To check that command for type "${ type }" is implemented run:\n`
+      + `censor .help ${ type }.identity.new`
+    }
+  );
 
   o.title = _.strUnquote( o.title );
 
@@ -9008,6 +9044,15 @@ function repoPullOpen( o )
   });
 
   return ready;
+
+  /* */
+
+  function typeGet()
+  {
+    const parsed = _.git.path.parse({ remotePath : o.remotePath, full : 0, atomic : 0, objects : 1 });
+    return _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+  }
+
 }
 
 repoPullOpen.defaults =
@@ -9045,18 +9090,36 @@ function repoRelease( o )
   const will = module.will;
   const logger = will.transaction.logger;
 
-  if( !o.token )
-  {
-    const identity = _.identity.identityResolveDefaultMaybe({ type : 'git' });
-    if( identity )
-    o.token = identity[ 'github.token' ] || identity.token;
-  }
-
-  _.assert( _.str.defined( o.token ), 'Expects token. Please, define it directly in command line or by the Censor utility.' );
   _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
 
   const originalRemotePath = _.git.remotePathFromLocal({ localPath : module.dirPath });
-  _.assert( _.str.defined( o.tag ), 'Expects tag {-o.tag-}.' );
+  _.assert( _.str.defined( originalRemotePath ), 'Expects git repository.' );
+
+  if( !o.token )
+  {
+    const type = typeGet();
+    const identity = _.identity.identityResolveDefaultMaybe({ type });
+    if( identity )
+    o.token = identity[ `${ type }.token` ] || identity.token;
+  }
+
+  _.sure
+  (
+    _.str.defined( o.token ),
+    () =>
+    {
+      const type = typeGet();
+      return 'Expects token.\n'
+      + 'You can provide it directly as option of command `.repo.release` or predefined step `repo.release`\n'
+      + `or add token to profile identity with type "${ type }".\n\n`
+      + `To add identity with type "${ type }" use utility "Censor" or utility "Identity".\n`
+      + `The command looks like:\n`
+      + `censor .${ type }.identity.new ${ type }.default login:yourLogin token:yourToken\n`
+      + `where "${type}.default" is identity name, "yourLogin" and "yourToken" are identity login and token.\n\n`
+      + `To check that command for type "${ type }" is implemented run:\n`
+      + `censor .help ${ type }.identity.new`
+    }
+  );
 
   const remotePath = `${ originalRemotePath }!${ o.tag }`;
 
@@ -9073,6 +9136,14 @@ function repoRelease( o )
     localPath : module.dirPath,
     logger,
   });
+
+  /* */
+
+  function typeGet()
+  {
+    const parsed = _.git.path.parse({ remotePath : originalRemotePath, full : 0, atomic : 0, objects : 1 });
+    return _.strIsolateLeftOrAll( parsed.service, '.' )[ 0 ];
+  }
 }
 
 repoRelease.defaults =
