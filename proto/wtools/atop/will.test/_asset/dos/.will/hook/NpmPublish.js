@@ -52,6 +52,7 @@ function onModule( context )
     delete context2.request.map.force;
     delete context2.request.map.org;
     delete context2.request.map.npmUserName;
+    delete context2.request.map.reflectPackageToRoot;
     _.assert( context2.request.map !== context.request.map );
     context2.will.hooks.GitSync.call( context2 );
   }
@@ -155,6 +156,7 @@ function onModule( context )
     delete context2.request.map.force;
     delete context2.request.map.org;
     delete context2.request.map.npmUserName;
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitSync.call( context2 );
   }
 
@@ -163,6 +165,7 @@ function onModule( context )
     context2.request.subject = '';
     context2.request.original = '';
     context2.request.map = { name : 'v' + bumped.config.version };
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitTag.call( context2 );
   }
 
@@ -171,6 +174,7 @@ function onModule( context )
     context2.request.subject = '';
     context2.request.original = '';
     context2.request.map = { name : o.tag };
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitTag.call( context2 );
   }
 
@@ -178,6 +182,7 @@ function onModule( context )
     let context2 = context.will.hookContextNew( context );
     context2.request.subject = '';
     context2.request.original = '';
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitPush.call( context2 );
   }
 
@@ -193,6 +198,7 @@ function onModule( context )
   {
     let context2 = context.will.hookContextNew( context );
     context2.request.map = { verbosity : 2 }
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.ProtoSync.call( context2 );
   }
 
