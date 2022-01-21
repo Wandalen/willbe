@@ -7927,8 +7927,8 @@ function npmModulePublish( o )
   const fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
-  let rootPath = context.module.pathMap[ 'npm.publish' ] || './';
-  rootPath = context.module.pathResolve( rootPath );
+  let rootPath = module.pathMap[ 'npm.publish' ] || './';
+  rootPath = module.pathResolve( rootPath );
   const packagePath = path.join( rootPath, 'package.json' );
   const logger = will.transaction.logger;
 
