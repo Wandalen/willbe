@@ -12,11 +12,11 @@ about:
     single-process-will: proto/wtools/atop/will/entry/Exec
     debug-will: proto/wtools/atop/will/entry/ExecDebug
     will: proto/wtools/atop/will/entry/ExecUnrestricted
-  author: Kostiantyn Wandalen <wanalen@01.school>
+  author: Kostiantyn Wandalen <wandalen@obox.systems>
   keywords:
     - wTools
   contributors:
-    - Kostiantyn Wandalen <wanalen@01.school>
+    - Kostiantyn Wandalen <wandalen@obox.systems>
     - Volodymyr M. <volodymyr.migdal@gmail.com>
     - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
   interpreters:
@@ -372,6 +372,9 @@ submodule:
     enabled: 0
   wcensorbasic:
     path: 'npm:///wcensorbasic'
+    enabled: 0
+  widentitybasic:
+    path: 'npm:///widentitybasic'
     enabled: 0
   eslint:
     path: 'npm:///eslint!7.32.0'

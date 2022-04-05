@@ -29,6 +29,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wNameMapper' );
   // _.include( 'wTemplateFileWriter' );
   _.include( 'wCensorBasic' );
+  _.include( 'wIdentityBasic' );
 
   module[ 'exports' ] = _global_.wTools;
 }

@@ -57,5 +57,6 @@ build :
       export : 1
       content: proto
     steps :
+      - submodules.download
       - build::build
       - step::export.out

@@ -26,4 +26,5 @@ build :
     criterion :
       default : 1
     steps :
+      - submodules.download
       - step::reflect.submodules

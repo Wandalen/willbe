@@ -3,8 +3,8 @@ root:
   - willbe.out
 consistency:
   ../will.yml: &ref_0
-    hash: a37ecda2bafaba7ef67a70aaee6cf2bf
-    size: 8978
+    hash: aa202329a11ba9109469e85c6b8db5a5
+    size: 9053
 module:
   willbe.out:
     about:
@@ -22,11 +22,11 @@ module:
         single-process-will: proto/wtools/atop/will/entry/Exec
         debug-will: proto/wtools/atop/will/entry/ExecDebug
         will: proto/wtools/atop/will/entry/ExecUnrestricted
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@obox.systems>
       keywords: &ref_3
         - wTools
       contributors: &ref_4
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@obox.systems>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       interpreters: &ref_5
@@ -3160,8 +3160,6 @@ module:
           - ../proto/wtools/atop/will.test/_asset/submodules/proto
           - >-
             ../proto/wtools/atop/will.test/_asset/submodules/proto/WithSubmodules.s
-          - ../proto/wtools/atop/will.test/_asset/submodules-safety
-          - ../proto/wtools/atop/will.test/_asset/submodules-safety/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.ex.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesBroken1/.im.will.yml
@@ -3263,6 +3261,10 @@ module:
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadedUpdate/module/.will.yml
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadEnabledAndDisabled
+          - >-
+            ../proto/wtools/atop/will.test/_asset/submodulesDownloadEnabledAndDisabled/.will.yml
           - ../proto/wtools/atop/will.test/_asset/submodulesDownloadErrors
           - >-
             ../proto/wtools/atop/will.test/_asset/submodulesDownloadErrors/bad.will.yml
@@ -3877,6 +3879,10 @@ module:
         enabled: 0
       wcensorbasic:
         path: 'npm:///wcensorbasic'
+        autoExporting: 0
+        enabled: 0
+      widentitybasic:
+        path: 'npm:///widentitybasic'
         autoExporting: 0
         enabled: 0
       eslint:
@@ -4526,7 +4532,7 @@ module:
       npm.engines: *ref_1
       npm.name: willbe
       npm.bin: *ref_2
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@obox.systems>
       keywords: *ref_3
       contributors: *ref_4
       interpreters: *ref_5
@@ -4735,6 +4741,10 @@ module:
         enabled: 0
       wcensorbasic:
         path: 'npm:///wcensorbasic'
+        autoExporting: 0
+        enabled: 0
+      widentitybasic:
+        path: 'npm:///widentitybasic'
         autoExporting: 0
         enabled: 0
       eslint:
@@ -5308,5 +5318,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: a37ecda2bafaba7ef67a70aaee6cf2bf
-        size: 8978
+        hash: aa202329a11ba9109469e85c6b8db5a5
+        size: 9053
