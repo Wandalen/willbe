@@ -1382,6 +1382,7 @@ function stepRoutineWillbeIsUpToDate( frame )
 stepRoutineWillbeIsUpToDate.stepOptions =
 {
   throwing : 1,
+  // brief : 0
 };
 
 stepRoutineWillbeIsUpToDate.uniqueOptions =
@@ -1415,6 +1416,247 @@ stepRoutineWillfileVersionBump.stepOptions =
 };
 
 stepRoutineWillfileVersionBump.uniqueOptions =
+{
+  versionDelta : null,
+};
+
+//
+
+function stepRoutineInterpreterVerify( frame )
+{
+  const step = this;
+  const opts = _.props.extend( null, step.opts );
+  const run = frame.run;
+  const module = run.module;
+
+  _.assert( arguments.length === 1 );
+
+  if( !opts.interpreters )
+  {
+    opts.interpreters = module.resolve({ selector : '{about::npm.engines}', mapValsUnwrapping : 0, singleUnwrapping : 0 });
+  }
+  if( !opts.interpreters )
+  {
+    const interpreters = module.resolve({ selector : '{about::interpreters}', mapValsUnwrapping : 0, singleUnwrapping : 0 })
+    opts.interpreters = Object.create( null );
+    _.each( interpreters, ( record ) => _.map.extend( opts.interpreters, _.will.transform.interpreterParse( record ) ) );
+  }
+
+  _.sure( !!opts.interpreters, 'Expects interpreters to verify. Please, add it to section `about` or to the step.' );
+
+  const currentInterpreters = currentInterpretersGet();
+  const interpretersVersionsMap = versionsParse( opts.interpreters );
+
+  _.each( interpretersVersionsMap, ( versionsMap, interpreter ) =>
+  {
+    versionVerify( currentInterpreters[ interpreter ], versionsMap );
+  });
+
+  return true;
+
+  /* */
+
+  function currentInterpretersGet()
+  {
+    const result = Object.create( null );
+
+    if( opts.commands === null )
+    {
+      _.assert( typeof process !== 'undefined', 'Unknown interpreter' );
+      result.node = process.versions.node;
+      if( opts.interpreters.npm )
+      result.npm = versionGet( 'npm --version' );
+    }
+    else
+    {
+      _.sure( _.longHasAll( _.props.keys( opts.interpreters ), _.props.keys( opts.commands ) ) );
+      _.each( opts.commands, ( command, interpreter ) =>
+      {
+        result[ interpreter ] = versionGet( command );
+      });
+    }
+    return result;
+  }
+
+  /* */
+
+  function versionGet( execPath )
+  {
+    return _.process.start
+    ({
+      execPath,
+      outputCollecting : 1,
+      mode : 'shell',
+      sync : 1,
+      outputPiping : 0,
+      verbosity : 0,
+      logger : 0,
+    }).output;
+  }
+
+  /* */
+
+  function versionsParse()
+  {
+    const interpreterVersionsMap = Object.create( null );
+    for( let interpreter in currentInterpreters )
+    if( interpreter in opts.interpreters )
+    interpreterVersionsMap[ interpreter ] = versionsMapInit();
+
+    _.each( interpreterVersionsMap, ( map, interpreter ) =>
+    {
+      const version = opts.interpreters[ interpreter ]
+
+      let versionArray = null;
+      if( _.str.is( version ) )
+      versionArray = versionSplit( version );
+      else if( _.array.is( version ) )
+      _.each( version, ( el ) => { versionArray = _.arrayAppendArray( versionArray, versionSplit( el ) ) } );
+
+      versionMapFill( interpreterVersionsMap[ interpreter ], versionArray );
+    });
+
+    return interpreterVersionsMap;
+  }
+
+  /* */
+
+  function versionsMapInit()
+  {
+    const versionsMap = Object.create( null );
+    versionsMap[ '=' ] = _.array.make();
+    versionsMap[ '>' ] = null;
+    versionsMap[ '>=' ] = null;
+    versionsMap[ '<' ] = null;
+    versionsMap[ '<=' ] = null;
+    return versionsMap;
+  }
+
+  /* */
+
+  function versionSplit( src )
+  {
+    let versionSplits = _.strSplit({ src, delimeter : [ /\d+(\.\d+)*/, ' ', '>=', '<=', '<', '>', '=' ], preservingEmpty : 0 });
+    if( versionSplits.length >= 4 )
+    _.sure
+    (
+      _.strHas( src, 'AND' ) || !_.strHasAny( src, [ '<', '>' ] ),
+      'Define strict versions for interpreter or use logical operator `AND` in range'
+    );
+    return versionSplits;
+  }
+
+  /* */
+
+  function versionMapFill( dstMap, versionArray )
+  {
+    for( let i = versionArray.length - 1 ; i >= 0 ; i-- )
+    if( _.strHas( versionArray[ i ], /\d+(\.\d+)*/ ) )
+    {
+      if( versionArray[ i - 1 ] )
+      {
+        if( _.strHasAny( versionArray[ i - 1 ], [ '>', '>=' ] ) )
+        {
+          _.assert( dstMap[ '>' ] === null );
+          _.assert( dstMap[ '>=' ] === null );
+          dstMap[ versionArray[ i - 1 ] ] = versionArray[ i ];
+          i -= 1;
+          continue;
+        }
+        else if( _.strHasAny( versionArray[ i - 1 ], [ '<', '<=' ] ) )
+        {
+          _.assert( dstMap[ '<' ] === null );
+          _.assert( dstMap[ '<=' ] === null );
+          dstMap[ versionArray[ i - 1 ] ] = versionArray[ i ];
+          i -= 1;
+          continue;
+        }
+      }
+
+      if( versionArray[ i ] === 'AND' )
+      continue;
+
+      dstMap[ '=' ].unshift( versionArray[ i ] );
+      if( versionArray[ i - 1 ] && _.strHas( versionArray[ i - 1 ], /\=+/ ) )
+      i -= 1;
+    }
+  }
+
+  /* */
+
+  function versionVerify( currentVersion, versionsMap )
+  {
+    if( versionsMap[ '>' ] || versionsMap[ '>=' ] )
+    {
+      _.sure( versionsMap[ '=' ].length === 0, 'Expects no direct defined version' );
+
+      const version = versionsMap[ '>' ] || versionsMap[ '>=' ];
+      const greater = versionIsGreater( currentVersion, version );
+      const equivalent = versionIsEquivalent( currentVersion, versionsMap[ '>=' ] );
+
+      const errorMsg =
+        opts.errorMsg || `Expects interpreter version newer${ versionsMap[ '>=' ] ? ' or equivalent' : '' } than ${ version }`;
+      _.sure ( greater || equivalent, errorMsg );
+      if( !versionsMap[ '<' ] && !versionsMap[ '<=' ] )
+      return;
+    }
+
+    if( versionsMap[ '<' ] || versionsMap[ '<=' ] )
+    {
+      _.sure( versionsMap[ '=' ].length === 0, 'Expects no direct defined version' );
+
+      const version = versionsMap[ '<' ] || versionsMap[ '<=' ];
+      const greater = versionIsGreater( currentVersion, version );
+      const equivalent = versionIsEquivalent( currentVersion, versionsMap[ '<=' ] );
+
+      const errorMsg =
+        opts.errorMsg || `Expects interpreter version older${ versionsMap[ '<=' ] ? ' or equivalent' : '' } than ${ version }`;
+      _.sure ( !greater || equivalent, errorMsg );
+      return;
+    }
+
+    const errorMsg = opts.errorMsg || `Expects interpreter with versions :\n${ _.entity.exportStringNice( versionsMap[ '=' ] ) }`;
+    _.sure ( _.any( versionsMap[ '=' ], ( version ) => versionIsEquivalent( currentVersion, version ) ), errorMsg );
+  }
+
+  /* */
+
+  function versionIsGreater( version1, version2 )
+  {
+    const splits1 = _.strSplit( version1, '.' );
+    const splits2 = _.strSplit( version2, '.' );
+    let greater = false;
+    for( let i = 0 ; i < splits1.length ; i++ )
+    {
+      let v1 = _.number.from( splits1[ i ] );
+      let v2 = _.number.from( splits2[ i ] );
+
+      if( v1 === v2 )
+      continue;
+      if( v1 > v2 )
+      greater = true;
+
+      break
+    }
+    return greater;
+  }
+
+  /* */
+
+  function versionIsEquivalent( version1, version2 )
+  {
+    return version1 === version2;
+  }
+}
+
+stepRoutineInterpreterVerify.stepOptions =
+{
+  interpreters : null,
+  commands : null,
+  errorMsg : null,
+};
+
+stepRoutineInterpreterVerify.uniqueOptions =
 {
 };
 
@@ -1468,6 +1710,8 @@ let Extension =
   stepRoutineWillbeIsUpToDate,
 
   stepRoutineWillfileVersionBump,
+
+  stepRoutineInterpreterVerify,
 }
 
 /* _.props.extend */Object.assign( _.will.Predefined, Extension );

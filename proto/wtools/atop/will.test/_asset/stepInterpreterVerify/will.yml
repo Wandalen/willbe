@@ -1,0 +1,25 @@
+about :
+
+  name : 'stepInterpreterVerify'
+  npm.engines :
+    node : '>= 6.0.0 AND <= 30.0.0'
+
+step :
+
+  njs.interpreter.verify :
+    inherit : interpreter.verify
+
+  not.full.version :
+    inherit : interpreter.verify
+    interpreters :
+      node : '>= 1.0.0 AND <= 30'
+
+build :
+
+  from.about :
+    steps :
+      - step::njs.interpreter.verify
+
+  not.full.version :
+    steps :
+      - step::not.full.version
