@@ -6367,8 +6367,7 @@ function hookGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
 
     return null;
   });
@@ -27103,7 +27102,7 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
 
     return null;
   });
@@ -37432,7 +37431,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
     return null;
   });
 
@@ -37483,8 +37482,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
-    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
     return null;
   });
 
@@ -37503,8 +37501,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 0 );
-    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
     return null;
   });
 
