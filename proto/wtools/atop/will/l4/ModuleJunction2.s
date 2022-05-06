@@ -1,24 +1,24 @@
-( function _ModuleJunction_s_()
+( function _ModuleJunction2_s_()
 {
 
 'use strict';
 
 /**
- * @classdesc Class wWillModuleJunction implements interface that allows different interfaces : module, relation, opener, object as single instance.
+ * @classdesc Class wWillModuleJunction2 implements interface that allows different interfaces : module, relation, opener, object as single instance.
  * @class wWillModuleJunction
  * @module Tools/atop/willbe
  */
 
 const _ = _global_.wTools;
-const Parent = _.will.AbstractJunction;
 // const Parent = null;
-const Self = wWillModuleJunction;
-function wWillModuleJunction( o )
+const Parent = _.will.AbstractJunction;
+const Self = wWillModuleJunction2;
+function wWillModuleJunction2( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
 
-Self.shortName = 'ModuleJunction';
+Self.shortName = 'ModuleJunction2';
 
 /* zzz : multiple inheritance should be here from AbstractModule1 an AbstractJunction */
 
@@ -312,7 +312,7 @@ function reform()
 
     _.assert( !will.junctionMap[ localPath ] );
 
-    let junction2 = new _.will.ModuleJunction({ will });
+    let junction2 = new _.will.ModuleJunction2({ will });
     junction2.localPaths.push( localPath );
     junction2.localPath = localPath;
     peerAssign( junction, junction2 );
@@ -338,13 +338,12 @@ function reform()
       _.assert( junction.peer.peer === junction );
       if( !object.peerModule )
       return junction.peer;
-      let junction2 = _.will.ModuleJunction._Of({ object : object.peerModule, will });
+      let junction2 = _.will.ModuleJunction2._Of({ object : object.peerModule, will });
       if( junction2 && junction2.peer === junction )
       return junction.peer;
     }
 
-    // debugger; /* xxx */
-    let junction2 = _.will.ModuleJunction._Of({ object : peerModule, will });
+    let junction2 = _.will.ModuleJunction2._Of({ object : peerModule, will });
     peerAssign( junction, junction2 );
 
     return junction2;
@@ -363,14 +362,6 @@ function reform()
       junction2.peer.mergeIn( junction );
       else
       junction2.peer.finit();
-      // if( !junction2.peer.ownSomething() )
-      // {
-      //   junction2.peer.finit();
-      // }
-      // else
-      // {
-      //   junction2.peer.mergeIn( junction );
-      // }
     }
 
     if( junction.peer && junction.peer !== junction2 )
@@ -384,15 +375,6 @@ function reform()
       {
         junction.peer.finit();
       }
-      // if( !junction.peer.ownSomething() )
-      // {
-      //   junction.peer.finit();
-      // }
-      // else
-      // {
-      //   junction2.mergeIn( junction.peer );
-      //   return;
-      // }
     }
 
     assign();
@@ -635,6 +617,8 @@ function mergeMaybe( usingPath )
     {
 
       let junction2 = will.junctionMap[ remotePath ];
+      if( !junction2 )
+      junction2 = junctionFromRemoteMaybe( remotePath );
       if( junction2 && junction2 !== junction )
       {
         if( junction.mergeIn( junction2 ) )
@@ -654,9 +638,39 @@ function mergeMaybe( usingPath )
         return junction3;
       }
     }
-
   }
 
+  /* */
+
+  function junctionFromRemoteMaybe( remotePath )
+  {
+    let namespacesMap =
+    {
+      git : _.git.path,
+      npm : _.npm.path,
+      http : _.uri,
+      https : _.uri,
+    };
+    let parsed = _.uri.parse( remotePath );
+    let protocols = parsed.protocols;
+    let longPath = parsed.protocol + _.uri.protocolToken + parsed.longPath;
+
+    let junction;
+    for( let i = 0 ; i < protocols.length ; i++ )
+    {
+      let nativized = namespacesMap[ protocols[ i ] ].nativize( longPath );
+      let selected = _.select( will.junctionMap, `*/module/about/values/aliases/${ protocols[ i ] }` );
+      for( let key in selected )
+      if( selected[ key ] && namespacesMap[ protocols[ i ] ].nativize( selected[ key ] ) === nativized )
+      {
+        junction = will.junctionMap[ key ];
+        break;
+      }
+      if( junction )
+      break;
+    }
+    return junction;
+  }
 }
 
 //
@@ -947,12 +961,6 @@ function _Of( o )
 
   let junction = o.will.objectToJunctionHash.get( o.object );
 
-  // if( junction )
-  // {
-  //   // junction.assertIntegrityVerify();
-  //   // junction.assertObjectRelationVerify( o.object );
-  // }
-
   return junction;
 }
 
@@ -1088,11 +1096,6 @@ function _relationAdd( relation )
   {
     return false
   }
-  // if( _.longHas( junction.relations, relation ) ) /* xxx */
-  // {
-  //   _.assert( will.objectToJunctionHash.get( relation ) === junction );
-  //   return changed;
-  // }
 
   if( !junction.relation )
   {
@@ -1171,11 +1174,6 @@ function _openerAdd( opener )
   {
     return false
   }
-  // if( _.longHas( junction.openers, opener ) ) /* xxx */
-  // {
-  //   _.assert( will.objectToJunctionHash.get( opener ) === junction );
-  //   return changed;
-  // }
 
   if( !junction.opener )
   {
@@ -1227,9 +1225,6 @@ function _openerRemoveSingle( opener )
   let junction2 = will.objectToJunctionHash.get( opener );
   _.assert( junction2 === junction );
   will.objectToJunctionHash.delete( opener );
-
-  // console.log( ` !! removed opener#${opener.id} ${opener.commonPath}` );
-
 }
 
 //
@@ -1262,11 +1257,6 @@ function _moduleAdd( module )
     // debugger; /* xxx : enter? */
     return false
   }
-  // if( _.longHas( junction.modules, module ) ) /* xxx */
-  // {
-  //   _.assert( will.objectToJunctionHash.get( module ) === junction );
-  //   return changed;
-  // }
 
   if( !junction.module )
   {
@@ -1341,12 +1331,6 @@ function _add( object )
 
   if( _.arrayIs( object ) )
   return _.any( _.container.map_( null, object, ( object ) => junction._add( object ) ) );
-
-  // _.assert( _.numberIs( object.formed ) ); /* yyy */
-  // if( object.formed <= 0 )
-  // {
-  //   return false
-  // }
 
   if( object instanceof _.will.ModulesRelation )
   {
@@ -1554,7 +1538,7 @@ function submodulesJunctionsFilter( o )
     if( !will.relationFit( junction, filter ) )
     return;
 
-    _.assert( junction instanceof _.will.ModuleJunction );
+    _.assert( junction instanceof _.will.ModuleJunction2 );
     _.arrayAppendOnce( result, junction );
 
   }
@@ -1571,142 +1555,6 @@ submodulesJunctionsFilter.defaults =
   withoutDuplicates : 0,
 
 }
-
-//
-
-// function shadow( o )
-// {
-//   let junction = this;
-//   let will = junction.will;
-//
-//   if( !_.mapIs( o ) )
-//   o = junction.ObjectToOptionsMap( o );
-//
-//   o = _.routine.options_( shadow, o );
-//   _.assert( arguments.length === 1 );
-//
-//   let shadowMap = _.props.extend( null, o );
-//   shadowMap.localPath = _.unknown;
-//   shadowMap.remotePath = _.unknown;
-//
-//   let shadowProxy = _.proxyShadow
-//   ({
-//     back : junction,
-//     front : shadowMap,
-//   });
-//
-//   pathsDeduce();
-//   peerDeduce();
-//   associationsFill();
-//   peerDeduce();
-//   pathsDeduce();
-//
-//   for( let s in shadowMap )
-//   if( shadowMap[ s ] === _.unknown )
-//   delete shadowMap[ s ];
-//
-//   return shadowProxy;
-//
-//   function associationsFill()
-//   {
-//     if( defined( shadowMap.module ) )
-//     objectAssociationsAppend( shadowMap.module );
-//     if( defined( shadowMap.opener ) )
-//     objectAssociationsAppend( shadowMap.opener );
-//     if( defined( shadowMap.relation ) )
-//     objectAssociationsAppend( shadowMap.relation );
-//   }
-//
-//   function objectAssociationsAppend( object )
-//   {
-//     junction.AssociationsOf( object ).forEach( ( object ) =>
-//     {
-//       if( object instanceof _.will.Module )
-//       {
-//         if( shadowMap.module === _.unknown )
-//         shadowMap.module = object;
-//       }
-//       else if( object instanceof _.will.ModuleOpener )
-//       {
-//         if( shadowMap.opener === _.unknown )
-//         shadowMap.opener = object;
-//       }
-//       else if( object instanceof _.will.ModulesRelation )
-//       {
-//         if( shadowMap.relation === _.unknown )
-//         shadowMap.relation = object;
-//       }
-//       else _.assert( 0 );
-//     });
-//   }
-//
-//   function pathsFrom( object )
-//   {
-//     let paths = junction.PathsOfAsMap( object );
-//     if( paths.localPath && shadowMap.localPath === _.unknown )
-//     shadowMap.localPath = paths.localPath;
-//     if( paths.remotePath && shadowMap.remotePath === _.unknown )
-//     shadowMap.remotePath = paths.remotePath;
-//   }
-//
-//   function pathsDeduce()
-//   {
-//     if( shadowMap.localPath !== _.unknown && shadowMap.remotePath !== _.unknown )
-//     return true;
-//     if( defined( shadowMap.module ) )
-//     pathsFrom( shadowMap.module );
-//     if( shadowMap.localPath !== _.unknown && shadowMap.remotePath !== _.unknown )
-//     return true;
-//     if( defined( shadowMap.opener ) )
-//     pathsFrom( shadowMap.opener );
-//     if( shadowMap.localPath !== _.unknown && shadowMap.remotePath !== _.unknown )
-//     return true;
-//     if( defined( shadowMap.relation ) )
-//     pathsFrom( shadowMap.relation );
-//     if( shadowMap.localPath !== _.unknown && shadowMap.remotePath !== _.unknown )
-//     return true;
-//     return false;
-//   }
-//
-//   function peerDeduce()
-//   {
-//     if( shadowMap.peer !== _.unknown )
-//     return true;
-//
-//     if( shadowMap.module && shadowMap.module.peerModule )
-//     peerFrom( shadowMap.module.peerModule );
-//     else if( shadowMap.opener && shadowMap.opener.peerModule )
-//     peerFrom( shadowMap.opener.peerModule );
-//
-//     if( shadowMap.peer !== _.unknown )
-//     return true;
-//     return false;
-//   }
-//
-//   function peerFrom( peerModule )
-//   {
-//     _.assert( peerModule instanceof _.will.Module );
-//     _.assert( shadowMap.peer === _.unknown );
-//     shadowMap.peer = junction.Of( peerModule, will );
-//     if( !shadowMap.peer )
-//     shadowMap.peer = junction.JunctionFrom( peerModule, will );
-//     shadowMap.peer = shadowMap.peer.shadow({ module : peerModule, peer : shadowProxy });
-//   }
-//
-//   function defined( val )
-//   {
-//     return !!val && ( val !== _.unknown );
-//   }
-//
-// }
-//
-// shadow.defaults =
-// {
-//   module : _.unknown,
-//   relation : _.unknown,
-//   opener : _.unknown,
-//   peer : _.unknown,
-// }
 
 //
 
@@ -1920,7 +1768,7 @@ function enabledGet()
   else if( junction.peer && junction.peer.module )
   result = junction.peer.module.enabled;
 
-  _.assert( result === null || _.boolLike( result ) );
+  _.assert( result === null || _.boolIs( result ) );
   return result;
 }
 
@@ -2098,7 +1946,6 @@ let Extension =
   ownSomething,
   isUsed,
   submodulesJunctionsFilter,
-  // shadow,
   assertObjectRelationVerify,
   assertIntegrityVerify,
 

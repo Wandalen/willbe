@@ -1488,7 +1488,7 @@ function _commandModuleOrientedLike( o )
 
     let openers = will.currentOpeners;
     let o2 = _.mapOnly_( null, o, will.modulesFor.defaults );
-    o2.modules = openers;
+    o2.modules = will.graphTopSort( openers );
     o2.recursive = 2;
     if( will.modulesArray.length === 1 )
     o2.withDisabledStem = 1;

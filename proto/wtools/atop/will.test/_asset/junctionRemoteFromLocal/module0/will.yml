@@ -1,0 +1,28 @@
+
+about :
+  name : Module0
+  aliases :
+    hd : Module0
+    git : https://github.com/user/Module0.git
+    npm :  npm:///module0
+
+submodule :
+  Module1 : git+https:///github.com/user/Module1.git
+  Module5 : git+https:///github.com/user/Module5.git
+
+path :
+  origins :
+    - git+https:///github.com/user/Module0.git
+    - npm:///module0
+
+step :
+  echo.self :
+    shell : echo {about::name}
+
+build :
+  echo :
+    criterion :
+      default : 1
+    steps :
+      - echo.self
+

@@ -1,0 +1,27 @@
+
+about :
+  name : Module2
+  aliases :
+    hd : Module2
+    git : https://github.com/user/Module2.git
+    npm :  npm:///module2
+
+submodule :
+  Module5 : git+https:///github.com/user/Module5.git
+
+path :
+  origins :
+    - git+https:///github.com/user/Module2.git
+    - npm:///module2
+
+step :
+  echo.self :
+    shell : echo {about::name}
+
+build :
+  echo :
+    criterion :
+      default : 1
+    steps :
+      - echo.self
+

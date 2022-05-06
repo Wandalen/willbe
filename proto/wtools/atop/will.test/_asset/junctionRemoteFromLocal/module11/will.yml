@@ -1,0 +1,26 @@
+
+about :
+  name : Module11
+  aliases :
+    hd : Module11
+    git : https://github.com/user/Module11.git
+    npm :  npm:///module11
+
+submodule :
+  Module5 : git+https:///github.com/user/Module0.git
+
+path :
+  origins :
+    - git+https:///github.com/user/Module11.git
+    - npm:///module11
+step :
+  echo.self :
+    shell : echo {about::name}
+
+build :
+  echo :
+    criterion :
+      default : 1
+    steps :
+      - echo.self
+

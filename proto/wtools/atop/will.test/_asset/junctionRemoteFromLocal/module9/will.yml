@@ -1,0 +1,24 @@
+
+about :
+  name : Module9
+  aliases :
+    hd : Module1
+    git : https://github.com/user/Module1.git
+    npm :  npm:///module1
+
+path :
+  origins :
+    - git+https:///github.com/user/Module1.git
+    - npm:///module1
+
+step :
+  echo.self :
+    shell : echo {about::name}
+
+build :
+  echo :
+    criterion :
+      default : 1
+    steps :
+      - echo.self
+

@@ -1156,6 +1156,143 @@ check that utility resolves valid names for build types:
   - publish;
 `;
 
+//
+
+function etcRunModulesLocalLinkedWithPriorityExperiment( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'junctionRemoteFromLocal' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run single module with not downloaded submodule, should not link anything';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module9/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run two modules with not downloaded submodule, should link submodule';
+    test.description = 'submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module[5|9]/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run three modules with not downloaded submodule, should link recursively';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module[2|5|9]/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run three modules with not downloaded submodule, should link and sort submodules';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module[0|5|9]/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module0$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run all modules, should link and sort submodules';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.with module*/ .shell echo {about::name}' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 1 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
+    test.true( (/Module2\n(.|\n)*Module0$/m).test( op.output ) );
+    test.true( (/Module0\n(.|\n)*Module11$/m).test( op.output ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+etcRunModulesLocalLinkedWithPriorityExperiment.experimental = 1;
+etcRunModulesLocalLinkedWithPriorityExperiment.description =
+`
+submodules of root module should link with local root modules and system should
+execute commands in sequence from most nested submodule to root module
+`;
+
 // --
 // build
 // --
@@ -2430,6 +2567,138 @@ function buildDetached( test )
 }
 
 buildDetached.timeOut = 300000;
+
+//
+
+function buildModulesInOrderExperiment( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'junctionRemoteFromLocal' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run single module.imply withSubmodules:0 .with not downloaded submodule, should not link anything';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.imply withSubmodules:0 .with module9/ .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run two modules.imply withSubmodules:0 .with not downloaded submodule, should link submodule';
+    test.description = 'submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.imply withSubmodules:0 .with module[5|9]/ .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run three modules.imply withSubmodules:0 .with not downloaded submodule, should link recursively';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.imply withSubmodules:0 .with module[2|5|9]/ .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run three modules.imply withSubmodules:0 .with not downloaded submodule, should link and sort submodules';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.imply withSubmodules:0 .with module[0|5|9]/ .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 0 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 0 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module0$/m).test( op.output ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'run all modules, should link and sort submodules';
+    test.description = 'sub submodule -> submodule -> module';
+    a.reflectMinimal();
+    return null;
+  });
+
+  a.appStart( '.imply withSubmodules:0 .with module*/ .build' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '> echo Module9' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module5' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module2' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module0' ), 1 );
+    test.identical( _.strCount( op.output, '> echo Module11' ), 1 );
+    test.true( (/Module9\n(.|\n)*Module5$/m).test( op.output ) );
+    test.true( (/Module5\n(.|\n)*Module2$/m).test( op.output ) );
+    test.true( (/Module2\n(.|\n)*Module0$/m).test( op.output ) );
+    test.true( (/Module0\n(.|\n)*Module11$/m).test( op.output ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+buildModulesInOrderExperiment.experimental = 1;
 
 //
 
@@ -8451,29 +8720,17 @@ function modulesTreeDotless( test )
 {
   let context = this;
   let a = context.assetFor( test, 'twoDotlessSingleExported' );
-  a.appStart = _.process.starter
-  ({
-    execPath : 'node ' + context.appJsPath,
-    currentPath : a.routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : a.ready,
-  })
-  a.reflect();
+  a.reflectMinimal();
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.imply v:1 ; .modules.tree withLocalPath:1';
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -8483,22 +8740,19 @@ function modulesTreeDotless( test )
     test.identical( _.strCount( op.output, 'modulesTreeDotless/sub' ), 1 );
 
     return null;
-  })
+  });
 
-  /* - */
+  /* */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = '.modules.tree withLocalPath:1'
     a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     return null;
-  })
+  });
 
   a.appStart({ execPath : '.modules.tree withLocalPath:1' })
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -8508,12 +8762,12 @@ function modulesTreeDotless( test )
     test.identical( _.strCount( op.output, 'modulesTreeDotless/sub' ), 2 );
 
     return null;
-  })
+  });
 
   /* - */
 
   return a.ready;
-} /* end of function modulesTreeDotless */
+}
 
 //
 
@@ -9153,6 +9407,44 @@ function modulesTreeDisabledAndCorrupted( test )
 }
 
 modulesTreeDisabledAndCorrupted.timeOut = 300000;
+
+//
+
+function modulesTreeForLocalModulesExperiment( test )
+{
+  const context = this;
+  const a = context.assetFor( test, 'junctionRemoteFromLocal' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.appStart( '.with module*/ .modules.tree withLocalPath:1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var exp =
+`
+ +-- module::Module11 - path::local:=${ a.abs( 'module11' ) }/
+ | +-- module::Module0 - path::local:=${ a.abs( 'module0' ) }/
+ |
+ +-- module::Module2 - path::local:=${ a.abs( 'module2' ) }/
+ | +-- module::Module5 - path::local:=${ a.abs( 'module5' ) }/
+ |
+ +-- module::Module5 - path::local:=${ a.abs( 'module5' ) }/
+ | +-- module::Module1 - path::local:=${ a.abs( 'module1' ) }/
+ |
+ +-- module::Module9 - path::local:=${ a.abs( 'module9' ) }/
+`;
+    test.identical( _.strCount( op.output, exp ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+modulesTreeForLocalModulesExperiment.experimental = 1;
 
 //
 
@@ -46046,6 +46338,8 @@ const Proto =
     etcResolveDefaultBuilds,
     etcResolveBuildsLists,
 
+    etcRunModulesLocalLinkedWithPriorityExperiment,
+
     // build
 
     build,
@@ -46059,6 +46353,7 @@ const Proto =
     buildOptionWithSubmodules, /* xxx : fix */
     buildOptionWithSubmodulesExplicitRunOption,
     // buildDetached, /* xxx : later */
+    buildModulesInOrderExperiment,
 
     //open
 
@@ -46130,6 +46425,7 @@ const Proto =
     // modulesTreeHierarchyRemoteDownloaded, /* xxx : later */
     // modulesTreeHierarchyRemotePartiallyDownloaded, /* xxx : later */
     modulesTreeDisabledAndCorrupted,
+    modulesTreeForLocalModulesExperiment,
 
     listSingleModule,
     listWithSubmodulesSimple,
