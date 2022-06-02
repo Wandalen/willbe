@@ -28,7 +28,7 @@ function onModule( context )
 
   // context.start( `git fetch -tf --all` );
   // context.start( `git fetch --prune -tf --all` );
-  context.start( `git pull --prune -t --all` );
+  context.start( `git pull --prune -tf --all` );
   // context.start( `git push -u origin --all` );
   context.start( `git push -u origin` );
 
