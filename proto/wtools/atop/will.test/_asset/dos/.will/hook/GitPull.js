@@ -62,6 +62,7 @@ function onModule( context )
     return _.git.pull
     ({
       localPath : context.junction.dirPath,
+      eachBranch : 1,
       sync : 0,
       throwing : 'full',
     });
