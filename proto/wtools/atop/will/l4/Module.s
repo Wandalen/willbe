@@ -8546,6 +8546,7 @@ function gitPull( o )
   let ready = _.git.pull
   ({
     localPath : o.dirPath,
+    eachBranch : 1,
     sync : 0,
     logger,
     throwing : 1,
