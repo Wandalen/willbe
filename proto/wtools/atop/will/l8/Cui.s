@@ -6406,10 +6406,11 @@ commandNpmPublish.defaults =
 {
   message : null,
   tag : null,
-  versionDelta : null,
+  versionDelta : 1,
 
   force : 0,
   withDisabledSubmodules : 1,
+  reflectPackageToRoot : 1,
   dry : 0,
   verbosity : 2,
 };
@@ -6428,6 +6429,7 @@ command.properties =
   versionDelta : 'Delta for bump. Default is +1 to patch version.',
   force : 'Forces diff.',
   withDisabledSubmodules : 'Generate dependencies from disabled submodules. Default is 1.',
+  reflectPackageToRoot : 'Reflect file `package.json` into root of module if root of js module is not the same as module root.',
   dry : 'Dry run.',
   verbosity : 'Change verbosity of output.',
 };
