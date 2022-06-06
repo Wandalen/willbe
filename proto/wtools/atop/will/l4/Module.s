@@ -7930,8 +7930,9 @@ function npmModulePublish( o )
   const fileProvider = will.fileProvider;
   const path = fileProvider.path;
 
-  let rootPath = module.pathMap[ 'npm.publish' ] || './';
+  let rootPath = module.pathMap[ 'npm.publish' ] || '.';
   rootPath = module.pathResolve( rootPath );
+  const rootIsSamePath = module.dirPath === rootPath;
   const packagePath = path.join( rootPath, 'package.json' );
   const logger = will.transaction.logger;
 
@@ -7984,6 +7985,7 @@ function npmModulePublish( o )
   let aboutCache = Object.create( null );
   ready.then( () => npmFixate() );
   ready.then( () => _.npm.fileFormat({ configPath : packagePath }) );
+  ready.then( () => configReflect() );
 
   ready.then( () => moduleSync( `-am "version ${ version }"` ) );
   ready.then( () => module.gitTag({ tag : `v${ version }` }) );
@@ -8080,6 +8082,16 @@ function npmModulePublish( o )
 
   /* */
 
+  function configReflect()
+  {
+    if( !rootIsSamePath )
+    if( o.reflectPackageToRoot )
+    fileProvider.fileCopy( path.join( module.dirPath, 'package.json' ), packagePath );
+    return null;
+  }
+
+  /* */
+
   function npmPublish()
   {
     return _.npm.publish
@@ -8111,7 +8123,6 @@ function npmModulePublish( o )
       dep.version = about.version;
     }
   }
-
 }
 
 npmModulePublish.defaults =
@@ -8123,6 +8134,7 @@ npmModulePublish.defaults =
   dry : 0,
   verbosity : 1,
   versionDelta : 1,
+  reflectPackageToRoot : 1,
 };
 
 //
