@@ -1,6 +1,6 @@
 {
   "name": "willbe",
-  "version": "0.5.538",
+  "version": "0.5.539",
   "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wandalen@obox.systems>",
   "contributors": [
@@ -20,7 +20,7 @@
   "license": "MIT",
   "engine-strict": true,
   "engines": {
-    "node": ">=10.21.0 <=16"
+    "node": ">=10.21.0"
   },
   "main": "proto/node_modules/willbe",
   "files": [
