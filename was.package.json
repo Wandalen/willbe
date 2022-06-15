@@ -20,7 +20,7 @@
   "license": "MIT",
   "engine-strict": true,
   "engines": {
-    "node": ">=10.21.0 <=16"
+    "node": ">=10.21.0"
   },
   "main": "proto/node_modules/willbe",
   "files": [
