@@ -6259,6 +6259,205 @@ hookGitPull.timeOut = 300000;
 
 //
 
+function hookGitPullEachBranch( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+
+  let config, profile, profileDir;
+  if( _.censor )
+  {
+    config = { path : { hlink : a.abs( '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'all branches synchronized';
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( `original` ), execPath : `.call GitPull profile:${ profile }` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'current branch is behind remote HEAD';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git reset --hard HEAD~` });
+
+  a.appStart({ currentPath : a.abs( `original` ), execPath : `.call GitPull profile:${ profile }` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'another branch is behind remote HEAD';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git reset --hard HEAD~` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+
+  a.appStart({ currentPath : a.abs( `original` ), execPath : `.call GitPull profile:${ profile }` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflectMinimal() );
+    a.ready.then( () =>
+    {
+      a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+      return null;
+    });
+
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'main' ) ); return null; });
+    a.shell({ currentPath : a.abs( 'main' ), execPath : 'git init --bare' });
+
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am master_init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git remote add origin ../main' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin master' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git checkout -b new' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m new_commit1' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m new_commit2' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin new' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git checkout master' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m master_commit' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+    return a.ready;
+  }
+}
+
+hookGitPullEachBranch.rapidity = -1;
+hookGitPullEachBranch.timeOut = 600000;
+
+//
+
 function hookGitPullConflict( test )
 {
   let context = this;
@@ -6506,8 +6705,7 @@ function hookGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
 
     return null;
   });
@@ -18673,6 +18871,8 @@ function submodulesDownload( test )
   return a.ready;
 }
 
+submodulesDownload.timeOut = 600000;
+
 //
 
 function submodulesDownloadRecursiveGit( test )
@@ -26558,7 +26758,7 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
 
     return null;
   });
@@ -38024,6 +38224,200 @@ commandGitPull.timeOut = 600000;
 
 //
 
+function commandGitPullEachBranch( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'gitPush' );
+
+  let config, profile, profileDir;
+  if( _.censor )
+  {
+    config = { path : { hlink : a.abs( '..' ) } };
+    profile = 'test-profile';
+    profileDir = a.abs( process.env.HOME || process.env.USERPROFILE, _.censor.storageDir, profile );
+    let configPath = a.abs( profileDir, 'config.yaml' );
+    a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+  }
+
+  /* - */
+
+  begin().then( () =>
+  {
+    test.case = 'all branches synchronized';
+    return null;
+  });
+
+  a.appStart({ currentPath : a.abs( `original` ), execPath : `.git.pull profile:${ profile }` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'current branch is behind remote HEAD';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git reset --hard HEAD~` });
+
+  a.appStart({ currentPath : a.abs( `original` ), execPath : `.git.pull profile:${ profile }` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  begin().then( () =>
+  {
+    test.case = 'another branch is behind remote HEAD';
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git reset --hard HEAD~` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+
+  a.appStart({ currentPath : a.abs( `original` ), execPath : `.git.pull profile:${ profile }` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout master` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 0 );
+    return null;
+  });
+
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git checkout new` });
+  a.shell({ currentPath : a.abs( `original` ), execPath : `git log` });
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'master_init' ), 1 );
+    test.identical( _.strCount( op.output, 'master_commit' ), 0 );
+    test.identical( _.strCount( op.output, 'new_commit1' ), 1 );
+    test.identical( _.strCount( op.output, 'new_commit2' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    if( _.censor )
+    a.fileProvider.filesDelete( profileDir );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => a.reflectMinimal() );
+
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( 'main' ) ); return null; });
+    a.shell({ currentPath : a.abs( 'main' ), execPath : 'git init --bare' });
+
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git add --all' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit -am master_init' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git remote add origin ../main' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin master' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git checkout -b new' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m new_commit1' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m new_commit2' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push -u origin new' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git checkout master' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git commit --allow-empty -m master_commit' });
+    a.shell({ currentPath : a.abs( 'original' ), execPath : 'git push' });
+    return a.ready;
+  }
+}
+
+commandGitPullEachBranch.rapidity = -1;
+commandGitPullEachBranch.timeOut = 600000;
+
+//
+
 function commandGitPullRestoreHardlinkOnFail( test )
 {
   let context = this;
@@ -38170,7 +38564,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
     return null;
   });
 
@@ -38221,8 +38615,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
-    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
     return null;
   });
 
@@ -38241,8 +38634,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
     test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 0 );
-    // test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
-    test.identical( _.strCount( op.output, /Branch .*master.* set up to track remote branch .*master.* from .*origin.*/), 1 );
+    test.identical( _.strCount( op.output, /(B|b)ranch .*master.* set up to track (master|origin|.)/ ), 1 );
     return null;
   });
 
@@ -46846,6 +47238,7 @@ const Proto =
     // hookPrepare, /* xxx : uncomment it when TemplateFileWriter will be reimplemented, test write template for module */
     hookHlink,
     hookGitPull,
+    hookGitPullEachBranch,
     hookGitPullConflict,
     hookGitPush,
     hookGitReset,
@@ -47124,6 +47517,7 @@ const Proto =
     commandGitDifferentCommands,
     commandGitDiff,
     commandGitPull,
+    commandGitPullEachBranch,
     commandGitPullRestoreHardlinkOnFail,
     commandGitPush,
     commandGitReset,

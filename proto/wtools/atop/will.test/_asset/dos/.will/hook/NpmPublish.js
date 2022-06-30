@@ -7,7 +7,10 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let abs = _.routine.join( path, path.join, [ context.junction.dirPath ] );
+  let rootPath = context.module.pathMap[ 'npm.publish' ] || './';
+  rootPath = context.module.pathResolve( rootPath );
+  let rootIsSamePath = context.junction.dirPath === rootPath;
+  let abs = _.routine.join( path, path.join, [ rootPath ] );
   let configPath = abs( 'package.json' );
   let wasСonfigPath = abs( 'was.package.json' );
   let wasPublished = null;
@@ -18,8 +21,6 @@ function onModule( context )
 
   if( o.org === null )
   o.org = [ 'srt', 'wtools' ];
-
-  debugger;
 
   if( !context.junction.module )
   return;
@@ -51,6 +52,7 @@ function onModule( context )
     delete context2.request.map.force;
     delete context2.request.map.org;
     delete context2.request.map.npmUserName;
+    delete context2.request.map.reflectPackageToRoot;
     _.assert( context2.request.map !== context.request.map );
     context2.will.hooks.GitSync.call( context2 );
   }
@@ -121,12 +123,20 @@ function onModule( context )
   _.npm.fileFixate
   ({
     dry : o.dry,
-    localPath : context.junction.dirPath,
+    localPath : rootPath,
+    // localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
     onDep,
     logger : o.verbosity - 2,
   });
+
+  if( !rootIsSamePath )
+  if( o.reflectPackageToRoot )
+  {
+    fileProvider.fileCopy( path.join( context.junction.dirPath, 'package.json' ), configPath );
+    fileProvider.fileCopy( path.join( context.junction.dirPath, 'was.package.json' ), wasСonfigPath );
+  }
 
   // /* adjust styles */
   // {
@@ -146,6 +156,7 @@ function onModule( context )
     delete context2.request.map.force;
     delete context2.request.map.org;
     delete context2.request.map.npmUserName;
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitSync.call( context2 );
   }
 
@@ -154,6 +165,7 @@ function onModule( context )
     context2.request.subject = '';
     context2.request.original = '';
     context2.request.map = { name : 'v' + bumped.config.version };
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitTag.call( context2 );
   }
 
@@ -162,6 +174,7 @@ function onModule( context )
     context2.request.subject = '';
     context2.request.original = '';
     context2.request.map = { name : o.tag };
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitTag.call( context2 );
   }
 
@@ -169,12 +182,14 @@ function onModule( context )
     let context2 = context.will.hookContextNew( context );
     context2.request.subject = '';
     context2.request.original = '';
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.GitPush.call( context2 );
   }
 
   _.npm.publish
   ({
-    localPath : context.junction.dirPath,
+    localPath : rootPath,
+    // localPath : context.junction.dirPath,
     tag : o.tag,
     ready : context.ready,
     logger : o.verbosity === 2 ? 2 : o.verbosity -1,
@@ -183,6 +198,7 @@ function onModule( context )
   {
     let context2 = context.will.hookContextNew( context );
     context2.request.map = { verbosity : 2 }
+    delete context2.request.map.reflectPackageToRoot;
     context2.will.hooks.ProtoSync.call( context2 );
   }
 
@@ -223,7 +239,6 @@ function onModule( context )
       }
     }
   }
-
 }
 
 var defaults = onModule.defaults = Object.create( null );
@@ -235,7 +250,8 @@ defaults.submodulesUpdating = 0;
 defaults.force = 0;
 defaults.verbosity = 2;
 defaults.org = null;
-defaults.npmUserName = 'wandalen'
+defaults.npmUserName = 'wandalen';
+defaults.reflectPackageToRoot = true;
 
 module.exports = onModule;
 

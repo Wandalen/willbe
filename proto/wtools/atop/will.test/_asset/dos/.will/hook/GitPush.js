@@ -26,7 +26,12 @@ function onModule( context )
   if( o.verbosity )
   logger.log( `Pushing ${context.junction.nameWithLocationGet()}` );
 
-  context.start( `git push -u origin --all` );
+  // context.start( `git fetch -tf --all` );
+  // context.start( `git fetch --prune -tf --all` );
+  context.start( `git pull --prune -tf --all` );
+  // context.start( `git push -u origin --all` );
+  context.start( `git push -u origin` );
+
   if( status.unpushedTags )
   context.start( `git push --tags -f` );
 
