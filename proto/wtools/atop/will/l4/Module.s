@@ -1180,6 +1180,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'files.link',
+    stepRoutine : Predefined.stepRoutineLink,
+  })
+
+  step
+  ({
     name : 'timelapse.begin',
     stepRoutine : Predefined.stepRoutineTimelapseBegin,
   })

@@ -1,0 +1,65 @@
+
+about :
+
+  name : 'SoftLink'
+  version : '0.0.1'
+
+path :
+
+  src : flat
+  dst : dst
+
+step :
+
+  terminal :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'File.txt'
+    dstPath : 'dst/File.txt'
+
+  terminal.glob :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'F*'
+    dstPath : 'dst/'
+
+  directory.flat :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'flat/'
+    dstPath : 'flat.lnk'
+
+  directory.nested :
+    inherit : files.link
+    mode : softlink
+    srcPath : 'nested/'
+    dstPath : 'nested.lnk'
+
+  resolve :
+    inherit : files.link
+    mode : softlink
+    srcPath : path::src
+    dstPath : path::dst
+
+build :
+
+  terminal :
+    steps :
+      - terminal
+
+  terminal.glob :
+    steps :
+      - terminal.glob
+
+  directory.flat :
+    steps :
+      - directory.flat
+
+  directory.nested :
+    steps :
+      - directory.nested
+
+  resolve :
+    steps :
+      - resolve
+

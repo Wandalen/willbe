@@ -1353,6 +1353,145 @@ build.rapidity = -1;
 
 //
 
+function buildFromStep( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'buildFromStep' );
+  a.reflectMinimal();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build build1';
+    return null;
+  });
+
+  a.appStart( '.with basic .build build1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step1' ), 1 );
+    return op;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step1';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with basic .build step1' );
+  a.ready.then( ( op ) =>
+  {
+    test.nil( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step1' ), 0 );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
+    return op;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step2';
+    return null;
+  });
+
+  a.appStart( '.with basic .build step2' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step2' ), 1 );
+    return op;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step3a';
+    return null;
+  });
+
+  a.appStart( '.with basic .build step3a' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step3' ), 1 );
+    return op;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step3';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with basic .build step3' );
+  a.ready.then( ( op ) =>
+  {
+    test.nil( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step3' ), 0 );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
+    return op;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with bad1 .resources.list';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with bad1 .resources.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.nil( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Instance build::step2 already exists' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource build::step2' ), 1 );
+    return op;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with bad2 .resources.list';
+    return null;
+  });
+
+  a.appStartNonThrowing( '.with bad2 .resources.list' );
+  a.ready.then( ( op ) =>
+  {
+    test.nil( op.exitCode, 0 );
+    logger.log( 'op.exitCode', op.exitCode );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Instance build::step3 already exists' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource build::step3' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+buildFromStep.description =
+`
+routine check that utility generates build scenarios from steps with field 'build : 1'
+`;
+
+//
+
 function buildStepShellAndViewWithoutAbout( test )
 {
   let context = this;
@@ -24256,20 +24395,71 @@ submodulesFixateDetached.timeOut = 500000;
 
 //
 
-function stepSubmodulesDownload( test )
+function stepFilesLinkAsHardLink( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'stepSubmodulesDownload' );
-  a.reflect();
+  const context = this;
+  const a = context.assetFor( test, 'stepFilesLink' );
 
   /* - */
 
-  a.appStart({ execPath : '.resources.list' })
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
-    test.case = 'list'
+    test.case = 'check default file structure';
+    a.reflectMinimal();
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.open( 'write new link' );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'hardlink single terminal file';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
     test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master` ) );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
     return null;
   });
 
@@ -24277,18 +24467,34 @@ function stepSubmodulesDownload( test )
 
   a.ready.then( () =>
   {
-    test.case = 'build'
-    a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    test.case = 'hardlink several terminal files';
+    a.reflectMinimal();
     return null;
   });
-
-  a.appStart({ execPath : '.build' })
-  .then( ( op ) =>
+  a.appStart( '.with HardLink .build terminal.glob' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
-    test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.js',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'File.js' ), a.abs( 'dst/File.js' ) ) );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
     return null;
   });
 
@@ -24296,20 +24502,256 @@ function stepSubmodulesDownload( test )
 
   a.ready.then( () =>
   {
-    test.case = 'export'
-    a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
-    a.fileProvider.filesDelete( a.abs( 'out/Download.out.will.yml' ) );
+    test.case = 'hardlink flat directory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build directory.flat' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './flat.lnk',
+      './flat.lnk/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'flat.lnk/Flat.txt' ) ) );
     return null;
   });
 
-  a.appStart({ execPath : '.export' })
-  .then( ( op ) =>
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'hardlink directory with subdirectory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build directory.nested' );
+  a.ready.then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
-    test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
-    test.true( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+      './nested.lnk',
+      './nested.lnk/dir',
+      './nested.lnk/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'nested/dir/Nested.txt' ), a.abs( 'nested.lnk/dir/Nested.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'hardlink resolved directories';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build resolve' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/Flat.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'dst/Flat.txt' ) ) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.close( 'write new link' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.open( 'rewrite links' );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'hardlink single terminal file';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build terminal' );
+  a.appStart( '.with HardLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'hardlink flat directory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build directory.flat' );
+  a.appStart( '.with HardLink .build directory.flat' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './flat.lnk',
+      './flat.lnk/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'flat.lnk/Flat.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'hardlink directory with subdirectory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build directory.nested' );
+  a.appStart( '.with HardLink .build directory.nested' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+      './nested.lnk',
+      './nested.lnk/dir',
+      './nested.lnk/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areHardLinked( a.abs( 'nested/dir/Nested.txt' ), a.abs( 'nested.lnk/dir/Nested.txt' ) ) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.close( 'rewrite links' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default output';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with HardLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::HardLink / build::terminal' ), 1 );
+    test.identical( _.strCount( op.output, 'Linking File.txt to dst/File.txt.' ), 0 );
+    test.identical( _.strCount( op.output, 'Built module::HardLink / build::terminal in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default output with higher verbosity';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.imply v:5 .with HardLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::HardLink / build::terminal' ), 1 );
+    test.identical( _.strCount( op.output, 'Linking File.txt to dst/File.txt.' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::HardLink / build::terminal in' ), 1 );
     return null;
   });
 
@@ -24318,928 +24760,39 @@ function stepSubmodulesDownload( test )
   return a.ready;
 }
 
-stepSubmodulesDownload.timeOut = 300000;
+stepFilesLinkAsHardLink.description =
+`
+test predefined step 'files.link' with mode 'hardlink'
+`;
 
 //
 
-function stepSubmodulesUpdate( test )
+function stepFilesLinkAsSoftLink( test )
 {
-  let context = this;
-  let a = context.assetFor( test, 'stepSubmodulesUpdate' );
-
-  a.remotePath = a.abs( 'module' );
-  a.appStart.predefined.currentPath = a.abs( 'clone' );
-  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
-
-  a.shellSync = _.process.starter
-  ({
-    currentPath : a.abs( '.' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  a.shellSyncClone = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  a.shellSyncSubmodule = _.process.starter
-  ({
-    currentPath : a.abs( 'clone/.module/ModuleForTesting2' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  a.moduleShellSync = _.process.starter
-  ({
-    currentPath : a.remotePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  /* */
-
-  init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'to:master', predownloadSubmodules : 0 })
-  a.appStart( `.build to.!master` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'to:master', predownloadSubmodules : 1 })
-  a.appStart( `.build to.!gamma` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
-  a.appStart( '.build dry.clean' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
-  a.appStart( '.build dry' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
-  a.appStart( '.build recursive.one' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'recursive:2, should download all submodules', predownloadSubmodules : 0, prepareRemoteModule : 1 });
-  a.appStart( '.build recursive.two' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
-  a.appStart( '.build loggingNoChanges.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'withStem:1', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'withStem:0', predownloadSubmodules : 1 })
-  a.appStart( '.build withStem.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function init( o )
-  {
-    o = o || {};
-
-    a.ready.then( () =>
-    {
-      test.case = _.entity.exportString( o );
-
-      a.fileProvider.filesDelete( a.abs( '.' ) );
-      a.reflect();
-
-      /* init main module */
-
-      a.moduleShellSync( 'git init' )
-      a.fileProvider.fileWrite({ filePath : a.abs( 'module/.gitignore' ), data : '.module' });
-      a.moduleShellSync( 'git add -fA .' )
-      a.moduleShellSync( 'git commit -m initial' )
-      a.moduleShellSync( 'git tag gamma' )
-
-      /* clone main module to simulate clone from the remote */
-
-      a.shellSync( 'git clone module clone' )
-
-      if( o.rootLocalChange )
-      a.fileProvider.fileWrite({ filePath : a.abs( 'clone/file' ), data : 'file' });
-
-      return null;
-    });
-
-    if( o.predownloadSubmodules )
-    {
-      a.appStart( '.submodules.download' );
-
-      if( o.submoduleLocalChange )
-      a.ready.then( () =>
-      {
-        a.fileProvider.fileWrite
-        ({
-           filePath : a.abs( 'clone/.module/ModuleForTesting2/file' ),
-           data : 'file'
-        });
-        return null;
-      });
-    }
-
-    if( o.prepareRemoteModule )
-    {
-      const modulePath = a.abs( '../-repo/ModuleForTesting2/' );
-      a.shell({ currentPath : modulePath, execPath : 'git checkout master' });
-      a.ready.then( () =>
-      {
-        const configPath = a.abs( modulePath, 'will.yml' );
-        const config = a.fileProvider.fileReadUnknown( configPath );
-        config.submodule.wModuleForTesting1.enabled = 1;
-        a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-        return null;
-      });
-      a.shell({ currentPath : modulePath, execPath : 'git add .' });
-      a.shell({ currentPath : modulePath, execPath : 'git commit -am enabled' });
-    }
-
-    return a.ready;
-  }
-}
-
-stepSubmodulesUpdate.timeOut = 800000;
-
-//
-
-function stepModulesUpdate( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'stepModulesUpdate' );
-
-  a.remotePath = a.abs( 'module' );
-  a.appStart.predefined.currentPath = a.abs( 'clone' );
-  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
-
-  a.shellSync = _.process.starter
-  ({
-    currentPath : a.abs( '.' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  a.shellSyncClone = _.process.starter
-  ({
-    currentPath : a.abs( 'clone' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  a.shellSyncSubmodule = _.process.starter
-  ({
-    currentPath : a.abs( 'clone/.module/ModuleForTesting2' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  a.moduleShellSync = _.process.starter
-  ({
-    currentPath : a.remotePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    sync : 1,
-    deasync : 0,
-    ready : null
-  });
-
-  /* */
-
-  init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 });
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'defaults, no changes', predownloadSubmodules : 1 });
-  a.appStart( '.build default' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'to:master', predownloadSubmodules : 0 });
-  a.appStart( `.build to.!master` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'to:master', predownloadSubmodules : 1 });
-  a.appStart( `.build to.!gamma` )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 });
-  a.appStart( '.build dry.clean' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 );
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 });
-  a.appStart( '.build dry' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 });
-  a.appStart( '.build recursive.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 );
-    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 });
-  a.appStart( '.build recursive.one' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'recursive:2, should download all submodules', predownloadSubmodules : 0, prepareRemoteModule : 1 });
-  a.appStart( '.build recursive.two' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  })
-
-  /* */
-
-  init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 });
-  a.appStart( '.build loggingNoChanges.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 });
-  a.appStart( '.build loggingNoChanges.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'withStem:1', predownloadSubmodules : 1 });
-  a.appStart( '.build withStem.on' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* */
-
-  init({ case : 'withStem:0', predownloadSubmodules : 1 });
-  a.appStart( '.build withStem.off' )
-  .then( ( op ) =>
-  {
-    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
-    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
-    test.identical( modules, [ 'ModuleForTesting2' ] );
-    var got = a.shellSyncClone( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-    var got = a.shellSyncSubmodule( 'git status' );
-    test.true( _.strHas( got.output, `On branch master` ) );
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function init( o )
-  {
-    o = o || {};
-
-    a.ready.then( () =>
-    {
-      test.case = _.entity.exportString( o );
-
-      a.fileProvider.filesDelete( a.abs( '.' ) );
-      a.reflect();
-
-      /* init main module */
-
-      a.moduleShellSync( 'git init' )
-      a.fileProvider.fileWrite({ filePath : a.abs( 'module/.gitignore' ), data : '.module' });
-      a.moduleShellSync( 'git add -fA .' )
-      a.moduleShellSync( 'git commit -m initial' )
-      a.moduleShellSync( 'git tag gamma' )
-
-      /* clone main module to simulate clone from the remote */
-
-      a.shellSync( 'git clone module clone' )
-
-      if( o.rootLocalChange )
-      a.fileProvider.fileWrite({ filePath : a.abs( 'clone/file' ), data : 'file' });
-
-      return null;
-    });
-
-    if( o.predownloadSubmodules )
-    {
-      a.appStart( '.submodules.download' );
-
-      if( o.submoduleLocalChange )
-      a.ready.then( () =>
-      {
-        a.fileProvider.fileWrite
-        ({
-           filePath : a.abs( 'clone/.module/ModuleForTesting2/file' ),
-           data : 'file'
-        });
-        return null;
-      });
-    }
-
-    if( o.prepareRemoteModule )
-    {
-      const modulePath = a.abs( '../-repo/ModuleForTesting2/' );
-      a.shell({ currentPath : modulePath, execPath : 'git checkout master' });
-      a.ready.then( () =>
-      {
-        const configPath = a.abs( modulePath, 'will.yml' );
-        const config = a.fileProvider.fileReadUnknown( configPath );
-        config.submodule.wModuleForTesting1.enabled = 1;
-        a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
-        return null;
-      });
-      a.shell({ currentPath : modulePath, execPath : 'git add .' });
-      a.shell({ currentPath : modulePath, execPath : 'git commit -am enabled' });
-    }
-
-    return a.ready;
-  }
-}
-
-stepModulesUpdate.timeOut = 800000;
-stepModulesUpdate.rapidity = -1;
-
-//
-
-function stepWillbeVersionCheck( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'stepWillbeVersionCheck' );
-
-  begin();
-
-  /* starter for local copy of utility */
-  a.appStart = _.process.starter
-  ({
-    execPath : `node ${ a.path.nativize( a.abs( 'proto/wtools/atop/will/entry/Exec' ) ) }`,
-    currentPath : a.abs( '.' ),
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    verbosity : 3,
-    ready : a.ready,
-  });
-
-  /* - */
-
-  a.appStart( '.build' )
-  .then( ( op ) =>
-  {
-    test.case = 'utiliti is up to data';
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, /Current version: \d+\.\d+\.\d+\. Utility willbe is up to date\./ ), 1 );
-    test.identical( _.strCount( op.output, /Built .+ \/ build::debug/ ), 1 );
-    return null;
-  });
-
-  /* */
-
-  a.ready.then( ( ) =>
-  {
-    let packageJsonPath = a.abs( 'package.json' );
-    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
-    packageJson.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
-    return null;
-  });
-
-  a.appStart( '.build' )
-  .then( ( op ) =>
-  {
-    test.case = 'utility is out of date';
-    test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Utility willbe is out of date!' ), 1 );
-    test.identical( _.strCount( op.output, 'Current version: 0.0.0' ), 1 );
-    test.identical( _.strCount( op.output, /Latest: \d+\.\d+\.\d+/ ), 1 );
-    test.identical( _.strCount( op.output, 'Please run: "npm r -g willbe && npm i -g willbe" to update.' ), 1 );
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-
-  /* */
-
-  function begin()
-  {
-    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
-    a.shell( 'git clone https://github.com/Wandalen/willbe.git ./' );
-    a.shell( 'npm i' );
-    a.ready.then( () =>
-    {
-      const willPath = a.abs( 'will.yml' );
-      const assetWillPath = a.abs( context.assetsOriginalPath, 'stepWillbeVersionCheck/will.yml' );
-      a.fileProvider.filesDelete( a.abs( 'out' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ assetWillPath ] : willPath } });
-      return null;
-    });
-    return a.ready;
-  }
-}
-
-//
-
-function stepVersionBump( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
+  const context = this;
+  const a = context.assetFor( test, 'stepFilesLink' );
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = 'initial check';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.0' );
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump", bump with defaults';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.number' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.number", bump with number delta';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.string' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.string", bump with string delta, full form';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.string.partial' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.string.partial", bump with string delta, not full form';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.patch' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.patch", bump string patch version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.minor' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.minor", bump string minor version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.major' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.major", bump string major version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.0.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.with.criterion.patch' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.with.criterion.patch", bump with resolved string criterion';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.with.criterion* bump:minor' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.with.criterion* bump:minor", bump with resolved string criterion';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.1.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.with.criterion* bump:major", bump with resolved string criterion';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.0.0' );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  a.appStart({ args : '.with Version .build bump.check.module' })
-  .then( ( op ) =>
-  {
-    test.case = '".build bump.check.module", check that module has same version as new willfile';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.1' );
-    test.identical( _.strCount( op.output, '> echo 0.0.1' ), 1 );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
+    test.case = 'check default file structure';
+    a.reflectMinimal();
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
     return null;
   });
 
@@ -25247,23 +24800,38 @@ function stepVersionBump( test )
 
   a.ready.then( () =>
   {
-    test.case = 'willfile has not version';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    delete config.about.version;
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    test.open( 'write new link' );
     return null;
   });
 
-  a.appStartNonThrowing({ args : '.with Version .build bump' })
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, undefined );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
+    test.case = 'softlink single terminal file';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
     return null;
   });
 
@@ -25271,46 +24839,289 @@ function stepVersionBump( test )
 
   a.ready.then( () =>
   {
-    test.case = 'willfile has version as number';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    config.about.version = 1.1;
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    test.case = 'softlink several terminal files';
+    a.reflectMinimal();
     return null;
   });
-
-  a.appStartNonThrowing({ args : '.with Version .build bump' })
-  .then( ( op ) =>
+  a.appStart( '.with SoftLink .build terminal.glob' );
+  a.ready.then( ( op ) =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, 1.1 );
-
-    config.about.version = '0.0.0';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.js',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.js' ), a.abs( 'dst/File.js' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.with Version .build bump.throwing.notInt' })
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.0' );
+    test.case = 'softlink flat directory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.flat' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './flat.lnk',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'flat.lnk/Flat.txt' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat' ), a.abs( 'flat.lnk' ) ) );
     return null;
   });
 
   /* */
 
-  a.appStartNonThrowing({ args : '.with Version .build bump.throwing.negative' })
-  .then( ( op ) =>
+  a.ready.then( () =>
   {
-    test.case = 'bump with negative number';
-    test.notIdentical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '0.0.0' );
+    test.case = 'softlink directory with subdirectory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.nested' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './nested.lnk',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested' ), a.abs( 'nested.lnk' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested/dir/Nested.txt' ), a.abs( 'nested.lnk/dir/Nested.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink resolved directories';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build resolve' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './dst',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat' ), a.abs( 'dst' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'dst/Flat.txt' ) ) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.close( 'write new link' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.open( 'rewrite links' );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink single terminal file';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal' );
+  a.appStart( '.with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './dst',
+      './dst/File.txt',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'File.txt' ), a.abs( 'dst/File.txt' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink flat directory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.flat' );
+  a.appStart( '.with SoftLink .build directory.flat' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './flat.lnk',
+      './HardLink.will.yml',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat/Flat.txt' ), a.abs( 'flat.lnk/Flat.txt' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'flat' ), a.abs( 'flat.lnk' ) ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'softlink directory with subdirectory';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build directory.nested' );
+  a.appStart( '.with SoftLink .build directory.nested' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    var files = a.find( a.abs( '.' ) );
+    var exp =
+    [
+      '.',
+      './File.js',
+      './File.txt',
+      './HardLink.will.yml',
+      './nested.lnk',
+      './SoftLink.will.yml',
+      './flat',
+      './flat/Flat.txt',
+      './nested',
+      './nested/dir',
+      './nested/dir/Nested.txt',
+    ];
+    test.identical( files, exp );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested' ), a.abs( 'nested.lnk' ) ) );
+    test.true( a.fileProvider.areSoftLinked( a.abs( 'nested/dir/Nested.txt' ), a.abs( 'nested.lnk/dir/Nested.txt' ) ) );
+    return null;
+  });
+
+  a.ready.then( () =>
+  {
+    test.close( 'rewrite links' );
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default output';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::SoftLink / build::terminal' ), 1 );
+    test.identical( _.strCount( op.output, 'Linking File.txt to dst/File.txt.' ), 0 );
+    test.identical( _.strCount( op.output, 'Built module::SoftLink / build::terminal in' ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'check default output with higher verbosity';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.imply v:5 .with SoftLink .build terminal' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::SoftLink / build::terminal' ), 1 );
+    test.identical( _.strCount( op.output, 'Linking File.txt to dst/File.txt.' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::SoftLink / build::terminal in' ), 1 );
     return null;
   });
 
@@ -25319,419 +25130,10 @@ function stepVersionBump( test )
   return a.ready;
 }
 
-//
-
-function stepVersionBumpCheckReset( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'npmFromWillfile' );
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'initial check';
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-    return null;
-  });
-
-  a.appStart({ args : '.imply withDisabledSubmodules:0 .with Version .build bump.with.criterion* bump:major' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump major version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '2.0.0' );
-
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ args : '.with Version .build bump.string' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump minor version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.3.0' );
-
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* */
-
-  a.appStart({ args : '.with Version .build bump' })
-  .then( ( op ) =>
-  {
-    test.case = 'bump patch version';
-    test.identical( op.exitCode, 0 );
-    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
-    test.identical( config.about.version, '1.2.4' );
-
-    config.about.version = '1.2.3';
-    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
-
-    return null;
-  });
-
-  /* - */
-
-  return a.ready;
-}
-
-//
-
-function stepSubmodulesAreUpdated( test )
-{
-  let context = this;
-  let a = context.assetFor( test, 'stepSubmodulesAreUpdated' );
-  a.appStart2 = _.process.starter
-  ({
-    currentPath : a.abs( 'module' ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : a.ready,
-  })
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = 'setup';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.with ./module/ .export' )
-  a.appStart2( 'git init' )
-  a.appStart2( 'git add -fA .' )
-  a.appStart2( 'git commit -m init' )
-  a.appStart2( 'git commit --allow-empty -m test' )
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'first build';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'second build';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'new commit on remote, try to build';
-    return null;
-  })
-
-  a.appStart2( 'git commit --allow-empty -m test' )
-
-  a.appStartNonThrowing( '.build' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
-    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'module is not downloaded';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build debug2' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
-    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
-    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'download path does not contain git repo';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build debug3' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
-    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
-    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /*  */
-
-  .then( () =>
-  {
-    test.case = 'module is downloaded from different origin';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build debug4' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    // test.true( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
-    test.true( _.strHas( op.output, '! Submodule opener::local has different origin url' ) );
-    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /*  */
-
-  .then( () =>
-  {
-    test.case = 'module is in detached state';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build debug5' )
-
-  .then( ( op ) =>
-  {
-    test.notIdentical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
-    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /*  */
-
-  .then( () =>
-  {
-    test.case = 'module is ahead remote';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.build debug6' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'new commit on remote, check is disabled via option';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.clean .submodules.download' )
-  a.appStartNonThrowing( '.submodules.download' )
-  a.appStart2( 'git commit --allow-empty -m test' )
-  a.appStartNonThrowing( '.build debug7' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
-    return null;
-  })
-
-  return a.ready;
-}
-
-stepSubmodulesAreUpdated.timeOut = 300000;
-
-//
-
-function stepBuild( test )
-{
-  let context = this;
-  let a = context.assetFor( test );
-  a.reflect();
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with basic .build build1';
-    return null;
-  })
-
-  a.appStart( '.with basic .build build1' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo step1' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with basic .build step1';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.with basic .build step1' )
-
-  .then( ( op ) =>
-  {
-    test.nil( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo step1' ), 0 );
-    test.identical( _.strCount( op.output, 'echo' ), 0 );
-    test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with basic .build step2';
-    return null;
-  })
-
-  a.appStart( '.with basic .build step2' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo step2' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with basic .build step3a';
-    return null;
-  })
-
-  a.appStart( '.with basic .build step3a' )
-
-  .then( ( op ) =>
-  {
-    test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo step3' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with basic .build step3';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.with basic .build step3' )
-
-  .then( ( op ) =>
-  {
-    test.nil( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo step3' ), 0 );
-    test.identical( _.strCount( op.output, 'echo' ), 0 );
-    test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with bad1 .resources.list';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.with bad1 .resources.list' )
-
-  .then( ( op ) =>
-  {
-    test.nil( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'echo' ), 0 );
-    test.identical( _.strCount( op.output, 'Instance build::step2 already exists' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to make resource build::step2' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  a.ready.then( () =>
-  {
-    test.case = '.with bad2 .resources.list';
-    return null;
-  })
-
-  a.appStartNonThrowing( '.with bad2 .resources.list' )
-
-  .then( ( op ) =>
-  {
-    test.nil( op.exitCode, 0 );
-    logger.log( 'op.exitCode', op.exitCode );
-    test.identical( _.strCount( op.output, 'echo' ), 0 );
-    test.identical( _.strCount( op.output, 'Instance build::step3 already exists' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to make resource build::step3' ), 1 );
-    return op;
-  });
-
-  /* - */
-
-  return a.ready;
-}
+stepFilesLinkAsSoftLink.description =
+`
+test predefined step 'files.link' with mode 'softlink'
+`;
 
 //
 
@@ -26075,6 +25477,61 @@ function stepSourcesJoinRunWithExts( test )
     test.identical( _.strCount( op.output, 'The multiplication of 4 and 4 is : 16' ), 0 );
     test.identical( _.strCount( op.output, 'The division of 4 and 4 is : 1' ), 0 );
     test.ge( _.strCount( op.output, /Failed to resolve path:.*Test\.ss, file doesn\'t exist/ ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepView( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepView' );
+
+  if( process.platform !== 'linux' || !_.process.insideTestContainer() )
+  return test.true( true );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'view file on remote server';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.build view1' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build view1"' ), 1 );
+    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepView / build::view1' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepView / build::view1' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'view file on local storage';
+    a.reflectMinimal();
+    return null;
+  });
+  a.appStart( '.build view2' );
+  a.ready.then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Command ".build view2"' ), 1 );
+    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Building module::stepView / build::view2' ), 1 );
+    test.identical( _.strCount( op.output, 'Built module::stepView / build::view2' ), 1 );
+
     return null;
   });
 
@@ -28594,30 +28051,1216 @@ function stepRepoReleaseRemote( test )
 
 //
 
-function stepView( test )
+function stepModulesUpdate( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'stepView' );
+  let a = context.assetFor( test, 'stepModulesUpdate' );
 
-  if( process.platform !== 'linux' || !_.process.insideTestContainer() )
-  return test.true( true );
+  a.remotePath = a.abs( 'module' );
+  a.appStart.predefined.currentPath = a.abs( 'clone' );
+  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  a.shellSyncClone = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  a.shellSyncSubmodule = _.process.starter
+  ({
+    currentPath : a.abs( 'clone/.module/ModuleForTesting2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  a.moduleShellSync = _.process.starter
+  ({
+    currentPath : a.remotePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  /* */
+
+  init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 });
+  a.appStart( '.build default' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'defaults, no changes', predownloadSubmodules : 1 });
+  a.appStart( '.build default' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'to:master', predownloadSubmodules : 0 });
+  a.appStart( `.build to.!master` )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'to:master', predownloadSubmodules : 1 });
+  a.appStart( `.build to.!gamma` )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 });
+  a.appStart( '.build dry.clean' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 );
+    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 });
+  a.appStart( '.build dry' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 });
+  a.appStart( '.build recursive.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 );
+    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 });
+  a.appStart( '.build recursive.one' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'recursive:2, should download all submodules', predownloadSubmodules : 0, prepareRemoteModule : 1 });
+  a.appStart( '.build recursive.two' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  })
+
+  /* */
+
+  init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 });
+  a.appStart( '.build loggingNoChanges.on' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 });
+  a.appStart( '.build loggingNoChanges.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'withStem:1', predownloadSubmodules : 1 });
+  a.appStart( '.build withStem.on' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'withStem:0', predownloadSubmodules : 1 });
+  a.appStart( '.build withStem.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 );
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function init( o )
+  {
+    o = o || {};
+
+    a.ready.then( () =>
+    {
+      test.case = _.entity.exportString( o );
+
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      /* init main module */
+
+      a.moduleShellSync( 'git init' )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'module/.gitignore' ), data : '.module' });
+      a.moduleShellSync( 'git add -fA .' )
+      a.moduleShellSync( 'git commit -m initial' )
+      a.moduleShellSync( 'git tag gamma' )
+
+      /* clone main module to simulate clone from the remote */
+
+      a.shellSync( 'git clone module clone' )
+
+      if( o.rootLocalChange )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'clone/file' ), data : 'file' });
+
+      return null;
+    });
+
+    if( o.predownloadSubmodules )
+    {
+      a.appStart( '.submodules.download' );
+
+      if( o.submoduleLocalChange )
+      a.ready.then( () =>
+      {
+        a.fileProvider.fileWrite
+        ({
+           filePath : a.abs( 'clone/.module/ModuleForTesting2/file' ),
+           data : 'file'
+        });
+        return null;
+      });
+    }
+
+    if( o.prepareRemoteModule )
+    {
+      const modulePath = a.abs( '../-repo/ModuleForTesting2/' );
+      a.shell({ currentPath : modulePath, execPath : 'git checkout master' });
+      a.ready.then( () =>
+      {
+        const configPath = a.abs( modulePath, 'will.yml' );
+        const config = a.fileProvider.fileReadUnknown( configPath );
+        config.submodule.wModuleForTesting1.enabled = 1;
+        a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+        return null;
+      });
+      a.shell({ currentPath : modulePath, execPath : 'git add .' });
+      a.shell({ currentPath : modulePath, execPath : 'git commit -am enabled' });
+    }
+
+    return a.ready;
+  }
+}
+
+stepModulesUpdate.timeOut = 800000;
+stepModulesUpdate.rapidity = -1;
+
+//
+
+function stepSubmodulesDownload( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSubmodulesDownload' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ execPath : '.resources.list' })
+  .then( ( op ) =>
+  {
+    test.case = 'list'
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master` ) );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'build'
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    return null;
+  });
+
+  a.appStart({ execPath : '.build' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'export'
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/Download.out.will.yml' ) );
+    return null;
+  });
+
+  a.appStart({ execPath : '.export' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
+    test.true( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+stepSubmodulesDownload.timeOut = 300000;
+
+//
+
+function stepSubmodulesUpdate( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSubmodulesUpdate' );
+
+  a.remotePath = a.abs( 'module' );
+  a.appStart.predefined.currentPath = a.abs( 'clone' );
+  a.appStartNonThrowing.predefined.currentPath = a.abs( 'clone' );
+
+  a.shellSync = _.process.starter
+  ({
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  a.shellSyncClone = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  a.shellSyncSubmodule = _.process.starter
+  ({
+    currentPath : a.abs( 'clone/.module/ModuleForTesting2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  a.moduleShellSync = _.process.starter
+  ({
+    currentPath : a.remotePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    sync : 1,
+    deasync : 0,
+    ready : null
+  });
+
+  /* */
+
+  init({ case : 'defaults, downloads submodule', predownloadSubmodules : 0 })
+  a.appStart( '.build default' )
+  .then( ( op ) =>
+  {
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'defaults, no changes', predownloadSubmodules : 1 })
+  a.appStart( '.build default' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'to:master', predownloadSubmodules : 0 })
+  a.appStart( `.build to.!master` )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were downloaded/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'to:master', predownloadSubmodules : 1 })
+  a.appStart( `.build to.!gamma` )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `HEAD detached at gamma` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'dry run, reports that submodule will be updated', predownloadSubmodules : 0 })
+  a.appStart( '.build dry.clean' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'dry run, reports that submodule will not be updated', predownloadSubmodules : 1 })
+  a.appStart( '.build dry' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* will be updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'recursive:0, should not download any submodule', predownloadSubmodules : 0 })
+  a.appStart( '.build recursive.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/0 submodule\(s\) of .* were updated/ ), 1 )
+    test.false( a.fileProvider.fileExists( a.abs( 'clone/.module' ) ) );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'recursive:1, should download only own submodules', predownloadSubmodules : 0 })
+  a.appStart( '.build recursive.one' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'recursive:2, should download all submodules', predownloadSubmodules : 0, prepareRemoteModule : 1 });
+  a.appStart( '.build recursive.two' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 2\/2 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2', 'wModuleForTesting1' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'loggingNoChanges:1', predownloadSubmodules : 1 })
+  a.appStart( '.build loggingNoChanges.on' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'loggingNoChanges:0', predownloadSubmodules : 1 })
+  a.appStart( '.build loggingNoChanges.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 0\/1 submodule\(s\) of .* were updated/ ), 0 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'withStem:1', predownloadSubmodules : 1 })
+  a.appStart( '.build withStem.on' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* */
+
+  init({ case : 'withStem:0', predownloadSubmodules : 1 })
+  a.appStart( '.build withStem.off' )
+  .then( ( op ) =>
+  {
+    test.identical( _.strCount( op.output, /\+ 1\/1 submodule\(s\) of .* were updated/ ), 1 )
+    let modules = a.fileProvider.dirRead( a.abs( 'clone/.module' ) );
+    test.identical( modules, [ 'ModuleForTesting2' ] );
+    var got = a.shellSyncClone( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+    var got = a.shellSyncSubmodule( 'git status' );
+    test.true( _.strHas( got.output, `On branch master` ) );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function init( o )
+  {
+    o = o || {};
+
+    a.ready.then( () =>
+    {
+      test.case = _.entity.exportString( o );
+
+      a.fileProvider.filesDelete( a.abs( '.' ) );
+      a.reflect();
+
+      /* init main module */
+
+      a.moduleShellSync( 'git init' )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'module/.gitignore' ), data : '.module' });
+      a.moduleShellSync( 'git add -fA .' )
+      a.moduleShellSync( 'git commit -m initial' )
+      a.moduleShellSync( 'git tag gamma' )
+
+      /* clone main module to simulate clone from the remote */
+
+      a.shellSync( 'git clone module clone' )
+
+      if( o.rootLocalChange )
+      a.fileProvider.fileWrite({ filePath : a.abs( 'clone/file' ), data : 'file' });
+
+      return null;
+    });
+
+    if( o.predownloadSubmodules )
+    {
+      a.appStart( '.submodules.download' );
+
+      if( o.submoduleLocalChange )
+      a.ready.then( () =>
+      {
+        a.fileProvider.fileWrite
+        ({
+           filePath : a.abs( 'clone/.module/ModuleForTesting2/file' ),
+           data : 'file'
+        });
+        return null;
+      });
+    }
+
+    if( o.prepareRemoteModule )
+    {
+      const modulePath = a.abs( '../-repo/ModuleForTesting2/' );
+      a.shell({ currentPath : modulePath, execPath : 'git checkout master' });
+      a.ready.then( () =>
+      {
+        const configPath = a.abs( modulePath, 'will.yml' );
+        const config = a.fileProvider.fileReadUnknown( configPath );
+        config.submodule.wModuleForTesting1.enabled = 1;
+        a.fileProvider.fileWrite({ filePath : configPath, data : config, encoding : 'yaml' });
+        return null;
+      });
+      a.shell({ currentPath : modulePath, execPath : 'git add .' });
+      a.shell({ currentPath : modulePath, execPath : 'git commit -am enabled' });
+    }
+
+    return a.ready;
+  }
+}
+
+stepSubmodulesUpdate.timeOut = 800000;
+
+//
+
+function stepSubmodulesAreUpdated( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepSubmodulesAreUpdated' );
+  a.appStart2 = _.process.starter
+  ({
+    currentPath : a.abs( 'module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+  })
+  a.reflect();
 
   /* - */
 
   a.ready.then( () =>
   {
-    test.case = 'view file on remote server';
-    a.reflectMinimal();
+    test.case = 'setup';
     return null;
-  });
-  a.appStart( '.build view1' );
-  a.ready.then( ( op ) =>
+  })
+
+  a.appStartNonThrowing( '.with ./module/ .export' )
+  a.appStart2( 'git init' )
+  a.appStart2( 'git add -fA .' )
+  a.appStart2( 'git commit -m init' )
+  a.appStart2( 'git commit --allow-empty -m test' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'first build';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build' )
+
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".build view1"' ), 1 );
-    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Building module::stepView / build::view1' ), 1 );
-    test.identical( _.strCount( op.output, 'Built module::stepView / build::view1' ), 1 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'second build';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, try to build';
+    return null;
+  })
+
+  a.appStart2( 'git commit --allow-empty -m test' )
+
+  a.appStartNonThrowing( '.build' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
+    test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'module is not downloaded';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build debug2' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'download path does not contain git repo';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build debug3' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    // test.true( _.strHas( op.output, '! Submodule module::local does not have files' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local does not have files' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is downloaded from different origin';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build debug4' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    // test.true( _.strHas( op.output, '! Submodule module::local has different origin url' ) );
+    test.true( _.strHas( op.output, '! Submodule opener::local has different origin url' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is in detached state';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build debug5' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '! Submodule module::local is not up to date' ) );
+    // test.true( _.strHas( op.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is ahead remote';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.build debug6' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, check is disabled via option';
+    return null;
+  })
+
+  a.appStartNonThrowing( '.clean .submodules.download' )
+  a.appStartNonThrowing( '.submodules.download' )
+  a.appStart2( 'git commit --allow-empty -m test' )
+  a.appStartNonThrowing( '.build debug7' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.true( _.strHas( op.output, '1/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  return a.ready;
+}
+
+stepSubmodulesAreUpdated.timeOut = 300000;
+
+//
+
+function stepWillbeVersionCheck( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'stepWillbeVersionCheck' );
+
+  begin();
+
+  /* starter for local copy of utility */
+  a.appStart = _.process.starter
+  ({
+    execPath : `node ${ a.path.nativize( a.abs( 'proto/wtools/atop/will/entry/Exec' ) ) }`,
+    currentPath : a.abs( '.' ),
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    verbosity : 3,
+    ready : a.ready,
+  });
+
+  /* - */
+
+  a.appStart( '.build' )
+  .then( ( op ) =>
+  {
+    test.case = 'utiliti is up to date';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /Current version: \d+\.\d+\.\d+\. Utility willbe is up to date\./ ), 1 );
+    test.identical( _.strCount( op.output, /Built .+ \/ build::debug/ ), 1 );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( ( ) =>
+  {
+    let packageJsonPath = a.abs( 'package.json' );
+    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    packageJson.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    return null;
+  });
+
+  a.appStart( '.build' )
+  .then( ( op ) =>
+  {
+    test.case = 'utility is out of date';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Utility willbe is out of date!' ), 1 );
+    test.identical( _.strCount( op.output, 'Current version: 0.0.0' ), 1 );
+    test.identical( _.strCount( op.output, /Latest: \d+\.\d+\.\d+/ ), 1 );
+    test.identical( _.strCount( op.output, 'Please run: "npm r -g willbe && npm i -g willbe" to update.' ), 1 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+
+  /* */
+
+  function begin()
+  {
+    a.ready.then( () => { a.fileProvider.dirMake( a.abs( '.' ) ); return null });
+    a.shell( 'git clone https://github.com/Wandalen/willbe.git ./' );
+    a.shell( 'npm i' );
+    a.ready.then( () =>
+    {
+      const willPath = a.abs( 'will.yml' );
+      const assetWillPath = a.abs( context.assetsOriginalPath, 'stepWillbeVersionCheck/will.yml' );
+      a.fileProvider.filesDelete( a.abs( 'out' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ assetWillPath ] : willPath } });
+      return null;
+    });
+    return a.ready;
+  }
+}
+
+//
+
+function stepVersionBump( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump", bump with defaults';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.number' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.number", bump with number delta';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.string' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.string", bump with string delta, full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.string.partial' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.string.partial", bump with string delta, not full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.patch", bump string patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.minor", bump string minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.major", bump string major version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion.patch' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion.patch", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:minor' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:minor", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.with.criterion* bump:major' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.with.criterion* bump:major", bump with resolved string criterion';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.0.0' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  a.appStart({ args : '.with Version .build bump.check.module' })
+  .then( ( op ) =>
+  {
+    test.case = '".build bump.check.module", check that module has same version as new willfile';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+    test.identical( _.strCount( op.output, '> echo 0.0.1' ), 1 );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'willfile has not version';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    delete config.about.version;
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.with Version .build bump' })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, undefined );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
   });
@@ -28626,18 +29269,115 @@ function stepView( test )
 
   a.ready.then( () =>
   {
-    test.case = 'view file on local storage';
-    a.reflectMinimal();
+    test.case = 'willfile has version as number';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    config.about.version = 1.1;
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
     return null;
   });
-  a.appStart( '.build view2' );
-  a.ready.then( ( op ) =>
+
+  a.appStartNonThrowing({ args : '.with Version .build bump' })
+  .then( ( op ) =>
   {
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, 1.1 );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.with Version .build bump.throwing.notInt' })
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.with Version .build bump.throwing.negative' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump with negative number';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function stepVersionBumpCheckReset( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npmFromWillfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStart({ args : '.imply withDisabledSubmodules:0 .with Version .build bump.with.criterion* bump:major' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump major version';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Command ".build view2"' ), 1 );
-    test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Building module::stepView / build::view2' ), 1 );
-    test.identical( _.strCount( op.output, 'Built module::stepView / build::view2' ), 1 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '2.0.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .build bump.string' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump minor version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.3.0' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart({ args : '.with Version .build bump' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump patch version';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileReadUnknown({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.2.4' );
+
+    config.about.version = '1.2.3';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
 
     return null;
   });
@@ -46439,6 +47179,7 @@ const Proto =
     // build
 
     build,
+    buildFromStep,
     buildStepShellAndViewWithoutAbout,
     buildTranspile,
     buildTranspileWithOptions,
@@ -46671,19 +47412,14 @@ const Proto =
 
     // step
 
-    stepSubmodulesDownload,
-    stepSubmodulesUpdate,
-    stepModulesUpdate,
-    stepWillbeVersionCheck,
-    stepVersionBump,
-    stepVersionBumpCheckReset,
-    stepSubmodulesAreUpdated,
-    stepBuild,
+    stepFilesLinkAsHardLink,
+    stepFilesLinkAsSoftLink,
     stepShellWithPathResolving,
     stepShellWithSeveralCommands,
     stepSourcesJoin,
     stepSourcesJoinRunInBrowser,
     stepSourcesJoinRunWithExts,
+    stepView,
     stepNpmGenerate,
     stepNpmGenerateOptionsInStep,
     stepGitCheckHardLinkRestoring,
@@ -46695,7 +47431,13 @@ const Proto =
     stepGitStatus,
     stepGitTag,
     stepRepoReleaseRemote,
-    stepView,
+    stepModulesUpdate,
+    stepSubmodulesDownload,
+    stepSubmodulesUpdate,
+    stepSubmodulesAreUpdated,
+    stepWillbeVersionCheck,
+    stepVersionBump,
+    stepVersionBumpCheckReset,
 
     /* xxx : cover "will .module.new.with prepare" */
 
